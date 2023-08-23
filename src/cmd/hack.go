@@ -108,7 +108,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Repo
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
 	}
-	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())

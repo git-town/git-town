@@ -57,7 +57,7 @@ func (fc *FrontendCommands) CreateRemoteBranch(localSha domain.SHA, branch domai
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, config.OriginRemote, localSha.String()+":refs/heads/"+branch.String())
+	args = append(args, domain.OriginRemote.String(), localSha.String()+":refs/heads/"+branch.String())
 	return fc.Run("git", args...)
 }
 
@@ -115,7 +115,7 @@ func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force
 // DeleteRemoteBranch removes the remote branch of the given local branch.
 // TODO: provide the actual domain.RemoteBranchName here and delete that branch instead of "origin/<localbranch>".
 func (fc *FrontendCommands) DeleteRemoteBranch(name domain.LocalBranchName) error {
-	return fc.Run("git", "push", config.OriginRemote, ":"+name.String())
+	return fc.Run("git", "push", domain.OriginRemote.String(), ":"+name.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
@@ -135,7 +135,7 @@ func (fc *FrontendCommands) Fetch() error {
 
 // FetchUpstream fetches updates from the upstream remote.
 func (fc *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error {
-	return fc.Run("git", "fetch", "upstream", branch.String())
+	return fc.Run("git", "fetch", domain.UpstreamRemote.String(), branch.String())
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,
@@ -164,13 +164,12 @@ type PushArgs struct {
 	Branch         domain.LocalBranchName
 	ForceWithLease bool `exhaustruct:"optional"`
 	NoPushHook     bool `exhaustruct:"optional"`
-	Remote         string
+	Remote         domain.Remote
 }
 
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	fmt.Println("AAAAAAAAAAAAAAA", options)
-	option := slice.FirstElementOr(options, PushArgs{Branch: domain.LocalBranchName{}, Remote: ""})
+	option := slice.FirstElementOr(options, PushArgs{Branch: domain.LocalBranchName{}, Remote: domain.NoRemote})
 	args := []string{"push"}
 	provideBranch := false
 	if option.NoPushHook {
@@ -179,8 +178,8 @@ func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
 	if option.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if option.Remote != "" {
-		args = append(args, "-u", option.Remote)
+	if !option.Remote.IsEmpty() {
+		args = append(args, "-u", option.Remote.String())
 		provideBranch = true
 	}
 	if !option.Branch.IsEmpty() && provideBranch {

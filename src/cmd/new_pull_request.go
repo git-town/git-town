@@ -89,7 +89,7 @@ type newPullRequestConfig struct {
 	branchesToSync     domain.BranchInfos
 	connector          hosting.Connector
 	hasOpenChanges     bool
-	remotes            config.Remotes
+	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName

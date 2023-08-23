@@ -10,7 +10,7 @@ import (
 // TODO: split this step type up into two and delete IsTracking.
 type DeleteRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
-	Remote     string
+	Remote     domain.Remote
 	IsTracking bool
 	NoPushHook bool
 	branchSha  domain.SHA
@@ -26,7 +26,7 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 
 func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := domain.NewRemoteBranchName(step.Remote + "/" + step.Branch.String())
+		trackingBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
 		var err error
 		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())
 		if err != nil {

@@ -10,19 +10,19 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	Branch     domain.LocalBranchName
-	Remote     string
+	Remote     domain.Remote
 	NoPushHook bool
 	EmptyStep
 }
 
 func (step *CreateTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&DeleteRemoteBranchStep{Branch: step.Branch, Remote: step.Remote}}, nil
+	return []Step{&DeleteRemoteBranchStep{Branch: step.Branch, Remote: domain.OriginRemote}}, nil
 }
 
 func (step *CreateTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Frontend.PushBranch(git.PushArgs{
 		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,
-		Remote:     step.Remote,
+		Remote:     domain.OriginRemote,
 	})
 }

@@ -25,8 +25,8 @@ type TestCommands struct {
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemote(name, url string) {
-	r.MustRun("git", "remote", "add", name, url)
+func (r *TestCommands) AddRemote(name domain.Remote, url string) {
+	r.MustRun("git", "remote", "add", name.String(), url)
 	r.RemotesCache.Invalidate()
 }
 
@@ -284,8 +284,8 @@ func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
 
-func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote string) {
-	r.MustRun("git", "push", "-u", remote, branch.String())
+func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote domain.Remote) {
+	r.MustRun("git", "push", "-u", remote.String(), branch.String())
 }
 
 // PushBranchAs pushes the currently checked out branch under the given name to the given remote.
@@ -299,9 +299,9 @@ func (r *TestCommands) RemoveBranch(name domain.LocalBranchName) {
 }
 
 // RemoveRemote deletes the Git remote with the given name.
-func (r *TestCommands) RemoveRemote(name string) {
+func (r *TestCommands) RemoveRemote(name domain.Remote) {
 	r.RemotesCache.Invalidate()
-	r.MustRun("git", "remote", "rm", name)
+	r.MustRun("git", "remote", "rm", name.String())
 }
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.

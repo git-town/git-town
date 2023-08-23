@@ -1,7 +1,6 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/validate"
 )
@@ -32,7 +31,7 @@ func LoadBranches(args LoadBranchesArgs) (branches domain.Branches, exit bool, e
 		}
 	}
 	if args.Fetch {
-		var remotes config.Remotes
+		var remotes domain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
 			return domain.EmptyBranches(), false, err

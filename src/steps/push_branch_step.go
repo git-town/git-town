@@ -1,7 +1,6 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -11,7 +10,6 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	Branch         domain.LocalBranchName
-	Remote         string
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
@@ -26,7 +24,7 @@ func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, err
 }
 
 func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.AtRemote(step.Remote))
+	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.AtRemote(domain.OriginRemote))
 	if err != nil {
 		return err
 	}
@@ -37,14 +35,15 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
-		Remote:         step.Remote,
+		Remote:         remote(currentBranch, step.Branch),
 	})
 }
 
 // provides the name of the remote to push to.
-func remoteName(currentBranch, stepBranch domain.LocalBranchName) string {
+func remote(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
+	// TODO: how does this comparison of whether the branch in the step is the current branch make sense when deciding whether to push to origin or not?
 	if currentBranch == stepBranch {
-		return ""
+		return domain.NoRemote
 	}
-	return config.OriginRemote
+	return domain.OriginRemote
 }

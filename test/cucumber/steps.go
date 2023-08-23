@@ -95,7 +95,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branchText, parentBranch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		return nil
 	})
 
@@ -114,7 +114,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branchText, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 			return nil
 		}
 		return nil
@@ -125,7 +125,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		return nil
 	})
 
@@ -421,7 +421,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
+		state.fixture.DevRepo.RemoveRemote(domain.OriginRemote)
 		state.initialRemoteBranches = domain.LocalBranchNames{}
 		state.fixture.OriginRepo = nil
 		return nil
@@ -660,7 +660,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -774,7 +774,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -792,7 +792,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -807,8 +807,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
-			state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch1, domain.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch2, domain.OriginRemote)
 		}
 		return nil
 	})
@@ -820,7 +820,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}

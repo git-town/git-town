@@ -15,8 +15,9 @@ func NewLocalBranchName(id string) LocalBranchName {
 	return LocalBranchName{id}
 }
 
-func (p LocalBranchName) AtRemote(remote string) RemoteBranchName {
-	return NewRemoteBranchName(remote + "/" + p.id)
+// AtRemote provides the RemoteBranchName of this branch at the given remote.
+func (p LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
+	return NewRemoteBranchName(remote.String() + "/" + p.id)
 }
 
 // BranchName widens the type of this LocalBranchName to a more generic BranchName.

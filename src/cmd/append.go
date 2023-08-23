@@ -77,7 +77,7 @@ type appendConfig struct {
 	branches            domain.Branches
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
-	remotes             config.Remotes
+	remotes             domain.Remotes
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          domain.LocalBranchName
@@ -104,7 +104,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Re
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
-	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	mainBranch := repo.Runner.Config.MainBranch()
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())

@@ -117,7 +117,7 @@ type shipConfig struct {
 	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOpenChanges           bool
-	remotes                  config.Remotes
+	remotes                  domain.Remotes
 	isShippingInitialBranch  bool
 	isOffline                bool
 	lineage                  config.Lineage
