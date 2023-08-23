@@ -74,7 +74,7 @@ issues:
       linters:
         - ireturn
     - path: src/hosting/gitea
-      text: missing in (ListOptions|ListPullRequestsOptions|PRBranchInfo|Token)
+      text: missing in (List.*Options|PRBranchInfo|Token)
       linters:
         - exhaustruct
     - path: src/hosting/github.go
@@ -82,7 +82,7 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
+      text: missing in (.*Options|Client)
       linters:
         - exhaustruct
     - path: src/hosting/gitlab_test.go
