@@ -16,7 +16,7 @@ func (r Remotes) HasUpstream() bool {
 }
 
 // OriginRemote contains the name of the "origin" remote.
-const OriginRemote = "origin"
+const OriginRemote = "origin" // TODO: delete this and replace with the proper remote. Also search for "origin" and do the same.
 
 // UpstreamRemote contains the name of the "upstream" remote.
 const UpstreamRemote = "upstream"

@@ -25,9 +25,8 @@ Feature: auto-push the new branch to origin
       | BRANCH | PARENT |
       | new    | main   |
 
-  @debug @this
   Scenario: undo
-    When I run "git-town undo -d"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND              |
       | new    | git push origin :new |
