@@ -30,24 +30,24 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
+	})
+	if err != nil {
+		return err
+	}
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
+		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return err
-	}
-	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               &repo.Runner,
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
 		return err
 	}
 	newBranch, validChoice, err := queryBranch(branches.Initial, repo.Runner.Config.Lineage())
