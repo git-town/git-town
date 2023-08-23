@@ -46,6 +46,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 
 // provides the name of the remote to push to.
 func remote(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
+	// TODO: how does this comparison of whether the branch in the step is the current branch make sense when deciding whether to push to origin or not?
 	if currentBranch == stepBranch {
 		return domain.NoRemote
 	}
