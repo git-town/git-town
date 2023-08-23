@@ -233,7 +233,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 
 // syncBranchSteps provides the steps to sync a particular branch.
 func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
-	fmt.Println("88888888888888", args.branch.Remote())
+	fmt.Println("88888888888888", args.branch)
 	fmt.Printf("%#v\n", args.branch)
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.Name)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
@@ -256,7 +256,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		fmt.Println("33333333333333333")
 		switch {
 		case !args.branch.HasTrackingBranch():
-			fmt.Println("4444444444444", args.branch.Remote())
+			fmt.Println("4444444444444", args.branch)
 			fmt.Printf("%#v\n", args.branch)
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 		case !isFeatureBranch:
