@@ -33,15 +33,11 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	if !shouldPush && !run.Config.DryRun {
 		return nil
 	}
-	currentBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return err
-	}
 	return run.Frontend.PushBranch(git.PushArgs{
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
-		Remote:         remoteName(currentBranch, step.Branch),
+		Remote:         step.Remote,
 	})
 }
 

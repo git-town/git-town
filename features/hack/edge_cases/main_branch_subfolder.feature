@@ -8,6 +8,7 @@ Feature: in a subfolder on the main branch
     And an uncommitted file
     When I run "git-town hack new" in the "new_folder" folder
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |

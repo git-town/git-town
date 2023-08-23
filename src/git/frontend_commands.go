@@ -169,6 +169,7 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
+	fmt.Println("AAAAAAAAAAAAAAA", options)
 	option := slice.FirstElementOr(options, PushArgs{Branch: domain.LocalBranchName{}, Remote: ""})
 	args := []string{"push"}
 	provideBranch := false
@@ -185,6 +186,7 @@ func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
 	if !option.Branch.IsEmpty() && provideBranch {
 		args = append(args, option.Branch.String())
 	}
+	fmt.Println("BBBBBBBBBBBBB", args)
 	return fc.Run("git", args...)
 }
 

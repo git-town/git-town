@@ -233,6 +233,8 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 
 // syncBranchSteps provides the steps to sync a particular branch.
 func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
+	fmt.Println("88888888888888", args.branch.Remote())
+	fmt.Printf("%#v\n", args.branch)
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.Name)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -251,12 +253,17 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		})
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
+		fmt.Println("33333333333333333")
 		switch {
 		case !args.branch.HasTrackingBranch():
-			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
+			fmt.Println("4444444444444", args.branch.Remote())
+			fmt.Printf("%#v\n", args.branch)
+			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name, Remote: "origin"})
 		case !isFeatureBranch:
+			fmt.Println("555555555555", args.branch)
 			list.Add(&steps.PushBranchStep{Branch: args.branch.Name, Remote: args.branch.Remote()})
 		default:
+			fmt.Println("666666666666")
 			pushFeatureBranchSteps(list, args.branch, args.syncStrategy, args.pushHook)
 		}
 	}
@@ -277,6 +284,7 @@ type syncBranchStepsArgs struct {
 }
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
+	// TODO: shouldn't it sync the parent first and then merge in the remote changes?
 	if branch.HasTrackingBranch() {
 		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName(), syncStrategy)
 	}
