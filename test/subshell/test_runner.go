@@ -258,7 +258,7 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		}
 	}
 	if r.Debug {
-		fmt.Println("\n\n", filepath.Base(r.WorkingDir), ">", cmd, strings.Join(args, " "), "\n")
+		fmt.Printf("\n\n%s > %s %s\n\n", strings.ToUpper(filepath.Base(r.WorkingDir)), cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
