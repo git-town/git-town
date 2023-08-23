@@ -45,7 +45,7 @@ type Fixture struct {
 func CloneFixture(original Fixture, dir string) Fixture {
 	helpers.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
-	originDir := filepath.Join(dir, "origin")
+	originDir := filepath.Join(dir, domain.OriginRemote.String())
 	originRepo := testruntime.New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
