@@ -102,7 +102,7 @@ type newPullRequestConfig struct {
 func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Fetch:                 false,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
@@ -118,12 +118,6 @@ func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfi
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
 		return nil, false, err
-	}
-	if remotes.HasOrigin() {
-		err := repo.Runner.Frontend.Fetch()
-		if err != nil {
-			return nil, false, err
-		}
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	lineage := repo.Runner.Config.Lineage()
