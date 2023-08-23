@@ -67,7 +67,7 @@ issues:
       text: is missing field
       linters:
         - exhaustruct
-    - text: (mockConfig|Options)
+    - text: (mockConfig)
       linters:
         - exhaustruct
     - path: src/cache/cache.go
