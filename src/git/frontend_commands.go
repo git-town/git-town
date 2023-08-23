@@ -135,7 +135,7 @@ func (fc *FrontendCommands) Fetch() error {
 
 // FetchUpstream fetches updates from the upstream remote.
 func (fc *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error {
-	return fc.Run("git", "fetch", "upstream", branch.String())
+	return fc.Run("git", "fetch", domain.UpstreamRemote.String(), branch.String())
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,

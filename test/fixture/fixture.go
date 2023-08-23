@@ -114,7 +114,7 @@ func (env *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() {
-	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
+	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, domain.UpstreamRemote.String()))
 	env.UpstreamRepo = &repo
 	env.DevRepo.AddRemote(domain.UpstreamRemote, env.UpstreamRepo.WorkingDir)
 }
