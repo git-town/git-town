@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -32,17 +31,14 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)
@@ -52,8 +48,8 @@ func runContinue(debug bool) error {
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
-	config, err := determineContinueConfig(&repo.Runner)
-	if err != nil {
+	config, exit, err := determineContinueConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
@@ -64,40 +60,43 @@ func runContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(run *git.ProdRunner) (*continueConfig, error) {
-	_, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               run,
-		ValidateIsConfigured: true,
+func determineContinueConfig(repo *execute.RepoData) (*continueConfig, bool, error) {
+	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	hasConflicts, err := run.Backend.HasConflicts()
+	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if hasConflicts {
-		return nil, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
-	originURL := run.Config.OriginURL()
-	hostingService, err := run.Config.HostingService()
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	mainBranch := run.Config.MainBranch()
+	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForBranch,
+		GetShaForBranch: repo.Runner.Backend.ShaForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   run.Config.GiteaToken(),
-		GithubAPIToken:  run.Config.GitHubToken(),
-		GitlabAPIToken:  run.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
 	return &continueConfig{
 		connector: connector,
-	}, err
+	}, false, err
 }
 
 type continueConfig struct {

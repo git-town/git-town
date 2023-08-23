@@ -46,21 +46,18 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &repo.Runner)
-	if err != nil {
+	config, exit, err := determineHackConfig(args, promptForParent, &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := appendStepList(config)
@@ -79,19 +76,25 @@ func hack(args []string, promptForParent, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.RepoData) (*appendConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, exit, err
+	}
 	fc := failure.Collector{}
-	branches := fc.Branches(execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               run,
-		ValidateIsConfigured: true,
-	}))
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	targetBranch := domain.NewLocalBranchName(args[0])
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
+	lineage := repo.Runner.Config.Lineage()
 	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
-		backend:         &run.Backend,
+		backend:         &repo.Runner.Backend,
 		branches:        branches,
 		lineage:         lineage,
 		mainBranch:      mainBranch,
@@ -99,26 +102,26 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		targetBranch:    targetBranch,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if updated {
-		lineage = run.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage()
 	}
-	remotes := fc.Strings(run.Backend.Remotes())
-	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
-	isOffline := fc.Bool(run.Config.IsOffline())
-	pushHook := fc.Bool(run.Config.PushHook())
+	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
+	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	if branches.All.HasLocalBranch(targetBranch) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
-	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	return &appendConfig{
 		branches:            branches,
 		branchesToSync:      branchesToSync,
@@ -135,7 +138,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		isOffline:           isOffline,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
-	}, fc.Err
+	}, false, fc.Err
 }
 
 func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.LocalBranchName, updated bool, err error) {

@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -46,21 +45,18 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determinePrependConfig(args, &repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determinePrependConfig(args, &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := prependStepList(config)
@@ -97,42 +93,48 @@ type prependConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) (*prependConfig, error) {
+func determinePrependConfig(args []string, repo *execute.RepoData) (*prependConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, exit, err
+	}
 	fc := failure.Collector{}
-	branches := fc.Branches(execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               run,
-		ValidateIsConfigured: true,
-	}))
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
-	remotes := fc.Strings(run.Backend.Remotes())
-	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
-	pushHook := fc.Bool(run.Config.PushHook())
-	mainBranch := run.Config.MainBranch()
-	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
-	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
-	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
+	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	mainBranch := repo.Runner.Config.MainBranch()
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
-		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
+		return nil, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
-	lineage := run.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage()
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
-		Backend:       &run.Backend,
+		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	}))
 	if updated {
-		lineage = run.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
@@ -141,7 +143,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		isOffline:           isOffline,
+		isOffline:           repo.IsOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		previousBranch:      previousBranch,
@@ -152,7 +154,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
-	}, fc.Err
+	}, false, fc.Err
 }
 
 func prependStepList(config *prependConfig) (runstate.StepList, error) {

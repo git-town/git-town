@@ -32,17 +32,14 @@ func abortCmd() *cobra.Command {
 }
 
 func abort(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)
