@@ -10,7 +10,6 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	Branch     domain.LocalBranchName
-	Remote     domain.Remote
 	NoPushHook bool
 	EmptyStep
 }

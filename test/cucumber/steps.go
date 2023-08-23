@@ -670,28 +670,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the current branch is a feature branch "([^"]*)" with tracking branch "([^"]*)"$`, func(branchName, trackingName string) error {
-		// create the local branch
-		branch := domain.NewLocalBranchName(branchName)
-		err := state.fixture.DevRepo.CreateFeatureBranch(branch)
-		if err != nil {
-			return err
-		}
-		state.fixture.DevRepo.CheckoutBranch(branch)
-		// local branch config
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialBranchHierarchy.AddRow(branchName, "main")
-		state.initialCurrentBranch = branch
-		// create the remote branch with the different name
-		trackingBranch := domain.NewRemoteBranchName(trackingName)
-		_, trackingBranchLocalName := trackingBranch.Parts()
-		state.fixture.DevRepo.PushBranchAs(branch, config.OriginRemote, trackingBranchLocalName)
-		state.fixture.DevRepo.SetTrackingBranch(branch, trackingBranch)
-		// remote branch config
-		state.initialRemoteBranches = append(state.initialRemoteBranches, trackingBranchLocalName)
-		return nil
-	})
-
 	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(currentText, previousText string) error {
 		current := domain.NewLocalBranchName(currentText)
 		previous := domain.NewLocalBranchName(previousText)

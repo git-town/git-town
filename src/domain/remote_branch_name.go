@@ -34,19 +34,19 @@ func (r RemoteBranchName) BranchName() BranchName {
 }
 
 // Parts provides the remote and branch part of this remote branch name.
-func (r RemoteBranchName) Parts() (remote string, localBranchName LocalBranchName) {
+func (r RemoteBranchName) Parts() (remote Remote, localBranchName LocalBranchName) {
 	if r.id == "" {
-		return "", LocalBranchName{}
+		return NoRemote, LocalBranchName{}
 	}
 	parts := strings.SplitN(r.id, "/", 2)
-	return parts[0], NewLocalBranchName(parts[1])
+	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
 }
 
 func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.id)
 }
 
-func (r RemoteBranchName) Remote() string {
+func (r RemoteBranchName) Remote() Remote {
 	remote, _ := r.Parts()
 	return remote
 }

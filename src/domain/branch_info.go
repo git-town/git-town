@@ -37,6 +37,6 @@ func (bi BranchInfo) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
 
-func (bi BranchInfo) Remote() string {
+func (bi BranchInfo) Remote() Remote {
 	return bi.RemoteName.Remote()
 }
