@@ -120,6 +120,12 @@ func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfi
 	if err != nil {
 		return nil, false, err
 	}
+	if remotes.HasOrigin() {
+		err := repo.Runner.Frontend.Fetch()
+		if err != nil {
+			return nil, false, err
+		}
+	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{

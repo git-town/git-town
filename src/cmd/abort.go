@@ -49,7 +49,7 @@ func abort(debug bool) error {
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)
