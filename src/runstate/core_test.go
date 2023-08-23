@@ -20,10 +20,10 @@ func TestRunState(t *testing.T) {
 			},
 			Command: "sync",
 			RunStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetToShaStep{Sha: domain.NewSHA("abcdef")}},
+				List: []steps.Step{&steps.ResetToShaStep{Sha: domain.NewSHA("abcdef"), Hard: false}},
 			},
 			UndoStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetToShaStep{Sha: domain.NewSHA("abcdef")}},
+				List: []steps.Step{&steps.ResetToShaStep{Sha: domain.NewSHA("abcdef"), Hard: false}},
 			},
 		}
 		data, err := json.Marshal(runState)

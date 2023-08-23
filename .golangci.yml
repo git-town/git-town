@@ -60,7 +60,11 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v9/src/hosting.Connector|github.com/git-town/git-town/v9/src/steps.Step)
-    - text: Step is missing field EmptyStep
+    - text: Steps? is missing field EmptyStep
+      linters:
+        - exhaustruct
+    - path: src/runstate/jsonstep.go
+      text: is missing field
       linters:
         - exhaustruct
     - text: (mockConfig|Options|Cmd)

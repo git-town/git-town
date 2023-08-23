@@ -11,7 +11,7 @@ type DeleteOriginBranchStep struct {
 	Branch     domain.LocalBranchName
 	IsTracking bool
 	NoPushHook bool
-	branchSha  domain.SHA
+	branchSha  domain.SHA `exhaustruct:"optional"`
 	EmptyStep
 }
 
