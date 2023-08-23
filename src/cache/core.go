@@ -12,6 +12,9 @@ type LocalBranch = Cache[domain.LocalBranchName]
 // RemoteBranch is a cache for domain.RemoteBranchName variables.
 type RemoteBranch = Cache[domain.RemoteBranchName]
 
+// Remotes is a cache for domain.Remotes variables.
+type Remotes = Cache[domain.Remotes]
+
 // String is a cache for string variables.
 type String = Cache[string]
 

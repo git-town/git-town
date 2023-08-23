@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
@@ -46,7 +45,7 @@ type Fixture struct {
 func CloneFixture(original Fixture, dir string) Fixture {
 	helpers.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
-	originDir := filepath.Join(dir, "origin")
+	originDir := filepath.Join(dir, domain.OriginRemote.String())
 	originRepo := testruntime.New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
@@ -57,8 +56,8 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
-	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	result.DevRepo.MustRun("git", "remote", "remove", domain.OriginRemote.String())
+	result.DevRepo.AddRemote(domain.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
 	result.DevRepo.ConnectTrackingBranch(domain.NewLocalBranchName("main"))
@@ -115,9 +114,9 @@ func (env *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() {
-	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
+	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, domain.UpstreamRemote.String()))
 	env.UpstreamRepo = &repo
-	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
+	env.DevRepo.AddRemote(domain.UpstreamRemote, env.UpstreamRepo.WorkingDir)
 }
 
 // AddCoworkerRepo adds a coworker repository.
@@ -223,7 +222,7 @@ func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if env.OriginRepo != nil {
 		originCommits := env.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
-		builder.AddMany(originCommits, config.OriginRemote)
+		builder.AddMany(originCommits, domain.OriginRemote.String())
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits := env.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
@@ -239,7 +238,7 @@ func (env Fixture) TagTable() datatable.DataTable {
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
 		originTags := env.OriginRepo.Tags()
-		builder.AddMany(originTags, config.OriginRemote)
+		builder.AddMany(originTags, domain.OriginRemote.String())
 	}
 	return builder.Table()
 }
@@ -267,7 +266,7 @@ func (env Fixture) developerRepoPath() string {
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env Fixture) originRepoPath() string {
-	return filepath.Join(env.Dir, config.OriginRemote)
+	return filepath.Join(env.Dir, domain.OriginRemote.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.

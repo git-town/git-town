@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
@@ -24,12 +23,12 @@ func TestTestCommands(t *testing.T) {
 		dev := testruntime.Create(t)
 		remotes, err := dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, config.Remotes{}, remotes)
+		assert.Equal(t, domain.Remotes{}, remotes)
 		origin := testruntime.Create(t)
-		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
+		dev.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		remotes, err = dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, config.Remotes{"origin"}, remotes)
+		assert.Equal(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
 	t.Run(".Commits()", func(t *testing.T) {
@@ -67,7 +66,7 @@ func TestTestCommands(t *testing.T) {
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
 		helpers.CopyDirectory(origin.WorkingDir, repoDir)
 		runtime := testruntime.New(repoDir, repoDir, "")
-		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
+		runtime.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		runtime.Fetch()
 		runtime.ConnectTrackingBranch(domain.NewLocalBranchName("initial"))
 		runtime.PushBranch()
@@ -191,7 +190,7 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		repo.AddRemote(config.OriginRemote, origin.WorkingDir)
+		repo.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		repo.Fetch()
 	})
 
@@ -233,7 +232,7 @@ func TestTestCommands(t *testing.T) {
 			runner.CreateFile("file1", "content")
 			runner.StageFiles("file1")
 			runner.CommitStagedChanges("stuff")
-			runner.PushBranchToRemote(domain.NewLocalBranchName("branch1"), config.OriginRemote)
+			runner.PushBranchToRemote(domain.NewLocalBranchName("branch1"), domain.OriginRemote)
 			have := runner.HasBranchesOutOfSync()
 			assert.False(t, have)
 		})
@@ -321,9 +320,9 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
+		dev.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		dev.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
-		dev.PushBranchToRemote(domain.NewLocalBranchName("b1"), config.OriginRemote)
+		dev.PushBranchToRemote(domain.NewLocalBranchName("b1"), domain.OriginRemote)
 		branches, err := origin.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
 		want := domain.NewLocalBranchNames("initial", "b1")
@@ -349,8 +348,8 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		repo.AddRemote(config.OriginRemote, origin.WorkingDir)
-		repo.RemoveRemote(config.OriginRemote)
+		repo.AddRemote(domain.OriginRemote, origin.WorkingDir)
+		repo.RemoveRemote(domain.OriginRemote)
 		remotes, err := repo.Remotes()
 		assert.NoError(t, err)
 		assert.Len(t, remotes, 0)
