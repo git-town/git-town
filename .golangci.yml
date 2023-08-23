@@ -60,7 +60,10 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v9/src/hosting.Connector|github.com/git-town/git-town/v9/src/steps.Step)
-    - text: (mockConfig|EmptyStep|Options|Cmd)
+    - text: Step is missing field EmptyStep
+      linters:
+        - exhaustruct
+    - text: (mockConfig|Options|Cmd)
       linters:
         - exhaustruct
     - path: src/cache/cache.go
