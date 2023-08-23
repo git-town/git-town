@@ -1,7 +1,6 @@
 @skipWindows
 Feature: display debug statistics
 
-  @this
   Scenario: debug mode enabled
     Given tool "open" is installed
     And the current branch is a feature branch "feature"
