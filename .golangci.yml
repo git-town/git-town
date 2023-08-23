@@ -63,7 +63,7 @@ issues:
     - text: Steps? is missing field EmptyStep
       linters:
         - exhaustruct
-    - path: src/runstate/jsonstep.go
+    - path: src/runstate/jsonstep.go # ignore all missing fields in jsonstep.go since those are intentional
       text: is missing field
       linters:
         - exhaustruct
