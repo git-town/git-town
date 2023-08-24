@@ -11,7 +11,7 @@ import (
 type SetParentStep struct {
 	Branch         domain.LocalBranchName
 	ParentBranch   domain.LocalBranchName
-	previousParent domain.LocalBranchName
+	previousParent domain.LocalBranchName `exhaustruct:"optional"`
 	EmptyStep
 }
 

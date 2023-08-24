@@ -9,7 +9,7 @@ import (
 // CheckoutStep checks out a new branch.
 type CheckoutStep struct {
 	Branch         domain.LocalBranchName
-	previousBranch domain.LocalBranchName
+	previousBranch domain.LocalBranchName `exhaustruct:"optional"`
 	EmptyStep
 }
 

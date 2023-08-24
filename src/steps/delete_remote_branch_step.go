@@ -13,7 +13,7 @@ type DeleteRemoteBranchStep struct {
 	Remote     domain.Remote
 	IsTracking bool
 	NoPushHook bool
-	branchSha  domain.SHA
+	branchSha  domain.SHA `exhaustruct:"optional"`
 	EmptyStep
 }
 
