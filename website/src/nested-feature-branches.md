@@ -1,7 +1,7 @@
 # Nested feature branches
 
-Feature branch chains are an alternative to having multiple commits in Git branches,
-with each commit performing one change, each commit being reviewed in isolation,
+Nested feature branches are an alternative to having multiple commits in Git branches,
+with each commit performing one change, being reviewed in isolation,
 and then not squash-merging the commits when shipping.
 The advantage of using nested feature branches is that reviewing the different changes in
 the different commits can happen more naturally, and parts of a change that are already agreed on
