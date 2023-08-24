@@ -159,8 +159,8 @@ func (fc *FrontendCommands) Pull() error {
 	return fc.Run("git", "pull")
 }
 
-// PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushBranch(noPushHook bool) error {
+// PushCurrentBranch pushes the current branch to its tracking branch.
+func (fc *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
