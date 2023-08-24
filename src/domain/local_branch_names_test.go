@@ -24,6 +24,14 @@ func TestLocalBranchNames(t *testing.T) {
 		assert.Equal(t, want, branches.Strings())
 	})
 
+	t.Run("RemoteName", func(t *testing.T) {
+		t.Parallel()
+		branch := domain.NewLocalBranchName("branch")
+		have := branch.RemoteName()
+		want := domain.NewRemoteBranchName("origin/branch")
+		assert.Equal(t, want, have)
+	})
+
 	t.Run("Sort", func(t *testing.T) {
 		t.Parallel()
 		branches := domain.NewLocalBranchNames("one", "two", "three")
