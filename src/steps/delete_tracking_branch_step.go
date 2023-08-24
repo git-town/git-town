@@ -8,15 +8,16 @@ import (
 
 // DeleteTrackingBranchStep deletes the tracking branch of the given local branch.
 type DeleteTrackingBranchStep struct {
-	Branch     domain.RemoteBranchName
+	Branch     domain.LocalBranchName
+	Remote     domain.Remote
 	NoPushHook bool
 	EmptyStep
 }
 
 func (step *DeleteTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&CreateTrackingBranchStep{Branch: step.Branch., NoPushHook: step.NoPushHook}}, nil
+	return []Step{&CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}}, nil
 }
 
 func (step *DeleteTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.DeleteRemoteBranch(step.Branch)
+	return run.Frontend.DeleteRemoteBranch(step.Branch, step.Remote)
 }

@@ -35,7 +35,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
-		Remote:         remote(currentBranch, step.Branch),
+		Remote:         remote(step.Branch, step.Branch),
 	})
 }
 

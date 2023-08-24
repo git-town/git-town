@@ -33,6 +33,17 @@ func (r RemoteBranchName) BranchName() BranchName {
 	return BranchName(r)
 }
 
+// LocalName provides the actual branch name for this remote branch.
+// TODO: is this used?
+func (r RemoteBranchName) LocalName() LocalBranchName {
+	_, localName := r.Parts()
+	return localName
+}
+
+func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(r.id)
+}
+
 // Parts provides the remote and branch part of this remote branch name.
 func (r RemoteBranchName) Parts() (remote Remote, localBranchName LocalBranchName) {
 	if r.id == "" {
@@ -40,10 +51,6 @@ func (r RemoteBranchName) Parts() (remote Remote, localBranchName LocalBranchNam
 	}
 	parts := strings.SplitN(r.id, "/", 2)
 	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
-}
-
-func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(r.id)
 }
 
 func (r RemoteBranchName) Remote() Remote {
