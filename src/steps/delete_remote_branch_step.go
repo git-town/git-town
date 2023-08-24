@@ -21,12 +21,11 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 }
 
 func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-		trackingBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
-		var err error
-		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())
-		if err != nil {
-			return err
-		}
+	remoteBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
+	var err error
+	step.branchSha, err = run.Backend.ShaForBranch(remoteBranch.BranchName())
+	if err != nil {
+		return err
 	}
 	return run.Frontend.DeleteRemoteBranch(step.Branch)
 }
