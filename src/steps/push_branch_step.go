@@ -35,18 +35,8 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	if err != nil {
 		return err
 	}
-	remote := remote(currentBranch, step.Branch)
-	if remote == domain.NoRemote {
+	if currentBranch == step.Branch {
 		return run.Frontend.PushCurrentBranch(step.NoPushHook)
 	}
-	return run.Frontend.CreateTrackingBranch(step.Branch, remote, step.NoPushHook)
-}
-
-// provides the name of the remote to push to.
-func remote(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
-	// TODO: how does this comparison of whether the branch in the step is the current branch make sense when deciding whether to push to origin or not?
-	if currentBranch == stepBranch {
-		return domain.NoRemote
-	}
-	return domain.OriginRemote
+	return run.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
 }
