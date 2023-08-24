@@ -85,6 +85,10 @@ func TestSanitizePath(t *testing.T) {
 					&steps.FetchUpstreamStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
+					&steps.ForcePushBranchStep{
+						Branch:     domain.NewLocalBranchName("branch"),
+						NoPushHook: true,
+					},
 					&steps.MergeStep{Branch: domain.NewBranchName("branch")},
 					&steps.PreserveCheckoutHistoryStep{
 						InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
@@ -94,10 +98,9 @@ func TestSanitizePath(t *testing.T) {
 					&steps.PullBranchStep{Branch: "branch"},
 					&steps.PushBranchAfterCurrentBranchSteps{},
 					&steps.PushBranchStep{
-						Branch:         domain.NewLocalBranchName("branch"),
-						ForceWithLease: true,
-						NoPushHook:     true,
-						Undoable:       true,
+						Branch:     domain.NewLocalBranchName("branch"),
+						NoPushHook: true,
+						Undoable:   true,
 					},
 					&steps.PushTagsStep{},
 					&steps.RebaseBranchStep{Branch: domain.NewBranchName("branch")},
@@ -261,6 +264,13 @@ func TestSanitizePath(t *testing.T) {
     },
     {
       "data": {
+        "Branch": "branch",
+        "NoPushHook": true
+      },
+      "type": "*ForcePushBranchStep"
+    },
+    {
+      "data": {
         "Branch": "branch"
       },
       "type": "*MergeStep"
@@ -286,7 +296,6 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ForceWithLease": true,
         "NoPushHook": true,
         "Undoable": true
       },

@@ -11,9 +11,8 @@ import (
 type PushBranchStep struct {
 	Branch domain.LocalBranchName
 	// TrackingBranch domain.RemoteBranchName // TODO: populate this with the actual tracking branch name
-	ForceWithLease bool
-	NoPushHook     bool
-	Undoable       bool
+	NoPushHook bool
+	Undoable   bool
 	EmptyStep
 }
 
@@ -35,9 +34,6 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	currentBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return err
-	}
-	if step.ForceWithLease {
-		return run.Frontend.ForcePushBranch(step.NoPushHook)
 	}
 	remote := remote(currentBranch, step.Branch)
 	if remote == domain.NoRemote {
