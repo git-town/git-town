@@ -18,7 +18,7 @@ type PushCurrentBranchStep struct {
 func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.Undoable {
 		return []Step{&ResetRemoteBranchToSHAStep{
-			Branch:           step.CurrentBranch.RemoteName(),
+			Branch:           step.CurrentBranch.RemoteBranch(),
 			SHAToPush:        step.InitialRemoteSHA,
 			SHAThatMustExist: step.shaAfterPush,
 		}}, nil
