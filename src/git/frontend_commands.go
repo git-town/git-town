@@ -167,12 +167,8 @@ type PushArgs struct {
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options PushArgs) error {
 	args := []string{"push"}
-	provideBranch := false
 	if options.NoPushHook {
 		args = append(args, "--no-verify")
-	}
-	if !options.Branch.IsEmpty() && provideBranch {
-		args = append(args, options.Branch.String())
 	}
 	return fc.Run("git", args...)
 }
