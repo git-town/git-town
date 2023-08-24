@@ -101,8 +101,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.RebaseBranchStep{}
 	case "*RemoveFromPerennialBranchesStep":
 		return &steps.RemoveFromPerennialBranchesStep{}
-	case "*ResetToSHAStep":
-		return &steps.ResetToSHAStep{}
+	case "*ResetLocalBranchToSHAStep":
+		return &steps.ResetLocalBranchToSHAStep{}
 	case "*RestoreOpenChangesStep":
 		return &steps.RestoreOpenChangesStep{}
 	case "*RevertCommitStep":

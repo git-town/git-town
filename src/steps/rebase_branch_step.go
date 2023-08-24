@@ -23,7 +23,7 @@ func (step *RebaseBranchStep) CreateContinueSteps() []Step {
 }
 
 func (step *RebaseBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
+	return []Step{&ResetLocalBranchToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
 }
 
 func (step *RebaseBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
