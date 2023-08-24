@@ -6,8 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// DeleteLocalBranchStep deletes the branch with the given name,
-// optionally in a safe or unsafe way.
+// DeleteLocalBranchStep deletes the branch with the given name.
 type DeleteLocalBranchStep struct {
 	Branch    domain.LocalBranchName
 	Parent    domain.Location

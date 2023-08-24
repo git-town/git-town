@@ -161,7 +161,7 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(list *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
+		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.Name, NoPushHook: config.noPushHook})
 	}
 	if config.initialBranch == config.targetBranch.Name {
 		if config.hasOpenChanges {
