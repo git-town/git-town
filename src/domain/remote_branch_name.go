@@ -35,12 +35,17 @@ func (r RemoteBranchName) BranchName() BranchName {
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
-	parts := strings.SplitN(r.id, "/", 2)
-	return NewLocalBranchName(parts[1])
+	_, localBranch := r.Parts()
+	return localBranch
 }
 
 func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.id)
+}
+
+func (r RemoteBranchName) Parts() (Remote, LocalBranchName) {
+	parts := strings.SplitN(r.id, "/", 2)
+	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
 }
 
 // Implementation of the fmt.Stringer interface.
