@@ -10,10 +10,10 @@ import (
 type CreateRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
-	Sha        domain.SHA
+	SHA        domain.SHA
 	EmptyStep
 }
 
 func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.CreateRemoteBranch(step.Sha, step.Branch, step.NoPushHook)
+	return run.Frontend.CreateRemoteBranch(step.SHA, step.Branch, step.NoPushHook)
 }

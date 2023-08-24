@@ -62,7 +62,7 @@ func (c *GiteaConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha domain.SHA, err error) {
+func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}

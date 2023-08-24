@@ -86,7 +86,7 @@ func determineContinueConfig(repo *execute.RepoData) (*continueConfig, bool, err
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: repo.Runner.Backend.ShaForBranch,
+		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
 		GithubAPIToken:  repo.Runner.Config.GitHubToken(),

@@ -16,7 +16,7 @@ type ConnectorMergeProposalStep struct {
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	mergeSha                  domain.SHA
+	mergeSHA                  domain.SHA
 	ProposalNumber            int
 	EmptyStep
 }
@@ -29,7 +29,7 @@ func (step *ConnectorMergeProposalStep) CreateAbortSteps() []Step {
 }
 
 func (step *ConnectorMergeProposalStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&RevertCommitStep{Sha: step.mergeSha}}, nil
+	return []Step{&RevertCommitStep{SHA: step.mergeSHA}}, nil
 }
 
 func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
@@ -68,7 +68,7 @@ func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosti
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	step.mergeSha, step.mergeError = connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
+	step.mergeSHA, step.mergeError = connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
 	return step.mergeError
 }
 

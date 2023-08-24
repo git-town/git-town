@@ -6,21 +6,21 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// ResetToShaStep undoes all commits on the current branch
+// ResetToSHAStep undoes all commits on the current branch
 // all the way until the given SHA.
-type ResetToShaStep struct {
+type ResetToSHAStep struct {
 	Hard bool
-	Sha  domain.SHA
+	SHA  domain.SHA
 	EmptyStep
 }
 
-func (step *ResetToShaStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	currentSha, err := run.Backend.CurrentSha()
+func (step *ResetToSHAStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+	currentSHA, err := run.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	if step.Sha == currentSha {
+	if step.SHA == currentSHA {
 		return nil
 	}
-	return run.Frontend.ResetToSha(step.Sha, step.Hard)
+	return run.Frontend.ResetToSHA(step.SHA, step.Hard)
 }

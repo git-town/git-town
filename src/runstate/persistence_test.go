@@ -54,7 +54,7 @@ func TestSanitizePath(t *testing.T) {
 					&steps.CreateRemoteBranchStep{
 						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
-						Sha:        domain.NewSHA("123456"),
+						SHA:        domain.NewSHA("123456"),
 					},
 					&steps.CreateTrackingBranchStep{
 						Branch:     domain.NewLocalBranchName("branch"),
@@ -107,13 +107,13 @@ func TestSanitizePath(t *testing.T) {
 					&steps.RemoveFromPerennialBranchesStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
-					&steps.ResetToShaStep{
+					&steps.ResetToSHAStep{
 						Hard: true,
-						Sha:  domain.NewSHA("123456"),
+						SHA:  domain.NewSHA("123456"),
 					},
 					&steps.RestoreOpenChangesStep{},
 					&steps.RevertCommitStep{
-						Sha: domain.NewSHA("123456"),
+						SHA: domain.NewSHA("123456"),
 					},
 					&steps.SetParentStep{
 						Branch:       domain.NewLocalBranchName("branch"),
@@ -205,7 +205,7 @@ func TestSanitizePath(t *testing.T) {
       "data": {
         "Branch": "branch",
         "NoPushHook": true,
-        "Sha": "123456"
+        "SHA": "123456"
       },
       "type": "*CreateRemoteBranchStep"
     },
@@ -320,9 +320,9 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {
         "Hard": true,
-        "Sha": "123456"
+        "SHA": "123456"
       },
-      "type": "*ResetToShaStep"
+      "type": "*ResetToSHAStep"
     },
     {
       "data": {},
@@ -330,7 +330,7 @@ func TestSanitizePath(t *testing.T) {
     },
     {
       "data": {
-        "Sha": "123456"
+        "SHA": "123456"
       },
       "type": "*RevertCommitStep"
     },

@@ -9,7 +9,7 @@ import (
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
 	Branch      domain.BranchName
-	previousSha domain.SHA
+	previousSHA domain.SHA
 	EmptyStep
 }
 
@@ -22,12 +22,12 @@ func (step *MergeStep) CreateContinueSteps() []Step {
 }
 
 func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetToShaStep{Hard: true, Sha: step.previousSha}}, nil
+	return []Step{&ResetToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
 }
 
 func (step *MergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
-	step.previousSha, err = run.Backend.CurrentSha()
+	step.previousSHA, err = run.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}

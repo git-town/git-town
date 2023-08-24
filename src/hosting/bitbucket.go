@@ -15,7 +15,7 @@ import (
 // BitbucketConnector provides access to the API of Bitbucket installations.
 type BitbucketConnector struct {
 	CommonConfig
-	getShaForBranch ShaForBranchFunc
+	getSHAForBranch SHAForBranchFunc
 }
 
 // NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
@@ -31,14 +31,14 @@ func NewBitbucketConnector(args NewBitbucketConnectorArgs) (*BitbucketConnector,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		getShaForBranch: args.GetShaForBranch,
+		getSHAForBranch: args.GetSHAForBranch,
 	}, nil
 }
 
 type NewBitbucketConnectorArgs struct {
 	OriginURL       *giturl.Parts
 	HostingService  config.Hosting
-	GetShaForBranch ShaForBranchFunc
+	GetSHAForBranch SHAForBranchFunc
 }
 
 func (c *BitbucketConnector) FindProposal(_, _ domain.LocalBranchName) (*Proposal, error) {
@@ -55,11 +55,11 @@ func (c *BitbucketConnector) HostingServiceName() string {
 
 func (c *BitbucketConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	branchSha, err := c.getShaForBranch(branch.BranchName())
+	branchSHA, err := c.getSHAForBranch(branch.BranchName())
 	if err != nil {
 		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{c.Organization + "/" + c.Repository, branchSha.TruncateTo(12).String(), branch.String()}, ":"))
+	query.Add("source", strings.Join([]string{c.Organization + "/" + c.Repository, branchSHA.TruncateTo(12).String(), branch.String()}, ":"))
 	query.Add("dest", strings.Join([]string{c.Organization + "/" + c.Repository, "", parentBranch.String()}, ":"))
 	return fmt.Sprintf("%s/pull-request/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
