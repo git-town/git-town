@@ -102,6 +102,17 @@ func (fc *FrontendCommands) DeleteLastCommit() error {
 	return fc.Run("git", "reset", "--hard", "HEAD~1")
 }
 
+// PushBranch pushes the branch with the given name to origin.
+func (fc *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", remote.String())
+	args = append(args, branch.String())
+	return fc.Run("git", args...)
+}
+
 // DeleteLocalBranch removes the local branch with the given name.
 func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force bool) error {
 	args := []string{"branch", "-d", name.String()}
@@ -159,29 +170,20 @@ func (fc *FrontendCommands) Pull() error {
 	return fc.Run("git", "pull")
 }
 
-type PushArgs struct {
-	Branch         domain.LocalBranchName
-	ForceWithLease bool `exhaustruct:"optional"`
-	NoPushHook     bool `exhaustruct:"optional"`
-	Remote         domain.Remote
+// PushCurrentBranch pushes the current branch to its tracking branch.
+func (fc *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return fc.Run("git", args...)
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushBranch(options PushArgs) error {
-	args := []string{"push"}
-	provideBranch := false
-	if options.NoPushHook {
+func (fc *FrontendCommands) ForcePushBranch(noPushHook bool) error {
+	args := []string{"push", "--force-with-lease"}
+	if noPushHook {
 		args = append(args, "--no-verify")
-	}
-	if options.ForceWithLease {
-		args = append(args, "--force-with-lease")
-	}
-	if !options.Remote.IsEmpty() {
-		args = append(args, "-u", options.Remote.String())
-		provideBranch = true
-	}
-	if !options.Branch.IsEmpty() && provideBranch {
-		args = append(args, options.Branch.String())
 	}
 	return fc.Run("git", args...)
 }

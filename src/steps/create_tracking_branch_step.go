@@ -19,9 +19,5 @@ func (step *CreateTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([
 }
 
 func (step *CreateTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.PushBranch(git.PushArgs{
-		Branch:     step.Branch,
-		NoPushHook: step.NoPushHook,
-		Remote:     domain.OriginRemote,
-	})
+	return run.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
 }
