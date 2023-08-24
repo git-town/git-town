@@ -277,9 +277,9 @@ type syncBranchStepsArgs struct {
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName(), syncStrategy)
+		pullCurrentFeatureBranchTrackingBranchStep(list, branch.RemoteName, syncStrategy)
 	}
-	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name).BranchName(), syncStrategy)
+	pullCurrentFeatureBranchParentBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
 }
 
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
@@ -300,13 +300,25 @@ type syncPerennialBranchStepsArgs struct {
 	hasUpstream        bool
 }
 
-// updateCurrentFeatureBranchStep provides the step to update the current feature branch with changes from the given other branch.
-func updateCurrentFeatureBranchStep(list *runstate.StepListBuilder, otherBranch domain.BranchName, strategy config.SyncStrategy) {
+// pullCurrentFeatureBranchTrackingBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
+func pullCurrentFeatureBranchTrackingBranchStep(list *runstate.StepListBuilder, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&steps.MergeStep{Branch: otherBranch})
+		list.Add(&steps.MergeStep{Branch: trackingBranch.BranchName()})
 	case config.SyncStrategyRebase:
-		list.Add(&steps.RebaseBranchStep{Branch: otherBranch})
+		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch.BranchName()})
+	default:
+		list.Fail("unknown syncStrategy value: %q", strategy)
+	}
+}
+
+// pullCurrentFeatureBranchParentBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
+func pullCurrentFeatureBranchParentBranchStep(list *runstate.StepListBuilder, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+	switch strategy {
+	case config.SyncStrategyMerge:
+		list.Add(&steps.MergeStep{Branch: parentBranch.BranchName()})
+	case config.SyncStrategyRebase:
+		list.Add(&steps.RebaseBranchStep{Branch: parentBranch.BranchName()})
 	default:
 		list.Fail("unknown syncStrategy value: %q", strategy)
 	}
