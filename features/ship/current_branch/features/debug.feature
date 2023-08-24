@@ -43,6 +43,8 @@ Feature: display debug statistics
       | main    | frontend | git commit -m done                                |
       |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git rev-list --left-right main...origin/main      |
+      |         | backend  | git rev-parse origin/main                         |
+      |         | backend  | git rev-parse HEAD                                |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
       |         | backend  | git rev-parse feature                             |
@@ -55,10 +57,11 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 42 shell commands.
+      Ran 44 shell commands.
       """
     And the current branch is now "main"
 
+  @debug @this
   Scenario: undo
     Given I ran "git-town ship -m done"
     When I run "git-town undo --debug"
