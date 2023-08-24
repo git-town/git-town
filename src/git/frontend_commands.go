@@ -165,9 +165,9 @@ type PushArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushBranch(options PushArgs) error {
+func (fc *FrontendCommands) PushBranch(noPushHook bool) error {
 	args := []string{"push"}
-	if options.NoPushHook {
+	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	return fc.Run("git", args...)

@@ -45,10 +45,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	}
 	remote := remote(currentBranch, step.Branch)
 	if remote == domain.NoRemote {
-		return run.Frontend.PushBranch(git.PushArgs{
-			Branch:     step.Branch,
-			NoPushHook: step.NoPushHook,
-		})
+		return run.Frontend.PushBranch(step.NoPushHook)
 	}
 	return run.Frontend.PushTrackingBranch(git.PushArgs{
 		Branch:     step.Branch,
