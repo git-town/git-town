@@ -8,15 +8,19 @@ import (
 
 // PushCurrentBranchStep pushes the current branch to its existing tracking branch.
 type PushCurrentBranchStep struct {
-	CurrentBranch domain.LocalBranchName
-	NoPushHook    bool
-	Undoable      bool
+	CurrentBranch    domain.LocalBranchName
+	InitialRemoteSHA domain.SHA
+	NoPushHook       bool
+	Undoable         bool
 	EmptyStep
 }
 
 func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.Undoable {
-		return []Step{&PushBranchAfterCurrentBranchSteps{}}, nil
+		return []Step{&ResetRemoteBranchToSHAStep{
+			Branch:    step.CurrentBranch.RemoteName(),
+			SHAToPush: step.InitialRemoteSHA,
+		}}, nil
 	}
 	return []Step{&SkipCurrentBranchSteps{}}, nil
 }

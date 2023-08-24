@@ -10,11 +10,12 @@ import (
 type ForcePushBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
+	RemoteSHA  domain.SHA // the SHA that the remote branch had before Git Town ran
 	EmptyStep
 }
 
 func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&SkipCurrentBranchSteps{}}, nil
+	return []Step{&ResetRemoteBranchToSHAStep{}}, nil
 }
 
 func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

@@ -213,6 +213,12 @@ func (fc *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) e
 	return fc.Run("git", args...)
 }
 
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (fc *FrontendCommands) ResetRemoteBranchToSHA(remoteBranch domain.RemoteBranchName, shaToPush domain.SHA, shaThatMustExist domain.SHA) error {
+	remote, localBranch := remoteBranch.Parts()
+	return fc.Run("git", "push", fmt.Sprintf("--force-with-lease=%s:%s", localBranch.String(), shaThatMustExist.String()), remote.String(), shaToPush.String()+":"+localBranch.String())
+}
+
 // RevertCommit reverts the commit with the given SHA.
 func (fc *FrontendCommands) RevertCommit(sha domain.SHA) error {
 	return fc.Run("git", "revert", sha.String())
