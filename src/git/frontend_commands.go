@@ -160,10 +160,9 @@ func (fc *FrontendCommands) Pull() error {
 }
 
 type PushArgs struct {
-	Branch         domain.LocalBranchName
-	ForceWithLease bool `exhaustruct:"optional"`
-	NoPushHook     bool `exhaustruct:"optional"`
-	Remote         domain.Remote
+	Branch     domain.LocalBranchName
+	NoPushHook bool `exhaustruct:"optional"`
+	Remote     domain.Remote
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -173,8 +172,22 @@ func (fc *FrontendCommands) PushBranch(options PushArgs) error {
 	if options.NoPushHook {
 		args = append(args, "--no-verify")
 	}
-	if options.ForceWithLease {
-		args = append(args, "--force-with-lease")
+	if !options.Remote.IsEmpty() {
+		args = append(args, "-u", options.Remote.String())
+		provideBranch = true
+	}
+	if !options.Branch.IsEmpty() && provideBranch {
+		args = append(args, options.Branch.String())
+	}
+	return fc.Run("git", args...)
+}
+
+// PushBranch pushes the branch with the given name to origin.
+func (fc *FrontendCommands) ForcePushBranch(options PushArgs) error {
+	args := []string{"push", "--force-with-lease"}
+	provideBranch := false
+	if options.NoPushHook {
+		args = append(args, "--no-verify")
 	}
 	if !options.Remote.IsEmpty() {
 		args = append(args, "-u", options.Remote.String())

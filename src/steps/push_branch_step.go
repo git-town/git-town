@@ -36,11 +36,17 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	if err != nil {
 		return err
 	}
+	if step.ForceWithLease {
+		return run.Frontend.ForcePushBranch(git.PushArgs{
+			Branch:     step.Branch,
+			NoPushHook: step.NoPushHook,
+			Remote:     remote(currentBranch, step.Branch),
+		})
+	}
 	return run.Frontend.PushBranch(git.PushArgs{
-		Branch:         step.Branch,
-		ForceWithLease: step.ForceWithLease,
-		NoPushHook:     step.NoPushHook,
-		Remote:         remote(currentBranch, step.Branch),
+		Branch:     step.Branch,
+		NoPushHook: step.NoPushHook,
+		Remote:     remote(currentBranch, step.Branch),
 	})
 }
 
