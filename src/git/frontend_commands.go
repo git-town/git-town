@@ -169,7 +169,7 @@ func (fc *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
+func (fc *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
