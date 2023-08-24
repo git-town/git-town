@@ -29,10 +29,10 @@ func TestLocalBranchName(t *testing.T) {
 		})
 	})
 
-	t.Run("RemoteName", func(t *testing.T) {
+	t.Run("RemoteBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch")
 		want := domain.NewRemoteBranchName("origin/branch")
-		assert.Equal(t, want, branch.RemoteName())
+		assert.Equal(t, want, branch.RemoteBranch())
 	})
 }
