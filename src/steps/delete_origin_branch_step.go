@@ -9,27 +9,21 @@ import (
 // DeleteOriginBranchStep deletes the current branch from the origin remote.
 type DeleteOriginBranchStep struct {
 	Branch     domain.LocalBranchName
-	IsTracking bool
 	NoPushHook bool
 	branchSha  domain.SHA `exhaustruct:"optional"`
 	EmptyStep
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	if step.IsTracking {
-		return []Step{&CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}}, nil
-	}
 	return []Step{&CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}}, nil
 }
 
 func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	if !step.IsTracking {
-		trackingBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
-		var err error
-		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())
-		if err != nil {
-			return err
-		}
+	remoteBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
+	var err error
+	step.branchSha, err = run.Backend.ShaForBranch(remoteBranch.BranchName())
+	if err != nil {
+		return err
 	}
 	return run.Frontend.DeleteRemoteBranch(step.Branch)
 }
