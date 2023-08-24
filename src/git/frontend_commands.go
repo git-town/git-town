@@ -174,13 +174,13 @@ func (fc *FrontendCommands) PushBranch(noPushHook bool) error {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushTrackingBranch(options PushArgs, remote domain.Remote) error {
+func (fc *FrontendCommands) PushTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
 	args := []string{"push"}
-	if options.NoPushHook {
+	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "-u", remote.String())
-	args = append(args, options.Branch.String())
+	args = append(args, branch.String())
 	return fc.Run("git", args...)
 }
 

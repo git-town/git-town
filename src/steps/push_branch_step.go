@@ -47,10 +47,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	if remote == domain.NoRemote {
 		return run.Frontend.PushBranch(step.NoPushHook)
 	}
-	return run.Frontend.PushTrackingBranch(git.PushArgs{
-		Branch:     step.Branch,
-		NoPushHook: step.NoPushHook,
-	}, remote)
+	return run.Frontend.PushTrackingBranch(step.Branch, remote, step.NoPushHook)
 }
 
 // provides the name of the remote to push to.
