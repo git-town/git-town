@@ -275,13 +275,15 @@ type syncBranchStepsArgs struct {
 	syncStrategy       config.SyncStrategy
 }
 
+// syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		pullCurrentFeatureBranchTrackingBranchStep(list, branch.RemoteName, syncStrategy)
+		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
 	}
-	pullCurrentFeatureBranchParentBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
 }
 
+// syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
@@ -300,8 +302,8 @@ type syncPerennialBranchStepsArgs struct {
 	hasUpstream        bool
 }
 
-// pullCurrentFeatureBranchTrackingBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullCurrentFeatureBranchTrackingBranchStep(list *runstate.StepListBuilder, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
+// pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
+func pullTrackingBranchOfCurrentFeatureBranchStep(list *runstate.StepListBuilder, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&steps.MergeStep{Branch: trackingBranch.BranchName()})
@@ -312,8 +314,8 @@ func pullCurrentFeatureBranchTrackingBranchStep(list *runstate.StepListBuilder, 
 	}
 }
 
-// pullCurrentFeatureBranchParentBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullCurrentFeatureBranchParentBranchStep(list *runstate.StepListBuilder, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+// pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
+func pullParentBranchOfCurrentFeatureBranchStep(list *runstate.StepListBuilder, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&steps.MergeStep{Branch: parentBranch.BranchName()})
