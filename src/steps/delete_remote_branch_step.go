@@ -11,21 +11,16 @@ import (
 type DeleteRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	Remote     domain.Remote
-	IsTracking bool
 	NoPushHook bool
 	branchSha  domain.SHA `exhaustruct:"optional"`
 	EmptyStep
 }
 
 func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	if step.IsTracking {
-		return []Step{&CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}}, nil
-	}
 	return []Step{&CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}}, nil
 }
 
 func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	if !step.IsTracking {
 		trackingBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
 		var err error
 		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())

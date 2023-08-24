@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/slice"
 )
 
 type FrontendRunner interface {
@@ -168,22 +167,21 @@ type PushArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	option := slice.FirstElementOr(options, PushArgs{Branch: domain.LocalBranchName{}, Remote: domain.NoRemote})
+func (fc *FrontendCommands) PushBranch(options PushArgs) error {
 	args := []string{"push"}
 	provideBranch := false
-	if option.NoPushHook {
+	if options.NoPushHook {
 		args = append(args, "--no-verify")
 	}
-	if option.ForceWithLease {
+	if options.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if !option.Remote.IsEmpty() {
-		args = append(args, "-u", option.Remote.String())
+	if !options.Remote.IsEmpty() {
+		args = append(args, "-u", options.Remote.String())
 		provideBranch = true
 	}
-	if !option.Branch.IsEmpty() && provideBranch {
-		args = append(args, option.Branch.String())
+	if !options.Branch.IsEmpty() && provideBranch {
+		args = append(args, options.Branch.String())
 	}
 	fmt.Println("BBBBBBBBBBBBB", args)
 	return fc.Run("git", args...)
