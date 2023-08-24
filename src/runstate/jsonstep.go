@@ -93,8 +93,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.PullBranchStep{}
 	case "*PushBranchAfterCurrentBranchSteps":
 		return &steps.PushBranchAfterCurrentBranchSteps{}
-	case "*PushBranchStep":
-		return &steps.PushBranchStep{}
+	case "*PushCurrentBranchStep":
+		return &steps.PushCurrentBranchStep{}
 	case "*PushTagsStep":
 		return &steps.PushTagsStep{}
 	case "*RebaseBranchStep":

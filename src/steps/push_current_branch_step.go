@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// PushBranchStep pushes the branch with the given name to the origin remote.
+// PushCurrentBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
-type PushBranchStep struct {
+type PushCurrentBranchStep struct {
 	Branch domain.LocalBranchName
 	// TrackingBranch domain.RemoteBranchName // TODO: populate this with the actual tracking branch name
 	NoPushHook bool
@@ -16,14 +16,14 @@ type PushBranchStep struct {
 	EmptyStep
 }
 
-func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.Undoable {
 		return []Step{&PushBranchAfterCurrentBranchSteps{}}, nil
 	}
 	return []Step{&SkipCurrentBranchSteps{}}, nil
 }
 
-func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteName()) // TODO: look this up in a git.Branches struct that needs to get injected here somehow
 	if err != nil {
 		return err
