@@ -15,7 +15,9 @@ type ForcePushBranchStep struct {
 }
 
 func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetRemoteBranchToSHAStep{}}, nil
+	return []Step{&ResetRemoteBranchToSHAStep{
+		Branch: step.Branch.RemoteName(),
+	}}, nil
 }
 
 func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
