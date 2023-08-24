@@ -10,7 +10,7 @@ const (
 	BranchCurrentProblem              = "cannot determine current branch: %w"
 	BranchDiffProblem                 = "cannot determine if branch %q has unmerged commits: %w"
 	BranchFeatureCannotCreate         = "cannot create feature branch %q: %w"
-	BranchLocalShaProblem             = "cannot determine SHA of local branch %q: %w"
+	BranchLocalSHAProblem             = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                = "cannot determine whether the local branch %q exists: %w"
 	BrowserOpen                       = "Please open in a browser: %s\n"
 	CacheUnitialized                  = "using a cached value before initialization"

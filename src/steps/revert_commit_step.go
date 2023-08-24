@@ -8,10 +8,10 @@ import (
 
 // RevertCommitStep reverts the commit with the given sha.
 type RevertCommitStep struct {
-	Sha domain.SHA
+	SHA domain.SHA
 	EmptyStep
 }
 
 func (step *RevertCommitStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.RevertCommit(step.Sha)
+	return run.Frontend.RevertCommit(step.SHA)
 }

@@ -10,7 +10,7 @@ import (
 // against the branch with the given name.
 type RebaseBranchStep struct {
 	Branch      domain.BranchName
-	previousSha domain.SHA
+	previousSHA domain.SHA
 	EmptyStep
 }
 
@@ -23,12 +23,12 @@ func (step *RebaseBranchStep) CreateContinueSteps() []Step {
 }
 
 func (step *RebaseBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetToShaStep{Hard: true, Sha: step.previousSha}}, nil
+	return []Step{&ResetToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
 }
 
 func (step *RebaseBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
-	step.previousSha, err = run.Backend.CurrentSha()
+	step.previousSHA, err = run.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}

@@ -307,8 +307,8 @@ func (r *TestCommands) RemoveUnnecessaryFiles() {
 	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "description"))
 }
 
-// ShaForCommit provides the SHA for the commit with the given name.
-func (r *TestCommands) ShaForCommit(name string) string {
+// SHAForCommit provides the SHA for the commit with the given name.
+func (r *TestCommands) SHAForCommit(name string) string {
 	output := r.MustQuery("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
 	if output == "" {
 		log.Fatalf("cannot find the SHA of commit %q", name)

@@ -74,7 +74,7 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForBranch,
+		GetSHAForBranch: run.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   run.Config.GiteaToken(),
 		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),

@@ -51,12 +51,12 @@ func (fc *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSha domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
+func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, domain.OriginRemote.String(), localSha.String()+":refs/heads/"+branch.String())
+	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return fc.Run("git", args...)
 }
 
@@ -203,8 +203,8 @@ func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
 	return fc.Run("git", "config", "--global", "--unset", "alias."+alias.String())
 }
 
-// ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetToSha(sha domain.SHA, hard bool) error {
+// ResetToSHA undoes all commits on the current branch all the way until the given SHA.
+func (fc *FrontendCommands) ResetToSHA(sha domain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
