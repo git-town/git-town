@@ -31,7 +31,7 @@ func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) e
 	if !shouldPush && !run.Config.DryRun {
 		return nil
 	}
-	sha, err := run.Backend.SHAForBranch(step.Branch)
+	step.shaAfterPush, err = run.Backend.SHAForBranch(step.Branch.BranchName())
 	if err != nil {
 		return err
 	}
