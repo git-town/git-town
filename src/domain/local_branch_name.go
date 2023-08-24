@@ -40,8 +40,8 @@ func (p LocalBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.id)
 }
 
-// RemoteName provides the name of the tracking branch for this local branch.
-func (p LocalBranchName) RemoteName() RemoteBranchName {
+// RemoteBranch provides the name of the tracking branch for this local branch.
+func (p LocalBranchName) RemoteBranch() RemoteBranchName {
 	return p.AtRemote(OriginRemote)
 }
 
