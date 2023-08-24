@@ -77,7 +77,7 @@ const (
 	RunstateSerializeProblem          = "cannot encode run-state: %w"
 	RunstatePathProblem               = "cannot determine the runstate file path: %w"
 	RunstateSaveProblem               = "cannot save run state: %w"
-	RunstateStepUnknown               = "unknown step type: %q, run \"git town config runstate reset\" to reset it"
+	RunstateStepUnknown               = "unknown step type: %q, run \"git town status reset\" to reset it"
 	SetParentNoFeatureBranch          = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	ShipAbortedMergeError             = "aborted because commit exited with error"
 	ShipBranchNothingToDo             = "the branch %q has no shippable changes"
