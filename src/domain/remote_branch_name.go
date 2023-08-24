@@ -35,8 +35,8 @@ func (r RemoteBranchName) BranchName() BranchName {
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
-	parts := strings.SplitN(r.id, "/", 2)
-	return NewLocalBranchName(parts[1])
+	_, localBranch := r.Parts()
+	return localBranch
 }
 
 func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
