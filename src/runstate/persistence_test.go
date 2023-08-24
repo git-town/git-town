@@ -98,9 +98,9 @@ func TestSanitizePath(t *testing.T) {
 					&steps.PullBranchStep{Branch: "branch"},
 					&steps.PushBranchAfterCurrentBranchSteps{},
 					&steps.PushCurrentBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
-						Undoable:   true,
+						CurrentBranch: domain.NewLocalBranchName("branch"),
+						NoPushHook:    true,
+						Undoable:      true,
 					},
 					&steps.PushTagsStep{},
 					&steps.RebaseBranchStep{Branch: domain.NewBranchName("branch")},
@@ -295,7 +295,7 @@ func TestSanitizePath(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
+        "CurrentBranch": "branch",
         "NoPushHook": true,
         "Undoable": true
       },

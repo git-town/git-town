@@ -9,10 +9,9 @@ import (
 // PushCurrentBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
 type PushCurrentBranchStep struct {
-	Branch domain.LocalBranchName
-	// TrackingBranch domain.RemoteBranchName // TODO: populate this with the actual tracking branch name
-	NoPushHook bool
-	Undoable   bool
+	CurrentBranch domain.LocalBranchName
+	NoPushHook    bool
+	Undoable      bool
 	EmptyStep
 }
 
@@ -24,7 +23,7 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 }
 
 func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteName()) // TODO: look this up in a git.Branches struct that needs to get injected here somehow
+	shouldPush, err := run.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteName()) // TODO: look this up in a git.Branches struct that needs to get injected here somehow
 	if err != nil {
 		return err
 	}
