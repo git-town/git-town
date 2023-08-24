@@ -67,12 +67,15 @@ func TestSanitizePath(t *testing.T) {
 					},
 					&steps.DeleteOriginBranchStep{
 						Branch:     domain.NewLocalBranchName("branch"),
-						IsTracking: true,
 						NoPushHook: true,
 					},
 					&steps.DeleteParentBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent"),
+					},
+					&steps.DeleteTrackingBranchStep{
+						Branch:     domain.NewLocalBranchName("branch"),
+						NoPushHook: true,
 					},
 					&steps.DiscardOpenChangesStep{},
 					&steps.EnsureHasShippableChangesStep{
@@ -221,7 +224,6 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "IsTracking": true,
         "NoPushHook": true
       },
       "type": "*DeleteOriginBranchStep"
@@ -232,6 +234,13 @@ func TestSanitizePath(t *testing.T) {
         "Parent": "parent"
       },
       "type": "*DeleteParentBranchStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "NoPushHook": true
+      },
+      "type": "*DeleteTrackingBranchStep"
     },
     {
       "data": {},
