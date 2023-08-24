@@ -180,9 +180,7 @@ func (fc *FrontendCommands) PushTrackingBranch(options PushArgs, remote domain.R
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "-u", remote.String())
-	if !options.Branch.IsEmpty() {
-		args = append(args, options.Branch.String())
-	}
+	args = append(args, options.Branch.String())
 	return fc.Run("git", args...)
 }
 
