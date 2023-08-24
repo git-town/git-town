@@ -203,8 +203,8 @@ func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
 	return fc.Run("git", "config", "--global", "--unset", "alias."+alias.String())
 }
 
-// ResetToSHA undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetToSHA(sha domain.SHA, hard bool) error {
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (fc *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")

@@ -16,7 +16,7 @@ type CommitOpenChangesStep struct {
 }
 
 func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetLocalBranchToSHAStep{SHA: step.previousSHA, Hard: false}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{SHA: step.previousSHA, Hard: false}}, nil
 }
 
 func (step *CommitOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
