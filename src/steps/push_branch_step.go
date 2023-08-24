@@ -31,12 +31,5 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 	if !shouldPush && !run.Config.DryRun {
 		return nil
 	}
-	currentBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return err
-	}
-	if currentBranch == step.Branch {
-		return run.Frontend.PushCurrentBranch(step.NoPushHook)
-	}
-	return run.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
+	return run.Frontend.PushCurrentBranch(step.NoPushHook)
 }
