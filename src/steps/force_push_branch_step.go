@@ -18,7 +18,7 @@ func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step
 }
 
 func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteName()) // TODO: look this up in a git.Branches struct that needs to get injected here somehow
+	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteName())
 	if err != nil {
 		return err
 	}
