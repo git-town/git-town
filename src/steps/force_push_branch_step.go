@@ -8,15 +8,18 @@ import (
 
 // ForcePushBranchStep force-pushes the branch with the given name to the origin remote.
 type ForcePushBranchStep struct {
-	Branch     domain.LocalBranchName
-	NoPushHook bool
-	RemoteSHA  domain.SHA // the SHA that the remote branch had before Git Town ran
+	Branch            domain.LocalBranchName
+	NoPushHook        bool
+	OriginalRemoteSHA domain.SHA // the SHA that the remote branch had before Git Town ran
+	shaAfterPush      domain.SHA
 	EmptyStep
 }
 
 func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	return []Step{&ResetRemoteBranchToSHAStep{
-		Branch: step.Branch.RemoteName(),
+		Branch:           step.Branch.RemoteName(),
+		SHAToPush:        step.OriginalRemoteSHA,
+		SHAThatMustExist: step.shaAfterPush,
 	}}, nil
 }
 
@@ -27,6 +30,10 @@ func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) e
 	}
 	if !shouldPush && !run.Config.DryRun {
 		return nil
+	}
+	sha, err := run.Backend.SHAForBranch(step.Branch)
+	if err != nil {
+		return err
 	}
 	return run.Frontend.ForcePushBranch(step.NoPushHook)
 }
