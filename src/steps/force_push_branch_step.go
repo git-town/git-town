@@ -6,8 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// PushBranchStep pushes the branch with the given name to the origin remote.
-// Optionally with force.
+// ForcePushBranchStep force-pushes the branch with the given name to the origin remote.
 type ForcePushBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool

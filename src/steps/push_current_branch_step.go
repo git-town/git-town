@@ -6,8 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// PushCurrentBranchStep pushes the branch with the given name to the origin remote.
-// Optionally with force.
+// PushCurrentBranchStep pushes the current branch to its existing tracking branch.
 type PushCurrentBranchStep struct {
 	CurrentBranch domain.LocalBranchName
 	NoPushHook    bool
