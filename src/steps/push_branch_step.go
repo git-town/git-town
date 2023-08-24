@@ -40,14 +40,20 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 		return run.Frontend.ForcePushBranch(git.PushArgs{
 			Branch:     step.Branch,
 			NoPushHook: step.NoPushHook,
-			Remote:     remote(currentBranch, step.Branch),
+			// Remote:     remote(currentBranch, step.Branch),
 		})
 	}
-	return run.Frontend.PushBranch(git.PushArgs{
+	remote := remote(currentBranch, step.Branch)
+	if remote == domain.NoRemote {
+		return run.Frontend.PushBranch(git.PushArgs{
+			Branch:     step.Branch,
+			NoPushHook: step.NoPushHook,
+		})
+	}
+	return run.Frontend.PushTrackingBranch(git.PushArgs{
 		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,
-		Remote:     remote(currentBranch, step.Branch),
-	})
+	}, remote)
 }
 
 // provides the name of the remote to push to.

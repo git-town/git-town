@@ -162,7 +162,6 @@ func (fc *FrontendCommands) Pull() error {
 type PushArgs struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool `exhaustruct:"optional"`
-	Remote     domain.Remote
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -172,11 +171,20 @@ func (fc *FrontendCommands) PushBranch(options PushArgs) error {
 	if options.NoPushHook {
 		args = append(args, "--no-verify")
 	}
-	if !options.Remote.IsEmpty() {
-		args = append(args, "-u", options.Remote.String())
-		provideBranch = true
-	}
 	if !options.Branch.IsEmpty() && provideBranch {
+		args = append(args, options.Branch.String())
+	}
+	return fc.Run("git", args...)
+}
+
+// PushBranch pushes the branch with the given name to origin.
+func (fc *FrontendCommands) PushTrackingBranch(options PushArgs, remote domain.Remote) error {
+	args := []string{"push"}
+	if options.NoPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", remote.String())
+	if !options.Branch.IsEmpty() {
 		args = append(args, options.Branch.String())
 	}
 	return fc.Run("git", args...)
@@ -188,10 +196,6 @@ func (fc *FrontendCommands) ForcePushBranch(options PushArgs) error {
 	provideBranch := false
 	if options.NoPushHook {
 		args = append(args, "--no-verify")
-	}
-	if !options.Remote.IsEmpty() {
-		args = append(args, "-u", options.Remote.String())
-		provideBranch = true
 	}
 	if !options.Branch.IsEmpty() && provideBranch {
 		args = append(args, options.Branch.String())
