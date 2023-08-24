@@ -42,7 +42,7 @@ func (p LocalBranchName) MarshalJSON() ([]byte, error) {
 
 // RemoteBranch provides the name of the tracking branch for this local branch.
 func (p LocalBranchName) RemoteBranch() RemoteBranchName {
-	return NewRemoteBranchName(OriginRemote.String() + "/" + p.id)
+	return p.AtRemote(OriginRemote)
 }
 
 // Implementation of the fmt.Stringer interface.
