@@ -43,6 +43,11 @@ func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.id)
 }
 
+func (r RemoteBranchName) Parts() (Remote, LocalBranchName) {
+	parts := strings.SplitN(r.id, "/", 2)
+	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
+}
+
 // Implementation of the fmt.Stringer interface.
 func (r RemoteBranchName) String() string { return r.id }
 
