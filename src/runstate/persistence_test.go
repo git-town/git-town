@@ -63,6 +63,7 @@ func TestSanitizePath(t *testing.T) {
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent").Location(),
+						Force:  false,
 					},
 					&steps.DeleteOriginBranchStep{
 						Branch:     domain.NewLocalBranchName("branch"),

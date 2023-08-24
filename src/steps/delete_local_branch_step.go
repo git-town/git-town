@@ -12,7 +12,7 @@ type DeleteLocalBranchStep struct {
 	Branch    domain.LocalBranchName
 	Parent    domain.Location
 	Force     bool
-	branchSha domain.SHA
+	branchSha domain.SHA `exhaustruct:"optional"`
 	EmptyStep
 }
 

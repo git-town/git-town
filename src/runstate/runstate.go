@@ -33,7 +33,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch})
+			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch, ForceWithLease: false, NoPushHook: false, Undoable: false})
 			runState.RunStepList.PrependList(popped)
 			break
 		}
