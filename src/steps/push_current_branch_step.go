@@ -6,10 +6,12 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// PushCurrentBranchStep pushes the current branch to its existing tracking branch.
+// PushCurrentBranchStep pushes the current branch to its tracking branch.
+// The tracking branch must exist.
 type PushCurrentBranchStep struct {
 	CurrentBranch    domain.LocalBranchName
-	InitialRemoteSHA domain.SHA
+	initialRemoteSHA domain.SHA
+	shaAfterPush     domain.SHA
 	NoPushHook       bool
 	Undoable         bool
 	EmptyStep
@@ -19,7 +21,7 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 	if step.Undoable {
 		return []Step{&ResetRemoteBranchToSHAStep{
 			Branch:           step.CurrentBranch.RemoteBranch(),
-			SHAToPush:        step.InitialRemoteSHA,
+			SHAToPush:        step.initialRemoteSHA,
 			SHAThatMustExist: step.shaAfterPush,
 		}}, nil
 	}
@@ -27,12 +29,21 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 }
 
 func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteBranch())
+	trackingBranch := step.CurrentBranch.RemoteBranch()
+	shouldPush, err := run.Backend.ShouldPushBranch(step.CurrentBranch, trackingBranch)
 	if err != nil {
 		return err
 	}
 	if !shouldPush && !run.Config.DryRun {
 		return nil
+	}
+	step.initialRemoteSHA, err = run.Backend.SHAForBranch(trackingBranch.BranchName())
+	if err != nil {
+		return err
+	}
+	step.shaAfterPush, err = run.Backend.CurrentSHA()
+	if err != nil {
+		return err
 	}
 	return run.Frontend.PushCurrentBranch(step.NoPushHook)
 }
