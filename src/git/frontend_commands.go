@@ -159,11 +159,6 @@ func (fc *FrontendCommands) Pull() error {
 	return fc.Run("git", "pull")
 }
 
-type PushArgs struct {
-	Branch     domain.LocalBranchName
-	NoPushHook bool `exhaustruct:"optional"`
-}
-
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(noPushHook bool) error {
 	args := []string{"push"}
@@ -185,14 +180,10 @@ func (fc *FrontendCommands) PushTrackingBranch(branch domain.LocalBranchName, re
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) ForcePushBranch(options PushArgs) error {
+func (fc *FrontendCommands) ForcePushBranch(noPushHook bool) error {
 	args := []string{"push", "--force-with-lease"}
-	provideBranch := false
-	if options.NoPushHook {
+	if noPushHook {
 		args = append(args, "--no-verify")
-	}
-	if !options.Branch.IsEmpty() && provideBranch {
-		args = append(args, options.Branch.String())
 	}
 	return fc.Run("git", args...)
 }

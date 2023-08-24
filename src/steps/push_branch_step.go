@@ -37,11 +37,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 		return err
 	}
 	if step.ForceWithLease {
-		return run.Frontend.ForcePushBranch(git.PushArgs{
-			Branch:     step.Branch,
-			NoPushHook: step.NoPushHook,
-			// Remote:     remote(currentBranch, step.Branch),
-		})
+		return run.Frontend.ForcePushBranch(step.NoPushHook)
 	}
 	remote := remote(currentBranch, step.Branch)
 	if remote == domain.NoRemote {
