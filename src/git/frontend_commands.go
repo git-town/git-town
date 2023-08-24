@@ -102,6 +102,17 @@ func (fc *FrontendCommands) DeleteLastCommit() error {
 	return fc.Run("git", "reset", "--hard", "HEAD~1")
 }
 
+// PushBranch pushes the branch with the given name to origin.
+func (fc *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", remote.String())
+	args = append(args, branch.String())
+	return fc.Run("git", args...)
+}
+
 // DeleteLocalBranch removes the local branch with the given name.
 func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force bool) error {
 	args := []string{"branch", "-d", name.String()}
@@ -165,17 +176,6 @@ func (fc *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	return fc.Run("git", args...)
-}
-
-// PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, "-u", remote.String())
-	args = append(args, branch.String())
 	return fc.Run("git", args...)
 }
 
