@@ -83,6 +83,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
+	case "*ForcePushBranchStep":
+		return &steps.ForcePushBranchStep{}
 	case "*MergeStep":
 		return &steps.MergeStep{}
 	case "*PreserveCheckoutHistoryStep":
@@ -91,8 +93,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.PullBranchStep{}
 	case "*PushBranchAfterCurrentBranchSteps":
 		return &steps.PushBranchAfterCurrentBranchSteps{}
-	case "*PushBranchStep":
-		return &steps.PushBranchStep{}
+	case "*PushCurrentBranchStep":
+		return &steps.PushCurrentBranchStep{}
 	case "*PushTagsStep":
 		return &steps.PushTagsStep{}
 	case "*RebaseBranchStep":

@@ -261,7 +261,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name, NoPushHook: false})
 		case !isFeatureBranch:
 			fmt.Println("555555555555", args.branch)
-			list.Add(&steps.PushBranchStep{Branch: args.branch.Name, ForceWithLease: false, NoPushHook: false, Undoable: false})
+			list.Add(&steps.PushCurrentBranchStep{CurrentBranch: args.branch.Name, NoPushHook: false, Undoable: false})
 		default:
 			fmt.Println("666666666666")
 			pushFeatureBranchSteps(list, args.branch, args.syncStrategy, args.pushHook)
@@ -336,9 +336,9 @@ func updateCurrentPerennialBranchStep(list *runstate.StepListBuilder, otherBranc
 func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
 	case config.SyncStrategyMerge:
-		list.Add(&steps.PushBranchStep{Branch: branch.Name, NoPushHook: !pushHook, ForceWithLease: false, Undoable: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: !pushHook, Undoable: false})
 	case config.SyncStrategyRebase:
-		list.Add(&steps.PushBranchStep{Branch: branch.Name, ForceWithLease: true, NoPushHook: false, Undoable: false})
+		list.Add(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
