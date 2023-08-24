@@ -275,7 +275,7 @@ type syncBranchStepsArgs struct {
 	syncStrategy       config.SyncStrategy
 }
 
-// syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name
+// syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name.
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
@@ -283,7 +283,7 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.Branch
 	pullParentBranchOfCurrentFeatureBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
 }
 
-// syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name
+// syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
