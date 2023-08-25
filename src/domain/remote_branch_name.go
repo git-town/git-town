@@ -30,7 +30,7 @@ func isValidRemoteBranchName(value string) bool {
 
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (r RemoteBranchName) BranchName() BranchName {
-	return BranchName(r)
+	return NewBranchName(r.id)
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
@@ -51,6 +51,6 @@ func (r RemoteBranchName) Parts() (Remote, LocalBranchName) {
 // Implementation of the fmt.Stringer interface.
 func (r RemoteBranchName) String() string { return r.id }
 
-func (r RemoteBranchName) UnmarshalJSON(b []byte) error {
+func (r *RemoteBranchName) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, &r.id)
 }
