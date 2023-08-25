@@ -12,10 +12,14 @@ type LocalBranchName struct {
 }
 
 func NewLocalBranchName(id string) LocalBranchName {
-	if id == "" {
+	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")
 	}
 	return LocalBranchName{id}
+}
+
+func isValidLocalBranchName(value string) bool {
+	return len(value) > 0
 }
 
 // AtRemote provides the RemoteBranchName of this branch at the given remote.
