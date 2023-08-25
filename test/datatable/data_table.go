@@ -81,7 +81,7 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 		cells := []string{}
 		for col := range table.Cells[row] {
 			cell := table.Cells[row][col]
-			if strings.Contains(cell, "{{") {
+			for strings.Contains(cell, "{{") {
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
 				switch {

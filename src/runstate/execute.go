@@ -80,11 +80,11 @@ func Execute(args ExecuteArgs) error {
 			if err != nil {
 				return fmt.Errorf(messages.RunstateSaveProblem, err)
 			}
-			message := runErr.Error() + `
+			message := fmt.Sprintf(`%s while running %#v
 
 To abort, run "git-town abort".
 To continue after having resolved conflicts, run "git-town continue".
-`
+`, runErr.Error(), step)
 			if args.RunState.UnfinishedDetails.CanSkip {
 				message += `To continue by skipping the current branch, run "git-town skip".`
 			}

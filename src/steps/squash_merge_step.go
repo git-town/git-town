@@ -12,9 +12,10 @@ import (
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type SquashMergeStep struct {
-	Branch        domain.LocalBranchName
-	CommitMessage string
-	Parent        domain.LocalBranchName
+	Branch         domain.LocalBranchName
+	CommitMessage  string
+	Parent         domain.LocalBranchName
+	shaBeforeMerge domain.SHA
 	EmptyStep
 }
 
@@ -23,11 +24,7 @@ func (step *SquashMergeStep) CreateAbortSteps() []Step {
 }
 
 func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
-	currentSHA, err := backend.CurrentSHA()
-	if err != nil {
-		return []Step{}, err
-	}
-	return []Step{&RevertCommitStep{SHA: currentSHA}}, nil
+	return []Step{&RevertCommitStep{SHA: step.shaBeforeMerge}}, nil
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {
@@ -35,7 +32,12 @@ func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 }
 
 func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	err := run.Frontend.SquashMerge(step.Branch)
+	var err error
+	step.shaBeforeMerge, err = run.Backend.CurrentSHA()
+	if err != nil {
+		return err
+	}
+	err = run.Frontend.SquashMerge(step.Branch)
 	if err != nil {
 		return err
 	}

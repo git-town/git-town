@@ -64,25 +64,22 @@ Feature: display debug statistics
   @debug @this
   Scenario: undo
     Given I ran "git-town ship -m done"
+    And inspect the repo
     When I run "git-town undo --debug"
     Then it runs the commands
-      | BRANCH  | TYPE     | COMMAND                                        |
-      |         | backend  | git version                                    |
-      |         | backend  | git config -lz --local                         |
-      |         | backend  | git config -lz --global                        |
-      |         | backend  | git rev-parse --show-toplevel                  |
-      |         | backend  | git branch -vva                                |
-      |         | backend  | git config git-town-branch.feature.parent main |
-      | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
-      |         | frontend | git push -u origin feature                     |
-      |         | frontend | git revert {{ sha 'done' }}                    |
-      |         | backend  | git rev-list --left-right main...origin/main   |
-      | main    | frontend | git push                                       |
-      |         | frontend | git checkout feature                           |
-      |         | backend  | git rev-parse HEAD                             |
-      |         | backend  | git rev-parse HEAD                             |
-      | feature | frontend | git checkout main                              |
-      | main    | frontend | git checkout feature                           |
+      | BRANCH | TYPE     | COMMAND                                                                                  |
+      |        | backend  | git version                                                                              |
+      |        | backend  | git config -lz --local                                                                   |
+      |        | backend  | git config -lz --global                                                                  |
+      |        | backend  | git rev-parse --show-toplevel                                                            |
+      |        | backend  | git branch -vva                                                                          |
+      |        | backend  | git config git-town-branch.feature.parent main                                           |
+      | main   | frontend | git branch feature {{ sha 'feature commit' }}                                            |
+      |        | frontend | git push -u origin feature                                                               |
+      |        | backend  | git rev-parse origin/main                                                                |
+      | main   | frontend | git push --force-with-lease=main:{{ sha 'done' }} origin {{ sha 'Initial commit' }}:main |
+      |        | frontend | git revert {{ sha 'Initial commit' }}                                                    |
+      |        | backend  | git status                                                                               |
     And it prints:
       """
       Ran 16 shell commands.

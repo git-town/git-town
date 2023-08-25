@@ -34,7 +34,7 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
 
-  @this
+  # @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
