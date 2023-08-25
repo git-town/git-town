@@ -94,6 +94,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("SHIP STEP LIST", stepList.String())
 	runState := runstate.RunState{
 		Command:     "ship",
 		RunStepList: stepList,

@@ -57,6 +57,7 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
+	fmt.Println("UNDO STEP LIST", undoRunState.RunStepList.String())
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &undoRunState,
 		Run:       &repo.Runner,
