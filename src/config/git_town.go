@@ -132,7 +132,11 @@ func (gt *GitTown) Lineage() Lineage {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() domain.LocalBranchName {
-	return domain.NewLocalBranchName(gt.LocalOrGlobalConfigValue(KeyMainBranch))
+	mainBranch := gt.LocalOrGlobalConfigValue(KeyMainBranch)
+	if mainBranch == "" {
+		return domain.LocalBranchName{}
+	}
+	return domain.NewLocalBranchName(mainBranch)
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
