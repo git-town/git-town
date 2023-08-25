@@ -30,7 +30,7 @@ func isValidRemoteBranchName(value string) bool {
 
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (r RemoteBranchName) BranchName() BranchName {
-	return BranchName(r)
+	return NewBranchName(r.id)
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
