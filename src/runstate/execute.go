@@ -16,21 +16,7 @@ func Execute(args ExecuteArgs) error {
 	for {
 		step := args.RunState.RunStepList.Pop()
 		if step == nil {
-			args.RunState.MarkAsFinished()
-			if args.RunState.IsAbort || args.RunState.isUndo {
-				err := Delete(args.RootDir)
-				if err != nil {
-					return fmt.Errorf(messages.RunstateDeleteProblem, err)
-				}
-			} else {
-				err := Save(args.RunState, args.RootDir)
-				if err != nil {
-					return fmt.Errorf(messages.RunstateSaveProblem, err)
-				}
-			}
-			fmt.Println()
-			args.Run.Stats.PrintAnalysis()
-			return nil
+			return finished(args)
 		}
 		if typeName(step) == "*SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
@@ -97,6 +83,24 @@ To continue after having resolved conflicts, run "git-town continue".
 		}
 		args.RunState.UndoStepList.Prepend(undoSteps...)
 	}
+}
+
+func finished(args ExecuteArgs) error {
+	args.RunState.MarkAsFinished()
+	if args.RunState.IsAbort || args.RunState.isUndo {
+		err := Delete(args.RootDir)
+		if err != nil {
+			return fmt.Errorf(messages.RunstateDeleteProblem, err)
+		}
+	} else {
+		err := Save(args.RunState, args.RootDir)
+		if err != nil {
+			return fmt.Errorf(messages.RunstateSaveProblem, err)
+		}
+	}
+	fmt.Println()
+	args.Run.Stats.PrintAnalysis()
+	return nil
 }
 
 type ExecuteArgs struct {
