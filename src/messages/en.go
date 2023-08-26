@@ -89,6 +89,7 @@ const (
 	SquashCannotReadFile              = "cannot read squash message file %q: %w"
 	SquashCommitAuthorProblem         = "error getting squash commit author: %w"
 	SquashMessageProblem              = "cannot comment out the squash commit message: %w"
+	StepRunProblem                    = "%s while running %#v\n\nTo abort, run \"git-town abort\".\nTo continue after having resolved conflicts, run \"git-town continue\"."
 	UndoCreateStepProblem             = "cannot create undo step for %q: %w"
 	UndoNothingToDo                   = "nothing to undo"
 )
