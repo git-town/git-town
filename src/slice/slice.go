@@ -45,13 +45,29 @@ func Hoist[C comparable](list []C, element C) []C {
 	return append([]C{element}, result...)
 }
 
+// Pop removes and returns the last element of the given list.
+func PopFirst[C comparable](list []C) (element C, newList []C) { //nolint:ireturn // why can't I return a generic value here?!?
+	if len(list) == 0 {
+		panic("cannot pop an empty list")
+	}
+	if len(list) == 1 {
+		return list[0], []C{}
+	}
+	return list[0], list[1:]
+}
+
 // Remove returns a new slice which is the given slice with the given element removed.
-func Remove[C comparable](list []C, value C) []C {
+func Remove[C comparable](list []C, value C) (listWithoutValue []C, found bool) {
+	if len(list) == 0 {
+		return list, false
+	}
 	result := make([]C, 0, len(list)-1)
 	for l := range list {
-		if list[l] != value {
+		if list[l] == value {
+			found = true
+		} else {
 			result = append(result, list[l])
 		}
 	}
-	return result
+	return result, found
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -73,11 +74,52 @@ func TestSlice(t *testing.T) {
 		})
 	})
 
+	t.Run("PopFirst", func(t *testing.T) {
+		t.Parallel()
+		t.Run("list contains one element", func(t *testing.T) {
+			t.Parallel()
+			list := []int{1}
+			element, newList := slice.PopFirst(list)
+			assert.Equal(t, 1, element)
+			assert.Empty(t, newList)
+		})
+		t.Run("list contains multiple element", func(t *testing.T) {
+			t.Parallel()
+			list := []int{1, 2}
+			element, newList := slice.PopFirst(list)
+			assert.Equal(t, 1, element)
+			assert.Equal(t, []int{2}, newList)
+		})
+		t.Run("list is empty", func(t *testing.T) {
+			t.Parallel()
+			defer asserts.Paniced(t)
+			list := []int{}
+			_, _ = slice.PopFirst(list)
+		})
+	})
+
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"one", "two", "three"}
-		have := slice.Remove(give, "two")
-		want := []string{"one", "three"}
-		assert.Equal(t, have, want)
+		t.Run("list contains the element", func(t *testing.T) {
+			give := []string{"one", "two", "three"}
+			have, found := slice.Remove(give, "two")
+			assert.True(t, found)
+			want := []string{"one", "three"}
+			assert.Equal(t, have, want)
+		})
+		t.Run("list does not contain the element", func(t *testing.T) {
+			give := []string{"one", "two", "three"}
+			have, found := slice.Remove(give, "four")
+			assert.False(t, found)
+			want := []string{"one", "two", "three"}
+			assert.Equal(t, have, want)
+		})
+		t.Run("list is empty", func(t *testing.T) {
+			give := []string{}
+			have, found := slice.Remove(give, "something")
+			assert.False(t, found)
+			want := []string{}
+			assert.Equal(t, have, want)
+		})
 	})
 }
