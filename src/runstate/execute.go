@@ -63,7 +63,7 @@ func finished(args ExecuteArgs) error {
 func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
 	if step.ShouldAutomaticallyAbortOnError() {
-		autoAbort(step, runErr, args)
+		return autoAbort(step, runErr, args)
 	}
 	args.RunState.RunStepList.Prepend(step.CreateContinueSteps()...)
 	err := args.RunState.MarkAsUnfinished(&args.Run.Backend)
@@ -99,7 +99,7 @@ To continue after having resolved conflicts, run "git-town continue".
 
 // autoAbort is called when a step that produced an error triggers an auto-abort.
 func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
-	cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
+	cli.PrintError(fmt.Errorf(messages.RunAutoAborting, runErr.Error()))
 	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
 		RunState:  &abortRunState,
