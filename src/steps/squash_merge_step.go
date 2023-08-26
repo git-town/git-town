@@ -23,7 +23,7 @@ func (step *SquashMergeStep) CreateAbortSteps() []Step {
 	return []Step{&DiscardOpenChangesStep{}}
 }
 
-func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
+func (step *SquashMergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	return []Step{&RevertCommitStep{SHA: step.shaBeforeMerge}}, nil
 }
 

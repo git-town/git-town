@@ -12,48 +12,33 @@ type Snapshot struct {
 	Config   map[string]string                // the Git configuration that exists in this repo
 }
 
+// Diff returns the difference between this and the given Snapshot.
 func (s Snapshot) Diff(other Snapshot) Diff {
-	branchesAdded := map[domain.BranchName]domain.SHA{}
-	branchesRemoved := map[domain.BranchName]domain.SHA{}
-	branchesUpdated := map[domain.BranchName]BranchUpdate{}
-	configAdded := map[string]string{}
-	configRemoved := map[string]string{}
-	configUpdated := map[string]ConfigUpdate{}
+	result := NewDiff()
 	sBranches := maps.Keys(s.Branches)
 	otherBranches := maps.Keys(other.Branches)
 	for len(sBranches) > 0 {
-		var sBranch domain.BranchName
-		sBranch, sBranches = slice.PopFirst(sBranches)
-		var otherContainsSBranch bool
-		otherBranches, otherContainsSBranch = slice.Remove(otherBranches, sBranch)
-		if otherContainsSBranch {
-			// sBranch was not added or removed, find out if it was modified
-			sSHA := s.Branches[sBranch]
-			otherSHA := other.Branches[sBranch]
+		var branch domain.BranchName
+		branch, sBranches = slice.PopFirst(sBranches)
+		var otherContainsBranch bool
+		otherBranches, otherContainsBranch = slice.Remove(otherBranches, branch)
+		if otherContainsBranch {
+			sSHA := s.Branches[branch]
+			otherSHA := other.Branches[branch]
 			if sSHA != otherSHA {
-				// sBranch was modified
-				branchesUpdated[sBranch] = BranchUpdate{
+				result.BranchesUpdated[branch] = BranchUpdate{
 					OriginalSHA: otherSHA,
 					FinalSHA:    sSHA,
 				}
 			}
 		} else {
-			// sBranch was added
-			branchesAdded[sBranch] = s.Branches[sBranch]
+			result.BranchesAdded[branch] = s.Branches[branch]
 		}
 	}
-	// here sBranches should be empty, otherBranches contains the branches that were removed
 	for _, removedBranch := range otherBranches {
-		branchesRemoved[removedBranch] = other.Branches[removedBranch]
+		result.BranchesRemoved[removedBranch] = other.Branches[removedBranch]
 	}
-	return Diff{
-		BranchesAdded:   branchesAdded,
-		BranchesRemoved: branchesRemoved,
-		BranchesUpdated: branchesUpdated,
-		ConfigAdded:     configAdded,
-		ConfigRemoved:   configRemoved,
-		ConfigUpdated:   configUpdated,
-	}
+	return result
 }
 
 // Diff represents the changes that a Git Town command made to the repository.
@@ -64,6 +49,18 @@ type Diff struct {
 	ConfigAdded     map[string]string                  // Git configuration entries added by this Git Town command, key = name, value = value
 	ConfigRemoved   map[string]string                  // Git configuration entries removed by this Git Town command
 	ConfigUpdated   map[string]ConfigUpdate            // Git configuration entries changed by this Git Town command, key = name
+}
+
+// NewDiff returns an empty Diff instance.
+func NewDiff() Diff {
+	return Diff{
+		BranchesAdded:   map[domain.BranchName]domain.SHA{},
+		BranchesRemoved: map[domain.BranchName]domain.SHA{},
+		BranchesUpdated: map[domain.BranchName]BranchUpdate{},
+		ConfigAdded:     map[string]string{},
+		ConfigRemoved:   map[string]string{},
+		ConfigUpdated:   map[string]ConfigUpdate{},
+	}
 }
 
 // BranchUpdate describes the update that a Git Town command made to a Git branch.
