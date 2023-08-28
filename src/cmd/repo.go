@@ -60,7 +60,7 @@ func repo(debug bool) error {
 	return nil
 }
 
-func determineRepoConfig(repo *execute.RepoData) (*repoConfig, bool, error) {
+func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, bool, error) {
 	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,

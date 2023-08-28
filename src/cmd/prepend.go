@@ -93,7 +93,7 @@ type prependConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.RepoData) (*prependConfig, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
