@@ -130,7 +130,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.RepoData) (*shipConfig, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

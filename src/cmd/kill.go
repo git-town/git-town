@@ -78,7 +78,7 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

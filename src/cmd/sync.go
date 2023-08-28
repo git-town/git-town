@@ -99,7 +99,7 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.RepoData) (*syncConfig, bool, error) {
+func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

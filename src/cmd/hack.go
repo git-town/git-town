@@ -76,7 +76,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *execute.RepoData) (*appendConfig, bool, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

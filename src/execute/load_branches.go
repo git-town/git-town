@@ -53,7 +53,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 }
 
 type LoadBranchesArgs struct {
-	Repo                  *RepoData
+	Repo                  *OpenRepoResult
 	Fetch                 bool
 	HandleUnfinishedState bool
 	ValidateIsConfigured  bool
