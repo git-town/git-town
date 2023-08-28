@@ -33,7 +33,7 @@ func syncStrategyCommand() *cobra.Command {
 }
 
 func syncStrategy(args []string, global, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  true,

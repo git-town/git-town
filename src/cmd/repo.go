@@ -41,7 +41,7 @@ func repoCommand() *cobra.Command {
 }
 
 func repo(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
