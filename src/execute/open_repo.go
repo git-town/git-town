@@ -78,8 +78,10 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		err = errors.New(messages.DirCurrentProblem)
 		return
 	}
-	if currentDirectory != rootDir {
-		err = prodRunner.Frontend.NavigateToDir(rootDir)
+	if args.ValidateGitRepo {
+		if currentDirectory != rootDir {
+			err = prodRunner.Frontend.NavigateToDir(rootDir)
+		}
 	}
 	return OpenRepoResult{
 		Runner:          prodRunner,

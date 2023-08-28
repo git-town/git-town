@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
-	"golang.org/x/exp/maps"
 )
 
 // PartialSnapshot is a snapshot of just the repo, without branches.
@@ -44,13 +43,12 @@ func NewSnapshot(partialSnapshot PartialSnapshot, branchInfos domain.BranchInfos
 // Diff returns the difference between this and the given Snapshot.
 func (s Snapshot) Diff(other Snapshot) Diff {
 	result := NewDiff()
-	sBranches := s.Branches
-	otherBranches := maps.Keys(other.Branches)
+	sBranches := s.Branches.Names()
+	otherBranches := other.Branches.Names()
 	for len(sBranches) > 0 {
-		var branch domain.BranchName
+		var branch domain.LocalBranchName
 		branch, sBranches = slice.PopFirst(sBranches)
-		var otherContainsBranch bool
-		otherBranches, otherContainsBranch = slice.Remove(otherBranches, branch)
+		otherBranches, otherContainsBranch := slice.Remove(otherBranches, branch)
 		if otherContainsBranch {
 			sSHA := s.Branches[branch]
 			otherSHA := other.Branches[branch]
