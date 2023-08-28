@@ -61,8 +61,9 @@ func runAppend(arg string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "append",
-		RunStepList: stepList,
+		Command:      "append",
+		InitialState: runstate.FullSnapshot(config.branches.All, repo.Runner.Config.Git),
+		RunStepList:  stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &runState,

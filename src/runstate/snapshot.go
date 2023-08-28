@@ -1,6 +1,7 @@
 package runstate
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"golang.org/x/exp/maps"
@@ -8,14 +9,24 @@ import (
 
 // Snapshot represents the state of a repository at a particular point in time.
 type Snapshot struct {
-	Branches map[domain.BranchName]domain.SHA // the branches that exist in this repo
-	Config   map[string]string                // the Git configuration that exists in this repo
+	Branches     domain.BranchInfos    // the branches that exist in this repo
+	GlobalConfig map[config.Key]string // the global Git configuration
+	LocalConfig  map[config.Key]string // the local Git configuration
+	Cwd          string                // the current working directory
+}
+
+func FullSnapshot(branchInfos domain.BranchInfos, git config.Git) Snapshot {
+	return Snapshot{
+		Branches:     branchInfos,
+		GlobalConfig: git.GlobalConfig(),
+		LocalConfig:  git.LocalConfig(),
+	}
 }
 
 // Diff returns the difference between this and the given Snapshot.
 func (s Snapshot) Diff(other Snapshot) Diff {
 	result := NewDiff()
-	sBranches := maps.Keys(s.Branches)
+	sBranches := s.Branches
 	otherBranches := maps.Keys(other.Branches)
 	for len(sBranches) > 0 {
 		var branch domain.BranchName
@@ -41,7 +52,8 @@ func (s Snapshot) Diff(other Snapshot) Diff {
 	return result
 }
 
-// Diff represents the changes that a Git Town command made to the repository.
+// Diff represents the changes that a Git Town command made to the repository,
+// or the changes that need to be made to a Git repo to change it from one Snapshot to another Snapshot.
 type Diff struct {
 	BranchesAdded   map[domain.BranchName]domain.SHA   // branches added by this Git Town command, SHA is the SHA after the command ran
 	BranchesRemoved map[domain.BranchName]domain.SHA   // branches removed by this Git Town command, SHA is the SHA before the command ran

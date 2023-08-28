@@ -12,6 +12,7 @@ import (
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
+	// startSnapshot :=
 	for {
 		step := args.RunState.RunStepList.Pop()
 		if step == nil {
