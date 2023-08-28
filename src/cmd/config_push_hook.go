@@ -35,7 +35,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func pushHook(args []string, global, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  true,
