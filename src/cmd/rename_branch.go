@@ -92,7 +92,7 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.RepoData) (*renameBranchConfig, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

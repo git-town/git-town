@@ -70,7 +70,7 @@ type pruneBranchesConfig struct {
 	previousBranch   domain.LocalBranchName
 }
 
-func determinePruneBranchesConfig(repo *execute.RepoData) (*pruneBranchesConfig, bool, error) {
+func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

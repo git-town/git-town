@@ -99,7 +99,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfig, bool, error) {
+func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,

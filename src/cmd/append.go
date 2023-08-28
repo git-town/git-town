@@ -90,7 +90,7 @@ type appendConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.RepoData) (*appendConfig, bool, error) {
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
