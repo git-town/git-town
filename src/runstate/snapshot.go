@@ -7,19 +7,37 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-// Snapshot represents the state of a repository at a particular point in time.
-type Snapshot struct {
-	Branches     domain.BranchInfos    // the branches that exist in this repo
+// PartialSnapshot is a snapshot of just the repo, without branches.
+type PartialSnapshot struct {
+	Cwd          string                // the current working directory
 	GlobalConfig map[config.Key]string // the global Git configuration
 	LocalConfig  map[config.Key]string // the local Git configuration
-	Cwd          string                // the current working directory
 }
 
-func FullSnapshot(branchInfos domain.BranchInfos, git config.Git) Snapshot {
-	return Snapshot{
-		Branches:     branchInfos,
+func NewPartialSnapshot(git config.Git, cwd string) PartialSnapshot {
+	return PartialSnapshot{
+		Cwd:          cwd,
 		GlobalConfig: git.GlobalConfig(),
 		LocalConfig:  git.LocalConfig(),
+	}
+}
+
+func (ps PartialSnapshot) Diff(other PartialSnapshot) PartialDiff {
+	result := NewPartialDiff()
+	// TODO: diff here
+	return result
+}
+
+// Snapshot represents the state of a Git repository at a particular point in time.
+type Snapshot struct {
+	PartialSnapshot
+	Branches domain.BranchInfos // the branches that exist in this repo
+}
+
+func NewSnapshot(partialSnapshot PartialSnapshot, branchInfos domain.BranchInfos) Snapshot {
+	return Snapshot{
+		PartialSnapshot: partialSnapshot,
+		Branches:        branchInfos,
 	}
 }
 
@@ -52,26 +70,36 @@ func (s Snapshot) Diff(other Snapshot) Diff {
 	return result
 }
 
+type PartialDiff struct {
+	ConfigAdded   map[string]string       // Git configuration entries added by this Git Town command, key = name, value = value
+	ConfigRemoved map[string]string       // Git configuration entries removed by this Git Town command
+	ConfigUpdated map[string]ConfigUpdate // Git configuration entries changed by this Git Town command, key = name
+}
+
+func NewPartialDiff() PartialDiff {
+	return PartialDiff{
+		ConfigAdded:   map[string]string{},
+		ConfigRemoved: map[string]string{},
+		ConfigUpdated: map[string]ConfigUpdate{},
+	}
+}
+
 // Diff represents the changes that a Git Town command made to the repository,
 // or the changes that need to be made to a Git repo to change it from one Snapshot to another Snapshot.
 type Diff struct {
+	PartialDiff
 	BranchesAdded   map[domain.BranchName]domain.SHA   // branches added by this Git Town command, SHA is the SHA after the command ran
 	BranchesRemoved map[domain.BranchName]domain.SHA   // branches removed by this Git Town command, SHA is the SHA before the command ran
 	BranchesUpdated map[domain.BranchName]BranchUpdate // branches changed by this Git Town command
-	ConfigAdded     map[string]string                  // Git configuration entries added by this Git Town command, key = name, value = value
-	ConfigRemoved   map[string]string                  // Git configuration entries removed by this Git Town command
-	ConfigUpdated   map[string]ConfigUpdate            // Git configuration entries changed by this Git Town command, key = name
 }
 
 // NewDiff returns an empty Diff instance.
 func NewDiff() Diff {
 	return Diff{
+		PartialDiff:     NewPartialDiff(),
 		BranchesAdded:   map[domain.BranchName]domain.SHA{},
 		BranchesRemoved: map[domain.BranchName]domain.SHA{},
 		BranchesUpdated: map[domain.BranchName]BranchUpdate{},
-		ConfigAdded:     map[string]string{},
-		ConfigRemoved:   map[string]string{},
-		ConfigUpdated:   map[string]ConfigUpdate{},
 	}
 }
 
