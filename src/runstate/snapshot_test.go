@@ -16,17 +16,24 @@ func TestSnapshot(t *testing.T) {
 		t.Run("branches added", func(t *testing.T) {
 			t.Parallel()
 			before := runstate.Snapshot{
-				Branches: map[domain.BranchName]domain.SHA{
-					domain.NewBranchName("branch-1"): domain.NewSHA("111111"),
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-1"),
+						InitialSHA: domain.NewSHA("111111"),
+					},
 				},
-				Config: map[string]string{},
 			}
 			after := runstate.Snapshot{
-				Branches: map[domain.BranchName]domain.SHA{
-					domain.NewBranchName("branch-1"): domain.NewSHA("111111"),
-					domain.NewBranchName("branch-2"): domain.NewSHA("222222"),
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-1"),
+						InitialSHA: domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-2"),
+						InitialSHA: domain.NewSHA("222222"),
+					},
 				},
-				Config: map[string]string{},
 			}
 			have := after.Diff(before)
 			want := runstate.Diff{
@@ -35,9 +42,11 @@ func TestSnapshot(t *testing.T) {
 					domain.NewBranchName("branch-2"): domain.NewSHA("222222"),
 				},
 				BranchesRemoved: map[domain.BranchName]domain.SHA{},
-				ConfigUpdated:   map[string]runstate.ConfigUpdate{},
-				ConfigAdded:     map[string]string{},
-				ConfigRemoved:   map[string]string{},
+				PartialDiff: runstate.PartialDiff{
+					ConfigUpdated: map[string]runstate.ConfigUpdate{},
+					ConfigAdded:   map[string]string{},
+					ConfigRemoved: map[string]string{},
+				},
 			}
 			fmt.Printf("WANT: %#v\n", want)
 			fmt.Printf("HAVE: %#v\n", have)
