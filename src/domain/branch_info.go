@@ -10,6 +10,7 @@ type BranchInfo struct {
 	Name LocalBranchName
 
 	// InitialSHA contains the SHA that this branch had locally before Git Town ran.
+	// TODO: rename to LocalSHA
 	InitialSHA SHA
 
 	// SyncStatus of the branch

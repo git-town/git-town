@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/slice"
 )
 
-// PartialSnapshot is a snapshot of just the repo, without branches.
+// PartialSnapshot is a snapshot of just the repo, without looking at branches.
 type PartialSnapshot struct {
 	Cwd          string                // the current working directory
 	GlobalConfig map[config.Key]string // the global Git configuration
@@ -40,30 +40,31 @@ func NewSnapshot(partialSnapshot PartialSnapshot, branchInfos domain.BranchInfos
 	}
 }
 
-// Diff returns the difference between this and the given Snapshot.
+// Diff returns the difference between this Snapshot and the given other Snapshot.
 func (s Snapshot) Diff(other Snapshot) Diff {
 	result := NewDiff()
-	sBranches := s.Branches.Names()
-	otherBranches := other.Branches.Names()
-	for len(sBranches) > 0 {
-		var branch domain.LocalBranchName
-		branch, sBranches = slice.PopFirst(sBranches)
-		otherBranches, otherContainsBranch := slice.Remove(otherBranches, branch)
+	thisBranchNames := s.Branches.Names()
+	otherBranchNames := other.Branches.Names()
+	for len(thisBranchNames) > 0 {
+		var thisBranchName domain.LocalBranchName
+		thisBranchName, thisBranchNames = slice.PopFirst(thisBranchNames)
+		thisSHA := s.Branches.FindLocalBranch(thisBranchName).InitialSHA
+		var otherContainsBranch bool
+		otherBranchNames, otherContainsBranch = slice.Remove(otherBranchNames, thisBranchName)
 		if otherContainsBranch {
-			sSHA := s.Branches[branch]
-			otherSHA := other.Branches[branch]
-			if sSHA != otherSHA {
-				result.BranchesUpdated[branch] = BranchUpdate{
+			otherSHA := other.Branches.FindLocalBranch(thisBranchName).InitialSHA
+			if thisSHA != otherSHA {
+				result.BranchesUpdated[thisBranchName.BranchName()] = BranchUpdate{
 					OriginalSHA: otherSHA,
-					FinalSHA:    sSHA,
+					FinalSHA:    thisSHA,
 				}
 			}
 		} else {
-			result.BranchesAdded[branch] = s.Branches[branch]
+			result.BranchesAdded[thisBranchName.BranchName()] = thisSHA
 		}
 	}
-	for _, removedBranch := range otherBranches {
-		result.BranchesRemoved[removedBranch] = other.Branches[removedBranch]
+	for _, removedBranch := range otherBranchNames {
+		result.BranchesRemoved[removedBranch.BranchName()] = other.Branches.FindLocalBranch(removedBranch).InitialSHA
 	}
 	return result
 }
