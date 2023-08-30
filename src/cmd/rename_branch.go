@@ -157,26 +157,26 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name.Location()})
-	if config.branches.Initial == config.oldBranch.Name {
+	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
+	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
 	if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.Name})
+		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.LocalName})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		lineage := config.lineage
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.Name, Parent: lineage.Parent(config.oldBranch.Name)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.Name)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.LocalName, Parent: lineage.Parent(config.oldBranch.LocalName)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.LocalName)})
 	}
-	for _, child := range config.lineage.Children(config.oldBranch.Name) {
+	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
 		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.Name, NoPushHook: false})
+		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.LocalName, NoPushHook: false})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch.Location(), Force: false})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.LocalName, Parent: config.mainBranch.Location(), Force: false})
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
