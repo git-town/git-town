@@ -53,15 +53,6 @@ func LoadGit(runner runner, global bool) map[Key]string {
 	return result
 }
 
-// NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner runner) Git {
-	return Git{
-		localConfigCache:  LoadGit(runner, false),
-		globalConfigCache: LoadGit(runner, true),
-		runner:            runner,
-	}
-}
-
 // GlobalConfig provides the entire global Git configuration
 func (g *Git) GlobalConfig() map[Key]string {
 	return g.globalConfigCache

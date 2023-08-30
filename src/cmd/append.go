@@ -91,7 +91,7 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
-	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
+	snapshot, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -112,19 +112,19 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if fc.Err != nil {
 		return nil, false, fc.Err
 	}
-	if branches.All.HasLocalBranch(targetBranch) {
+	if snapshot.All.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
+	if snapshot.All.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
-	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+	updated, err := validate.KnowsBranchAncestors(snapshot.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
-		AllBranches:   branches.All,
+		AllBranches:   snapshot.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Types,
+		BranchTypes:   snapshot.Types,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
@@ -133,12 +133,12 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if updated {
 		lineage = repo.Runner.Config.Lineage() // refresh lineage after ancestry changes
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
-	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	branchNamesToSync := lineage.BranchAndAncestors(snapshot.Initial)
+	branchesToSync := fc.BranchesSyncStatus(snapshot.All.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	return &appendConfig{
-		branches:            branches,
+		branches:            snapshot,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
@@ -146,7 +146,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
-		parentBranch:        branches.Initial,
+		parentBranch:        snapshot.Initial,
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,

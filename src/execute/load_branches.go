@@ -51,7 +51,8 @@ func LoadSnapshot(args LoadBranchesArgs) (runstate.Snapshot, bool, error) {
 		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
 	}
 	return runstate.Snapshot{
-		PartialSnapshot: args.Repo.,
+		PartialSnapshot: runstate.NewPartialSnapshot(args.Repo.Runner.Config.Git),
+		Branches:        branches.All,
 	}, false, err
 }
 
