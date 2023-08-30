@@ -6,12 +6,11 @@ import (
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
-	// Name contains the local name of the branch.
-	Name LocalBranchName
+	// LocalName contains the local name of the branch.
+	LocalName LocalBranchName
 
-	// InitialSHA contains the SHA that this branch had locally before Git Town ran.
-	// TODO: rename to LocalSHA
-	InitialSHA SHA
+	// LocalSHA contains the SHA that this branch had locally before Git Town ran.
+	LocalSHA SHA
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus

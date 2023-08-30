@@ -14,7 +14,7 @@ type BranchInfos []BranchInfo
 // IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
 func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, branch := range bs {
-		if branch.Name == localBranch {
+		if branch.LocalName == localBranch {
 			return true
 		}
 	}
@@ -57,7 +57,7 @@ func (bs BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 // FindLocalBranch provides the branch with the given name if one exists.
 func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
 	for bi, branch := range bs {
-		if branch.Name == branchName {
+		if branch.LocalName == branchName {
 			return &bs[bi]
 		}
 	}
@@ -79,8 +79,8 @@ func (bs BranchInfos) FindLocalBranchWithTracking(remoteBranch RemoteBranchName)
 func (bs BranchInfos) Names() LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(bs))
 	for _, branch := range bs {
-		if !branch.Name.IsEmpty() {
-			result = append(result, branch.Name)
+		if !branch.LocalName.IsEmpty() {
+			result = append(result, branch.LocalName)
 		}
 	}
 	return result
@@ -89,7 +89,7 @@ func (bs BranchInfos) Names() LocalBranchNames {
 func (bs BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 	result := BranchInfos{}
 	for _, branch := range bs {
-		if branch.Name != branchName {
+		if branch.LocalName != branchName {
 			result = append(result, branch)
 		}
 	}
