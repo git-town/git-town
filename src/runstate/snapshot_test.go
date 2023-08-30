@@ -1,7 +1,6 @@
 package runstate_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -49,10 +48,9 @@ func TestSnapshot(t *testing.T) {
 				BranchesRemoved: map[domain.BranchName]domain.SHA{},
 				PartialDiff:     runstate.NewPartialDiff(),
 			}
-			fmt.Printf("WANT: %#v\n", want)
-			fmt.Printf("HAVE: %#v\n", have)
 			assert.Equal(t, want, have)
 		})
+
 		t.Run("branches removed", func(t *testing.T) {
 			t.Parallel()
 			before := runstate.Snapshot{
@@ -89,10 +87,9 @@ func TestSnapshot(t *testing.T) {
 				},
 				PartialDiff: runstate.NewPartialDiff(),
 			}
-			fmt.Printf("WANT: %#v\n", want)
-			fmt.Printf("HAVE: %#v\n", have)
 			assert.Equal(t, want, have)
 		})
+
 		t.Run("branches updated", func(t *testing.T) {
 			t.Parallel()
 			before := runstate.Snapshot{
@@ -130,7 +127,7 @@ func TestSnapshot(t *testing.T) {
 			have := after.Diff(before)
 			want := runstate.Diff{
 				BranchesUpdated: map[domain.BranchName]runstate.BranchUpdate{
-					domain.NewBranchName("branch-2"): runstate.BranchUpdate{
+					domain.NewBranchName("branch-2"): {
 						OriginalSHA: domain.NewSHA("222222"),
 						FinalSHA:    domain.NewSHA("444444"),
 					},
@@ -139,10 +136,9 @@ func TestSnapshot(t *testing.T) {
 				BranchesRemoved: map[domain.BranchName]domain.SHA{},
 				PartialDiff:     runstate.NewPartialDiff(),
 			}
-			fmt.Printf("WANT: %#v\n", want)
-			fmt.Printf("HAVE: %#v\n", have)
 			assert.Equal(t, want, have)
 		})
+
 		t.Run("config added", func(t *testing.T) {
 			t.Parallel()
 		})
