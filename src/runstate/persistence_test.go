@@ -30,7 +30,19 @@ func TestSanitizePath(t *testing.T) {
 		runState := runstate.RunState{
 			AbortStepList: runstate.StepList{},
 			Command:       "command",
-			IsAbort:       true,
+			InitialState: runstate.Snapshot{
+				PartialSnapshot: runstate.PartialSnapshot{},
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-1"),
+						InitialSHA: domain.NewSHA("111111"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("222222"),
+					},
+				},
+			},
+			IsAbort: true,
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
@@ -149,7 +161,15 @@ func TestSanitizePath(t *testing.T) {
     "Cwd": "",
     "GlobalConfig": null,
     "LocalConfig": null,
-    "Branches": null
+    "Branches": [
+      {
+        "Name": "branch-1",
+        "InitialSHA": "111111",
+        "SyncStatus": "up to date",
+        "RemoteName": "origin/branch-1",
+        "RemoteSHA": "222222"
+      }
+    ]
   },
   "IsAbort": true,
   "RunStepList": [

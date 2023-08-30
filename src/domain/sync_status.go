@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -31,4 +32,14 @@ func (s SyncStatus) IsLocal() bool {
 		return false
 	}
 	panic(fmt.Sprintf("uncaptured sync status: %v", s))
+}
+
+// MarshalJSON is used when serializing this LocalBranchName to JSON.
+func (s SyncStatus) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.name)
+}
+
+// UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
+func (s *SyncStatus) UnmarshalJSON(ba []byte) error {
+	return json.Unmarshal(ba, &s.name)
 }
