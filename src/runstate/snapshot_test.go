@@ -18,8 +18,8 @@ func TestSnapshot(t *testing.T) {
 			before := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						Name:       domain.NewLocalBranchName("branch-2"),
+						InitialSHA: domain.NewSHA("222222"),
 					},
 				},
 			}
@@ -43,7 +43,7 @@ func TestSnapshot(t *testing.T) {
 			want := runstate.Diff{
 				BranchesUpdated: map[domain.BranchName]runstate.BranchUpdate{},
 				BranchesAdded: map[domain.BranchName]domain.SHA{
-					domain.NewBranchName("branch-2"): domain.NewSHA("222222"),
+					domain.NewBranchName("branch-1"): domain.NewSHA("111111"),
 					domain.NewBranchName("branch-3"): domain.NewSHA("333333"),
 				},
 				BranchesRemoved: map[domain.BranchName]domain.SHA{},
