@@ -41,15 +41,15 @@ func TestCollector(t *testing.T) {
 			fc := failure.Collector{}
 			syncStatuses := domain.BranchInfos{
 				{
-					Name:       domain.NewLocalBranchName("branch1"),
-					InitialSHA: domain.SHA{},
+					LocalName:  domain.NewLocalBranchName("branch1"),
+					LocalSHA:   domain.SHA{},
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.SHA{},
 				},
 				{
-					Name:       domain.NewLocalBranchName("branch2"),
-					InitialSHA: domain.SHA{},
+					LocalName:  domain.NewLocalBranchName("branch2"),
+					LocalSHA:   domain.SHA{},
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.SHA{},
