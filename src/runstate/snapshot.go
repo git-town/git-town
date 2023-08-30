@@ -9,14 +9,14 @@ import (
 // PartialSnapshot is a snapshot of just the repo, without looking at branches.
 type PartialSnapshot struct {
 	Cwd             string                // the current working directory
-	GlobalGitConfig map[config.Key]string // the global Git configuration at the time this snapshot was taken
-	LocalGitConfig  map[config.Key]string // the local Git configuration at the time this snapshot was taken
+	GlobalGitConfig map[config.Key]string // a copy of the global Git configuration that was active at the time this snapshot was taken
+	LocalGitConfig  map[config.Key]string // a copy of the local Git configuration that was active at the time this snapshot was taken
 }
 
 func NewPartialSnapshot(git config.Git, cwd string) PartialSnapshot {
 	return PartialSnapshot{
 		Cwd:             cwd,
-		GlobalGitConfig: maps.Copy(git.GlobalConfig())
+		GlobalGitConfig: maps.Copy(git.GlobalConfig()),
 		LocalGitConfig:  git.LocalConfig(),
 	}
 }
