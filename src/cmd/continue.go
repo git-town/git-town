@@ -61,7 +61,7 @@ func runContinue(debug bool) error {
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, bool, error) {
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,

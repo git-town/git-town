@@ -79,7 +79,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, bool, error) {
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,

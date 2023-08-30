@@ -100,7 +100,7 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, bool, error) {
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
