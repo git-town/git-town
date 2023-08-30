@@ -17,24 +17,24 @@ func TestSnapshot(t *testing.T) {
 			before := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("222222"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("222222"),
 					},
 				},
 			}
 			after := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						LocalName: domain.NewLocalBranchName("branch-1"),
+						LocalSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("222222"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("222222"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-3"),
-						InitialSHA: domain.NewSHA("333333"),
+						LocalName: domain.NewLocalBranchName("branch-3"),
+						LocalSHA:  domain.NewSHA("333333"),
 					},
 				},
 			}
@@ -56,24 +56,24 @@ func TestSnapshot(t *testing.T) {
 			before := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						LocalName: domain.NewLocalBranchName("branch-1"),
+						LocalSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("222222"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("222222"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-3"),
-						InitialSHA: domain.NewSHA("333333"),
+						LocalName: domain.NewLocalBranchName("branch-3"),
+						LocalSHA:  domain.NewSHA("333333"),
 					},
 				},
 			}
 			after := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("222222"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("222222"),
 					},
 				},
 			}
@@ -95,32 +95,32 @@ func TestSnapshot(t *testing.T) {
 			before := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						LocalName: domain.NewLocalBranchName("branch-1"),
+						LocalSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("222222"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("222222"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-3"),
-						InitialSHA: domain.NewSHA("333333"),
+						LocalName: domain.NewLocalBranchName("branch-3"),
+						LocalSHA:  domain.NewSHA("333333"),
 					},
 				},
 			}
 			after := runstate.Snapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						LocalName: domain.NewLocalBranchName("branch-1"),
+						LocalSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-2"),
-						InitialSHA: domain.NewSHA("444444"),
+						LocalName: domain.NewLocalBranchName("branch-2"),
+						LocalSHA:  domain.NewSHA("444444"),
 					},
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-3"),
-						InitialSHA: domain.NewSHA("333333"),
+						LocalName: domain.NewLocalBranchName("branch-3"),
+						LocalSHA:  domain.NewSHA("333333"),
 					},
 				},
 			}

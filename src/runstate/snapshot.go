@@ -48,11 +48,11 @@ func (s Snapshot) Diff(other Snapshot) Diff {
 	for len(thisBranchNames) > 0 {
 		var thisBranchName domain.LocalBranchName
 		thisBranchName, thisBranchNames = slice.PopFirst(thisBranchNames)
-		thisSHA := s.Branches.FindLocalBranch(thisBranchName).InitialSHA
+		thisSHA := s.Branches.FindLocalBranch(thisBranchName).LocalSHA
 		var otherContainsBranch bool
 		otherBranchNames, otherContainsBranch = slice.Remove(otherBranchNames, thisBranchName)
 		if otherContainsBranch {
-			otherSHA := other.Branches.FindLocalBranch(thisBranchName).InitialSHA
+			otherSHA := other.Branches.FindLocalBranch(thisBranchName).LocalSHA
 			if thisSHA != otherSHA {
 				result.BranchesUpdated[thisBranchName.BranchName()] = BranchUpdate{
 					OriginalSHA: otherSHA,
@@ -64,7 +64,7 @@ func (s Snapshot) Diff(other Snapshot) Diff {
 		}
 	}
 	for _, removedBranch := range otherBranchNames {
-		result.BranchesRemoved[removedBranch.BranchName()] = other.Branches.FindLocalBranch(removedBranch).InitialSHA
+		result.BranchesRemoved[removedBranch.BranchName()] = other.Branches.FindLocalBranch(removedBranch).LocalSHA
 	}
 	return result
 }

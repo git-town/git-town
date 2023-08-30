@@ -34,8 +34,8 @@ func TestSanitizePath(t *testing.T) {
 				PartialSnapshot: runstate.PartialSnapshot{},
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						Name:       domain.NewLocalBranchName("branch-1"),
-						InitialSHA: domain.NewSHA("111111"),
+						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalSHA:   domain.NewSHA("111111"),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
@@ -163,8 +163,8 @@ func TestSanitizePath(t *testing.T) {
     "LocalConfig": null,
     "Branches": [
       {
-        "Name": "branch-1",
-        "InitialSHA": "111111",
+        "LocalName": "branch-1",
+        "LocalSHA": "111111",
         "SyncStatus": "up to date",
         "RemoteName": "origin/branch-1",
         "RemoteSHA": "222222"
