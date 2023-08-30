@@ -3,7 +3,6 @@ package runstate
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"golang.org/x/exp/maps"
 )
 
 // PartialSnapshot is a snapshot of just the repo, without looking at branches.
@@ -16,8 +15,8 @@ type PartialSnapshot struct {
 func NewPartialSnapshot(git config.Git, cwd string) PartialSnapshot {
 	return PartialSnapshot{
 		Cwd:             cwd,
-		GlobalGitConfig: maps.Copy(git.GlobalConfig()),
-		LocalGitConfig:  git.LocalConfig(),
+		GlobalGitConfig: git.GlobalConfigCopy(),
+		LocalGitConfig:  git.LocalConfigCopy(),
 	}
 }
 

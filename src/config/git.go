@@ -3,6 +3,8 @@ package config
 import (
 	"regexp"
 	"strings"
+
+	"golang.org/x/exp/maps"
 )
 
 // Git manages configuration data stored in Git metadata.
@@ -53,9 +55,11 @@ func LoadGit(runner runner, global bool) map[Key]string {
 	return result
 }
 
-// GlobalConfig provides the entire global Git configuration
-func (g *Git) GlobalConfig() map[Key]string {
-	return g.globalConfigCache
+// GlobalConfig provides a copy of the the entire global Git configuration
+func (g *Git) GlobalConfigCopy() map[Key]string {
+	result := make(map[Key]string, len(g.globalConfigCache))
+	maps.Copy(result, g.globalConfigCache)
+	return result
 }
 
 // GlobalConfigValue provides the configuration value with the given key from the local Git configuration.
@@ -64,8 +68,10 @@ func (g *Git) GlobalConfigValue(key Key) string {
 }
 
 // LocalConfig provides the entire local Git configuration
-func (g *Git) LocalConfig() map[Key]string {
-	return g.localConfigCache
+func (g *Git) LocalConfigCopy() map[Key]string {
+	result := make(map[Key]string, len(g.localConfigCache))
+	maps.Copy(result, g.localConfigCache)
+	return result
 }
 
 // LocalConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
