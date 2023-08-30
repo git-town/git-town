@@ -33,6 +33,10 @@ func TestSnapshot(t *testing.T) {
 						Name:       domain.NewLocalBranchName("branch-2"),
 						InitialSHA: domain.NewSHA("222222"),
 					},
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-3"),
+						InitialSHA: domain.NewSHA("333333"),
+					},
 				},
 			}
 			have := after.Diff(before)
@@ -40,13 +44,10 @@ func TestSnapshot(t *testing.T) {
 				BranchesUpdated: map[domain.BranchName]runstate.BranchUpdate{},
 				BranchesAdded: map[domain.BranchName]domain.SHA{
 					domain.NewBranchName("branch-2"): domain.NewSHA("222222"),
+					domain.NewBranchName("branch-3"): domain.NewSHA("333333"),
 				},
 				BranchesRemoved: map[domain.BranchName]domain.SHA{},
-				PartialDiff: runstate.PartialDiff{
-					ConfigUpdated: map[string]runstate.ConfigUpdate{},
-					ConfigAdded:   map[string]string{},
-					ConfigRemoved: map[string]string{},
-				},
+				PartialDiff:     runstate.NewPartialDiff(),
 			}
 			fmt.Printf("WANT: %#v\n", want)
 			fmt.Printf("HAVE: %#v\n", have)

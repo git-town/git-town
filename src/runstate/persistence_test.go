@@ -145,6 +145,12 @@ func TestSanitizePath(t *testing.T) {
 {
   "AbortStepList": [],
   "Command": "command",
+  "InitialState": {
+    "Cwd": "",
+    "GlobalConfig": null,
+    "LocalConfig": null,
+    "Branches": null
+  },
   "IsAbort": true,
   "RunStepList": [
     {

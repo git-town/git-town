@@ -5,6 +5,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -16,7 +17,25 @@ type Key struct {
 	name string
 }
 
+// MarshalJSON is used when serializing this LocalBranchName to JSON.
+func (k Key) MarshalJSON() ([]byte, error) {
+	return json.Marshal(k.name)
+}
+
+func (k Key) MarshalText() (text []byte, err error) {
+	return json.Marshal(k.name)
+}
+
 func (c Key) String() string { return c.name }
+
+// UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
+func (k *Key) UnmarshalJSON(ba []byte) error {
+	return json.Unmarshal(ba, &k.name)
+}
+
+func (k *Key) UnmarshalText(ba []byte) error {
+	return json.Unmarshal(ba, &k.name)
+}
 
 var (
 	KeyAliasAppend                 = Key{"alias." + AliasAppend.name}             //nolint:gochecknoglobals
