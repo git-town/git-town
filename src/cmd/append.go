@@ -92,15 +92,15 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	loadBranchesResult := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return nil, exit, err
+	if loadBranchesResult.Err != nil || loadBranchesResult.Exit {
+		return nil, loadBranchesResult.Exit, loadBranchesResult.Err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
