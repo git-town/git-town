@@ -55,6 +55,43 @@ func TestSnapshot(t *testing.T) {
 		})
 		t.Run("branches removed", func(t *testing.T) {
 			t.Parallel()
+			before := runstate.Snapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-1"),
+						InitialSHA: domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-2"),
+						InitialSHA: domain.NewSHA("222222"),
+					},
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-3"),
+						InitialSHA: domain.NewSHA("333333"),
+					},
+				},
+			}
+			after := runstate.Snapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						Name:       domain.NewLocalBranchName("branch-2"),
+						InitialSHA: domain.NewSHA("222222"),
+					},
+				},
+			}
+			have := after.Diff(before)
+			want := runstate.Diff{
+				BranchesUpdated: map[domain.BranchName]runstate.BranchUpdate{},
+				BranchesAdded:   map[domain.BranchName]domain.SHA{},
+				BranchesRemoved: map[domain.BranchName]domain.SHA{
+					domain.NewBranchName("branch-1"): domain.NewSHA("111111"),
+					domain.NewBranchName("branch-3"): domain.NewSHA("333333"),
+				},
+				PartialDiff: runstate.NewPartialDiff(),
+			}
+			fmt.Printf("WANT: %#v\n", want)
+			fmt.Printf("HAVE: %#v\n", have)
+			assert.Equal(t, want, have)
 		})
 		t.Run("branches updated", func(t *testing.T) {
 			t.Parallel()
