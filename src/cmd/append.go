@@ -113,19 +113,19 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if fc.Err != nil {
 		return nil, false, fc.Err
 	}
-	if branches.All.HasLocalBranch(targetBranch) {
+	if loadBranchesResult.Snapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
+	if loadBranchesResult.Snapshot.Branches.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
-	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+	updated, err := validate.KnowsBranchAncestors(loadBranchesResult.InitialBranch, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
-		AllBranches:   branches.All,
+		AllBranches:   loadBranchesResult.Snapshot.Branches,
 		Lineage:       lineage,
-		BranchTypes:   branches.Types,
+		BranchTypes:   loadBranchesResult.BranchTypes,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
