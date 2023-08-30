@@ -134,12 +134,12 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if updated {
 		lineage = repo.Runner.Config.Lineage() // refresh lineage after ancestry changes
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
-	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	branchNamesToSync := lineage.BranchAndAncestors(loadBranchesResult.InitialBranch)
+	branchesToSync := fc.BranchesSyncStatus(loadBranchesResult.Snapshot.Branches.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	return &appendConfig{
-		branches:            branches,
+		branches:            loadBranchesResult.Snapshot.Branches,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
@@ -147,7 +147,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
-		parentBranch:        branches.Initial,
+		parentBranch:        loadBranchesResult.InitialBranch,
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
