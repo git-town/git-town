@@ -72,6 +72,11 @@ func (g *Git) GlobalConfigValue(key Key) string {
 	return g.globalConfigCache[key]
 }
 
+// LocalConfig provides the entire local Git configuration
+func (g *Git) LocalConfig() map[Key]string {
+	return g.localConfigCache
+}
+
 // LocalConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
 func (g *Git) LocalConfigKeysMatching(toMatch string) []Key {
 	result := []Key{}
