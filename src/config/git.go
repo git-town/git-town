@@ -62,6 +62,11 @@ func NewGit(runner runner) Git {
 	}
 }
 
+// GlobalConfig provides the entire global Git configuration
+func (g *Git) GlobalConfig() map[Key]string {
+	return g.globalConfigCache
+}
+
 // GlobalConfigValue provides the configuration value with the given key from the local Git configuration.
 func (g *Git) GlobalConfigValue(key Key) string {
 	return g.globalConfigCache[key]
