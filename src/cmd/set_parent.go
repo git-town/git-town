@@ -39,7 +39,7 @@ func setParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,

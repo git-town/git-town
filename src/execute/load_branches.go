@@ -6,49 +6,54 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-// LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (result LoadBranchesResult) {
+// LoadSnapshot loads the typically used information about Git branches using a single Git command.
+func LoadSnapshot(args LoadBranchesArgs) (runstate.Snapshot, bool, error) {
 	if args.HandleUnfinishedState {
-		result.Exit, result.Err = validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
-		if result.Err != nil || result.Exit {
-			return result
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
+		if err != nil || exit {
+			return runstate.EmptySnapshot(), exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		var hasOpenChanges bool
-		hasOpenChanges, result.Err = args.Repo.Runner.Backend.HasOpenChanges()
-		if result.Err != nil {
-			return result
+		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return runstate.EmptySnapshot(), false, err
 		}
-		result.Err = validate.NoOpenChanges(hasOpenChanges)
-		if result.Err != nil {
-			return result
+		err = validate.NoOpenChanges(hasOpenChanges)
+		if err != nil {
+			return runstate.EmptySnapshot(), false, err
 		}
 	}
 	if args.Fetch {
 		var remotes domain.Remotes
-		remotes, result.Err = args.Repo.Runner.Backend.Remotes()
-		if result.Err != nil {
-			return result
+		remotes, err := args.Repo.Runner.Backend.Remotes()
+		if err != nil {
+			return runstate.EmptySnapshot(), false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline {
-			result.Err = args.Repo.Runner.Frontend.Fetch()
-			if result.Err != nil {
-				return result
+			err = args.Repo.Runner.Frontend.Fetch()
+			if err != nil {
+				return runstate.EmptySnapshot(), false, err
 			}
 		}
 	}
-	var allBranches domain.BranchInfos
-	allBranches, result.InitialBranch, result.Err = args.Repo.Runner.Backend.BranchInfos()
-	if result.Err != nil {
-		return result
+	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
+	if err != nil {
+		return runstate.EmptySnapshot(), false, err
+	}
+	branchTypes := args.Repo.Runner.Config.BranchTypes()
+	branches := domain.Branches{
+		All:     allBranches,
+		Types:   branchTypes,
+		Initial: initialBranch,
 	}
 	result.BranchTypes = args.Repo.Runner.Config.BranchTypes()
 	if args.ValidateIsConfigured {
-		result.BranchTypes, result.Err = validate.IsConfigured(&args.Repo.Runner.Backend, allBranches, result.BranchTypes)
+		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
 	}
-	result.Snapshot = runstate.NewSnapshot(args.Repo.PartialSnapshot, allBranches)
-	return result
+	return runstate.Snapshot{
+		PartialSnapshot: args.Repo.,
+	}, false, err
 }
 
 type LoadBranchesArgs struct {

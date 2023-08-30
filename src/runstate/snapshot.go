@@ -27,6 +27,14 @@ func (ps PartialSnapshot) Diff(other PartialSnapshot) PartialDiff {
 	return result
 }
 
+func EmptyPartialSnapshot() PartialSnapshot {
+	return PartialSnapshot{
+		Cwd:          "",
+		GlobalConfig: map[config.Key]string{},
+		LocalConfig:  map[config.Key]string{},
+	}
+}
+
 // Snapshot represents the state of a Git repository at a particular point in time.
 type Snapshot struct {
 	PartialSnapshot
@@ -112,4 +120,11 @@ type BranchUpdate struct {
 type ConfigUpdate struct {
 	OriginalValue string // value that this config setting had before the Git Town command ran
 	FinalValue    string // value that this config setting had after the Git Town command ran
+}
+
+func EmptySnapshot() Snapshot {
+	return Snapshot{
+		PartialSnapshot: EmptyPartialSnapshot(),
+		Branches:        domain.BranchInfos{},
+	}
 }
