@@ -44,19 +44,19 @@ func (gt *GitTown) BranchTypes() domain.BranchTypes {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfig[KeyDeprecatedNewBranchPushFlag]
+	return gt.globalConfigCache[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfig[KeyDeprecatedNewBranchPushFlag]
+	return gt.localConfigCache[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return gt.globalConfig[KeyDeprecatedPushVerify]
+	return gt.globalConfigCache[KeyDeprecatedPushVerify]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return gt.localConfig[KeyDeprecatedPushVerify]
+	return gt.localConfigCache[KeyDeprecatedPushVerify]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -81,7 +81,7 @@ func (gt *GitTown) GiteaToken() string {
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
-	for key := range gt.localConfig {
+	for key := range gt.localConfigCache {
 		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true
 		}
@@ -268,14 +268,14 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
-	gt.localConfig[KeyCodeHostingDriver] = value
+	gt.localConfigCache[KeyCodeHostingDriver] = value
 	err := gt.Run("git", "config", KeyCodeHostingDriver.String(), value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
-	gt.localConfig[KeyCodeHostingOriginHostname] = value
+	gt.localConfigCache[KeyCodeHostingOriginHostname] = value
 	err := gt.Run("git", "config", KeyCodeHostingOriginHostname.String(), value)
 	return err
 }
