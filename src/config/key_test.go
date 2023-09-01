@@ -51,5 +51,10 @@ func TestKey(t *testing.T) {
 				assert.Nil(t, have)
 			})
 		})
+		t.Run("unknown key", func(t *testing.T) {
+			t.Parallel()
+			have := config.ParseKey("zonk")
+			assert.Nil(t, have)
+		})
 	})
 }
