@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -73,26 +72,21 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		err = errors.New(messages.OfflineNotAllowed)
 		return
 	}
-	currentDir, err := os.Getwd()
-	if err != nil {
-		err = errors.New(messages.DirCurrentProblem)
-		return
-	}
 	if args.ValidateGitRepo {
-		if currentDir != rootDir {
+		var currentDirectory string
+		currentDirectory, err = os.Getwd()
+		if err != nil {
+			err = errors.New(messages.DirCurrentProblem)
+			return
+		}
+		if currentDirectory != rootDir {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
-	partialSnapshot := runstate.PartialSnapshot{
-		Cwd:             currentDir,
-		GlobalGitConfig: repoConfig.Git.GlobalConfigClone(),
-		LocalGitConfig:  repoConfig.Git.LocalConfigClone(),
-	}
 	return OpenRepoResult{
-		Runner:          prodRunner,
-		PartialSnapshot: partialSnapshot,
-		RootDir:         rootDir,
-		IsOffline:       isOffline,
+		Runner:    prodRunner,
+		RootDir:   rootDir,
+		IsOffline: isOffline,
 	}, err
 }
 
@@ -105,10 +99,9 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner          git.ProdRunner
-	PartialSnapshot runstate.PartialSnapshot
-	RootDir         string
-	IsOffline       bool
+	Runner    git.ProdRunner
+	RootDir   string
+	IsOffline bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
