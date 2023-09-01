@@ -9,10 +9,10 @@ import (
 
 // Key contains all the keys used in Git Town configuration.
 type Key struct {
-	Name string
+	name string
 }
 
-func (c Key) String() string { return c.Name }
+func (c Key) String() string { return c.name }
 
 var (
 	KeyAliasAppend                 = Key{"alias." + AliasAppend.name}             //nolint:gochecknoglobals
@@ -67,7 +67,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 
 func ParseKey(key string) *Key {
 	for _, configKey := range keys {
-		if configKey.Name == key {
+		if configKey.name == key {
 			return &configKey
 		}
 	}
@@ -83,7 +83,7 @@ func ParseAliasKey(key string) *Key {
 		return nil
 	}
 	return &Key{
-		Name: key,
+		name: key,
 	}
 }
 
@@ -92,7 +92,7 @@ func ParseLineageKey(key string) *Key {
 		return nil
 	}
 	return &Key{
-		Name: key,
+		name: key,
 	}
 }
 
@@ -126,6 +126,6 @@ func NewAliasKey(aliasType Alias) Key {
 
 func NewParentKey(branch domain.LocalBranchName) Key {
 	return Key{
-		Name: fmt.Sprintf("git-town-branch.%s.parent", branch),
+		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}
 }
