@@ -31,7 +31,7 @@ func (gc GitConfigCache) KeysMatching(pattern string) []Key {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGitConfigCache(querier querier, global bool) GitConfigCache {
+func LoadGitConfigCache(runner runner, global bool) GitConfigCache {
 	result := GitConfigCache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -39,7 +39,7 @@ func LoadGitConfigCache(querier querier, global bool) GitConfigCache {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	output, err := querier.Query("git", cmdArgs...)
+	output, err := runner.Query("git", cmdArgs...)
 	if err != nil {
 		return result
 	}

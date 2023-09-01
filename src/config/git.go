@@ -3,15 +3,20 @@ package config
 // Git manages configuration data stored in Git metadata.
 // Supports configuration in the local repo and the global Git configuration.
 type Git struct {
-	querierRunner
+	runner
 	config GitConfig
 }
 
+type runner interface {
+	Query(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
+}
+
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner querierRunner) Git {
+func NewGit(runner runner) Git {
 	return Git{
-		config:        LoadGitConfig(runner),
-		querierRunner: runner,
+		config: LoadGitConfig(runner),
+		runner: runner,
 	}
 }
 
@@ -48,8 +53,8 @@ func (g Git) LocalOrGlobalConfigValue(key Key) string {
 // Reload refreshes the cached configuration information.
 // TODO: replace this with assigmnents.
 func (g *Git) Reload() {
-	g.config.Local = LoadGitConfigCache(g.querierRunner, false)
-	g.config.Global = LoadGitConfigCache(g.querierRunner, true)
+	g.config.Local = LoadGitConfigCache(g.runner, false)
+	g.config.Global = LoadGitConfigCache(g.runner, true)
 }
 
 func (g *Git) RemoveGlobalConfigValue(key Key) error {

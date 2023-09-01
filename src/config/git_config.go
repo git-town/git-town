@@ -6,9 +6,9 @@ type GitConfig struct {
 	Local  GitConfigCache
 }
 
-func LoadGitConfig(querier querier) GitConfig {
+func LoadGitConfig(runner runner) GitConfig {
 	return GitConfig{
-		Global: LoadGitConfigCache(querier, true),
-		Local:  LoadGitConfigCache(querier, false),
+		Global: LoadGitConfigCache(runner, true),
+		Local:  LoadGitConfigCache(runner, false),
 	}
 }
