@@ -2,6 +2,7 @@ package config
 
 import (
 	"regexp"
+	"sort"
 	"strings"
 
 	"golang.org/x/exp/maps"
@@ -54,5 +55,6 @@ func (gc GitConfigCache) KeysMatching(pattern string) []Key {
 			result = append(result, key)
 		}
 	}
+	sort.Slice(result, func(a, b int) bool { return result[a].Name < result[b].Name })
 	return result
 }

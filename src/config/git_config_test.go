@@ -23,4 +23,19 @@ func TestGitConfigCache(t *testing.T) {
 		assert.Equal(t, "A", original[alpha])
 		assert.Equal(t, "B", original[beta])
 	})
+
+	t.Run("KeysMatching", func(t *testing.T) {
+		t.Parallel()
+		cache := config.GitConfigCache{
+			config.Key{"key1"}:  "A",
+			config.Key{"key2"}:  "B",
+			config.Key{"other"}: "other",
+		}
+		have := cache.KeysMatching("key")
+		want := []config.Key{
+			{"key1"},
+			{"key2"},
+		}
+		assert.Equal(t, want, have)
+	})
 }
