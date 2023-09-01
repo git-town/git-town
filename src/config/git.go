@@ -39,6 +39,10 @@ func (g Git) LocalConfigClone() GitConfigCache {
 	return g.localConfigCache.Clone()
 }
 
+func (g *Git) LocalConfigKeysMatching(pattern string) []Key {
+	return g.localConfigCache.KeysMatching(pattern)
+}
+
 func (g Git) LocalConfigValue(key Key) string {
 	return g.localConfigCache[key]
 }
@@ -51,10 +55,6 @@ func (g *Git) LocalOrGlobalConfigValue(key Key) string {
 		return local
 	}
 	return g.globalConfigCache[key]
-}
-
-func (g *Git) LocalConfigKeysMatching(pattern string) []Key {
-	return g.localConfigCache.KeysMatching(pattern)
 }
 
 // Reload refreshes the cached configuration information.
