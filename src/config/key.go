@@ -65,17 +65,17 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func ParseKey(key string) *Key {
+func ParseKey(name string) *Key {
 	for _, configKey := range keys {
-		if configKey.Name == key {
+		if configKey.Name == name {
 			return &configKey
 		}
 	}
-	lineageKey := ParseLineageKey(key)
+	lineageKey := parseLineageKey(name)
 	if lineageKey != nil {
 		return lineageKey
 	}
-	return ParseAliasKey(key)
+	return ParseAliasKey(name)
 }
 
 func ParseAliasKey(key string) *Key {
@@ -87,7 +87,7 @@ func ParseAliasKey(key string) *Key {
 	}
 }
 
-func ParseLineageKey(key string) *Key {
+func parseLineageKey(key string) *Key {
 	if !strings.HasPrefix(key, "git-town-branch.") || !strings.HasSuffix(key, ".parent") {
 		return nil
 	}
