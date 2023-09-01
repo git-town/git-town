@@ -21,9 +21,9 @@ type GitTown struct {
 	originURLCache OriginURLCache
 }
 
-func NewGitTown(runner querierRunner) *GitTown {
+func NewGitTown(runner querierRunner, gitConfig GitConfig) *GitTown {
 	return &GitTown{
-		Git:            NewGit(runner),
+		Git:            NewGit(runner, gitConfig),
 		originURLCache: OriginURLCache{},
 	}
 }
@@ -44,19 +44,19 @@ func (gt *GitTown) BranchTypes() domain.BranchTypes {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.config.Global[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.config.Local[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedPushVerify]
+	return gt.config.Global[KeyDeprecatedPushVerify]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedPushVerify]
+	return gt.config.Local[KeyDeprecatedPushVerify]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -81,7 +81,7 @@ func (gt *GitTown) GiteaToken() string {
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
-	for key := range gt.localConfigCache {
+	for key := range gt.config.Local {
 		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true
 		}
@@ -268,14 +268,14 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
-	gt.localConfigCache[KeyCodeHostingDriver] = value
+	gt.config.Local[KeyCodeHostingDriver] = value
 	err := gt.Run("git", "config", KeyCodeHostingDriver.String(), value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
-	gt.localConfigCache[KeyCodeHostingOriginHostname] = value
+	gt.config.Local[KeyCodeHostingOriginHostname] = value
 	err := gt.Run("git", "config", KeyCodeHostingOriginHostname.String(), value)
 	return err
 }
