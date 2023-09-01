@@ -14,7 +14,6 @@ type Git struct {
 
 type runner interface {
 	Query(executable string, args ...string) (string, error)
-	QueryTrim(executable string, args ...string) (string, error)
 	Run(executable string, args ...string) error
 }
 

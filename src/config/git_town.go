@@ -151,8 +151,8 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := gt.QueryTrim("git", "remote", "get-url", domain.OriginRemote.String())
-	return output
+	output, _ := gt.Query("git", "remote", "get-url", domain.OriginRemote.String())
+	return strings.TrimSpace(output)
 }
 
 // OriginURL provides the URL for the "origin" remote.
