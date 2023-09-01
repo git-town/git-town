@@ -299,7 +299,7 @@ func (gt *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
 func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 	setting := strconv.FormatBool(value)
 	if global {
-		_, err := gt.SetGlobalConfigValue(KeyPushNewBranches, setting)
+		err := gt.SetGlobalConfigValue(KeyPushNewBranches, setting)
 		return err
 	}
 	err := gt.SetLocalConfigValue(KeyPushNewBranches, setting)
@@ -308,7 +308,7 @@ func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 
 // SetOffline updates whether Git Town is in offline mode.
 func (gt *GitTown) SetOffline(value bool) error {
-	_, err := gt.SetGlobalConfigValue(KeyOffline, strconv.FormatBool(value))
+	err := gt.SetGlobalConfigValue(KeyOffline, strconv.FormatBool(value))
 	return err
 }
 
@@ -339,7 +339,7 @@ func (gt *GitTown) SetPushHookLocally(value bool) error {
 
 // SetPushHook updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookGlobally(value bool) error {
-	_, err := gt.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
+	err := gt.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
@@ -361,7 +361,7 @@ func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
 }
 
 func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
-	_, err := gt.SetGlobalConfigValue(KeySyncStrategy, value.name)
+	err := gt.SetGlobalConfigValue(KeySyncStrategy, value.name)
 	return err
 }
 
@@ -448,11 +448,11 @@ func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) erro
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", deprecatedKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
-		_, err := gt.RemoveGlobalConfigValue(deprecatedKey)
+		err := gt.RemoveGlobalConfigValue(deprecatedKey)
 		if err != nil {
 			return err
 		}
-		_, err = gt.SetGlobalConfigValue(newKey, deprecatedSetting)
+		err = gt.SetGlobalConfigValue(newKey, deprecatedSetting)
 		return err
 	}
 	return nil

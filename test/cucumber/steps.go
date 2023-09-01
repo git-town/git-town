@@ -516,7 +516,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := config.ParseKey("git-town." + name)
-		_, err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
+		err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
 		return err
 	})
 
