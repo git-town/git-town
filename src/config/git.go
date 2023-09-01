@@ -25,6 +25,14 @@ type runner interface {
 	Run(executable string, args ...string) error
 }
 
+func NewGit(runner runner) Git {
+	return Git{
+		localConfigCache:  LoadGit(runner, false),
+		globalConfigCache: LoadGit(runner, true),
+		runner:            runner,
+	}
+}
+
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
 func LoadGit(runner runner, global bool) map[Key]string {
 	result := map[Key]string{}

@@ -12,14 +12,6 @@ type PartialSnapshot struct {
 	LocalGitConfig  map[config.Key]string // a copy of the local Git configuration that was active at the time this snapshot was taken
 }
 
-func NewPartialSnapshot(git config.Git, cwd string) PartialSnapshot {
-	return PartialSnapshot{
-		Cwd:             cwd,
-		GlobalGitConfig: git.GlobalConfigCopy(),
-		LocalGitConfig:  git.LocalConfigCopy(),
-	}
-}
-
 func EmptyPartialSnapshot() PartialSnapshot {
 	return PartialSnapshot{
 		Cwd:             "",
@@ -31,7 +23,10 @@ func EmptyPartialSnapshot() PartialSnapshot {
 // Snapshot represents the state of a Git repository at a particular point in time.
 type Snapshot struct {
 	PartialSnapshot
-	Branches domain.BranchInfos // the branches that exist in this repo
+
+	// Branches is a read-only copy of the branches that exist in this repo at the time the snapshot was taken.
+	// Don't use these branches for business logic since businss logic might want to modify its cache of branches as it adds or removes them.
+	Branches domain.BranchInfos
 }
 
 func EmptySnapshot() Snapshot {
