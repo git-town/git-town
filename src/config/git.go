@@ -39,7 +39,7 @@ func (g Git) LocalConfigClone() GitConfigCache {
 	return g.localConfigCache.Clone()
 }
 
-func (g *Git) LocalConfigKeysMatching(pattern string) []Key {
+func (g Git) LocalConfigKeysMatching(pattern string) []Key {
 	return g.localConfigCache.KeysMatching(pattern)
 }
 
@@ -49,7 +49,7 @@ func (g Git) LocalConfigValue(key Key) string {
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
-func (g *Git) LocalOrGlobalConfigValue(key Key) string {
+func (g Git) LocalOrGlobalConfigValue(key Key) string {
 	local := g.LocalConfigValue(key)
 	if local != "" {
 		return local
