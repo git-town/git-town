@@ -54,7 +54,7 @@ func (g Git) LocalOrGlobalConfigValue(key Key) string {
 	if local != "" {
 		return local
 	}
-	return g.globalConfigCache[key]
+	return g.GlobalConfigValue(key)
 }
 
 // Reload refreshes the cached configuration information.
