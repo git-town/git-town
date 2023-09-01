@@ -8,6 +8,15 @@ type ProdRunner struct {
 	Stats    Statistics
 }
 
+func EmptyProdRunner() ProdRunner {
+	return ProdRunner{
+		Config:   RepoConfig{},
+		Backend:  BackendCommands{},
+		Frontend: FrontendCommands{},
+		Stats:    nil,
+	}
+}
+
 type Statistics interface {
 	PrintAnalysis()
 }

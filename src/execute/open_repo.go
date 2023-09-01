@@ -8,12 +8,13 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
+func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -34,14 +35,20 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
 	if err != nil {
-		return result, err
+		return EmptyOpenRepoResult(), err
 	}
 	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
-		return
+		return EmptyOpenRepoResult(), err
+	}
+	var currentDirectory string
+	currentDirectory, err = os.Getwd()
+	if err != nil {
+		err = errors.New(messages.DirCurrentProblem)
+		return EmptyOpenRepoResult(), err
 	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(backendRunner),
+		GitTown: config.NewGitTown(git),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
@@ -60,25 +67,18 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
 		if rootDir == "" {
-			err = errors.New(messages.RepoOutside)
-			return
+			return EmptyOpenRepoResult(), errors.New(messages.RepoOutside)
 		}
 	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
-		return
+		return EmptyOpenRepoResult(), err
 	}
 	if args.ValidateIsOnline && isOffline {
 		err = errors.New(messages.OfflineNotAllowed)
-		return
+		return EmptyOpenRepoResult(), err
 	}
 	if args.ValidateGitRepo {
-		var currentDirectory string
-		currentDirectory, err = os.Getwd()
-		if err != nil {
-			err = errors.New(messages.DirCurrentProblem)
-			return
-		}
 		if currentDirectory != rootDir {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
@@ -87,6 +87,11 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		Runner:    prodRunner,
 		RootDir:   rootDir,
 		IsOffline: isOffline,
+		PartialSnapshot: runstate.PartialSnapshot{
+			Cwd:             currentDirectory,
+			GlobalGitConfig: repoConfig.GlobalConfigCopy(),
+			LocalGitConfig:  repoConfig.LocalConfigCopy(),
+		},
 	}, err
 }
 
@@ -99,9 +104,18 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner    git.ProdRunner
-	RootDir   string
-	IsOffline bool
+	Runner          git.ProdRunner
+	RootDir         string
+	IsOffline       bool
+	PartialSnapshot runstate.PartialSnapshot
+}
+
+func EmptyOpenRepoResult() OpenRepoResult {
+	return OpenRepoResult{
+		Runner:    git.EmptyProdRunner(),
+		RootDir:   "",
+		IsOffline: false,
+	}
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

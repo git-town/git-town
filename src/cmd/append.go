@@ -91,7 +91,7 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
-	snapshot, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
+	snapshot, initialBranch, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -112,17 +112,17 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if fc.Err != nil {
 		return nil, false, fc.Err
 	}
-	if snapshot.All.HasLocalBranch(targetBranch) {
+	if snapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if snapshot.All.HasMatchingRemoteBranchFor(targetBranch) {
+	if snapshot.Branches.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(snapshot.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
-		AllBranches:   snapshot.All,
+		AllBranches:   snapshot.Branches,
 		Lineage:       lineage,
 		BranchTypes:   snapshot.Types,
 		MainBranch:    mainBranch,
