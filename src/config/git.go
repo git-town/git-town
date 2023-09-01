@@ -52,8 +52,7 @@ func (g Git) LocalOrGlobalConfigValue(key Key) string {
 
 // Reload refreshes the cached configuration information.
 func (g *Git) Reload() {
-	g.config.Local = LoadGitConfigCache(g.runner, false)
-	g.config.Global = LoadGitConfigCache(g.runner, true)
+	g.config = LoadGitConfig(g.runner)
 }
 
 func (g *Git) RemoveGlobalConfigValue(key Key) error {
