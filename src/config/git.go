@@ -46,8 +46,8 @@ func (g Git) LocalConfigValue(key Key) string {
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
 func (g *Git) LocalOrGlobalConfigValue(key Key) string {
-	local, has := g.localConfigCache[key]
-	if has {
+	local := g.localConfigCache[key]
+	if local != "" {
 		return local
 	}
 	return g.globalConfigCache[key]
