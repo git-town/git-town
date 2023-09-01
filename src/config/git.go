@@ -63,9 +63,9 @@ func (g *Git) Reload() {
 	g.globalConfigCache = LoadGitConfig(g.runner, true)
 }
 
-func (g *Git) RemoveGlobalConfigValue(key Key) (string, error) {
+func (g *Git) RemoveGlobalConfigValue(key Key) error {
 	delete(g.globalConfigCache, key)
-	return g.Query("git", "config", "--global", "--unset", key.String())
+	return g.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
