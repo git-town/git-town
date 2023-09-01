@@ -151,6 +151,7 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
+	// NOTE: this call must use QueryTrim, otherwise `git new-pull-request` doesn't work
 	output, _ := gt.QueryTrim("git", "remote", "get-url", domain.OriginRemote.String())
 	return output
 }
