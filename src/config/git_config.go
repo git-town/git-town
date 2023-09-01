@@ -17,6 +17,7 @@ func (gc GitConfigCache) Clone() GitConfigCache {
 	return result
 }
 
+// KeysMatching provides the keys in this GitConfigCache that match the given regex.
 func (gc GitConfigCache) KeysMatching(pattern string) []Key {
 	result := []Key{}
 	re := regexp.MustCompile(pattern)
