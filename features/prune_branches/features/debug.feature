@@ -14,8 +14,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
-      |        | backend  | git config -lz --local                        |
       |        | backend  | git config -lz --global                       |
+      |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git remote                                    |
       |        | backend  | git status                                    |
@@ -51,8 +51,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                    |
       |        | backend  | git version                                |
-      |        | backend  | git config -lz --local                     |
       |        | backend  | git config -lz --global                    |
+      |        | backend  | git config -lz --local                     |
       |        | backend  | git rev-parse --show-toplevel              |
       |        | backend  | git branch -vva                            |
       | main   | frontend | git branch old {{ sha 'old commit' }}      |

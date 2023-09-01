@@ -4,12 +4,7 @@ package config
 // Supports configuration in the local repo and the global Git configuration.
 type Git struct {
 	runner
-
-	// globalConfigCache is a cache of the global Git configuration.
-	globalConfigCache GitConfigCache
-
-	// localConfigCache is a cache of the Git configuration in the local Git repo.
-	localConfigCache GitConfigCache
+	config GitConfig
 }
 
 type runner interface {
@@ -20,30 +15,29 @@ type runner interface {
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
 func NewGit(runner runner) Git {
 	return Git{
-		localConfigCache:  LoadGitConfig(runner, false),
-		globalConfigCache: LoadGitConfig(runner, true),
-		runner:            runner,
+		config: LoadGitConfig(runner),
+		runner: runner,
 	}
 }
 
 func (g Git) GlobalConfigClone() GitConfigCache {
-	return g.globalConfigCache.Clone()
+	return g.config.Global.Clone()
 }
 
 func (g Git) GlobalConfigValue(key Key) string {
-	return g.globalConfigCache[key]
+	return g.config.Global[key]
 }
 
 func (g Git) LocalConfigClone() GitConfigCache {
-	return g.localConfigCache.Clone()
+	return g.config.Local.Clone()
 }
 
 func (g Git) LocalConfigKeysMatching(pattern string) []Key {
-	return g.localConfigCache.KeysMatching(pattern)
+	return g.config.Local.KeysMatching(pattern)
 }
 
 func (g Git) LocalConfigValue(key Key) string {
-	return g.localConfigCache[key]
+	return g.config.Local[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
@@ -58,30 +52,29 @@ func (g Git) LocalOrGlobalConfigValue(key Key) string {
 
 // Reload refreshes the cached configuration information.
 func (g *Git) Reload() {
-	g.localConfigCache = LoadGitConfig(g.runner, false)
-	g.globalConfigCache = LoadGitConfig(g.runner, true)
+	g.config = LoadGitConfig(g.runner)
 }
 
 func (g *Git) RemoveGlobalConfigValue(key Key) error {
-	delete(g.globalConfigCache, key)
+	delete(g.config.Global, key)
 	return g.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (g *Git) RemoveLocalConfigValue(key Key) error {
-	delete(g.localConfigCache, key)
-	err := g.runner.Run("git", "config", "--unset", key.String())
+	delete(g.config.Local, key)
+	err := g.Run("git", "config", "--unset", key.String())
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
 func (g *Git) SetGlobalConfigValue(key Key, value string) error {
-	g.globalConfigCache[key] = value
-	return g.runner.Run("git", "config", "--global", key.String(), value)
+	g.config.Global[key] = value
+	return g.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (g *Git) SetLocalConfigValue(key Key, value string) error {
-	g.localConfigCache[key] = value
-	return g.runner.Run("git", "config", key.String(), value)
+	g.config.Local[key] = value
+	return g.Run("git", "config", key.String(), value)
 }
