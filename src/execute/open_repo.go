@@ -41,7 +41,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		return
 	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(backendRunner, config.LoadGitConfig(backendRunner)),
+		GitTown: config.NewGitTown(backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig

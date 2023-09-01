@@ -57,7 +57,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BinDir:     binDir,
 	}
 	config := git.RepoConfig{
-		GitTown: config.NewGitTown(&runner, config.LoadGitConfig(&runner)),
+		GitTown: config.NewGitTown(&runner),
 		DryRun:  false,
 	}
 	backendCommands := git.BackendCommands{

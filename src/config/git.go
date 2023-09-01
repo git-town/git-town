@@ -8,9 +8,9 @@ type Git struct {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner querierRunner, config GitConfig) Git {
+func NewGit(runner querierRunner) Git {
 	return Git{
-		config:        config,
+		config:        LoadGitConfig(runner),
 		querierRunner: runner,
 	}
 }
