@@ -51,7 +51,6 @@ func (g Git) LocalOrGlobalConfigValue(key Key) string {
 }
 
 // Reload refreshes the cached configuration information.
-// TODO: replace this with assigmnents.
 func (g *Git) Reload() {
 	g.config.Local = LoadGitConfigCache(g.runner, false)
 	g.config.Global = LoadGitConfigCache(g.runner, true)
