@@ -58,7 +58,6 @@ func (g *Git) LocalConfigKeysMatching(pattern string) []Key {
 }
 
 // Reload refreshes the cached configuration information.
-// TODO: move this somewhere else?
 func (g *Git) Reload() {
 	g.localConfigCache = LoadGitConfig(g.runner, false)
 	g.globalConfigCache = LoadGitConfig(g.runner, true)
