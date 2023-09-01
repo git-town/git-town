@@ -76,9 +76,9 @@ func (g *Git) RemoveLocalConfigValue(key Key) error {
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (g *Git) SetGlobalConfigValue(key Key, value string) (string, error) {
+func (g *Git) SetGlobalConfigValue(key Key, value string) error {
 	g.globalConfigCache[key] = value
-	return g.runner.Query("git", "config", "--global", key.String(), value)
+	return g.runner.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
