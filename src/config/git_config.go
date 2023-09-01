@@ -10,6 +10,25 @@ import (
 
 type GitConfigCache map[Key]string
 
+// Clone provides a copy of this GitConfiguration instance.
+func (gc GitConfigCache) Clone() GitConfigCache {
+	result := GitConfigCache{}
+	maps.Copy(result, gc)
+	return result
+}
+
+func (gc GitConfigCache) KeysMatching(pattern string) []Key {
+	result := []Key{}
+	re := regexp.MustCompile(pattern)
+	for key := range gc {
+		if re.MatchString(key.String()) {
+			result = append(result, key)
+		}
+	}
+	sort.Slice(result, func(a, b int) bool { return result[a].Name < result[b].Name })
+	return result
+}
+
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
 func LoadGitConfig(runner runner, global bool) GitConfigCache {
 	result := GitConfigCache{}
@@ -37,24 +56,5 @@ func LoadGitConfig(runner runner, global bool) GitConfigCache {
 			result[*configKey] = value
 		}
 	}
-	return result
-}
-
-// Clone provides a copy of this GitConfiguration instance.
-func (gc GitConfigCache) Clone() GitConfigCache {
-	result := GitConfigCache{}
-	maps.Copy(result, gc)
-	return result
-}
-
-func (gc GitConfigCache) KeysMatching(pattern string) []Key {
-	result := []Key{}
-	re := regexp.MustCompile(pattern)
-	for key := range gc {
-		if re.MatchString(key.String()) {
-			result = append(result, key)
-		}
-	}
-	sort.Slice(result, func(a, b int) bool { return result[a].Name < result[b].Name })
 	return result
 }
