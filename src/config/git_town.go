@@ -44,19 +44,19 @@ func (gt *GitTown) BranchTypes() domain.BranchTypes {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.globalConfig[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.localConfig[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedPushVerify]
+	return gt.globalConfig[KeyDeprecatedPushVerify]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedPushVerify]
+	return gt.localConfig[KeyDeprecatedPushVerify]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -81,8 +81,8 @@ func (gt *GitTown) GiteaToken() string {
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
-	for key := range gt.localConfigCache {
-		if strings.HasPrefix(key.name, "git-town-branch.") {
+	for key := range gt.localConfig {
+		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true
 		}
 	}
@@ -123,7 +123,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 func (gt *GitTown) Lineage() Lineage {
 	lineage := Lineage{}
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent"))
+		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.Name, "git-town-branch."), ".parent"))
 		parent := domain.NewLocalBranchName(gt.LocalConfigValue(key))
 		lineage[child] = parent
 	}
@@ -268,14 +268,14 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
-	gt.localConfigCache[KeyCodeHostingDriver] = value
+	gt.localConfig[KeyCodeHostingDriver] = value
 	err := gt.Run("git", "config", KeyCodeHostingDriver.String(), value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
-	gt.localConfigCache[KeyCodeHostingOriginHostname] = value
+	gt.localConfig[KeyCodeHostingOriginHostname] = value
 	err := gt.Run("git", "config", KeyCodeHostingOriginHostname.String(), value)
 	return err
 }

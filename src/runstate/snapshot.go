@@ -12,6 +12,7 @@ type PartialSnapshot struct {
 	LocalGitConfig  map[config.Key]string // a copy of the local Git configuration that was active at the time this snapshot was taken
 }
 
+// EmptyPartialSnapshot provides an empty PartialSnapshot with all fields correctly initialized.
 func EmptyPartialSnapshot() PartialSnapshot {
 	return PartialSnapshot{
 		Cwd:             "",
