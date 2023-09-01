@@ -75,16 +75,20 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	return ParseAliasKey(name)
+	return parseAliasKey(name)
 }
 
-func ParseAliasKey(key string) *Key {
+func parseAliasKey(key string) *Key {
 	if !strings.HasPrefix(key, "alias.") {
 		return nil
 	}
-	return &Key{
-		Name: key,
+	for _, alias := range Aliases() {
+		aliasKey := NewAliasKey(alias)
+		if key == aliasKey.Name {
+			return &aliasKey
+		}
 	}
+	return nil
 }
 
 func parseLineageKey(key string) *Key {

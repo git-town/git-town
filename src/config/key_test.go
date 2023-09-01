@@ -26,13 +26,22 @@ func TestKey(t *testing.T) {
 				assert.Equal(t, want, have)
 			})
 			t.Run("lineage key without suffix", func(t *testing.T) {
-				give := "git-town-branch.branch-1"
-				have := config.ParseKey(give)
+				have := config.ParseKey("git-town-branch.branch-1")
 				assert.Nil(t, have)
 			})
 			t.Run("lineage key without prefix", func(t *testing.T) {
-				give := "git-town.branch-1.parent"
-				have := config.ParseKey(give)
+				have := config.ParseKey("git-town.branch-1.parent")
+				assert.Nil(t, have)
+			})
+		})
+		t.Run("alias key", func(t *testing.T) {
+			t.Run("valid alias", func(t *testing.T) {
+				have := config.ParseKey("alias.append")
+				want := &config.KeyAliasAppend
+				assert.Equal(t, want, have)
+			})
+			t.Run("invalid alias", func(t *testing.T) {
+				have := config.ParseKey("alias.zonk")
 				assert.Nil(t, have)
 			})
 		})
