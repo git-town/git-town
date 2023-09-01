@@ -8,7 +8,7 @@ type GitConfig struct {
 
 func LoadGitConfig(runner runner) GitConfig {
 	return GitConfig{
-		Local:  LoadGitConfigCache(runner, false),
 		Global: LoadGitConfigCache(runner, true),
+		Local:  LoadGitConfigCache(runner, false),
 	}
 }
