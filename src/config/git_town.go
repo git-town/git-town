@@ -21,7 +21,7 @@ type GitTown struct {
 	originURLCache OriginURLCache
 }
 
-func NewGitTown(runner runner) *GitTown {
+func NewGitTown(runner querierRunner) *GitTown {
 	return &GitTown{
 		Git:            NewGit(runner),
 		originURLCache: OriginURLCache{},
