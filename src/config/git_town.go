@@ -82,7 +82,7 @@ func (gt *GitTown) GiteaToken() string {
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
 	for key := range gt.localConfigCache {
-		if strings.HasPrefix(key.name, "git-town-branch.") {
+		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true
 		}
 	}
@@ -123,7 +123,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 func (gt *GitTown) Lineage() Lineage {
 	lineage := Lineage{}
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent"))
+		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.Name, "git-town-branch."), ".parent"))
 		parent := domain.NewLocalBranchName(gt.LocalConfigValue(key))
 		lineage[child] = parent
 	}
