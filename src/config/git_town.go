@@ -447,7 +447,7 @@ func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) erro
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", deprecatedKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
-		_, err := gt.RemoveGlobalConfigValue(deprecatedKey)
+		err := gt.RemoveGlobalConfigValue(deprecatedKey)
 		if err != nil {
 			return err
 		}
