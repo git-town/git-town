@@ -6,6 +6,7 @@ Feature: on the main branch with an upstream repo
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And the current branch is "main"
+    And setting "sync-upstream" is "true"
     And I run "git-town sync"
 
   Scenario: result
@@ -22,3 +23,12 @@ Feature: on the main branch with an upstream repo
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And the current branch is still "main"
+    And now these commits exist
+      | BRANCH | LOCATION                | MESSAGE         |
+      | main   | local, origin, upstream | upstream commit |
+    And the initial branches and hierarchy exist
