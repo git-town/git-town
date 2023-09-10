@@ -30,3 +30,17 @@ Feature: with upstream repo
       | main    | local, origin, upstream | upstream commit |
       | feature | local, origin           | upstream commit |
       |         |                         | local commit    |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And the current branch is still "feature"
+    And now these commits exist
+      | BRANCH  | LOCATION                | MESSAGE         |
+      | main    | local, origin, upstream | upstream commit |
+      | feature | local, origin           | upstream commit |
+      |         |                         | local commit    |
+    And the initial branches and hierarchy exist
