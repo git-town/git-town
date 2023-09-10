@@ -49,3 +49,11 @@ Feature: nested feature branches
       |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it prints the error:
+      """
+      nothing to undo
+      """
+    And it runs no commands
