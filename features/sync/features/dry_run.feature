@@ -23,3 +23,18 @@ Feature: dry run
       |         | git push                           |
     And the current branch is still "feature"
     And now the initial commits exist
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And the current branch is still "feature"
+    And now these commits exist
+      | BRANCH  | LOCATION | MESSAGE               |
+      | main    | local    | local main commit     |
+      |         | origin   | origin main commit    |
+      | feature | local    | local feature commit  |
+      |         | origin   | origin feature commit |
+    And the initial branches and hierarchy exist
