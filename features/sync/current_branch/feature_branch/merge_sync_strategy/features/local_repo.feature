@@ -21,3 +21,13 @@ Feature: sync the current feature branch (in a local repo)
       | feature | local    | feature commit                   |
       |         |          | main commit                      |
       |         |          | Merge branch 'main' into feature |
+
+  @this
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                     |
+      | feature | git reset --hard {{ sha 'feature commit' }} |
+    And the current branch is still "feature"
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
