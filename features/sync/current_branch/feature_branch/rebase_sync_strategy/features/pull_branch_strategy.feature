@@ -44,15 +44,13 @@ Feature: with pull-branch-strategy set to "merge"
       | main    | git checkout feature |
     And the current branch is still "feature"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | local main commit                                          |
-      |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main'                 |
-      | feature | local, origin | local feature commit                                       |
-      |         |               | origin feature commit                                      |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | local main commit                                          |
-      |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main'                 |
-      |         |               | Merge branch 'main' into feature                           |
+      | BRANCH  | LOCATION      | MESSAGE                                    |
+      | main    | local, origin | local main commit                          |
+      |         |               | origin main commit                         |
+      |         |               | Merge remote-tracking branch 'origin/main' |
+      | feature | local, origin | local main commit                          |
+      |         |               | origin main commit                         |
+      |         |               | Merge remote-tracking branch 'origin/main' |
+      |         |               | origin feature commit                      |
+      |         |               | local feature commit                       |
     And the initial branches and hierarchy exist
