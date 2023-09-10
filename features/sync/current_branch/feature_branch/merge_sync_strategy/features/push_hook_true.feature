@@ -34,3 +34,11 @@ Feature: push-hook setting set to "true"
       |         |               | origin main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it prints the error:
+      """
+      nothing to undo
+      """
+    And it runs no commands

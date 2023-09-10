@@ -37,7 +37,6 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
