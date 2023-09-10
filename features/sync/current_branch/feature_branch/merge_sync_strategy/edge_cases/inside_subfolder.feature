@@ -43,7 +43,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into beta  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
