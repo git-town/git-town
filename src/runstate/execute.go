@@ -17,11 +17,11 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
-		if typeName(step) == "*SkipCurrentBranchSteps" {
+		if typeName(step) == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
 		}
-		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
+		if typeName(step) == "PushBranchAfterCurrentBranchSteps" {
 			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
 			if err != nil {
 				return err
