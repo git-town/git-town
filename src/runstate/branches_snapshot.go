@@ -27,7 +27,7 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 	for _, beforeBranch := range bs.Branches {
 		afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
 		if afterBI == nil {
-			// result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
+			result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
 		} else {
 
 		}
