@@ -99,7 +99,7 @@ func TestBranchesSnapshot(t *testing.T) {
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: map[domain.LocalBranchName]runstate.Change[domain.SHA]{
-					domain.NewLocalBranchName("branch-1"): runstate.Change[domain.SHA]{
+					domain.NewLocalBranchName("branch-1"): {
 						Before: domain.NewSHA("111111"),
 						After:  domain.NewSHA("222222"),
 					},
