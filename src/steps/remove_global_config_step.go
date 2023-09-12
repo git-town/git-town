@@ -13,7 +13,7 @@ type RemoveGlobalConfigStep struct {
 }
 
 func (step *RemoveGlobalConfigStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&AddGlobalConfigStep{
+	return []Step{&SetGlobalConfigStep{
 		Key:   step.Key,
 		Value: step.previousValue,
 	}}, nil

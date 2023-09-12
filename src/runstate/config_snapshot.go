@@ -61,9 +61,15 @@ func (scd SnapshotConfigDiff) UndoSteps() StepList {
 		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
 	}
 	for key, value := range scd.Global.Removed {
-		result.Append(&steps.AddGlobalConfigStep{
+		result.Append(&steps.SetGlobalConfigStep{
 			Key:   key,
 			Value: value,
+		})
+	}
+	for key, change := range scd.Global.Changed {
+		result.Append(&steps.SetGlobalConfigStep{
+			Key:   key,
+			Value: change.Before,
 		})
 	}
 	return result
