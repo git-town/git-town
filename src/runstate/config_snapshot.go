@@ -81,6 +81,12 @@ func (scd SnapshotConfigDiff) UndoSteps() StepList {
 			Value: change.Before,
 		})
 	}
+	for key, change := range scd.Local.Changed {
+		result.Append(&steps.SetLocalConfigStep{
+			Key:   key,
+			Value: change.Before,
+		})
+	}
 	return result
 }
 

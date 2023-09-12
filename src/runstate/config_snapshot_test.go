@@ -430,5 +430,32 @@ func TestSnapshotConfigDiff(t *testing.T) {
 			}
 			assert.Equal(t, want, have)
 		})
+
+		t.Run("local config changed", func(t *testing.T) {
+			diff := runstate.SnapshotConfigDiff{
+				Global: runstate.ConfigDiff{},
+				Local: runstate.ConfigDiff{
+					Added:   []config.Key{},
+					Removed: map[config.Key]string{},
+					Changed: map[config.Key]runstate.Change[string]{
+						config.KeyOffline: {
+							Before: "0",
+							After:  "1",
+						},
+					},
+				},
+			}
+			have := diff.UndoSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "0",
+					},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+
 	})
 }
