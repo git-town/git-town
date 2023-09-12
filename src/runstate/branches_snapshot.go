@@ -29,7 +29,12 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 		if afterBI == nil {
 			result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
 		} else {
-
+			if beforeBranch.LocalSHA != afterBI.LocalSHA {
+				result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
+					Before: beforeBranch.LocalSHA,
+					After:  afterBI.LocalSHA,
+				}
+			}
 		}
 	}
 	for _, afterBranch := range after.Branches {
