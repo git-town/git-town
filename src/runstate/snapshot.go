@@ -11,6 +11,28 @@ type ConfigSnapshot struct {
 	GitConfig config.GitConfig
 }
 
+func (cs ConfigSnapshot) Diff(other ConfigSnapshot) ConfigDiff {
+	return ConfigDiff{}
+}
+
+type ConfigDiff struct {
+	GlobalAdded   []config.Key
+	GlobalRemoved map[config.Key]string
+	GlobalChanged map[config.Key]StringChange
+	LocalAdded    []config.Key
+	LocalRemoved  map[config.Key]string
+	LocalChanged  map[config.Key]StringChange
+}
+
+func (cd ConfigDiff) Steps() StepList {
+	return StepList{}
+}
+
+type StringChange struct {
+	Before string
+	After  string
+}
+
 // BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
 type BranchesSnapshot struct {
 
@@ -22,4 +44,23 @@ type BranchesSnapshot struct {
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{}
+}
+
+func (bs BranchesSnapshot) Diff(other BranchesSnapshot) BranchesDiff {
+	return BranchesDiff{}
+}
+
+type BranchesDiff struct {
+	LocalAdded   domain.LocalBranchNames
+	LocalRemoved map[domain.LocalBranchName]domain.SHA
+	LocalChanged map[domain.LocalBranchName]SHAChange
+}
+
+func (bd BranchesDiff) Steps() StepList {
+	return StepList{}
+}
+
+type SHAChange struct {
+	Before domain.SHA
+	After  domain.SHA
 }
