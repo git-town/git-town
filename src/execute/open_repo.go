@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -40,9 +41,17 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	if err != nil {
 		return
 	}
-	gitConfig := config.LoadGitConfig(backendRunner)
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		err = errors.New(messages.DirCurrentProblem)
+		return
+	}
+	snapshot := runstate.PartialSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(backendRunner),
+	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(gitConfig, backendRunner),
+		GitTown: config.NewGitTown(snapshot.GitConfig.Clone(), backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
@@ -75,11 +84,6 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
-		currentDirectory, err = os.Getwd()
-		if err != nil {
-			err = errors.New(messages.DirCurrentProblem)
-			return
-		}
 		if currentDirectory != rootDir {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
@@ -88,6 +92,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		Runner:    prodRunner,
 		RootDir:   rootDir,
 		IsOffline: isOffline,
+		Snapshot:  snapshot,
 	}, err
 }
 
@@ -103,6 +108,7 @@ type OpenRepoResult struct {
 	Runner    git.ProdRunner
 	RootDir   string
 	IsOffline bool
+	Snapshot  runstate.PartialSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
