@@ -12,3 +12,10 @@ func LoadGitConfig(runner runner) GitConfig {
 		Local:  LoadGitConfigCache(runner, false),
 	}
 }
+
+func (gc GitConfig) Clone() GitConfig {
+	return GitConfig{
+		Global: gc.Global.Clone(),
+		Local:  gc.Local.Clone(),
+	}
+}
