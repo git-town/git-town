@@ -89,10 +89,10 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		}
 	}
 	return OpenRepoResult{
-		Runner:    prodRunner,
-		RootDir:   rootDir,
-		IsOffline: isOffline,
-		Snapshot:  snapshot,
+		Runner:          prodRunner,
+		RootDir:         rootDir,
+		IsOffline:       isOffline,
+		PartialSnapshot: snapshot,
 	}, err
 }
 
@@ -105,10 +105,10 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner    git.ProdRunner
-	RootDir   string
-	IsOffline bool
-	Snapshot  runstate.PartialSnapshot
+	Runner          git.ProdRunner
+	RootDir         string
+	IsOffline       bool
+	PartialSnapshot runstate.PartialSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

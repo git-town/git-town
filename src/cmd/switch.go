@@ -40,7 +40,7 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,

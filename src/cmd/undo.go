@@ -39,7 +39,7 @@ func undo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,

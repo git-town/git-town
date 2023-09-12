@@ -20,3 +20,7 @@ type Snapshot struct {
 	// as it adds or removes branches.
 	Branches domain.BranchInfos
 }
+
+func EmptySnapshot() Snapshot {
+	return Snapshot{}
+}

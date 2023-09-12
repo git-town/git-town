@@ -11,6 +11,12 @@ import (
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchInfos []BranchInfo
 
+func (bs BranchInfos) Clone() BranchInfos {
+	result := make(BranchInfos, len(bs))
+	copy(result, bs)
+	return result
+}
+
 // IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
 func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, branch := range bs {
