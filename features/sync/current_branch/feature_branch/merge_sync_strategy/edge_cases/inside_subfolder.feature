@@ -42,3 +42,26 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | beta   | local, origin | beta commit                    |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into beta  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND            |
+      | alpha  | git add -A         |
+      |        | git stash          |
+      |        | git checkout beta  |
+      | beta   | git checkout alpha |
+      | alpha  | git checkout main  |
+      | main   | git checkout alpha |
+      | alpha  | git stash pop      |
+    And the current branch is still "alpha"
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE                        |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | folder commit                  |
+      |        |               | main commit                    |
+      |        |               | Merge branch 'main' into alpha |
+      | beta   | local, origin | beta commit                    |
+      |        |               | main commit                    |
+      |        |               | Merge branch 'main' into beta  |
+    And the initial branches and hierarchy exist

@@ -43,81 +43,81 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 
 func DetermineStep(stepType string) steps.Step {
 	switch stepType {
-	case "*AbortMergeStep":
+	case "AbortMergeStep":
 		return &steps.AbortMergeStep{}
-	case "*AbortRebaseStep":
+	case "AbortRebaseStep":
 		return &steps.AbortRebaseStep{}
-	case "*AddToPerennialBranchesStep":
+	case "AddToPerennialBranchesStep":
 		return &steps.AddToPerennialBranchesStep{}
-	case "*CheckoutStep":
+	case "CheckoutStep":
 		return &steps.CheckoutStep{}
-	case "*CommitOpenChangesStep":
+	case "CommitOpenChangesStep":
 		return &steps.CommitOpenChangesStep{}
-	case "*ConnectorMergeProposalStep":
+	case "ConnectorMergeProposalStep":
 		return &steps.ConnectorMergeProposalStep{}
-	case "*ContinueMergeStep":
+	case "ContinueMergeStep":
 		return &steps.ContinueMergeStep{}
-	case "*ContinueRebaseStep":
+	case "ContinueRebaseStep":
 		return &steps.ContinueRebaseStep{}
-	case "*CreateBranchStep":
+	case "CreateBranchStep":
 		return &steps.CreateBranchStep{}
-	case "*CreateProposalStep":
+	case "CreateProposalStep":
 		return &steps.CreateProposalStep{}
-	case "*CreateRemoteBranchStep":
+	case "CreateRemoteBranchStep":
 		return &steps.CreateRemoteBranchStep{}
-	case "*CreateTrackingBranchStep":
+	case "CreateTrackingBranchStep":
 		return &steps.CreateTrackingBranchStep{}
-	case "*DeleteLocalBranchStep":
+	case "DeleteLocalBranchStep":
 		return &steps.DeleteLocalBranchStep{}
-	case "*DeleteParentBranchStep":
+	case "DeleteParentBranchStep":
 		return &steps.DeleteParentBranchStep{}
-	case "*DeleteRemoteBranchStep":
+	case "DeleteRemoteBranchStep":
 		return &steps.DeleteRemoteBranchStep{}
-	case "*DeleteTrackingBranchStep":
+	case "DeleteTrackingBranchStep":
 		return &steps.DeleteTrackingBranchStep{}
-	case "*DiscardOpenChangesStep":
+	case "DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
-	case "*EmptyStep":
+	case "EmptyStep":
 		return &steps.EmptyStep{}
-	case "*EnsureHasShippableChangesStep":
+	case "EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
-	case "*FetchUpstreamStep":
+	case "FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
-	case "*ForcePushBranchStep":
+	case "ForcePushBranchStep":
 		return &steps.ForcePushBranchStep{}
-	case "*MergeStep":
+	case "MergeStep":
 		return &steps.MergeStep{}
-	case "*PreserveCheckoutHistoryStep":
+	case "PreserveCheckoutHistoryStep":
 		return &steps.PreserveCheckoutHistoryStep{}
-	case "*PullBranchStep":
+	case "PullBranchStep":
 		return &steps.PullBranchStep{}
-	case "*PushBranchAfterCurrentBranchSteps":
+	case "PushBranchAfterCurrentBranchSteps":
 		return &steps.PushBranchAfterCurrentBranchSteps{}
-	case "*PushCurrentBranchStep":
+	case "PushCurrentBranchStep":
 		return &steps.PushCurrentBranchStep{}
-	case "*PushTagsStep":
+	case "PushTagsStep":
 		return &steps.PushTagsStep{}
-	case "*RebaseBranchStep":
+	case "RebaseBranchStep":
 		return &steps.RebaseBranchStep{}
-	case "*RemoveFromPerennialBranchesStep":
+	case "RemoveFromPerennialBranchesStep":
 		return &steps.RemoveFromPerennialBranchesStep{}
-	case "*ResetCurrentBranchToSHAStep":
+	case "ResetCurrentBranchToSHAStep":
 		return &steps.ResetCurrentBranchToSHAStep{}
 	case "*ResetRemoteBranchToSHAStep":
 		return &steps.ResetRemoteBranchToSHAStep{}
 	case "*RestoreOpenChangesStep":
 		return &steps.RestoreOpenChangesStep{}
-	case "*RevertCommitStep":
+	case "RevertCommitStep":
 		return &steps.RevertCommitStep{}
-	case "*SetParentStep":
+	case "SetParentStep":
 		return &steps.SetParentStep{}
-	case "*SquashMergeStep":
+	case "SquashMergeStep":
 		return &steps.SquashMergeStep{}
-	case "*SkipCurrentBranchSteps":
+	case "SkipCurrentBranchSteps":
 		return &steps.SkipCurrentBranchSteps{}
-	case "*StashOpenChangesStep":
+	case "StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
-	case "*UpdateProposalTargetStep":
+	case "UpdateProposalTargetStep":
 		return &steps.UpdateProposalTargetStep{}
 	}
 	return nil
@@ -126,7 +126,7 @@ func DetermineStep(stepType string) steps.Step {
 func typeName(myvar interface{}) string {
 	t := reflect.TypeOf(myvar)
 	if t.Kind() == reflect.Ptr {
-		return "*" + t.Elem().Name()
+		return t.Elem().Name()
 	}
 	return t.Name()
 }

@@ -13,9 +13,9 @@ type runner interface {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner runner) Git {
+func NewGit(gitConfig GitConfig, runner runner) Git {
 	return Git{
-		config: LoadGitConfig(runner),
+		config: gitConfig,
 		runner: runner,
 	}
 }

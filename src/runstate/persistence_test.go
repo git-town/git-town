@@ -175,27 +175,27 @@ func TestSanitizePath(t *testing.T) {
   "RunStepList": [
     {
       "data": {},
-      "type": "*AbortMergeStep"
+      "type": "AbortMergeStep"
     },
     {
       "data": {},
-      "type": "*AbortRebaseStep"
+      "type": "AbortRebaseStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*AddToPerennialBranchesStep"
+      "type": "AddToPerennialBranchesStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*CheckoutStep"
+      "type": "CheckoutStep"
     },
     {
       "data": {},
-      "type": "*CommitOpenChangesStep"
+      "type": "CommitOpenChangesStep"
     },
     {
       "data": {
@@ -204,28 +204,28 @@ func TestSanitizePath(t *testing.T) {
         "ProposalMessage": "proposal message",
         "ProposalNumber": 123
       },
-      "type": "*ConnectorMergeProposalStep"
+      "type": "ConnectorMergeProposalStep"
     },
     {
       "data": {},
-      "type": "*ContinueMergeStep"
+      "type": "ContinueMergeStep"
     },
     {
       "data": {},
-      "type": "*ContinueRebaseStep"
+      "type": "ContinueRebaseStep"
     },
     {
       "data": {
         "Branch": "branch",
         "StartingPoint": "123456"
       },
-      "type": "*CreateBranchStep"
+      "type": "CreateBranchStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*CreateProposalStep"
+      "type": "CreateProposalStep"
     },
     {
       "data": {
@@ -233,14 +233,14 @@ func TestSanitizePath(t *testing.T) {
         "NoPushHook": true,
         "SHA": "123456"
       },
-      "type": "*CreateRemoteBranchStep"
+      "type": "CreateRemoteBranchStep"
     },
     {
       "data": {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "*CreateTrackingBranchStep"
+      "type": "CreateTrackingBranchStep"
     },
     {
       "data": {
@@ -248,58 +248,58 @@ func TestSanitizePath(t *testing.T) {
         "Parent": "parent",
         "Force": false
       },
-      "type": "*DeleteLocalBranchStep"
+      "type": "DeleteLocalBranchStep"
     },
     {
       "data": {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "*DeleteRemoteBranchStep"
+      "type": "DeleteRemoteBranchStep"
     },
     {
       "data": {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "*DeleteParentBranchStep"
+      "type": "DeleteParentBranchStep"
     },
     {
       "data": {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "*DeleteTrackingBranchStep"
+      "type": "DeleteTrackingBranchStep"
     },
     {
       "data": {},
-      "type": "*DiscardOpenChangesStep"
+      "type": "DiscardOpenChangesStep"
     },
     {
       "data": {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "*EnsureHasShippableChangesStep"
+      "type": "EnsureHasShippableChangesStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*FetchUpstreamStep"
+      "type": "FetchUpstreamStep"
     },
     {
       "data": {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "*ForcePushBranchStep"
+      "type": "ForcePushBranchStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*MergeStep"
+      "type": "MergeStep"
     },
     {
       "data": {
@@ -307,17 +307,17 @@ func TestSanitizePath(t *testing.T) {
         "InitialPreviouslyCheckedOutBranch": "initial-previous-branch",
         "MainBranch": "main"
       },
-      "type": "*PreserveCheckoutHistoryStep"
+      "type": "PreserveCheckoutHistoryStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*PullBranchStep"
+      "type": "PullBranchStep"
     },
     {
       "data": {},
-      "type": "*PushBranchAfterCurrentBranchSteps"
+      "type": "PushBranchAfterCurrentBranchSteps"
     },
     {
       "data": {
@@ -325,51 +325,51 @@ func TestSanitizePath(t *testing.T) {
         "NoPushHook": true,
         "Undoable": true
       },
-      "type": "*PushCurrentBranchStep"
+      "type": "PushCurrentBranchStep"
     },
     {
       "data": {},
-      "type": "*PushTagsStep"
+      "type": "PushTagsStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*RebaseBranchStep"
+      "type": "RebaseBranchStep"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "*RemoveFromPerennialBranchesStep"
+      "type": "RemoveFromPerennialBranchesStep"
     },
     {
       "data": {
         "Hard": true,
         "SHA": "123456"
       },
-      "type": "*ResetCurrentBranchToSHAStep"
+      "type": "ResetCurrentBranchToSHAStep"
     },
     {
       "data": {},
-      "type": "*RestoreOpenChangesStep"
+      "type": "RestoreOpenChangesStep"
     },
     {
       "data": {
         "SHA": "123456"
       },
-      "type": "*RevertCommitStep"
+      "type": "RevertCommitStep"
     },
     {
       "data": {
         "Branch": "branch",
         "ParentBranch": "parent"
       },
-      "type": "*SetParentStep"
+      "type": "SetParentStep"
     },
     {
       "data": {},
-      "type": "*SkipCurrentBranchSteps"
+      "type": "SkipCurrentBranchSteps"
     },
     {
       "data": {
@@ -377,11 +377,11 @@ func TestSanitizePath(t *testing.T) {
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "*SquashMergeStep"
+      "type": "SquashMergeStep"
     },
     {
       "data": {},
-      "type": "*StashOpenChangesStep"
+      "type": "StashOpenChangesStep"
     },
     {
       "data": {
@@ -389,7 +389,7 @@ func TestSanitizePath(t *testing.T) {
         "NewTarget": "new-target",
         "ExistingTarget": "existing-target"
       },
-      "type": "*UpdateProposalTargetStep"
+      "type": "UpdateProposalTargetStep"
     }
   ],
   "UndoStepList": [],
