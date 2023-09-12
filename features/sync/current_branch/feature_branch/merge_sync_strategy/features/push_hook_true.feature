@@ -1,4 +1,4 @@
-Feature: sync the current feature branch with a tracking branch using the "merge" sync strategy
+Feature: push-hook setting set to "true"
 
   Background:
     Given the current branch is a feature branch "feature"
@@ -8,9 +8,10 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    When I run "git-town sync"
+    And setting "push-hook" is "true"
 
   Scenario: result
+    When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
@@ -36,19 +37,8 @@ Feature: sync the current feature branch with a tracking branch using the "merge
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
-    And the current branch is still "feature"
-    And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | origin main commit                                         |
-      |         |               | local main commit                                          |
-      | feature | local, origin | local feature commit                                       |
-      |         |               | origin feature commit                                      |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | origin main commit                                         |
-      |         |               | local main commit                                          |
-      |         |               | Merge branch 'main' into feature                           |
-    And the initial branches and hierarchy exist
+    Then it prints the error:
+      """
+      nothing to undo
+      """
+    And it runs no commands

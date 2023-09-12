@@ -30,41 +30,57 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		err = runstate.Delete(rootDir)
-		return false, err
+		return discardRunstate(rootDir)
 	case dialog.ResponseContinue:
-		hasConflicts, err := run.Backend.HasConflicts()
-		if err != nil {
-			return false, err
-		}
-		if hasConflicts {
-			return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
-		}
-		return true, runstate.Execute(runstate.ExecuteArgs{
-			RunState:  runState,
-			Run:       run,
-			Connector: connector,
-			RootDir:   rootDir,
-		})
+		return continueRunstate(run, runState, connector, rootDir)
 	case dialog.ResponseAbort:
-		abortRunState := runState.CreateAbortRunState()
-		return true, runstate.Execute(runstate.ExecuteArgs{
-			RunState:  &abortRunState,
-			Run:       run,
-			Connector: connector,
-			RootDir:   rootDir,
-		})
+		return abortRunstate(run, runState, connector, rootDir)
 	case dialog.ResponseSkip:
-		skipRunState := runState.CreateSkipRunState()
-		return true, runstate.Execute(runstate.ExecuteArgs{
-			RunState:  &skipRunState,
-			Run:       run,
-			Connector: connector,
-			RootDir:   rootDir,
-		})
+		return skipRunstate(run, runState, connector, rootDir)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
 		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 	}
+}
+
+func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string) (bool, error) {
+	abortRunState := runState.CreateAbortRunState()
+	return true, runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &abortRunState,
+		Run:       run,
+		Connector: connector,
+		RootDir:   rootDir,
+	})
+}
+
+func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string) (bool, error) {
+	hasConflicts, err := run.Backend.HasConflicts()
+	if err != nil {
+		return false, err
+	}
+	if hasConflicts {
+		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+	}
+	return true, runstate.Execute(runstate.ExecuteArgs{
+		RunState:  runState,
+		Run:       run,
+		Connector: connector,
+		RootDir:   rootDir,
+	})
+}
+
+func discardRunstate(rootDir string) (bool, error) {
+	err := runstate.Delete(rootDir)
+	return false, err
+}
+
+func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string) (bool, error) {
+	skipRunState := runState.CreateSkipRunState()
+	return true, runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &skipRunState,
+		Run:       run,
+		Connector: connector,
+		RootDir:   rootDir,
+	})
 }

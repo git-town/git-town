@@ -18,5 +18,5 @@ type UnfinishedRunStateDetails struct {
 }
 
 func isCheckoutStep(step steps.Step) bool {
-	return typeName(step) == "*CheckoutStep"
+	return typeName(step) == "CheckoutStep"
 }

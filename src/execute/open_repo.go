@@ -28,7 +28,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
+		Config:             nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.LocalBranch{},
 		RemoteBranchCache:  &cache.RemoteBranch{},
 		RemotesCache:       &cache.Remotes{},
@@ -47,6 +47,7 @@ func OpenRepo(args OpenRepoArgs) (OpenRepoResult, error) {
 		err = errors.New(messages.DirCurrentProblem)
 		return EmptyOpenRepoResult(), err
 	}
+	gitConfig := config.LoadGitConfig(backendRunner)
 	repoConfig := git.RepoConfig{
 		GitTown: config.NewGitTown(config.NewGit(backendRunner)),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
