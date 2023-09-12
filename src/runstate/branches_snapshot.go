@@ -15,7 +15,7 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{}
 }
 
-func (bs BranchesSnapshot) Diff(other BranchesSnapshot) BranchesDiff {
+func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 	result := BranchesDiff{
 		LocalAdded:    domain.LocalBranchNames{},
 		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
@@ -23,6 +23,20 @@ func (bs BranchesSnapshot) Diff(other BranchesSnapshot) BranchesDiff {
 		RemoteAdded:   []domain.RemoteBranchName{},
 		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
+	}
+	for _, beforeBranch := range bs.Branches {
+		afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
+		if afterBI == nil {
+			result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
+		} else {
+
+		}
+	}
+	for _, afterBranch := range after.Branches {
+		beforeBI := bs.Branches.FindLocalBranch(afterBranch.LocalName)
+		if beforeBI == nil {
+			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
+		}
 	}
 	return result
 }
