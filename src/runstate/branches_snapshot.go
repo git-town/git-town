@@ -16,13 +16,24 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 }
 
 func (bs BranchesSnapshot) Diff(other BranchesSnapshot) BranchesDiff {
-	return BranchesDiff{}
+	result := BranchesDiff{
+		LocalAdded:    domain.LocalBranchNames{},
+		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
+		LocalChanged:  map[domain.LocalBranchName]Change[domain.SHA]{},
+		RemoteAdded:   []domain.RemoteBranchName{},
+		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
+	}
+	return result
 }
 
 type BranchesDiff struct {
-	LocalAdded   domain.LocalBranchNames
-	LocalRemoved map[domain.LocalBranchName]domain.SHA
-	LocalChanged map[domain.LocalBranchName]Change[domain.SHA]
+	LocalAdded    domain.LocalBranchNames
+	LocalRemoved  map[domain.LocalBranchName]domain.SHA
+	LocalChanged  map[domain.LocalBranchName]Change[domain.SHA]
+	RemoteAdded   []domain.RemoteBranchName
+	RemoteRemoved map[domain.RemoteBranchName]domain.SHA
+	RemoteChanged map[domain.RemoteBranchName]Change[domain.SHA]
 }
 
 func (bd BranchesDiff) Steps() StepList {

@@ -36,10 +36,12 @@ func diffConfig(before, after config.GitConfigCache) ConfigDiff {
 		} else {
 			result.Removed[key] = beforeValue
 		}
-		delete(after, key)
 	}
 	for key := range after {
-		result.Added = append(result.Added, key)
+		_, beforeContains := before[key]
+		if !beforeContains {
+			result.Added = append(result.Added, key)
+		}
 	}
 	return result
 }
