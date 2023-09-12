@@ -1,9 +1,12 @@
 package runstate
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -44,6 +47,26 @@ func Execute(args ExecuteArgs) error {
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return errors.New(messages.DirCurrentProblem)
+	}
+	finalConfigSnapshot := ConfigSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(args.Run.Backend),
+	}
+	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
+	undoConfigSteps := configDiff.Steps()
+	allBranches, _, err := args.Run.Backend.BranchInfos()
+	if err != nil {
+		return err
+	}
+	finalBranchesSnapshot := BranchesSnapshot{
+		Branches: allBranches,
+	}
+	branchesDiff := finalBranchesSnapshot.Diff(args.InitialBranchesSnapshot)
+	undoBranchesSteps := branchesDiff.Steps()
+	args.RunState.UndoStepList = undoConfigSteps.Append(undoBranchesSteps)
 	if args.RunState.IsAbort || args.RunState.isUndo {
 		err := Delete(args.RootDir)
 		if err != nil {
@@ -115,8 +138,10 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	RunState  *RunState
-	Run       *git.ProdRunner
-	Connector hosting.Connector
-	RootDir   string
+	RunState                *RunState
+	Run                     *git.ProdRunner
+	Connector               hosting.Connector
+	RootDir                 string
+	InitialBranchesSnapshot BranchesSnapshot
+	InitialConfigSnapshot   ConfigSnapshot
 }

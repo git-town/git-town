@@ -46,12 +46,12 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		err = errors.New(messages.DirCurrentProblem)
 		return
 	}
-	snapshot := runstate.PartialSnapshot{
+	configSnapshot := runstate.ConfigSnapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backendRunner),
 	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(snapshot.GitConfig.Clone(), backendRunner),
+		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
@@ -89,10 +89,10 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		}
 	}
 	return OpenRepoResult{
-		Runner:          prodRunner,
-		RootDir:         rootDir,
-		IsOffline:       isOffline,
-		PartialSnapshot: snapshot,
+		Runner:         prodRunner,
+		RootDir:        rootDir,
+		IsOffline:      isOffline,
+		ConfigSnapshot: configSnapshot,
 	}, err
 }
 
@@ -105,10 +105,10 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner          git.ProdRunner
-	RootDir         string
-	IsOffline       bool
-	PartialSnapshot runstate.PartialSnapshot
+	Runner         git.ProdRunner
+	RootDir        string
+	IsOffline      bool
+	ConfigSnapshot runstate.ConfigSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

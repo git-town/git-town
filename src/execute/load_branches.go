@@ -7,39 +7,39 @@ import (
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.Snapshot, bool, error) {
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnapshot, bool, error) {
 	if args.HandleUnfinishedState {
 		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
 		if err != nil || exit {
-			return domain.EmptyBranches(), runstate.EmptySnapshot(), exit, err
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
 		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
 		if err != nil {
-			return domain.EmptyBranches(), runstate.EmptySnapshot(), false, err
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 		}
 		err = validate.NoOpenChanges(hasOpenChanges)
 		if err != nil {
-			return domain.EmptyBranches(), runstate.EmptySnapshot(), false, err
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 		}
 	}
 	if args.Fetch {
 		var remotes domain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
-			return domain.EmptyBranches(), runstate.EmptySnapshot(), false, err
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline {
 			err = args.Repo.Runner.Frontend.Fetch()
 			if err != nil {
-				return domain.EmptyBranches(), runstate.EmptySnapshot(), false, err
+				return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 			}
 		}
 	}
 	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
 	if err != nil {
-		return domain.EmptyBranches(), runstate.EmptySnapshot(), false, err
+		return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	branches := domain.Branches{
@@ -50,9 +50,8 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.Snapshot, bo
 	if args.ValidateIsConfigured {
 		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
 	}
-	snapshot := runstate.Snapshot{
-		PartialSnapshot: args.Repo.PartialSnapshot,
-		Branches:        branches.All.Clone(),
+	snapshot := runstate.BranchesSnapshot{
+		Branches: branches.All.Clone(),
 	}
 	return branches, snapshot, false, err
 }
