@@ -329,7 +329,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 			have := diff.UndoSteps()
 			want := runstate.StepList{
 				List: []steps.Step{
-					steps.RemoveGlobalConfigStep{
+					&steps.RemoveGlobalConfigStep{
 						Key: config.KeyOffline,
 					},
 				},

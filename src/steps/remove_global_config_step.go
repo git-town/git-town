@@ -7,14 +7,19 @@ import (
 )
 
 type RemoveGlobalConfigStep struct {
-	Key config.Key // the config key to remove
+	Key           config.Key // the config key to remove
+	previousValue string
 	EmptyStep
 }
 
 func (step *RemoveGlobalConfigStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&AddGlobalConfigStep{}}, nil
+	return []Step{&AddGlobalConfigStep{
+		Key:   step.Key,
+		Value: step.previousValue,
+	}}, nil
 }
 
 func (step *RemoveGlobalConfigStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+	step.previousValue = run.Config.GlobalConfigValue(step.Key)
 	return run.Config.RemoveGlobalConfigValue(step.Key)
 }

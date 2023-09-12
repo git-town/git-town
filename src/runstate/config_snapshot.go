@@ -2,6 +2,7 @@ package runstate
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // ConfigSnapshot is a snapshot of the Git configuration at a particular point in time.
@@ -55,7 +56,11 @@ type SnapshotConfigDiff struct {
 }
 
 func (scd SnapshotConfigDiff) UndoSteps() StepList {
-	return StepList{}
+	result := StepList{}
+	for _, key := range scd.Global.Added {
+		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
+	}
+	return result
 }
 
 type Change[T any] struct {

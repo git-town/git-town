@@ -56,7 +56,7 @@ func finished(args ExecuteArgs) error {
 		GitConfig: config.LoadGitConfig(args.Run.Backend),
 	}
 	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
-	undoConfigSteps := configDiff.Steps()
+	undoConfigSteps := configDiff.UndoSteps()
 	allBranches, _, err := args.Run.Backend.BranchInfos()
 	if err != nil {
 		return err
