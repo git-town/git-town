@@ -54,7 +54,7 @@ type SnapshotConfigDiff struct {
 	Local  ConfigDiff
 }
 
-func (scd SnapshotConfigDiff) Steps() StepList {
+func (scd SnapshotConfigDiff) UndoSteps() StepList {
 	return StepList{}
 }
 

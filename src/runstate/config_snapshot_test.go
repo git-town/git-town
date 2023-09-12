@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -302,6 +303,34 @@ func TestConfigSnapshot(t *testing.T) {
 							Before: "prod",
 							After:  "prod qa",
 						},
+					},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+	})
+}
+
+func TestSnapshotConfigDiff(t *testing.T) {
+	t.Parallel()
+	t.Run("UndoSteps", func(t *testing.T) {
+		t.Parallel()
+		t.Run("global config added", func(t *testing.T) {
+			diff := runstate.SnapshotConfigDiff{
+				Global: runstate.ConfigDiff{
+					Added: []config.Key{
+						config.KeyOffline,
+					},
+					Removed: map[config.Key]string{},
+					Changed: map[config.Key]runstate.Change[string]{},
+				},
+				Local: runstate.ConfigDiff{},
+			}
+			have := diff.UndoSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					steps.RemoveGlobalConfigStep{
+						Key: config.KeyOffline,
 					},
 				},
 			}
