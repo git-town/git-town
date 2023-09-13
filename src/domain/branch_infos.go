@@ -71,9 +71,9 @@ func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
 	return nil
 }
 
-// FindLocalBranchWithTracking provides the local branch that has the given remote branch as its tracking branch
+// FindByRemote provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (bs BranchInfos) FindLocalBranchWithTracking(remoteBranch RemoteBranchName) *BranchInfo {
+func (bs BranchInfos) FindByRemote(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, branch := range bs {
 		if branch.RemoteName == remoteBranch {
 			return &bs[b]
