@@ -27,7 +27,7 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 	for _, before := range bs.Branches {
 		if before.LocalName.IsEmpty() {
 			// remote-only branch
-			after := after.Branches.FindLocalBranchWithTracking(before.RemoteName)
+			after := after.Branches.FindByRemote(before.RemoteName)
 			if after == nil {
 				result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
 				continue
@@ -69,7 +69,7 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 				continue
 			}
 		}
-		before := bs.Branches.FindLocalBranchWithTracking(afterBranch.RemoteName)
+		before := bs.Branches.FindByRemote(afterBranch.RemoteName)
 		if before == nil {
 			result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
 			continue
