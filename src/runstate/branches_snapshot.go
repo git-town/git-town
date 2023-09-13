@@ -119,26 +119,18 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
 	}
 	for _, ba := range bc {
-		if ba.NoChanges() {
-			continue
-		}
-		if ba.IsOmniChange() {
+		switch true {
+		case ba.NoChanges():
+		case ba.IsOmniChange():
 			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
-			continue
-		}
-		if ba.IsOmniAdd() {
+		case ba.IsOmniAdd():
 			result.BothAdded = append(result.BothAdded, ba.After.LocalName)
-			continue
+		case ba.IsOmniRemove():
+			result.BothRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
 		}
-		if ba.IsOmniRemove() {
-		}
-		// if !beforeLocalSHA.IsEmpty() && beforeLocalSHA == beforeRemoteSHA && afterLocalSHA.IsEmpty() && afterRemoteSHA.IsEmpty() {
-		// 	result.BothRemoved[ba.Before.LocalName] = beforeLocalSHA
-		// 	continue
-		// }
 
 		// 	if ba.Before != nil && ba.After != nil {
 		// 		if !ba.Before.LocalName.IsEmpty() && !ba.After.LocalName.IsEmpty() {
