@@ -15,14 +15,14 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Run("no changes", func(t *testing.T) {
 			t.Parallel()
 			bba := runstate.BranchBeforeAfter{
-				Before: &domain.BranchInfo{
+				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
-				After: &domain.BranchInfo{
+				After: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
 					SyncStatus: domain.SyncStatusUpToDate,
@@ -35,14 +35,14 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Run("has changes", func(t *testing.T) {
 			t.Parallel()
 			bba := runstate.BranchBeforeAfter{
-				Before: &domain.BranchInfo{
+				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
-				After: &domain.BranchInfo{
+				After: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("222222"),
 					SyncStatus: domain.SyncStatusUpToDate,
@@ -59,14 +59,14 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Run("is an omni change", func(t *testing.T) {
 			t.Parallel()
 			bba := runstate.BranchBeforeAfter{
-				Before: &domain.BranchInfo{
+				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
-				After: &domain.BranchInfo{
+				After: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("222222"),
 					SyncStatus: domain.SyncStatusUpToDate,
@@ -76,17 +76,17 @@ func TestBranchBeforeAfter(t *testing.T) {
 			}
 			assert.True(t, bba.IsOmniChange())
 		})
-		t.Run("no omni change", func(t *testing.T) {
+		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
 			bba := runstate.BranchBeforeAfter{
-				Before: &domain.BranchInfo{
+				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("333333"),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("333333"),
+					RemoteSHA:  domain.NewSHA("111111"),
 				},
-				After: &domain.BranchInfo{
+				After: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("222222"),
 					SyncStatus: domain.SyncStatusUpToDate,
@@ -94,7 +94,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.True(t, bba.IsOmniChange())
+			assert.False(t, bba.IsOmniChange())
 		})
 	})
 }

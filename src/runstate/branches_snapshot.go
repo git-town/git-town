@@ -19,26 +19,30 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 
 // BranchBeforeAfter represents the temporal change of a branch.
 type BranchBeforeAfter struct {
-	Before *domain.BranchInfo // the status of the branch before Git Town ran
-	After  *domain.BranchInfo // the status of the branch after Git Town ran
+	Before domain.BranchInfo // the status of the branch before Git Town ran
+	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
 // NoChanges indicates whether this BranchBeforeAfter contains changes or not.
 func (bba BranchBeforeAfter) NoChanges() bool {
-	if bba.Before == nil && bba.After == nil {
-		return true
-	}
-	if bba.Before == nil && bba.After != nil {
-		return false
-	}
-	if bba.Before != nil && bba.After == nil {
-		return false
-	}
 	return bba.Before.LocalSHA == bba.After.LocalSHA && bba.Before.RemoteSHA == bba.After.RemoteSHA
 }
 
-// IsOmniChange indicates whether this BranchBeforeAfter deletes a synced branch.
+// IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
+// from one SHA both locally and remotely to another SHA both locally and remotely.
 func (bba BranchBeforeAfter) IsOmniChange() bool {
+	if bba.Before.LocalSHA != bba.Before.RemoteSHA {
+		// was not an omnibranch before
+		return false
+	}
+	if bba.After.LocalSHA != bba.After.RemoteSHA {
+		// is not an omnibranch after
+		return false
+	}
+	if bba.Before.LocalSHA == bba.After.LocalSHA {
+		// no change
+		return false
+	}
 	return true
 }
 

@@ -46,3 +46,8 @@ func (bi BranchInfo) HasTrackingBranch() bool {
 func (bi BranchInfo) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
+
+// IsOmniBranch indicates whether the local and remote branch are in sync.
+func (bi BranchInfo) IsOmniBranch() bool {
+	return bi.LocalSHA == bi.RemoteSHA
+}
