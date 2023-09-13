@@ -24,21 +24,40 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
 	}
-	for _, beforeBranch := range bs.Branches {
-		if !beforeBranch.LocalName.IsEmpty() {
-			afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
-			if afterBI == nil {
-				result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
+	for _, before := range bs.Branches {
+		if before.LocalName.IsEmpty() {
+			// remote-only branch
+			after := after.Branches.FindLocalBranchWithTracking(before.RemoteName)
+			if after == nil {
+				result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
 				continue
-			}
-			if beforeBranch.LocalSHA != afterBI.LocalSHA {
-				result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
-					Before: beforeBranch.LocalSHA,
-					After:  afterBI.LocalSHA,
+			} else {
+				// remote branch updated
+				if before.RemoteSHA != after.RemoteSHA {
+					result.RemoteChanged[before.RemoteName] = Change[domain.SHA]{
+						Before: before.RemoteSHA,
+						After:  after.RemoteSHA,
+					}
+					continue
 				}
 			}
-			if beforeBranch.RemoteSHA != afterBI.RemoteSHA {
-
+		} else {
+			// local branch
+			after := after.Branches.FindLocalBranch(before.LocalName)
+			if after == nil {
+				result.LocalRemoved[before.LocalName] = before.LocalSHA
+				continue
+			}
+			if before.LocalSHA != after.LocalSHA {
+				result.LocalChanged[before.LocalName] = Change[domain.SHA]{
+					Before: before.LocalSHA,
+					After:  after.LocalSHA,
+				}
+				continue
+			}
+			if !before.RemoteSHA.IsEmpty() && after.RemoteSHA.IsEmpty() {
+				result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
+				continue
 			}
 		}
 	}
