@@ -22,21 +22,6 @@ type BranchBeforeAfter struct {
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
-// IsLocalAdd indicates whether this BranchBeforeAfter adds a local branch.
-func (bba BranchBeforeAfter) IsLocalAdd() bool {
-	return bba.Before.IsEmpty() && bba.After.HasOnlyLocalBranch()
-}
-
-// IsLocalChange indicates whether this BranchBeforeAfter changes a local-only branch.
-func (bba BranchBeforeAfter) IsLocalChange() bool {
-	return bba.Before.HasOnlyLocalBranch() && bba.After.HasOnlyLocalBranch() && bba.LocalChanged()
-}
-
-// IsLocalRemove indicates whether this BranchBeforeAfter describes the removal of a local-only branch.
-func (bba BranchBeforeAfter) IsLocalRemove() bool {
-	return bba.Before.HasOnlyLocalBranch() && bba.After.IsEmpty()
-}
-
 // IsOmniAdd indicates whether this BranchBeforeAfter adds an omnibranch.
 func (bba BranchBeforeAfter) IsOmniAdd() bool {
 	return bba.Before.IsEmpty() && !bba.After.IsEmpty() && bba.After.IsOmniBranch()
@@ -53,21 +38,16 @@ func (bba BranchBeforeAfter) IsOmniRemove() bool {
 	return !bba.Before.IsEmpty() && bba.Before.IsOmniBranch() && bba.After.IsEmpty()
 }
 
-func (bba BranchBeforeAfter) IsRemoteAdd() bool {
-	return bba.Before.IsEmpty() && bba.After.HasOnlyRemoteBranch()
+func (bba BranchBeforeAfter) LocalAdded() bool {
+	return !bba.Before.HasLocalBranch() && bba.After.HasLocalBranch()
 }
 
-func (bba BranchBeforeAfter) IsRemoteChange() bool {
-	return bba.Before.HasOnlyRemoteBranch() && bba.After.HasOnlyRemoteBranch() && bba.RemoteChanged()
-}
-
-func (bba BranchBeforeAfter) IsRemoteRemove() bool {
-	return bba.Before.HasOnlyRemoteBranch() && bba.After.IsEmpty()
-}
-
-// LocalChanged indicates whether this BranchBeforeAfter describes a change to the local branch.
 func (bba BranchBeforeAfter) LocalChanged() bool {
 	return bba.Before.LocalSHA != bba.After.LocalSHA
+}
+
+func (bba BranchBeforeAfter) LocalRemoved() bool {
+	return bba.Before.HasLocalBranch() && !bba.After.HasLocalBranch()
 }
 
 // NoChanges indicates whether this BranchBeforeAfter contains changes or not.
@@ -75,8 +55,16 @@ func (bba BranchBeforeAfter) NoChanges() bool {
 	return !bba.LocalChanged() && !bba.RemoteChanged()
 }
 
+func (bba BranchBeforeAfter) RemoteAdded() bool {
+	return !bba.Before.HasRemoteBranch() && bba.After.HasRemoteBranch()
+}
+
 func (bba BranchBeforeAfter) RemoteChanged() bool {
 	return bba.Before.RemoteSHA != bba.After.RemoteSHA
+}
+
+func (bba BranchBeforeAfter) RemoteRemoved() bool {
+	return bba.Before.HasRemoteBranch() && !bba.After.HasRemoteBranch()
 }
 
 type BranchesBeforeAfter []BranchBeforeAfter
@@ -115,37 +103,43 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
 	}
 	for _, ba := range bc {
-		switch {
-		case ba.NoChanges():
-		case ba.IsOmniChange():
+		if ba.NoChanges() {
+			continue
+		}
+		if ba.IsOmniChange() {
 			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
-		case ba.IsOmniAdd():
+			continue
+		}
+		if ba.IsOmniAdd() {
 			result.BothAdded = append(result.BothAdded, ba.After.LocalName)
-		case ba.IsOmniRemove():
+			continue
+		}
+		if ba.IsOmniRemove() {
 			result.BothRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
-		case ba.IsLocalAdd():
+			continue
+		}
+		if ba.LocalAdded() {
 			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
-		case ba.IsLocalRemove():
+		} else if ba.LocalRemoved() {
 			result.LocalRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
-		case ba.IsLocalChange():
+		} else if ba.LocalChanged() {
 			result.LocalChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
-		case ba.IsRemoteAdd():
+		}
+		if ba.RemoteAdded() {
 			result.RemoteAdded = append(result.RemoteAdded, ba.After.RemoteName)
-		case ba.IsRemoteRemove():
+		} else if ba.RemoteRemoved() {
 			result.RemoteRemoved[ba.Before.RemoteName] = ba.Before.RemoteSHA
-		case ba.IsRemoteChange():
+		} else if ba.RemoteChanged() {
 			result.RemoteChanged[ba.Before.RemoteName] = Change[domain.SHA]{
 				Before: ba.Before.RemoteSHA,
 				After:  ba.After.RemoteSHA,
 			}
-		default:
-			panic("unrecognized state")
 		}
 	}
 	return result
