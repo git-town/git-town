@@ -58,6 +58,10 @@ func (bba BranchBeforeAfter) IsRemoteAdd() bool {
 	return bba.Before.IsEmpty() && bba.After.HasOnlyRemoteBranch()
 }
 
+func (bba BranchBeforeAfter) IsRemoteChange() bool {
+	return bba.Before.HasOnlyRemoteBranch() && bba.After.HasOnlyRemoteBranch() && bba.RemoteChanged()
+}
+
 func (bba BranchBeforeAfter) IsRemoteRemove() bool {
 	return bba.Before.HasOnlyRemoteBranch() && bba.After.IsEmpty()
 }
@@ -167,6 +171,11 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			result.RemoteAdded = append(result.RemoteAdded, ba.After.RemoteName)
 		case ba.IsRemoteRemove():
 			result.RemoteRemoved[ba.Before.RemoteName] = ba.Before.RemoteSHA
+		case ba.IsRemoteChange():
+			result.RemoteChanged[ba.Before.RemoteName] = Change[domain.SHA]{
+				Before: ba.Before.RemoteSHA,
+				After:  ba.After.RemoteSHA,
+			}
 		}
 
 		// 	if ba.Before != nil && ba.After != nil {
