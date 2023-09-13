@@ -10,6 +10,17 @@ import (
 
 func TestSHA(t *testing.T) {
 	t.Parallel()
+	t.Run("IsEmpty", func(t *testing.T) {
+		t.Run("is empty", func(t *testing.T) {
+			sha := domain.SHA{}
+			assert.True(t, sha.IsEmpty())
+		})
+		t.Run("is not empty", func(t *testing.T) {
+			sha := domain.NewSHA("123456")
+			assert.False(t, sha.IsEmpty())
+		})
+	})
+
 	t.Run("NewSHA and String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
