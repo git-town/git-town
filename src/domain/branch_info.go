@@ -42,6 +42,10 @@ func (bi BranchInfo) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
+func (bi BranchInfo) IsEmpty() bool {
+	return bi.LocalName.IsEmpty() && bi.LocalSHA.IsEmpty() && bi.RemoteName.IsEmpty() && bi.RemoteSHA.IsEmpty()
+}
+
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (bi BranchInfo) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()

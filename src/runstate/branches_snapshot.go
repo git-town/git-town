@@ -23,10 +23,20 @@ type BranchBeforeAfter struct {
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
+// IsOmniAdd indicates whether this BranchBeforeAfter adds an omnibranch.
+func (bba BranchBeforeAfter) IsOmniAdd() bool {
+	return bba.Before.IsEmpty() && !bba.After.IsEmpty() && bba.After.IsOmniBranch()
+}
+
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (bba BranchBeforeAfter) IsOmniChange() bool {
 	return bba.Before.IsOmniBranch() && bba.After.IsOmniBranch() && bba.LocalChanged()
+}
+
+// IsOmniRemove indicates whether this BranchBeforeAfter removes an omnibranch.
+func (bba BranchBeforeAfter) IsOmniRemove() bool {
+	return !bba.Before.IsEmpty() && bba.Before.IsOmniBranch() && bba.After.IsEmpty()
 }
 
 // LocalChanged indicates whether this BranchBeforeAfter describes a change to the local branch.
@@ -108,93 +118,91 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
 		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
 	}
-	// for _, ba := range bc {
-	// 	if ba.NoChanges() {
-	// 		continue
-	// 	}
-	// 	// check for omnibranch change
-	// 	if beforeLocalSHA == beforeRemoteSHA && afterLocalSHA == afterRemoteSHA && beforeLocalSHA != afterLocalSHA {
-	// 		result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
-	// 			Before: beforeLocalSHA,
-	// 			After: afterLocalSHA,
-	// 		}
-	// 		continue
-	// 	}
-	// 	// check for omnibranch added
-	// 	if beforeLocalSHA.IsEmpty() && beforeRemoteSHA.IsEmpty && !afterLocalSHA.IsEmpty() && afterLocalSHA == afterRemoteSHA {
-	// 		result.BothAdded = append(result.BothAdded, ba.After.LocalName)
-	// 		continue
-	// 	}
-	// 	// check for omnibranch removed
-	// 	if !beforeLocalSHA.IsEmpty() && beforeLocalSHA == beforeRemoteSHA && afterLocalSHA.IsEmpty() && afterRemoteSHA.IsEmpty() {
-	// 		result.BothRemoved[ba.Before.LocalName] = beforeLocalSHA
-	// 		continue
-	// 	}
-	// 	if
+	for _, ba := range bc {
+		if ba.NoChanges() {
+			continue
+		}
+		if ba.IsOmniChange() {
+			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
+				Before: ba.Before.LocalSHA,
+				After:  ba.After.LocalSHA,
+			}
+			continue
+		}
+		if ba.IsOmniAdd() {
+			result.BothAdded = append(result.BothAdded, ba.After.LocalName)
+			continue
+		}
+		if ba.IsOmniRemove() {
+		}
+		// if !beforeLocalSHA.IsEmpty() && beforeLocalSHA == beforeRemoteSHA && afterLocalSHA.IsEmpty() && afterRemoteSHA.IsEmpty() {
+		// 	result.BothRemoved[ba.Before.LocalName] = beforeLocalSHA
+		// 	continue
+		// }
 
-	// 	if ba.Before != nil && ba.After != nil {
-	// 		if !ba.Before.LocalName.IsEmpty() && !ba.After.LocalName.IsEmpty() {
-	// 			if ba.Before.LocalSHA == ba.After.LocalSHA
-	// 		}
-	// 	}
-	// 	if ba.Before != nil && ba.After == nil {
-	// 	}
-	// 	if ba.Before == nil && ba.After != nil {
-	// 	}
-	// 	panic("before and after are nil, this should never happen")
-	// }
+		// 	if ba.Before != nil && ba.After != nil {
+		// 		if !ba.Before.LocalName.IsEmpty() && !ba.After.LocalName.IsEmpty() {
+		// 			if ba.Before.LocalSHA == ba.After.LocalSHA
+		// 		}
+		// 	}
+		// 	if ba.Before != nil && ba.After == nil {
+		// 	}
+		// 	if ba.Before == nil && ba.After != nil {
+		// 	}
+		// 	panic("before and after are nil, this should never happen")
+		// }
 
-	// for _, before := range bs.Branches {
-	// 	if before.LocalName.IsEmpty() {
-	// 		// remote-only branch
-	// 		after := after.Branches.FindByRemote(before.RemoteName)
-	// 		if after == nil {
-	// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
-	// 			continue
-	// 		} else {
-	// 			// remote branch updated
-	// 			if before.RemoteSHA != after.RemoteSHA {
-	// 				result.RemoteChanged[before.RemoteName] = Change[domain.SHA]{
-	// 					Before: before.RemoteSHA,
-	// 					After:  after.RemoteSHA,
-	// 				}
-	// 				continue
-	// 			}
-	// 		}
-	// 	} else {
-	// 		// local or omni branch
-	// 		after := after.Branches.FindLocalBranch(before.LocalName)
-	// 		if after == nil {
-	// 			result.LocalRemoved[before.LocalName] = before.LocalSHA
-	// 			continue
-	// 		}
-	// 		if before.LocalSHA != after.LocalSHA {
-	// 			result.LocalChanged[before.LocalName] = Change[domain.SHA]{
-	// 				Before: before.LocalSHA,
-	// 				After:  after.LocalSHA,
-	// 			}
-	// 			continue
-	// 		}
-	// 		if !before.RemoteSHA.IsEmpty() && after.RemoteSHA.IsEmpty() {
-	// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
-	// 			continue
-	// 		}
-	// 	}
-	// }
-	// for _, afterBranch := range after.Branches {
-	// 	if !afterBranch.LocalName.IsEmpty() {
-	// 		before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
-	// 		if before == nil {
-	// 			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
-	// 			continue
-	// 		}
-	// 	}
-	// 	before := bs.Branches.FindByRemote(afterBranch.RemoteName)
-	// 	if before == nil {
-	// 		result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
-	// 		continue
-	// 	}
-	// }
+		// for _, before := range bs.Branches {
+		// 	if before.LocalName.IsEmpty() {
+		// 		// remote-only branch
+		// 		after := after.Branches.FindByRemote(before.RemoteName)
+		// 		if after == nil {
+		// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
+		// 			continue
+		// 		} else {
+		// 			// remote branch updated
+		// 			if before.RemoteSHA != after.RemoteSHA {
+		// 				result.RemoteChanged[before.RemoteName] = Change[domain.SHA]{
+		// 					Before: before.RemoteSHA,
+		// 					After:  after.RemoteSHA,
+		// 				}
+		// 				continue
+		// 			}
+		// 		}
+		// 	} else {
+		// 		// local or omni branch
+		// 		after := after.Branches.FindLocalBranch(before.LocalName)
+		// 		if after == nil {
+		// 			result.LocalRemoved[before.LocalName] = before.LocalSHA
+		// 			continue
+		// 		}
+		// 		if before.LocalSHA != after.LocalSHA {
+		// 			result.LocalChanged[before.LocalName] = Change[domain.SHA]{
+		// 				Before: before.LocalSHA,
+		// 				After:  after.LocalSHA,
+		// 			}
+		// 			continue
+		// 		}
+		// 		if !before.RemoteSHA.IsEmpty() && after.RemoteSHA.IsEmpty() {
+		// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
+		// 			continue
+		// 		}
+		// 	}
+		// }
+		// for _, afterBranch := range after.Branches {
+		// 	if !afterBranch.LocalName.IsEmpty() {
+		// 		before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
+		// 		if before == nil {
+		// 			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
+		// 			continue
+		// 		}
+		// 	}
+		// 	before := bs.Branches.FindByRemote(afterBranch.RemoteName)
+		// 	if before == nil {
+		// 		result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
+		// 		continue
+		// 	}
+	}
 	return result
 }
 
