@@ -28,6 +28,11 @@ func (bba BranchBeforeAfter) IsLocalAdd() bool {
 	return bba.Before.IsEmpty() && bba.After.HasOnlyLocalBranch()
 }
 
+// IsLocalChange indicates whether this BranchBeforeAfter changes a local-only branch.
+func (bba BranchBeforeAfter) IsLocalChange() bool {
+	return bba.Before.HasOnlyLocalBranch() && bba.After.HasOnlyLocalBranch() && bba.LocalChanged()
+}
+
 // IsLocalRemove indicates whether this BranchBeforeAfter describes the removal of a local-only branch.
 func (bba BranchBeforeAfter) IsLocalRemove() bool {
 	return bba.Before.HasOnlyLocalBranch() && bba.After.IsEmpty()
@@ -145,6 +150,11 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
 		case ba.IsLocalRemove():
 			result.LocalRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
+		case ba.IsLocalChange():
+			result.LocalChanged[ba.Before.LocalName] = Change[domain.SHA]{
+				Before: ba.Before.LocalSHA,
+				After:  ba.After.LocalSHA,
+			}
 		}
 
 		// 	if ba.Before != nil && ba.After != nil {
