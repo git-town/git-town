@@ -17,6 +17,18 @@ func (bs BranchInfos) Clone() BranchInfos {
 	return result
 }
 
+func (bs BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
+	for _, branchInfo := range bs {
+		if branchInfo.LocalName == other.LocalName && !other.LocalName.IsEmpty() {
+			return branchInfo
+		}
+		if branchInfo.RemoteName == other.RemoteName && !other.RemoteName.IsEmpty() {
+			return branchInfo
+		}
+	}
+	return EmptyBranchInfo()
+}
+
 // IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
 func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, branch := range bs {

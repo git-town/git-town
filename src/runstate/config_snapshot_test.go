@@ -12,8 +12,10 @@ import (
 func TestConfigSnapshot(t *testing.T) {
 	t.Parallel()
 	t.Run("Diff", func(t *testing.T) {
+		t.Parallel()
 
 		t.Run("global config added", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -52,6 +54,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("global config removed", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -90,6 +93,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("global config changed", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -130,6 +134,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("local config added", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -168,6 +173,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("local config removed", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -206,6 +212,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("local config changed", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -246,6 +253,7 @@ func TestConfigSnapshot(t *testing.T) {
 		})
 
 		t.Run("complex example", func(t *testing.T) {
+			t.Parallel()
 			before := runstate.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
@@ -316,6 +324,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 	t.Run("UndoSteps", func(t *testing.T) {
 		t.Parallel()
 		t.Run("global config added", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{
 					Added: []config.Key{
@@ -338,6 +347,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		})
 
 		t.Run("global config removed", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{
 					Added: []config.Key{},
@@ -361,6 +371,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		})
 
 		t.Run("global config changed", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
@@ -387,6 +398,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		})
 
 		t.Run("local config added", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{},
 				Local: runstate.ConfigDiff{
@@ -409,6 +421,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		})
 
 		t.Run("local config removed", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{},
 				Local: runstate.ConfigDiff{
@@ -432,6 +445,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		})
 
 		t.Run("local config changed", func(t *testing.T) {
+			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
 				Global: runstate.ConfigDiff{},
 				Local: runstate.ConfigDiff{
@@ -456,6 +470,5 @@ func TestSnapshotConfigDiff(t *testing.T) {
 			}
 			assert.Equal(t, want, have)
 		})
-
 	})
 }

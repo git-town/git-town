@@ -11,11 +11,14 @@ import (
 func TestSHA(t *testing.T) {
 	t.Parallel()
 	t.Run("IsEmpty", func(t *testing.T) {
+		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
+			t.Parallel()
 			sha := domain.SHA{}
 			assert.True(t, sha.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
+			t.Parallel()
 			sha := domain.NewSHA("123456")
 			assert.False(t, sha.IsEmpty())
 		})

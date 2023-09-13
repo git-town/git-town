@@ -6,7 +6,6 @@ import (
 
 // BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
 type BranchesSnapshot struct {
-
 	// Branches is a read-only copy of the branches that exist in this repo at the time the snapshot was taken.
 	// Don't use these branches for business logic since businss logic might want to modify its in-memory cache of branches
 	// as it adds or removes branches.
@@ -82,53 +81,23 @@ func (bba BranchBeforeAfter) RemoteChanged() bool {
 
 type BranchesBeforeAfter []BranchBeforeAfter
 
-// Changes provides matching BranchInfos from before and after.
 func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBeforeAfter {
 	result := BranchesBeforeAfter{}
-	// for _, before := range bs.Branches {
-	// 	if !before.LocalName.IsEmpty() {
-	// 		after := afterSnapshot.Branches.FindLocalBranch(before.LocalName)
-	// 		if after != nil {
-	// 			result = append(result, BranchBeforeAfter{
-	// 				Before: &before,
-	// 				After:  after,
-	// 			})
-	// 			continue
-	// 		}
-	// 	}
-	// 	if !before.RemoteName.IsEmpty() {
-	// 		after := afterSnapshot.Branches.FindByRemote(before.RemoteName)
-	// 		result = append(result, BranchBeforeAfter{
-	// 			Before: &before,
-	// 			After:  after,
-	// 		})
-	// 	}
-	// }
-	// for _, after := range afterSnapshot.Branches {
-	// 	if !after.LocalName.IsEmpty() {
-	// 		before := bs.Branches.FindLocalBranch(after.LocalName)
-	// 		if before == nil {
-	// 			result = append(result, BranchBeforeAfter{
-	// 				Before: nil,
-	// 				After:  &after,
-	// 			})
-	// 		} else {
-	// 			// here there exists a matching before and after --> it was already added when iterating before
-	// 		}
-	// 		continue
-	// 	}
-	// 	if !after.RemoteName.IsEmpty() {
-	// 		before := bs.Branches.FindByRemote(after.RemoteName)
-	// 		if before == nil {
-	// 			result = append(result, BranchBeforeAfter{
-	// 				Before: nil,
-	// 				After:  &after,
-	// 			})
-	// 		} else {
-	// 			// here there exists a matching before and after --> it was already added when iterating before
-	// 		}
-	// 	}
-	// }
+	for _, before := range bs.Branches {
+		after := afterSnapshot.Branches.FindMatchingRecord(before)
+		result = append(result, BranchBeforeAfter{
+			Before: before,
+			After:  after,
+		})
+	}
+	for _, after := range afterSnapshot.Branches {
+		if bs.Branches.FindMatchingRecord(after).IsEmpty() {
+			result = append(result, BranchBeforeAfter{
+				Before: domain.EmptyBranchInfo(),
+				After:  after,
+			})
+		}
+	}
 	return result
 }
 
@@ -146,9 +115,8 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
 	}
 	for _, ba := range bc {
-		switch true {
+		switch {
 		case ba.NoChanges():
-			// nothing to do here
 		case ba.IsOmniChange():
 			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
@@ -176,70 +144,9 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 				Before: ba.Before.RemoteSHA,
 				After:  ba.After.RemoteSHA,
 			}
+		default:
+			panic("unrecognized state")
 		}
-
-		// 	if ba.Before != nil && ba.After != nil {
-		// 		if !ba.Before.LocalName.IsEmpty() && !ba.After.LocalName.IsEmpty() {
-		// 			if ba.Before.LocalSHA == ba.After.LocalSHA
-		// 		}
-		// 	}
-		// 	if ba.Before != nil && ba.After == nil {
-		// 	}
-		// 	if ba.Before == nil && ba.After != nil {
-		// 	}
-		// 	panic("before and after are nil, this should never happen")
-		// }
-
-		// for _, before := range bs.Branches {
-		// 	if before.LocalName.IsEmpty() {
-		// 		// remote-only branch
-		// 		after := after.Branches.FindByRemote(before.RemoteName)
-		// 		if after == nil {
-		// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
-		// 			continue
-		// 		} else {
-		// 			// remote branch updated
-		// 			if before.RemoteSHA != after.RemoteSHA {
-		// 				result.RemoteChanged[before.RemoteName] = Change[domain.SHA]{
-		// 					Before: before.RemoteSHA,
-		// 					After:  after.RemoteSHA,
-		// 				}
-		// 				continue
-		// 			}
-		// 		}
-		// 	} else {
-		// 		// local or omni branch
-		// 		after := after.Branches.FindLocalBranch(before.LocalName)
-		// 		if after == nil {
-		// 			result.LocalRemoved[before.LocalName] = before.LocalSHA
-		// 			continue
-		// 		}
-		// 		if before.LocalSHA != after.LocalSHA {
-		// 			result.LocalChanged[before.LocalName] = Change[domain.SHA]{
-		// 				Before: before.LocalSHA,
-		// 				After:  after.LocalSHA,
-		// 			}
-		// 			continue
-		// 		}
-		// 		if !before.RemoteSHA.IsEmpty() && after.RemoteSHA.IsEmpty() {
-		// 			result.RemoteRemoved[before.RemoteName] = before.RemoteSHA
-		// 			continue
-		// 		}
-		// 	}
-		// }
-		// for _, afterBranch := range after.Branches {
-		// 	if !afterBranch.LocalName.IsEmpty() {
-		// 		before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
-		// 		if before == nil {
-		// 			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
-		// 			continue
-		// 		}
-		// 	}
-		// 	before := bs.Branches.FindByRemote(afterBranch.RemoteName)
-		// 	if before == nil {
-		// 		result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
-		// 		continue
-		// 	}
 	}
 	return result
 }
