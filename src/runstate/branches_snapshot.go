@@ -41,12 +41,14 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 		}
 	}
 	for _, afterBranch := range after.Branches {
-		before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
-		if before == nil {
-			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
-			continue
+		if !afterBranch.LocalName.IsEmpty() {
+			before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
+			if before == nil {
+				result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
+				continue
+			}
 		}
-		before = bs.Branches.FindLocalBranchWithTracking(afterBranch.RemoteName)
+		before := bs.Branches.FindLocalBranchWithTracking(afterBranch.RemoteName)
 		if before == nil {
 			result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
 			continue
