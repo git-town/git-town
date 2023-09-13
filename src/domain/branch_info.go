@@ -69,5 +69,5 @@ func (bi BranchInfo) IsLocal() bool {
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.
 func (bi BranchInfo) IsOmniBranch() bool {
-	return bi.LocalSHA == bi.RemoteSHA
+	return !bi.IsEmpty() && bi.LocalSHA == bi.RemoteSHA
 }

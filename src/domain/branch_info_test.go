@@ -262,5 +262,16 @@ func TestBranchInfo(t *testing.T) {
 			}
 			assert.False(t, bi.IsOmniBranch())
 		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			bi := domain.BranchInfo{
+				LocalName:  domain.LocalBranchName{},
+				LocalSHA:   domain.SHA{},
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.RemoteBranchName{},
+				RemoteSHA:  domain.SHA{},
+			}
+			assert.False(t, bi.IsOmniBranch())
+		})
 	})
 }
