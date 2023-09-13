@@ -33,6 +33,10 @@ func (r RemoteBranchName) BranchName() BranchName {
 	return NewBranchName(r.id)
 }
 
+func (r RemoteBranchName) IsEmpty() bool {
+	return len(r.id) == 0
+}
+
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
 	_, localBranch := r.Parts()

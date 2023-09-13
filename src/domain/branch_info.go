@@ -22,6 +22,16 @@ type BranchInfo struct {
 	RemoteSHA SHA
 }
 
+func EmptyBranchInfo() BranchInfo {
+	return BranchInfo{
+		LocalName:  LocalBranchName{},
+		LocalSHA:   SHA{},
+		SyncStatus: SyncStatusUpToDate,
+		RemoteName: RemoteBranchName{},
+		RemoteSHA:  SHA{},
+	}
+}
+
 func (bi BranchInfo) HasTrackingBranch() bool {
 	switch bi.SyncStatus {
 	case SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:

@@ -29,6 +29,18 @@ func TestRemoteBranchName(t *testing.T) {
 		})
 	})
 
+	t.Run("IsEmpty", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is empty", func(t *testing.T) {
+			remoteName := domain.RemoteBranchName{}
+			assert.True(t, remoteName.IsEmpty())
+		})
+		t.Run("is not empty", func(t *testing.T) {
+			remoteName := domain.NewRemoteBranchName("origin/branch-1")
+			assert.False(t, remoteName.IsEmpty())
+		})
+	})
+
 	t.Run("LocalBranchName", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is at the origin remote", func(t *testing.T) {
