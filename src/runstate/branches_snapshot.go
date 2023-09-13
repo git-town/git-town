@@ -23,6 +23,11 @@ type BranchBeforeAfter struct {
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
+// IsLocalAdd indicates whether this BranchBeforeAfter adds a local branch.
+func (bba BranchBeforeAfter) IsLocalAdd() bool {
+	return bba.Before.IsEmpty() && bba.After.HasOnlyLocalBranch()
+}
+
 // IsOmniAdd indicates whether this BranchBeforeAfter adds an omnibranch.
 func (bba BranchBeforeAfter) IsOmniAdd() bool {
 	return bba.Before.IsEmpty() && !bba.After.IsEmpty() && bba.After.IsOmniBranch()
@@ -121,6 +126,7 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 	for _, ba := range bc {
 		switch true {
 		case ba.NoChanges():
+			// nothing to do here
 		case ba.IsOmniChange():
 			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
@@ -130,6 +136,8 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			result.BothAdded = append(result.BothAdded, ba.After.LocalName)
 		case ba.IsOmniRemove():
 			result.BothRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
+		case ba.IsLocalAdd():
+			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
 		}
 
 		// 	if ba.Before != nil && ba.After != nil {

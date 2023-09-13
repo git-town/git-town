@@ -32,6 +32,18 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+func (bi BranchInfo) HasLocalBranch() bool {
+	return !bi.LocalName.IsEmpty() && !bi.LocalSHA.IsEmpty()
+}
+
+func (bi BranchInfo) HasOnlyLocalBranch() bool {
+	return bi.HasLocalBranch() && !bi.HasRemoteBranch()
+}
+
+func (bi BranchInfo) HasRemoteBranch() bool {
+	return !bi.RemoteName.IsEmpty() && !bi.RemoteSHA.IsEmpty()
+}
+
 func (bi BranchInfo) HasTrackingBranch() bool {
 	switch bi.SyncStatus {
 	case SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:
