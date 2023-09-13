@@ -54,6 +54,10 @@ func (bba BranchBeforeAfter) IsOmniRemove() bool {
 	return !bba.Before.IsEmpty() && bba.Before.IsOmniBranch() && bba.After.IsEmpty()
 }
 
+func (bba BranchBeforeAfter) IsRemoteAdd() bool {
+	return bba.Before.IsEmpty() && bba.After.HasOnlyRemoteBranch()
+}
+
 // LocalChanged indicates whether this BranchBeforeAfter describes a change to the local branch.
 func (bba BranchBeforeAfter) LocalChanged() bool {
 	return bba.Before.LocalSHA != bba.After.LocalSHA
@@ -155,6 +159,8 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
+		case ba.IsRemoteAdd():
+			result.RemoteAdded = append(result.RemoteAdded, ba.After.RemoteName)
 		}
 
 		// 	if ba.Before != nil && ba.After != nil {

@@ -40,6 +40,10 @@ func (bi BranchInfo) HasOnlyLocalBranch() bool {
 	return bi.HasLocalBranch() && !bi.HasRemoteBranch()
 }
 
+func (bi BranchInfo) HasOnlyRemoteBranch() bool {
+	return bi.HasRemoteBranch() && !bi.HasLocalBranch()
+}
+
 func (bi BranchInfo) HasRemoteBranch() bool {
 	return !bi.RemoteName.IsEmpty() && !bi.RemoteSHA.IsEmpty()
 }
