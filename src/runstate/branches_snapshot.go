@@ -28,19 +28,28 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 		afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
 		if afterBI == nil {
 			result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
-		} else {
-			if beforeBranch.LocalSHA != afterBI.LocalSHA {
-				result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
-					Before: beforeBranch.LocalSHA,
-					After:  afterBI.LocalSHA,
-				}
+			continue
+		}
+		if beforeBranch.LocalSHA != afterBI.LocalSHA {
+			result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
+				Before: beforeBranch.LocalSHA,
+				After:  afterBI.LocalSHA,
 			}
+		}
+		if beforeBranch.RemoteSHA != afterBI.RemoteSHA {
+
 		}
 	}
 	for _, afterBranch := range after.Branches {
-		beforeBI := bs.Branches.FindLocalBranch(afterBranch.LocalName)
-		if beforeBI == nil {
+		before := bs.Branches.FindLocalBranch(afterBranch.LocalName)
+		if before == nil {
 			result.LocalAdded = append(result.LocalAdded, afterBranch.LocalName)
+			continue
+		}
+		before = bs.Branches.FindLocalBranchWithTracking(afterBranch.RemoteName)
+		if before == nil {
+			result.RemoteAdded = append(result.RemoteAdded, afterBranch.RemoteName)
+			continue
 		}
 	}
 	return result
