@@ -849,46 +849,50 @@ func TestBranchesSnapshot(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 
-		// 	t.Run("remote-only branch changed", func(t *testing.T) {
-		// 		t.Parallel()
-		// 		before := runstate.BranchesSnapshot{
-		// 			Branches: domain.BranchInfos{
-		// 				domain.BranchInfo{
-		// 					LocalName:  domain.LocalBranchName{},
-		// 					LocalSHA:   domain.SHA{},
-		// 					SyncStatus: domain.SyncStatusRemoteOnly,
-		// 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-		// 					RemoteSHA:  domain.NewSHA("111111"),
-		// 				},
-		// 			},
-		// 		}
-		// 		after := runstate.BranchesSnapshot{
-		// 			Branches: domain.BranchInfos{
-		// 				domain.BranchInfo{
-		// 					LocalName:  domain.LocalBranchName{},
-		// 					LocalSHA:   domain.SHA{},
-		// 					SyncStatus: domain.SyncStatusRemoteOnly,
-		// 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-		// 					RemoteSHA:  domain.NewSHA("222222"),
-		// 				},
-		// 			},
-		// 		}
-		// 		have := before.Diff(after)
-		// 		want := runstate.Changes{
-		// 			LocalAdded:    domain.LocalBranchNames{},
-		// 			LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-		// 			LocalChanged:  map[domain.LocalBranchName]runstate.Change[domain.SHA]{},
-		// 			RemoteAdded:   []domain.RemoteBranchName{},
-		// 			RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-		// 			RemoteChanged: map[domain.RemoteBranchName]runstate.Change[domain.SHA]{
-		// 				domain.NewRemoteBranchName("origin/branch-1"): {
-		// 					Before: domain.NewSHA("111111"),
-		// 					After:  domain.NewSHA("222222"),
-		// 				},
-		// 			},
-		// 		}
-		// 		assert.Equal(t, want, have)
-		// 	})
+		t.Run("remote-only branch changed", func(t *testing.T) {
+			t.Parallel()
+			before := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.LocalBranchName{},
+						LocalSHA:   domain.SHA{},
+						SyncStatus: domain.SyncStatusRemoteOnly,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("111111"),
+					},
+				},
+			}
+			after := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.LocalBranchName{},
+						LocalSHA:   domain.SHA{},
+						SyncStatus: domain.SyncStatusRemoteOnly,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("222222"),
+					},
+				},
+			}
+			changes := before.Changes(after)
+			have := changes.Diff()
+			want := runstate.Changes{
+				LocalAdded:    domain.LocalBranchNames{},
+				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
+				LocalChanged:  map[domain.LocalBranchName]runstate.Change[domain.SHA]{},
+				RemoteAdded:   []domain.RemoteBranchName{},
+				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteChanged: map[domain.RemoteBranchName]runstate.Change[domain.SHA]{
+					domain.NewRemoteBranchName("origin/branch-1"): {
+						Before: domain.NewSHA("111111"),
+						After:  domain.NewSHA("222222"),
+					},
+				},
+				BothAdded:   domain.NewLocalBranchNames(),
+				BothRemoved: map[domain.LocalBranchName]domain.SHA{},
+				BothChanged: map[domain.LocalBranchName]runstate.Change[domain.SHA]{},
+			}
+			assert.Equal(t, want, have)
+		})
 
 		// 	t.Run("omnibranch added", func(t *testing.T) {
 		// 		t.Parallel()
