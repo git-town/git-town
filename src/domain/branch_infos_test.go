@@ -9,6 +9,27 @@ import (
 
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
+	t.Run("Clone", func(t *testing.T) {
+		bis := domain.BranchInfos{
+			domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName("branch-1"),
+				LocalSHA:   domain.NewSHA("111111"),
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+				RemoteSHA:  domain.NewSHA("111111"),
+			},
+		}
+		have := bis.Clone()
+		have[0].LocalName = domain.NewLocalBranchName("branch-2")
+		have[0].LocalSHA = domain.NewSHA("222222")
+		have[0].RemoteName = domain.NewRemoteBranchName("origin/branch-2")
+		have[0].RemoteSHA = domain.NewSHA("222222")
+		assert.Equal(t, bis[0].LocalName, domain.NewLocalBranchName("branch-1"))
+		assert.Equal(t, bis[0].LocalSHA, domain.NewSHA("111111"))
+		assert.Equal(t, bis[0].RemoteName, domain.NewRemoteBranchName("origin/branch-1"))
+		assert.Equal(t, bis[0].RemoteSHA, domain.NewSHA("111111"))
+	})
+
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a matching local branch", func(t *testing.T) {
