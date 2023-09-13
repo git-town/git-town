@@ -25,19 +25,21 @@ func (bs BranchesSnapshot) Diff(after BranchesSnapshot) BranchesDiff {
 		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
 	}
 	for _, beforeBranch := range bs.Branches {
-		afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
-		if afterBI == nil {
-			result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
-			continue
-		}
-		if beforeBranch.LocalSHA != afterBI.LocalSHA {
-			result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
-				Before: beforeBranch.LocalSHA,
-				After:  afterBI.LocalSHA,
+		if !beforeBranch.LocalName.IsEmpty() {
+			afterBI := after.Branches.FindLocalBranch(beforeBranch.LocalName)
+			if afterBI == nil {
+				result.LocalRemoved[beforeBranch.LocalName] = beforeBranch.LocalSHA
+				continue
 			}
-		}
-		if beforeBranch.RemoteSHA != afterBI.RemoteSHA {
+			if beforeBranch.LocalSHA != afterBI.LocalSHA {
+				result.LocalChanged[beforeBranch.LocalName] = Change[domain.SHA]{
+					Before: beforeBranch.LocalSHA,
+					After:  afterBI.LocalSHA,
+				}
+			}
+			if beforeBranch.RemoteSHA != afterBI.RemoteSHA {
 
+			}
 		}
 	}
 	for _, afterBranch := range after.Branches {
