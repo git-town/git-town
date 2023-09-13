@@ -23,27 +23,24 @@ type BranchBeforeAfter struct {
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
-// NoChanges indicates whether this BranchBeforeAfter contains changes or not.
-func (bba BranchBeforeAfter) NoChanges() bool {
-	return bba.Before.LocalSHA == bba.After.LocalSHA && bba.Before.RemoteSHA == bba.After.RemoteSHA
-}
-
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (bba BranchBeforeAfter) IsOmniChange() bool {
-	if bba.Before.LocalSHA != bba.Before.RemoteSHA {
-		// was not an omnibranch before
-		return false
-	}
-	if bba.After.LocalSHA != bba.After.RemoteSHA {
-		// is not an omnibranch after
-		return false
-	}
-	if bba.Before.LocalSHA == bba.After.LocalSHA {
-		// no change
-		return false
-	}
-	return true
+	return bba.Before.IsOmniBranch() && bba.After.IsOmniBranch() && bba.LocalChanged()
+}
+
+// LocalChanged indicates whether this BranchBeforeAfter describes a change to the local branch.
+func (bba BranchBeforeAfter) LocalChanged() bool {
+	return bba.Before.LocalSHA != bba.After.LocalSHA
+}
+
+// NoChanges indicates whether this BranchBeforeAfter contains changes or not.
+func (bba BranchBeforeAfter) NoChanges() bool {
+	return !bba.LocalChanged() && !bba.RemoteChanged()
+}
+
+func (bba BranchBeforeAfter) RemoteChanged() bool {
+	return bba.Before.RemoteSHA != bba.After.RemoteSHA
 }
 
 type BranchesBeforeAfter []BranchBeforeAfter
