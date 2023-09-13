@@ -72,6 +72,70 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 	})
 
+	t.Run("IsLocalRemove", func(t *testing.T) {
+		t.Parallel()
+		t.Run("removes a local-only branch", func(t *testing.T) {
+			t.Parallel()
+			bba := runstate.BranchBeforeAfter{
+				Before: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("111111"),
+					SyncStatus: domain.SyncStatusLocalOnly,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+			}
+			assert.True(t, bba.IsLocalRemove())
+		})
+		t.Run("removes an omni branch", func(t *testing.T) {
+			t.Parallel()
+			bba := runstate.BranchBeforeAfter{
+				Before: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("111111"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+					RemoteSHA:  domain.NewSHA("111111"),
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+			}
+			assert.False(t, bba.IsLocalRemove())
+		})
+		t.Run("changes a local-only branch", func(t *testing.T) {
+			t.Parallel()
+			bba := runstate.BranchBeforeAfter{
+				Before: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("111111"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("222222"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+			}
+			assert.False(t, bba.IsLocalRemove())
+		})
+	})
+
 	t.Run("IsOmniAdd", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omniadd", func(t *testing.T) {

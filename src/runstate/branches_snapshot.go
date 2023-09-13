@@ -28,6 +28,11 @@ func (bba BranchBeforeAfter) IsLocalAdd() bool {
 	return bba.Before.IsEmpty() && bba.After.HasOnlyLocalBranch()
 }
 
+// IsLocalRemove indicates whether this BranchBeforeAfter describes the removal of a local-only branch.
+func (bba BranchBeforeAfter) IsLocalRemove() bool {
+	return bba.Before.HasOnlyLocalBranch() && bba.After.IsEmpty()
+}
+
 // IsOmniAdd indicates whether this BranchBeforeAfter adds an omnibranch.
 func (bba BranchBeforeAfter) IsOmniAdd() bool {
 	return bba.Before.IsEmpty() && !bba.After.IsEmpty() && bba.After.IsOmniBranch()
@@ -138,6 +143,8 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			result.BothRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
 		case ba.IsLocalAdd():
 			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
+		case ba.IsLocalRemove():
+			result.LocalRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
 		}
 
 		// 	if ba.Before != nil && ba.After != nil {
