@@ -2,6 +2,7 @@ package runstate
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -22,13 +23,13 @@ func diffConfig(before, after config.GitConfigCache) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []config.Key{},
 		Removed: map[config.Key]string{},
-		Changed: map[config.Key]Change[string]{},
+		Changed: map[config.Key]domain.Change[string]{},
 	}
 	for key, beforeValue := range before {
 		afterValue, afterContains := after[key]
 		if afterContains {
 			if beforeValue != afterValue {
-				result.Changed[key] = Change[string]{
+				result.Changed[key] = domain.Change[string]{
 					Before: beforeValue,
 					After:  afterValue,
 				}
@@ -49,14 +50,14 @@ func diffConfig(before, after config.GitConfigCache) ConfigDiff {
 type ConfigDiff struct {
 	Added   []config.Key
 	Removed map[config.Key]string
-	Changed map[config.Key]Change[string]
+	Changed map[config.Key]domain.Change[string]
 }
 
 func EmptyConfigDiff() ConfigDiff {
 	return ConfigDiff{
 		Added:   []config.Key{},
 		Removed: map[config.Key]string{},
-		Changed: map[config.Key]Change[string]{},
+		Changed: map[config.Key]domain.Change[string]{},
 	}
 }
 
@@ -98,9 +99,4 @@ func (scd SnapshotConfigDiff) UndoSteps() StepList {
 		})
 	}
 	return result
-}
-
-type Change[T any] struct {
-	Before T
-	After  T
 }

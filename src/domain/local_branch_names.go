@@ -15,6 +15,17 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
+func (l LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
+	for _, branch := range l {
+		if branchTypes.IsFeatureBranch(branch) {
+			features = append(features, branch)
+		} else {
+			perennials = append(perennials, branch)
+		}
+	}
+	return perennials, features
+}
+
 // Join provides the names of all branches in this collection connected by the given separator.
 func (l LocalBranchNames) Join(sep string) string {
 	return strings.Join(l.Strings(), sep)

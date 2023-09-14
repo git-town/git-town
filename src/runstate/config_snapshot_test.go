@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
@@ -42,12 +43,12 @@ func TestConfigSnapshot(t *testing.T) {
 						config.KeyPullBranchStrategy,
 					},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -81,12 +82,12 @@ func TestConfigSnapshot(t *testing.T) {
 					Removed: map[config.Key]string{
 						config.KeyPullBranchStrategy: "1",
 					},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -117,7 +118,7 @@ func TestConfigSnapshot(t *testing.T) {
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyOffline: {
 							Before: "0",
 							After:  "1",
@@ -127,7 +128,7 @@ func TestConfigSnapshot(t *testing.T) {
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -159,14 +160,14 @@ func TestConfigSnapshot(t *testing.T) {
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
 					},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -198,14 +199,14 @@ func TestConfigSnapshot(t *testing.T) {
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
 						config.KeyPullBranchStrategy: "1",
 					},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -236,12 +237,12 @@ func TestConfigSnapshot(t *testing.T) {
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyOffline: {
 							Before: "0",
 							After:  "1",
@@ -290,7 +291,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Removed: map[config.Key]string{
 						config.KeyPushHook: "0",
 					},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyOffline: {
 							Before: "0",
 							After:  "1",
@@ -302,7 +303,7 @@ func TestConfigSnapshot(t *testing.T) {
 						config.KeyPushHook,
 					},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyMainBranch: {
 							Before: "main",
 							After:  "dev",
@@ -331,7 +332,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 						config.KeyOffline,
 					},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.EmptyConfigDiff(),
 			}
@@ -354,7 +355,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 					Removed: map[config.Key]string{
 						config.KeyOffline: "1",
 					},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 				Local: runstate.EmptyConfigDiff(),
 			}
@@ -376,7 +377,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 				Global: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyOffline: {
 							Before: "0",
 							After:  "1",
@@ -406,7 +407,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 						config.KeyOffline,
 					},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			have := diff.UndoSteps()
@@ -429,7 +430,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 					Removed: map[config.Key]string{
 						config.KeyOffline: "1",
 					},
-					Changed: map[config.Key]runstate.Change[string]{},
+					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
 			have := diff.UndoSteps()
@@ -451,7 +452,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
-					Changed: map[config.Key]runstate.Change[string]{
+					Changed: map[config.Key]domain.Change[string]{
 						config.KeyOffline: {
 							Before: "0",
 							After:  "1",

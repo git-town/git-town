@@ -66,7 +66,7 @@ func finished(args ExecuteArgs) error {
 	}
 	bba := args.InitialBranchesSnapshot.Changes(finalBranchesSnapshot)
 	branchesDiff := bba.Diff()
-	undoBranchesSteps := branchesDiff.Steps()
+	undoBranchesSteps := branchesDiff.Steps(args.Run.Config.Lineage(), args.Run.Config.BranchTypes())
 	undoConfigSteps.AppendList(undoBranchesSteps)
 	args.RunState.UndoStepList = undoConfigSteps
 	if args.RunState.IsAbort || args.RunState.isUndo {

@@ -1,7 +1,9 @@
 package runstate
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
@@ -99,7 +101,7 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			continue
 		}
 		if ba.IsOmniChange() {
-			result.BothChanged[ba.Before.LocalName] = Change[domain.SHA]{
+			result.BothChanged[ba.Before.LocalName] = domain.Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
@@ -119,7 +121,7 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		case ba.LocalRemoved():
 			result.LocalRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
 		case ba.LocalChanged():
-			result.LocalChanged[ba.Before.LocalName] = Change[domain.SHA]{
+			result.LocalChanged[ba.Before.LocalName] = domain.Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
@@ -130,7 +132,7 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 		case ba.RemoteRemoved():
 			result.RemoteRemoved[ba.Before.RemoteName] = ba.Before.RemoteSHA
 		case ba.RemoteChanged():
-			result.RemoteChanged[ba.Before.RemoteName] = Change[domain.SHA]{
+			result.RemoteChanged[ba.Before.RemoteName] = domain.Change[domain.SHA]{
 				Before: ba.Before.RemoteSHA,
 				After:  ba.After.RemoteSHA,
 			}
@@ -142,13 +144,13 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 type Changes struct {
 	LocalAdded    domain.LocalBranchNames
 	LocalRemoved  map[domain.LocalBranchName]domain.SHA
-	LocalChanged  map[domain.LocalBranchName]Change[domain.SHA]
+	LocalChanged  domain.LocalBranchChange
 	RemoteAdded   []domain.RemoteBranchName
 	RemoteRemoved map[domain.RemoteBranchName]domain.SHA
-	RemoteChanged map[domain.RemoteBranchName]Change[domain.SHA]
-	BothAdded     domain.LocalBranchNames                       // a branch was added locally and remotely with the same SHA
-	BothRemoved   map[domain.LocalBranchName]domain.SHA         // a branch that had the same SHA locally and remotely was removed from both locations
-	BothChanged   map[domain.LocalBranchName]Change[domain.SHA] // a branch that had the same SHA locally and remotely now has a new SHA locally and remotely, and the local and remote SHA are still equal
+	RemoteChanged map[domain.RemoteBranchName]domain.Change[domain.SHA]
+	BothAdded     domain.LocalBranchNames               // a branch was added locally and remotely with the same SHA
+	BothRemoved   map[domain.LocalBranchName]domain.SHA // a branch that had the same SHA locally and remotely was removed from both locations
+	BothChanged   domain.LocalBranchChange              // a branch that had the same SHA locally and remotely now has a new SHA locally and remotely, and the local and remote SHA are still equal
 }
 
 // EmptyChanges provides a properly initialized empty Changes instance.
@@ -156,16 +158,52 @@ func EmptyChanges() Changes {
 	return Changes{
 		LocalAdded:    domain.LocalBranchNames{},
 		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-		LocalChanged:  map[domain.LocalBranchName]Change[domain.SHA]{},
+		LocalChanged:  domain.LocalBranchChange{},
 		RemoteAdded:   []domain.RemoteBranchName{},
 		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
+		RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 		BothAdded:     domain.LocalBranchNames{},
 		BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
-		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
+		BothChanged:   domain.LocalBranchChange{},
 	}
 }
 
-func (bd Changes) Steps() StepList {
-	return StepList{}
+func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) StepList {
+	result := StepList{}
+	bothChangedPerennials, bothChangedFeatures := bd.BothChanged.Categorize(branchTypes)
+	// revert omni-changed perennial branches
+	for branch, change := range bothChangedPerennials {
+		result.Append(&steps.CheckoutStep{Branch: branch})
+		result.Append(&steps.RevertCommitStep{SHA: change.Before})
+		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
+	}
+	// reset omni-changed feature branches
+	for branch, change := range bothChangedFeatures {
+		result.Append(&steps.CheckoutStep{Branch: branch})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{SHA: change.Before, Hard: true})
+		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
+	}
+
+	// delete omni-changed feature branches locally and push updates
+	// remove added omni-branches
+	// re-create removed omni-branches
+
+	// revert locally changed perennial branches
+	// reset locally changed feature branches
+	// remove locally added branches
+	for _, addedLocalBranch := range bd.LocalAdded {
+		parent := lineage.Parent(addedLocalBranch)
+		result.Append(&steps.DeleteLocalBranchStep{
+			Branch: addedLocalBranch,
+			Parent: parent.Location(),
+			Force:  false,
+		})
+	}
+	// re-create locally removed branches
+
+	// revert remotely changed perennial branches
+	// reset remotely changed feature branches
+	// remove remotely added branches
+	// re-create remotely removed branches
+	return result
 }
