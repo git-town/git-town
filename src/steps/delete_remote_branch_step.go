@@ -24,5 +24,5 @@ func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector
 	if err != nil {
 		return err
 	}
-	return run.Frontend.DeleteRemoteBranch(step.Branch)
+	return run.Frontend.DeleteRemoteBranch(step.Branch.LocalBranchName())
 }

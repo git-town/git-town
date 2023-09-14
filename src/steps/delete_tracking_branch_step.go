@@ -18,5 +18,5 @@ func (step *DeleteTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([
 }
 
 func (step *DeleteTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.DeleteRemoteBranch(step.Branch.AtRemote(domain.OriginRemote))
+	return run.Frontend.DeleteRemoteBranch(step.Branch)
 }
