@@ -53,8 +53,7 @@ Feature: display debug statistics
       |        | backend  | git branch -vva                               |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
       |        | frontend | git push -u origin old                        |
-      |        | backend  | git rev-parse origin/new                      |
-      | new    | frontend | git push origin :new                          |
+      |        | frontend | git push origin :new                          |
       |        | backend  | git config --unset git-town-branch.new.parent |
       |        | backend  | git config git-town-branch.old.parent main    |
       | new    | frontend | git checkout old                              |
@@ -63,6 +62,6 @@ Feature: display debug statistics
       | old    | frontend | git branch -D new                             |
     And it prints:
       """
-      Ran 15 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "old"
