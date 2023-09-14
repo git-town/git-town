@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.
@@ -19,19 +18,19 @@ func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 	return []Step{&ResetCurrentBranchToSHAStep{SHA: step.previousSHA, Hard: false}}, nil
 }
 
-func (step *CommitOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *CommitOpenChangesStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = run.Backend.CurrentSHA()
+	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	err = run.Frontend.StageFiles("-A")
+	err = args.Runner.Frontend.StageFiles("-A")
 	if err != nil {
 		return err
 	}
-	currentBranch, err := run.Backend.CurrentBranch()
+	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return run.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	return args.Runner.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

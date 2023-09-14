@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // CreateTrackingBranchStep pushes the given local branch up to origin
@@ -18,6 +17,6 @@ func (step *CreateTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([
 	return []Step{&DeleteTrackingBranchStep{Branch: step.Branch, NoPushHook: false}}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
+func (step *CreateTrackingBranchStep) Run(args RunArgs) error {
+	return args.Runner.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
 }
