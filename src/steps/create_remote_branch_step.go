@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// CreateRemoteBranchStep pushes the current branch up to origin.
+// CreateRemoteBranchStep pushes the given local branch up to origin.
 type CreateRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool

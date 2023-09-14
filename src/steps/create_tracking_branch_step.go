@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// CreateTrackingBranchStep pushes the current branch up to origin
+// CreateTrackingBranchStep pushes the given local branch up to origin
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	Branch     domain.LocalBranchName
