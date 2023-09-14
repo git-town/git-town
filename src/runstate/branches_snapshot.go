@@ -91,17 +91,7 @@ func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBefor
 
 // Diff describes the changes made in this BranchesBeforeAfter structure.
 func (bc BranchesBeforeAfter) Diff() Changes {
-	result := Changes{
-		LocalAdded:    domain.LocalBranchNames{},
-		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-		LocalChanged:  map[domain.LocalBranchName]Change[domain.SHA]{},
-		RemoteAdded:   []domain.RemoteBranchName{},
-		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
-		BothAdded:     domain.LocalBranchNames{},
-		BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
-		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
-	}
+	result := EmptyChanges()
 	for _, ba := range bc {
 		if ba.NoChanges() {
 			continue
@@ -155,6 +145,21 @@ type Changes struct {
 	BothAdded     domain.LocalBranchNames                       // a branch was added locally and remotely with the same SHA
 	BothRemoved   map[domain.LocalBranchName]domain.SHA         // a branch that had the same SHA locally and remotely was removed from both locations
 	BothChanged   map[domain.LocalBranchName]Change[domain.SHA] // a branch that had the same SHA locally and remotely now has a new SHA locally and remotely, and the local and remote SHA are still equal
+}
+
+// EmptyChanges provides a properly initialized empty Changes instance.
+func EmptyChanges() Changes {
+	return Changes{
+		LocalAdded:    domain.LocalBranchNames{},
+		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
+		LocalChanged:  map[domain.LocalBranchName]Change[domain.SHA]{},
+		RemoteAdded:   []domain.RemoteBranchName{},
+		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+		RemoteChanged: map[domain.RemoteBranchName]Change[domain.SHA]{},
+		BothAdded:     domain.LocalBranchNames{},
+		BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
+		BothChanged:   map[domain.LocalBranchName]Change[domain.SHA]{},
+	}
 }
 
 func (bd Changes) Steps() StepList {
