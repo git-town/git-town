@@ -2,8 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // ResetRemoteBranchToSHAStep sets the given remote branch to the given SHA,
@@ -15,6 +13,6 @@ type ResetRemoteBranchToSHAStep struct {
 	EmptyStep
 }
 
-func (step *ResetRemoteBranchToSHAStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.ResetRemoteBranchToSHA(step.Branch, step.SHA)
+func (step *ResetRemoteBranchToSHAStep) Run(args RunArgs) error {
+	return args.Runner.Frontend.ResetRemoteBranchToSHA(step.Branch, step.SetToSHA)
 }

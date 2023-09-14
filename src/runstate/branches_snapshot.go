@@ -223,13 +223,16 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		})
 	}
 
-	remotePerennialChanges, remoteFeatureChanges := bd.RemoteChanged.Categorize(branchTypes)
-	// reset remotely changed perennial branches
-	// IGNORING FOR NOW
+	_, remoteFeatureChanges := bd.RemoteChanged.Categorize(branchTypes)
+	// ignore remotely changed perennial branches for now
 
 	// reset remotely changed feature branches
 	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
-		result.Append(&steps.ResetRemoteBranchToSHAStep{})
+		result.Append(&steps.ResetRemoteBranchToSHAStep{
+			Branch:      remoteChangedFeatureBranch,
+			MustHaveSHA: change.After,
+			SetToSHA:    change.Before,
+		})
 	}
 	// remove remotely added branches
 	for _, addedRemoteBranch := range bd.RemoteAdded {

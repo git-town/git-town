@@ -6,6 +6,7 @@ import (
 )
 
 // ForcePushBranchStep force-pushes the branch with the given name to the origin remote.
+// TODO: rename to ForcePushCurrentBranchStep and determine the current branch
 type ForcePushBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool

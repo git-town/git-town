@@ -1290,8 +1290,9 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.ResetRemoteBranchToSHAStep{
-						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
-						SHA:    domain.NewSHA("333333"),
+						Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
+						SetToSHA:    domain.NewSHA("333333"),
+						MustHaveSHA: domain.NewSHA("444444"),
 					},
 				},
 			}
@@ -1355,10 +1356,10 @@ func TestChanges(t *testing.T) {
 				BothChanged: domain.LocalBranchChange{
 					domain.NewLocalBranchName("perennial-branch"): {
 						Before: domain.NewSHA("111111"),
-						After:  domain.NewSHA("222222"),
+						After:  domain.NewSHA("333333"),
 					},
 					domain.NewLocalBranchName("feature-branch"): {
-						Before: domain.NewSHA("333333"),
+						Before: domain.NewSHA("222222"),
 						After:  domain.NewSHA("444444"),
 					},
 				},
@@ -1368,10 +1369,10 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
-					&steps.RevertCommitStep{SHA: domain.NewSHA("333333")},
-					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
+					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
+					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
-					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("222222")},
+					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
 				},
 			}
