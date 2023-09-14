@@ -686,12 +686,17 @@ func TestChanges(t *testing.T) {
 			assert.Equal(t, wantSteps, haveSteps)
 		})
 
-		t.Run("local-only branch changed", func(t *testing.T) {
+		t.Run("local-only perennial branch changed", func(t *testing.T) {
 			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames("dev"),
+			}
+			lineage := config.Lineage{}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalName:  domain.NewLocalBranchName("dev"),
 						LocalSHA:   domain.NewSHA("111111"),
 						SyncStatus: domain.SyncStatusLocalOnly,
 						RemoteName: domain.RemoteBranchName{},
@@ -702,7 +707,7 @@ func TestChanges(t *testing.T) {
 			after := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalName:  domain.NewLocalBranchName("dev"),
 						LocalSHA:   domain.NewSHA("222222"),
 						SyncStatus: domain.SyncStatusLocalOnly,
 						RemoteName: domain.RemoteBranchName{},
@@ -711,12 +716,12 @@ func TestChanges(t *testing.T) {
 				},
 			}
 			changes := before.Changes(after)
-			have := changes.Diff()
-			want := runstate.Changes{
+			haveDiff := changes.Diff()
+			wantDiff := runstate.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
-					domain.NewLocalBranchName("branch-1"): {
+					domain.NewLocalBranchName("dev"): {
 						Before: domain.NewSHA("111111"),
 						After:  domain.NewSHA("222222"),
 					},
@@ -728,7 +733,18 @@ func TestChanges(t *testing.T) {
 				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				BothChanged:   domain.LocalBranchChange{},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("dev")},
+					&steps.ResetCurrentBranchToSHAStep{
+						SHA:  domain.NewSHA("111111"),
+						Hard: true,
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local-only branch pushed to origin", func(t *testing.T) {

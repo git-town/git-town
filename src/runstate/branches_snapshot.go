@@ -189,6 +189,11 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	// re-create removed omni-branches
 
 	// revert locally changed perennial branches
+	for localBranch, change := range bd.LocalChanged {
+		result.Append(&steps.CheckoutStep{Branch: localBranch})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{SHA: change.Before, Hard: true})
+	}
+
 	// reset locally changed feature branches
 	// remove locally added branches
 	for _, addedLocalBranch := range bd.LocalAdded {
