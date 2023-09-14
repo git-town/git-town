@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // PushCurrentBranchStep pushes the current branch to its tracking branch.
@@ -28,13 +27,13 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 	return []Step{&SkipCurrentBranchSteps{}}, nil
 }
 
-func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *PushCurrentBranchStep) Run(args RunArgs) error {
 	trackingBranch := step.CurrentBranch.RemoteBranch()
 	shouldPush, err := run.Backend.ShouldPushBranch(step.CurrentBranch, trackingBranch)
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !run.Config.DryRun {
+	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
 	step.initialRemoteSHA, err = run.Backend.SHAForBranch(trackingBranch.BranchName())
@@ -45,5 +44,5 @@ func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector)
 	if err != nil {
 		return err
 	}
-	return run.Frontend.PushCurrentBranch(step.NoPushHook)
+	return args.Runner.Frontend.PushCurrentBranch(step.NoPushHook)
 }
