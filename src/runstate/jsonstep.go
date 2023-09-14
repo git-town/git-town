@@ -89,8 +89,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.MergeStep{}
 	case "PreserveCheckoutHistoryStep":
 		return &steps.PreserveCheckoutHistoryStep{}
-	case "PullBranchStep":
-		return &steps.PullBranchStep{}
+	case "PullCurrentBranchStep":
+		return &steps.PullCurrentBranchStep{}
 	case "PushBranchAfterCurrentBranchSteps":
 		return &steps.PushBranchAfterCurrentBranchSteps{}
 	case "PushCurrentBranchStep":

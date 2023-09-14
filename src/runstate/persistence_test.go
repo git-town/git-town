@@ -107,7 +107,7 @@ func TestSanitizePath(t *testing.T) {
 						InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
 						MainBranch:                        domain.NewLocalBranchName("main"),
 					},
-					&steps.PullBranchStep{Branch: "branch"},
+					&steps.PullCurrentBranchStep{},
 					&steps.PushBranchAfterCurrentBranchSteps{},
 					&steps.PushCurrentBranchStep{
 						CurrentBranch: domain.NewLocalBranchName("branch"),
@@ -310,10 +310,8 @@ func TestSanitizePath(t *testing.T) {
       "type": "PreserveCheckoutHistoryStep"
     },
     {
-      "data": {
-        "Branch": "branch"
-      },
-      "type": "PullBranchStep"
+      "data": {},
+      "type": "PullCurrentBranchStep"
     },
     {
       "data": {},
