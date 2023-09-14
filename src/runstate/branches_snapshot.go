@@ -215,6 +215,11 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	// revert remotely changed perennial branches
 	// reset remotely changed feature branches
 	// remove remotely added branches
+	for _, addedRemoteBranch := range bd.RemoteAdded {
+		result.Append(&steps.DeleteRemoteBranchStep{
+			Branch: addedRemoteBranch.LocalBranchName(),
+		})
+	}
 	// re-create remotely removed branches
 	return result
 }
