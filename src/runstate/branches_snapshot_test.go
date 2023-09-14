@@ -1060,18 +1060,69 @@ func TestBranchesSnapshot(t *testing.T) {
 			}
 			assert.Equal(t, want, have)
 		})
+
 		t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
 			t.Parallel()
+			before := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalSHA:   domain.NewSHA("111111"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("111111"),
+					},
+				},
+			}
+			after := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalSHA:   domain.NewSHA("222222"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("333333"),
+					},
+				},
+			}
+			changes := before.Changes(after)
+			have := changes.Diff()
+			want := runstate.Changes{
+				LocalAdded:   domain.LocalBranchNames{},
+				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
+				LocalChanged: map[domain.LocalBranchName]runstate.Change[domain.SHA]{
+					domain.NewLocalBranchName("branch-1"): {
+						Before: domain.NewSHA("111111"),
+						After:  domain.NewSHA("222222"),
+					},
+				},
+				RemoteAdded:   []domain.RemoteBranchName{},
+				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteChanged: map[domain.RemoteBranchName]runstate.Change[domain.SHA]{
+					domain.NewRemoteBranchName("origin/branch-1"): {
+						Before: domain.NewSHA("111111"),
+						After:  domain.NewSHA("333333"),
+					},
+				},
+				BothAdded:   domain.NewLocalBranchNames(),
+				BothRemoved: map[domain.LocalBranchName]domain.SHA{},
+				BothChanged: map[domain.LocalBranchName]runstate.Change[domain.SHA]{},
+			}
+			assert.Equal(t, want, have)
 		})
+
 		t.Run("omnibranch updates pulled down", func(t *testing.T) {
 			t.Parallel()
 		})
+
 		t.Run("omnibranch updates pushed up", func(t *testing.T) {
 			t.Parallel()
 		})
+
 		t.Run("omnibranch deleted locally", func(t *testing.T) {
 			t.Parallel()
 		})
+
 		t.Run("omnibranch deleted remotely", func(t *testing.T) {
 			t.Parallel()
 		})
