@@ -1218,141 +1218,131 @@ func TestChanges(t *testing.T) {
 			assert.Equal(t, wantSteps, haveSteps)
 		})
 
-		t.Run("omnibranch changed remotely", func(t *testing.T) {
+		t.Run("omnibranch remote updated", func(t *testing.T) {
 			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
+			}
+			lineage := config.Lineage{
+				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
+			}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
+						LocalSHA:   domain.NewSHA("222222"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("444444"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("333333"),
 					},
 				},
 			}
 			after := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
+						LocalSHA:   domain.NewSHA("222222"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("222222"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("444444"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
 			}
 			changes := before.Changes(after)
-			have := changes.Diff()
-			want := runstate.Changes{
+			haveDiff := changes.Diff()
+			wantDiff := runstate.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{
-					domain.NewRemoteBranchName("origin/branch-1"): {
+					domain.NewRemoteBranchName("origin/perennial-branch"): {
 						Before: domain.NewSHA("111111"),
 						After:  domain.NewSHA("222222"),
+					},
+					domain.NewRemoteBranchName("origin/feature-branch"): {
+						Before: domain.NewSHA("333333"),
+						After:  domain.NewSHA("444444"),
 					},
 				},
 				BothAdded:   domain.NewLocalBranchNames(),
 				BothRemoved: map[domain.LocalBranchName]domain.SHA{},
 				BothChanged: domain.LocalBranchChange{},
 			}
-			assert.Equal(t, want, have)
-		})
-
-		t.Run("perennial omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
-			t.Parallel()
-			branchTypes := domain.BranchTypes{
-				MainBranch:        domain.NewLocalBranchName("main"),
-				PerennialBranches: domain.NewLocalBranchNames("dev"),
-			}
-			lineage := config.Lineage{}
-			before := runstate.BranchesSnapshot{
-				Branches: domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("dev"),
-						LocalSHA:   domain.NewSHA("111111"),
-						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/dev"),
-						RemoteSHA:  domain.NewSHA("111111"),
-					},
-				},
-			}
-			after := runstate.BranchesSnapshot{
-				Branches: domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("dev"),
-						LocalSHA:   domain.NewSHA("222222"),
-						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/dev"),
-						RemoteSHA:  domain.NewSHA("222222"),
-					},
-				},
-			}
-			changes := before.Changes(after)
-			diff := changes.Diff()
-			wantDiff := runstate.Changes{
-				LocalAdded:    domain.LocalBranchNames{},
-				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-				LocalChanged:  domain.LocalBranchChange{},
-				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				BothAdded:     domain.NewLocalBranchNames(),
-				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
-				BothChanged: domain.LocalBranchChange{
-					domain.NewLocalBranchName("dev"): {
-						Before: domain.NewSHA("111111"),
-						After:  domain.NewSHA("222222"),
-					},
-				},
-			}
-			assert.Equal(t, wantDiff, diff)
-			haveSteps := diff.Steps(lineage, branchTypes)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("dev")},
-					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
-					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("dev"), NoPushHook: false},
+					&steps.ResetRemoteBranchToSHAStep{
+						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
+						SHA:    domain.NewSHA("333333"),
+					},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
 		})
 
-		t.Run("feature omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
+		t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
 			t.Parallel()
 			branchTypes := domain.BranchTypes{
 				MainBranch:        domain.NewLocalBranchName("main"),
-				PerennialBranches: domain.NewLocalBranchNames(),
+				PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 			}
 			lineage := config.Lineage{}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
 						LocalSHA:   domain.NewSHA("111111"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("222222"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
 			}
 			after := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("222222"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
+						LocalSHA:   domain.NewSHA("333333"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("222222"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
+						RemoteSHA:  domain.NewSHA("333333"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("444444"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
 			}
 			changes := before.Changes(after)
-			diff := changes.Diff()
+			haveDiff := changes.Diff()
 			wantDiff := runstate.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
@@ -1363,19 +1353,26 @@ func TestChanges(t *testing.T) {
 				BothAdded:     domain.NewLocalBranchNames(),
 				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				BothChanged: domain.LocalBranchChange{
-					domain.NewLocalBranchName("branch-1"): {
+					domain.NewLocalBranchName("perennial-branch"): {
 						Before: domain.NewSHA("111111"),
 						After:  domain.NewSHA("222222"),
 					},
+					domain.NewLocalBranchName("feature-branch"): {
+						Before: domain.NewSHA("333333"),
+						After:  domain.NewSHA("444444"),
+					},
 				},
 			}
-			assert.Equal(t, wantDiff, diff)
-			haveSteps := diff.Steps(lineage, branchTypes)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
-					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("111111"), Hard: true},
-					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("branch-1"), NoPushHook: false},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.RevertCommitStep{SHA: domain.NewSHA("333333")},
+					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("222222")},
+					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)

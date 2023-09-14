@@ -147,7 +147,7 @@ type Changes struct {
 	LocalChanged  domain.LocalBranchChange
 	RemoteAdded   []domain.RemoteBranchName
 	RemoteRemoved map[domain.RemoteBranchName]domain.SHA
-	RemoteChanged map[domain.RemoteBranchName]domain.Change[domain.SHA]
+	RemoteChanged domain.RemoteBranchChange
 	BothAdded     domain.LocalBranchNames               // a branch was added locally and remotely with the same SHA
 	BothRemoved   map[domain.LocalBranchName]domain.SHA // a branch that had the same SHA locally and remotely was removed from both locations
 	BothChanged   domain.LocalBranchChange              // a branch that had the same SHA locally and remotely now has a new SHA locally and remotely, and the local and remote SHA are still equal
@@ -183,9 +183,7 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		result.Append(&steps.ResetCurrentBranchToSHAStep{SHA: change.Before, Hard: true})
 		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
 	}
-
 	// delete omni-changed feature branches locally and push updates
-
 	// remove added omni-branches
 	for _, addedBranch := range bd.BothAdded {
 		result.Append(&steps.DeleteTrackingBranchStep{
@@ -225,8 +223,14 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		})
 	}
 
-	// revert remotely changed perennial branches
+	remotePerennialChanges, remoteFeatureChanges := bd.RemoteChanged.Categorize(branchTypes)
+	// reset remotely changed perennial branches
+	// IGNORING FOR NOW
+
 	// reset remotely changed feature branches
+	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
+		result.Append(&steps.ResetRemoteBranchToSHAStep{})
+	}
 	// remove remotely added branches
 	for _, addedRemoteBranch := range bd.RemoteAdded {
 		result.Append(&steps.DeleteTrackingBranchStep{
