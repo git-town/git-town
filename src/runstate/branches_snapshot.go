@@ -185,7 +185,20 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	}
 
 	// delete omni-changed feature branches locally and push updates
+
 	// remove added omni-branches
+	for _, addedBranch := range bd.BothAdded {
+		result.Append(&steps.DeleteTrackingBranchStep{
+			Branch:     addedBranch,
+			NoPushHook: false,
+		})
+		result.Append(&steps.DeleteLocalBranchStep{
+			Branch: addedBranch,
+			Parent: lineage.Parent(addedBranch).Location(),
+			Force:  true,
+		})
+	}
+
 	// re-create removed omni-branches
 
 	// revert locally changed perennial branches
