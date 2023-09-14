@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// DeleteRemoteBranchStep deletes the current branch from the origin remote.
+// DeleteRemoteBranchStep deletes the tracking branch of the given local branch.
 type DeleteRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
@@ -19,7 +19,7 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 }
 
 func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	remoteBranch := step.Branch.AtRemote(domain.OriginRemote) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
+	remoteBranch := step.Branch.AtRemote(domain.OriginRemote)
 	var err error
 	step.branchSHA, err = run.Backend.SHAForBranch(remoteBranch.BranchName())
 	if err != nil {
