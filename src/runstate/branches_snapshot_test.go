@@ -838,11 +838,11 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.DeleteRemoteBranchStep{
+					&steps.DeleteTrackingBranchStep{
 						Branch:     domain.NewLocalBranchName("perennial-branch"),
 						NoPushHook: false,
 					},
-					&steps.DeleteRemoteBranchStep{
+					&steps.DeleteTrackingBranchStep{
 						Branch:     domain.NewLocalBranchName("feature-branch"),
 						NoPushHook: false,
 					},

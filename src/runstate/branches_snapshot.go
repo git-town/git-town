@@ -216,7 +216,7 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	// reset remotely changed feature branches
 	// remove remotely added branches
 	for _, addedRemoteBranch := range bd.RemoteAdded {
-		result.Append(&steps.DeleteRemoteBranchStep{
+		result.Append(&steps.DeleteTrackingBranchStep{
 			Branch: addedRemoteBranch.LocalBranchName(),
 		})
 	}
