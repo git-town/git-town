@@ -336,7 +336,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})
-		list.Add(&steps.PullBranchStep{Branch: ""})
+		list.Add(&steps.PullCurrentBranchStep{})
 	} else {
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
