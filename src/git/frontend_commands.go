@@ -51,12 +51,12 @@ func (fc *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.RemoteBranchName, noPushHook bool) error {
+func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, domain.OriginRemote.String(), localSHA.String()+":"+branch.String())
+	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
 	return fc.Run("git", args...)
 }
 

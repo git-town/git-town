@@ -15,5 +15,5 @@ type CreateRemoteBranchStep struct {
 }
 
 func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.CreateRemoteBranch(step.SHA, step.Branch.AtRemote(domain.OriginRemote), step.NoPushHook)
+	return run.Frontend.CreateRemoteBranch(step.SHA, step.Branch, step.NoPushHook)
 }
