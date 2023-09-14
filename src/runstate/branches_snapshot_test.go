@@ -627,7 +627,11 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.DeleteLocalBranchStep{Branch: domain.NewLocalBranchName("branch-1"), Parent: domain.NewLocalBranchName("main").Location(), Force: true},
+					&steps.DeleteLocalBranchStep{
+						Branch: domain.NewLocalBranchName("branch-1"),
+						Parent: domain.NewLocalBranchName("main").Location(),
+						Force:  true,
+					},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
