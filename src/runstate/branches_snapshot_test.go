@@ -570,6 +570,13 @@ func TestChanges(t *testing.T) {
 		t.Parallel()
 		t.Run("local-only branch added", func(t *testing.T) {
 			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames(),
+			}
+			lineage := config.Lineage{
+				domain.NewLocalBranchName("branch-1"): domain.NewLocalBranchName("main"),
+			}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
 			}
@@ -604,8 +611,8 @@ func TestChanges(t *testing.T) {
 				},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			have := haveChanges.Diff()
-			want := runstate.Changes{
+			haveDiff := haveChanges.Diff()
+			wantDiff := runstate.Changes{
 				LocalAdded:    domain.NewLocalBranchNames("branch-1"),
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -616,7 +623,14 @@ func TestChanges(t *testing.T) {
 				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				BothChanged:   domain.LocalBranchChange{},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.DeleteLocalBranchStep{Branch: domain.NewLocalBranchName("branch-1"), Parent: domain.NewLocalBranchName("main").Location(), Force: true},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local-only branch removed", func(t *testing.T) {

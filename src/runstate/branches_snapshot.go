@@ -196,7 +196,7 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		result.Append(&steps.DeleteLocalBranchStep{
 			Branch: addedLocalBranch,
 			Parent: parent.Location(),
-			Force:  false,
+			Force:  true,
 		})
 	}
 	// re-create locally removed branches
