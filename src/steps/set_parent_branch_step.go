@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // SetParentStep registers the branch with the given name as a parent
@@ -22,7 +21,7 @@ func (step *SetParentStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, erro
 	return []Step{&SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}}, nil
 }
 
-func (step *SetParentStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	step.previousParent = run.Config.Lineage()[step.Branch]
-	return run.Config.SetParent(step.Branch, step.ParentBranch)
+func (step *SetParentStep) Run(args RunArgs) error {
+	step.previousParent = args.Runner.Config.Lineage()[step.Branch]
+	return args.Runner.Config.SetParent(step.Branch, step.ParentBranch)
 }

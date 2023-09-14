@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // EmptyStep does nothing.
@@ -27,7 +26,7 @@ func (step *EmptyStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *EmptyStep) Run(_ *git.ProdRunner, _ hosting.Connector) error {
+func (step *EmptyStep) Run(_ RunArgs) error {
 	return nil
 }
 
