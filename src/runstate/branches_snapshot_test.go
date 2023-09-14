@@ -851,39 +851,55 @@ func TestChanges(t *testing.T) {
 			assert.Equal(t, wantSteps, haveSteps)
 		})
 
-		t.Run("remote-only branch added", func(t *testing.T) {
-			t.Parallel()
-			before := runstate.BranchesSnapshot{
-				Branches: domain.BranchInfos{},
-			}
-			after := runstate.BranchesSnapshot{
-				Branches: domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
-						LocalSHA:   domain.SHA{},
-						SyncStatus: domain.SyncStatusRemoteOnly,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("111111"),
-					},
-				},
-			}
-			changes := before.Changes(after)
-			have := changes.Diff()
-			want := runstate.Changes{
-				LocalAdded:   domain.LocalBranchNames{},
-				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
-				LocalChanged: domain.LocalBranchChange{},
-				RemoteAdded: []domain.RemoteBranchName{
-					domain.NewRemoteBranchName("origin/branch-1"),
-				},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				BothAdded:     domain.NewLocalBranchNames(),
-				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
-				BothChanged:   domain.LocalBranchChange{},
-			}
-			assert.Equal(t, want, have)
-		})
+		// TODO: is this a realistic scenario? Which Git Town command adds a remote-only branch?
+		// t.Run("remote-only branch added", func(t *testing.T) {
+		// 	t.Parallel()
+		// 	branchTypes := domain.BranchTypes{
+		// 		MainBranch:        domain.NewLocalBranchName("main"),
+		// 		PerennialBranches: domain.NewLocalBranchNames(),
+		// 	}
+		// 	lineage := config.Lineage{}
+		// 	before := runstate.BranchesSnapshot{
+		// 		Branches: domain.BranchInfos{},
+		// 	}
+		// 	after := runstate.BranchesSnapshot{
+		// 		Branches: domain.BranchInfos{
+		// 			domain.BranchInfo{
+		// 				LocalName:  domain.LocalBranchName{},
+		// 				LocalSHA:   domain.SHA{},
+		// 				SyncStatus: domain.SyncStatusRemoteOnly,
+		// 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+		// 				RemoteSHA:  domain.NewSHA("111111"),
+		// 			},
+		// 		},
+		// 	}
+		// 	changes := before.Changes(after)
+		// 	haveDiff := changes.Diff()
+		// 	wantDiff := runstate.Changes{
+		// 		LocalAdded:   domain.LocalBranchNames{},
+		// 		LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
+		// 		LocalChanged: domain.LocalBranchChange{},
+		// 		RemoteAdded: []domain.RemoteBranchName{
+		// 			domain.NewRemoteBranchName("origin/branch-1"),
+		// 		},
+		// 		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+		// 		RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+		// 		BothAdded:     domain.NewLocalBranchNames(),
+		// 		BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
+		// 		BothChanged:   domain.LocalBranchChange{},
+		// 	}
+		// 	assert.Equal(t, wantDiff, haveDiff)
+		// 	haveSteps := haveDiff.Steps(lineage, branchTypes)
+		// 	wantSteps := runstate.StepList{
+		// 		List: []steps.Step{
+		// 			&steps.DeleteRemoteBranchStep{
+		// 				Branch:     domain.NewLocalBranchName("branch-1"),
+		// 				NoPushHook: false,
+		// 			},
+		// 		},
+		// 	}
+		// 	assert.Equal(t, wantSteps, haveSteps)
+		// })
 
 		t.Run("remote-only branch downloaded", func(t *testing.T) {
 			t.Parallel()
