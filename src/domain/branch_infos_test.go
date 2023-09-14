@@ -10,6 +10,7 @@ import (
 func TestBranchInfos(t *testing.T) {
 	t.Parallel()
 	t.Run("Clone", func(t *testing.T) {
+		t.Parallel()
 		bis := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("branch-1"),

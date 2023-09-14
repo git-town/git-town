@@ -11,6 +11,12 @@ type SHA struct {
 	id string
 }
 
+func EmptySHA() SHA {
+	return SHA{
+		id: "",
+	}
+}
+
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHA(id string) SHA {

@@ -25,10 +25,10 @@ type BranchInfo struct {
 func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
 		LocalName:  LocalBranchName{},
-		LocalSHA:   SHA{},
+		LocalSHA:   EmptySHA(),
 		SyncStatus: SyncStatusUpToDate,
 		RemoteName: RemoteBranchName{},
-		RemoteSHA:  SHA{},
+		RemoteSHA:  EmptySHA(),
 	}
 }
 
