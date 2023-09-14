@@ -51,12 +51,12 @@ func (fc *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
+func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.RemoteBranchName, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
+	args = append(args, domain.OriginRemote.String(), localSHA.String()+":"+branch.String())
 	return fc.Run("git", args...)
 }
 
@@ -124,8 +124,8 @@ func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
 // TODO: provide the actual domain.RemoteBranchName here and delete that branch instead of "origin/<localbranch>".
-func (fc *FrontendCommands) DeleteRemoteBranch(name domain.LocalBranchName) error {
-	return fc.Run("git", "push", domain.OriginRemote.String(), ":"+name.String())
+func (fc *FrontendCommands) DeleteRemoteBranch(name domain.RemoteBranchName) error {
+	return fc.Run("git", "push", domain.OriginRemote.String(), ":"+name.LocalBranchName().String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
