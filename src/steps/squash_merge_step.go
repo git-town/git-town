@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -34,12 +33,12 @@ func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
-func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	err := run.Frontend.SquashMerge(step.Branch)
+func (step *SquashMergeStep) Run(args RunArgs) error {
+	err := args.Run.Frontend.SquashMerge(step.Branch)
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := run.Backend.BranchAuthors(step.Branch, step.Parent)
+	branchAuthors, err := args.Run.Backend.BranchAuthors(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
@@ -47,17 +46,17 @@ func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
-	repoAuthor, err := run.Backend.Author()
+	repoAuthor, err := args.Run.Backend.Author()
 	if err != nil {
 		return fmt.Errorf(messages.GitUserProblem, err)
 	}
-	if err = run.Backend.CommentOutSquashCommitMessage(""); err != nil {
+	if err = args.Run.Backend.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	if repoAuthor == author {
 		author = ""
 	}
-	return run.Frontend.Commit(step.CommitMessage, author)
+	return args.Run.Frontend.Commit(step.CommitMessage, author)
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

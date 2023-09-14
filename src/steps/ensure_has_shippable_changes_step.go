@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -20,8 +18,8 @@ func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipBranchNothingToDo, step.Branch)
 }
 
-func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	hasShippableChanges, err := run.Backend.HasShippableChanges(step.Branch, step.Parent)
+func (step *EnsureHasShippableChangesStep) Run(args RunArgs) error {
+	hasShippableChanges, err := args.Run.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}

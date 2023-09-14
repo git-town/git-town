@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -17,8 +16,8 @@ type UpdateProposalTargetStep struct {
 	EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) Run(_ *git.ProdRunner, connector hosting.Connector) error {
-	return connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
+func (step *UpdateProposalTargetStep) Run(args RunArgs) error {
+	return args.Connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 
 func (step *UpdateProposalTargetStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

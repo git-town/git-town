@@ -2,8 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // FetchUpstreamStep brings the Git history of the local repository
@@ -13,6 +11,6 @@ type FetchUpstreamStep struct {
 	EmptyStep
 }
 
-func (step *FetchUpstreamStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.FetchUpstream(step.Branch)
+func (step *FetchUpstreamStep) Run(args RunArgs) error {
+	return args.Run.Frontend.FetchUpstream(step.Branch)
 }

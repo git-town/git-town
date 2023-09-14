@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // MergeStep merges the branch with the given name into the current branch.
@@ -25,11 +24,11 @@ func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
 }
 
-func (step *MergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *MergeStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = run.Backend.CurrentSHA()
+	step.previousSHA, err = args.Run.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	return run.Frontend.MergeBranchNoEdit(step.Branch)
+	return args.Run.Frontend.MergeBranchNoEdit(step.Branch)
 }

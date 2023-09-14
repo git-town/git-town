@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // DeleteRemoteBranchStep deletes the tracking branch of the given local branch.
@@ -18,12 +17,12 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 	return []Step{&CreateRemoteBranchStep{Branch: step.Branch, SHA: step.branchSHA, NoPushHook: step.NoPushHook}}, nil
 }
 
-func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *DeleteRemoteBranchStep) Run(args RunArgs) error {
 	remoteBranch := step.Branch.AtRemote(domain.OriginRemote)
 	var err error
-	step.branchSHA, err = run.Backend.SHAForBranch(remoteBranch.BranchName())
+	step.branchSHA, err = args.Run.Backend.SHAForBranch(remoteBranch.BranchName())
 	if err != nil {
 		return err
 	}
-	return run.Frontend.DeleteRemoteBranch(step.Branch)
+	return args.Run.Frontend.DeleteRemoteBranch(step.Branch)
 }

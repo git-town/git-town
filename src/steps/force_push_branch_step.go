@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // ForcePushBranchStep force-pushes the branch with the given name to the origin remote.
@@ -17,13 +16,13 @@ func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step
 	return []Step{&SkipCurrentBranchSteps{}}, nil
 }
 
-func (step *ForcePushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteBranch())
+func (step *ForcePushBranchStep) Run(args RunArgs) error {
+	shouldPush, err := args.Run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteBranch())
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !run.Config.DryRun {
+	if !shouldPush && !args.Run.Config.DryRun {
 		return nil
 	}
-	return run.Frontend.ForcePushBranch(step.NoPushHook)
+	return args.Run.Frontend.ForcePushBranch(step.NoPushHook)
 }
