@@ -1077,6 +1077,65 @@ func TestBranchesSnapshot(t *testing.T) {
 			assert.Equal(t, wantSteps, haveSteps)
 		})
 
+		t.Run("feature omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
+			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames(),
+			}
+			lineage := config.Lineage{}
+			before := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalSHA:   domain.NewSHA("111111"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("111111"),
+					},
+				},
+			}
+			after := runstate.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalSHA:   domain.NewSHA("222222"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteSHA:  domain.NewSHA("222222"),
+					},
+				},
+			}
+			changes := before.Changes(after)
+			diff := changes.Diff()
+			wantDiff := runstate.Changes{
+				LocalAdded:    domain.LocalBranchNames{},
+				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
+				LocalChanged:  domain.LocalBranchChange{},
+				RemoteAdded:   []domain.RemoteBranchName{},
+				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+				BothAdded:     domain.NewLocalBranchNames(),
+				BothRemoved:   map[domain.LocalBranchName]domain.SHA{},
+				BothChanged: domain.LocalBranchChange{
+					domain.NewLocalBranchName("branch-1"): {
+						Before: domain.NewSHA("111111"),
+						After:  domain.NewSHA("222222"),
+					},
+				},
+			}
+			assert.Equal(t, wantDiff, diff)
+			haveSteps := diff.Steps(lineage, branchTypes)
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("111111"), Hard: true},
+					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("branch-1"), NoPushHook: false},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
+		})
+
 		t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
 			t.Parallel()
 			before := runstate.BranchesSnapshot{
