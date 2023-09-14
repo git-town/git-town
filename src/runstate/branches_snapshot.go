@@ -200,6 +200,12 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		})
 	}
 	// re-create locally removed branches
+	for removedLocalBranch, startingPoint := range bd.LocalRemoved {
+		result.Append(&steps.CreateBranchStep{
+			Branch:        removedLocalBranch,
+			StartingPoint: startingPoint.Location(),
+		})
+	}
 
 	// revert remotely changed perennial branches
 	// reset remotely changed feature branches
