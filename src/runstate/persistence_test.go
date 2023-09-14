@@ -66,7 +66,7 @@ func TestSanitizePath(t *testing.T) {
 						Force:  false,
 					},
 					&steps.DeleteRemoteBranchStep{
-						Branch:     domain.NewRemoteBranchName("origin/branch"),
+						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 					},
 					&steps.DeleteParentBranchStep{
@@ -226,7 +226,7 @@ func TestSanitizePath(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "origin/branch",
+        "Branch": "branch",
         "NoPushHook": true
       },
       "type": "DeleteRemoteBranchStep"
