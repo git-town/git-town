@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // PushCurrentBranchStep pushes the current branch to its existing tracking branch.
@@ -21,13 +20,13 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 	return []Step{&SkipCurrentBranchSteps{}}, nil
 }
 
-func (step *PushCurrentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteBranch())
+func (step *PushCurrentBranchStep) Run(args RunArgs) error {
+	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteBranch())
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !run.Config.DryRun {
+	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
-	return run.Frontend.PushCurrentBranch(step.NoPushHook)
+	return args.Runner.Frontend.PushCurrentBranch(step.NoPushHook)
 }
