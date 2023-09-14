@@ -564,9 +564,8 @@ func TestBranchBeforeAfter(t *testing.T) {
 	})
 }
 
-func TestBranchesSnapshot(t *testing.T) {
+func TestChanges(t *testing.T) {
 	t.Parallel()
-
 	t.Run("Diff", func(t *testing.T) {
 		t.Parallel()
 		t.Run("local-only branch added", func(t *testing.T) {
@@ -1359,12 +1358,5 @@ func TestBranchesSnapshot(t *testing.T) {
 			}
 			assert.Equal(t, want, have)
 		})
-	})
-}
-
-func TestChanges(t *testing.T) {
-	t.Parallel()
-	t.Run("Steps", func(t *testing.T) {
-		t.Parallel()
 	})
 }
