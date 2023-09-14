@@ -111,21 +111,23 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			result.BothRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
 			continue
 		}
-		if ba.LocalAdded() {
+		switch {
+		case ba.LocalAdded():
 			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
-		} else if ba.LocalRemoved() {
+		case ba.LocalRemoved():
 			result.LocalRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
-		} else if ba.LocalChanged() {
+		case ba.LocalChanged():
 			result.LocalChanged[ba.Before.LocalName] = Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,
 				After:  ba.After.LocalSHA,
 			}
 		}
-		if ba.RemoteAdded() {
+		switch {
+		case ba.RemoteAdded():
 			result.RemoteAdded = append(result.RemoteAdded, ba.After.RemoteName)
-		} else if ba.RemoteRemoved() {
+		case ba.RemoteRemoved():
 			result.RemoteRemoved[ba.Before.RemoteName] = ba.Before.RemoteSHA
-		} else if ba.RemoteChanged() {
+		case ba.RemoteChanged():
 			result.RemoteChanged[ba.Before.RemoteName] = Change[domain.SHA]{
 				Before: ba.Before.RemoteSHA,
 				After:  ba.After.RemoteSHA,

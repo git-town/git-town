@@ -1286,3 +1286,7 @@ func TestBranchesSnapshot(t *testing.T) {
 		})
 	})
 }
+
+func TestChanges(t *testing.T) {
+	t.Parallel()
+}
