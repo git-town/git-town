@@ -13,7 +13,9 @@ type BranchesSnapshot struct {
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
-	return BranchesSnapshot{}
+	return BranchesSnapshot{
+		Branches: domain.BranchInfos{},
+	}
 }
 
 // BranchBeforeAfter represents the temporal change of a branch.
