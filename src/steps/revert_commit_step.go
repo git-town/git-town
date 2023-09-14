@@ -11,5 +11,5 @@ type RevertCommitStep struct {
 }
 
 func (step *RevertCommitStep) Run(args RunArgs) error {
-	return args.Run.Frontend.RevertCommit(step.SHA)
+	return args.Runner.Frontend.RevertCommit(step.SHA)
 }

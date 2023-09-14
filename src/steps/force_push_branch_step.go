@@ -17,12 +17,12 @@ func (step *ForcePushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step
 }
 
 func (step *ForcePushBranchStep) Run(args RunArgs) error {
-	shouldPush, err := args.Run.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteBranch())
+	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteBranch())
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !args.Run.Config.DryRun {
+	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
-	return args.Run.Frontend.ForcePushBranch(step.NoPushHook)
+	return args.Runner.Frontend.ForcePushBranch(step.NoPushHook)
 }

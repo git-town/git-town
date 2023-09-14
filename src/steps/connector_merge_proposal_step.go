@@ -45,23 +45,23 @@ func (step *ConnectorMergeProposalStep) Run(args RunArgs) error {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
-		err := args.Run.Frontend.SquashMerge(step.Branch)
+		err := args.Runner.Frontend.SquashMerge(step.Branch)
 		if err != nil {
 			return err
 		}
-		err = args.Run.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
+		err = args.Runner.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
-		err = args.Run.Frontend.StartCommit()
+		err = args.Runner.Frontend.StartCommit()
 		if err != nil {
 			return err
 		}
-		commitMessage, err = args.Run.Backend.LastCommitMessage()
+		commitMessage, err = args.Runner.Backend.LastCommitMessage()
 		if err != nil {
 			return err
 		}
-		err = args.Run.Frontend.DeleteLastCommit()
+		err = args.Runner.Frontend.DeleteLastCommit()
 		if err != nil {
 			return err
 		}

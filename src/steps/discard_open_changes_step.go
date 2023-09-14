@@ -6,5 +6,5 @@ type DiscardOpenChangesStep struct {
 }
 
 func (step *DiscardOpenChangesStep) Run(args RunArgs) error {
-	return args.Run.Frontend.DiscardOpenChanges()
+	return args.Runner.Frontend.DiscardOpenChanges()
 }

@@ -18,12 +18,12 @@ func (step *CheckoutStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error
 
 func (step *CheckoutStep) Run(args RunArgs) error {
 	var err error
-	step.previousBranch, err = args.Run.Backend.CurrentBranch()
+	step.previousBranch, err = args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if step.previousBranch != step.Branch {
-		err := args.Run.Frontend.CheckoutBranch(step.Branch)
+		err := args.Runner.Frontend.CheckoutBranch(step.Branch)
 		return err
 	}
 	return nil

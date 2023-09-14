@@ -13,20 +13,20 @@ type PreserveCheckoutHistoryStep struct {
 }
 
 func (step *PreserveCheckoutHistoryStep) Run(args RunArgs) error {
-	expectedPreviouslyCheckedOutBranch, err := args.Run.Backend.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
+	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
 	if err != nil {
 		return err
 	}
-	if expectedPreviouslyCheckedOutBranch == args.Run.Backend.PreviouslyCheckedOutBranch() {
+	if expectedPreviouslyCheckedOutBranch == args.Runner.Backend.PreviouslyCheckedOutBranch() {
 		return nil
 	}
-	currentBranch, err := args.Run.Backend.CurrentBranch()
+	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	err = args.Run.Backend.CheckoutBranchUncached(expectedPreviouslyCheckedOutBranch)
+	err = args.Runner.Backend.CheckoutBranchUncached(expectedPreviouslyCheckedOutBranch)
 	if err != nil {
 		return err
 	}
-	return args.Run.Backend.CheckoutBranchUncached(currentBranch)
+	return args.Runner.Backend.CheckoutBranchUncached(currentBranch)
 }

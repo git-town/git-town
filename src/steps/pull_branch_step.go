@@ -8,5 +8,5 @@ type PullBranchStep struct {
 }
 
 func (step *PullBranchStep) Run(args RunArgs) error {
-	return args.Run.Frontend.Pull()
+	return args.Runner.Frontend.Pull()
 }

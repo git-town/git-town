@@ -19,7 +19,7 @@ func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 }
 
 func (step *EnsureHasShippableChangesStep) Run(args RunArgs) error {
-	hasShippableChanges, err := args.Run.Backend.HasShippableChanges(step.Branch, step.Parent)
+	hasShippableChanges, err := args.Runner.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}

@@ -34,11 +34,11 @@ func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 }
 
 func (step *SquashMergeStep) Run(args RunArgs) error {
-	err := args.Run.Frontend.SquashMerge(step.Branch)
+	err := args.Runner.Frontend.SquashMerge(step.Branch)
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := args.Run.Backend.BranchAuthors(step.Branch, step.Parent)
+	branchAuthors, err := args.Runner.Backend.BranchAuthors(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
@@ -46,17 +46,17 @@ func (step *SquashMergeStep) Run(args RunArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
-	repoAuthor, err := args.Run.Backend.Author()
+	repoAuthor, err := args.Runner.Backend.Author()
 	if err != nil {
 		return fmt.Errorf(messages.GitUserProblem, err)
 	}
-	if err = args.Run.Backend.CommentOutSquashCommitMessage(""); err != nil {
+	if err = args.Runner.Backend.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	if repoAuthor == author {
 		author = ""
 	}
-	return args.Run.Frontend.Commit(step.CommitMessage, author)
+	return args.Runner.Frontend.Commit(step.CommitMessage, author)
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

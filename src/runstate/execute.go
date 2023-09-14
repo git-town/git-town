@@ -30,7 +30,7 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := step.Run(steps.RunArgs{
-			Run:       args.Run,
+			Runner:    args.Run,
 			Connector: args.Connector,
 		})
 		if err != nil {

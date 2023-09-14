@@ -21,12 +21,12 @@ func (step *PushCurrentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 }
 
 func (step *PushCurrentBranchStep) Run(args RunArgs) error {
-	shouldPush, err := args.Run.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteBranch())
+	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.RemoteBranch())
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !args.Run.Config.DryRun {
+	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
-	return args.Run.Frontend.PushCurrentBranch(step.NoPushHook)
+	return args.Runner.Frontend.PushCurrentBranch(step.NoPushHook)
 }

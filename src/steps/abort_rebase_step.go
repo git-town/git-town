@@ -7,5 +7,5 @@ type AbortRebaseStep struct {
 }
 
 func (step *AbortRebaseStep) Run(args RunArgs) error {
-	return args.Run.Frontend.AbortRebase()
+	return args.Runner.Frontend.AbortRebase()
 }

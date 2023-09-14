@@ -38,6 +38,6 @@ type Step interface {
 }
 
 type RunArgs struct {
-	Run       *git.ProdRunner
+	Runner    *git.ProdRunner
 	Connector hosting.Connector
 }

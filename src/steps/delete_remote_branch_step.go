@@ -20,9 +20,9 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 func (step *DeleteRemoteBranchStep) Run(args RunArgs) error {
 	remoteBranch := step.Branch.AtRemote(domain.OriginRemote)
 	var err error
-	step.branchSHA, err = args.Run.Backend.SHAForBranch(remoteBranch.BranchName())
+	step.branchSHA, err = args.Runner.Backend.SHAForBranch(remoteBranch.BranchName())
 	if err != nil {
 		return err
 	}
-	return args.Run.Frontend.DeleteRemoteBranch(step.Branch)
+	return args.Runner.Frontend.DeleteRemoteBranch(step.Branch)
 }

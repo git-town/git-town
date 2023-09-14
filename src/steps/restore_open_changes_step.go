@@ -17,7 +17,7 @@ func (step *RestoreOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 }
 
 func (step *RestoreOpenChangesStep) Run(args RunArgs) error {
-	err := args.Run.Frontend.PopStash()
+	err := args.Runner.Frontend.PopStash()
 	if err != nil {
 		return errors.New(messages.DiffConflictWithMain)
 	}

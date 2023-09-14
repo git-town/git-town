@@ -12,11 +12,11 @@ type CreateProposalStep struct {
 }
 
 func (step *CreateProposalStep) Run(args RunArgs) error {
-	parentBranch := args.Run.Config.Lineage()[step.Branch]
+	parentBranch := args.Runner.Config.Lineage()[step.Branch]
 	prURL, err := args.Connector.NewProposalURL(step.Branch, parentBranch)
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, args.Run.Frontend.FrontendRunner, args.Run.Backend)
+	browser.Open(prURL, args.Runner.Frontend.FrontendRunner, args.Runner.Backend)
 	return nil
 }

@@ -16,5 +16,5 @@ func (step *RemoveFromPerennialBranchesStep) CreateUndoSteps(_ *git.BackendComma
 }
 
 func (step *RemoveFromPerennialBranchesStep) Run(args RunArgs) error {
-	return args.Run.Config.RemoveFromPerennialBranches(step.Branch)
+	return args.Runner.Config.RemoveFromPerennialBranches(step.Branch)
 }

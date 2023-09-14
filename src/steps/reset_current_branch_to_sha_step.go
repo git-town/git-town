@@ -13,12 +13,12 @@ type ResetCurrentBranchToSHAStep struct {
 }
 
 func (step *ResetCurrentBranchToSHAStep) Run(args RunArgs) error {
-	currentSHA, err := args.Run.Backend.CurrentSHA()
+	currentSHA, err := args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
 	if step.SHA == currentSHA {
 		return nil
 	}
-	return args.Run.Frontend.ResetCurrentBranchToSHA(step.SHA, step.Hard)
+	return args.Runner.Frontend.ResetCurrentBranchToSHA(step.SHA, step.Hard)
 }

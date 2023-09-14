@@ -16,5 +16,5 @@ func (step *AddToPerennialBranchesStep) CreateUndoSteps(_ *git.BackendCommands) 
 }
 
 func (step *AddToPerennialBranchesStep) Run(args RunArgs) error {
-	return args.Run.Config.AddToPerennialBranches(step.Branch)
+	return args.Runner.Config.AddToPerennialBranches(step.Branch)
 }

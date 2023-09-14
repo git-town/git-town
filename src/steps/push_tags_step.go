@@ -6,5 +6,5 @@ type PushTagsStep struct {
 }
 
 func (step *PushTagsStep) Run(args RunArgs) error {
-	return args.Run.Frontend.PushTags()
+	return args.Runner.Frontend.PushTags()
 }

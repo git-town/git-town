@@ -20,17 +20,17 @@ func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 
 func (step *CommitOpenChangesStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = args.Run.Backend.CurrentSHA()
+	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	err = args.Run.Frontend.StageFiles("-A")
+	err = args.Runner.Frontend.StageFiles("-A")
 	if err != nil {
 		return err
 	}
-	currentBranch, err := args.Run.Backend.CurrentBranch()
+	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return args.Run.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	return args.Runner.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

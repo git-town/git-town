@@ -13,5 +13,5 @@ func (step *StashOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Ste
 }
 
 func (step *StashOpenChangesStep) Run(args RunArgs) error {
-	return args.Run.Frontend.Stash()
+	return args.Runner.Frontend.Stash()
 }

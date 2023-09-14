@@ -26,9 +26,9 @@ func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 
 func (step *MergeStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = args.Run.Backend.CurrentSHA()
+	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	return args.Run.Frontend.MergeBranchNoEdit(step.Branch)
+	return args.Runner.Frontend.MergeBranchNoEdit(step.Branch)
 }

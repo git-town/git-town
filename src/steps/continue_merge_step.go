@@ -11,8 +11,8 @@ func (step *ContinueMergeStep) CreateContinueSteps() []Step {
 }
 
 func (step *ContinueMergeStep) Run(args RunArgs) error {
-	if args.Run.Backend.HasMergeInProgress() {
-		return args.Run.Frontend.CommitNoEdit()
+	if args.Runner.Backend.HasMergeInProgress() {
+		return args.Runner.Frontend.CommitNoEdit()
 	}
 	return nil
 }

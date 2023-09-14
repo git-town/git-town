@@ -20,13 +20,13 @@ func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 
 func (step *DeleteLocalBranchStep) Run(args RunArgs) error {
 	var err error
-	step.branchSHA, err = args.Run.Backend.SHAForBranch(step.Branch.BranchName())
+	step.branchSHA, err = args.Runner.Backend.SHAForBranch(step.Branch.BranchName())
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := args.Run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
-	return args.Run.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return args.Runner.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

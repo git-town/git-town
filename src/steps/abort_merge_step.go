@@ -6,5 +6,5 @@ type AbortMergeStep struct {
 }
 
 func (step *AbortMergeStep) Run(args RunArgs) error {
-	return args.Run.Frontend.AbortMerge()
+	return args.Runner.Frontend.AbortMerge()
 }

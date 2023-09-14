@@ -20,5 +20,5 @@ func (step *DeleteParentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 }
 
 func (step *DeleteParentBranchStep) Run(args RunArgs) error {
-	return args.Run.Config.RemoveParent(step.Branch)
+	return args.Runner.Config.RemoveParent(step.Branch)
 }

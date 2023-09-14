@@ -12,5 +12,5 @@ type FetchUpstreamStep struct {
 }
 
 func (step *FetchUpstreamStep) Run(args RunArgs) error {
-	return args.Run.Frontend.FetchUpstream(step.Branch)
+	return args.Runner.Frontend.FetchUpstream(step.Branch)
 }

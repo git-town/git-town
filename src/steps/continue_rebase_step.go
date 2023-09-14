@@ -15,12 +15,12 @@ func (step *ContinueRebaseStep) CreateContinueSteps() []Step {
 }
 
 func (step *ContinueRebaseStep) Run(args RunArgs) error {
-	hasRebaseInProgress, err := args.Run.Backend.HasRebaseInProgress()
+	hasRebaseInProgress, err := args.Runner.Backend.HasRebaseInProgress()
 	if err != nil {
 		return err
 	}
 	if hasRebaseInProgress {
-		return args.Run.Frontend.ContinueRebase()
+		return args.Runner.Frontend.ContinueRebase()
 	}
 	return nil
 }

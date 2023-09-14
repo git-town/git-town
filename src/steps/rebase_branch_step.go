@@ -27,9 +27,9 @@ func (step *RebaseBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, e
 
 func (step *RebaseBranchStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = args.Run.Backend.CurrentSHA()
+	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	return args.Run.Frontend.Rebase(step.Branch)
+	return args.Runner.Frontend.Rebase(step.Branch)
 }

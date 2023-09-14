@@ -17,5 +17,5 @@ func (step *CreateBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, e
 }
 
 func (step *CreateBranchStep) Run(args RunArgs) error {
-	return args.Run.Frontend.CreateBranch(step.Branch, step.StartingPoint)
+	return args.Runner.Frontend.CreateBranch(step.Branch, step.StartingPoint)
 }
