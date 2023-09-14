@@ -566,7 +566,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 
 func TestChanges(t *testing.T) {
 	t.Parallel()
-	t.Run("Diff", func(t *testing.T) {
+	t.Run("Steps", func(t *testing.T) {
 		t.Parallel()
 		t.Run("local-only branch added", func(t *testing.T) {
 			t.Parallel()
