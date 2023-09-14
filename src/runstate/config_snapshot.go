@@ -52,6 +52,14 @@ type ConfigDiff struct {
 	Changed map[config.Key]Change[string]
 }
 
+func EmptyConfigDiff() ConfigDiff {
+	return ConfigDiff{
+		Added:   []config.Key{},
+		Removed: map[config.Key]string{},
+		Changed: map[config.Key]Change[string]{},
+	}
+}
+
 type SnapshotConfigDiff struct {
 	Global ConfigDiff
 	Local  ConfigDiff

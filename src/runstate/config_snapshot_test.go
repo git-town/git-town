@@ -333,7 +333,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]runstate.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{},
+				Local: runstate.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -356,7 +356,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 					},
 					Changed: map[config.Key]runstate.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{},
+				Local: runstate.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -383,7 +383,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 						},
 					},
 				},
-				Local: runstate.ConfigDiff{},
+				Local: runstate.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -400,7 +400,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		t.Run("local config added", func(t *testing.T) {
 			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{},
+				Global: runstate.EmptyConfigDiff(),
 				Local: runstate.ConfigDiff{
 					Added: []config.Key{
 						config.KeyOffline,
@@ -423,7 +423,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		t.Run("local config removed", func(t *testing.T) {
 			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{},
+				Global: runstate.EmptyConfigDiff(),
 				Local: runstate.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
@@ -447,7 +447,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		t.Run("local config changed", func(t *testing.T) {
 			t.Parallel()
 			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{},
+				Global: runstate.EmptyConfigDiff(),
 				Local: runstate.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},

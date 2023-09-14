@@ -11,6 +11,12 @@ type RemoteBranchName struct {
 	id string
 }
 
+func EmptyRemoteBranchName() RemoteBranchName {
+	return RemoteBranchName{
+		id: "",
+	}
+}
+
 func NewRemoteBranchName(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
