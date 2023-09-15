@@ -148,10 +148,14 @@ type Changes struct {
 	RemoteAdded   []domain.RemoteBranchName
 	RemoteRemoved map[domain.RemoteBranchName]domain.SHA
 	RemoteChanged domain.RemoteBranchChange
-	// OmniChanges are changes where the local and remote branch have the same SHA before and after.
+	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
+	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
+	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
+	// So, to revert a change on a remote perennial branch one needs to perform a revert commit on the local perennial branch, then normal-push (not force-push) that new commit up to the remote branch.
+	// This is only possible if the local and remote branches have an identical SHA before as well as after.
+	OmniChanged domain.LocalBranchChange              // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 	OmniAdded   domain.LocalBranchNames               // a branch was added locally and remotely, local and remote have the same SHA
 	OmniRemoved map[domain.LocalBranchName]domain.SHA // a branch that had the same SHA locally and remotely was removed from both locations
-	OmniChanged domain.LocalBranchChange              // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 }
 
 // EmptyChanges provides a properly initialized empty Changes instance.
