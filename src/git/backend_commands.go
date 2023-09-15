@@ -214,6 +214,41 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
+func (bc *BackendCommands) CommitsInBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
+	if parent.IsEmpty() {
+		return bc.CommitsInPerennialBranch()
+	}
+	return bc.CommitsInFeatureBranch(branch, parent)
+}
+
+func (bc *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
+	output, err := bc.QueryTrim("git", "cherry", parent.String(), branch.String())
+	if err != nil {
+		return domain.SHAs{}, err
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]domain.SHA, 0, len(lines))
+	for _, line := range lines {
+		if len(line) > 0 {
+			result = append(result, domain.NewSHA(line[2:]))
+		}
+	}
+	return result, nil
+}
+
+func (bc *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
+	output, err := bc.QueryTrim("git", "log", "--pretty=format:%H", "-10")
+	if err != nil {
+		return domain.SHAs{}, err
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]domain.SHA, 0, len(lines))
+	for _, line := range lines {
+		result = append(result, domain.NewSHA(line))
+	}
+	return result, nil
+}
+
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) error {
 	err := bc.RunMany([][]string{

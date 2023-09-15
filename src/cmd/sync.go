@@ -79,6 +79,7 @@ func sync(all, dryRun, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -100,10 +101,12 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -122,7 +125,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
-	lineage := repo.Runner.Config.Lineage()
 	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()

@@ -65,10 +65,12 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*diffParentConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -86,7 +88,6 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*di
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,

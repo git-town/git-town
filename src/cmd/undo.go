@@ -39,10 +39,12 @@ func undo(debug bool) error {
 	if err != nil {
 		return err
 	}
+	lineage := repo.Runner.Config.Lineage()
 	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -61,6 +63,7 @@ func undo(debug bool) error {
 		RunState:  &undoRunState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   lineage,
 		RootDir:   repo.RootDir,
 	})
 }
