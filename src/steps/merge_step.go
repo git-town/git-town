@@ -7,8 +7,9 @@ import (
 
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
-	Branch      domain.BranchName
-	previousSHA domain.SHA
+	Branch    domain.BranchName
+	beforeSHA domain.SHA
+	afterSHA  domain.SHA
 	EmptyStep
 }
 
@@ -21,14 +22,19 @@ func (step *MergeStep) CreateContinueSteps() []Step {
 }
 
 func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SetToSHA: step.previousSHA}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, MustHaveSHA: step.afterSHA, SetToSHA: step.beforeSHA}}, nil
 }
 
 func (step *MergeStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
+	step.beforeSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	return args.Runner.Frontend.MergeBranchNoEdit(step.Branch)
+	err = args.Runner.Frontend.MergeBranchNoEdit(step.Branch)
+	if err != nil {
+		return err
+	}
+	step.afterSHA, err = args.Runner.Backend.CurrentSHA()
+	return err
 }

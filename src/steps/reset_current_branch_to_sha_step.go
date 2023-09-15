@@ -1,7 +1,10 @@
 package steps
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // ResetCurrentBranchToSHAStep undoes all commits on the current branch
@@ -19,7 +22,15 @@ func (step *ResetCurrentBranchToSHAStep) Run(args RunArgs) error {
 		return err
 	}
 	if step.SetToSHA == currentSHA {
+		// nothing to do
 		return nil
+	}
+	if currentSHA != step.MustHaveSHA {
+		currentBranchName, err := args.Runner.Backend.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf(messages.BranchHasWrongSHA, currentBranchName, step.SetToSHA, step.MustHaveSHA, currentSHA)
 	}
 	return args.Runner.Frontend.ResetCurrentBranchToSHA(step.SetToSHA, step.Hard)
 }
