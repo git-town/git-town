@@ -28,12 +28,15 @@ Feature: display debug statistics
       | feature | frontend | git checkout main                                 |
       |         | backend  | git rev-parse HEAD                                |
       | main    | frontend | git rebase origin/main                            |
+      |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git checkout feature                              |
       |         | backend  | git rev-parse HEAD                                |
       | feature | frontend | git merge --no-edit origin/feature                |
       |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse HEAD                                |
       | feature | frontend | git merge --no-edit main                          |
+      |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash feature                        |
@@ -55,7 +58,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 42 shell commands.
+      Ran 45 shell commands.
       """
     And the current branch is now "main"
 
