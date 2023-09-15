@@ -214,14 +214,14 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (bc *BackendCommands) CommitsInBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
+func (bc *BackendCommands) CommitsInBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
 	if parent.IsEmpty() {
 		return bc.CommitsInPerennialBranch()
 	}
 	return bc.CommitsInFeatureBranch(branch, parent)
 }
 
-func (bc *BackendCommands) CommitsInFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
+func (bc *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
 	output, err := bc.QueryTrim("git", "cherry", parent.String(), branch.String())
 	if err != nil {
 		return domain.SHAs{}, err
