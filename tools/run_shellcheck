@@ -19,5 +19,5 @@ if [ "$os" = "Darwin" ] && [ "$machine" = "arm64" ]; then
 		exit 1
 	fi
 else
-	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs "shellcheck_${SHELLCHECK_VERSION}"
+	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs "tools/shellcheck_${SHELLCHECK_VERSION}"
 fi
