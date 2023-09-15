@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+SHFMT_VERSION=$1
+SHELLCHECK_VERSION=$2
+if [ -z "$SHFMT_VERSION" ] || [ -z "$SHELLCHECK_VERSION" ]; then
+	echo "Usage: $0 <SHFMT_VERSION> <SHELLCHECK_VERSION>"
+	exit 1
+fi
+
+os=$(uname -s)
+machine=$(uname -m)
+
+if [ "$os" = "Darwin" ] && [ "$machine" = "arm64" ]; then
+	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs shellcheck
+else
+	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs "shellcheck_${SHELLCHECK_VERSION}"
+fi
