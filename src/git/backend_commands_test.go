@@ -40,7 +40,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
 
-	t.Run(".CheckoutBranch()", func(t *testing.T) {
+	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
@@ -54,7 +54,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, initial, currentBranch)
 	})
 
-	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
+	t.Run("CreateFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
@@ -67,7 +67,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, lineageWant, lineageHave)
 	})
 
-	t.Run(".CurrentBranch()", func(t *testing.T) {
+	t.Run("CurrentBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CheckoutBranch(initial)
@@ -82,7 +82,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, initial, branch)
 	})
 
-	t.Run(".HasLocalBranch()", func(t *testing.T) {
+	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
@@ -94,7 +94,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
 	})
 
-	t.Run(".HasOpenChanges()", func(t *testing.T) {
+	t.Run("HasOpenChanges", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		has, err := runtime.Backend.HasOpenChanges()
@@ -106,7 +106,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.True(t, has)
 	})
 
-	t.Run(".HasRebaseInProgress()", func(t *testing.T) {
+	t.Run("HasRebaseInProgress", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		has, err := runtime.Backend.HasRebaseInProgress()
@@ -350,7 +350,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
+	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(domain.NewLocalBranchName("feature1"), initial)
@@ -361,7 +361,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, domain.NewLocalBranchName("feature1"), have)
 	})
 
-	t.Run(".Remotes()", func(t *testing.T) {
+	t.Run("Remotes", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
@@ -371,7 +371,7 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
-	t.Run(".RootDirectory", func(t *testing.T) {
+	t.Run("RootDirectory", func(t *testing.T) {
 		t.Parallel()
 		t.Run("inside a Git repo", func(t *testing.T) {
 			t.Parallel()
