@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // RevertCommitStep adds a commit to the current branch
@@ -19,9 +20,12 @@ func (step *RevertCommitStep) Run(args RunArgs) error {
 		return err
 	}
 	parent := args.Lineage.Parent(currentBranch)
-	commitsInCurrentBranch := args.Runner.Backend.CommitsInCurrentBranch(currentBranch, parent)
-	if !commitsInCurrentBranch.Contains(step.SHA) {
-		return fmt.Errorf("branch %q does not contain commit %q. Found commits %s", currentBranch, step.SHA)
+	commitsInCurrentBranch, err := args.Runner.Backend.CommitsInBranch(currentBranch, parent)
+	if err != nil {
+		return err
+	}
+	if !slice.Contains(commitsInCurrentBranch, step.SHA) {
+		return fmt.Errorf("branch %q does not contain commit %q. Found commits %s", currentBranch, step.SHA, commitsInCurrentBranch.Join("|"))
 	}
 
 	// Ensure that the current branch contains the given commit?

@@ -58,6 +58,21 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		t.Run("branch contains commits", func(t *testing.T) {
 			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   domain.NewLocalBranchName("branch1"),
+				Message:  "commit 1",
+				FileName: "file1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   domain.NewLocalBranchName("branch1"),
+				Message:  "commit 2",
+				FileName: "file2",
+			})
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
+			assert.NoError(t, err)
+			assert.Equal(t, 2, len(commits))
 		})
 		t.Run("branch contains no commits", func(t *testing.T) {
 			t.Parallel()
