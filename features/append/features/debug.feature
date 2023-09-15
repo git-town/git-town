@@ -24,12 +24,15 @@ Feature: display debug statistics
       | existing | frontend | git checkout main                                    |
       |          | backend  | git rev-parse HEAD                                   |
       | main     | frontend | git rebase origin/main                               |
+      |          | backend  | git rev-parse HEAD                                   |
       |          | backend  | git rev-list --left-right main...origin/main         |
       | main     | frontend | git checkout existing                                |
       |          | backend  | git rev-parse HEAD                                   |
       | existing | frontend | git merge --no-edit origin/existing                  |
       |          | backend  | git rev-parse HEAD                                   |
+      |          | backend  | git rev-parse HEAD                                   |
       | existing | frontend | git merge --no-edit main                             |
+      |          | backend  | git rev-parse HEAD                                   |
       |          | backend  | git rev-list --left-right existing...origin/existing |
       | existing | frontend | git branch new existing                              |
       |          | backend  | git config git-town-branch.new.parent existing       |
@@ -38,7 +41,7 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "new"
 

@@ -10,18 +10,18 @@ import (
 // CommitOpenChangesStep commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
-	previousSHA domain.SHA
-	currentSHA  domain.SHA
+	beforeSHA domain.SHA
+	afterSHA  domain.SHA
 	EmptyStep
 }
 
 func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetCurrentBranchToSHAStep{MustHaveSHA: step.currentSHA, SetToSHA: step.previousSHA, Hard: false}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{MustHaveSHA: step.afterSHA, SetToSHA: step.beforeSHA, Hard: false}}, nil
 }
 
 func (step *CommitOpenChangesStep) Run(args RunArgs) error {
 	var err error
-	step.previousSHA, err = args.Runner.Backend.CurrentSHA()
+	step.beforeSHA, err = args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
@@ -37,6 +37,6 @@ func (step *CommitOpenChangesStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	step.currentSHA, err = args.Runner.Backend.CurrentSHA()
+	step.afterSHA, err = args.Runner.Backend.CurrentSHA()
 	return err
 }

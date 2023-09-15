@@ -1,4 +1,4 @@
-Feature: offline mode
+Feature: undoing an offline ship with additional commits to main
 
   Background:
     Given offline mode is enabled
@@ -7,27 +7,8 @@ Feature: offline mode
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     When I run "git-town ship -m 'feature done'"
+    And I add commit "additional commit" to the "main" branch
 
-  Scenario: result
-    Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
-      |         | git branch -D feature              |
-    And the current branch is now "main"
-    And now these commits exist
-      | BRANCH  | LOCATION | MESSAGE        |
-      | main    | local    | feature done   |
-      | feature | origin   | feature commit |
-    And no branch hierarchy exists now
-
-  @broken
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -36,8 +17,6 @@ Feature: offline mode
       |         | git revert {{ sha 'feature done' }}           |
       |         | git checkout feature                          |
       | feature | git checkout main                             |
-    # | main    | git reset --hard {{ sha 'Initial commit' }}   |
-    # |         | git checkout feature                          |
     And it prints the error:
       """
       cannot reset branch "main"
@@ -50,6 +29,7 @@ Feature: offline mode
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local         | feature done          |
+      |         |               | additional commit     |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
     And the initial branches and hierarchy exist
