@@ -1,4 +1,4 @@
-Feature: additional commits on main before undoing an offline ship
+Feature: undoing an offline ship with additional commits to main
 
   Background:
     Given offline mode is enabled
