@@ -215,14 +215,37 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 }
 
 func (bc *BackendCommands) CommitsInBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
+	if parent.IsEmpty() {
+		return bc.CommitsInPerennialBranch(branch, parent)
+	} else {
+		return bc.CommitsInFeatureBranch(branch, parent)
+	}
+}
+
+func (bc *BackendCommands) CommitsInFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
 	output, err := bc.QueryTrim("git", "cherry", parent.String(), branch.String())
 	if err != nil {
 		return domain.SHAs{}, err
 	}
 	lines := strings.Split(output, "\n")
-	result := make([]domain.SHA, len(lines))
-	for l, line := range lines {
-		result[l] = domain.NewSHA(line[2:])
+	result := make([]domain.SHA, 0, len(lines))
+	for _, line := range lines {
+		if len(line) > 0 {
+			result = append(result, domain.NewSHA(line[2:]))
+		}
+	}
+	return result, nil
+}
+
+func (bc *BackendCommands) CommitsInPerennialBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
+	output, err := bc.QueryTrim("git", "log", "--pretty=format:%H", "-10")
+	if err != nil {
+		return domain.SHAs{}, err
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]domain.SHA, 0, len(lines))
+	for _, line := range lines {
+		result = append(result, domain.NewSHA(line))
 	}
 	return result, nil
 }
