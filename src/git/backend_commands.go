@@ -216,10 +216,9 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 
 func (bc *BackendCommands) CommitsInBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
 	if parent.IsEmpty() {
-		return bc.CommitsInPerennialBranch(branch, parent)
-	} else {
-		return bc.CommitsInFeatureBranch(branch, parent)
+		return bc.CommitsInPerennialBranch()
 	}
+	return bc.CommitsInFeatureBranch(branch, parent)
 }
 
 func (bc *BackendCommands) CommitsInFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
@@ -237,7 +236,7 @@ func (bc *BackendCommands) CommitsInFeatureBranch(branch domain.LocalBranchName,
 	return result, nil
 }
 
-func (bc *BackendCommands) CommitsInPerennialBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) (domain.SHAs, error) {
+func (bc *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
 	output, err := bc.QueryTrim("git", "log", "--pretty=format:%H", "-10")
 	if err != nil {
 		return domain.SHAs{}, err
