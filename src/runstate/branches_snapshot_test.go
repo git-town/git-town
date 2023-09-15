@@ -1370,7 +1370,7 @@ func TestChanges(t *testing.T) {
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
 					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
-					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
+					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
