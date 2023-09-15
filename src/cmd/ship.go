@@ -103,6 +103,7 @@ func ship(args []string, message string, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -132,10 +133,12 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
@@ -179,7 +182,6 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	if !branches.Types.IsFeatureBranch(branchNameToShip) {
 		return nil, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,

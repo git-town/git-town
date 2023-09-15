@@ -76,7 +76,8 @@ Feature: display debug statistics
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
-      |         | frontend | git revert {{ sha 'done' }}                    |
+      |         | backend  | git log --pretty=format:%H -10                 |
+      | main    | frontend | git revert {{ sha 'done' }}                    |
       |         | backend  | git rev-list --left-right main...origin/main   |
       | main    | frontend | git push                                       |
       |         | frontend | git checkout feature                           |
@@ -86,6 +87,6 @@ Feature: display debug statistics
       | main    | frontend | git checkout feature                           |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "feature"

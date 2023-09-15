@@ -72,15 +72,18 @@ func hack(args []string, promptForParent, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
 
 func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -92,7 +95,6 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	mainBranch := repo.Runner.Config.MainBranch()
-	lineage := repo.Runner.Config.Lineage()
 	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
 		backend:         &repo.Runner.Backend,
 		branches:        branches,

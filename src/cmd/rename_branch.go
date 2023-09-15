@@ -77,6 +77,7 @@ func renameBranch(args []string, force, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -93,10 +94,12 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -142,7 +145,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if branches.All.HasMatchingRemoteBranchFor(newBranchName) {
 		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	return &renameBranchConfig{
 		branches:       branches,
 		isOffline:      repo.IsOffline,
