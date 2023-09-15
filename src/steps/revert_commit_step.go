@@ -19,8 +19,6 @@ func (step *RevertCommitStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("1111111111111111111111111")
-	fmt.Println(currentBranch)
 	parent := args.Lineage.Parent(currentBranch)
 	commitsInCurrentBranch, err := args.Runner.Backend.CommitsInBranch(currentBranch, parent)
 	if err != nil {

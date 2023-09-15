@@ -32,7 +32,6 @@ Feature: commit message with double-quotes
       | main   | local, origin | with "double quotes" |
     And no branch hierarchy exists now
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
