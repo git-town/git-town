@@ -6,6 +6,7 @@ Feature: display debug statistics
       | main   | origin   | main commit |
     And the current branch is "main"
 
+  @this
   Scenario: result
     When I run "git-town hack new --debug"
     Then it runs the commands
@@ -23,6 +24,7 @@ Feature: display debug statistics
       |        | backend  | git status --porcelain --ignore-submodules   |
       |        | backend  | git rev-parse HEAD                           |
       | main   | frontend | git rebase origin/main                       |
+      |        | backend  | git rev-parse HEAD                           |
       |        | backend  | git rev-list --left-right main...origin/main |
       | main   | frontend | git branch new main                          |
       |        | backend  | git config git-town-branch.new.parent main   |
@@ -31,7 +33,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
     And it prints:
       """
-      Ran 19 shell commands.
+      Ran 20 shell commands.
       """
     And the current branch is now "new"
 
