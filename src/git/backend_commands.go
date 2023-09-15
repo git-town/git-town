@@ -214,6 +214,19 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
+func (bc *BackendCommands) CommitsInBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) ([]domain.SHA, error) {
+	output, err := bc.QueryTrim("git", "cherry", parent.String(), branch.String())
+	if err != nil {
+		return []domain.SHA{}, err
+	}
+	lines := strings.Split(output, "\n")
+	result := make([]domain.SHA, len(lines))
+	for l, line := range lines {
+		result[l] = domain.NewSHA(line[2:])
+	}
+	return result, nil
+}
+
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) error {
 	err := bc.RunMany([][]string{
