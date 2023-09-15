@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/slice"
 )
 
@@ -25,7 +26,7 @@ func (step *RevertCommitStep) Run(args RunArgs) error {
 		return err
 	}
 	if !slice.Contains(commitsInCurrentBranch, step.SHA) {
-		return fmt.Errorf("branch %q does not contain commit %q. Found commits %s", currentBranch, step.SHA, commitsInCurrentBranch.Join("|"))
+		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, step.SHA, commitsInCurrentBranch.Join("|"))
 	}
 
 	// Ensure that the current branch contains the given commit?
