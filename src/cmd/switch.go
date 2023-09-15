@@ -40,17 +40,19 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := queryBranch(branches.Initial, repo.Runner.Config.Lineage())
+	newBranch, validChoice, err := queryBranch(branches.Initial, lineage)
 	if err != nil {
 		return err
 	}

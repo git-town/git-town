@@ -54,6 +54,60 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, initial, currentBranch)
 	})
 
+	t.Run("CommitsInBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("feature branch contains commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   domain.NewLocalBranchName("branch1"),
+				Message:  "commit 1",
+				FileName: "file1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   domain.NewLocalBranchName("branch1"),
+				Message:  "commit 2",
+				FileName: "file2",
+			})
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
+			assert.NoError(t, err)
+			assert.Equal(t, 2, len(commits))
+		})
+		t.Run("feature branch contains no commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
+			assert.NoError(t, err)
+			assert.Equal(t, 0, len(commits))
+		})
+		t.Run("main branch contains commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   initial,
+				Message:  "commit 1",
+				FileName: "file1",
+			})
+			runtime.CreateCommit(testgit.Commit{
+				Branch:   initial,
+				Message:  "commit 2",
+				FileName: "file2",
+			})
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
+			assert.NoError(t, err)
+			assert.Equal(t, 3, len(commits)) // 1 initial commit + 2 test commits
+		})
+		t.Run("main branch contains no commits", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
+			assert.NoError(t, err)
+			assert.Equal(t, 1, len(commits)) // the initial commit
+		})
+	})
+
 	t.Run("CreateFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)

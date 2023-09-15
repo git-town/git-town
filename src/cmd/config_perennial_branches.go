@@ -70,10 +70,12 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		Lineage:               lineage,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})

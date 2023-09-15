@@ -68,6 +68,7 @@ func runAppend(arg string, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -91,9 +92,11 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	snapshot, initialBranch, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
+		Lineage:               lineage,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
@@ -118,7 +121,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if snapshot.Branches.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(snapshot.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
