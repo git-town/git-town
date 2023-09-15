@@ -1199,6 +1199,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
+					// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
+					// and we can't revert the commit on it since we cannot change the local perennial branch here.
 					&steps.ResetRemoteBranchToSHAStep{
 						Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
 						SetToSHA:    domain.NewSHA("333333"),
@@ -1276,9 +1278,11 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveDiff.Steps(lineage, branchTypes)
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
+					// revert the commit on the perennial branch
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
 					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
 					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
+					// reset the feature branch to the previous SHA
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("444444"), SetToSHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
