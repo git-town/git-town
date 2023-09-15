@@ -32,6 +32,15 @@ func (bba BranchBeforeAfter) IsOmniChange() bool {
 	return bba.Before.IsOmniBranch() && bba.After.IsOmniBranch() && bba.LocalChanged()
 }
 
+func (bba BranchBeforeAfter) IsInconsintentChange() bool {
+	return !bba.Before.LocalSHA.IsEmpty() &&
+		!bba.Before.RemoteSHA.IsEmpty() &&
+		!bba.After.LocalSHA.IsEmpty() &&
+		!bba.After.RemoteSHA.IsEmpty() &&
+		bba.LocalChanged() &&
+		bba.RemoteChanged()
+}
+
 func (bba BranchBeforeAfter) LocalAdded() bool {
 	return !bba.Before.HasLocalBranch() && bba.After.HasLocalBranch()
 }
@@ -97,6 +106,13 @@ func (bc BranchesBeforeAfter) Diff() Changes {
 			}
 			continue
 		}
+		if ba.IsInconsintentChange() {
+			result.InconsistentlyChanged = append(result.InconsistentlyChanged, domain.InconsistentChange{
+				Before: ba.Before,
+				After:  ba.After,
+			})
+			continue
+		}
 		switch {
 		case ba.LocalAdded():
 			result.LocalAdded = append(result.LocalAdded, ba.After.LocalName)
@@ -133,21 +149,26 @@ type Changes struct {
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
 	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
 	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
-	// So, to revert a change on a remote perennial branch one needs to perform a revert commit on the local perennial branch, then normal-push (not force-push) that new commit up to the remote branch.
+	// So, to revert a change on a remote perennial branch one needs to perform a revert commit on the local perennial branch,
+	// then normal-push (not force-push) that new commit up to the remote branch.
 	// This is only possible if the local and remote branches have an identical SHA before as well as after.
 	OmniChanged domain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
+	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch don't have the same SHA before or after.
+	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
+	InconsistentlyChanged domain.InconsistentChanges
 }
 
 // EmptyChanges provides a properly initialized empty Changes instance.
 func EmptyChanges() Changes {
 	return Changes{
-		LocalAdded:    domain.LocalBranchNames{},
-		LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-		LocalChanged:  domain.LocalBranchChange{},
-		RemoteAdded:   []domain.RemoteBranchName{},
-		RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
-		RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-		OmniChanged:   domain.LocalBranchChange{},
+		LocalAdded:            domain.LocalBranchNames{},
+		LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
+		LocalChanged:          domain.LocalBranchChange{},
+		RemoteAdded:           []domain.RemoteBranchName{},
+		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+		OmniChanged:           domain.LocalBranchChange{},
+		InconsistentlyChanged: domain.InconsistentChanges{},
 	}
 }
 
@@ -166,6 +187,23 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
 	}
+	// ignore inconsistently changed perennial branches
+	_, inconsistentChangedFeatures := bd.InconsistentlyChanged.Categorize(branchTypes)
+	// reset inconsintently changed feature branches
+	for _, inconsistentChange := range inconsistentChangedFeatures {
+		result.Append(&steps.CheckoutStep{Branch: inconsistentChange.Before.LocalName})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{
+			MustHaveSHA: inconsistentChange.After.LocalSHA,
+			SetToSHA:    inconsistentChange.Before.LocalSHA,
+			Hard:        true,
+		})
+		result.Append(&steps.ResetRemoteBranchToSHAStep{
+			Branch:      inconsistentChange.Before.RemoteName,
+			MustHaveSHA: inconsistentChange.After.RemoteSHA,
+			SetToSHA:    inconsistentChange.Before.RemoteSHA,
+		})
+	}
+
 	// delete omni-changed feature branches locally and push updates
 
 	// remove remotely added branches
