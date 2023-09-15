@@ -12,7 +12,7 @@ import (
 
 func TestMockingRunner(t *testing.T) {
 	t.Parallel()
-	t.Run(".MockCommand()", func(t *testing.T) {
+	t.Run("MockCommand", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
 		devDir := filepath.Join(workDir, "dev")
@@ -31,7 +31,7 @@ func TestMockingRunner(t *testing.T) {
 		assert.Equal(t, "foo called with: bar", res)
 	})
 
-	t.Run(".Run()", func(t *testing.T) {
+	t.Run("Run", func(t *testing.T) {
 		t.Parallel()
 		runner := subshell.TestRunner{
 			WorkingDir: t.TempDir(),
@@ -43,7 +43,7 @@ func TestMockingRunner(t *testing.T) {
 		assert.Equal(t, "hello world", res)
 	})
 
-	t.Run(".QueryString()", func(t *testing.T) {
+	t.Run("QueryString", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
 		runner := subshell.TestRunner{
@@ -57,7 +57,7 @@ func TestMockingRunner(t *testing.T) {
 		assert.False(t, os.IsNotExist(err))
 	})
 
-	t.Run(".QueryWith", func(t *testing.T) {
+	t.Run("QueryWith", func(t *testing.T) {
 		t.Run("without input", func(t *testing.T) {
 			t.Parallel()
 			dir1 := t.TempDir()
@@ -96,7 +96,7 @@ func TestMockingRunner(t *testing.T) {
 		})
 	})
 
-	t.Run(".QueryWithCode", func(t *testing.T) {
+	t.Run("QueryWithCode", func(t *testing.T) {
 		t.Parallel()
 		t.Run("exit code 0", func(t *testing.T) {
 			r := subshell.TestRunner{

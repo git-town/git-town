@@ -12,7 +12,7 @@ import (
 
 func TestRunState(t *testing.T) {
 	t.Parallel()
-	t.Run(".Marshal()", func(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			AbortStepList: runstate.StepList{
