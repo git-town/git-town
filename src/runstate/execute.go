@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -32,6 +33,7 @@ func Execute(args ExecuteArgs) error {
 		err := step.Run(steps.RunArgs{
 			Runner:    args.Run,
 			Connector: args.Connector,
+			Lineage:   args.Lineage,
 		})
 		if err != nil {
 			return errored(step, err, args)
@@ -110,6 +112,7 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 		Run:       args.Run,
 		Connector: args.Connector,
 		RootDir:   args.RootDir,
+		Lineage:   args.Lineage,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortStepProblem, err)
@@ -122,4 +125,5 @@ type ExecuteArgs struct {
 	Run       *git.ProdRunner
 	Connector hosting.Connector
 	RootDir   string
+	Lineage   config.Lineage
 }

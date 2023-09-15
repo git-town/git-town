@@ -71,6 +71,7 @@ func prepend(args []string, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -94,10 +95,12 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -124,7 +127,6 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return nil, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,

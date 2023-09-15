@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/validate"
 )
@@ -8,7 +9,7 @@ import (
 // LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage)
 		if err != nil || exit {
 			return domain.EmptyBranches(), exit, err
 		}
@@ -56,6 +57,7 @@ type LoadBranchesArgs struct {
 	Repo                  *OpenRepoResult
 	Fetch                 bool
 	HandleUnfinishedState bool
+	Lineage               config.Lineage
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 }

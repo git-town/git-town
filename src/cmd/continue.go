@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -56,15 +57,18 @@ func runContinue(debug bool) error {
 		RunState:  runState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -96,9 +100,11 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 	})
 	return &continueConfig{
 		connector: connector,
+		lineage:   lineage,
 	}, false, err
 }
 
 type continueConfig struct {
 	connector hosting.Connector
+	lineage   config.Lineage
 }

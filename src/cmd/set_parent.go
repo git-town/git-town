@@ -39,10 +39,12 @@ func setParent(debug bool) error {
 	if err != nil {
 		return err
 	}
+	lineage := repo.Runner.Config.Lineage()
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -52,7 +54,6 @@ func setParent(debug bool) error {
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	existingParent := lineage.Parent(branches.Initial)
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent

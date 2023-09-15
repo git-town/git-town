@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -61,6 +62,7 @@ func abort(debug bool) error {
 		RunState:  &abortRunState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -72,6 +74,7 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
+	lineage := run.Config.Lineage()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: run.Backend.SHAForBranch,
@@ -84,9 +87,11 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 	})
 	return &abortConfig{
 		connector: connector,
+		lineage:   lineage,
 	}, err
 }
 
 type abortConfig struct {
 	connector hosting.Connector
+	lineage   config.Lineage
 }
