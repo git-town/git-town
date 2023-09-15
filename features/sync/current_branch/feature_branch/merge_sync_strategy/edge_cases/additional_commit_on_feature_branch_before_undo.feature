@@ -1,4 +1,4 @@
-Feature: undo after additional commits on feature branch
+Feature: undo offline sync after additional commits to the feature branch
 
   Background:
     Given offline mode is enabled
