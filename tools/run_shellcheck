@@ -11,6 +11,7 @@ os=$(uname -s)
 machine=$(uname -m)
 if [ "$os" = "Darwin" ] && [ "$machine" = "arm64" ]; then
 	if command -v shellcheck >/dev/null 2>&1; then
+		echo "using homebrew ShellCheck"
 	else
 		echo
 		echo "Please install ShellCheck via Homebrew since you use Apple Silicon."
