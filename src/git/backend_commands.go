@@ -281,7 +281,7 @@ func (bc *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, erro
 	return domain.NewLocalBranchName(output), nil
 }
 
-// CurrentBranch provides the currently checked out branch.
+// CurrentBranch provides the name of the currently checked out branch.
 func (bc *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
 	if bc.Config.DryRun {
 		return bc.CurrentBranchCache.Value(), nil

@@ -13,48 +13,6 @@ import (
 func TestBranchBeforeAfter(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsOmniAdd", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is an omniadd", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
-				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
-				},
-				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-			}
-			assert.True(t, bba.IsOmniAdd())
-		})
-		t.Run("not an omniadd", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
-				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-			}
-			assert.False(t, bba.IsOmniAdd())
-		})
-	})
-
 	t.Run("IsOmniChange", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {
@@ -96,48 +54,6 @@ func TestBranchBeforeAfter(t *testing.T) {
 				},
 			}
 			assert.False(t, bba.IsOmniChange())
-		})
-	})
-
-	t.Run("IsOmniRemove", func(t *testing.T) {
-		t.Parallel()
-		t.Run("is an omniremove", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
-				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
-				},
-			}
-			assert.True(t, bba.IsOmniRemove())
-		})
-		t.Run("not an omniremove", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
-				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("branch-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusUpToDate,
-					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-					RemoteSHA:  domain.NewSHA("111111"),
-				},
-			}
-			assert.False(t, bba.IsOmniRemove())
 		})
 	})
 
@@ -619,8 +535,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -669,8 +583,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -750,8 +662,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -760,13 +670,15 @@ func TestChanges(t *testing.T) {
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
-						SHA:  domain.NewSHA("111111"),
-						Hard: true,
+						MustHaveSHA: domain.NewSHA("333333"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
-						SHA:  domain.NewSHA("222222"),
-						Hard: true,
+						MustHaveSHA: domain.NewSHA("444444"),
+						SetToSHA:    domain.NewSHA("222222"),
+						Hard:        true,
 					},
 				},
 			}
@@ -830,8 +742,6 @@ func TestChanges(t *testing.T) {
 				},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -958,8 +868,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -1095,14 +1003,18 @@ func TestChanges(t *testing.T) {
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
 			wantDiff := runstate.Changes{
-				LocalAdded:    domain.LocalBranchNames{},
-				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
-				LocalChanged:  domain.LocalBranchChange{},
-				RemoteAdded:   []domain.RemoteBranchName{},
+				LocalAdded: domain.LocalBranchNames{
+					domain.NewLocalBranchName("perennial-branch"),
+					domain.NewLocalBranchName("feature-branch"),
+				},
+				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
+				LocalChanged: domain.LocalBranchChange{},
+				RemoteAdded: []domain.RemoteBranchName{
+					domain.NewRemoteBranchName("origin/perennial-branch"),
+					domain.NewRemoteBranchName("origin/feature-branch"),
+				},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames("perennial-branch", "feature-branch"),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -1113,20 +1025,20 @@ func TestChanges(t *testing.T) {
 						Branch:     domain.NewLocalBranchName("perennial-branch"),
 						NoPushHook: false,
 					},
-					&steps.DeleteLocalBranchStep{
-						Branch: domain.NewLocalBranchName("perennial-branch"),
-						Parent: domain.LocalBranchName{}.Location(),
-						Force:  true,
-					},
-					&steps.DeleteTrackingBranchStep{
-						Branch:     domain.NewLocalBranchName("feature-branch"),
-						NoPushHook: false,
-					},
-					&steps.DeleteLocalBranchStep{
-						Branch: domain.NewLocalBranchName("feature-branch"),
-						Parent: domain.NewLocalBranchName("main").Location(),
-						Force:  true,
-					},
+					// &steps.DeleteTrackingBranchStep{
+					// 	Branch:     domain.NewLocalBranchName("feature-branch"),
+					// 	NoPushHook: false,
+					// },
+					// &steps.DeleteLocalBranchStep{
+					// 	Branch: domain.NewLocalBranchName("perennial-branch"),
+					// 	Parent: domain.LocalBranchName{}.Location(),
+					// 	Force:  true,
+					// },
+					// &steps.DeleteLocalBranchStep{
+					// 	Branch: domain.NewLocalBranchName("feature-branch"),
+					// 	Parent: domain.NewLocalBranchName("main").Location(),
+					// 	Force:  true,
+					// },
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1195,8 +1107,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -1205,13 +1115,15 @@ func TestChanges(t *testing.T) {
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
-						SHA:  domain.NewSHA("111111"),
-						Hard: true,
+						MustHaveSHA: domain.NewSHA("333333"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
-						SHA:  domain.NewSHA("222222"),
-						Hard: true,
+						MustHaveSHA: domain.NewSHA("444444"),
+						SetToSHA:    domain.NewSHA("222222"),
+						Hard:        true,
 					},
 				},
 			}
@@ -1281,8 +1193,6 @@ func TestChanges(t *testing.T) {
 						After:  domain.NewSHA("444444"),
 					},
 				},
-				OmniAdded:   domain.NewLocalBranchNames(),
-				OmniRemoved: map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged: domain.LocalBranchChange{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
@@ -1351,8 +1261,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged: domain.LocalBranchChange{
 					domain.NewLocalBranchName("perennial-branch"): {
 						Before: domain.NewSHA("111111"),
@@ -1372,7 +1280,7 @@ func TestChanges(t *testing.T) {
 					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
 					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
-					&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("222222"), Hard: true},
+					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("444444"), SetToSHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
 				},
 			}
@@ -1422,8 +1330,6 @@ func TestChanges(t *testing.T) {
 						After:  domain.NewSHA("333333"),
 					},
 				},
-				OmniAdded:   domain.NewLocalBranchNames(),
-				OmniRemoved: map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged: domain.LocalBranchChange{},
 			}
 			assert.Equal(t, want, have)
@@ -1467,8 +1373,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, want, have)
@@ -1512,8 +1416,6 @@ func TestChanges(t *testing.T) {
 						After:  domain.NewSHA("222222"),
 					},
 				},
-				OmniAdded:   domain.NewLocalBranchNames(),
-				OmniRemoved: map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged: domain.LocalBranchChange{},
 			}
 			assert.Equal(t, want, have)
@@ -1554,8 +1456,6 @@ func TestChanges(t *testing.T) {
 				RemoteAdded:   []domain.RemoteBranchName{},
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, want, have)
@@ -1596,8 +1496,6 @@ func TestChanges(t *testing.T) {
 					domain.NewRemoteBranchName("origin/branch-1"): domain.NewSHA("111111"),
 				},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-				OmniAdded:     domain.NewLocalBranchNames(),
-				OmniRemoved:   map[domain.LocalBranchName]domain.SHA{},
 				OmniChanged:   domain.LocalBranchChange{},
 			}
 			assert.Equal(t, want, have)

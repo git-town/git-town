@@ -11,11 +11,12 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
 	previousSHA domain.SHA
+	currentSHA  domain.SHA
 	EmptyStep
 }
 
 func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetCurrentBranchToSHAStep{SHA: step.previousSHA, Hard: false}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{MustHaveSHA: step.currentSHA, SetToSHA: step.previousSHA, Hard: false}}, nil
 }
 
 func (step *CommitOpenChangesStep) Run(args RunArgs) error {
@@ -32,5 +33,10 @@ func (step *CommitOpenChangesStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	return args.Runner.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	err = args.Runner.Frontend.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	if err != nil {
+		return err
+	}
+	step.currentSHA, err = args.Runner.Backend.CurrentSHA()
+	return err
 }
