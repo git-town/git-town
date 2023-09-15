@@ -1025,20 +1025,20 @@ func TestChanges(t *testing.T) {
 						Branch:     domain.NewLocalBranchName("perennial-branch"),
 						NoPushHook: false,
 					},
-					// &steps.DeleteTrackingBranchStep{
-					// 	Branch:     domain.NewLocalBranchName("feature-branch"),
-					// 	NoPushHook: false,
-					// },
-					// &steps.DeleteLocalBranchStep{
-					// 	Branch: domain.NewLocalBranchName("perennial-branch"),
-					// 	Parent: domain.LocalBranchName{}.Location(),
-					// 	Force:  true,
-					// },
-					// &steps.DeleteLocalBranchStep{
-					// 	Branch: domain.NewLocalBranchName("feature-branch"),
-					// 	Parent: domain.NewLocalBranchName("main").Location(),
-					// 	Force:  true,
-					// },
+					&steps.DeleteTrackingBranchStep{
+						Branch:     domain.NewLocalBranchName("feature-branch"),
+						NoPushHook: false,
+					},
+					&steps.DeleteLocalBranchStep{
+						Branch: domain.NewLocalBranchName("perennial-branch"),
+						Parent: domain.LocalBranchName{}.Location(),
+						Force:  true,
+					},
+					&steps.DeleteLocalBranchStep{
+						Branch: domain.NewLocalBranchName("feature-branch"),
+						Parent: domain.NewLocalBranchName("main").Location(),
+						Force:  true,
+					},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
