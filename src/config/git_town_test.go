@@ -108,7 +108,7 @@ func TestGitTown(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
-	t.Run("OriginURL()", func(t *testing.T) {
+	t.Run("OriginURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
 			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
