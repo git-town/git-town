@@ -108,7 +108,7 @@ func TestGitTown(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
-	t.Run("OriginURL()", func(t *testing.T) {
+	t.Run("OriginURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
 			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
@@ -127,7 +127,7 @@ func TestGitTown(t *testing.T) {
 		}
 	})
 
-	t.Run(".SetOffline()", func(t *testing.T) {
+	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)

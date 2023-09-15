@@ -11,7 +11,7 @@ import (
 
 func TestFixtureFactory(t *testing.T) {
 	t.Parallel()
-	t.Run("NewFixtureFactory()", func(t *testing.T) {
+	t.Run("NewFixtureFactory", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		_ = fixture.NewFactory(dir)
@@ -20,7 +20,7 @@ func TestFixtureFactory(t *testing.T) {
 		assert.Falsef(t, os.IsNotExist(err), "memoized directory %q not found", memoizedPath)
 	})
 
-	t.Run(".CreateFixture()", func(t *testing.T) {
+	t.Run("CreateFixture", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		gm := fixture.NewFactory(dir)
