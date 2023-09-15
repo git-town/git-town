@@ -28,7 +28,5 @@ func (step *RevertCommitStep) Run(args RunArgs) error {
 	if !slice.Contains(commitsInCurrentBranch, step.SHA) {
 		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, step.SHA, commitsInCurrentBranch.Join("|"))
 	}
-
-	// Ensure that the current branch contains the given commit?
 	return args.Runner.Frontend.RevertCommit(step.SHA)
 }
