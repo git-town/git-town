@@ -26,7 +26,7 @@ func TestFixture(t *testing.T) {
 		cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), domain.OriginRemote)
 	})
 
-	t.Run(".NewStandardFixture()", func(t *testing.T) {
+	t.Run("NewStandardFixture", func(t *testing.T) {
 		t.Parallel()
 		gitEnvRootDir := t.TempDir()
 		result := fixture.NewStandardFixture(gitEnvRootDir)
@@ -79,7 +79,7 @@ func TestFixture(t *testing.T) {
 		})
 	})
 
-	t.Run(".CreateCommits()", func(t *testing.T) {
+	t.Run("CreateCommits", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
@@ -133,7 +133,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
-	t.Run(".CreateOriginBranch()", func(t *testing.T) {
+	t.Run("CreateOriginBranch", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
@@ -151,7 +151,7 @@ func TestFixture(t *testing.T) {
 		assert.NotContains(t, branches, "b1")
 	})
 
-	t.Run(".CommitTable()", func(t *testing.T) {
+	t.Run("CommitTable", func(t *testing.T) {
 		t.Run("without upstream repo", func(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
@@ -215,7 +215,7 @@ func TestFixture(t *testing.T) {
 		})
 	})
 
-	t.Run(".Remove()", func(t *testing.T) {
+	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()

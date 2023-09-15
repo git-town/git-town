@@ -127,7 +127,7 @@ func TestGitTown(t *testing.T) {
 		}
 	})
 
-	t.Run(".SetOffline()", func(t *testing.T) {
+	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)

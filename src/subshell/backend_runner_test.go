@@ -64,7 +64,7 @@ OUTPUT END
 		})
 	})
 
-	t.Run(".RunMany()", func(t *testing.T) {
+	t.Run("RunMany", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
 		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}

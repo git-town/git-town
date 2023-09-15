@@ -18,7 +18,7 @@ import (
 func TestTestCommands(t *testing.T) {
 	t.Parallel()
 
-	t.Run(".AddRemote()", func(t *testing.T) {
+	t.Run("AddRemote", func(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
 		remotes, err := dev.Remotes()
@@ -31,7 +31,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
-	t.Run(".Commits()", func(t *testing.T) {
+	t.Run("Commits", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
@@ -58,7 +58,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, "second commit", commits[1].Message)
 	})
 
-	t.Run(".ConnectTrackingBranch()", func(t *testing.T) {
+	t.Run("ConnectTrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		// replicating the situation this is used in,
 		// connecting branches of repos with the same commits in them
@@ -72,7 +72,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.PushBranch()
 	})
 
-	t.Run(".CreateBranch()", func(t *testing.T) {
+	t.Run("CreateBranch", func(t *testing.T) {
 		t.Run("simple branch name", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
@@ -100,7 +100,7 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".CreateChildFeatureBranch()", func(t *testing.T) {
+	t.Run("CreateChildFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
@@ -114,7 +114,7 @@ func TestTestCommands(t *testing.T) {
 		}
 	})
 
-	t.Run(".CreateCommit()", func(t *testing.T) {
+	t.Run("CreateCommit", func(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
@@ -152,7 +152,7 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".CreateFile()", func(t *testing.T) {
+	t.Run("CreateFile", func(t *testing.T) {
 		t.Run("simple example", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
@@ -172,7 +172,7 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".CreatePerennialBranches()", func(t *testing.T) {
+	t.Run("CreatePerennialBranches", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
 		runtime.CreatePerennialBranches(domain.NewLocalBranchName("p1"), domain.NewLocalBranchName("p2"))
@@ -186,7 +186,7 @@ func TestTestCommands(t *testing.T) {
 		assert.True(t, branchTypes.IsPerennialBranch(domain.NewLocalBranchName("p2")))
 	})
 
-	t.Run(".Fetch()", func(t *testing.T) {
+	t.Run("Fetch", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
@@ -194,7 +194,7 @@ func TestTestCommands(t *testing.T) {
 		repo.Fetch()
 	})
 
-	t.Run(".FileContentInCommit()", func(t *testing.T) {
+	t.Run("FileContentInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
@@ -209,7 +209,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, "hello world", content)
 	})
 
-	t.Run(".FilesInCommit()", func(t *testing.T) {
+	t.Run("FilesInCommit", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateFile("f1.txt", "one")
@@ -222,7 +222,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
 	})
 
-	t.Run(".HasBranchesOutOfSync()", func(t *testing.T) {
+	t.Run("HasBranchesOutOfSync", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
@@ -265,7 +265,7 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".HasFile()", func(t *testing.T) {
+	t.Run("HasFile", func(t *testing.T) {
 		t.Parallel()
 		t.Run("filename and content match", func(t *testing.T) {
 			t.Parallel()
@@ -287,7 +287,7 @@ func TestTestCommands(t *testing.T) {
 		})
 	})
 
-	t.Run(".HasGitTownConfigNow()", func(t *testing.T) {
+	t.Run("HasGitTownConfigNow", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		res := runtime.HasGitTownConfigNow()
@@ -300,7 +300,7 @@ func TestTestCommands(t *testing.T) {
 		assert.True(t, res)
 	})
 
-	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
+	t.Run("LocalBranchesMainFirst", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
@@ -316,7 +316,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, want, branches)
 	})
 
-	t.Run(".PushBranchToRemote()", func(t *testing.T) {
+	t.Run("PushBranchToRemote", func(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
 		origin := testruntime.Create(t)
@@ -329,7 +329,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, want, branches)
 	})
 
-	t.Run(".RemoveBranch()", func(t *testing.T) {
+	t.Run("RemoveBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
@@ -344,7 +344,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Equal(t, wantBranches, branches)
 	})
 
-	t.Run(".RemoveRemote()", func(t *testing.T) {
+	t.Run("RemoveRemote", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
@@ -355,7 +355,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Len(t, remotes, 0)
 	})
 
-	t.Run(".SHAForCommit()", func(t *testing.T) {
+	t.Run("SHAForCommit", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		repo.CreateCommit(git.Commit{Branch: domain.NewLocalBranchName("initial"), FileName: "foo", FileContent: "bar", Message: "commit"})
@@ -363,7 +363,7 @@ func TestTestCommands(t *testing.T) {
 		assert.Len(t, sha, 40)
 	})
 
-	t.Run(".UncommittedFiles()", func(t *testing.T) {
+	t.Run("UncommittedFiles", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateFile("f1.txt", "one")
