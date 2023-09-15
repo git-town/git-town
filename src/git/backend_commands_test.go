@@ -59,7 +59,9 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch contains commits", func(t *testing.T) {
 			t.Parallel()
 		})
-		t.Run("branch contains no commits", func(t *testing.T) {})
+		t.Run("branch contains no commits", func(t *testing.T) {
+			t.Parallel()
+		})
 	})
 
 	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
