@@ -39,7 +39,7 @@ fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/run_shellcheck "${SHFMT_VERSION}" "${SHELLCHECK_VERSION}"
+	tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh

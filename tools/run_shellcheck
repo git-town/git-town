@@ -11,14 +11,13 @@ os=$(uname -s)
 machine=$(uname -m)
 if [ "$os" = "Darwin" ] && [ "$machine" = "arm64" ]; then
 	if command -v shellcheck >/dev/null 2>&1; then
-		echo "using homebrew ShellCheck"
+		"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs shellcheck
 	else
 		echo
 		echo "Please install ShellCheck via Homebrew since you use Apple Silicon."
 		echo
 		exit 1
 	fi
-	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs shellcheck
 else
 	"tools/shfmt_${SHFMT_VERSION}" -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs "shellcheck_${SHELLCHECK_VERSION}"
 fi
