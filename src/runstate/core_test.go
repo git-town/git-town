@@ -16,14 +16,14 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			AbortStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("abcdef"), Hard: false}},
+				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SetToSHA: domain.NewSHA("abcdef"), Hard: false}},
 			},
 			Command: "sync",
 			RunStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("abcdef"), Hard: false}},
+				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SetToSHA: domain.NewSHA("abcdef"), Hard: false}},
 			},
 			UndoStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SHA: domain.NewSHA("abcdef"), Hard: false}},
+				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{SetToSHA: domain.NewSHA("abcdef"), Hard: false}},
 			},
 		}
 		data, err := json.Marshal(runState)

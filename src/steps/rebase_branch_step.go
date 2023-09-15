@@ -22,7 +22,7 @@ func (step *RebaseBranchStep) CreateContinueSteps() []Step {
 }
 
 func (step *RebaseBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SetToSHA: step.previousSHA}}, nil
 }
 
 func (step *RebaseBranchStep) Run(args RunArgs) error {

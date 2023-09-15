@@ -21,7 +21,7 @@ func (step *MergeStep) CreateContinueSteps() []Step {
 }
 
 func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SHA: step.previousSHA}}, nil
+	return []Step{&ResetCurrentBranchToSHAStep{Hard: true, SetToSHA: step.previousSHA}}, nil
 }
 
 func (step *MergeStep) Run(args RunArgs) error {

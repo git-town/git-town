@@ -108,8 +108,8 @@ func TestSanitizePath(t *testing.T) {
 						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.ResetCurrentBranchToSHAStep{
-						Hard: true,
-						SHA:  domain.NewSHA("123456"),
+						Hard:     true,
+						SetToSHA: domain.NewSHA("123456"),
 					},
 					&steps.RestoreOpenChangesStep{},
 					&steps.RevertCommitStep{
