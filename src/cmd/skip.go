@@ -39,10 +39,12 @@ func skip(debug bool) error {
 	if err != nil {
 		return err
 	}
+	lineage := repo.Runner.Config.Lineage()
 	_, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -64,6 +66,7 @@ func skip(debug bool) error {
 		RunState:  &skipRunState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   lineage,
 		RootDir:   repo.RootDir,
 	})
 }

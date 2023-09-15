@@ -35,6 +35,7 @@ func Execute(args ExecuteArgs) error {
 		err := step.Run(steps.RunArgs{
 			Runner:    args.Run,
 			Connector: args.Connector,
+			Lineage:   args.Lineage,
 		})
 		if err != nil {
 			return errored(step, err, args)
@@ -135,6 +136,7 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 		Run:       args.Run,
 		Connector: args.Connector,
 		RootDir:   args.RootDir,
+		Lineage:   args.Lineage,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortStepProblem, err)
@@ -149,4 +151,5 @@ type ExecuteArgs struct {
 	RootDir                 string
 	InitialBranchesSnapshot BranchesSnapshot
 	InitialConfigSnapshot   ConfigSnapshot
+	Lineage                 config.Lineage
 }

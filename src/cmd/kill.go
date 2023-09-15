@@ -63,6 +63,7 @@ func kill(args []string, debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -79,10 +80,12 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -98,7 +101,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	if targetBranch == nil {
 		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	lineage := repo.Runner.Config.Lineage()
 	if targetBranch.IsLocal() {
 		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
 			DefaultBranch: mainBranch,

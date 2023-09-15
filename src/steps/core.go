@@ -5,6 +5,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -40,4 +41,5 @@ type Step interface {
 type RunArgs struct {
 	Runner    *git.ProdRunner
 	Connector hosting.Connector
+	Lineage   config.Lineage
 }

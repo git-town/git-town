@@ -58,6 +58,7 @@ func pruneBranches(debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -71,16 +72,18 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	return &pruneBranchesConfig{
 		branches:         branches,
-		lineage:          repo.Runner.Config.Lineage(),
+		lineage:          lineage,
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		mainBranch:       repo.Runner.Config.MainBranch(),
 		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),

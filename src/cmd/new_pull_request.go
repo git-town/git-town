@@ -79,6 +79,7 @@ func newPullRequest(debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -100,10 +101,12 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
 	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -120,7 +123,6 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		return nil, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
