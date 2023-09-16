@@ -100,7 +100,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		Fetch:                 true,
 		Lineage:               lineage,
 		HandleUnfinishedState: true,
-		InitialConfigSnapshot: repo.ConfigSnapshot,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})

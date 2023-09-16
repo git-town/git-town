@@ -87,7 +87,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

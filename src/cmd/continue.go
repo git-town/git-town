@@ -70,7 +70,6 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, run
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

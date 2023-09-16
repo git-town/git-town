@@ -17,7 +17,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnap
 		initialBranchesSnapshot := runstate.BranchesSnapshot{
 			Branches: allBranches,
 		}
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, initialBranchesSnapshot, args.InitialConfigSnapshot)
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, initialBranchesSnapshot, args.Repo.ConfigSnapshot)
 		if err != nil || exit {
 			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), exit, err
 		}
@@ -71,5 +71,4 @@ type LoadBranchesArgs struct {
 	Lineage               config.Lineage
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
-	InitialConfigSnapshot runstate.ConfigSnapshot
 }

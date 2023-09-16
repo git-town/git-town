@@ -85,7 +85,6 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

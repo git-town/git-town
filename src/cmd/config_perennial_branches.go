@@ -75,7 +75,6 @@ func updatePerennialBranches(debug bool) error {
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
