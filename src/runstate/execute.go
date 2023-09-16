@@ -46,28 +46,15 @@ func Execute(args ExecuteArgs) error {
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return errors.New(messages.DirCurrentProblem)
-	}
-	finalConfigSnapshot := ConfigSnapshot{
-		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(args.Run.Backend),
-	}
-	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
-	undoConfigSteps := configDiff.UndoSteps()
-	allBranches, _, err := args.Run.Backend.BranchInfos()
+	undoSteps, err := createUndoList(createUndoListArgs{
+		Run:                     args.Run,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+	})
 	if err != nil {
 		return err
 	}
-	finalBranchesSnapshot := BranchesSnapshot{
-		Branches: allBranches,
-	}
-	bba := args.InitialBranchesSnapshot.Changes(finalBranchesSnapshot)
-	branchesDiff := bba.Diff()
-	undoBranchesSteps := branchesDiff.Steps(args.Run.Config.Lineage(), args.Run.Config.BranchTypes())
-	undoConfigSteps.AppendList(undoBranchesSteps)
-	args.RunState.UndoStepList = undoConfigSteps
+	args.RunState.UndoStepList = undoSteps
 	if args.RunState.IsAbort || args.RunState.isUndo {
 		err := Delete(args.RootDir)
 		if err != nil {
@@ -143,4 +130,35 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot BranchesSnapshot
 	InitialConfigSnapshot   ConfigSnapshot
 	Lineage                 config.Lineage
+}
+
+func createUndoList(args createUndoListArgs) (StepList, error) {
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return StepList{}, errors.New(messages.DirCurrentProblem)
+	}
+	finalConfigSnapshot := ConfigSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(args.Run.Backend),
+	}
+	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
+	undoConfigSteps := configDiff.UndoSteps()
+	allBranches, _, err := args.Run.Backend.BranchInfos()
+	if err != nil {
+		return StepList{}, err
+	}
+	finalBranchesSnapshot := BranchesSnapshot{
+		Branches: allBranches,
+	}
+	bba := args.InitialBranchesSnapshot.Changes(finalBranchesSnapshot)
+	branchesDiff := bba.Diff()
+	undoBranchesSteps := branchesDiff.Steps(args.Run.Config.Lineage(), args.Run.Config.BranchTypes())
+	undoConfigSteps.AppendList(undoBranchesSteps)
+	return undoConfigSteps, nil
+}
+
+type createUndoListArgs struct {
+	Run                     *git.ProdRunner
+	InitialBranchesSnapshot BranchesSnapshot
+	InitialConfigSnapshot   ConfigSnapshot
 }
