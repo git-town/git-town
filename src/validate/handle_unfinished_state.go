@@ -33,11 +33,11 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	case dialog.ResponseDiscard:
 		return discardRunstate(rootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage)
+		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
 	case dialog.ResponseAbort:
 		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage)
+		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -58,7 +58,7 @@ func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector h
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage, initialBranchesSnapshot runstate.BranchesSnapshot, initialConfigSnapshot runstate.ConfigSnapshot) (bool, error) {
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
@@ -67,11 +67,13 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, runstate.Execute(runstate.ExecuteArgs{
-		RunState:  runState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+		RunState:                runState,
+		Run:                     run,
+		Connector:               connector,
+		Lineage:                 lineage,
+		RootDir:                 rootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
 	})
 }
 
@@ -80,13 +82,15 @@ func discardRunstate(rootDir string) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage, initialBranchesSnapshot runstate.BranchesSnapshot, initialConfigSnapshot runstate.ConfigSnapshot) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+		RunState:                &skipRunState,
+		Run:                     run,
+		Connector:               connector,
+		Lineage:                 lineage,
+		RootDir:                 rootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
 	})
 }
