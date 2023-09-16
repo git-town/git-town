@@ -42,7 +42,7 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determinePruneBranchesConfig(&repo)
+	config, initialBranchesSnapshot, exit, err := determinePruneBranchesConfig(&repo)
 	if err != nil || exit {
 		return err
 	}
@@ -55,11 +55,13 @@ func pruneBranches(debug bool) error {
 		RunStepList: stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
@@ -71,9 +73,9 @@ type pruneBranchesConfig struct {
 	previousBranch   domain.LocalBranchName
 }
 
-func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, bool, error) {
+func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -87,7 +89,7 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		mainBranch:       repo.Runner.Config.MainBranch(),
 		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),
-	}, exit, err
+	}, branchesSnapshot, exit, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
