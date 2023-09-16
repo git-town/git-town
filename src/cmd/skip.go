@@ -40,7 +40,7 @@ func skip(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
-	_, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -63,10 +63,12 @@ func skip(debug bool) error {
 	}
 	skipRunState := runState.CreateSkipRunState()
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &skipRunState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
