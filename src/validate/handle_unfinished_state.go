@@ -12,7 +12,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string, lineage config.Lineage) (quit bool, err error) {
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string, lineage config.Lineage, initialBranchesSnapshot runstate.BranchesSnapshot, initialConfigSnapshot runstate.ConfigSnapshot) (quit bool, err error) {
 	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -35,7 +35,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	case dialog.ResponseContinue:
 		return continueRunstate(run, runState, connector, rootDir, lineage)
 	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage)
+		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
 	case dialog.ResponseSkip:
 		return skipRunstate(run, runState, connector, rootDir, lineage)
 	case dialog.ResponseQuit:
@@ -45,14 +45,16 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage, initialBranchesSnapshot runstate.BranchesSnapshot, initialConfigSnapshot runstate.ConfigSnapshot) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &abortRunState,
-		Run:       run,
-		Connector: connector,
-		RootDir:   rootDir,
-		Lineage:   lineage,
+		RunState:                &abortRunState,
+		Run:                     run,
+		Connector:               connector,
+		RootDir:                 rootDir,
+		Lineage:                 lineage,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
 	})
 }
 
