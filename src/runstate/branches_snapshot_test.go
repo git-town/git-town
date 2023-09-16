@@ -1691,11 +1691,18 @@ func TestChanges(t *testing.T) {
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
 						LocalSHA:   domain.NewSHA("111111"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("222222"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
 			}
@@ -1705,8 +1712,15 @@ func TestChanges(t *testing.T) {
 						LocalName:  domain.LocalBranchName{},
 						LocalSHA:   domain.SHA{},
 						SyncStatus: domain.SyncStatusRemoteOnly,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.LocalBranchName{},
+						LocalSHA:   domain.SHA{},
+						SyncStatus: domain.SyncStatusRemoteOnly,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
 			}
@@ -1715,7 +1729,8 @@ func TestChanges(t *testing.T) {
 			wantDiff := runstate.Changes{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
-					domain.NewLocalBranchName("branch-1"): domain.NewSHA("111111"),
+					domain.NewLocalBranchName("perennial-branch"): domain.NewSHA("111111"),
+					domain.NewLocalBranchName("feature-branch"):   domain.NewSHA("222222"),
 				},
 				LocalChanged:          domain.LocalBranchChange{},
 				RemoteAdded:           []domain.RemoteBranchName{},
