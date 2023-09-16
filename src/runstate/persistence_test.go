@@ -71,11 +71,9 @@ func TestSanitizePath(t *testing.T) {
 					},
 					&steps.DeleteParentBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
+						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.DiscardOpenChangesStep{},
 					&steps.EnsureHasShippableChangesStep{
@@ -100,7 +98,6 @@ func TestSanitizePath(t *testing.T) {
 					&steps.PushCurrentBranchStep{
 						CurrentBranch: domain.NewLocalBranchName("branch"),
 						NoPushHook:    true,
-						Undoable:      true,
 					},
 					&steps.PushTagsStep{},
 					&steps.RebaseBranchStep{Branch: domain.NewBranchName("branch")},
@@ -130,7 +127,6 @@ func TestSanitizePath(t *testing.T) {
 					&steps.UpdateProposalTargetStep{
 						ProposalNumber: 123,
 						NewTarget:      domain.NewLocalBranchName("new-target"),
-						ExistingTarget: domain.NewLocalBranchName("existing-target"),
 					},
 				},
 			},
@@ -234,15 +230,13 @@ func TestSanitizePath(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
-        "Parent": "parent"
+        "Branch": "branch"
       },
       "type": "DeleteParentBranchStep"
     },
     {
       "data": {
-        "Branch": "branch",
-        "NoPushHook": true
+        "Branch": "branch"
       },
       "type": "DeleteTrackingBranchStep"
     },
@@ -295,8 +289,7 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "NoPushHook": true,
-        "Undoable": true
+        "NoPushHook": true
       },
       "type": "PushCurrentBranchStep"
     },
@@ -360,8 +353,7 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {
         "ProposalNumber": 123,
-        "NewTarget": "new-target",
-        "ExistingTarget": "existing-target"
+        "NewTarget": "new-target"
       },
       "type": "UpdateProposalTargetStep"
     }

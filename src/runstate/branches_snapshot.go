@@ -180,7 +180,7 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	for branch, change := range omniChangedPerennials {
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.RevertCommitStep{SHA: change.Before})
-		result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false, Undoable: false})
+		result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false})
 	}
 
 	// reset omni-changed feature branches

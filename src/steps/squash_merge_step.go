@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -19,14 +18,6 @@ type SquashMergeStep struct {
 
 func (step *SquashMergeStep) CreateAbortSteps() []Step {
 	return []Step{&DiscardOpenChangesStep{}}
-}
-
-func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
-	currentSHA, err := backend.CurrentSHA()
-	if err != nil {
-		return []Step{}, err
-	}
-	return []Step{&RevertCommitStep{SHA: currentSHA}}, nil
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {

@@ -168,7 +168,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		lineage := config.lineage
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.LocalName, Parent: lineage.Parent(config.oldBranch.LocalName)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.LocalName})
 		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.LocalName)})
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
@@ -176,7 +176,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.LocalName, NoPushHook: false})
+		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.LocalName})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.LocalName, Parent: config.mainBranch.Location(), Force: false})
 	err := result.Wrap(runstate.WrapOptions{

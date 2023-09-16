@@ -327,11 +327,10 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 			list.Add(&steps.UpdateProposalTargetStep{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
-				ExistingTarget: childProposal.Target,
 			})
 		}
 		// push
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: false, Undoable: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: false})
 		list.Add(&steps.ConnectorMergeProposalStep{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
@@ -343,7 +342,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, Undoable: true, NoPushHook: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, NoPushHook: false})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -351,11 +350,11 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.LocalName, NoPushHook: false})
+			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.LocalName})
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.LocalName, Parent: run.Config.Lineage().Parent(config.branchToShip.LocalName)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.LocalName})
 	}
