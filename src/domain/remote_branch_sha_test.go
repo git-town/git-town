@@ -1,0 +1,32 @@
+package domain_test
+
+import (
+	"testing"
+
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestRemoteBranchesSHAs(t *testing.T) {
+	t.Parallel()
+	t.Run("Categorize", func(t *testing.T) {
+		t.Parallel()
+		rbs := domain.RemoteBranchesSHAs{
+			domain.NewRemoteBranchName("origin/feature-branch"):   domain.NewSHA("111111"),
+			domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("222222"),
+		}
+		branchTypes := domain.BranchTypes{
+			MainBranch:        domain.NewLocalBranchName("main"),
+			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
+		}
+		havePerennials, haveFeatures := rbs.Categorize(branchTypes)
+		wantPerennials := domain.RemoteBranchesSHAs{
+			domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("222222"),
+		}
+		assert.Equal(t, wantPerennials, havePerennials)
+		wantFeatures := domain.RemoteBranchesSHAs{
+			domain.NewRemoteBranchName("origin/feature-branch"): domain.NewSHA("111111"),
+		}
+		assert.Equal(t, wantFeatures, haveFeatures)
+	})
+}
