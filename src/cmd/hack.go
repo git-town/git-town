@@ -56,7 +56,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineHackConfig(args, promptForParent, &repo)
+	config, initialBranchesSnapshot, exit, err := determineHackConfig(args, promptForParent, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -69,17 +69,19 @@ func hack(args []string, promptForParent, debug bool) error {
 		RunStepList: stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -88,7 +90,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, exit, err
 	}
 	fc := failure.Collector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
@@ -104,7 +106,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		targetBranch:    targetBranch,
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
@@ -114,10 +116,10 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	if branches.All.HasLocalBranch(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
@@ -140,7 +142,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		isOffline:           isOffline,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
-	}, false, fc.Err
+	}, branchesSnapshot, false, fc.Err
 }
 
 func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.LocalBranchName, updated bool, err error) {
