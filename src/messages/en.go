@@ -1,7 +1,7 @@
 package messages
 
 const (
-	AbortContinueHelp                 = "\n\nTo abort, run \"git-town abort\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
+	AbortContinueGuidance             = "\n\nTo abort, run \"git-town abort\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
 	AbortNothingToDo                  = "nothing to abort"
 	ArgumentUnknown                   = "unknown argument: %q"
 	BranchAlreadyExistsLocally        = "there is already a branch %q"
@@ -21,7 +21,7 @@ const (
 	ConfigPullbranchStrategyUnknown   = "unknown pull branch strategy: %q"
 	ConfigSyncStrategyUnknown         = "unknown sync strategy: %q"
 	ConfigRemoveError                 = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
-	ContitueSkipHelp                  = "To continue by skipping the current branch, run \"git-town skip\"."
+	ContinueSkipGuidance              = "To continue by skipping the current branch, run \"git-town skip\"."
 	DiffConflictWithMain              = "conflicts between your uncommmitted changes and the main branch"
 	ValueInvalid                      = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 	ValueGlobalInvalid                = "invalid value for global %s: %q. Please provide either \"true\" or \"false\""

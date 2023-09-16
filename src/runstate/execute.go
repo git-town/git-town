@@ -91,9 +91,9 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	message := runErr.Error() + messages.AbortContinueHelp
+	message := runErr.Error() + messages.AbortContinueGuidance
 	if args.RunState.UnfinishedDetails.CanSkip {
-		message += messages.ContitueSkipHelp
+		message += messages.ContinueSkipGuidance
 	}
 	message += "\n"
 	return fmt.Errorf(message)
