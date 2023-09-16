@@ -40,7 +40,7 @@ func undo(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
-	_, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -60,10 +60,12 @@ func undo(debug bool) error {
 	}
 	undoRunState := runState.CreateUndoRunState()
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &undoRunState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &undoRunState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
