@@ -9,8 +9,11 @@ import (
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnapshot, bool, error) {
+	var allBranches domain.BranchInfos
+	var initialBranch domain.LocalBranchName
+	var err error
 	if args.HandleUnfinishedState {
-		allBranches, _, err := args.Repo.Runner.Backend.BranchInfos()
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
 		if err != nil {
 			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 		}
@@ -44,6 +47,12 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnap
 				return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 			}
 		}
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
+		if err != nil {
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
+		}
+	}
+	if initialBranch.IsEmpty() {
 		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
 		if err != nil {
 			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
