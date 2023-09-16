@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -90,7 +89,7 @@ func ship(args []string, message string, debug bool) error {
 			return err
 		}
 	}
-	stepList, err := shipStepList(config, message, &repo.Runner)
+	stepList, err := shipStepList(config, message)
 	if err != nil {
 		return err
 	}
@@ -289,7 +288,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
+func shipStepList(config *shipConfig, commitMessage string) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
