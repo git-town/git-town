@@ -12,12 +12,36 @@ type BranchesSnapshot struct {
 	// Don't use these branches for business logic since businss logic might want to modify its in-memory cache of branches
 	// as it adds or removes branches.
 	Branches domain.BranchInfos
+
+	// the branch that was checked out at the time the snapshot was taken
+	Active domain.LocalBranchName
 }
 
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
 		Branches: domain.BranchInfos{},
+		Active:   domain.LocalBranchName{},
 	}
+}
+
+func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBeforeAfter {
+	result := BranchesBeforeAfter{}
+	for _, before := range bs.Branches {
+		after := afterSnapshot.Branches.FindMatchingRecord(before)
+		result = append(result, BranchBeforeAfter{
+			Before: before,
+			After:  after,
+		})
+	}
+	for _, after := range afterSnapshot.Branches {
+		if bs.Branches.FindMatchingRecord(after).IsEmpty() {
+			result = append(result, BranchBeforeAfter{
+				Before: domain.EmptyBranchInfo(),
+				After:  after,
+			})
+		}
+	}
+	return result
 }
 
 // BranchBeforeAfter represents the temporal change of a branch.
@@ -71,26 +95,6 @@ func (bba BranchBeforeAfter) RemoteRemoved() bool {
 }
 
 type BranchesBeforeAfter []BranchBeforeAfter
-
-func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBeforeAfter {
-	result := BranchesBeforeAfter{}
-	for _, before := range bs.Branches {
-		after := afterSnapshot.Branches.FindMatchingRecord(before)
-		result = append(result, BranchBeforeAfter{
-			Before: before,
-			After:  after,
-		})
-	}
-	for _, after := range afterSnapshot.Branches {
-		if bs.Branches.FindMatchingRecord(after).IsEmpty() {
-			result = append(result, BranchBeforeAfter{
-				Before: domain.EmptyBranchInfo(),
-				After:  after,
-			})
-		}
-	}
-	return result
-}
 
 // Diff describes the changes made in this BranchesBeforeAfter structure.
 func (bc BranchesBeforeAfter) Diff() Changes {
@@ -172,7 +176,7 @@ func EmptyChanges() Changes {
 	}
 }
 
-func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) StepList {
+func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, initialBranch, finalBranch domain.LocalBranchName) StepList {
 	result := StepList{}
 	omniChangedPerennials, omniChangedFeatures := bd.OmniChanged.Categorize(branchTypes)
 
@@ -234,6 +238,9 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 
 	// remove locally added branches
 	for _, addedLocalBranch := range bd.LocalAdded {
+		if finalBranch == addedLocalBranch {
+			result.Append(&steps.CheckoutStep{Branch: initialBranch})
+		}
 		result.Append(&steps.DeleteLocalBranchStep{
 			Branch: addedLocalBranch,
 			Parent: lineage.Parent(addedLocalBranch).Location(),
@@ -261,5 +268,7 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 			SetToSHA:    change.Before,
 		})
 	}
+
+	result.Append(&steps.CheckoutStep{Branch: initialBranch})
 	return result
 }

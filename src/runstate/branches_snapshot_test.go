@@ -599,6 +599,7 @@ func TestChanges(t *testing.T) {
 			}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
+				Active:   domain.NewLocalBranchName(""),
 			}
 			after := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -643,9 +644,14 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(
+				lineage,
+				branchTypes,
+				domain.NewLocalBranchName("before"),
+				domain.NewLocalBranchName("branch-1"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("before")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("branch-1"),
 						Parent: domain.NewLocalBranchName("main").Location(),
@@ -692,13 +698,14 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("branch-1"), domain.NewLocalBranchName("main"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
 						Branch:        domain.NewLocalBranchName("branch-1"),
 						StartingPoint: domain.NewSHA("111111").Location(),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -772,7 +779,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -853,7 +860,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{

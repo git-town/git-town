@@ -19,6 +19,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnap
 		}
 		initialBranchesSnapshot := runstate.BranchesSnapshot{
 			Branches: allBranches,
+			Active:   initialBranch,
 		}
 		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, initialBranchesSnapshot, args.Repo.ConfigSnapshot)
 		if err != nil || exit {
@@ -69,6 +70,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnap
 	}
 	snapshot := runstate.BranchesSnapshot{
 		Branches: branches.All.Clone(),
+		Active:   initialBranch,
 	}
 	return branches, snapshot, false, err
 }
