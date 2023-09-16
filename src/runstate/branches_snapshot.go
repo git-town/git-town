@@ -144,7 +144,7 @@ type Changes struct {
 	LocalRemoved  map[domain.LocalBranchName]domain.SHA
 	LocalChanged  domain.LocalBranchChange
 	RemoteAdded   []domain.RemoteBranchName
-	RemoteRemoved map[domain.RemoteBranchName]domain.SHA
+	RemoteRemoved domain.RemoteBranchesSHAs
 	RemoteChanged domain.RemoteBranchChange
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
 	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
@@ -188,7 +188,9 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
 	}
 	// ignore inconsistently changed perennial branches
+	// because we can't change the remote and we therefore don't want to reset the local part either
 	_, inconsistentChangedFeatures := bd.InconsistentlyChanged.Categorize(branchTypes)
+
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
 		result.Append(&steps.CheckoutStep{Branch: inconsistentChange.Before.LocalName})
@@ -204,8 +206,6 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		})
 	}
 
-	// delete omni-changed feature branches locally and push updates
-
 	// remove remotely added branches
 	for _, addedRemoteBranch := range bd.RemoteAdded {
 		result.Append(&steps.DeleteTrackingBranchStep{
@@ -213,7 +213,15 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		})
 	}
 
-	// re-create remotely removed branches
+	// re-create remotely removed feature branches
+	_, removedFeatureTrackingBranches := bd.RemoteRemoved.Categorize(branchTypes)
+	for branch, sha := range removedFeatureTrackingBranches {
+		result.Append(&steps.CreateRemoteBranchStep{
+			Branch:     branch.LocalBranchName(),
+			SHA:        sha,
+			NoPushHook: false,
+		})
+	}
 
 	// reset locally changed branches
 	for localBranch, change := range bd.LocalChanged {
@@ -239,7 +247,8 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	}
 
 	_, remoteFeatureChanges := bd.RemoteChanged.Categorize(branchTypes)
-	// ignore remotely changed perennial branches for now
+	// ignore remotely changed perennial branches because we
+
 	// reset remotely changed feature branches
 	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
 		result.Append(&steps.ResetRemoteBranchToSHAStep{
