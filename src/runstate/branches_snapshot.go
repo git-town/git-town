@@ -175,6 +175,7 @@ func EmptyChanges() Changes {
 func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) StepList {
 	result := StepList{}
 	omniChangedPerennials, omniChangedFeatures := bd.OmniChanged.Categorize(branchTypes)
+
 	// revert omni-changed perennial branches
 	for branch, change := range omniChangedPerennials {
 		result.Append(&steps.CheckoutStep{Branch: branch})
