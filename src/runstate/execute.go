@@ -74,11 +74,20 @@ func finished(args ExecuteArgs) error {
 // errored is called when the given step has resulted in the given error.
 func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
+	undoSteps, err := createUndoList(createUndoListArgs{
+		Run:                     args.Run,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+	})
+	if err != nil {
+		return err
+	}
+	args.RunState.UndoStepList = undoSteps
 	if step.ShouldAutomaticallyAbortOnError() {
 		return autoAbort(step, runErr, args)
 	}
 	args.RunState.RunStepList.Prepend(step.CreateContinueSteps()...)
-	err := args.RunState.MarkAsUnfinished(&args.Run.Backend)
+	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)
 	if err != nil {
 		return err
 	}
