@@ -87,6 +87,9 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, runstate.BranchesS
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
+	if err != nil {
+		return nil, runstate.EmptyBranchesSnapshot(), err
+	}
 	allBranches, _, err := run.Backend.BranchInfos()
 	if err != nil {
 		return nil, runstate.EmptyBranchesSnapshot(), err
