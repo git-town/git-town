@@ -44,10 +44,10 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, runstate.BranchesSnap
 				return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
 			}
 		}
-	}
-	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
-	if err != nil {
-		return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
+		if err != nil {
+			return domain.EmptyBranches(), runstate.EmptyBranchesSnapshot(), false, err
+		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	branches := domain.Branches{

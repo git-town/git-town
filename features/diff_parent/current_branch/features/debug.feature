@@ -1,5 +1,6 @@
 Feature: display debug statistics
 
+  @debug @this
   Scenario: feature branch
     And the current branch is a feature branch "feature"
     When I run "git-town diff-parent --debug"

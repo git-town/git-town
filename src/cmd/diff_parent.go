@@ -46,10 +46,12 @@ func diffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("AAAAAAAAAAAAAAAAAAAA")
 	config, exit, err := determineDiffParentConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
+	fmt.Println("EEEEEEEEEEEEEEEEEEEE")
 	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
 	if err != nil {
 		return err
@@ -66,6 +68,7 @@ type diffParentConfig struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*diffParentConfig, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	fmt.Println("111111111111111111111111111111")
 	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
@@ -74,6 +77,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*di
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
+	fmt.Println("333333333333333333333333333333")
 	if err != nil || exit {
 		return nil, exit, err
 	}
