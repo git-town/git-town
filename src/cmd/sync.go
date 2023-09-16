@@ -63,7 +63,7 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineSyncConfig(all, &repo)
+	config, initialBranchesSnapshot, exit, err := determineSyncConfig(all, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -76,11 +76,13 @@ func sync(all, dryRun, debug bool) error {
 		RunStepList: stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
@@ -100,9 +102,9 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, bool, error) {
+func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -111,16 +113,16 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
@@ -136,7 +138,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 			MainBranch:  mainBranch,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, false, err
 		}
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
@@ -150,7 +152,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 			MainBranch:    mainBranch,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, false, err
 		}
 	}
 	if configUpdated {
@@ -168,19 +170,19 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
@@ -197,7 +199,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 		shouldPushTags:     shouldPushTags,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
-	}, false, err
+	}, branchesSnapshot, false, err
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
