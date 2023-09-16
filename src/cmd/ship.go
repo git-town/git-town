@@ -75,7 +75,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineShipConfig(args, &repo)
+	config, initialBranchesSnapshot, exit, err := determineShipConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -98,11 +98,13 @@ func ship(args []string, message string, debug bool) error {
 		RunStepList: stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
@@ -130,9 +132,9 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -141,20 +143,20 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	deleteOrigin, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
@@ -162,23 +164,23 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
-			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+			return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
 	if !branches.Types.IsFeatureBranch(branchNameToShip) {
-		return nil, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
@@ -189,19 +191,19 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Types, lineage)
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := branches.All.FindLocalBranch(targetBranchName)
 	if targetBranch == nil {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
@@ -210,12 +212,12 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	proposalsOfChildBranches := []hosting.Proposal{}
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
@@ -228,13 +230,13 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	if !repo.IsOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
-				return nil, false, err
+				return nil, branchesSnapshot, false, err
 			}
 			if proposal != nil {
 				canShipViaAPI = true
@@ -244,7 +246,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		for _, childBranch := range childBranches {
 			childProposal, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
-				return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				return nil, branchesSnapshot, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
 			if childProposal != nil {
 				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
@@ -273,7 +275,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		pushHook:                 pushHook,
 		shouldSyncUpstream:       shouldSyncUpstream,
 		syncStrategy:             syncStrategy,
-	}, false, nil
+	}, branchesSnapshot, false, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage config.Lineage) error {
