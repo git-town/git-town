@@ -110,13 +110,9 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	message := runErr.Error() + `
-
-To abort, run "git-town abort".
-To continue after having resolved conflicts, run "git-town continue".
-`
+	message := runErr.Error() + messages.AbortContinueGuidance
 	if args.RunState.UnfinishedDetails.CanSkip {
-		message += `To continue by skipping the current branch, run "git-town skip".`
+		message += messages.ContinueSkipGuidance
 	}
 	message += "\n"
 	return fmt.Errorf(message)
