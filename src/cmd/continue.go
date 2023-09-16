@@ -49,43 +49,46 @@ func runContinue(debug bool) error {
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
-	config, exit, err := determineContinueConfig(&repo)
+	config, initialBranchesSnapshot, exit, err := determineContinueConfig(&repo)
 	if err != nil || exit {
 		return err
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  runState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                runState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, initialBranchesSnapshot, exit, err
 	}
 	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
-		return nil, false, err
+		return nil, initialBranchesSnapshot, false, err
 	}
 	if hasConflicts {
-		return nil, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, initialBranchesSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, initialBranchesSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -101,7 +104,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 	return &continueConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, false, err
+	}, initialBranchesSnapshot, false, err
 }
 
 type continueConfig struct {

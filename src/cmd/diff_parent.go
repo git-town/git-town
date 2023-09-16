@@ -70,6 +70,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*di
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		InitialConfigSnapshot: repo.ConfigSnapshot,
 		Lineage:               lineage,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
