@@ -40,11 +40,6 @@ func Execute(args ExecuteArgs) error {
 		if err != nil {
 			return errored(step, err, args)
 		}
-		undoSteps, err := step.CreateUndoSteps(&args.Run.Backend)
-		if err != nil {
-			return fmt.Errorf(messages.UndoCreateStepProblem, step, err)
-		}
-		args.RunState.UndoStepList.Prepend(undoSteps...)
 	}
 }
 
