@@ -182,12 +182,14 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 		result.Append(&steps.RevertCommitStep{SHA: change.Before})
 		result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false, Undoable: false})
 	}
+
 	// reset omni-changed feature branches
 	for branch, change := range omniChangedFeatures {
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
 	}
+
 	// ignore inconsistently changed perennial branches
 	// because we can't change the remote and we therefore don't want to reset the local part either
 	_, inconsistentChangedFeatures := bd.InconsistentlyChanged.Categorize(branchTypes)
@@ -248,7 +250,8 @@ func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes) 
 	}
 
 	_, remoteFeatureChanges := bd.RemoteChanged.Categorize(branchTypes)
-	// ignore remotely changed perennial branches because we
+	// Ignore remotely changed perennial branches because we can't force-push to them
+	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
 	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
