@@ -1688,6 +1688,13 @@ func TestChanges(t *testing.T) {
 
 		t.Run("omnibranch deleted locally", func(t *testing.T) {
 			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
+			}
+			lineage := config.Lineage{
+				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
+			}
 			before := runstate.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
@@ -1740,6 +1747,20 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.CreateBranchStep{
+						Branch:        domain.NewLocalBranchName("perennial-branch"),
+						StartingPoint: domain.NewSHA("111111").Location(),
+					},
+					&steps.CreateBranchStep{
+						Branch:        domain.NewLocalBranchName("feature-branch"),
+						StartingPoint: domain.NewSHA("222222").Location(),
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch deleted remotely", func(t *testing.T) {
