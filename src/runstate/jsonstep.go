@@ -107,6 +107,10 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.RestoreOpenChangesStep{}
 	case "RevertCommitStep":
 		return &steps.RevertCommitStep{}
+	case "SetGlobalConfigStep":
+		return &steps.SetGlobalConfigStep{}
+	case "SetLocalConfigStep":
+		return &steps.SetLocalConfigStep{}
 	case "SetParentStep":
 		return &steps.SetParentStep{}
 	case "SquashMergeStep":
