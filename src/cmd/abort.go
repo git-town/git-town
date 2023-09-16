@@ -50,7 +50,7 @@ func abort(debug bool) error {
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.AbortNothingToDo)
 	}
-	config, err := determineAbortConfig(&repo.Runner)
+	config, initialBranchesSnapshot, err := determineAbortConfig(&repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -59,19 +59,21 @@ func abort(debug bool) error {
 		return err
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &abortRunState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &abortRunState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
-func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
+func determineAbortConfig(run *git.ProdRunner) (*abortConfig, runstate.BranchesSnapshot, error) {
 	originURL := run.Config.OriginURL()
 	hostingService, err := run.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, runstate.EmptyBranchesSnapshot(), err
 	}
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
@@ -85,10 +87,17 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
+	allBranches, _, err := run.Backend.BranchInfos()
+	if err != nil {
+		return nil, runstate.EmptyBranchesSnapshot(), err
+	}
+	branchesSnapshot := runstate.BranchesSnapshot{
+		Branches: allBranches,
+	}
 	return &abortConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, err
+	}, branchesSnapshot, err
 }
 
 type abortConfig struct {
