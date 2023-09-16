@@ -47,7 +47,7 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineKillConfig(args, &repo)
+	config, initialBranchesSnapshot, exit, err := determineKillConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -60,11 +60,13 @@ func kill(args []string, debug bool) error {
 		RunStepList: stepList,
 	}
 	return runstate.Execute(runstate.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
 }
 
@@ -79,9 +81,9 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, runstate.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
@@ -90,16 +92,16 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, exit, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
-		return nil, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := branches.All.FindLocalBranch(targetBranchName)
 	if targetBranch == nil {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	if targetBranch.IsLocal() {
 		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
@@ -111,7 +113,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 			MainBranch:    mainBranch,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, false, err
 		}
 		if updated {
 			repo.Runner.Config.Reload()
@@ -121,11 +123,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, false, err
 	}
 	return &killConfig{
 		hasOpenChanges: hasOpenChanges,
@@ -136,7 +138,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
 		targetBranch:   *targetBranch,
-	}, false, nil
+	}, branchesSnapshot, false, nil
 }
 
 func (kc killConfig) isOnline() bool {
