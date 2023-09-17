@@ -985,7 +985,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("perennial-branch"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteLocalBranchStep{
@@ -998,6 +998,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1133,7 +1134,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("man"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
@@ -1142,6 +1143,7 @@ func TestChanges(t *testing.T) {
 					&steps.DeleteTrackingBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
 						Parent: domain.LocalBranchName{}.Location(),
@@ -1224,7 +1226,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -1239,6 +1241,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("222222"),
 						Hard:        true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1311,7 +1314,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
@@ -1321,6 +1324,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("333333"),
 						MustHaveSHA: domain.NewSHA("444444"),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1393,7 +1397,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// revert the commit on the perennial branch
@@ -1404,6 +1408,8 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("444444"), SetToSHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
+					// check out the initial branch
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1500,7 +1506,7 @@ func TestChanges(t *testing.T) {
 				},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1515,6 +1521,7 @@ func TestChanges(t *testing.T) {
 						MustHaveSHA: domain.NewSHA("666666"),
 						SetToSHA:    domain.NewSHA("222222"),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1587,7 +1594,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1603,6 +1610,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("333333"),
 						Hard:        true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1675,7 +1683,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
@@ -1684,6 +1692,7 @@ func TestChanges(t *testing.T) {
 						MustHaveSHA: domain.NewSHA("444444"),
 						SetToSHA:    domain.NewSHA("333333"),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1750,7 +1759,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
@@ -1761,6 +1770,7 @@ func TestChanges(t *testing.T) {
 						Branch:        domain.NewLocalBranchName("feature-branch"),
 						StartingPoint: domain.NewSHA("222222").Location(),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1827,7 +1837,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes)
+			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// don't re-create the tracking branch for the perennial branch
@@ -1837,6 +1847,7 @@ func TestChanges(t *testing.T) {
 						SHA:        domain.NewSHA("222222"),
 						NoPushHook: false,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
