@@ -11,14 +11,12 @@ type CheckoutStep struct {
 }
 
 func (step *CheckoutStep) Run(args RunArgs) error {
-	var err error
 	previousBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	if previousBranch != step.Branch {
-		err := args.Runner.Frontend.CheckoutBranch(step.Branch)
-		return err
+	if previousBranch == step.Branch {
+		return nil
 	}
-	return nil
+	return args.Runner.Frontend.CheckoutBranch(step.Branch)
 }
