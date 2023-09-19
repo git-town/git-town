@@ -15,6 +15,7 @@ func TestTypeName(t *testing.T) {
 		123:                              "int",
 		domain.NewLocalBranchName("foo"): "LocalBranchName",
 		&sha:                             "SHA",
+		nil:                              "nil",
 	}
 	for give, want := range tests {
 		have := gohacks.TypeName(give)
