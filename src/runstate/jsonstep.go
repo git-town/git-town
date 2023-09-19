@@ -34,82 +34,88 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	j.Step = determineStep(stepType)
+	j.Step = DetermineStep(stepType)
 	if j.Step == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
-func determineStep(stepType string) steps.Step {
+func DetermineStep(stepType string) steps.Step {
 	switch stepType {
-	case "*AbortMergeStep":
+	case "AbortMergeStep":
 		return &steps.AbortMergeStep{}
-	case "*AbortRebaseStep":
+	case "AbortRebaseStep":
 		return &steps.AbortRebaseStep{}
-	case "*AddToPerennialBranchesStep":
+	case "AddToPerennialBranchesStep":
 		return &steps.AddToPerennialBranchesStep{}
-	case "*CheckoutStep":
+	case "CheckoutStep":
 		return &steps.CheckoutStep{}
-	case "*ConnectorMergeProposalStep":
+	case "CommitOpenChangesStep":
+		return &steps.CommitOpenChangesStep{}
+	case "ConnectorMergeProposalStep":
 		return &steps.ConnectorMergeProposalStep{}
-	case "*ContinueMergeStep":
+	case "ContinueMergeStep":
 		return &steps.ContinueMergeStep{}
-	case "*ContinueRebaseStep":
+	case "ContinueRebaseStep":
 		return &steps.ContinueRebaseStep{}
-	case "*CreateBranchStep":
+	case "CreateBranchStep":
 		return &steps.CreateBranchStep{}
-	case "*CreateProposalStep":
+	case "CreateProposalStep":
 		return &steps.CreateProposalStep{}
-	case "*CreateRemoteBranchStep":
+	case "CreateRemoteBranchStep":
 		return &steps.CreateRemoteBranchStep{}
-	case "*CreateTrackingBranchStep":
+	case "CreateTrackingBranchStep":
 		return &steps.CreateTrackingBranchStep{}
-	case "*DeleteLocalBranchStep":
+	case "DeleteLocalBranchStep":
 		return &steps.DeleteLocalBranchStep{}
-	case "*DeleteOriginBranchStep":
-		return &steps.DeleteOriginBranchStep{}
-	case "*DeleteParentBranchStep":
+	case "DeleteParentBranchStep":
 		return &steps.DeleteParentBranchStep{}
-	case "*DiscardOpenChangesStep":
+	case "DeleteRemoteBranchStep":
+		return &steps.DeleteRemoteBranchStep{}
+	case "DeleteTrackingBranchStep":
+		return &steps.DeleteTrackingBranchStep{}
+	case "DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
-	case "*EmptyStep":
+	case "EmptyStep":
 		return &steps.EmptyStep{}
-	case "*EnsureHasShippableChangesStep":
+	case "EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
-	case "*FetchUpstreamStep":
+	case "FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
-	case "*MergeStep":
+	case "ForcePushBranchStep":
+		return &steps.ForcePushBranchStep{}
+	case "MergeStep":
 		return &steps.MergeStep{}
-	case "*PreserveCheckoutHistoryStep":
+	case "PreserveCheckoutHistoryStep":
 		return &steps.PreserveCheckoutHistoryStep{}
-	case "*PullBranchStep":
-		return &steps.PullBranchStep{}
-	case "*PushBranchAfterCurrentBranchSteps":
+	case "PullCurrentBranchStep":
+		return &steps.PullCurrentBranchStep{}
+	case "PushBranchAfterCurrentBranchSteps":
 		return &steps.PushBranchAfterCurrentBranchSteps{}
-	case "*PushBranchStep":
-		return &steps.PushBranchStep{}
-	case "*PushTagsStep":
+	case "PushCurrentBranchStep":
+		return &steps.PushCurrentBranchStep{}
+	case "PushTagsStep":
 		return &steps.PushTagsStep{}
-	case "*RebaseBranchStep":
+	case "RebaseBranchStep":
 		return &steps.RebaseBranchStep{}
-	case "*RemoveFromPerennialBranchesStep":
+	case "RemoveFromPerennialBranchesStep":
 		return &steps.RemoveFromPerennialBranchesStep{}
-	case "*ResetToShaStep":
-		return &steps.ResetToShaStep{}
-	case "*RestoreOpenChangesStep":
+	case "ResetCurrentBranchToSHAStep":
+		return &steps.ResetCurrentBranchToSHAStep{}
+	case "RestoreOpenChangesStep":
 		return &steps.RestoreOpenChangesStep{}
-	case "*RevertCommitStep":
+	case "RevertCommitStep":
 		return &steps.RevertCommitStep{}
-	case "*SetParentStep":
+	case "SetParentStep":
 		return &steps.SetParentStep{}
-	case "*SquashMergeStep":
+	case "SquashMergeStep":
 		return &steps.SquashMergeStep{}
-	case "*SkipCurrentBranchSteps":
+	case "SkipCurrentBranchSteps":
 		return &steps.SkipCurrentBranchSteps{}
-	case "*StashOpenChangesStep":
+	case "StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
-	case "*UpdateProposalTargetStep":
+	case "UpdateProposalTargetStep":
 		return &steps.UpdateProposalTargetStep{}
 	}
 	return nil
@@ -118,7 +124,7 @@ func determineStep(stepType string) steps.Step {
 func typeName(myvar interface{}) string {
 	t := reflect.TypeOf(myvar)
 	if t.Kind() == reflect.Ptr {
-		return "*" + t.Elem().Name()
+		return t.Elem().Name()
 	}
 	return t.Name()
 }

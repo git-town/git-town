@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/spf13/cobra"
@@ -30,31 +31,34 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
+	})
+	if err != nil {
+		return err
+	}
+	lineage := repo.Runner.Config.Lineage()
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
+	newBranch, validChoice, err := queryBranch(branches.Initial, lineage)
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(branches.Initial, repo.Runner.Config.Lineage())
-	if err != nil {
-		return err
-	}
-	if newBranch != nil && *newBranch != branches.Initial {
-		err = repo.Runner.Backend.CheckoutBranch(*newBranch)
+	if validChoice && newBranch != branches.Initial {
+		err = repo.Runner.Backend.CheckoutBranch(newBranch)
 		if err != nil {
 			return err
 		}
@@ -63,13 +67,20 @@ func runSwitch(debug bool) error {
 }
 
 // queryBranch lets the user select a new branch via a visual dialog.
-// Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, lineage config.Lineage) (selection *string, err error) {
+// Indicates via `validSelection` whether the user made a valid selection.
+func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	entries, err := createEntries(lineage)
 	if err != nil {
-		return nil, err
+		return domain.LocalBranchName{}, false, err
 	}
-	return dialog.ModalSelect(entries, currentBranch)
+	choice, err := dialog.ModalSelect(entries, currentBranch.String())
+	if err != nil {
+		return domain.LocalBranchName{}, false, err
+	}
+	if choice == nil {
+		return domain.LocalBranchName{}, false, nil
+	}
+	return domain.NewLocalBranchName(*choice), true, nil
 }
 
 // createEntries provides all the entries for the branch dialog.
@@ -86,10 +97,10 @@ func createEntries(lineage config.Lineage) (dialog.ModalEntries, error) {
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, lineage config.Lineage) (dialog.ModalEntries, error) {
+func addEntryAndChildren(entries dialog.ModalEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
-		Text:  strings.Repeat("  ", indent) + branch,
-		Value: branch,
+		Text:  strings.Repeat("  ", indent) + branch.String(),
+		Value: branch.String(),
 	})
 	var err error
 	for _, child := range lineage.Children(branch) {

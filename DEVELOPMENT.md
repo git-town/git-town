@@ -117,7 +117,8 @@ details.
 
 ## debug end-to-end tests
 
-To see the CLI output of the shell commands in a Cucumber test, add a tag
+To see the CLI output of the shell commands in a Cucumber test, as well as the
+Git commands that the Git Town test suite runs under the hood, add a tag
 `@debug` above the feature or scenario you want to debug:
 
 ```cucumber
@@ -125,10 +126,18 @@ To see the CLI output of the shell commands in a Cucumber test, add a tag
 Scenario: A foo walks into a bar
 ```
 
+This often goes together with a `@this` tag to only run the test at hand.
+
 To inspect the local and remote Git repository used in an end-to-end test,
 insert the step `And inspect the repo`. This step will make Cucumber print the
 path of the workspace and wait until you hit ENTER. This gives you time to
 inspect that folder using the tool of your choice.
+
+If this level of debug information isn't enough, you can run the Git Town
+command under test with the `--debug` option. As an example, if the step
+`When I run "git-town append new"` mysteriously fails, you could change it to
+`When I run "git-town append new -d"`. This will print the Git commands that Git
+Town runs under the hood.
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 

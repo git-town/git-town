@@ -3,32 +3,32 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposalStep struct {
-	EmptyStep
-	Branch                    string
+	Branch                    domain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	mergeSha                  string
+	mergeSHA                  domain.SHA
 	ProposalNumber            int
+	EmptyStep
 }
 
-func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
+func (step *ConnectorMergeProposalStep) CreateAbortSteps() []Step {
 	if step.enteredEmptyCommitMessage {
-		return &DiscardOpenChangesStep{}
+		return []Step{&DiscardOpenChangesStep{}}
 	}
-	return nil
+	return []Step{}
 }
 
 func (step *ConnectorMergeProposalStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&RevertCommitStep{Sha: step.mergeSha}}, nil
+	return []Step{&RevertCommitStep{SHA: step.mergeSHA}}, nil
 }
 
 func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
@@ -38,36 +38,36 @@ func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *ConnectorMergeProposalStep) Run(args RunArgs) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
-		err := run.Frontend.SquashMerge(step.Branch)
+		err := args.Runner.Frontend.SquashMerge(step.Branch)
 		if err != nil {
 			return err
 		}
-		err = run.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
+		err = args.Runner.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
-		err = run.Frontend.StartCommit()
+		err = args.Runner.Frontend.StartCommit()
 		if err != nil {
 			return err
 		}
-		commitMessage, err = run.Backend.LastCommitMessage()
+		commitMessage, err = args.Runner.Backend.LastCommitMessage()
 		if err != nil {
 			return err
 		}
-		err = run.Frontend.DeleteLastCommit()
+		err = args.Runner.Frontend.DeleteLastCommit()
 		if err != nil {
 			return err
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	step.mergeSha, step.mergeError = connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
+	step.mergeSHA, step.mergeError = args.Connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
 	return step.mergeError
 }
 

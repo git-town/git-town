@@ -14,8 +14,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
-      |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
+      |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
@@ -30,8 +30,8 @@ Feature: display debug statistics
       |         | backend  | git log main..current                             |
       | main    | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
-      |         | backend  | git branch                                        |
-      |         | backend  | git branch                                        |
+      |         | backend  | git show-ref --quiet refs/heads/other             |
+      |         | backend  | git show-ref --quiet refs/heads/current           |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |

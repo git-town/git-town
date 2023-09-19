@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
@@ -23,10 +23,10 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
+		cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), domain.OriginRemote)
 	})
 
-	t.Run(".NewStandardFixture()", func(t *testing.T) {
+	t.Run("NewStandardFixture", func(t *testing.T) {
 		t.Parallel()
 		gitEnvRootDir := t.TempDir()
 		result := fixture.NewStandardFixture(gitEnvRootDir)
@@ -34,13 +34,13 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", branch, "the origin should be at the initial branch so that we can push to it")
+		assert.Equal(t, domain.NewLocalBranchName("initial"), branch, "the origin should be at the initial branch so that we can push to it")
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "main", branch)
+		assert.Equal(t, domain.NewLocalBranchName("main"), branch)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
@@ -50,10 +50,10 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			// create the branches
-			gitEnv.DevRepo.CreateBranch("d1", "main")
-			gitEnv.DevRepo.CreateBranch("d2", "main")
-			gitEnv.OriginRepo.CreateBranch("o1", "initial")
-			gitEnv.OriginRepo.CreateBranch("o2", "initial")
+			gitEnv.DevRepo.CreateBranch(domain.NewLocalBranchName("d1"), domain.NewLocalBranchName("main"))
+			gitEnv.DevRepo.CreateBranch(domain.NewLocalBranchName("d2"), domain.NewLocalBranchName("main"))
+			gitEnv.OriginRepo.CreateBranch(domain.NewLocalBranchName("o1"), domain.NewLocalBranchName("initial"))
+			gitEnv.OriginRepo.CreateBranch(domain.NewLocalBranchName("o2"), domain.NewLocalBranchName("initial"))
 			// get branches
 			table := gitEnv.Branches()
 			// verify
@@ -67,10 +67,10 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			// create the branches
-			gitEnv.DevRepo.CreateBranch("b1", "main")
-			gitEnv.DevRepo.CreateBranch("b2", "main")
-			gitEnv.OriginRepo.CreateBranch("b1", "main")
-			gitEnv.OriginRepo.CreateBranch("b2", "main")
+			gitEnv.DevRepo.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("main"))
+			gitEnv.DevRepo.CreateBranch(domain.NewLocalBranchName("b2"), domain.NewLocalBranchName("main"))
+			gitEnv.OriginRepo.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("main"))
+			gitEnv.OriginRepo.CreateBranch(domain.NewLocalBranchName("b2"), domain.NewLocalBranchName("main"))
 			// get branches
 			table := gitEnv.Branches()
 			// verify
@@ -79,7 +79,7 @@ func TestFixture(t *testing.T) {
 		})
 	})
 
-	t.Run(".CreateCommits()", func(t *testing.T) {
+	t.Run("CreateCommits", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
@@ -88,21 +88,21 @@ func TestFixture(t *testing.T) {
 		// create the commits
 		cloned.CreateCommits([]git.Commit{
 			{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "local-file",
 				FileContent: "lc",
 				Locations:   []string{"local"},
 				Message:     "local commit",
 			},
 			{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "origin-file",
 				FileContent: "rc",
 				Locations:   []string{"origin"},
 				Message:     "origin commit",
 			},
 			{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "loc-rem-file",
 				FileContent: "lrc",
 				Locations:   []string{"local", "origin"},
@@ -110,7 +110,7 @@ func TestFixture(t *testing.T) {
 			},
 		})
 		// verify local commits
-		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "local commit", commits[0].Message)
 		assert.Equal(t, "local-file", commits[0].FileName)
@@ -119,7 +119,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, "loc-rem-file", commits[1].FileName)
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin commits
-		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "origin commit", commits[0].Message)
 		assert.Equal(t, "origin-file", commits[0].FileName)
@@ -130,10 +130,10 @@ func TestFixture(t *testing.T) {
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", branch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
-	t.Run(".CreateOriginBranch()", func(t *testing.T) {
+	t.Run("CreateOriginBranch", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()
@@ -142,16 +142,16 @@ func TestFixture(t *testing.T) {
 		// create the origin branch
 		cloned.CreateOriginBranch("b1", "main")
 		// verify it is in the origin branches
-		branches, err := cloned.OriginRepo.LocalBranchesMainFirst("main")
+		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		assert.NoError(t, err)
-		assert.Contains(t, branches, "b1")
+		assert.Contains(t, branches, domain.NewLocalBranchName("b1"))
 		// verify it isn't in the local branches
-		branches, err = cloned.DevRepo.LocalBranchesMainFirst("main")
+		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		assert.NoError(t, err)
 		assert.NotContains(t, branches, "b1")
 	})
 
-	t.Run(".CommitTable()", func(t *testing.T) {
+	t.Run("CommitTable", func(t *testing.T) {
 		t.Run("without upstream repo", func(t *testing.T) {
 			t.Parallel()
 			// create Fixture instance
@@ -160,14 +160,14 @@ func TestFixture(t *testing.T) {
 			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "local-origin.md",
 				FileContent: "one",
 				Message:     "local-origin",
 			})
-			cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
+			cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), domain.OriginRemote)
 			cloned.OriginRepo.CreateCommit(git.Commit{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "origin.md",
 				FileContent: "two",
 				Message:     "2",
@@ -192,13 +192,13 @@ func TestFixture(t *testing.T) {
 			cloned.AddUpstream()
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
 			cloned.UpstreamRepo.CreateCommit(git.Commit{
-				Branch:      "main",
+				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "upstream.md",
 				FileContent: "two",
 				Message:     "2",
@@ -215,7 +215,7 @@ func TestFixture(t *testing.T) {
 		})
 	})
 
-	t.Run(".Remove()", func(t *testing.T) {
+	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		// create Fixture instance
 		dir := t.TempDir()

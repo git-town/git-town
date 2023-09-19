@@ -1,27 +1,63 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (git.Branches, error) {
-	allBranches, initialBranch, err := pr.Backend.BranchesSyncStatus()
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
+	if args.HandleUnfinishedState {
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage)
+		if err != nil || exit {
+			return domain.EmptyBranches(), exit, err
+		}
+	}
+	if args.ValidateNoOpenChanges {
+		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+	}
+	if args.Fetch {
+		var remotes domain.Remotes
+		remotes, err := args.Repo.Runner.Backend.Remotes()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		if remotes.HasOrigin() && !args.Repo.IsOffline {
+			err = args.Repo.Runner.Frontend.Fetch()
+			if err != nil {
+				return domain.EmptyBranches(), false, err
+			}
+		}
+	}
+	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
 	if err != nil {
-		return git.EmptyBranches(), err
+		return domain.EmptyBranches(), false, err
 	}
-	branchDurations := pr.Config.BranchDurations()
+	branchTypes := args.Repo.Runner.Config.BranchTypes()
+	result := domain.Branches{
+		All:     allBranches,
+		Types:   branchTypes,
+		Initial: initialBranch,
+	}
 	if args.ValidateIsConfigured {
-		branchDurations, err = validate.IsConfigured(&pr.Backend, allBranches, branchDurations)
+		result.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, result)
 	}
-	return git.Branches{
-		All:       allBranches,
-		Durations: branchDurations,
-		Initial:   initialBranch,
-	}, err
+	return result, false, err
 }
 
 type LoadBranchesArgs struct {
-	ValidateIsConfigured bool
+	Repo                  *OpenRepoResult
+	Fetch                 bool
+	HandleUnfinishedState bool
+	Lineage               config.Lineage
+	ValidateIsConfigured  bool
+	ValidateNoOpenChanges bool
 }

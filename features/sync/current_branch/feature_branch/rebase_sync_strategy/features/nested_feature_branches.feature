@@ -46,3 +46,27 @@ Feature: nested feature branches
       |        |               | local main commit    |
       |        |               | origin parent commit |
       |        |               | local parent commit  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND             |
+      | child  | git checkout parent |
+      | parent | git checkout main   |
+      | main   | git checkout child  |
+    And the current branch is still "child"
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE              |
+      | main   | local, origin | origin main commit   |
+      |        |               | local main commit    |
+      | child  | local, origin | origin main commit   |
+      |        |               | local main commit    |
+      |        |               | origin parent commit |
+      |        |               | local parent commit  |
+      |        |               | origin child commit  |
+      |        |               | local child commit   |
+      | parent | local, origin | origin main commit   |
+      |        |               | local main commit    |
+      |        |               | origin parent commit |
+      |        |               | local parent commit  |
+    And the initial branches and hierarchy exist

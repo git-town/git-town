@@ -21,3 +21,17 @@ Feature: sync the current perennial branch (local repo)
     And the current branch is still "qa"
     And the uncommitted file still exists
     And now the initial commits exist
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND       |
+      | qa     | git add -A    |
+      |        | git stash     |
+      |        | git stash pop |
+    And the current branch is still "qa"
+    And now these commits exist
+      | BRANCH | LOCATION | MESSAGE      |
+      | main   | local    | main commit  |
+      | qa     | local    | local commit |
+    And the initial branches and hierarchy exist

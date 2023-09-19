@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
@@ -32,21 +32,18 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      true,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: true,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determinePruneBranchesConfig(&repo.Runner)
-	if err != nil {
+	config, exit, err := determinePruneBranchesConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := pruneBranchesStepList(config)
@@ -61,56 +58,61 @@ func pruneBranches(debug bool) error {
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
 
 type pruneBranchesConfig struct {
-	branchDurations  config.BranchDurations
-	initialBranch    string
+	branches         domain.Branches
 	lineage          config.Lineage
-	branchesToDelete []string
-	mainBranch       string
-	previousBranch   string
+	branchesToDelete domain.LocalBranchNames
+	mainBranch       domain.LocalBranchName
+	previousBranch   domain.LocalBranchName
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	return &pruneBranchesConfig{
-		branchDurations:  branches.Durations,
-		initialBranch:    branches.Initial,
-		lineage:          run.Config.Lineage(),
-		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
-		mainBranch:       run.Config.MainBranch(),
-		previousBranch:   run.Backend.PreviouslyCheckedOutBranch(),
-	}, err
+		branches:         branches,
+		lineage:          lineage,
+		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
+		mainBranch:       repo.Runner.Config.MainBranch(),
+		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),
+	}, exit, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
-		if config.initialBranch == branchWithDeletedRemote {
+		if config.branches.Initial == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
-		if parent != "" {
+		if !parent.IsEmpty() {
 			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
 				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
 		}
-		if config.branchDurations.IsPerennialBranch(branchWithDeletedRemote) {
+		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return result, err

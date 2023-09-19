@@ -7,6 +7,7 @@ package main
 
 import (
 	"os"
+	"runtime/debug"
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/cli"
@@ -15,6 +16,7 @@ import (
 )
 
 func main() {
+	debug.SetGCPercent(-1)
 	dialog.Initialize()
 	color.NoColor = false // Prevent color from auto disable
 	err := cmd.Execute()

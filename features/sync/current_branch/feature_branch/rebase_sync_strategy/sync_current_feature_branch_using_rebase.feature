@@ -32,3 +32,20 @@ Feature: sync the current feature branch using the "rebase" sync strategy
       |         |               | local main commit     |
       |         |               | origin feature commit |
       |         |               | local feature commit  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And the current branch is still "feature"
+    And now these commits exist
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, origin | origin main commit    |
+      |         |               | local main commit     |
+      | feature | local, origin | origin main commit    |
+      |         |               | local main commit     |
+      |         |               | origin feature commit |
+      |         |               | local feature commit  |
+    And the initial branches and hierarchy exist

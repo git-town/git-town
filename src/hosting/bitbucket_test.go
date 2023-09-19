@@ -16,7 +16,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
 			HostingService:  config.HostingNone,
 			OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
-			GetShaForBranch: emptyShaForBranch,
+			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
@@ -32,7 +32,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
 			HostingService:  config.HostingBitbucket,
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
-			GetShaForBranch: emptyShaForBranch,
+			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
@@ -48,7 +48,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
 			HostingService:  config.HostingNone,
 			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
-			GetShaForBranch: emptyShaForBranch,
+			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
@@ -59,7 +59,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
 			HostingService:  config.HostingNone,
 			OriginURL:       originURL,
-			GetShaForBranch: emptyShaForBranch,
+			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)

@@ -2,14 +2,14 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/spf13/cobra"
 )
 
@@ -41,17 +41,14 @@ func configCmd() *cobra.Command {
 }
 
 func runConfig(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	config, err := determineConfigConfig(&repo.Runner)
@@ -63,8 +60,8 @@ func runConfig(debug bool) error {
 }
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
-	fc := failure.Collector{}
-	branchDurations := run.Config.BranchDurations()
+	fc := gohacks.FailureCollector{}
+	branchTypes := run.Config.BranchTypes()
 	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
 	giteaToken := run.Config.GiteaToken()
 	githubToken := run.Config.GitHubToken()
@@ -78,7 +75,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return ConfigConfig{
-		branchDurations:    branchDurations,
+		branchTypes:        branchTypes,
 		deleteOrigin:       deleteOrigin,
 		hosting:            hosting,
 		giteaToken:         giteaToken,
@@ -95,7 +92,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 }
 
 type ConfigConfig struct {
-	branchDurations    config.BranchDurations
+	branchTypes        domain.BranchTypes
 	deleteOrigin       bool
 	giteaToken         string
 	githubToken        string
@@ -113,8 +110,8 @@ type ConfigConfig struct {
 func printConfig(config ConfigConfig) {
 	fmt.Println()
 	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(config.branchDurations.MainBranch))
-	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(config.branchDurations.PerennialBranches, ", ")))
+	cli.PrintEntry("main branch", cli.StringSetting(config.branchTypes.MainBranch.String()))
+	cli.PrintEntry("perennial branches", cli.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
 	cli.PrintEntry("offline", cli.BoolSetting(config.isOffline))
@@ -131,7 +128,7 @@ func printConfig(config ConfigConfig) {
 	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
 	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
 	fmt.Println()
-	if config.branchDurations.MainBranch != "" {
+	if !config.branchTypes.MainBranch.IsEmpty() {
 		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(config.lineage))
 	}
 }

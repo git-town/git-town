@@ -8,9 +8,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -20,9 +21,9 @@ type GitTown struct {
 	originURLCache OriginURLCache
 }
 
-func NewGitTown(runner runner) *GitTown {
+func NewGitTown(gitConfig GitConfig, runner runner) *GitTown {
 	return &GitTown{
-		Git:            NewGit(runner),
+		Git:            NewGit(gitConfig, runner),
 		originURLCache: OriginURLCache{},
 	}
 }
@@ -31,31 +32,31 @@ type OriginURLCache map[string]*giturl.Parts
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (gt *GitTown) AddToPerennialBranches(branches ...string) error {
+func (gt *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
 	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
 }
 
-func (gt *GitTown) BranchDurations() BranchDurations {
-	return BranchDurations{
+func (gt *GitTown) BranchTypes() domain.BranchTypes {
+	return domain.BranchTypes{
 		MainBranch:        gt.MainBranch(),
 		PerennialBranches: gt.PerennialBranches(),
 	}
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.config.Global[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedNewBranchPushFlag]
+	return gt.config.Local[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return gt.globalConfigCache[KeyDeprecatedPushVerify]
+	return gt.config.Global[KeyDeprecatedPushVerify]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return gt.localConfigCache[KeyDeprecatedPushVerify]
+	return gt.config.Local[KeyDeprecatedPushVerify]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -80,8 +81,8 @@ func (gt *GitTown) GiteaToken() string {
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
-	for key := range gt.localConfigCache {
-		if strings.HasPrefix(key.name, "git-town-branch.") {
+	for key := range gt.config.Local {
+		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true
 		}
 	}
@@ -101,7 +102,7 @@ func (gt *GitTown) HostingService() (Hosting, error) {
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (gt *GitTown) IsMainBranch(branch string) bool {
+func (gt *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 	return branch == gt.MainBranch()
 }
 
@@ -122,25 +123,20 @@ func (gt *GitTown) IsOffline() (bool, error) {
 func (gt *GitTown) Lineage() Lineage {
 	lineage := Lineage{}
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent")
-		parent := gt.LocalConfigValue(key)
+		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.Name, "git-town-branch."), ".parent"))
+		parent := domain.NewLocalBranchName(gt.LocalConfigValue(key))
 		lineage[child] = parent
 	}
 	return lineage
 }
 
 // MainBranch provides the name of the main branch.
-func (gt *GitTown) MainBranch() string {
-	return gt.LocalOrGlobalConfigValue(KeyMainBranch)
-}
-
-// MainBranch provides the name of the main branch, or the given default value if none is configured.
-func (gt *GitTown) MainBranchOr(defaultValue string) string {
-	configured := gt.LocalOrGlobalConfigValue(KeyMainBranch)
-	if configured != "" {
-		return configured
+func (gt *GitTown) MainBranch() domain.LocalBranchName {
+	mainBranch := gt.LocalOrGlobalConfigValue(KeyMainBranch)
+	if mainBranch == "" {
+		return domain.LocalBranchName{}
 	}
-	return defaultValue
+	return domain.NewLocalBranchName(mainBranch)
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
@@ -155,8 +151,8 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := gt.QueryTrim("git", "remote", "get-url", OriginRemote)
-	return output
+	output, _ := gt.Query("git", "remote", "get-url", domain.OriginRemote.String())
+	return strings.TrimSpace(output)
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -184,12 +180,12 @@ func DetermineOriginURL(originURL, originOverride string, originURLCache OriginU
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
-func (gt *GitTown) PerennialBranches() []string {
+func (gt *GitTown) PerennialBranches() domain.LocalBranchNames {
 	result := gt.LocalOrGlobalConfigValue(KeyPerennialBranches)
 	if result == "" {
-		return []string{}
+		return domain.LocalBranchNames{}
 	}
-	return strings.Split(result, " ")
+	return domain.NewLocalBranchNames(strings.Split(result, " ")...)
 }
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
@@ -233,8 +229,8 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
-	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
+func (gt *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
+	return gt.SetPerennialBranches(slice.Remove(gt.PerennialBranches(), branch))
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
@@ -261,7 +257,7 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
-func (gt *GitTown) RemoveParent(branch string) error {
+func (gt *GitTown) RemoveParent(branch domain.LocalBranchName) error {
 	return gt.RemoveLocalConfigValue(NewParentKey(branch))
 }
 
@@ -272,14 +268,14 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
-	gt.localConfigCache[KeyCodeHostingDriver] = value
+	gt.config.Local[KeyCodeHostingDriver] = value
 	err := gt.Run("git", "config", KeyCodeHostingDriver.String(), value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
-	gt.localConfigCache[KeyCodeHostingOriginHostname] = value
+	gt.config.Local[KeyCodeHostingOriginHostname] = value
 	err := gt.Run("git", "config", KeyCodeHostingOriginHostname.String(), value)
 	return err
 }
@@ -292,8 +288,8 @@ func (gt *GitTown) SetColorUI(value string) error {
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (gt *GitTown) SetMainBranch(branch string) error {
-	err := gt.SetLocalConfigValue(KeyMainBranch, branch)
+func (gt *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
+	err := gt.SetLocalConfigValue(KeyMainBranch, branch.String())
 	return err
 }
 
@@ -302,7 +298,7 @@ func (gt *GitTown) SetMainBranch(branch string) error {
 func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 	setting := strconv.FormatBool(value)
 	if global {
-		_, err := gt.SetGlobalConfigValue(KeyPushNewBranches, setting)
+		err := gt.SetGlobalConfigValue(KeyPushNewBranches, setting)
 		return err
 	}
 	err := gt.SetLocalConfigValue(KeyPushNewBranches, setting)
@@ -311,20 +307,20 @@ func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 
 // SetOffline updates whether Git Town is in offline mode.
 func (gt *GitTown) SetOffline(value bool) error {
-	_, err := gt.SetGlobalConfigValue(KeyOffline, strconv.FormatBool(value))
+	err := gt.SetGlobalConfigValue(KeyOffline, strconv.FormatBool(value))
 	return err
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (gt *GitTown) SetParent(branch, parentBranch string) error {
-	err := gt.SetLocalConfigValue(NewParentKey(branch), parentBranch)
+func (gt *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) error {
+	err := gt.SetLocalConfigValue(NewParentKey(branch), parentBranch.String())
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
-func (gt *GitTown) SetPerennialBranches(branch []string) error {
-	err := gt.SetLocalConfigValue(KeyPerennialBranches, strings.Join(branch, " "))
+func (gt *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
+	err := gt.SetLocalConfigValue(KeyPerennialBranches, branches.Join(" "))
 	return err
 }
 
@@ -342,7 +338,7 @@ func (gt *GitTown) SetPushHookLocally(value bool) error {
 
 // SetPushHook updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookGlobally(value bool) error {
-	_, err := gt.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
+	err := gt.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
@@ -364,7 +360,7 @@ func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
 }
 
 func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
-	_, err := gt.SetGlobalConfigValue(KeySyncStrategy, value.name)
+	err := gt.SetGlobalConfigValue(KeySyncStrategy, value.name)
 	return err
 }
 
@@ -451,11 +447,11 @@ func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) erro
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", deprecatedKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
-		_, err := gt.RemoveGlobalConfigValue(deprecatedKey)
+		err := gt.RemoveGlobalConfigValue(deprecatedKey)
 		if err != nil {
 			return err
 		}
-		_, err = gt.SetGlobalConfigValue(newKey, deprecatedSetting)
+		err = gt.SetGlobalConfigValue(newKey, deprecatedSetting)
 		return err
 	}
 	return nil

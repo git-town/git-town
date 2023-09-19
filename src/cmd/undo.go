@@ -29,23 +29,26 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
+	})
+	if err != nil {
+		return err
+	}
+	lineage := repo.Runner.Config.Lineage()
+	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return err
-	}
-	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)
@@ -60,6 +63,7 @@ func undo(debug bool) error {
 		RunState:  &undoRunState,
 		Run:       &repo.Runner,
 		Connector: nil,
+		Lineage:   lineage,
 		RootDir:   repo.RootDir,
 	})
 }

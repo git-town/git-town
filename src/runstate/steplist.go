@@ -2,7 +2,9 @@ package runstate
 
 import (
 	"encoding/json"
+	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -21,8 +23,8 @@ func NewStepList(step steps.Step) StepList {
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *StepList) Append(step steps.Step) {
-	stepList.List = append(stepList.List, step)
+func (stepList *StepList) Append(step ...steps.Step) {
+	stepList.List = append(stepList.List, step...)
 }
 
 // AppendList adds all elements of the given StepList to the end of this StepList.
@@ -54,8 +56,10 @@ func (stepList *StepList) Pop() steps.Step {
 }
 
 // Prepend adds the given step to the beginning of this StepList.
-func (stepList *StepList) Prepend(steps ...steps.Step) {
-	stepList.List = append(steps, stepList.List...)
+func (stepList *StepList) Prepend(other ...steps.Step) {
+	if len(other) > 0 {
+		stepList.List = append(other, stepList.List...)
+	}
 }
 
 // PrependList adds all elements of the given StepList to the start of this StepList.
@@ -63,19 +67,28 @@ func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
 }
 
+// Implementation of the fmt.Stringer interface.
+func (stepList *StepList) String() string {
+	result := "StepList:\n"
+	for s, step := range stepList.List {
+		result += fmt.Sprintf("%d: %#v\n", s+1, step)
+	}
+	return result
+}
+
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	RunInGitRoot     bool
 	StashOpenChanges bool
-	MainBranch       string
-	InitialBranch    string
-	PreviousBranch   string
+	MainBranch       domain.LocalBranchName
+	InitialBranch    domain.LocalBranchName
+	PreviousBranch   domain.LocalBranchName
 }
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions) error {
-	if options.PreviousBranch != "" {
+	if !options.PreviousBranch.IsEmpty() {
 		stepList.Append(&steps.PreserveCheckoutHistoryStep{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,

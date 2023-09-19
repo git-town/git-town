@@ -33,3 +33,22 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         |               | origin main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And the current branch is still "feature"
+    And now these commits exist
+      | BRANCH  | LOCATION      | MESSAGE                                                    |
+      | main    | local, origin | origin main commit                                         |
+      |         |               | local main commit                                          |
+      | feature | local, origin | local feature commit                                       |
+      |         |               | origin feature commit                                      |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
+      |         |               | origin main commit                                         |
+      |         |               | local main commit                                          |
+      |         |               | Merge branch 'main' into feature                           |
+    And the initial branches and hierarchy exist

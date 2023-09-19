@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,7 @@ func TestNewGithubConnector(t *testing.T) {
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			MainBranch:     "mainBranch",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
@@ -38,7 +39,7 @@ func TestNewGithubConnector(t *testing.T) {
 			HostingService: config.HostingGitHub,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			MainBranch:     "mainBranch",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
@@ -56,7 +57,7 @@ func TestNewGithubConnector(t *testing.T) {
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
-			MainBranch:     "mainBranch",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
@@ -69,7 +70,7 @@ func TestNewGithubConnector(t *testing.T) {
 			HostingService: config.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
-			MainBranch:     "mainBranch",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
@@ -93,23 +94,23 @@ func TestGithubConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
-			branch string
-			parent string
+			branch domain.LocalBranchName
+			parent domain.LocalBranchName
 			want   string
 		}{
 			"top-level branch": {
-				branch: "feature",
-				parent: "main",
+				branch: domain.NewLocalBranchName("feature"),
+				parent: domain.NewLocalBranchName("main"),
 				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
 			"nested branch": {
-				branch: "feature-3",
-				parent: "feature-2",
+				branch: domain.NewLocalBranchName("feature-3"),
+				parent: domain.NewLocalBranchName("feature-2"),
 				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",
 			},
 			"special characters in branch name": {
-				branch: "feature-#",
-				parent: "main",
+				branch: domain.NewLocalBranchName("feature-#"),
+				parent: domain.NewLocalBranchName("main"),
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 		}
@@ -121,7 +122,7 @@ func TestGithubConnector(t *testing.T) {
 						Organization: "organization",
 						Repository:   "repo",
 					},
-					MainBranch: "main",
+					MainBranch: domain.NewLocalBranchName("main"),
 				}
 				have, err := connector.NewProposalURL(test.branch, test.parent)
 				assert.Nil(t, err)

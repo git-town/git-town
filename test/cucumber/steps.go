@@ -16,7 +16,8 @@ import (
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
@@ -78,8 +79,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.fixture.DevRepo.CreateBranch(branch, "main")
+		state.initialLocalBranches = append(state.initialLocalBranches, domain.NewLocalBranchName(branch))
+		state.fixture.DevRepo.CreateBranch(domain.NewLocalBranchName(branch), domain.NewLocalBranchName("main"))
 		return nil
 	})
 
@@ -88,12 +89,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
+	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branchText, parentBranch string) error {
+		branch := domain.NewLocalBranchName(branchText)
+		state.fixture.DevRepo.CreateChildFeatureBranch(branch, domain.NewLocalBranchName(parentBranch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.initialBranchHierarchy.AddRow(branchText, parentBranch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		return nil
 	})
 
@@ -104,24 +106,26 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branchText string) error {
+		branch := domain.NewLocalBranchName(branchText)
 		isLocal := localStr != ""
 		asserts.NoError(state.fixture.DevRepo.CreateFeatureBranch(branch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialBranchHierarchy.AddRow(branch, "main")
+		state.initialBranchHierarchy.AddRow(branchText, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 			return nil
 		}
 		return nil
 	})
 
-	suite.Step(`^a perennial branch "([^"]+)"$`, func(branch string) error {
+	suite.Step(`^a perennial branch "([^"]+)"$`, func(branchText string) error {
+		branch := domain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		return nil
 	})
 
@@ -134,9 +138,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branchText string) error {
+		branch := domain.NewLocalBranchName(branchText)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.fixture.OriginRepo.CreateBranch(branch, "main")
+		// we are creating a remote branch in the remote repo --> it is a local branch there
+		state.fixture.OriginRepo.CreateBranch(branch, domain.NewLocalBranchName("main"))
 		return nil
 	})
 
@@ -222,7 +228,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
 		state.fixture.DevRepo.CreateCommit(git.Commit{
-			Branch:      branch,
+			Branch:      domain.NewLocalBranchName(branch),
 			FileName:    "new_file",
 			FileContent: "new content",
 			Message:     message,
@@ -415,8 +421,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
-		state.initialRemoteBranches = []string{}
+		state.fixture.DevRepo.RemoveRemote(domain.OriginRemote)
+		state.initialRemoteBranches = domain.LocalBranchNames{}
 		state.fixture.OriginRepo = nil
 		return nil
 	})
@@ -489,9 +495,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetOffline(true)
 	})
 
-	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
-		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
-		state.fixture.OriginRepo.RemoveBranch(name)
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
+		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
+		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -506,7 +512,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := config.ParseKey("git-town." + name)
-		_, err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
+		err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
 		return err
 	})
 
@@ -556,8 +562,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		for _, branch := range []string{branch1, branch2} {
-			state.fixture.DevRepo.CreateBranch(branch, "main")
+		for _, branchName := range []string{branch1, branch2} {
+			branch := domain.NewLocalBranchName(branchName)
+			state.fixture.DevRepo.CreateBranch(branch, domain.NewLocalBranchName("main"))
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
@@ -580,8 +587,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		commits := git.FromGherkinTable(table)
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
-		if state.initialCurrentBranch == "" {
-			state.fixture.DevRepo.CheckoutBranch("main")
+		if state.initialCurrentBranch.IsEmpty() {
+			state.fixture.DevRepo.CheckoutBranch(domain.NewLocalBranchName("main")) // TODO: extract into a global constant variable (possibly in the test namespace)
 			return nil
 		}
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -598,7 +605,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
-		state.fixture.CoworkerRepo.CheckoutBranch(branch)
+		state.fixture.CoworkerRepo.CheckoutBranch(domain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -608,7 +615,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.fixture.CoworkerRepo.Config.SetParent(childBranch, parentBranch)
+		_ = state.fixture.CoworkerRepo.Config.SetParent(domain.NewLocalBranchName(childBranch), domain.NewLocalBranchName(parentBranch))
 		return nil
 	})
 
@@ -622,16 +629,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
-		state.initialCurrentBranch = name
-		if !stringslice.Contains(state.initialLocalBranches, name) {
-			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			state.fixture.DevRepo.CreateBranch(name, "main")
+		branch := domain.NewLocalBranchName(name)
+		state.initialCurrentBranch = branch
+		if !slice.Contains(state.initialLocalBranches, branch) {
+			state.initialLocalBranches = append(state.initialLocalBranches, branch)
+			state.fixture.DevRepo.CreateBranch(branch, domain.NewLocalBranchName("main"))
 		}
-		state.fixture.DevRepo.CheckoutBranch(name)
+		state.fixture.DevRepo.CheckoutBranch(branch)
 		return nil
 	})
 
-	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branch string) error {
+	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
+		branch := domain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
 		var err error
 		switch branchType {
@@ -647,11 +656,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if branchType == "feature" {
-			state.initialBranchHierarchy.AddRow(branch, "main")
+			state.initialBranchHierarchy.AddRow(branchName, "main")
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
@@ -661,7 +670,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
+	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(currentText, previousText string) error {
+		current := domain.NewLocalBranchName(currentText)
+		previous := domain.NewLocalBranchName(previousText)
 		state.initialCurrentBranch = current
 		state.fixture.DevRepo.CheckoutBranch(previous)
 		state.fixture.DevRepo.CheckoutBranch(current)
@@ -674,7 +685,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		if actual != expected {
+		if actual.String() != expected {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
 		}
 		return nil
@@ -732,15 +743,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		for _, branch := range []string{branch1, branch2} {
+		for _, branchText := range []string{branch1, branch2} {
+			branch := domain.NewLocalBranchName(branchText)
 			err := state.fixture.DevRepo.CreateFeatureBranch(branch)
 			if err != nil {
 				return err
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.initialBranchHierarchy.AddRow(branch, "main")
+			state.initialBranchHierarchy.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -749,40 +761,44 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
-		for _, branch := range []string{branch1, branch2, branch3} {
+		for _, branchText := range []string{branch1, branch2, branch3} {
+			branch := domain.NewLocalBranchName(branchText)
 			err := state.fixture.DevRepo.CreateFeatureBranch(branch)
 			if err != nil {
 				return err
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.initialBranchHierarchy.AddRow(branch, "main")
+			state.initialBranchHierarchy.AddRow(branchText, "main")
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
 	})
 
-	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1Text, branch2Text string) error {
+		branch1 := domain.NewLocalBranchName(branch1Text)
+		branch2 := domain.NewLocalBranchName(branch2Text)
 		isLocal := localStr != ""
 		state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
-			state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch1, domain.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch2, domain.OriginRemote)
 		}
 		return nil
 	})
 
 	suite.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
-		for _, branch := range []string{branch1, branch2, branch3} {
+		for _, branchText := range []string{branch1, branch2, branch3} {
+			branch := domain.NewLocalBranchName(branchText)
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -790,13 +806,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.Config.SetMainBranch(name)
+		return state.fixture.DevRepo.Config.SetMainBranch(domain.NewLocalBranchName(name))
 	})
 
-	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
-		actual := state.fixture.DevRepo.Config.MainBranch()
-		if actual != name {
-			return fmt.Errorf("expected %q, got %q", name, actual)
+	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.MainBranch()
+		if have.String() != want {
+			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
 	})
@@ -807,11 +823,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.Config.AddToPerennialBranches(name)
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(domain.NewLocalBranchName(name))
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		return state.fixture.DevRepo.Config.AddToPerennialBranches(branch1, branch2)
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(domain.NewLocalBranchName(branch1), domain.NewLocalBranchName(branch2))
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
@@ -823,7 +839,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
-		if actual[0] != name {
+		if actual[0].String() != name {
 			return fmt.Errorf("expected %q, got %q", name, actual[0])
 		}
 		return nil
@@ -834,22 +850,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
-		if actual[0] != branch1 || actual[1] != branch2 {
+		if actual[0].String() != branch1 || actual[1].String() != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		state.fixture.DevRepo.CheckoutBranch("-")
+		previousBranch := domain.NewLocalBranchName("-")
+		state.fixture.DevRepo.CheckoutBranch(previousBranch)
 		have, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return err
 		}
-		if have != want {
+		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
-		state.fixture.DevRepo.CheckoutBranch("-")
+		state.fixture.DevRepo.CheckoutBranch(previousBranch)
 		return nil
 	})
 
@@ -892,7 +909,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable := state.fixture.DevRepo.FilesInBranches("main")
+		fileTable := state.fixture.DevRepo.FilesInBranches(domain.NewLocalBranchName("main"))
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)

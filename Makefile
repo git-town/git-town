@@ -1,7 +1,7 @@
 # dev tooling and versions
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.4.0
-GOLANGCILINT_VERSION = 1.53.3
+GOLANGCILINT_VERSION = 1.54.0
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.9.0
 SHFMT_VERSION = 3.6.0
@@ -39,7 +39,7 @@ fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shellcheck_${SHELLCHECK_VERSION}
+	tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
@@ -87,7 +87,7 @@ test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VER
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 
 todo:  # displays all TODO items
-	git grep --line-number -C1 TODO ':!vendor'
+	git grep --line-number TODO ':!vendor'
 
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...

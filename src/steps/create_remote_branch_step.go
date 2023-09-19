@@ -1,18 +1,17 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/domain"
 )
 
-// CreateRemoteBranchStep pushes the current branch up to origin.
+// CreateRemoteBranchStep pushes the given local branch up to origin.
 type CreateRemoteBranchStep struct {
-	EmptyStep
-	Branch     string
+	Branch     domain.LocalBranchName
 	NoPushHook bool
-	Sha        string
+	SHA        domain.SHA
+	EmptyStep
 }
 
-func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	return run.Frontend.CreateRemoteBranch(step.Sha, step.Branch, step.NoPushHook)
+func (step *CreateRemoteBranchStep) Run(args RunArgs) error {
+	return args.Runner.Frontend.CreateRemoteBranch(step.SHA, step.Branch, step.NoPushHook)
 }

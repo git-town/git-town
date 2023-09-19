@@ -25,30 +25,33 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
+	})
+	if err != nil {
+		return err
+	}
+	lineage := repo.Runner.Config.Lineage()
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
+		Lineage:               lineage,
+		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: false,
-	})
+	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), branches.Types.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
-	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().BranchNames(), branches.Durations.MainBranch, &repo.Runner.Backend)
-	if err != nil {
-		return err
-	}
-	branches.Durations.MainBranch = newMainBranch
-	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	branches.Types.MainBranch = newMainBranch
+	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches)
 	return err
 }

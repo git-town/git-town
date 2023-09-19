@@ -12,8 +12,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
-      |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
+      |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git remote                                        |
@@ -49,7 +49,7 @@ Feature: display debug statistics
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
-      |         | backend  | git branch                                        |
+      |         | backend  | git show-ref --quiet refs/heads/feature           |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout main                                 |
       |         | backend  | git checkout main                                 |
@@ -65,14 +65,15 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                        |
       |         | backend  | git version                                    |
-      |         | backend  | git config -lz --local                         |
       |         | backend  | git config -lz --global                        |
+      |         | backend  | git config -lz --local                         |
       |         | backend  | git rev-parse --show-toplevel                  |
       |         | backend  | git branch -vva                                |
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
-      |         | frontend | git revert {{ sha 'done' }}                    |
+      |         | backend  | git log --pretty=format:%H -10                 |
+      | main    | frontend | git revert {{ sha 'done' }}                    |
       |         | backend  | git rev-list --left-right main...origin/main   |
       | main    | frontend | git push                                       |
       |         | frontend | git checkout feature                           |
@@ -82,6 +83,6 @@ Feature: display debug statistics
       | main    | frontend | git checkout feature                           |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "feature"
