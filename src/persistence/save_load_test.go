@@ -364,10 +364,10 @@ func TestLoadSave(t *testing.T) {
   }
 }`[1:]
 
-		repoName := domain.NewRepoRootDir("git-town-unit-tests")
-		err := persistence.Save(&runState, repoName)
+		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")
+		err := persistence.Save(&runState, repoRoot)
 		assert.NoError(t, err)
-		filepath, err := persistence.FilePath(repoName)
+		filepath, err := persistence.FilePath(repoRoot)
 		assert.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		assert.NoError(t, err)
