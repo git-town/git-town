@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
@@ -111,7 +111,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	if err != nil || exit {
 		return nil, branchesSnapshot, exit, err
 	}
-	fc := failure.Collector{}
+	fc := gohacks.FailureCollector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
