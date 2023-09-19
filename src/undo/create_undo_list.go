@@ -29,8 +29,8 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 		Branches: allBranches,
 		Active:   active,
 	}
-	bba := args.InitialBranchesSnapshot.Changes(finalBranchesSnapshot)
-	branchesDiff := bba.Diff()
+	bba := args.InitialBranchesSnapshot.Span(finalBranchesSnapshot)
+	branchesDiff := bba.Changes()
 	undoBranchesSteps := branchesDiff.Steps(args.Run.Config.Lineage(), args.Run.Config.BranchTypes(), args.InitialBranchesSnapshot.Active, finalBranchesSnapshot.Active)
 	undoConfigSteps.AppendList(undoBranchesSteps)
 	return undoConfigSteps, nil

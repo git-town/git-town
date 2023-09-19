@@ -18,7 +18,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -38,7 +38,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("333333"),
@@ -62,7 +62,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("is an inconsistent change", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -82,7 +82,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -102,7 +102,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -122,7 +122,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -142,7 +142,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -165,7 +165,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 	t.Run("LocalAdded", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add a new local branch", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -184,7 +184,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalAdded())
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -203,7 +203,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalAdded())
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -227,7 +227,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("changed a local branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -247,7 +247,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -267,7 +267,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -290,7 +290,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 	t.Run("LocalRemoved", func(t *testing.T) {
 		t.Parallel()
 		t.Run("removed a local branch", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -309,7 +309,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalRemoved())
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -328,7 +328,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalRemoved())
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -352,7 +352,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("no changes", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -372,7 +372,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("has changes", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -396,7 +396,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("adds a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -416,7 +416,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -436,7 +436,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -460,7 +460,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("changes a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -480,7 +480,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -500,7 +500,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -524,7 +524,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("removing a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -544,7 +544,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -564,7 +564,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bba := undo.BranchBeforeAfter{
+			bba := undo.BranchSpan{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -614,9 +614,9 @@ func TestChanges(t *testing.T) {
 				},
 				Active: domain.NewLocalBranchName("branch-1"),
 			}
-			haveChanges := before.Changes(after)
-			wantChanges := undo.BranchesBeforeAfter{
-				undo.BranchBeforeAfter{
+			haveSpan := before.Span(after)
+			wantSpan := undo.BranchesSpan{
+				undo.BranchSpan{
 					Before: domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
 						LocalSHA:   domain.SHA{},
@@ -633,9 +633,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
-			haveDiff := haveChanges.Diff()
-			wantDiff := undo.Changes{
+			assert.Equal(t, wantSpan, haveSpan)
+			haveChanges := haveSpan.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:            domain.NewLocalBranchNames("branch-1"),
 				LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:          domain.LocalBranchChange{},
@@ -645,8 +645,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(
 				lineage,
 				branchTypes,
 				domain.NewLocalBranchName("before"),
@@ -685,9 +685,9 @@ func TestChanges(t *testing.T) {
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("branch-1"): domain.NewSHA("111111"),
@@ -699,8 +699,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("branch-1"), domain.NewLocalBranchName("main"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("branch-1"), domain.NewLocalBranchName("main"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
@@ -759,9 +759,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -780,8 +780,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -846,9 +846,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},
@@ -861,8 +861,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
@@ -971,9 +971,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -986,8 +986,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("perennial-branch"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("perennial-branch"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteLocalBranchStep{
@@ -1117,9 +1117,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -1135,8 +1135,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("man"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("man"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
@@ -1206,9 +1206,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -1227,8 +1227,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -1294,9 +1294,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1315,8 +1315,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
@@ -1377,9 +1377,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1398,8 +1398,8 @@ func TestChanges(t *testing.T) {
 				},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// revert the commit on the perennial branch
@@ -1462,9 +1462,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1507,8 +1507,8 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1574,9 +1574,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -1595,8 +1595,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1663,9 +1663,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1684,8 +1684,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
@@ -1745,9 +1745,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("perennial-branch"): domain.NewSHA("111111"),
@@ -1760,8 +1760,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
@@ -1823,9 +1823,9 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			changes := before.Changes(after)
-			haveDiff := changes.Diff()
-			wantDiff := undo.Changes{
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},
@@ -1838,8 +1838,8 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantDiff, haveDiff)
-			haveSteps := haveDiff.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// don't re-create the tracking branch for the perennial branch

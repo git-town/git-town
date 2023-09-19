@@ -25,18 +25,18 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 	}
 }
 
-func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBeforeAfter {
-	result := BranchesBeforeAfter{}
+func (bs BranchesSnapshot) Span(afterSnapshot BranchesSnapshot) BranchesSpan {
+	result := BranchesSpan{}
 	for _, before := range bs.Branches {
 		after := afterSnapshot.Branches.FindMatchingRecord(before)
-		result = append(result, BranchBeforeAfter{
+		result = append(result, BranchSpan{
 			Before: before,
 			After:  after,
 		})
 	}
 	for _, after := range afterSnapshot.Branches {
 		if bs.Branches.FindMatchingRecord(after).IsEmpty() {
-			result = append(result, BranchBeforeAfter{
+			result = append(result, BranchSpan{
 				Before: domain.EmptyBranchInfo(),
 				After:  after,
 			})
@@ -45,19 +45,19 @@ func (bs BranchesSnapshot) Changes(afterSnapshot BranchesSnapshot) BranchesBefor
 	return result
 }
 
-// BranchBeforeAfter represents the temporal change of a branch.
-type BranchBeforeAfter struct {
+// BranchSpan represents the temporal change of a branch.
+type BranchSpan struct {
 	Before domain.BranchInfo // the status of the branch before Git Town ran
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (bba BranchBeforeAfter) IsOmniChange() bool {
+func (bba BranchSpan) IsOmniChange() bool {
 	return bba.Before.IsOmniBranch() && bba.After.IsOmniBranch() && bba.LocalChanged()
 }
 
-func (bba BranchBeforeAfter) IsInconsintentChange() bool {
+func (bba BranchSpan) IsInconsintentChange() bool {
 	return !bba.Before.LocalSHA.IsEmpty() &&
 		!bba.Before.RemoteSHA.IsEmpty() &&
 		!bba.After.LocalSHA.IsEmpty() &&
@@ -66,39 +66,39 @@ func (bba BranchBeforeAfter) IsInconsintentChange() bool {
 		bba.RemoteChanged()
 }
 
-func (bba BranchBeforeAfter) LocalAdded() bool {
+func (bba BranchSpan) LocalAdded() bool {
 	return !bba.Before.HasLocalBranch() && bba.After.HasLocalBranch()
 }
 
-func (bba BranchBeforeAfter) LocalChanged() bool {
+func (bba BranchSpan) LocalChanged() bool {
 	return bba.Before.LocalSHA != bba.After.LocalSHA
 }
 
-func (bba BranchBeforeAfter) LocalRemoved() bool {
+func (bba BranchSpan) LocalRemoved() bool {
 	return bba.Before.HasLocalBranch() && !bba.After.HasLocalBranch()
 }
 
 // NoChanges indicates whether this BranchBeforeAfter contains changes or not.
-func (bba BranchBeforeAfter) NoChanges() bool {
+func (bba BranchSpan) NoChanges() bool {
 	return !bba.LocalChanged() && !bba.RemoteChanged()
 }
 
-func (bba BranchBeforeAfter) RemoteAdded() bool {
+func (bba BranchSpan) RemoteAdded() bool {
 	return !bba.Before.HasRemoteBranch() && bba.After.HasRemoteBranch()
 }
 
-func (bba BranchBeforeAfter) RemoteChanged() bool {
+func (bba BranchSpan) RemoteChanged() bool {
 	return bba.Before.RemoteSHA != bba.After.RemoteSHA
 }
 
-func (bba BranchBeforeAfter) RemoteRemoved() bool {
+func (bba BranchSpan) RemoteRemoved() bool {
 	return bba.Before.HasRemoteBranch() && !bba.After.HasRemoteBranch()
 }
 
-type BranchesBeforeAfter []BranchBeforeAfter
+type BranchesSpan []BranchSpan
 
-// Diff describes the changes made in this BranchesBeforeAfter structure.
-func (bc BranchesBeforeAfter) Diff() Changes {
+// Changes describes the changes made in this BranchesBeforeAfter structure.
+func (bc BranchesSpan) Changes() Changes {
 	result := EmptyChanges()
 	for _, ba := range bc {
 		if ba.NoChanges() {
