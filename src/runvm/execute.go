@@ -1,4 +1,4 @@
-package runstate
+package runvm
 
 import (
 	"errors"
@@ -10,7 +10,9 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/undo"
 )
 
 // Execute runs the commands in the given runstate.
@@ -20,7 +22,7 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
-		stepName := typeName(step)
+		stepName := runstate.TypeName(step)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
@@ -55,13 +57,13 @@ func finished(args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.UndoStepList = undoSteps
-	if args.RunState.IsAbort || args.RunState.isUndo {
-		err := Delete(args.RootDir)
+	if args.RunState.IsAbort || args.RunState.IsUndo {
+		err := runstate.Delete(args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateDeleteProblem, err)
 		}
 	} else {
-		err := Save(args.RunState, args.RootDir)
+		err := runstate.Save(args.RunState, args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}
@@ -102,7 +104,7 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if args.RunState.Command == "sync" && !(rebasing && args.Run.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
-	err = Save(args.RunState, args.RootDir)
+	err = runstate.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
@@ -134,21 +136,21 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	RunState                *RunState
+	RunState                *runstate.RunState
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
 	RootDir                 string
-	InitialBranchesSnapshot BranchesSnapshot
-	InitialConfigSnapshot   ConfigSnapshot
+	InitialBranchesSnapshot undo.BranchesSnapshot
+	InitialConfigSnapshot   undo.ConfigSnapshot
 	Lineage                 config.Lineage
 }
 
-func createUndoList(args createUndoListArgs) (StepList, error) {
+func createUndoList(args createUndoListArgs) (runstate.StepList, error) {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		return StepList{}, errors.New(messages.DirCurrentProblem)
+		return runstate.StepList{}, errors.New(messages.DirCurrentProblem)
 	}
-	finalConfigSnapshot := ConfigSnapshot{
+	finalConfigSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(args.Run.Backend),
 	}
@@ -156,9 +158,9 @@ func createUndoList(args createUndoListArgs) (StepList, error) {
 	undoConfigSteps := configDiff.UndoSteps()
 	allBranches, active, err := args.Run.Backend.BranchInfos()
 	if err != nil {
-		return StepList{}, err
+		return runstate.StepList{}, err
 	}
-	finalBranchesSnapshot := BranchesSnapshot{
+	finalBranchesSnapshot := undo.BranchesSnapshot{
 		Branches: allBranches,
 		Active:   active,
 	}
@@ -171,6 +173,6 @@ func createUndoList(args createUndoListArgs) (StepList, error) {
 
 type createUndoListArgs struct {
 	Run                     *git.ProdRunner
-	InitialBranchesSnapshot BranchesSnapshot
-	InitialConfigSnapshot   ConfigSnapshot
+	InitialBranchesSnapshot undo.BranchesSnapshot
+	InitialConfigSnapshot   undo.ConfigSnapshot
 }

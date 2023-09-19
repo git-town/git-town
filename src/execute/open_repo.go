@@ -8,9 +8,9 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
@@ -46,7 +46,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		err = errors.New(messages.DirCurrentProblem)
 		return
 	}
-	configSnapshot := runstate.ConfigSnapshot{
+	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backendRunner),
 	}
@@ -108,7 +108,7 @@ type OpenRepoResult struct {
 	Runner         git.ProdRunner
 	RootDir        string
 	IsOffline      bool
-	ConfigSnapshot runstate.ConfigSnapshot
+	ConfigSnapshot undo.ConfigSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

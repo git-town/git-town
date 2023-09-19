@@ -1,8 +1,9 @@
-package runstate
+package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -176,8 +177,8 @@ func EmptyChanges() Changes {
 	}
 }
 
-func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, initialBranch, finalBranch domain.LocalBranchName) StepList {
-	result := StepList{}
+func (bd Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, initialBranch, finalBranch domain.LocalBranchName) runstate.StepList {
+	result := runstate.StepList{}
 	omniChangedPerennials, omniChangedFeatures := bd.OmniChanged.Categorize(branchTypes)
 
 	// revert omni-changed perennial branches

@@ -31,6 +31,7 @@ func TestSanitizePath(t *testing.T) {
 			AbortStepList: runstate.StepList{},
 			Command:       "command",
 			IsAbort:       true,
+			IsUndo:        true,
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
@@ -143,6 +144,7 @@ func TestSanitizePath(t *testing.T) {
   "AbortStepList": [],
   "Command": "command",
   "IsAbort": true,
+  "IsUndo": true,
   "RunStepList": [
     {
       "data": {},

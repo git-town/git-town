@@ -14,7 +14,7 @@ type RunState struct {
 	AbortStepList     StepList                   `exhaustruct:"optional" json:"AbortStepList"`
 	Command           string                     `json:"Command"`
 	IsAbort           bool                       `exhaustruct:"optional" json:"IsAbort"`
-	isUndo            bool                       `exhaustruct:"optional"`
+	IsUndo            bool                       `exhaustruct:"optional"`
 	RunStepList       StepList                   `json:"RunStepList"`
 	UndoStepList      StepList                   `exhaustruct:"optional" json:"UndoStepList"`
 	UnfinishedDetails *UnfinishedRunStateDetails `exhaustruct:"optional" json:"UnfinishedDetails"`
@@ -85,7 +85,7 @@ func (runState *RunState) CreateSkipRunState() RunState {
 func (runState *RunState) CreateUndoRunState() RunState {
 	return RunState{
 		Command:     runState.Command,
-		isUndo:      true,
+		IsUndo:      true,
 		RunStepList: runState.UndoStepList,
 	}
 }

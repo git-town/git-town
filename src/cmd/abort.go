@@ -11,6 +11,8 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +60,7 @@ func abort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &abortRunState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
@@ -69,11 +71,11 @@ func abort(debug bool) error {
 	})
 }
 
-func determineAbortConfig(run *git.ProdRunner) (*abortConfig, runstate.BranchesSnapshot, error) {
+func determineAbortConfig(run *git.ProdRunner) (*abortConfig, undo.BranchesSnapshot, error) {
 	originURL := run.Config.OriginURL()
 	hostingService, err := run.Config.HostingService()
 	if err != nil {
-		return nil, runstate.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), err
 	}
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
@@ -88,14 +90,15 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, runstate.BranchesS
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, runstate.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), err
 	}
-	allBranches, _, err := run.Backend.BranchInfos()
+	allBranches, initialBranch, err := run.Backend.BranchInfos()
 	if err != nil {
-		return nil, runstate.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), err
 	}
-	branchesSnapshot := runstate.BranchesSnapshot{
+	branchesSnapshot := undo.BranchesSnapshot{
 		Branches: allBranches,
+		Active:   initialBranch,
 	}
 	return &abortConfig{
 		connector: connector,

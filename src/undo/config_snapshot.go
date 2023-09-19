@@ -1,8 +1,9 @@
-package runstate
+package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -66,8 +67,8 @@ type SnapshotConfigDiff struct {
 	Local  ConfigDiff
 }
 
-func (scd SnapshotConfigDiff) UndoSteps() StepList {
-	result := StepList{}
+func (scd SnapshotConfigDiff) UndoSteps() runstate.StepList {
+	result := runstate.StepList{}
 	for _, key := range scd.Global.Added {
 		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
 	}

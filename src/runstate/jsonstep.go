@@ -18,7 +18,7 @@ type JSONStep struct {
 func (j *JSONStep) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
-		"type": typeName(j.Step),
+		"type": TypeName(j.Step),
 	})
 }
 
@@ -125,7 +125,8 @@ func DetermineStep(stepType string) steps.Step {
 	return nil
 }
 
-func typeName(myvar interface{}) string {
+// TODO: make private again after the undo refactor ships.
+func TypeName(myvar interface{}) string {
 	t := reflect.TypeOf(myvar)
 	if t.Kind() == reflect.Ptr {
 		return t.Elem().Name()

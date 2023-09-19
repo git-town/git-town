@@ -9,7 +9,9 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -73,7 +75,7 @@ func renameBranch(args []string, force, debug bool) error {
 		Command:     "rename-branch",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
@@ -95,7 +97,7 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, runstate.BranchesSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, undo.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

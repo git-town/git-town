@@ -1,4 +1,4 @@
-package runstate_test
+package undo_test
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -37,7 +38,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("333333"),
@@ -61,7 +62,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("is an inconsistent change", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -81,7 +82,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -101,7 +102,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -121,7 +122,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -141,7 +142,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -164,7 +165,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 	t.Run("LocalAdded", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add a new local branch", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -183,7 +184,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalAdded())
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -202,7 +203,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalAdded())
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -226,7 +227,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("changed a local branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -246,7 +247,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -266,7 +267,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -289,7 +290,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 	t.Run("LocalRemoved", func(t *testing.T) {
 		t.Parallel()
 		t.Run("removed a local branch", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -308,7 +309,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalRemoved())
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -327,7 +328,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 			assert.True(t, bba.LocalRemoved())
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -351,7 +352,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("no changes", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -371,7 +372,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("has changes", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -395,7 +396,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("adds a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -415,7 +416,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -435,7 +436,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -459,7 +460,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("changes a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -479,7 +480,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -499,7 +500,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -523,7 +524,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		t.Parallel()
 		t.Run("removing a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -543,7 +544,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
 					LocalSHA:   domain.NewSHA("111111"),
@@ -563,7 +564,7 @@ func TestBranchBeforeAfter(t *testing.T) {
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bba := runstate.BranchBeforeAfter{
+			bba := undo.BranchBeforeAfter{
 				Before: domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
 					LocalSHA:   domain.SHA{},
@@ -597,11 +598,11 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("branch-1"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
-				Active:   domain.NewLocalBranchName(""),
+				Active:   domain.NewLocalBranchName("main"),
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("branch-1"),
@@ -611,10 +612,11 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("branch-1"),
 			}
 			haveChanges := before.Changes(after)
-			wantChanges := runstate.BranchesBeforeAfter{
-				runstate.BranchBeforeAfter{
+			wantChanges := undo.BranchesBeforeAfter{
+				undo.BranchBeforeAfter{
 					Before: domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
 						LocalSHA:   domain.SHA{},
@@ -633,7 +635,7 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveDiff := haveChanges.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:            domain.NewLocalBranchNames("branch-1"),
 				LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:          domain.LocalBranchChange{},
@@ -669,7 +671,7 @@ func TestChanges(t *testing.T) {
 				PerennialBranches: domain.NewLocalBranchNames(),
 			}
 			lineage := config.Lineage{}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("branch-1"),
@@ -680,12 +682,12 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("branch-1"): domain.NewSHA("111111"),
@@ -720,7 +722,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -739,7 +741,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -759,7 +761,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -808,7 +810,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -826,7 +828,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -846,7 +848,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},
@@ -933,7 +935,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
@@ -951,7 +953,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -971,7 +973,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -1094,10 +1096,10 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1117,7 +1119,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -1168,7 +1170,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1186,7 +1188,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1206,7 +1208,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -1256,7 +1258,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1274,7 +1276,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1294,7 +1296,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1339,7 +1341,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1357,7 +1359,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1377,7 +1379,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1424,7 +1426,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1442,7 +1444,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1462,7 +1464,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1536,7 +1538,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1554,7 +1556,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1574,7 +1576,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -1625,7 +1627,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1643,7 +1645,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1663,7 +1665,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1707,7 +1709,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1725,7 +1727,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
@@ -1745,7 +1747,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("perennial-branch"): domain.NewSHA("111111"),
@@ -1785,7 +1787,7 @@ func TestChanges(t *testing.T) {
 			lineage := config.Lineage{
 				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 			}
-			before := runstate.BranchesSnapshot{
+			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1803,7 +1805,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.BranchesSnapshot{
+			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
@@ -1823,7 +1825,7 @@ func TestChanges(t *testing.T) {
 			}
 			changes := before.Changes(after)
 			haveDiff := changes.Diff()
-			wantDiff := runstate.Changes{
+			wantDiff := undo.Changes{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},

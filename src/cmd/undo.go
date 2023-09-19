@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/spf13/cobra"
 )
 
@@ -21,14 +22,14 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return undo(readDebugFlag(cmd))
+			return runUndo(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func undo(debug bool) error {
+func runUndo(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
@@ -59,7 +60,7 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,

@@ -10,6 +10,8 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -53,7 +55,7 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
@@ -64,7 +66,7 @@ func runContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, runstate.BranchesSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, undo.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

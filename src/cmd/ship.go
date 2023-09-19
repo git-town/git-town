@@ -11,9 +11,11 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -97,7 +99,7 @@ func ship(args []string, message string, debug bool) error {
 		Command:     "ship",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
@@ -132,7 +134,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, runstate.BranchesSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, undo.BranchesSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

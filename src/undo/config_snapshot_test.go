@@ -1,4 +1,4 @@
-package runstate_test
+package undo_test
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("global config added", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -26,7 +27,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -37,15 +38,15 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
 					},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
@@ -56,7 +57,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("global config removed", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -66,7 +67,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -76,15 +77,15 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
 						config.KeyPullBranchStrategy: "1",
 					},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
@@ -95,7 +96,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("global config changed", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -104,7 +105,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -114,8 +115,8 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{
@@ -125,7 +126,7 @@ func TestConfigSnapshot(t *testing.T) {
 						},
 					},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
@@ -136,7 +137,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("local config added", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -145,7 +146,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -156,13 +157,13 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
 					},
@@ -175,7 +176,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("local config removed", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -185,7 +186,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -195,13 +196,13 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
 						config.KeyPullBranchStrategy: "1",
@@ -214,7 +215,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("local config changed", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -223,7 +224,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{},
@@ -233,13 +234,13 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{
@@ -255,7 +256,7 @@ func TestConfigSnapshot(t *testing.T) {
 
 		t.Run("complex example", func(t *testing.T) {
 			t.Parallel()
-			before := runstate.ConfigSnapshot{
+			before := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -268,7 +269,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			after := runstate.ConfigSnapshot{
+			after := undo.ConfigSnapshot{
 				Cwd: "/foo",
 				GitConfig: config.GitConfig{
 					Global: config.GitConfigCache{
@@ -283,8 +284,8 @@ func TestConfigSnapshot(t *testing.T) {
 				},
 			}
 			have := before.Diff(after)
-			want := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			want := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
 					},
@@ -298,7 +299,7 @@ func TestConfigSnapshot(t *testing.T) {
 						},
 					},
 				},
-				Local: runstate.ConfigDiff{
+				Local: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPushHook,
 					},
@@ -326,15 +327,15 @@ func TestSnapshotConfigDiff(t *testing.T) {
 		t.Parallel()
 		t.Run("global config added", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyOffline,
 					},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.EmptyConfigDiff(),
+				Local: undo.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -349,15 +350,15 @@ func TestSnapshotConfigDiff(t *testing.T) {
 
 		t.Run("global config removed", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
 						config.KeyOffline: "1",
 					},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: runstate.EmptyConfigDiff(),
+				Local: undo.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -373,8 +374,8 @@ func TestSnapshotConfigDiff(t *testing.T) {
 
 		t.Run("global config changed", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{
@@ -384,7 +385,7 @@ func TestSnapshotConfigDiff(t *testing.T) {
 						},
 					},
 				},
-				Local: runstate.EmptyConfigDiff(),
+				Local: undo.EmptyConfigDiff(),
 			}
 			have := diff.UndoSteps()
 			want := runstate.StepList{
@@ -400,9 +401,9 @@ func TestSnapshotConfigDiff(t *testing.T) {
 
 		t.Run("local config added", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.EmptyConfigDiff(),
-				Local: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.EmptyConfigDiff(),
+				Local: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyOffline,
 					},
@@ -423,9 +424,9 @@ func TestSnapshotConfigDiff(t *testing.T) {
 
 		t.Run("local config removed", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.EmptyConfigDiff(),
-				Local: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.EmptyConfigDiff(),
+				Local: undo.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
 						config.KeyOffline: "1",
@@ -447,9 +448,9 @@ func TestSnapshotConfigDiff(t *testing.T) {
 
 		t.Run("local config changed", func(t *testing.T) {
 			t.Parallel()
-			diff := runstate.SnapshotConfigDiff{
-				Global: runstate.EmptyConfigDiff(),
-				Local: runstate.ConfigDiff{
+			diff := undo.SnapshotConfigDiff{
+				Global: undo.EmptyConfigDiff(),
+				Local: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{
