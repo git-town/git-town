@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -60,7 +61,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
-		if rootDir == "" {
+		if rootDir.IsEmpty() {
 			err = errors.New(messages.RepoOutside)
 			return
 		}
@@ -80,7 +81,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 			err = errors.New(messages.DirCurrentProblem)
 			return
 		}
-		if currentDirectory != rootDir {
+		if currentDirectory != rootDir.String() {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
@@ -101,7 +102,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Runner    git.ProdRunner
-	RootDir   string
+	RootDir   domain.RepoRootDir
 	IsOffline bool
 }
 

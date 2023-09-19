@@ -364,7 +364,7 @@ func TestLoadSave(t *testing.T) {
   }
 }`[1:]
 
-		repoName := "git-town-unit-tests"
+		repoName := domain.NewRepoRootDir("git-town-unit-tests")
 		err := persistence.Save(&runState, repoName)
 		assert.NoError(t, err)
 		filepath, err := persistence.FilePath(repoName)

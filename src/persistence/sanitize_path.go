@@ -3,11 +3,13 @@ package persistence
 import (
 	"regexp"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/domain"
 )
 
-func SanitizePath(dir string) string {
+func SanitizePath(dir domain.RepoRootDir) string {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
-	sanitized := replaceCharacterRE.ReplaceAllString(dir, "-")
+	sanitized := replaceCharacterRE.ReplaceAllString(dir.String(), "-")
 	sanitized = strings.ToLower(sanitized)
 	replaceDoubleMinusRE := regexp.MustCompile("--+") // two or more dashes
 	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")

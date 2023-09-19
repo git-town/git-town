@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Delete removes the stored run state from disk.
-func Delete(repoDir string) error {
+func Delete(repoDir domain.RepoRootDir) error {
 	filename, err := FilePath(repoDir)
 	if err != nil {
 		return err

@@ -5,10 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-func FilePath(repoDir string) (string, error) {
+func FilePath(repoDir domain.RepoRootDir) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf(messages.RunstatePathProblem, err)
