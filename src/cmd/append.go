@@ -4,8 +4,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -105,7 +105,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		return nil, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	fc := failure.Collector{}
+	fc := gohacks.FailureCollector{}
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	mainBranch := repo.Runner.Config.MainBranch()
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
