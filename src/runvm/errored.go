@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
-// errored is called when the given step has resulted in the given error.
+// errored handles the situation when the given step was executed and has resulted in the given error.
 func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
 	if step.ShouldAutomaticallyAbortOnError() {
