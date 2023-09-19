@@ -9,6 +9,7 @@ import (
 )
 
 func TestTypeName(t *testing.T) {
+	t.Parallel()
 	sha := domain.NewSHA("123456")
 	tests := map[any]string{
 		"hello":                          "string",
