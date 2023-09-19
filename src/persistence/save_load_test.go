@@ -15,7 +15,6 @@ import (
 
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
-<<<<<<<< HEAD:src/persistence/persistence_test.go
 	t.Run("SanitizePath", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
@@ -27,8 +26,6 @@ func TestLoadSave(t *testing.T) {
 			assert.Equal(t, want, have)
 		}
 	})
-========
->>>>>>>> main:src/persistence/save_load_test.go
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
