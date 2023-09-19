@@ -156,8 +156,8 @@ func (fc *FrontendCommands) MergeBranchNoEdit(branch domain.BranchName) error {
 }
 
 // NavigateToDir changes into the root directory of the current repository.
-func (fc *FrontendCommands) NavigateToDir(dir string) error {
-	return os.Chdir(dir)
+func (fc *FrontendCommands) NavigateToDir(dir domain.RepoRootDir) error {
+	return os.Chdir(dir.String())
 }
 
 // PopStash restores stashed-away changes into the workspace.
