@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
@@ -58,12 +59,12 @@ func finished(args ExecuteArgs) error {
 	}
 	args.RunState.UndoStepList = undoSteps
 	if args.RunState.IsAbort || args.RunState.IsUndo {
-		err := runstate.Delete(args.RootDir)
+		err := persistence.Delete(args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateDeleteProblem, err)
 		}
 	} else {
-		err := runstate.Save(args.RunState, args.RootDir)
+		err := persistence.Save(args.RunState, args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}
@@ -104,7 +105,7 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if args.RunState.Command == "sync" && !(rebasing && args.Run.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
-	err = runstate.Save(args.RunState, args.RootDir)
+	err = persistence.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}

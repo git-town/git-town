@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/spf13/cobra"
 )
@@ -52,7 +52,7 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(repo.RootDir)
+	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
