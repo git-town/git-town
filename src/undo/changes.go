@@ -1,0 +1,138 @@
+package undo
+
+import (
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/steps"
+)
+
+type Changes struct {
+	LocalAdded    domain.LocalBranchNames
+	LocalRemoved  map[domain.LocalBranchName]domain.SHA
+	LocalChanged  domain.LocalBranchChange
+	RemoteAdded   []domain.RemoteBranchName
+	RemoteRemoved domain.RemoteBranchesSHAs
+	RemoteChanged domain.RemoteBranchChange
+	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
+	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
+	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
+	// So, to revert a change on a remote perennial branch one needs to perform a revert commit on the local perennial branch,
+	// then normal-push (not force-push) that new commit up to the remote branch.
+	// This is only possible if the local and remote branches have an identical SHA before as well as after.
+	OmniChanged domain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
+	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch don't have the same SHA before or after.
+	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
+	InconsistentlyChanged domain.InconsistentChanges
+}
+
+// EmptyChanges provides a properly initialized empty Changes instance.
+func EmptyChanges() Changes {
+	return Changes{
+		LocalAdded:            domain.LocalBranchNames{},
+		LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
+		LocalChanged:          domain.LocalBranchChange{},
+		RemoteAdded:           []domain.RemoteBranchName{},
+		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+		OmniChanged:           domain.LocalBranchChange{},
+		InconsistentlyChanged: domain.InconsistentChanges{},
+	}
+}
+
+func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, initialBranch, finalBranch domain.LocalBranchName) runstate.StepList {
+	result := runstate.StepList{}
+	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(branchTypes)
+
+	// revert omni-changed perennial branches
+	for branch, change := range omniChangedPerennials {
+		result.Append(&steps.CheckoutStep{Branch: branch})
+		result.Append(&steps.RevertCommitStep{SHA: change.Before})
+		result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false})
+	}
+
+	// reset omni-changed feature branches
+	for branch, change := range omniChangedFeatures {
+		result.Append(&steps.CheckoutStep{Branch: branch})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
+	}
+
+	// ignore inconsistently changed perennial branches
+	// because we can't change the remote and we therefore don't want to reset the local part either
+	_, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(branchTypes)
+
+	// reset inconsintently changed feature branches
+	for _, inconsistentChange := range inconsistentChangedFeatures {
+		result.Append(&steps.CheckoutStep{Branch: inconsistentChange.Before.LocalName})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{
+			MustHaveSHA: inconsistentChange.After.LocalSHA,
+			SetToSHA:    inconsistentChange.Before.LocalSHA,
+			Hard:        true,
+		})
+		result.Append(&steps.ResetRemoteBranchToSHAStep{
+			Branch:      inconsistentChange.Before.RemoteName,
+			MustHaveSHA: inconsistentChange.After.RemoteSHA,
+			SetToSHA:    inconsistentChange.Before.RemoteSHA,
+		})
+	}
+
+	// remove remotely added branches
+	for _, addedRemoteBranch := range c.RemoteAdded {
+		result.Append(&steps.DeleteTrackingBranchStep{
+			Branch: addedRemoteBranch.LocalBranchName(),
+		})
+	}
+
+	// re-create remotely removed feature branches
+	_, removedFeatureTrackingBranches := c.RemoteRemoved.Categorize(branchTypes)
+	for branch, sha := range removedFeatureTrackingBranches {
+		result.Append(&steps.CreateRemoteBranchStep{
+			Branch:     branch.LocalBranchName(),
+			SHA:        sha,
+			NoPushHook: false,
+		})
+	}
+
+	// reset locally changed branches
+	for localBranch, change := range c.LocalChanged {
+		result.Append(&steps.CheckoutStep{Branch: localBranch})
+		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+	}
+
+	// remove locally added branches
+	for _, addedLocalBranch := range c.LocalAdded {
+		if finalBranch == addedLocalBranch {
+			result.Append(&steps.CheckoutStep{Branch: initialBranch})
+		}
+		result.Append(&steps.DeleteLocalBranchStep{
+			Branch: addedLocalBranch,
+			Parent: lineage.Parent(addedLocalBranch).Location(),
+			Force:  true,
+		})
+	}
+
+	// re-create locally removed branches
+	for removedLocalBranch, startingPoint := range c.LocalRemoved {
+		result.Append(&steps.CreateBranchStep{
+			Branch:        removedLocalBranch,
+			StartingPoint: startingPoint.Location(),
+		})
+	}
+
+	_, remoteFeatureChanges := c.RemoteChanged.Categorize(branchTypes)
+	// Ignore remotely changed perennial branches because we can't force-push to them
+	// and we would need the local branch to revert commits on them, but we can't change the local branch.
+
+	// reset remotely changed feature branches
+	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
+		result.Append(&steps.ResetRemoteBranchToSHAStep{
+			Branch:      remoteChangedFeatureBranch,
+			MustHaveSHA: change.After,
+			SetToSHA:    change.Before,
+		})
+	}
+
+	result.Append(&steps.CheckoutStep{Branch: initialBranch})
+	return result
+}
