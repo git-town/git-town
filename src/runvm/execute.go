@@ -3,6 +3,7 @@ package runvm
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -16,7 +17,7 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
-		stepName := runstate.TypeName(step)
+		stepName := gohacks.TypeName(step)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
