@@ -22,7 +22,8 @@ func TestLoadSave(t *testing.T) {
 			"c:\\Users\\user\\development\\git-town": "c-users-user-development-git-town",
 		}
 		for give, want := range tests {
-			have := persistence.SanitizePath(give)
+			rootDir := domain.NewRepoRootDir(give)
+			have := persistence.SanitizePath(rootDir)
 			assert.Equal(t, want, have)
 		}
 	})
