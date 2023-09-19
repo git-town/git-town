@@ -16,6 +16,8 @@ If a step fails (for example due to a merge conflict),
 the engine asks the step to create it's corresponding abort and continue steps,
 adds them to the respective StepLists, saves the entire runstate to disk, informs the user, and exits.
 
+The `persistence` package persists the runstate to disk.
+
 When running "git town continue", Git Town loads the runstate and executes the "continue" StepList in it.
 When running "git town abort", Git Town loads the runstate and executes the "abort" StepList in it.
 When running "git town undo", Git Town loads the runstate and executes the "undo" StepList in it.
