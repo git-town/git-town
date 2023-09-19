@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -18,5 +19,5 @@ type UnfinishedRunStateDetails struct {
 }
 
 func isCheckoutStep(step steps.Step) bool {
-	return typeName(step) == "CheckoutStep"
+	return gohacks.TypeName(step) == "CheckoutStep"
 }

@@ -3,8 +3,8 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -18,7 +18,7 @@ type JSONStep struct {
 func (j *JSONStep) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
-		"type": typeName(j.Step),
+		"type": gohacks.TypeName(j.Step),
 	})
 }
 
@@ -119,12 +119,4 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.UpdateProposalTargetStep{}
 	}
 	return nil
-}
-
-func typeName(myvar interface{}) string {
-	t := reflect.TypeOf(myvar)
-	if t.Kind() == reflect.Ptr {
-		return t.Elem().Name()
-	}
-	return t.Name()
 }
