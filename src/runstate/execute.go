@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -18,7 +19,7 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
-		stepName := typeName(step)
+		stepName := gohacks.TypeName(step)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
