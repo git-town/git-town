@@ -8,12 +8,13 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
+func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -27,21 +28,22 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
-		CurrentBranchCache: &cache.String{},
-		RemoteBranchCache:  &cache.Strings{},
-		RemotesCache:       &cache.Strings{},
+		Config:             nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
+		CurrentBranchCache: &cache.LocalBranch{},
+		RemoteBranchCache:  &cache.RemoteBranch{},
+		RemotesCache:       &cache.Remotes{},
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
 	if err != nil {
-		return result, false, err
+		return result, err
 	}
 	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
 		return
 	}
+	gitConfig := config.LoadGitConfig(backendRunner)
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(backendRunner),
+		GitTown: config.NewGitTown(gitConfig, backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
@@ -64,22 +66,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 			return
 		}
 	}
-	if args.HandleUnfinishedState {
-		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
-		if err != nil || exit {
-			return
-		}
-	}
-	if args.ValidateNoOpenChanges {
-		hasOpenChanges, err := prodRunner.Backend.HasOpenChanges()
-		if err != nil {
-			return result, false, err
-		}
-		err = validate.NoOpenChanges(hasOpenChanges)
-		if err != nil {
-			return result, false, err
-		}
-	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
 		return
@@ -88,52 +74,37 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		err = errors.New(messages.OfflineNotAllowed)
 		return
 	}
-	if args.Fetch {
-		var remotes config.Remotes
-		remotes, err = backendCommands.Remotes()
-		if err != nil {
-			return
-		}
-		if remotes.HasOrigin() && !isOffline {
-			err = prodRunner.Frontend.Fetch()
-			if err != nil {
-				return
-			}
-		}
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		err = errors.New(messages.DirCurrentProblem)
+		return
 	}
 	if args.ValidateGitRepo {
-		var currentDirectory string
-		currentDirectory, err = os.Getwd()
-		if err != nil {
-			err = errors.New(messages.DirCurrentProblem)
-			return
-		}
 		if currentDirectory != rootDir {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
-	return RepoData{
-		Runner:    prodRunner,
-		RootDir:   rootDir,
-		IsOffline: isOffline,
-	}, false, err
+	return OpenRepoResult{
+		Runner:          prodRunner,
+		RootDir:         rootDir,
+		IsOffline:       isOffline,
+		PartialSnapshot: runstate.NewPartialSnapshot(repoConfig.Git, currentDirectory),
+	}, err
 }
 
-type OpenShellArgs struct {
-	Debug                 bool
-	DryRun                bool
-	Fetch                 bool
-	HandleUnfinishedState bool
-	OmitBranchNames       bool
-	ValidateGitRepo       bool
-	ValidateIsOnline      bool
-	ValidateNoOpenChanges bool
+type OpenRepoArgs struct {
+	Debug            bool
+	DryRun           bool
+	OmitBranchNames  bool
+	ValidateGitRepo  bool
+	ValidateIsOnline bool
 }
 
-type RepoData struct {
-	Runner    git.ProdRunner
-	RootDir   string
-	IsOffline bool
+type OpenRepoResult struct {
+	Runner          git.ProdRunner
+	RootDir         string
+	IsOffline       bool
+	PartialSnapshot runstate.PartialSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

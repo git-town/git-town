@@ -33,17 +33,14 @@ func syncStrategyCommand() *cobra.Command {
 }
 
 func syncStrategy(args []string, global, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       false,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	if len(args) > 0 {

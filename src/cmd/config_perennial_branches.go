@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -47,43 +45,43 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
-		return err
-	}
-	cli.Println(cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), "\n")))
-	return nil
-}
-
-func updatePerennialBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
-		return err
-	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	cli.Println(cli.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
+	return nil
+}
+
+func updatePerennialBranches(debug bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
+	})
+	if err != nil {
+		return err
+	}
+	lineage := repo.Runner.Config.Lineage()
+	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
+		Repo:                  &repo,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		Lineage:               lineage,
+		ValidateIsConfigured:  false,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return err
+	}
+	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches)
 	return err
 }

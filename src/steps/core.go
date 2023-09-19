@@ -5,6 +5,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -14,11 +15,11 @@ import (
 // Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and can provide Steps to continue, abort, and undo them.
 type Step interface {
-	// CreateAbortStep provides the abort step for this step.
-	CreateAbortStep() Step
+	// CreateAbortSteps provides the abort step for this step.
+	CreateAbortSteps() []Step
 
-	// CreateContinueStep provides the continue step for this step.
-	CreateContinueStep() Step
+	// CreateContinueSteps provides the continue step for this step.
+	CreateContinueSteps() []Step
 
 	// CreateUndoSteps provides the undo step for this step.
 	CreateUndoSteps(*git.BackendCommands) ([]Step, error)
@@ -28,11 +29,17 @@ type Step interface {
 	CreateAutomaticAbortError() error
 
 	// Run executes this step.
-	Run(run *git.ProdRunner, connector hosting.Connector) error
+	Run(args RunArgs) error
 
 	// ShouldAutomaticallyAbortOnError indicates whether this step should
 	// cause the command to automatically abort if it errors.
 	// When true, automatically runs the abort logic and leaves the user where they started.
 	// When false, stops execution to let the user fix the issue and continue or manually abort.
 	ShouldAutomaticallyAbortOnError() bool
+}
+
+type RunArgs struct {
+	Runner    *git.ProdRunner
+	Connector hosting.Connector
+	Lineage   config.Lineage
 }

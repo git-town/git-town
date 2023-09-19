@@ -60,14 +60,21 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v9/src/hosting.Connector|github.com/git-town/git-town/v9/src/steps.Step)
-    - text: (mockConfig|EmptyStep|Options|Cmd)
+    - text: Steps? is missing field EmptyStep
+      linters:
+        - exhaustruct
+    - path: src/runstate/jsonstep.go # ignore all missing fields in jsonstep.go since those are intentional
+      text: is missing field
+      linters:
+        - exhaustruct
+    - text: (cobra.Command|subshell.Options|gitea.*Options|github.*Options|gitlab.*Options|godog.Options) is missing fields?
       linters:
         - exhaustruct
     - path: src/cache/cache.go
       linters:
         - ireturn
     - path: src/hosting/gitea
-      text: missing in (ListOptions|ListPullRequestsOptions|PRBranchInfo|Token)
+      text: missing in (List.*Options|PRBranchInfo|Token)
       linters:
         - exhaustruct
     - path: src/hosting/github.go
@@ -75,7 +82,7 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
+      text: missing in (.*Options|Client)
       linters:
         - exhaustruct
     - path: src/hosting/gitlab_test.go
@@ -86,3 +93,12 @@ issues:
       text: missing in (MultiSelect|Select)
       linters:
         - exhaustruct
+    - linters:
+        - exhaustruct
+      text: (survey.MultiSelect|survey.Select) is missing fields
+    - linters:
+        - exhaustruct
+      text: (gitea.PRBranchInfo|github.PullRequest|github.PullRequestBranch|oauth2.Token|http.Client) is missing fields
+    - linters:
+        - exhaustruct
+      text: domain.LocalBranchName is missing field id

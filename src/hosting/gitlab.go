@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/xanzy/go-gitlab"
@@ -19,11 +20,11 @@ type GitLabConnector struct {
 	log Log
 }
 
-func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
+func (c *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
-		SourceBranch: gitlab.String(branch),
-		TargetBranch: gitlab.String(target),
+		SourceBranch: gitlab.String(branch.String()),
+		TargetBranch: gitlab.String(target.String()),
 	}
 	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
 	if err != nil {
@@ -39,9 +40,9 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 	return &proposal, nil
 }
 
-func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
+func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
+		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	c.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
@@ -53,16 +54,16 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 	})
 	if err != nil {
 		c.log.Failed(err)
-		return "", err
+		return domain.SHA{}, err
 	}
 	c.log.Success()
-	return result.SHA, nil
+	return domain.NewSHA(result.SHA), nil
 }
 
-func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
+func (c *GitLabConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	c.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.String(target),
+		TargetBranch: gitlab.String(target.String()),
 	})
 	if err != nil {
 		c.log.Failed(err)
@@ -129,10 +130,10 @@ func (c *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
+func (c *GitLabConfig) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch)
-	query.Add("merge_request[target_branch]", parentBranch)
+	query.Add("merge_request[source_branch]", branch.String())
+	query.Add("merge_request[target_branch]", parentBranch.String())
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
@@ -147,7 +148,7 @@ func (c *GitLabConfig) RepositoryURL() string {
 func parseGitLabMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
 	return Proposal{
 		Number:          mergeRequest.IID,
-		Target:          mergeRequest.TargetBranch,
+		Target:          domain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:           mergeRequest.Title,
 		CanMergeWithAPI: true,
 	}

@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -35,21 +36,18 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo.Runner)
-	if err != nil {
+	config, exit, err := determineDiffParentConfig(args, &repo)
+	if err != nil || exit {
 		return err
 	}
 	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
@@ -61,55 +59,51 @@ func diffParent(args []string, debug bool) error {
 }
 
 type diffParentConfig struct {
-	branch       string
-	parentBranch string
+	branch       domain.LocalBranchName
+	parentBranch domain.LocalBranchName
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*diffParentConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage()
+	branches, exit, err := execute.LoadSnapshot(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 false,
+		HandleUnfinishedState: true,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	var branch string
-	if len(args) > 0 {
-		branch = args[0]
-	} else {
-		branch = branches.Initial
-	}
-	if branches.Initial != branch {
-		hasBranch, err := run.Backend.HasLocalBranch(branch)
-		if err != nil {
-			return nil, err
-		}
-		if !hasBranch {
-			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
+	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	if branch != branches.Initial {
+		if !branches.All.HasLocalBranch(branch) {
+			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	branchDurations := run.Config.BranchDurations()
-	if !branchDurations.IsFeatureBranch(branch) {
-		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
+	branchTypes := repo.Runner.Config.BranchTypes()
+	if !branchTypes.IsFeatureBranch(branch) {
+		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   mainBranch,
-		Backend:         &run.Backend,
-		AllBranches:     branches.All,
-		Lineage:         lineage,
-		BranchDurations: branchDurations,
-		MainBranch:      mainBranch,
+		DefaultBranch: mainBranch,
+		Backend:       &repo.Runner.Backend,
+		AllBranches:   branches.All,
+		Lineage:       lineage,
+		BranchTypes:   branchTypes,
+		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if updated {
-		lineage = run.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage()
 	}
 	return &diffParentConfig{
 		branch:       branch,
 		parentBranch: lineage.Parent(branch),
-	}, nil
+	}, false, nil
 }

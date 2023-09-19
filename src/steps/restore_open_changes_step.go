@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -17,8 +16,8 @@ func (step *RestoreOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 	return []Step{&StashOpenChangesStep{}}, nil
 }
 
-func (step *RestoreOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	err := run.Frontend.PopStash()
+func (step *RestoreOpenChangesStep) Run(args RunArgs) error {
+	err := args.Runner.Frontend.PopStash()
 	if err != nil {
 		return errors.New(messages.DiffConflictWithMain)
 	}

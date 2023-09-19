@@ -3,22 +3,22 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, branchDurations config.BranchDurations) (config.BranchDurations, error) {
+func IsConfigured(backend *git.BackendCommands, allBranches domain.BranchInfos, branchTypes domain.BranchTypes) (domain.BranchTypes, error) {
 	mainBranch := backend.Config.MainBranch()
-	if mainBranch == "" {
+	if mainBranch.IsEmpty() {
 		fmt.Print("Git Town needs to be configured\n\n")
-		newMainBranch, err := dialog.EnterMainBranch(allBranches.LocalBranches().BranchNames(), mainBranch, backend)
+		newMainBranch, err := dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch, backend)
 		if err != nil {
-			return branchDurations, err
+			return branchTypes, err
 		}
-		branchDurations.MainBranch = newMainBranch
-		return dialog.EnterPerennialBranches(backend, allBranches, branchDurations)
+		branchTypes.MainBranch = newMainBranch
+		return dialog.EnterPerennialBranches(backend, allBranches, branchTypes)
 	}
-	return branchDurations, backend.RemoveOutdatedConfiguration(allBranches)
+	return branchTypes, backend.RemoveOutdatedConfiguration(allBranches)
 }

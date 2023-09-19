@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -32,17 +33,14 @@ func abortCmd() *cobra.Command {
 }
 
 func abort(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)
@@ -64,6 +62,7 @@ func abort(debug bool) error {
 		RunState:  &abortRunState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
+		Lineage:   config.lineage,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -75,9 +74,10 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
+	lineage := run.Config.Lineage()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForBranch,
+		GetSHAForBranch: run.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   run.Config.GiteaToken(),
 		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),
@@ -87,9 +87,11 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 	})
 	return &abortConfig{
 		connector: connector,
+		lineage:   lineage,
 	}, err
 }
 
 type abortConfig struct {
 	connector hosting.Connector
+	lineage   config.Lineage
 }

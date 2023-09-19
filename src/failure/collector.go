@@ -4,10 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 )
-
-// TODO: rename this package to `collector` and this class to Failure
 
 // Collector helps avoid excessive error checking
 // while gathering a larger number of values through fallible operations.
@@ -42,12 +40,12 @@ func (ec *Collector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (ec *Collector) Branches(value git.Branches, err error) git.Branches {
+func (ec *Collector) Branches(value domain.Branches, err error) domain.Branches {
 	ec.Check(err)
 	return value
 }
 
-func (ec *Collector) BranchesSyncStatus(value git.BranchesSyncStatus, err error) git.BranchesSyncStatus {
+func (ec *Collector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
 	ec.Check(err)
 	return value
 }
@@ -62,6 +60,13 @@ func (ec *Collector) Hosting(value config.Hosting, err error) config.Hosting {
 // PullBranchStrategy provides the string part of the given fallible function result
 // while registering the given error.
 func (ec *Collector) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
+	ec.Check(err)
+	return value
+}
+
+// Remotes provides the domain.Remotes part of the given fallible function result
+// while registering the given error.
+func (ec *Collector) Remotes(value domain.Remotes, err error) domain.Remotes {
 	ec.Check(err)
 	return value
 }

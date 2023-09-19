@@ -35,3 +35,22 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | Merge remote-tracking branch 'origin/main' |
       |         |               | origin feature commit                      |
       |         |               | local feature commit                       |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And the current branch is still "feature"
+    And now these commits exist
+      | BRANCH  | LOCATION      | MESSAGE                                    |
+      | main    | local, origin | local main commit                          |
+      |         |               | origin main commit                         |
+      |         |               | Merge remote-tracking branch 'origin/main' |
+      | feature | local, origin | local main commit                          |
+      |         |               | origin main commit                         |
+      |         |               | Merge remote-tracking branch 'origin/main' |
+      |         |               | origin feature commit                      |
+      |         |               | local feature commit                       |
+    And the initial branches and hierarchy exist

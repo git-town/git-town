@@ -4,41 +4,43 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type SquashMergeStep struct {
+	Branch         domain.LocalBranchName
+	CommitMessage  string
+	Parent         domain.LocalBranchName
+	shaBeforeMerge domain.SHA
 	EmptyStep
-	Branch        string
-	CommitMessage string
-	Parent        string
 }
 
-func (step *SquashMergeStep) CreateAbortStep() Step {
-	return &DiscardOpenChangesStep{}
+func (step *SquashMergeStep) CreateAbortSteps() []Step {
+	return []Step{&DiscardOpenChangesStep{}}
 }
 
-func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
-	currentSHA, err := backend.CurrentSha()
-	if err != nil {
-		return []Step{}, err
-	}
-	return []Step{&RevertCommitStep{Sha: currentSHA}}, nil
+func (step *SquashMergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{&RevertCommitStep{SHA: step.shaBeforeMerge}}, nil
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
-func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	err := run.Frontend.SquashMerge(step.Branch)
+func (step *SquashMergeStep) Run(args RunArgs) error {
+	var err error
+	step.shaBeforeMerge, err = run.Backend.CurrentSHA()
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := run.Backend.BranchAuthors(step.Branch, step.Parent)
+	err = run.Frontend.SquashMerge(step.Branch)
+	if err != nil {
+		return err
+	}
+	branchAuthors, err := args.Runner.Backend.BranchAuthors(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
@@ -46,17 +48,17 @@ func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
-	repoAuthor, err := run.Backend.Author()
+	repoAuthor, err := args.Runner.Backend.Author()
 	if err != nil {
 		return fmt.Errorf(messages.GitUserProblem, err)
 	}
-	if err = run.Backend.CommentOutSquashCommitMessage(""); err != nil {
+	if err = args.Runner.Backend.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	if repoAuthor == author {
 		author = ""
 	}
-	return run.Frontend.Commit(step.CommitMessage, author)
+	return args.Runner.Frontend.Commit(step.CommitMessage, author)
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

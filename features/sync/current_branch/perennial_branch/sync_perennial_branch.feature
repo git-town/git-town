@@ -24,3 +24,14 @@ Feature: sync the current perennial branch
       | main   | local, origin | main commit   |
       | qa     | local, origin | origin commit |
       |        |               | local commit  |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And the current branch is still "qa"
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, origin | main commit   |
+      | qa     | local, origin | origin commit |
+      |        |               | local commit  |
+    And the initial branches and hierarchy exist

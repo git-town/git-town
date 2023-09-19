@@ -81,17 +81,17 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 		cells := []string{}
 		for col := range table.Cells[row] {
 			cell := table.Cells[row][col]
-			if strings.Contains(cell, "{{") {
+			for strings.Contains(cell, "{{") {
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
 				switch {
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
-					sha := localRepo.ShaForCommit(commitName)
+					sha := localRepo.SHAForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
-					sha := remoteRepo.ShaForCommit(commitName)
+					sha := remoteRepo.SHAForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
 					log.Fatalf("DataTable.Expand: unknown template expression %q", cell)
@@ -115,8 +115,8 @@ func (table *DataTable) RemoveText(text string) {
 
 // Sorted provides a new DataTable that contains the content of this DataTable sorted by the first column.
 func (table *DataTable) Sort() {
-	sort.Slice(table.Cells, func(i, j int) bool {
-		return table.Cells[i][0] < table.Cells[j][0]
+	sort.Slice(table.Cells, func(a, b int) bool {
+		return table.Cells[a][0] < table.Cells[b][0]
 	})
 }
 

@@ -14,8 +14,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                            |
       |         | backend  | git version                                        |
-      |         | backend  | git config -lz --local                             |
       |         | backend  | git config -lz --global                            |
+      |         | backend  | git config -lz --local                             |
       |         | backend  | git rev-parse --show-toplevel                      |
       |         | backend  | git remote                                         |
       |         | backend  | git status                                         |
@@ -36,11 +36,10 @@ Feature: display debug statistics
       | feature | frontend | git merge --no-edit main                           |
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
-      |         | backend  | git branch                                         |
-      |         | backend  | git branch                                         |
+      |         | backend  | git show-ref --quiet refs/heads/main               |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And all branches are now synchronized

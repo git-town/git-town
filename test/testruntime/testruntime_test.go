@@ -26,7 +26,7 @@ func TestRunner(t *testing.T) {
 		assert.Equal(t, binDir, runtime.BinDir)
 	})
 
-	t.Run(".Clone()", func(t *testing.T) {
+	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
 		clonedPath := filepath.Join(origin.WorkingDir, "cloned")

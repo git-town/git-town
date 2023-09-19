@@ -2,11 +2,10 @@ package cucumber
 
 import (
 	"fmt"
-	"sort"
-	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -18,10 +17,10 @@ type ScenarioState struct {
 	fixture fixture.Fixture
 
 	// initialLocalBranches contains the local branches before the WHEN steps run
-	initialLocalBranches []string
+	initialLocalBranches domain.LocalBranchNames
 
 	// initialRemoteBranches contains the remote branches before the WHEN steps run
-	initialRemoteBranches []string
+	initialRemoteBranches domain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
@@ -30,7 +29,7 @@ type ScenarioState struct {
 	initialBranchHierarchy datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
-	initialCurrentBranch string
+	initialCurrentBranch domain.LocalBranchName
 
 	// the error of the last run of Git Town
 	runExitCode int
@@ -51,11 +50,11 @@ type ScenarioState struct {
 // Reset restores the null value of this ScenarioState.
 func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.fixture = gitEnv
-	state.initialLocalBranches = []string{"main"}
-	state.initialRemoteBranches = []string{"main"}
+	state.initialLocalBranches = domain.NewLocalBranchNames("main")
+	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
 	state.initialCommits = nil
 	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
-	state.initialCurrentBranch = ""
+	state.initialCurrentBranch = domain.LocalBranchName{}
 	state.runOutput = ""
 	state.runExitCode = 0
 	state.runExitCodeChecked = false
@@ -67,12 +66,12 @@ func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 func (state *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	sort.Strings(state.initialLocalBranches)
-	state.initialLocalBranches = stringslice.Hoist(state.initialLocalBranches, "main")
-	sort.Strings(state.initialRemoteBranches)
-	state.initialRemoteBranches = stringslice.Hoist(state.initialRemoteBranches, "main")
-	localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
-	remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
+	state.initialLocalBranches.Sort()
+	state.initialLocalBranches = slice.Hoist(state.initialLocalBranches, domain.NewLocalBranchName("main"))
+	state.initialRemoteBranches.Sort()
+	state.initialRemoteBranches = slice.Hoist(state.initialRemoteBranches, domain.NewLocalBranchName("main"))
+	localBranchesJoined := state.initialLocalBranches.Join(", ")
+	remoteBranchesJoined := state.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {

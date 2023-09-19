@@ -2,7 +2,6 @@ package datatable
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/git-town/git-town/v9/test/helpers"
 )
@@ -15,13 +14,13 @@ type TagTableBuilder struct {
 	// Structure:
 	//   tag1: [local]
 	//   tag2: [local, remote]
-	tagToLocations map[string]helpers.OrderedStringSet
+	tagToLocations map[string]helpers.OrderedSet[string]
 }
 
 // NewTagTableBuilder provides a fully initialized instance of TagTableBuilder.
 func NewTagTableBuilder() TagTableBuilder {
 	return TagTableBuilder{
-		tagToLocations: make(map[string]helpers.OrderedStringSet),
+		tagToLocations: make(map[string]helpers.OrderedSet[string]),
 	}
 }
 
@@ -31,7 +30,7 @@ func (builder *TagTableBuilder) Add(tag, location string) {
 	if exists {
 		builder.tagToLocations[tag] = locations.Add(location)
 	} else {
-		builder.tagToLocations[tag] = helpers.NewOrderedStringSet(location)
+		builder.tagToLocations[tag] = helpers.NewOrderedSet(location)
 	}
 }
 
@@ -54,7 +53,7 @@ func (builder *TagTableBuilder) Table() DataTable {
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {
-		result.AddRow(tag, strings.Join(builder.tagToLocations[tag].Slice(), ", "))
+		result.AddRow(tag, builder.tagToLocations[tag].Join(", "))
 	}
 	return result
 }

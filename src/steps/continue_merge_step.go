@@ -1,23 +1,18 @@
 package steps
 
-import (
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
-)
-
 // ContinueMergeStep finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type ContinueMergeStep struct {
 	EmptyStep
 }
 
-func (step *ContinueMergeStep) CreateContinueStep() Step {
-	return step
+func (step *ContinueMergeStep) CreateContinueSteps() []Step {
+	return []Step{step}
 }
 
-func (step *ContinueMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	if run.Backend.HasMergeInProgress() {
-		return run.Frontend.CommitNoEdit()
+func (step *ContinueMergeStep) Run(args RunArgs) error {
+	if args.Runner.Backend.HasMergeInProgress() {
+		return args.Runner.Frontend.CommitNoEdit()
 	}
 	return nil
 }

@@ -12,8 +12,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
-      |        | backend  | git config -lz --local                        |
       |        | backend  | git config -lz --global                       |
+      |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git remote                                    |
       |        | backend  | git status                                    |
@@ -36,12 +36,11 @@ Feature: display debug statistics
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
-      |        | backend  | git branch                                    |
-      |        | backend  | git branch                                    |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "parent"
 
@@ -51,8 +50,8 @@ Feature: display debug statistics
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                          |
       |        | backend  | git version                                      |
-      |        | backend  | git config -lz --local                           |
       |        | backend  | git config -lz --global                          |
+      |        | backend  | git config -lz --local                           |
       |        | backend  | git rev-parse --show-toplevel                    |
       |        | backend  | git branch -vva                                  |
       | parent | frontend | git checkout old                                 |

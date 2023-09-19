@@ -1,33 +1,32 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// DeleteLocalBranchStep deletes the branch with the given name,
-// optionally in a safe or unsafe way.
+// DeleteLocalBranchStep deletes the branch with the given name.
 type DeleteLocalBranchStep struct {
-	EmptyStep
-	Branch    string
-	Parent    string
+	Branch    domain.LocalBranchName
+	Parent    domain.Location
 	Force     bool
-	branchSha string
+	branchSHA domain.SHA `exhaustruct:"optional"`
+	EmptyStep
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}}, nil
+	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSHA.Location()}}, nil
 }
 
-func (step *DeleteLocalBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *DeleteLocalBranchStep) Run(args RunArgs) error {
 	var err error
-	step.branchSha, err = run.Backend.ShaForBranch(step.Branch)
+	step.branchSHA, err = args.Runner.Backend.SHAForBranch(step.Branch.BranchName())
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
-	return run.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return args.Runner.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }
