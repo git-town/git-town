@@ -1,9 +1,7 @@
 package runvm
 
 import (
-	"errors"
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
@@ -49,7 +47,7 @@ func Execute(args ExecuteArgs) error {
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
-	undoSteps, err := createUndoList(createUndoListArgs{
+	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
 		Run:                     args.Run,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
@@ -77,7 +75,7 @@ func finished(args ExecuteArgs) error {
 // errored is called when the given step has resulted in the given error.
 func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
-	undoSteps, err := createUndoList(createUndoListArgs{
+	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
 		Run:                     args.Run,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
@@ -144,36 +142,4 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot undo.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	Lineage                 config.Lineage
-}
-
-func createUndoList(args createUndoListArgs) (runstate.StepList, error) {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return runstate.StepList{}, errors.New(messages.DirCurrentProblem)
-	}
-	finalConfigSnapshot := undo.ConfigSnapshot{
-		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(args.Run.Backend),
-	}
-	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
-	undoConfigSteps := configDiff.UndoSteps()
-	allBranches, active, err := args.Run.Backend.BranchInfos()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	finalBranchesSnapshot := undo.BranchesSnapshot{
-		Branches: allBranches,
-		Active:   active,
-	}
-	bba := args.InitialBranchesSnapshot.Changes(finalBranchesSnapshot)
-	branchesDiff := bba.Diff()
-	undoBranchesSteps := branchesDiff.Steps(args.Run.Config.Lineage(), args.Run.Config.BranchTypes(), args.InitialBranchesSnapshot.Active, finalBranchesSnapshot.Active)
-	undoConfigSteps.AppendList(undoBranchesSteps)
-	return undoConfigSteps, nil
-}
-
-type createUndoListArgs struct {
-	Run                     *git.ProdRunner
-	InitialBranchesSnapshot undo.BranchesSnapshot
-	InitialConfigSnapshot   undo.ConfigSnapshot
 }
