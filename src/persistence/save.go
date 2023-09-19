@@ -6,12 +6,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 )
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState *runstate.RunState, repoDir string) error {
+func Save(runState *runstate.RunState, repoDir domain.RepoRootDir) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)

@@ -431,7 +431,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have := runtime.BackendCommands.RootDirectory()
-			assert.Positive(t, len(have))
+			assert.False(t, have.IsEmpty())
 		})
 		t.Run("outside a Git repo", func(t *testing.T) {
 			t.Parallel()

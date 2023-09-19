@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/persistence"
@@ -55,7 +56,7 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(rootDir string) (*displayStatusConfig, error) {
+func loadDisplayStatusConfig(rootDir domain.RepoRootDir) (*displayStatusConfig, error) {
 	filepath, err := persistence.FilePath(rootDir)
 	if err != nil {
 		return nil, err
