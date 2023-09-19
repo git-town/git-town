@@ -1,4 +1,4 @@
-package runstate_test
+package persistence_test
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +22,7 @@ func TestSanitizePath(t *testing.T) {
 			"c:\\Users\\user\\development\\git-town": "c-users-user-development-git-town",
 		}
 		for give, want := range tests {
-			have := runstate.SanitizePath(give)
+			have := persistence.SanitizePath(give)
 			assert.Equal(t, want, have)
 		}
 	})
@@ -31,6 +32,7 @@ func TestSanitizePath(t *testing.T) {
 			AbortStepList: runstate.StepList{},
 			Command:       "command",
 			IsAbort:       true,
+			IsUndo:        true,
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
@@ -146,6 +148,7 @@ func TestSanitizePath(t *testing.T) {
   "AbortStepList": [],
   "Command": "command",
   "IsAbort": true,
+  "IsUndo": true,
   "RunStepList": [
     {
       "data": {},
@@ -373,9 +376,9 @@ func TestSanitizePath(t *testing.T) {
 }`[1:]
 
 		repoName := "git-town-unit-tests"
-		err := runstate.Save(&runState, repoName)
+		err := persistence.Save(&runState, repoName)
 		assert.NoError(t, err)
-		filepath, err := runstate.PersistenceFilePath(repoName)
+		filepath, err := persistence.FilePath(repoName)
 		assert.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		assert.NoError(t, err)

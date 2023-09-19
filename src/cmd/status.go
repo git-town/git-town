@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -55,11 +56,11 @@ type displayStatusConfig struct {
 }
 
 func loadDisplayStatusConfig(rootDir string) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilePath(rootDir)
+	filepath, err := persistence.FilePath(rootDir)
 	if err != nil {
 		return nil, err
 	}
-	state, err := runstate.Load(rootDir)
+	state, err := persistence.Load(rootDir)
 	if err != nil {
 		return nil, err
 	}

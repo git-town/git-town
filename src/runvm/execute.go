@@ -1,4 +1,4 @@
-package runstate
+package runvm
 
 import (
 	"fmt"
@@ -9,6 +9,8 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -50,13 +52,13 @@ func Execute(args ExecuteArgs) error {
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
-	if args.RunState.IsAbort || args.RunState.isUndo {
-		err := Delete(args.RootDir)
+	if args.RunState.IsAbort || args.RunState.IsUndo {
+		err := persistence.Delete(args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateDeleteProblem, err)
 		}
 	} else {
-		err := Save(args.RunState, args.RootDir)
+		err := persistence.Save(args.RunState, args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}
@@ -88,7 +90,7 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if args.RunState.Command == "sync" && !(rebasing && args.Run.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
-	err = Save(args.RunState, args.RootDir)
+	err = persistence.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
@@ -118,7 +120,7 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	RunState  *RunState
+	RunState  *runstate.RunState
 	Run       *git.ProdRunner
 	Connector hosting.Connector
 	RootDir   string

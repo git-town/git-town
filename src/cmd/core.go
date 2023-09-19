@@ -8,7 +8,7 @@
 // each Git Town command performs. Examples are steps to
 // change to a different Git branch or to pull updates for the current branch.
 //
-// When executing a step, the runstate.Execute function goes through each step in the StepList.
+// When executing a step, the runvm.Execute function goes through each step in the StepList.
 // It executes the step. If it succeeded, it asks the current step to provide the undo step
 // for what it just did and appends it to the undo StepList.
 // If a Git command fails (for example due to a merge conflict), then the program

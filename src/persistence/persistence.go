@@ -1,4 +1,4 @@
-package runstate
+package persistence
 
 import (
 	"encoding/json"
@@ -9,11 +9,12 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repoDir string) (*RunState, error) {
-	filename, err := PersistenceFilePath(repoDir)
+func Load(repoDir string) (*runstate.RunState, error) {
+	filename, err := FilePath(repoDir)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +29,7 @@ func Load(repoDir string) (*RunState, error) {
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
-	var runState RunState
+	var runState runstate.RunState
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
@@ -38,7 +39,7 @@ func Load(repoDir string) (*RunState, error) {
 
 // Delete removes the stored run state from disk.
 func Delete(repoDir string) error {
-	filename, err := PersistenceFilePath(repoDir)
+	filename, err := FilePath(repoDir)
 	if err != nil {
 		return err
 	}
@@ -57,12 +58,12 @@ func Delete(repoDir string) error {
 }
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState *RunState, repoDir string) error {
+func Save(runState *runstate.RunState, repoDir string) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)
 	}
-	persistencePath, err := PersistenceFilePath(repoDir)
+	persistencePath, err := FilePath(repoDir)
 	if err != nil {
 		return err
 	}
@@ -78,7 +79,7 @@ func Save(runState *RunState, repoDir string) error {
 	return nil
 }
 
-func PersistenceFilePath(repoDir string) (string, error) {
+func FilePath(repoDir string) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf(messages.RunstatePathProblem, err)
