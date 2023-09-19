@@ -452,12 +452,12 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Branch
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectory() string {
+func (bc *BackendCommands) RootDirectory() domain.RepoRootDir {
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
-		return ""
+		return domain.RepoRootDir{}
 	}
-	return filepath.FromSlash(output)
+	return domain.NewRepoRootDir(filepath.FromSlash(output))
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.

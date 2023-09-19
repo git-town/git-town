@@ -69,7 +69,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
-		if rootDir == "" {
+		if rootDir.IsEmpty() {
 			err = errors.New(messages.RepoOutside)
 			return
 		}
@@ -84,7 +84,12 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
-		if currentDirectory != rootDir {
+		currentDirectory, err = os.Getwd()
+		if err != nil {
+			err = errors.New(messages.DirCurrentProblem)
+			return
+		}
+		if currentDirectory != rootDir.String() {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
