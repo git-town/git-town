@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -111,7 +112,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Runner         git.ProdRunner
-	RootDir        string
+	RootDir        domain.RepoRootDir
 	IsOffline      bool
 	ConfigSnapshot undo.ConfigSnapshot
 }
