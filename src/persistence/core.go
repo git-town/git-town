@@ -1,2 +1,2 @@
-// Package persistence implements storage of the runstate in a JSON file.
+// Package persistence stores Git Town runstate on disk.
 package persistence
