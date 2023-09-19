@@ -13,8 +13,8 @@ func TestTypeName(t *testing.T) {
 	tests := map[any]string{
 		"hello":                          "string",
 		123:                              "int",
-		domain.NewLocalBranchName("foo"): "LocalBranchName",
-		&sha:                             "SHA",
+		domain.NewLocalBranchName("foo"): "LocalBranchName", // instance of a struct
+		&sha:                             "SHA",             // pointer variable
 		nil:                              "nil",
 	}
 	for give, want := range tests {
