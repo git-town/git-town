@@ -5,6 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/stretchr/testify/assert"
 )
@@ -35,8 +37,8 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			have := before.Diff(after)
-			want := undo.ConfigDiffs{
+			haveDiff := before.Diff(after)
+			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
@@ -44,13 +46,18 @@ func TestConfigSnapshot(t *testing.T) {
 					Removed: map[config.Key]string{},
 					Changed: map[config.Key]domain.Change[string]{},
 				},
-				Local: undo.ConfigDiff{
-					Added:   []config.Key{},
-					Removed: map[config.Key]string{},
-					Changed: map[config.Key]domain.Change[string]{},
+				Local: undo.EmptyConfigDiff(),
+			}
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.UndoSteps()
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.RemoveGlobalConfigStep{
+						Key: config.KeyPullBranchStrategy,
+					},
 				},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("global config removed", func(t *testing.T) {
@@ -74,8 +81,8 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			have := before.Diff(after)
-			want := undo.ConfigDiffs{
+			haveDiff := before.Diff(after)
+			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{},
 					Removed: map[config.Key]string{
@@ -89,7 +96,17 @@ func TestConfigSnapshot(t *testing.T) {
 					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.UndoSteps()
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyPullBranchStrategy,
+						Value: "1",
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("global config changed", func(t *testing.T) {
