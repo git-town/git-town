@@ -29,7 +29,7 @@ Feature: in a local repo
 
   @this
   Scenario: undo
-    When I run "git town undo"
+    When I run "git town undo -d"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |

@@ -61,7 +61,7 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantSpan, haveSpan)
 			haveChanges := haveSpan.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:            domain.NewLocalBranchNames("branch-1"),
 				LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:          domain.LocalBranchChange{},
@@ -117,7 +117,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("branch-1"): domain.NewSHA("111111"),
@@ -198,7 +198,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -293,7 +293,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},
@@ -426,7 +426,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -579,7 +579,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded: domain.LocalBranchNames{
 					domain.NewLocalBranchName("perennial-branch"),
 					domain.NewLocalBranchName("feature-branch"),
@@ -676,7 +676,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -771,7 +771,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -861,7 +861,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -953,7 +953,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1072,7 +1072,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{
@@ -1168,7 +1168,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:    domain.LocalBranchNames{},
 				LocalRemoved:  map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged:  domain.LocalBranchChange{},
@@ -1257,7 +1257,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded: domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{
 					domain.NewLocalBranchName("perennial-branch"): domain.NewSHA("111111"),
@@ -1342,7 +1342,7 @@ func TestChanges(t *testing.T) {
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
-			wantChanges := undo.Changes{
+			wantChanges := undo.BranchChanges{
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: map[domain.LocalBranchName]domain.SHA{},
 				LocalChanged: domain.LocalBranchChange{},

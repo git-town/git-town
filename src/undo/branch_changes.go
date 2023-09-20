@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
-type Changes struct {
+type BranchChanges struct {
 	LocalAdded    domain.LocalBranchNames
 	LocalRemoved  map[domain.LocalBranchName]domain.SHA
 	LocalChanged  domain.LocalBranchChange
@@ -26,9 +26,9 @@ type Changes struct {
 	InconsistentlyChanged domain.InconsistentChanges
 }
 
-// EmptyChanges provides a properly initialized empty Changes instance.
-func EmptyChanges() Changes {
-	return Changes{
+// EmptyBranchChanges provides a properly initialized empty Changes instance.
+func EmptyBranchChanges() BranchChanges {
+	return BranchChanges{
 		LocalAdded:            domain.LocalBranchNames{},
 		LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
 		LocalChanged:          domain.LocalBranchChange{},
@@ -40,7 +40,7 @@ func EmptyChanges() Changes {
 	}
 }
 
-func (c Changes) Steps(args StepsArgs) runstate.StepList {
+func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 	result := runstate.StepList{}
 	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
 

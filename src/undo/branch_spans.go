@@ -5,8 +5,8 @@ import "github.com/git-town/git-town/v9/src/domain"
 type BranchSpans []BranchSpan
 
 // Changes describes the changes made in this BranchesBeforeAfter structure.
-func (bs BranchSpans) Changes() Changes {
-	result := EmptyChanges()
+func (bs BranchSpans) Changes() BranchChanges {
+	result := EmptyBranchChanges()
 	for _, ba := range bs {
 		if ba.NoChanges() {
 			continue
