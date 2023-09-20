@@ -556,7 +556,7 @@ func TestChanges(t *testing.T) {
 			}
 			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
-				Active:   domain.NewLocalBranchName("feature-branch"),
+				Active:   domain.NewLocalBranchName("main"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -610,7 +610,6 @@ func TestChanges(t *testing.T) {
 					&steps.DeleteTrackingBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 					},
-					// &steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
 						Parent: domain.LocalBranchName{}.Location(),
