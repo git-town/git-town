@@ -72,7 +72,7 @@ Feature: display debug statistics
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
-      |         | backend  | git log --pretty=format:%H -10                 |
+      |         | backend  | git log --pretty=format:%h -10                 |
       | main    | frontend | git revert {{ sha 'done' }}                    |
       |         | backend  | git rev-list --left-right main...origin/main   |
       | main    | frontend | git push                                       |
