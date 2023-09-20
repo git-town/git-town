@@ -26,13 +26,13 @@ Feature: display debug statistics
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git checkout main                                 |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       | main    | frontend | git rebase origin/main                            |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git checkout feature                              |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       | feature | frontend | git merge --no-edit origin/feature                |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       | feature | frontend | git merge --no-edit main                          |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
@@ -41,7 +41,7 @@ Feature: display debug statistics
       |         | backend  | git config user.name                              |
       |         | backend  | git config user.email                             |
       | main    | frontend | git commit -m done                                |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
@@ -77,8 +77,8 @@ Feature: display debug statistics
       |         | backend  | git rev-list --left-right main...origin/main   |
       | main    | frontend | git push                                       |
       |         | frontend | git checkout feature                           |
-      |         | backend  | git rev-parse HEAD                             |
-      |         | backend  | git rev-parse HEAD                             |
+      |         | backend  | git rev-parse --short HEAD                     |
+      |         | backend  | git rev-parse --short HEAD                     |
       | feature | frontend | git checkout main                              |
       | main    | frontend | git checkout feature                           |
     And it prints:

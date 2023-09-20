@@ -20,6 +20,7 @@ Feature: missing configuration
       | BRANCH  | PARENT |
       | feature | main   |
 
+  @debug @this
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
