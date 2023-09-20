@@ -314,8 +314,8 @@ func TestConfigSnapshot(t *testing.T) {
 						config.KeyPushHook: "0",
 					},
 					Local: config.GitConfigCache{
-						config.KeyMainBranch:        "main",
 						config.KeyPerennialBranches: "prod",
+						config.KeyGithubToken:       "token",
 					},
 				},
 			}
@@ -327,14 +327,13 @@ func TestConfigSnapshot(t *testing.T) {
 						config.KeyPullBranchStrategy: "1",
 					},
 					Local: config.GitConfigCache{
-						config.KeyMainBranch:        "dev",
 						config.KeyPerennialBranches: "prod qa",
 						config.KeyPushHook:          "1",
 					},
 				},
 			}
-			have := before.Diff(after)
-			want := undo.ConfigDiffs{
+			haveDiff := before.Diff(after)
+			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{
 						config.KeyPullBranchStrategy,
@@ -353,12 +352,10 @@ func TestConfigSnapshot(t *testing.T) {
 					Added: []config.Key{
 						config.KeyPushHook,
 					},
-					Removed: map[config.Key]string{},
+					Removed: map[config.Key]string{
+						config.KeyGithubToken: "token",
+					},
 					Changed: map[config.Key]domain.Change[string]{
-						config.KeyMainBranch: {
-							Before: "main",
-							After:  "dev",
-						},
 						config.KeyPerennialBranches: {
 							Before: "prod",
 							After:  "prod qa",
@@ -366,7 +363,35 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.UndoSteps()
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.RemoveGlobalConfigStep{
+						Key: config.KeyPullBranchStrategy,
+					},
+					&steps.RemoveLocalConfigStep{
+						Key: config.KeyPushHook,
+					},
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyPushHook,
+						Value: "0",
+					},
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyGithubToken,
+						Value: "token",
+					},
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "0",
+					},
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyPerennialBranches,
+						Value: "prod",
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 	})
 }
