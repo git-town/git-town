@@ -360,7 +360,7 @@ func TestTestCommands(t *testing.T) {
 		repo := testruntime.Create(t)
 		repo.CreateCommit(git.Commit{Branch: domain.NewLocalBranchName("initial"), FileName: "foo", FileContent: "bar", Message: "commit"})
 		sha := repo.SHAForCommit("commit")
-		assert.Len(t, sha, 40)
+		assert.Len(t, sha, 7)
 	})
 
 	t.Run("UncommittedFiles", func(t *testing.T) {

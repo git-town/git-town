@@ -26,15 +26,15 @@ Feature: display debug statistics
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git checkout main                                 |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       | main    | frontend | git rebase origin/main                            |
       |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git checkout feature                              |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       | feature | frontend | git merge --no-edit origin/feature                |
-      |         | backend  | git rev-parse HEAD                                |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
+      |         | backend  | git rev-parse --short HEAD                        |
       | feature | frontend | git merge --no-edit main                          |
       |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git diff main..feature                            |
@@ -44,11 +44,11 @@ Feature: display debug statistics
       |         | backend  | git config user.name                              |
       |         | backend  | git config user.email                             |
       | main    | frontend | git commit -m done                                |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | backend  | git rev-parse --short HEAD                        |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
-      |         | backend  | git rev-parse feature                             |
+      |         | backend  | git rev-parse --short feature                     |
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
@@ -75,13 +75,13 @@ Feature: display debug statistics
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
-      |         | backend  | git log --pretty=format:%H -10                 |
+      |         | backend  | git log --pretty=format:%h -10                 |
       | main    | frontend | git revert {{ sha 'done' }}                    |
       |         | backend  | git rev-list --left-right main...origin/main   |
       | main    | frontend | git push                                       |
       |         | frontend | git checkout feature                           |
-      |         | backend  | git rev-parse HEAD                             |
-      |         | backend  | git rev-parse HEAD                             |
+      |         | backend  | git rev-parse --short HEAD                     |
+      |         | backend  | git rev-parse --short HEAD                     |
       | feature | frontend | git checkout main                              |
       | main    | frontend | git checkout feature                           |
     And it prints:

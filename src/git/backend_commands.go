@@ -230,14 +230,14 @@ func (bc *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBra
 	result := make([]domain.SHA, 0, len(lines))
 	for _, line := range lines {
 		if len(line) > 0 {
-			result = append(result, domain.NewSHA(line[2:]))
+			result = append(result, domain.NewSHA(line[2:9]))
 		}
 	}
 	return result, nil
 }
 
 func (bc *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
-	output, err := bc.QueryTrim("git", "log", "--pretty=format:%H", "-10")
+	output, err := bc.QueryTrim("git", "log", "--pretty=format:%h", "-10")
 	if err != nil {
 		return domain.SHAs{}, err
 	}
