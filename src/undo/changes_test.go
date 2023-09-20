@@ -72,11 +72,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(
-				lineage,
-				branchTypes,
-				domain.NewLocalBranchName("before"),
-				domain.NewLocalBranchName("branch-1"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("before")},
@@ -129,7 +130,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("branch-1"), domain.NewLocalBranchName("main"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
@@ -212,7 +218,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -295,7 +306,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.LocalBranchName{}, domain.LocalBranchName{})
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
@@ -304,6 +320,7 @@ func TestChanges(t *testing.T) {
 					&steps.DeleteTrackingBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -422,7 +439,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("perennial-branch"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteLocalBranchStep{
@@ -435,7 +457,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -573,7 +595,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("man"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("man"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
@@ -667,7 +694,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
@@ -757,7 +789,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
@@ -842,7 +879,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// revert the commit on the perennial branch
@@ -953,7 +995,12 @@ func TestChanges(t *testing.T) {
 				},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1043,7 +1090,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
@@ -1134,7 +1186,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
@@ -1212,7 +1269,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
@@ -1292,7 +1354,12 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(lineage, branchTypes, domain.NewLocalBranchName("main"), domain.NewLocalBranchName("feature-branch"))
+			haveSteps := haveChanges.Steps(undo.StepsArgs{
+				Lineage:       lineage,
+				BranchTypes:   branchTypes,
+				InitialBranch: domain.NewLocalBranchName("main"),
+				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// don't re-create the tracking branch for the perennial branch

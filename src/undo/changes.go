@@ -40,9 +40,9 @@ func EmptyChanges() Changes {
 	}
 }
 
-func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, initialBranch, finalBranch domain.LocalBranchName) runstate.StepList {
+func (c Changes) Steps(args StepsArgs) runstate.StepList {
 	result := runstate.StepList{}
-	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(branchTypes)
+	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
 	for branch, change := range omniChangedPerennials {
@@ -60,7 +60,7 @@ func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, i
 
 	// ignore inconsistently changed perennial branches
 	// because we can't change the remote and we therefore don't want to reset the local part either
-	_, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(branchTypes)
+	_, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(args.BranchTypes)
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
@@ -85,7 +85,7 @@ func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, i
 	}
 
 	// re-create remotely removed feature branches
-	_, removedFeatureTrackingBranches := c.RemoteRemoved.Categorize(branchTypes)
+	_, removedFeatureTrackingBranches := c.RemoteRemoved.Categorize(args.BranchTypes)
 	for branch, sha := range removedFeatureTrackingBranches {
 		result.Append(&steps.CreateRemoteBranchStep{
 			Branch:     branch.LocalBranchName(),
@@ -102,12 +102,12 @@ func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, i
 
 	// remove locally added branches
 	for _, addedLocalBranch := range c.LocalAdded {
-		if finalBranch == addedLocalBranch {
-			result.Append(&steps.CheckoutStep{Branch: initialBranch})
+		if args.FinalBranch == addedLocalBranch {
+			result.Append(&steps.CheckoutStep{Branch: args.InitialBranch})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{
 			Branch: addedLocalBranch,
-			Parent: lineage.Parent(addedLocalBranch).Location(),
+			Parent: args.Lineage.Parent(addedLocalBranch).Location(),
 			Force:  true,
 		})
 	}
@@ -120,7 +120,7 @@ func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, i
 		})
 	}
 
-	_, remoteFeatureChanges := c.RemoteChanged.Categorize(branchTypes)
+	_, remoteFeatureChanges := c.RemoteChanged.Categorize(args.BranchTypes)
 	// Ignore remotely changed perennial branches because we can't force-push to them
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
@@ -133,6 +133,13 @@ func (c Changes) Steps(lineage config.Lineage, branchTypes domain.BranchTypes, i
 		})
 	}
 
-	result.Append(&steps.CheckoutStep{Branch: initialBranch})
+	result.Append(&steps.CheckoutStep{Branch: args.InitialBranch})
 	return result
+}
+
+type StepsArgs struct {
+	Lineage       config.Lineage
+	BranchTypes   domain.BranchTypes
+	InitialBranch domain.LocalBranchName
+	FinalBranch   domain.LocalBranchName
 }
