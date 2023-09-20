@@ -80,13 +80,13 @@ func TestChanges(t *testing.T) {
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("before")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("branch-1"),
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("before")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
