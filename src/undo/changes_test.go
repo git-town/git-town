@@ -599,8 +599,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("man"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -610,17 +610,19 @@ func TestChanges(t *testing.T) {
 					&steps.DeleteTrackingBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					// &steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
 						Parent: domain.LocalBranchName{}.Location(),
 						Force:  true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -698,8 +700,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -793,8 +795,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -883,8 +885,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -999,8 +1001,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1094,8 +1096,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1190,8 +1192,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1273,8 +1275,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1358,8 +1360,8 @@ func TestChanges(t *testing.T) {
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
-				InitialBranch: domain.NewLocalBranchName("main"),
-				FinalBranch:   domain.NewLocalBranchName("feature-branch"),
+				InitialBranch: before.Active,
+				FinalBranch:   after.Active,
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
