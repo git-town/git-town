@@ -54,7 +54,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, branchesSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
+	config, initialBranchesSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -71,7 +71,7 @@ func runAppend(arg string, debug bool) error {
 		Run:                     &repo.Runner,
 		Connector:               nil,
 		RootDir:                 repo.RootDir,
-		InitialBranchesSnapshot: branchesSnapshot,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		Lineage:                 config.lineage,
 	})
