@@ -898,7 +898,7 @@ func TestChanges(t *testing.T) {
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("444444"), SetToSHA: domain.NewSHA("222222"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
 					// check out the initial branch
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
