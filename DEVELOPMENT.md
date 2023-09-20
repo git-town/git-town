@@ -1,6 +1,8 @@
 # Developing the Git Town source code
 
-This page helps you get started hacking on the Git Town codebase.
+This page helps you get started hacking on the Git Town codebase. See file
+[ARCHITECTURE.md](ARCHITECTURE.md) for an overview of how the Git Town engine
+works.
 
 ## setup
 

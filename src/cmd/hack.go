@@ -7,11 +7,12 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -68,7 +69,7 @@ func hack(args []string, promptForParent, debug bool) error {
 		Command:     "hack",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,
@@ -90,7 +91,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	fc := failure.Collector{}
+	fc := gohacks.FailureCollector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	targetBranch := domain.NewLocalBranchName(args[0])

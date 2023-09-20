@@ -7,9 +7,9 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/spf13/cobra"
 )
 
@@ -60,7 +60,7 @@ func runConfig(debug bool) error {
 }
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
-	fc := failure.Collector{}
+	fc := gohacks.FailureCollector{}
 	branchTypes := run.Config.BranchTypes()
 	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
 	giteaToken := run.Config.GiteaToken()

@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func statusReset(debug bool) error {
 	if err != nil {
 		return err
 	}
-	err = runstate.Delete(repo.RootDir)
+	err = persistence.Delete(repo.RootDir)
 	if err != nil {
 		return err
 	}
