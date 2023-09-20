@@ -129,8 +129,8 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			have := before.Diff(after)
-			want := undo.ConfigDiffs{
+			haveDiff := before.Diff(after)
+			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
@@ -147,7 +147,17 @@ func TestConfigSnapshot(t *testing.T) {
 					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.UndoSteps()
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "0",
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local config added", func(t *testing.T) {
