@@ -15,17 +15,8 @@ func (cd ConfigDiffs) UndoSteps() runstate.StepList {
 	for _, key := range cd.Global.Added {
 		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
 	}
-	for _, key := range cd.Local.Added {
-		result.Append(&steps.RemoveLocalConfigStep{Key: key})
-	}
 	for key, value := range cd.Global.Removed {
 		result.Append(&steps.SetGlobalConfigStep{
-			Key:   key,
-			Value: value,
-		})
-	}
-	for key, value := range cd.Local.Removed {
-		result.Append(&steps.SetLocalConfigStep{
 			Key:   key,
 			Value: value,
 		})
@@ -34,6 +25,15 @@ func (cd ConfigDiffs) UndoSteps() runstate.StepList {
 		result.Append(&steps.SetGlobalConfigStep{
 			Key:   key,
 			Value: change.Before,
+		})
+	}
+	for _, key := range cd.Local.Added {
+		result.Append(&steps.RemoveLocalConfigStep{Key: key})
+	}
+	for key, value := range cd.Local.Removed {
+		result.Append(&steps.SetLocalConfigStep{
+			Key:   key,
+			Value: value,
 		})
 	}
 	for key, change := range cd.Local.Changed {

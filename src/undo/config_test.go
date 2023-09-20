@@ -370,20 +370,20 @@ func TestConfigSnapshot(t *testing.T) {
 					&steps.RemoveGlobalConfigStep{
 						Key: config.KeyPullBranchStrategy,
 					},
-					&steps.RemoveLocalConfigStep{
-						Key: config.KeyPushHook,
-					},
 					&steps.SetGlobalConfigStep{
 						Key:   config.KeyPushHook,
 						Value: "0",
 					},
-					&steps.SetLocalConfigStep{
-						Key:   config.KeyGithubToken,
-						Value: "token",
-					},
 					&steps.SetGlobalConfigStep{
 						Key:   config.KeyOffline,
 						Value: "0",
+					},
+					&steps.RemoveLocalConfigStep{
+						Key: config.KeyPushHook,
+					},
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyGithubToken,
+						Value: "token",
 					},
 					&steps.SetLocalConfigStep{
 						Key:   config.KeyPerennialBranches,
