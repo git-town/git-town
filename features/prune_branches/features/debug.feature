@@ -25,7 +25,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | old    | frontend | git checkout main                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
-      |        | backend  | git rev-parse old                             |
+      |        | backend  | git rev-parse --short old                     |
       |        | backend  | git log main..old                             |
       | main   | frontend | git branch -D old                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
