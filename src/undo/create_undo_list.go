@@ -19,7 +19,7 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(args.Run.Backend),
 	}
-	configDiff := finalConfigSnapshot.Diff(args.InitialConfigSnapshot)
+	configDiff := args.InitialConfigSnapshot.Diff(finalConfigSnapshot)
 	undoConfigSteps := configDiff.UndoSteps()
 	allBranches, active, err := args.Run.Backend.BranchInfos()
 	if err != nil {

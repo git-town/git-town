@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -107,6 +108,12 @@ func TestLoadSave(t *testing.T) {
 					&steps.RemoveFromPerennialBranchesStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
+					&steps.RemoveGlobalConfigStep{
+						Key: config.KeyOffline,
+					},
+					&steps.RemoveLocalConfigStep{
+						Key: config.KeyOffline,
+					},
 					&steps.ResetCurrentBranchToSHAStep{
 						Hard:        true,
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -115,6 +122,14 @@ func TestLoadSave(t *testing.T) {
 					&steps.RestoreOpenChangesStep{},
 					&steps.RevertCommitStep{
 						SHA: domain.NewSHA("123456"),
+					},
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "1",
+					},
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "1",
 					},
 					&steps.SetParentStep{
 						Branch:       domain.NewLocalBranchName("branch"),
@@ -315,6 +330,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "RemoveGlobalConfigStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "RemoveLocalConfigStep"
+    },
+    {
+      "data": {
         "Hard": true,
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
@@ -330,6 +357,20 @@ func TestLoadSave(t *testing.T) {
         "SHA": "123456"
       },
       "type": "RevertCommitStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "SetGlobalConfigStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "SetLocalConfigStep"
     },
     {
       "data": {

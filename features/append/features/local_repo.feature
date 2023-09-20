@@ -27,9 +27,8 @@ Feature: in a local repo
       | existing | main   |
       | new      | main   |
 
-  @this
   Scenario: undo
-    When I run "git town undo -d"
+    When I run "git town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
