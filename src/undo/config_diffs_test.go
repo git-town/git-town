@@ -16,29 +16,6 @@ func TestConfigDiffs(t *testing.T) {
 	t.Run("UndoSteps", func(t *testing.T) {
 		t.Parallel()
 
-		t.Run("local config added", func(t *testing.T) {
-			t.Parallel()
-			diff := undo.ConfigDiffs{
-				Global: undo.EmptyConfigDiff(),
-				Local: undo.ConfigDiff{
-					Added: []config.Key{
-						config.KeyOffline,
-					},
-					Removed: map[config.Key]string{},
-					Changed: map[config.Key]domain.Change[string]{},
-				},
-			}
-			have := diff.UndoSteps()
-			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.RemoveLocalConfigStep{
-						Key: config.KeyOffline,
-					},
-				},
-			}
-			assert.Equal(t, want, have)
-		})
-
 		t.Run("local config removed", func(t *testing.T) {
 			t.Parallel()
 			diff := undo.ConfigDiffs{
