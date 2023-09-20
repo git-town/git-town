@@ -3,11 +3,15 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -40,26 +44,14 @@ func runUndo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage()
-	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
+	config, initialBranchesSnapshot, lineage, err := determineUndoConfig(&repo)
+	if err != nil {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
+	undoRunState, err := determineUndoRunState(config, &repo)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsUnfinished() {
-		return fmt.Errorf(messages.UndoNothingToDo)
-	}
-	undoRunState := runState.CreateUndoRunState()
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
@@ -69,4 +61,53 @@ func runUndo(debug bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 	})
+}
+
+type undoConfig struct {
+	hasOpenChanges          bool
+	mainBranch              domain.LocalBranchName
+	initialBranchesSnapshot undo.BranchesSnapshot
+	previousBranch          domain.LocalBranchName
+}
+
+func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.BranchesSnapshot, config.Lineage, error) {
+	lineage := repo.Runner.Config.Lineage()
+	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, initialBranchesSnapshot, lineage, err
+	}
+	mainBranch := repo.Runner.Backend.Config.MainBranch()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	return &undoConfig{
+		hasOpenChanges:          true,
+		initialBranchesSnapshot: initialBranchesSnapshot,
+		mainBranch:              mainBranch,
+		previousBranch:          previousBranch,
+	}, initialBranchesSnapshot, lineage, nil
+}
+
+func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
+	runState, err := persistence.Load(repo.RootDir)
+	if err != nil {
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	if runState == nil || runState.IsUnfinished() {
+		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
+	}
+	undoRunState := runState.CreateUndoRunState()
+	err = undoRunState.RunStepList.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranchesSnapshot.Active,
+		PreviousBranch:   config.previousBranch,
+	})
+	return undoRunState, err
 }

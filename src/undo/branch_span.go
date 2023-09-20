@@ -10,17 +10,17 @@ type BranchSpan struct {
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (bs BranchSpan) IsOmniChange() bool {
-	return bs.Before.IsOmniBranch() && bs.After.IsOmniBranch() && bs.LocalChanged()
+func (b BranchSpan) IsOmniChange() bool {
+	return b.Before.IsOmniBranch() && b.After.IsOmniBranch() && b.LocalChanged()
 }
 
-func (bba BranchSpan) IsInconsintentChange() bool {
-	return !bba.Before.LocalSHA.IsEmpty() &&
-		!bba.Before.RemoteSHA.IsEmpty() &&
-		!bba.After.LocalSHA.IsEmpty() &&
-		!bba.After.RemoteSHA.IsEmpty() &&
-		bba.LocalChanged() &&
-		bba.RemoteChanged()
+func (b BranchSpan) IsInconsintentChange() bool {
+	return !b.Before.LocalSHA.IsEmpty() &&
+		!b.Before.RemoteSHA.IsEmpty() &&
+		!b.After.LocalSHA.IsEmpty() &&
+		!b.After.RemoteSHA.IsEmpty() &&
+		b.LocalChanged() &&
+		b.RemoteChanged()
 }
 
 func (b BranchSpan) LocalAdded() bool {

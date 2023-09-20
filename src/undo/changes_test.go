@@ -85,6 +85,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("before")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -107,9 +108,11 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("branch-1"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
+				Active:   domain.NewLocalBranchName("main"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -166,6 +169,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -184,6 +188,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -253,6 +258,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -271,6 +277,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -378,6 +385,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -396,6 +404,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -524,6 +533,7 @@ func TestChanges(t *testing.T) {
 			}
 			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{},
+				Active:   domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -542,6 +552,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -613,6 +624,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -631,6 +643,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -701,6 +714,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("333333"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -719,6 +733,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -784,6 +799,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -802,6 +818,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -869,6 +886,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -887,6 +905,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("666666"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -981,6 +1000,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -999,6 +1019,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -1070,6 +1091,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("333333"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -1088,6 +1110,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -1152,6 +1175,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -1170,6 +1194,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -1230,6 +1255,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
@@ -1248,6 +1274,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.SHA{},
 					},
 				},
+				Active: domain.NewLocalBranchName("feature-branch"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
