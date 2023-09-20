@@ -18,6 +18,7 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
+		// TODO: remove this once the tests pass
 		stepName := gohacks.TypeName(step)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
