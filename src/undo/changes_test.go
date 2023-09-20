@@ -1253,7 +1253,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 				},
-				Active: domain.NewLocalBranchName("feature-branch"),
+				Active: domain.NewLocalBranchName("main"),
 			}
 			span := before.Span(after)
 			haveChanges := span.Changes()
@@ -1287,7 +1287,7 @@ func TestChanges(t *testing.T) {
 						Branch:        domain.NewLocalBranchName("feature-branch"),
 						StartingPoint: domain.NewSHA("222222").Location(),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
