@@ -2,7 +2,7 @@ package undo
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// BranchSpan represents the temporal change of a branch.
+// BranchSpan represents the states of a branch before and after a change.
 type BranchSpan struct {
 	Before domain.BranchInfo // the status of the branch before Git Town ran
 	After  domain.BranchInfo // the status of the branch after Git Town ran
