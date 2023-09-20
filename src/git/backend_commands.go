@@ -462,7 +462,7 @@ func (bc *BackendCommands) RootDirectory() domain.RepoRootDir {
 
 // SHAForBranch provides the SHA for the local branch with the given name.
 func (bc *BackendCommands) SHAForBranch(name domain.BranchName) (domain.SHA, error) {
-	output, err := bc.QueryTrim("git", "rev-parse", name.String())
+	output, err := bc.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
 		return domain.SHA{}, fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
