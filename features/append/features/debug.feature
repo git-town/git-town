@@ -22,15 +22,15 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | backend  | git status --porcelain --ignore-submodules           |
       | existing | frontend | git checkout main                                    |
-      |          | backend  | git rev-parse HEAD                                   |
+      |          | backend  | git rev-parse --short HEAD                           |
       | main     | frontend | git rebase origin/main                               |
       |          | backend  | git rev-parse HEAD                                   |
       |          | backend  | git rev-list --left-right main...origin/main         |
       | main     | frontend | git checkout existing                                |
-      |          | backend  | git rev-parse HEAD                                   |
+      |          | backend  | git rev-parse --short HEAD                           |
       | existing | frontend | git merge --no-edit origin/existing                  |
-      |          | backend  | git rev-parse HEAD                                   |
-      |          | backend  | git rev-parse HEAD                                   |
+      |          | backend  | git rev-parse --short HEAD                           |
+      |          | backend  | git rev-parse --short HEAD                           |
       | existing | frontend | git merge --no-edit main                             |
       |          | backend  | git rev-parse HEAD                                   |
       |          | backend  | git rev-list --left-right existing...origin/existing |

@@ -21,7 +21,7 @@ Feature: display debug statistics
       |        | backend  | git branch -vva                              |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
       |        | backend  | git status --porcelain --ignore-submodules   |
-      |        | backend  | git rev-parse HEAD                           |
+      |        | backend  | git rev-parse --short HEAD                   |
       | main   | frontend | git rebase origin/main                       |
       |        | backend  | git rev-parse HEAD                           |
       |        | backend  | git rev-list --left-right main...origin/main |
