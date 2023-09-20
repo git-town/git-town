@@ -6,7 +6,7 @@ Feature: display debug statistics
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
 
-  # TODO: eliminate redundant "git rev-parse HEAD"
+  # TODO: eliminate redundant "git rev-parse --short HEAD"
   Scenario: result
     When I run "git-town prepend parent --debug"
     Then it runs the commands
@@ -23,13 +23,13 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --porcelain --ignore-submodules    |
       | old    | frontend | git checkout main                             |
-      |        | backend  | git rev-parse HEAD                            |
+      |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       | main   | frontend | git checkout old                              |
-      |        | backend  | git rev-parse HEAD                            |
+      |        | backend  | git rev-parse --short HEAD                    |
       | old    | frontend | git merge --no-edit origin/old                |
-      |        | backend  | git rev-parse HEAD                            |
+      |        | backend  | git rev-parse --short HEAD                    |
       | old    | frontend | git merge --no-edit main                      |
       |        | backend  | git rev-list --left-right old...origin/old    |
       | old    | frontend | git branch parent main                        |
@@ -57,7 +57,7 @@ Feature: display debug statistics
       | parent | frontend | git checkout old                                 |
       |        | backend  | git config git-town-branch.old.parent main       |
       |        | backend  | git config --unset git-town-branch.parent.parent |
-      |        | backend  | git rev-parse parent                             |
+      |        | backend  | git rev-parse --short parent                     |
       |        | backend  | git log main..parent                             |
       | old    | frontend | git branch -D parent                             |
       |        | frontend | git checkout main                                |
