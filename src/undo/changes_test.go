@@ -716,7 +716,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("222222"),
 						Hard:        true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1017,7 +1017,7 @@ func TestChanges(t *testing.T) {
 						MustHaveSHA: domain.NewSHA("666666"),
 						SetToSHA:    domain.NewSHA("222222"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
