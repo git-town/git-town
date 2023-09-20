@@ -1,7 +1,7 @@
 package runstate
 
 import (
-	"github.com/git-town/git-town/v9/src/failure"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -10,8 +10,8 @@ import (
 //
 // This is based on ideas outlined in https://go.dev/blog/errors-are-values.
 type StepListBuilder struct {
-	StepList          StepList `exhaustruct:"optional"`
-	failure.Collector `exhaustruct:"optional"`
+	StepList                 StepList `exhaustruct:"optional"`
+	gohacks.FailureCollector `exhaustruct:"optional"`
 }
 
 func (slb *StepListBuilder) Add(step steps.Step) {

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
@@ -75,7 +76,7 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(runstate.ExecuteArgs{
+	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
 		Connector: nil,

@@ -5,15 +5,18 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/runvm"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string, lineage config.Lineage) (quit bool, err error) {
-	runState, err := runstate.Load(rootDir)
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (quit bool, err error) {
+	runState, err := persistence.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -45,9 +48,9 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
-	return true, runstate.Execute(runstate.ExecuteArgs{
+	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:  &abortRunState,
 		Run:       run,
 		Connector: connector,
@@ -56,7 +59,7 @@ func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector h
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
@@ -64,7 +67,7 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 	if hasConflicts {
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
-	return true, runstate.Execute(runstate.ExecuteArgs{
+	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:  runState,
 		Run:       run,
 		Connector: connector,
@@ -73,14 +76,14 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 	})
 }
 
-func discardRunstate(rootDir string) (bool, error) {
-	err := runstate.Delete(rootDir)
+func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
+	err := persistence.Delete(rootDir)
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir string, lineage config.Lineage) (bool, error) {
+func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
-	return true, runstate.Execute(runstate.ExecuteArgs{
+	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:  &skipRunState,
 		Run:       run,
 		Connector: connector,
