@@ -225,8 +225,8 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			have := before.Diff(after)
-			want := undo.ConfigDiffs{
+			haveDiff := before.Diff(after)
+			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
 					Removed: map[config.Key]string{},
@@ -240,7 +240,17 @@ func TestConfigSnapshot(t *testing.T) {
 					Changed: map[config.Key]domain.Change[string]{},
 				},
 			}
-			assert.Equal(t, want, have)
+			assert.Equal(t, wantDiff, haveDiff)
+			haveSteps := haveDiff.UndoSteps()
+			wantSteps := runstate.StepList{
+				List: []steps.Step{
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyPullBranchStrategy,
+						Value: "1",
+					},
+				},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local config changed", func(t *testing.T) {
