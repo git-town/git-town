@@ -45,7 +45,7 @@ Feature: display debug statistics
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
-      |         | backend  | git rev-parse feature                             |
+      |         | backend  | git rev-parse --short feature                     |
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
