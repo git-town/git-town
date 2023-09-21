@@ -29,7 +29,7 @@ Feature: conflicts between the main branch and its tracking branch
     And a rebase is now in progress
     And the uncommitted file is stashed
 
-  @this
+  @debug @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
