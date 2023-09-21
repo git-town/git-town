@@ -85,8 +85,12 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.Branch
 	}
 	mainBranch := repo.Runner.Backend.Config.MainBranch()
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	if err != nil {
+		return nil, initialBranchesSnapshot, lineage, err
+	}
 	return &undoConfig{
-		hasOpenChanges:          true,
+		hasOpenChanges:          hasOpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
