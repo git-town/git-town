@@ -26,14 +26,14 @@ func abortCmd() *cobra.Command {
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return abort(readDebugFlag(cmd))
+			return runAbort(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func abort(debug bool) error {
+func runAbort(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

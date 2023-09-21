@@ -31,14 +31,14 @@ func aliasesCommand() *cobra.Command {
 		Short:   aliasesDesc,
 		Long:    long(aliasesDesc, aliasesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return aliases(args[0], readDebugFlag(cmd))
+			return runAliases(args[0], readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func aliases(arg string, debug bool) error {
+func runAliases(arg string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

@@ -43,14 +43,14 @@ func newPullRequestCommand() *cobra.Command {
 		Short:   newPullRequestDesc,
 		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return newPullRequest(readDebugFlag(cmd))
+			return runNewPullRequest(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func newPullRequest(debug bool) error {
+func runNewPullRequest(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
