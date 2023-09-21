@@ -3,6 +3,7 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -69,11 +70,12 @@ func (stepList *StepList) PrependList(otherList StepList) {
 
 // Implementation of the fmt.Stringer interface.
 func (stepList *StepList) String() string {
-	result := "StepList:\n"
+	sb := strings.Builder{}
+	sb.WriteString("StepList:\n")
 	for s, step := range stepList.List {
-		result += fmt.Sprintf("%d: %#v\n", s+1, step)
+		sb.WriteString(fmt.Sprintf("%d: %#v\n", s+1, step))
 	}
-	return result
+	return sb.String()
 }
 
 // WrapOptions represents the options given to Wrap.
