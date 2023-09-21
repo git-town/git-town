@@ -14,6 +14,7 @@ Feature: display debug statistics
       |          | backend  | git config -lz --global                              |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git rev-parse --show-toplevel                        |
+      |          | backend  | git stash list                                       |
       |          | backend  | git branch -vva                                      |
       |          | backend  | git remote                                           |
       | existing | frontend | git fetch --prune --tags                             |
@@ -35,9 +36,10 @@ Feature: display debug statistics
       |          | backend  | git config -lz --global                              |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git branch -vva                                      |
+      |          | backend  | git stash list                                       |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "new"
 
@@ -46,6 +48,6 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 19 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "existing"
