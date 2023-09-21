@@ -19,14 +19,14 @@ func resetRunstateCommand() *cobra.Command {
 		Short: statusResetDesc,
 		Long:  long(statusResetDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return statusReset(readDebugFlag(cmd))
+			return runStatusReset(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func statusReset(debug bool) error {
+func runStatusReset(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

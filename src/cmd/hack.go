@@ -39,7 +39,7 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return hack(args, readPromptFlag(cmd), readDebugFlag(cmd))
+			return runHack(args, readPromptFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -47,7 +47,7 @@ func hackCmd() *cobra.Command {
 	return &cmd
 }
 
-func hack(args []string, promptForParent, debug bool) error {
+func runHack(args []string, promptForParent, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
