@@ -23,7 +23,7 @@ func statusCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return status(readDebugFlag(cmd))
+			return runStatus(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -31,7 +31,7 @@ func statusCommand() *cobra.Command {
 	return &cmd
 }
 
-func status(debug bool) error {
+func runStatus(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

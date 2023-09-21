@@ -22,14 +22,14 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return undo(readDebugFlag(cmd))
+			return runUndo(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func undo(debug bool) error {
+func runUndo(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

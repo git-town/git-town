@@ -28,14 +28,14 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return diffParent(args, readDebugFlag(cmd))
+			return runDiffParent(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func diffParent(args []string, debug bool) error {
+func runDiffParent(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
