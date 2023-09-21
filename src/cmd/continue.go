@@ -53,6 +53,8 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("11111111111111111111")
+	fmt.Println(runState.String())
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,

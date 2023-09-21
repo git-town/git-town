@@ -21,7 +21,7 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoStepList = undoSteps
+	args.RunState.UndoStepList.AppendList(undoSteps)
 	if step.ShouldAutomaticallyAbortOnError() {
 		return autoAbort(step, runErr, args)
 	}

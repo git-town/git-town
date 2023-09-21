@@ -1,6 +1,8 @@
 package runstate
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/git-town/git-town/v9/src/git"
@@ -136,4 +138,18 @@ func (runState *RunState) SkipCurrentBranchSteps() {
 		}
 		runState.RunStepList.Pop()
 	}
+}
+
+func (runState *RunState) String() string {
+	result := strings.Builder{}
+	result.WriteString("RunState {\n")
+	result.WriteString("  Command: ")
+	result.WriteString(runState.Command)
+	result.WriteString("\n  IsAbort: ")
+	result.WriteString(fmt.Sprintf("%t", runState.IsAbort))
+	result.WriteString("\n  IsUndo: ")
+	result.WriteString(fmt.Sprintf("%t", runState.IsUndo))
+	result.WriteString("\n  RunStepList: ")
+	result.WriteString("}")
+	return result.String()
 }
