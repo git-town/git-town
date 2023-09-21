@@ -36,10 +36,9 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
       |          | git stash             |
-      |          | git checkout main     |
-      | main     | git branch -D new     |
       |          | git checkout existing |
-      | existing | git stash pop         |
+      | existing | git branch -D new     |
+      |          | git stash pop         |
     And the current branch is now "existing"
     And now the initial commits exist
     And the initial branch hierarchy exists
