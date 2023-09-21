@@ -1,6 +1,7 @@
 package domain_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -10,6 +11,16 @@ import (
 
 func TestSHA(t *testing.T) {
 	t.Parallel()
+
+	t.Run("MarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		sha := domain.NewSHA("123456")
+		have, err := json.MarshalIndent(sha, "", "  ")
+		assert.Nil(t, err)
+		want := `"123456"`
+		assert.Equal(t, want, string(have))
+	})
+
 	t.Run("NewSHA and String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
@@ -56,5 +67,14 @@ func TestSHA(t *testing.T) {
 			want := domain.NewSHA("123456789")
 			assert.Equal(t, want, have)
 		})
+	})
+
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		give := `"123456"`
+		have := domain.SHA{}
+		json.Unmarshal([]byte(give), &have)
+		want := domain.NewSHA("123456")
+		assert.Equal(t, want, have)
 	})
 }
