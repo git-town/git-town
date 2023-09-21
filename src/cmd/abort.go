@@ -49,10 +49,10 @@ func runAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
+	abortRunState, err := determineAbortRunstate(&repo)
 	if err != nil {
 		return err
 	}
-	abortRunState, err := determineAbortRunstate(&repo)
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:  abortRunState,
 		Run:       &repo.Runner,
