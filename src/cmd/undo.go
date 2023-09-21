@@ -73,7 +73,7 @@ type undoConfig struct {
 
 func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -81,7 +81,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.StashS
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
 	mainBranch := repo.Runner.Backend.Config.MainBranch()

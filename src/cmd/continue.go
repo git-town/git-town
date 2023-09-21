@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
@@ -44,19 +45,16 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.ContinueNothingToDo)
-	}
 	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(&repo)
 	if err != nil || exit {
 		return err
 	}
+	runState, err := determineContinueRunstate(&repo)
+	if err != nil {
+		return err
+	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:                runState,
+		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
 		Lineage:                 config.lineage,
@@ -112,4 +110,15 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, und
 type continueConfig struct {
 	connector hosting.Connector
 	lineage   config.Lineage
+}
+
+func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, error) {
+	runState, err := persistence.Load(repo.RootDir)
+	if err != nil {
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return runstate.RunState{}, fmt.Errorf(messages.ContinueNothingToDo)
+	}
+	return *runState, nil
 }
