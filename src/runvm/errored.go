@@ -45,7 +45,10 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	message := runErr.Error() + messages.AbortContinueGuidance
+	message := runErr.Error()
+	if !args.RunState.IsAbort && !args.RunState.IsUndo {
+		message += messages.AbortContinueGuidance
+	}
 	if args.RunState.UnfinishedDetails.CanSkip {
 		message += messages.ContinueSkipGuidance
 	}

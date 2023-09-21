@@ -5,12 +5,13 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
@@ -27,14 +28,14 @@ func abortCmd() *cobra.Command {
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return abort(readDebugFlag(cmd))
+			return runAbort(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func abort(debug bool) error {
+func runAbort(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
@@ -45,18 +46,11 @@ func abort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.AbortNothingToDo)
-	}
-	config, initialBranchesSnapshot, initialStashSnapshot, err := determineAbortConfig(&repo.Runner)
+	config, initialStashSnapshot, err := determineAbortConfig(&repo)
 	if err != nil {
 		return err
 	}
-	abortRunState := runState.CreateAbortRunState()
+	abortRunState, err := determineAbortRunstate(config, &repo)
 	if err != nil {
 		return err
 	}
@@ -66,55 +60,83 @@ func abort(debug bool) error {
 		Connector:               config.connector,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
-func determineAbortConfig(run *git.ProdRunner) (*abortConfig, undo.BranchesSnapshot, undo.StashSnapshot, error) {
-	originURL := run.Config.OriginURL()
-	hostingService, err := run.Config.HostingService()
+func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.StashSnapshot, error) {
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
+		return nil, undo.EmptyStashSnapshot(), err
 	}
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
+	lineage := repo.Runner.Config.Lineage()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetSHAForBranch: run.Backend.SHAForBranch,
+		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   run.Config.GiteaToken(),
-		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),
-		GitlabAPIToken:  run.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  hosting.GetGitHubAPIToken(repo.Runner.Config),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
+		return nil, undo.EmptyStashSnapshot(), err
 	}
-	allBranches, initialBranch, err := run.Backend.BranchInfos()
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		Lineage:               lineage,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, initialStashSnapshot, err
+	}
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
+		return nil, undo.EmptyStashSnapshot(), err
 	}
-	branchesSnapshot := undo.BranchesSnapshot{
-		Branches: allBranches,
-		Active:   initialBranch,
-	}
-	stashSize, err := run.Backend.StashSize()
-	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
-	}
-	stashSnapshot := undo.StashSnapshot{
-		Amount: stashSize,
-	}
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &abortConfig{
-		connector: connector,
-		lineage:   lineage,
-	}, branchesSnapshot, stashSnapshot, err
+		connector:               connector,
+		hasOpenChanges:          hasOpenChanges,
+		initialBranchesSnapshot: initialBranchesSnapshot,
+		lineage:                 lineage,
+		mainBranch:              mainBranch,
+		previousBranch:          previousBranch,
+	}, initialStashSnapshot, err
 }
 
 type abortConfig struct {
-	connector hosting.Connector
-	lineage   config.Lineage
+	connector               hosting.Connector
+	hasOpenChanges          bool
+	initialBranchesSnapshot undo.BranchesSnapshot
+	mainBranch              domain.LocalBranchName
+	lineage                 config.Lineage
+	previousBranch          domain.LocalBranchName
+}
+
+func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
+	runState, err := persistence.Load(repo.RootDir)
+	if err != nil {
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
+	}
+	abortRunState := runState.CreateAbortRunState()
+	err = abortRunState.RunStepList.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranchesSnapshot.Active,
+		PreviousBranch:   config.previousBranch,
+	})
+	return abortRunState, err
 }

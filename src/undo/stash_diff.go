@@ -12,16 +12,16 @@ type StashDiff struct {
 }
 
 func (sd StashDiff) Steps() runstate.StepList {
-	if sd.EntriesAdded < 0 {
-		// fmt.Println("1111111111111111111111111")
-		// fmt.Println(sd.EntriesAdded)
-		// panic("unexpected smaller Git stash found")
-	}
+	// if sd.EntriesAdded < 0 {
+	// fmt.Println("1111111111111111111111111")
+	// fmt.Println(sd.EntriesAdded)
+	// panic("unexpected smaller Git stash found")
+	// }
 	result := runstate.StepList{}
 	if sd.EntriesAdded > 0 {
 		for sd.EntriesAdded > 0 {
 			result.Append(&steps.RestoreOpenChangesStep{})
-			sd.EntriesAdded -= 1
+			sd.EntriesAdded--
 		}
 	}
 	return result
