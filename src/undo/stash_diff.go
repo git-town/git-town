@@ -16,6 +16,7 @@ func (sd StashDiff) Steps() runstate.StepList {
 	if sd.EntriesAdded > 0 {
 		for sd.EntriesAdded > 0 {
 			result.Append(&steps.RestoreOpenChangesStep{})
+			sd.EntriesAdded -= 1
 		}
 	}
 	if sd.EntriesAdded < 0 {
