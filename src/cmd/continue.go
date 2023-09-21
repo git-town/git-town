@@ -44,8 +44,8 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineContinueConfig(&repo)
-	if err != nil || exit {
+	config, err := determineContinueConfig(&repo)
+	if err != nil {
 		return err
 	}
 	runState, err := determineContinueRunstate(&repo)
@@ -61,9 +61,9 @@ func runContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -71,20 +71,20 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return nil, exit, err
+	if err != nil {
+		return nil, err
 	}
 	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	if hasConflicts {
-		return nil, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -100,7 +100,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 	return &continueConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, false, err
+	}, err
 }
 
 type continueConfig struct {
