@@ -15,6 +15,7 @@ func finished(args ExecuteArgs) error {
 		Run:                     args.Run,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
 	})
 	if err != nil {
 		return err

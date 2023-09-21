@@ -16,7 +16,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot) (quit bool, err error) {
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot undo.StashSnapshot) (quit bool, err error) {
 	runState, err := persistence.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -37,11 +37,11 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	case dialog.ResponseDiscard:
 		return discardRunstate(rootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
+		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot)
 	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
+		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot)
+		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -49,7 +49,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot) (bool, error) {
+func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot undo.StashSnapshot) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &abortRunState,
@@ -59,10 +59,11 @@ func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector h
 		Lineage:                 lineage,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot) (bool, error) {
+func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot undo.StashSnapshot) (bool, error) {
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
@@ -78,6 +79,7 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 		RootDir:                 rootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
@@ -86,7 +88,7 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot) (bool, error) {
+func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot undo.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot undo.StashSnapshot) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &skipRunState,
@@ -96,5 +98,6 @@ func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector ho
 		RootDir:                 rootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }

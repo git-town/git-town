@@ -52,7 +52,7 @@ func abort(debug bool) error {
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.AbortNothingToDo)
 	}
-	config, initialBranchesSnapshot, err := determineAbortConfig(&repo.Runner)
+	config, initialBranchesSnapshot, initialStashSnapshot, err := determineAbortConfig(&repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -68,14 +68,15 @@ func abort(debug bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
-func determineAbortConfig(run *git.ProdRunner) (*abortConfig, undo.BranchesSnapshot, error) {
+func determineAbortConfig(run *git.ProdRunner) (*abortConfig, undo.BranchesSnapshot, undo.StashSnapshot, error) {
 	originURL := run.Config.OriginURL()
 	hostingService, err := run.Config.HostingService()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
 	}
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
@@ -90,20 +91,27 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, undo.BranchesSnaps
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
 	}
 	allBranches, initialBranch, err := run.Backend.BranchInfos()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), err
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
 	}
 	branchesSnapshot := undo.BranchesSnapshot{
 		Branches: allBranches,
 		Active:   initialBranch,
 	}
+	stashSize, err := run.Backend.StashSize()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), err
+	}
+	stashSnapshot := undo.StashSnapshot{
+		Amount: stashSize,
+	}
 	return &abortConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, branchesSnapshot, err
+	}, branchesSnapshot, stashSnapshot, err
 }
 
 type abortConfig struct {

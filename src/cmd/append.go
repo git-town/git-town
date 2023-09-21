@@ -54,7 +54,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -73,6 +73,7 @@ func runAppend(arg string, debug bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 		Lineage:                 config.lineage,
 	})
 }
@@ -95,9 +96,9 @@ type appendConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, undo.BranchesSnapshot, bool, error) {
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		Lineage:               lineage,
@@ -106,7 +107,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	fc := gohacks.FailureCollector{}
@@ -117,7 +118,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
-		return nil, branchesSnapshot, false, fc.Err
+		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
 	if branches.All.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -134,7 +135,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, branchesSnapshot, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage() // refresh lineage after ancestry changes
@@ -159,7 +160,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
-	}, branchesSnapshot, false, fc.Err
+	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
 func appendStepList(config *appendConfig) (runstate.StepList, error) {

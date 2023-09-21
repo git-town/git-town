@@ -49,5 +49,6 @@ type ExecuteArgs struct {
 	RootDir                 domain.RepoRootDir
 	InitialBranchesSnapshot undo.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
+	InitialStashSnapshot    undo.StashSnapshot
 	Lineage                 config.Lineage
 }

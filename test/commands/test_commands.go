@@ -322,13 +322,13 @@ func (r *TestCommands) StageFiles(names ...string) {
 	r.MustRun("git", args...)
 }
 
-// StashSize provides the number of stashes in this repository.
-func (r *TestCommands) StashSize() int {
-	output := r.MustQuery("git", "stash", "list")
-	if output == "" {
-		return 0
-	}
-	return len(stringslice.Lines(output))
+// StashOpenFiles stashes the open files away.
+// TODO: rename r to tc.
+func (r *TestCommands) StashOpenFiles() {
+	r.MustRunMany([][]string{
+		{"git", "add", "-A"},
+		{"git", "stash"},
+	})
 }
 
 // Tags provides a list of the tags in this repository.

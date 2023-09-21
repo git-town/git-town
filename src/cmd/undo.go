@@ -44,7 +44,7 @@ func runUndo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, lineage, err := determineUndoConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnaphot, lineage, err := determineUndoConfig(&repo)
 	if err != nil {
 		return err
 	}
@@ -60,6 +60,7 @@ func runUndo(debug bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnaphot,
 	})
 }
 
@@ -70,9 +71,9 @@ type undoConfig struct {
 	previousBranch          domain.LocalBranchName
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.BranchesSnapshot, config.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.BranchesSnapshot, undo.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, initialBranchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -81,20 +82,20 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.Branch
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, initialBranchesSnapshot, lineage, err
+		return nil, initialBranchesSnapshot, initialStashSnapshot, lineage, err
 	}
 	mainBranch := repo.Runner.Backend.Config.MainBranch()
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, initialBranchesSnapshot, lineage, err
+		return nil, initialBranchesSnapshot, initialStashSnapshot, lineage, err
 	}
 	return &undoConfig{
 		hasOpenChanges:          hasOpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
-	}, initialBranchesSnapshot, lineage, nil
+	}, initialBranchesSnapshot, initialStashSnapshot, lineage, nil
 }
 
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {

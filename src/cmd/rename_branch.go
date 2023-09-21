@@ -63,7 +63,7 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, exit, err := determineRenameBranchConfig(args, force, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -83,6 +83,7 @@ func renameBranch(args []string, force, debug bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
@@ -97,9 +98,9 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, undo.BranchesSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, branchesSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -108,12 +109,12 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, branchesSnapshot, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	var oldBranchName domain.LocalBranchName
@@ -126,28 +127,28 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		newBranchName = domain.NewLocalBranchName(args[1])
 	}
 	if repo.Runner.Config.IsMainBranch(oldBranchName) {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if branches.Types.IsPerennialBranch(oldBranchName) {
-			return nil, branchesSnapshot, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.RenameToSameName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameToSameName)
 	}
 	oldBranch := branches.All.FindLocalBranch(oldBranchName)
 	if oldBranch == nil {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != domain.SyncStatusUpToDate {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(newBranchName) {
-		return nil, branchesSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
 		branches:       branches,
@@ -158,7 +159,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		noPushHook:     !pushHook,
 		oldBranch:      *oldBranch,
 		previousBranch: previousBranch,
-	}, branchesSnapshot, false, err
+	}, branchesSnapshot, stashSnapshot, false, err
 }
 
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {

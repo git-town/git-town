@@ -479,6 +479,15 @@ func (bc *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, track
 	return out != "", nil
 }
 
+// StashSize provides the number of stashes in this repository.
+func (bc *BackendCommands) StashSize() (int, error) {
+	output, err := bc.QueryTrim("git", "stash", "list")
+	if output == "" {
+		return 0, err
+	}
+	return len(stringslice.Lines(output)), nil
+}
+
 // Version indicates whether the needed Git version is installed.
 func (bc *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)

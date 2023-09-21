@@ -36,7 +36,7 @@ func setup(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
-	branches, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,

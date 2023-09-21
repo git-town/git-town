@@ -22,6 +22,7 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 	}
 }
 
+// TODO: rename to Spans.
 func (b BranchesSnapshot) Span(afterSnapshot BranchesSnapshot) BranchSpans {
 	result := BranchSpans{}
 	for _, before := range b.Branches {

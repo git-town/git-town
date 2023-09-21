@@ -23,6 +23,7 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortStepProblem, err)

@@ -11,33 +11,21 @@ import (
 )
 
 func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return runstate.StepList{}, errors.New(messages.DirCurrentProblem)
-	}
-	finalConfigSnapshot := ConfigSnapshot{
-		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(args.Run.Backend),
-	}
-	configDiff := args.InitialConfigSnapshot.Diff(finalConfigSnapshot)
-	undoConfigSteps := configDiff.UndoSteps()
-	allBranches, active, err := args.Run.Backend.BranchInfos()
+	// TODO: provide a StepListBuilder here instead of creating so many separate StepLists and cut down on the redundant error checking.
+	undoConfigSteps, err := determineUndoConfigSteps(args.InitialConfigSnapshot, &args.Run.Backend)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	finalBranchesSnapshot := BranchesSnapshot{
-		Branches: allBranches,
-		Active:   active,
+	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.Run)
+	if err != nil {
+		return runstate.StepList{}, err
 	}
-	bba := args.InitialBranchesSnapshot.Span(finalBranchesSnapshot)
-	branchesDiff := bba.Changes()
-	undoBranchesSteps := branchesDiff.Steps(StepsArgs{
-		Lineage:       args.Run.Config.Lineage(),
-		BranchTypes:   args.Run.Config.BranchTypes(),
-		InitialBranch: args.InitialBranchesSnapshot.Active,
-		FinalBranch:   finalBranchesSnapshot.Active,
-	})
+	undoStashSteps, err := determineUndoStashSteps(args.InitialStashSnapshot, &args.Run.Backend)
+	if err != nil {
+		return runstate.StepList{}, err
+	}
 	undoConfigSteps.AppendList(undoBranchesSteps)
+	undoConfigSteps.AppendList(undoStashSteps)
 	return undoConfigSteps, nil
 }
 
@@ -45,4 +33,49 @@ type CreateUndoListArgs struct {
 	Run                     *git.ProdRunner
 	InitialBranchesSnapshot BranchesSnapshot
 	InitialConfigSnapshot   ConfigSnapshot
+	InitialStashSnapshot    StashSnapshot
+}
+
+func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (runstate.StepList, error) {
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return runstate.StepList{}, errors.New(messages.DirCurrentProblem)
+	}
+	finalConfigSnapshot := ConfigSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(backend),
+	}
+	configDiff := initialConfigSnapshot.Diff(finalConfigSnapshot)
+	return configDiff.UndoSteps(), nil
+}
+
+func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, runner *git.ProdRunner) (runstate.StepList, error) {
+	allBranches, active, err := runner.Backend.BranchInfos()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	finalBranchesSnapshot := BranchesSnapshot{
+		Branches: allBranches,
+		Active:   active,
+	}
+	branchSpans := initialBranchesSnapshot.Span(finalBranchesSnapshot)
+	branchChanges := branchSpans.Changes()
+	return branchChanges.Steps(StepsArgs{
+		Lineage:       runner.Config.Lineage(),
+		BranchTypes:   runner.Config.BranchTypes(),
+		InitialBranch: initialBranchesSnapshot.Active,
+		FinalBranch:   finalBranchesSnapshot.Active,
+	}), nil
+}
+
+func determineUndoStashSteps(initialStashSnapshot StashSnapshot, backend *git.BackendCommands) (runstate.StepList, error) {
+	stashSize, err := backend.StashSize()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	finalStashSnapshot := StashSnapshot{
+		Amount: stashSize,
+	}
+	stashDiff := initialStashSnapshot.Diff(finalStashSnapshot)
+	return stashDiff.Steps(), nil
 }
