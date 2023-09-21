@@ -47,6 +47,9 @@ func runUndo(debug bool) error {
 		return err
 	}
 	undoRunState, err := determineUndoRunstate(&repo)
+	if err != nil {
+		return err
+	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:  undoRunState,
 		Run:       &repo.Runner,
