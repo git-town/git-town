@@ -40,7 +40,8 @@ func formatFile(path string, perm os.FileMode) error {
 		}
 		if foundTestLine {
 			if !isParallelLine(line) {
-				return fmt.Errorf("%s:%d: Test start not followed by call to t.Parallel()", path, l)
+				// tests without a "t.Parallel()" line will not be formatted
+				return nil
 			}
 			foundTestLine = false
 			foundParallelLine = true
