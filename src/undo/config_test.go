@@ -13,6 +13,7 @@ import (
 
 func TestConfigSnapshot(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Diff", func(t *testing.T) {
 		t.Parallel()
 

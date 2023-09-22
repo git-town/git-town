@@ -11,6 +11,7 @@ import (
 
 func TestSHA(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsEmpty", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {

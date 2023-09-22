@@ -13,6 +13,7 @@ import (
 
 func TestChanges(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Steps", func(t *testing.T) {
 		t.Parallel()
 		t.Run("local-only branch added", func(t *testing.T) {

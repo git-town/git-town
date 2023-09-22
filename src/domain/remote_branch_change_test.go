@@ -9,6 +9,7 @@ import (
 
 func TestRemoteBranchChange(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
 		rbc := domain.RemoteBranchChange{

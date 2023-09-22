@@ -9,6 +9,7 @@ import (
 
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
+
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch", func(t *testing.T) {

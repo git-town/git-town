@@ -10,6 +10,7 @@ import (
 
 func TestBranchSpan(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsOmniChange", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {

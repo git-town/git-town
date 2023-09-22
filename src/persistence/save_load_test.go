@@ -16,6 +16,7 @@ import (
 
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SanitizePath", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]string{
@@ -28,6 +29,7 @@ func TestLoadSave(t *testing.T) {
 			assert.Equal(t, want, have)
 		}
 	})
+
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{

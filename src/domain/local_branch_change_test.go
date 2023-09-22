@@ -9,6 +9,7 @@ import (
 
 func TestLocalBranchChange(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
 		lbc := domain.LocalBranchChange{

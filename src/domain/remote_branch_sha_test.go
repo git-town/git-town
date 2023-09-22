@@ -9,6 +9,7 @@ import (
 
 func TestRemoteBranchesSHAs(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
 		rbs := domain.RemoteBranchesSHAs{
