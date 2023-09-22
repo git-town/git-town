@@ -9,7 +9,7 @@ import (
 )
 
 func isTestLine(line string) bool {
-	return strings.HasPrefix(line, "  func Test") && strings.HasSuffix(line, "(t *testing.T) {")
+	return strings.HasPrefix(line, "func Test") && strings.HasSuffix(line, "(t *testing.T) {")
 }
 
 func formatFile(path string, perm os.FileMode) error {
