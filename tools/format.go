@@ -46,6 +46,10 @@ func isEmptyLine(line string) bool {
 	return line == ""
 }
 
+func isGoTestFile(path string) bool {
+	return strings.HasSuffix(path, "_test.go")
+}
+
 func formatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
 	newLines := []string{}
@@ -62,7 +66,7 @@ func formatFileContent(content string) string {
 
 func formatFiles() {
 	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
-		if err != nil || shouldIgnorePath(path) || dirEntry.IsDir() || !strings.HasSuffix(dirEntry.Name(), "_test.go") {
+		if err != nil || shouldIgnorePath(path) || dirEntry.IsDir() || !isGoTestFile(path) {
 			return err
 		}
 		fmt.Print(".")
@@ -147,7 +151,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	})
 }`
 	have := formatFileContent(give)
-	verifyStrings("formatContent with subtests", want, have)
+	assertEqual("formatContent with subtests", want, have)
 }
 
 func testFormatContentWithNestedSubtests() {
@@ -218,7 +222,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	})
 }`
 	have := formatFileContent(give)
-	verifyStrings("formatContent with nested subtests", want, have)
+	assertEqual("formatContent with nested subtests", want, have)
 }
 
 func testFormatContentWithoutSubTests() {
@@ -245,10 +249,22 @@ func TestNewGiteaConnector(t *testing.T) {
 	give := "123"
 }`
 	have := formatFileContent(give)
-	verifyStrings("formatContent without subtests", want, have)
+	assertEqual("formatContent without subtests", want, have)
 }
 
-func verifyStrings(testName, want, have string) {
+func testIsGoTestFile() {
+	tests := map[string]bool{
+		"/one/two/three_test.go": true,
+		"/one/two/three.go":      false,
+		"/one/two_test/three.go": false,
+	}
+	for give, want := range tests {
+		have := isGoTestFile(give)
+		assertEqual("isGoTestFile", want, have)
+	}
+}
+
+func assertEqual[T comparable](testName string, want, have T) {
 	fmt.Print(".")
 	if have != want {
 		fmt.Printf("\nTEST FAILURE in %q\n", testName)
