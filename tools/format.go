@@ -14,7 +14,7 @@ Usage: format <command>
 
 Available commands:
    format  Formats the test files
-	 test    Runs the internal tests for this tool
+   test    Runs the internal tests for this tool
 `[1:])
 }
 
@@ -106,8 +106,9 @@ func runTests() {
 }
 
 func main() {
-	if len(os.Args) == 1 && len(os.Args) > 2 {
+	if len(os.Args) == 1 || len(os.Args) > 2 {
 		displayUsage()
+		return
 	}
 	if len(os.Args) == 2 && os.Args[1] == "format" {
 		formatFiles()
