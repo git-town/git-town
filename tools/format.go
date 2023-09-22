@@ -48,19 +48,19 @@ func isEmptyLine(line string) bool {
 
 func formatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
-	newContent := []string{}
+	newLines := []string{}
 	previousLineEmpty := false
 	for _, line := range lines {
 		if isTopLevelRunLine(line) && !previousLineEmpty {
-			newContent = append(newContent, "")
+			newLines = append(newLines, "")
 		}
-		newContent = append(newContent, line)
+		newLines = append(newLines, line)
 		previousLineEmpty = false
 		if isEmptyLine(line) {
 			previousLineEmpty = true
 		}
 	}
-	return strings.Join(newContent, "\n")
+	return strings.Join(newLines, "\n")
 }
 
 func formatFiles() {
