@@ -388,6 +388,7 @@ func TestBranchInfos(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 	})
+
 	t.Run("does not contain the removed element", func(t *testing.T) {
 		t.Parallel()
 		bs := domain.BranchInfos{

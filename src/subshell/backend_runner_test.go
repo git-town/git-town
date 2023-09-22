@@ -14,6 +14,7 @@ import (
 
 func TestBackendRunner(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Query", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
@@ -53,6 +54,7 @@ OUTPUT END
 			assert.Equal(t, expectedError, err.Error())
 		})
 	})
+
 	t.Run("QueryTrim", func(t *testing.T) {
 		t.Parallel()
 		t.Run("trims whitespace", func(t *testing.T) {

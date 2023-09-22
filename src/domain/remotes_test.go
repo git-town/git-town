@@ -9,6 +9,7 @@ import (
 
 func TestRemotes(t *testing.T) {
 	t.Parallel()
+
 	t.Run("HasOrigin", func(t *testing.T) {
 		t.Parallel()
 		t.Run("origin remote exists", func(t *testing.T) {
@@ -22,6 +23,7 @@ func TestRemotes(t *testing.T) {
 			assert.False(t, remotes.HasOrigin())
 		})
 	})
+
 	t.Run("HasUpstream", func(t *testing.T) {
 		t.Parallel()
 		t.Run("upstream remote exists", func(t *testing.T) {

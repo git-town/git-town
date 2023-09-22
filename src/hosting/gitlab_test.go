@@ -13,6 +13,7 @@ import (
 
 func TestNewGitlabConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
@@ -32,6 +33,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.GitLabConfig)
 	})
+
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
@@ -51,6 +53,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.GitLabConfig)
 	})
+
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
@@ -62,6 +65,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		assert.Nil(t, have)
 		assert.NoError(t, err)
 	})
+
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
@@ -78,6 +82,7 @@ func TestNewGitlabConnector(t *testing.T) {
 
 func TestGitlabConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		config := hosting.GitLabConfig{
@@ -98,6 +103,7 @@ func TestGitlabConnector(t *testing.T) {
 		have := config.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {

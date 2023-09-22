@@ -9,6 +9,7 @@ import (
 
 func TestGitConfigCache(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		alpha := config.Key{"alpha"}

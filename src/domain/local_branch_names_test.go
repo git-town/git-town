@@ -9,6 +9,7 @@ import (
 
 func TestLocalBranchNames(t *testing.T) {
 	t.Parallel()
+
 	t.Run("AtRemote", func(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch")
