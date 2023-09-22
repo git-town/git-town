@@ -11,6 +11,7 @@ import (
 
 func TestBranchName(t *testing.T) {
 	t.Parallel()
+
 	t.Run("NewBranchName and String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal branch name", func(t *testing.T) {

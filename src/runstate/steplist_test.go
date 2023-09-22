@@ -12,6 +12,7 @@ import (
 
 func TestStepList(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Append", func(t *testing.T) {
 		t.Parallel()
 		t.Run("append a single step", func(t *testing.T) {

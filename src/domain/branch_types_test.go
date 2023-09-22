@@ -9,6 +9,7 @@ import (
 
 func TestBranchTypes(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		bt := domain.BranchTypes{
@@ -20,6 +21,7 @@ func TestBranchTypes(t *testing.T) {
 		assert.False(t, bt.IsFeatureBranch(domain.NewLocalBranchName("peren1")))
 		assert.False(t, bt.IsFeatureBranch(domain.NewLocalBranchName("peren2")))
 	})
+
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
 		bt := domain.BranchTypes{
@@ -31,6 +33,7 @@ func TestBranchTypes(t *testing.T) {
 		assert.False(t, bt.IsMainBranch(domain.NewLocalBranchName("peren1")))
 		assert.False(t, bt.IsMainBranch(domain.NewLocalBranchName("peren2")))
 	})
+
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		bt := domain.BranchTypes{

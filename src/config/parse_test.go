@@ -9,6 +9,7 @@ import (
 
 func TestParseBool(t *testing.T) {
 	t.Parallel()
+
 	t.Run("yes/no", func(t *testing.T) {
 		t.Parallel()
 		verifyParseBool(t, map[string]bool{

@@ -11,6 +11,7 @@ import (
 
 func TestFixtureFactory(t *testing.T) {
 	t.Parallel()
+
 	t.Run("NewFixtureFactory", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
