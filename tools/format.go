@@ -24,6 +24,8 @@ func main() {
 
 func displayUsage() {
 	fmt.Println(`
+This tool formats Go unit tests to have an empty line before top-level subtests.
+
 Usage: format <command>
 
 Available commands:
