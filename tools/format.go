@@ -150,7 +150,13 @@ import (
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
-	t.Run("hosted service type provided manually", func(t *testing.T) {
+	t.Run("top-level test 1", func(t *testing.T) {
+		t.Parallel()
+		give := 123
+	})
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		give := 123
 	})
 }`
 	want := `
@@ -163,11 +169,89 @@ import (
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("hosted service type provided manually", func(t *testing.T) {
+	t.Run("top-level test 1", func(t *testing.T) {
+		t.Parallel()
+		give := 123
+	})
+
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		give := 123
 	})
 }`
 	have := formatContent(give)
-	verifyStrings("formatContent", want, have)
+	verifyStrings("formatContent with subtests", want, have)
+}
+
+func testFormatContentWithNestedSubtests() {
+	give := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	t.Run("top-level test 1", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 1a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 1b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 2a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 2b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+}`
+	want := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+
+	t.Run("top-level test 1", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 1a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 1b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 2a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 2b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+}`
+	have := formatContent(give)
+	verifyStrings("formatContent with nested subtests", want, have)
 }
 
 func testFormatContentWithoutSubTests() {
@@ -179,6 +263,7 @@ import (
 )
 
 func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
 	give := "123"
 }`
 	want := `
@@ -189,16 +274,17 @@ import (
 )
 
 func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
 	give := "123"
 }`
 	have := formatContent(give)
-	verifyStrings("formatContent", want, have)
+	verifyStrings("formatContent without subtests", want, have)
 }
 
-func verifyStrings(unit, want, have string) {
+func verifyStrings(testName, want, have string) {
 	fmt.Print(".")
 	if have != want {
-		fmt.Printf("\nTEST FAILURE for %q\n", unit)
+		fmt.Printf("\nTEST FAILURE in %q\n", testName)
 		fmt.Println("\n\nWANT")
 		fmt.Println("--------------------------------------------------------")
 		fmt.Println(want)
