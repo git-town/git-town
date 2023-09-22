@@ -89,6 +89,7 @@ func formatFiles() {
 // TESTS
 
 func runTests() {
+	testIsGoTestFile()
 	testIsTopLevelRunLine()
 	testFormatContentWithoutSubTests()
 	testFormatContentWithSubtests()
