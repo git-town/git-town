@@ -28,12 +28,11 @@ Feature: auto-push the new branch
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | new    | git push origin :new |
-      |        | git checkout main    |
-      | main   | git branch -D new    |
+      | BRANCH | COMMAND                                     |
+      | new    | git push origin :new                        |
+      |        | git checkout main                           |
+      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      |        | git branch -D new                           |
     And the current branch is now "main"
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | origin commit |
-    And no branch hierarchy exists now
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
