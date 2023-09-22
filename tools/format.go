@@ -102,12 +102,8 @@ func testIsTopLevelRunLine() {
 		"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
 	}
 	for give, want := range tests {
-		fmt.Print(".")
 		have := isTopLevelRunLine(give)
-		if have != want {
-			fmt.Printf("isTestLine(%s) want %t but have %t\n", give, want, have)
-			os.Exit(1)
-		}
+		assertEqual(want, have, "isTopLevelRunLine")
 	}
 }
 
