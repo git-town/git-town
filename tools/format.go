@@ -32,16 +32,12 @@ Available commands:
 `[1:])
 }
 
-func shouldIgnore(path string) bool {
+func shouldIgnorePath(path string) bool {
 	return path == "main_test.go"
 }
 
-func isTestLine(line string) bool {
-	return strings.HasPrefix(line, "func Test") && strings.HasSuffix(line, "(t *testing.T) {")
-}
-
-func isParallelLine(line string) bool {
-	return line == "\tt.Parallel()"
+func isTopLevelRunLine(line string) bool {
+	return strings.HasPrefix(line, "\tt.Run(\"") && strings.HasSuffix(line, ", func(t *testing.T) {")
 }
 
 func isEmptyLine(line string) bool {
@@ -51,35 +47,16 @@ func isEmptyLine(line string) bool {
 func formatContent(content string) string {
 	lines := strings.Split(content, "\n")
 	newContent := []string{}
-	foundTestLine := false
-	foundParallelLine := false
+	previousLineEmpty := false
 	for _, line := range lines {
-		if isTestLine(line) {
-			foundTestLine = true
-			newContent = append(newContent, line)
-			continue
-		}
-		if foundTestLine {
-			if !isParallelLine(line) {
-				// tests without a "t.Parallel()" line will not be formatted
-				return content
-			}
-			foundTestLine = false
-			foundParallelLine = true
-			newContent = append(newContent, line)
-			continue
-		}
-		if foundParallelLine {
-			foundParallelLine = false
-			if isEmptyLine(line) {
-				newContent = append(newContent, line)
-				continue
-			}
+		if isTopLevelRunLine(line) && !previousLineEmpty {
 			newContent = append(newContent, "")
-			newContent = append(newContent, line)
-			continue
 		}
 		newContent = append(newContent, line)
+		previousLineEmpty = false
+		if isEmptyLine(line) {
+			previousLineEmpty = true
+		}
 	}
 	return strings.Join(newContent, "\n")
 }
@@ -89,7 +66,7 @@ func formatFiles() {
 		if err != nil {
 			return err
 		}
-		if shouldIgnore(path) {
+		if shouldIgnorePath(path) {
 			return nil
 		}
 		if dirEntry.IsDir() {
@@ -118,21 +95,21 @@ func formatFiles() {
 // TESTS
 
 func runTests() {
-	testIsTestLine()
-	testFormatContentWithSubtests()
+	testIsTopLevelRunLine()
 	testFormatContentWithoutSubTests()
+	testFormatContentWithSubtests()
+	testFormatContentWithNestedSubtests()
 	fmt.Println()
 }
 
-func testIsTestLine() {
+func testIsTopLevelRunLine() {
 	tests := map[string]bool{
-		"func TestFoo(t *testing.T) {": true,
-		"func TestFoo":                 false,
-		"func Other(t *testing.T) {":   false,
+		"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
+		"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
 	}
 	for give, want := range tests {
 		fmt.Print(".")
-		have := isTestLine(give)
+		have := isTopLevelRunLine(give)
 		if have != want {
 			fmt.Printf("isTestLine(%s) want %t but have %t\n", give, want, have)
 			os.Exit(1)
