@@ -56,7 +56,9 @@ func formatFile(path string, perm os.FileMode) error {
 			}
 			newContent = append(newContent, "")
 			newContent = append(newContent, line)
+			continue
 		}
+		newContent = append(newContent, line)
 	}
 	err = os.WriteFile(path, []byte(strings.Join(newContent, "\n")), perm)
 	if err != nil {
