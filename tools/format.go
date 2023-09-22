@@ -62,14 +62,8 @@ func formatFileContent(content string) string {
 
 func formatFiles() {
 	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
-		if err != nil {
+		if err != nil || shouldIgnorePath(path) || dirEntry.IsDir() {
 			return err
-		}
-		if shouldIgnorePath(path) {
-			return nil
-		}
-		if dirEntry.IsDir() {
-			return nil
 		}
 		if !strings.HasSuffix(dirEntry.Name(), "_test.go") {
 			return nil
