@@ -119,7 +119,7 @@ func formatFiles() {
 
 func runTests() {
 	testIsTestLine()
-	testFormatContent()
+	testFormatContent_subtests()
 	fmt.Println()
 }
 
@@ -133,10 +133,47 @@ func testIsTestLine() {
 		fmt.Print(".")
 		have := isTestLine(give)
 		if have != want {
-			panic(fmt.Sprintf("isTestLine(%s) want %t but have %t", give, want, have))
+			fmt.Printf("isTestLine(%s) want %t but have %t\n", give, want, have)
+			os.Exit(1)
 		}
 	}
 }
 
-func testFormatContent() {
+func testFormatContent_subtests() {
+	give := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	t.Run("hosted service type provided manually", func(t *testing.T) {
+	})
+}`
+	have := formatContent(give)
+	want := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+
+	t.Run("hosted service type provided manually", func(t *testing.T) {
+	})
+}`
+	if have != want {
+		fmt.Println("\nTEST FAILURE for \"formatContent\"")
+		fmt.Println("\n\nWANT")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(want)
+		fmt.Println("\n\nHAVE")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(have)
+		os.Exit(1)
+	}
 }
