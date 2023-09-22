@@ -32,7 +32,7 @@ func formatFile(path string, perm os.FileMode) error {
 	newContent := []string{}
 	foundTestLine := false
 	foundParallelLine := false
-	for l, line := range strings.Split(string(content), "\n") {
+	for _, line := range strings.Split(string(content), "\n") {
 		if isTestLine(line) {
 			foundTestLine = true
 			newContent = append(newContent, line)
@@ -49,6 +49,7 @@ func formatFile(path string, perm os.FileMode) error {
 			continue
 		}
 		if foundParallelLine {
+			foundParallelLine = false
 			if isEmptyLine(line) {
 				newContent = append(newContent, line)
 				continue
