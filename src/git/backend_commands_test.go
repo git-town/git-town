@@ -168,16 +168,25 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("during rebase", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
+			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
+			runtime.CheckoutBranch(domain.NewLocalBranchName("branch1"))
 			runtime.CreateCommit(testgit.Commit{
-				Branch:      domain.NewLocalBranchName("main"),
-				FileName:    "file1",
-				FileContent: "content",
+				Branch:      domain.NewLocalBranchName("branch1"),
+				FileName:    "file",
+				FileContent: "content on branch1",
+				Message:     "Create file",
+			})
+			runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      domain.NewLocalBranchName("initial"),
+				FileName:    "file",
+				FileContent: "content on initial",
 				Message:     "Create file1",
 			})
-			testruntime.RebaseLastCommitInteractively()
+			runtime.RebaseAgainstBranch(domain.NewLocalBranchName("branch1"))
 			has, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.True(t, has)
+			assert.False(t, has)
 		})
 	})
 
