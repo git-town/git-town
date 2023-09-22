@@ -151,7 +151,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	})
 }`
 	have := formatFileContent(give)
-	assertEqual("formatContent with subtests", want, have)
+	assertEqual(want, have, "formatContent with subtests")
 }
 
 func testFormatContentWithNestedSubtests() {
@@ -222,7 +222,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	})
 }`
 	have := formatFileContent(give)
-	assertEqual("formatContent with nested subtests", want, have)
+	assertEqual(want, have, "formatContent with nested subtests")
 }
 
 func testFormatContentWithoutSubTests() {
@@ -249,7 +249,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	give := "123"
 }`
 	have := formatFileContent(give)
-	assertEqual("formatContent without subtests", want, have)
+	assertEqual(want, have, "formatContent without subtests")
 }
 
 func testIsGoTestFile() {
@@ -260,11 +260,11 @@ func testIsGoTestFile() {
 	}
 	for give, want := range tests {
 		have := isGoTestFile(give)
-		assertEqual("isGoTestFile", want, have)
+		assertEqual(want, have, "isGoTestFile")
 	}
 }
 
-func assertEqual[T comparable](testName string, want, have T) {
+func assertEqual[T comparable](want, have T, testName string) {
 	fmt.Print(".")
 	if have != want {
 		fmt.Printf("\nTEST FAILURE in %q\n", testName)
