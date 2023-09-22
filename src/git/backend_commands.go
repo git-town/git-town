@@ -364,7 +364,11 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.OpenChangesProblem, err)
 	}
-	return output != "", nil
+	return DoesStatusOutputContainOpenChanges(output), nil
+}
+
+func DoesStatusOutputContainOpenChanges(output string) bool {
+
 }
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.

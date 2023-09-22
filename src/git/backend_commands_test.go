@@ -150,14 +150,35 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("HasOpenChanges", func(t *testing.T) {
 		t.Parallel()
-		runtime := testruntime.Create(t)
-		has, err := runtime.Backend.HasOpenChanges()
-		assert.NoError(t, err)
-		assert.False(t, has)
-		runtime.CreateFile("foo", "bar")
-		has, err = runtime.Backend.HasOpenChanges()
-		assert.NoError(t, err)
-		assert.True(t, has)
+		t.Run("no open changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			has, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.False(t, has)
+		})
+		t.Run("has open changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("foo", "bar")
+			has, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.True(t, has)
+		})
+		t.Run("during rebase", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      domain.NewLocalBranchName("main"),
+				FileName:    "file1",
+				FileContent: "content",
+				Message:     "Create file1",
+			})
+			testruntime.RebaseLastCommitInteractively()
+			has, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.True(t, has)
+		})
 	})
 
 	t.Run("HasRebaseInProgress", func(t *testing.T) {
