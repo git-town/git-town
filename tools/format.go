@@ -12,17 +12,44 @@ func isTestLine(line string) bool {
 	return strings.HasPrefix(line, "func Test") && strings.HasSuffix(line, "(t *testing.T) {")
 }
 
+func isParallelLine(line string) bool {
+	return line == "\tt.Parallel()"
+}
+
+func isEmptyLine(line string) bool {
+	return line == ""
+}
+
 func formatFile(path string, perm os.FileMode) error {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 	newContent := []string{}
-	for _, line := range strings.Split(string(content), "\n") {
+	foundTestLine := false
+	foundParallelLine := false
+	foundEmptyLine := false
+	for l, line := range strings.Split(string(content), "\n") {
 		if isTestLine(line) {
+			foundTestLine = true
 			newContent = append(newContent, line)
+			continue
+		}
+		if foundTestLine {
+			if !isParallelLine(line) {
+				return fmt.Errorf("%s:%d: Test start not followed by call to t.Parallel()", path, l)
+			}
+			foundTestLine = false
+			foundParallelLine = true
+			newContent = append(newContent, line)
+			continue
+		}
+		if foundParallelLine {
+			if isEmptyLine(line) {
+				newContent = append(newContent, line)
+				continue
+			}
 			newContent = append(newContent, "")
-		} else {
 			newContent = append(newContent, line)
 		}
 	}
