@@ -119,8 +119,23 @@ func formatFiles() {
 
 func runTests() {
 	testIsTestLine()
-	testFormatContent_subtests()
+	testFormatContentWithSubtests()
+	testFormatContentWithoutSubTests()
 	fmt.Println()
+}
+
+func verifyStrings(unit, want, have string) {
+	fmt.Print(".")
+	if have != want {
+		fmt.Printf("\nTEST FAILURE for %q\n", unit)
+		fmt.Println("\n\nWANT")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(want)
+		fmt.Println("\n\nHAVE")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(have)
+		os.Exit(1)
+	}
 }
 
 func testIsTestLine() {
@@ -139,7 +154,7 @@ func testIsTestLine() {
 	}
 }
 
-func testFormatContent_subtests() {
+func testFormatContentWithSubtests() {
 	give := `
 package hosting_test
 
@@ -152,7 +167,6 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 	})
 }`
-	have := formatContent(give)
 	want := `
 package hosting_test
 
@@ -166,14 +180,31 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 	})
 }`
-	if have != want {
-		fmt.Println("\nTEST FAILURE for \"formatContent\"")
-		fmt.Println("\n\nWANT")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(want)
-		fmt.Println("\n\nHAVE")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(have)
-		os.Exit(1)
-	}
+	have := formatContent(give)
+	verifyStrings("formatContent", want, have)
+}
+
+func testFormatContentWithoutSubTests() {
+	give := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	give := "123"
+}`
+	want := `
+package hosting_test
+
+import (
+	"code.gitea.io/sdk/gitea"
+)
+
+func TestNewGiteaConnector(t *testing.T) {
+	give := "123"
+}`
+	have := formatContent(give)
+	verifyStrings("formatContent", want, have)
 }
