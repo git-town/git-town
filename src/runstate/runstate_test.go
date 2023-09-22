@@ -12,6 +12,7 @@ import (
 
 func TestRunState(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Marshal and Unmarshal", func(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{

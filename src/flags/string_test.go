@@ -10,6 +10,7 @@ import (
 
 func TestString(t *testing.T) {
 	t.Parallel()
+
 	t.Run("long version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}

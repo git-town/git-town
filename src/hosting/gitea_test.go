@@ -14,6 +14,7 @@ import (
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
@@ -31,6 +32,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
+
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
@@ -42,6 +44,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		assert.Nil(t, have)
 		assert.NoError(t, err)
 	})
+
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
@@ -58,6 +61,7 @@ func TestNewGiteaConnector(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
+
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		give := hosting.Proposal{ //nolint:exhaustruct
 			Number: 1,
@@ -68,6 +72,7 @@ func TestGitea(t *testing.T) {
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, have, want)
 	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
 			HostingService: config.HostingGitea,
@@ -80,6 +85,7 @@ func TestGitea(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, have, "https://gitea.com/git-town/docs/compare/parent...feature")
 	})
+
 	t.Run("RepositoryURL", func(t *testing.T) {
 		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
 			HostingService: config.HostingGitea,

@@ -10,6 +10,7 @@ import (
 
 func TestPrependPath(t *testing.T) {
 	t.Parallel()
+
 	t.Run("already contains the given path", func(t *testing.T) {
 		t.Parallel()
 		var give []string
