@@ -124,20 +124,6 @@ func runTests() {
 	fmt.Println()
 }
 
-func verifyStrings(unit, want, have string) {
-	fmt.Print(".")
-	if have != want {
-		fmt.Printf("\nTEST FAILURE for %q\n", unit)
-		fmt.Println("\n\nWANT")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(want)
-		fmt.Println("\n\nHAVE")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(have)
-		os.Exit(1)
-	}
-}
-
 func testIsTestLine() {
 	tests := map[string]bool{
 		"func TestFoo(t *testing.T) {": true,
@@ -207,4 +193,18 @@ func TestNewGiteaConnector(t *testing.T) {
 }`
 	have := formatContent(give)
 	verifyStrings("formatContent", want, have)
+}
+
+func verifyStrings(unit, want, have string) {
+	fmt.Print(".")
+	if have != want {
+		fmt.Printf("\nTEST FAILURE for %q\n", unit)
+		fmt.Println("\n\nWANT")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(want)
+		fmt.Println("\n\nHAVE")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(have)
+		os.Exit(1)
+	}
 }
