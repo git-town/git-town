@@ -46,7 +46,7 @@ func isEmptyLine(line string) bool {
 	return line == ""
 }
 
-func formatContent(content string) string {
+func formatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
 	newContent := []string{}
 	previousLineEmpty := false
@@ -82,7 +82,7 @@ func formatFiles() {
 		if err != nil {
 			return err
 		}
-		newContent := formatContent(string(content))
+		newContent := formatFileContent(string(content))
 		perm := dirEntry.Type().Perm()
 		return os.WriteFile(path, []byte(newContent), perm)
 	})
@@ -158,7 +158,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		give := 123
 	})
 }`
-	have := formatContent(give)
+	have := formatFileContent(give)
 	verifyStrings("formatContent with subtests", want, have)
 }
 
@@ -229,7 +229,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		})
 	})
 }`
-	have := formatContent(give)
+	have := formatFileContent(give)
 	verifyStrings("formatContent with nested subtests", want, have)
 }
 
@@ -256,7 +256,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
 	give := "123"
 }`
-	have := formatContent(give)
+	have := formatFileContent(give)
 	verifyStrings("formatContent without subtests", want, have)
 }
 
