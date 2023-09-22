@@ -75,8 +75,7 @@ func formatFiles() {
 			return err
 		}
 		newContent := formatFileContent(string(content))
-		perm := dirEntry.Type().Perm()
-		return os.WriteFile(path, []byte(newContent), perm)
+		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
 	})
 	fmt.Println()
 	if err != nil {
