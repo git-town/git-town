@@ -10,7 +10,7 @@ import (
 )
 
 // JSONStep is used to store a step in JSON.
-type JSONStep struct {
+type JSONStep struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
 	Step steps.Step
 }
 
@@ -24,13 +24,13 @@ func (j *JSONStep) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals the step from JSON.
 func (j *JSONStep) UnmarshalJSON(b []byte) error {
-	var mapping map[string]*json.RawMessage
+	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {
 		return err
 	}
 	var stepType string
-	err = json.Unmarshal(*mapping["type"], &stepType)
+	err = json.Unmarshal(mapping["type"], &stepType)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if j.Step == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
-	return json.Unmarshal(*mapping["data"], &j.Step)
+	return json.Unmarshal(mapping["data"], &j.Step)
 }
 
 func DetermineStep(stepType string) steps.Step {
