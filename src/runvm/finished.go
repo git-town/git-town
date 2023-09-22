@@ -20,7 +20,7 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoStepList = undoSteps
+	args.RunState.UndoStepList.AppendList(undoSteps)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
 		err := persistence.Delete(args.RootDir)
 		if err != nil {

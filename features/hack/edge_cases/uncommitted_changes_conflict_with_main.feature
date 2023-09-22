@@ -77,20 +77,22 @@ Feature: conflicts between uncommitted changes and the main branch
       | new    | local         | conflicting commit | conflicting_file | main content |
     And file "conflicting_file" still has content "resolved content"
 
-  @debug @this
   Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND               |
-      | new    | git checkout main     |
-      | main   | git branch -D new     |
-      |        | git checkout existing |
+      | BRANCH   | COMMAND               |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
+      |          | git stash pop         |
     And it prints the error:
       """
-      cannot check out branch "existing"
+      conflicts between your uncommmitted changes and the main branch
       """
-    And the current branch is now "main"
+    And the current branch is now "existing"
     And now the initial commits exist
+    And the initial branches and hierarchy exist
     And file "conflicting_file" still has content "resolved content"
