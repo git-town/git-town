@@ -8,6 +8,20 @@ import (
 	"strings"
 )
 
+func main() {
+	switch {
+	case len(os.Args) == 1 || len(os.Args) > 2:
+		displayUsage()
+	case len(os.Args) == 2 && os.Args[1] == "format":
+		formatFiles()
+	case len(os.Args) == 2 && os.Args[1] == "test":
+		runTests()
+	default:
+		fmt.Printf("Error: unknown argument: %s", os.Args[1])
+		os.Exit(1)
+	}
+}
+
 func displayUsage() {
 	fmt.Println(`
 Usage: format <command>
@@ -89,7 +103,6 @@ func formatFiles() {
 		if err != nil {
 			return err
 		}
-		dirEntry.Type().Perm()
 		newContent := formatContent(string(content))
 		perm := dirEntry.Type().Perm()
 		return os.WriteFile(path, []byte(newContent), perm)
@@ -101,21 +114,29 @@ func formatFiles() {
 	}
 }
 
+//////////////////////////
+// TESTS
+
 func runTests() {
-	fmt.Println("running tests")
+	testIsTestLine()
+	testFormatContent()
+	fmt.Println()
 }
 
-func main() {
-	if len(os.Args) == 1 || len(os.Args) > 2 {
-		displayUsage()
-		return
+func testIsTestLine() {
+	tests := map[string]bool{
+		"func TestFoo(t *testing.T) {": true,
+		"func TestFoo":                 false,
+		"func Other(t *testing.T) {":   false,
 	}
-	if len(os.Args) == 2 && os.Args[1] == "format" {
-		formatFiles()
-	} else if len(os.Args) == 2 && os.Args[1] == "test" {
-		runTests()
-	} else {
-		fmt.Printf("Error: unknown argument: %s", os.Args[1])
-		os.Exit(1)
+	for give, want := range tests {
+		fmt.Print(".")
+		have := isTestLine(give)
+		if have != want {
+			panic(fmt.Sprintf("isTestLine(%s) want %t but have %t", give, want, have))
+		}
 	}
+}
+
+func testFormatContent() {
 }
