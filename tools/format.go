@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+func shouldIgnore(path string) bool {
+	return path == "main_test.go"
+}
+
 func isTestLine(line string) bool {
 	return strings.HasPrefix(line, "func Test") && strings.HasSuffix(line, "(t *testing.T) {")
 }
@@ -28,7 +32,6 @@ func formatFile(path string, perm os.FileMode) error {
 	newContent := []string{}
 	foundTestLine := false
 	foundParallelLine := false
-	foundEmptyLine := false
 	for l, line := range strings.Split(string(content), "\n") {
 		if isTestLine(line) {
 			foundTestLine = true
@@ -65,6 +68,9 @@ func main() {
 	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
+		}
+		if shouldIgnore(path) {
+			return nil
 		}
 		if dirEntry.IsDir() {
 			return nil
