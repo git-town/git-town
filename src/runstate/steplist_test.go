@@ -1,6 +1,7 @@
 package runstate_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -66,6 +67,27 @@ func TestStepList(t *testing.T) {
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			assert.False(t, list.IsEmpty())
 		})
+	})
+
+	t.Run("MarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		list := runstate.StepList{List: []steps.Step{
+			&steps.AbortMergeStep{},
+			&steps.StashOpenChangesStep{},
+		}}
+		have, err := json.MarshalIndent(list, "", "  ")
+		assert.Nil(t, err)
+		// NOTE: Why does it not serialize the type names here?
+		// This somehow works when serializing a StepList as part of a larger containing structure like a RunState,
+		// but it doesn't work here for some reason.
+		want := `
+{
+  "List": [
+    {},
+    {}
+  ]
+}`[1:]
+		assert.Equal(t, want, string(have))
 	})
 
 	t.Run("Peek", func(t *testing.T) {
@@ -166,6 +188,35 @@ StepList:
 1: &steps.AbortMergeStep{EmptyStep:steps.EmptyStep{}}
 2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{id:"branch"}, EmptyStep:steps.EmptyStep{}}
 `[1:]
+		assert.Equal(t, want, have)
+	})
+
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		give := `
+[
+	{
+		"data": {
+			"Hard": false,
+			"SHA": "abcdef"
+		},
+		"type": "ResetCurrentBranchToSHAStep"
+	},
+	{
+		"data": {},
+		"type": "StashOpenChangesStep"
+	}
+]`[1:]
+		have := runstate.StepList{}
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
+		want := runstate.StepList{List: []steps.Step{
+			&steps.ResetCurrentBranchToSHAStep{
+				Hard: false,
+				SHA:  domain.NewSHA("abcdef"),
+			},
+			&steps.StashOpenChangesStep{},
+		}}
 		assert.Equal(t, want, have)
 	})
 }
