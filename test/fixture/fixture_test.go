@@ -14,6 +14,7 @@ import (
 
 func TestFixture(t *testing.T) {
 	t.Parallel()
+
 	t.Run("CloneFixture", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()

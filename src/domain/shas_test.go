@@ -9,6 +9,7 @@ import (
 
 func TestSHAs(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Join", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {

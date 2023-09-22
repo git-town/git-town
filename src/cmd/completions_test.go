@@ -9,6 +9,7 @@ import (
 
 func TestNewCompletionType(t *testing.T) {
 	t.Parallel()
+
 	t.Run("recognizes shells", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]cmd.CompletionType{

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/spf13/cobra"
 )
@@ -43,15 +44,12 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
+	config, err := determineContinueConfig(&repo)
 	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
+		return err
 	}
-	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.ContinueNothingToDo)
-	}
-	config, exit, err := determineContinueConfig(&repo)
-	if err != nil || exit {
+	runState, err := determineContinueRunstate(&repo)
+	if err != nil {
 		return err
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
@@ -63,9 +61,9 @@ func runContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	_, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -73,20 +71,20 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return nil, exit, err
+	if err != nil {
+		return nil, err
 	}
 	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	if hasConflicts {
-		return nil, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -102,10 +100,21 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, boo
 	return &continueConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, false, err
+	}, err
 }
 
 type continueConfig struct {
 	connector hosting.Connector
 	lineage   config.Lineage
+}
+
+func determineContinueRunstate(repo *execute.OpenRepoResult) (*runstate.RunState, error) {
+	runState, err := persistence.Load(repo.RootDir)
+	if err != nil {
+		return nil, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return nil, fmt.Errorf(messages.ContinueNothingToDo)
+	}
+	return runState, nil
 }

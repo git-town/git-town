@@ -9,6 +9,7 @@ import (
 
 func TestKey(t *testing.T) {
 	t.Parallel()
+
 	t.Run("ParseKey", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal config key", func(t *testing.T) {

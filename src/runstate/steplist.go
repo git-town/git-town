@@ -37,6 +37,15 @@ func (stepList *StepList) IsEmpty() bool {
 	return len(stepList.List) == 0
 }
 
+// MarshalJSON marshals the step list to JSON.
+func (stepList *StepList) MarshalJSON() ([]byte, error) {
+	jsonSteps := make([]JSONStep, len(stepList.List))
+	for s, step := range stepList.List {
+		jsonSteps[s] = JSONStep{Step: step}
+	}
+	return json.Marshal(jsonSteps)
+}
+
 // Peek provides the first element of this StepList.
 func (stepList *StepList) Peek() steps.Step {
 	if stepList.IsEmpty() {
@@ -76,6 +85,22 @@ func (stepList *StepList) String() string {
 	return result
 }
 
+// UnmarshalJSON unmarshals the step list from JSON.
+func (stepList *StepList) UnmarshalJSON(b []byte) error {
+	var jsonSteps []JSONStep
+	err := json.Unmarshal(b, &jsonSteps)
+	if err != nil {
+		return err
+	}
+	if len(jsonSteps) > 0 {
+		stepList.List = make([]steps.Step, len(jsonSteps))
+		for j, jsonStep := range jsonSteps {
+			stepList.List[j] = jsonStep.Step
+		}
+	}
+	return nil
+}
+
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	RunInGitRoot     bool
@@ -98,31 +123,6 @@ func (stepList *StepList) Wrap(options WrapOptions) error {
 	if options.StashOpenChanges {
 		stepList.Prepend(&steps.StashOpenChangesStep{})
 		stepList.Append(&steps.RestoreOpenChangesStep{})
-	}
-	return nil
-}
-
-// MarshalJSON marshals the step list to JSON.
-func (stepList *StepList) MarshalJSON() ([]byte, error) {
-	jsonSteps := make([]*JSONStep, len(stepList.List))
-	for s, step := range stepList.List {
-		jsonSteps[s] = &JSONStep{Step: step}
-	}
-	return json.Marshal(jsonSteps)
-}
-
-// UnmarshalJSON unmarshals the step list from JSON.
-func (stepList *StepList) UnmarshalJSON(b []byte) error {
-	var jsonSteps []JSONStep
-	err := json.Unmarshal(b, &jsonSteps)
-	if err != nil {
-		return err
-	}
-	if len(jsonSteps) > 0 {
-		stepList.List = make([]steps.Step, len(jsonSteps))
-		for j, jsonStep := range jsonSteps {
-			stepList.List[j] = jsonStep.Step
-		}
 	}
 	return nil
 }

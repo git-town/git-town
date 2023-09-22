@@ -15,6 +15,7 @@ import (
 
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
