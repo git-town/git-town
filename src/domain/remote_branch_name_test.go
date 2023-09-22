@@ -68,7 +68,8 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		give := `"origin/branch-1"`
 		have := domain.RemoteBranchName{}
-		json.Unmarshal([]byte(give), &have)
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
 		want := domain.NewRemoteBranchName("origin/branch-1")
 		assert.Equal(t, want, have)
 	})

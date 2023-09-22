@@ -73,7 +73,8 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`
 		have := domain.SHA{}
-		json.Unmarshal([]byte(give), &have)
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
 		want := domain.NewSHA("123456")
 		assert.Equal(t, want, have)
 	})

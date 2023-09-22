@@ -51,7 +51,8 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
 		have := domain.LocalBranchName{}
-		json.Unmarshal([]byte(give), &have)
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
 		want := domain.NewLocalBranchName("branch-1")
 		assert.Equal(t, want, have)
 	})

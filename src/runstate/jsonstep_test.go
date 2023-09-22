@@ -47,7 +47,8 @@ func TestJSONStep(t *testing.T) {
 				Branch: domain.LocalBranchName{},
 			},
 		}
-		json.Unmarshal([]byte(give), &have)
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
 		want := runstate.JSONStep{
 			Step: &steps.CheckoutStep{
 				Branch: domain.NewLocalBranchName("branch-1"),
