@@ -14,6 +14,7 @@ import (
 
 func TestNewGithubConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
@@ -51,6 +52,7 @@ func TestNewGithubConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
+
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
@@ -63,6 +65,7 @@ func TestNewGithubConnector(t *testing.T) {
 		assert.Nil(t, have)
 		assert.NoError(t, err)
 	})
+
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
@@ -80,6 +83,7 @@ func TestNewGithubConnector(t *testing.T) {
 
 func TestGithubConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		connector := hosting.GitHubConnector{} //nolint:exhaustruct
@@ -91,6 +95,7 @@ func TestGithubConnector(t *testing.T) {
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
@@ -130,6 +135,7 @@ func TestGithubConnector(t *testing.T) {
 			})
 		}
 	})
+
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := hosting.GitHubConnector{ //nolint:exhaustruct

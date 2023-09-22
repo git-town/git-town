@@ -25,14 +25,14 @@ func mainbranchConfigCmd() *cobra.Command {
 		Short: mainbranchDesc,
 		Long:  long(mainbranchDesc, mainbranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return configureMainBranch(args, readDebugFlag(cmd))
+			return runConfigMainBranch(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func configureMainBranch(args []string, debug bool) error {
+func runConfigMainBranch(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

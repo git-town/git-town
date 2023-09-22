@@ -12,6 +12,7 @@ import (
 
 func TestRunner(t *testing.T) {
 	t.Parallel()
+
 	t.Run("New", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()

@@ -9,6 +9,7 @@ import (
 
 func TestGitCommandsInGitTownOutput(t *testing.T) {
 	t.Parallel()
+
 	t.Run("single frontend line", func(t *testing.T) {
 		t.Parallel()
 		give := "\x1b[1m[mybranch] foo bar"
@@ -18,6 +19,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		have := output.GitCommandsInGitTownOutput(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("multiple frontend lines", func(t *testing.T) {
 		t.Parallel()
 		give := "\x1b[1m[branch1] command one\n\n\x1b[1m[branch2] command two\n\n"
@@ -28,6 +30,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		have := output.GitCommandsInGitTownOutput(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("frontend line without branch", func(t *testing.T) {
 		t.Parallel()
 		give := "\x1b[1mcommand one"
@@ -37,6 +40,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		have := output.GitCommandsInGitTownOutput(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("single debug line", func(t *testing.T) {
 		t.Parallel()
 		give := "(debug) foo bar"
@@ -46,6 +50,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		have := output.GitCommandsInGitTownOutput(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("multiple debug lines", func(t *testing.T) {
 		t.Parallel()
 		give := "(debug) command one\n\n(debug) command two\n\n"
@@ -56,6 +61,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		have := output.GitCommandsInGitTownOutput(give)
 		assert.Equal(t, want, have)
 	})
+
 	t.Run("line withouth a command", func(t *testing.T) {
 		t.Parallel()
 		give := "hello world"

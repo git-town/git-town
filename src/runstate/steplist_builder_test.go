@@ -11,6 +11,7 @@ import (
 
 func TestStepListBuilder(t *testing.T) {
 	t.Parallel()
+
 	t.Run("AppendE", func(t *testing.T) {
 		t.Parallel()
 		t.Run("without registered error", func(t *testing.T) {

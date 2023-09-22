@@ -9,6 +9,7 @@ import (
 
 func TestGitConfig(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		original := config.GitConfig{

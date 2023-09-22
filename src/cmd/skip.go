@@ -22,14 +22,14 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return skip(readDebugFlag(cmd))
+			return runSkip(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func skip(debug bool) error {
+func runSkip(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

@@ -25,14 +25,14 @@ func pruneBranchesCommand() *cobra.Command {
 		Short: pruneBranchesDesc,
 		Long:  long(pruneBranchesDesc, pruneBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return pruneBranches(readDebugFlag(cmd))
+			return runPruneBranches(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func pruneBranches(debug bool) error {
+func runPruneBranches(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

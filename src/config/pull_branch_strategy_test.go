@@ -9,6 +9,7 @@ import (
 
 func TestNewPullBranchStrategy(t *testing.T) {
 	t.Parallel()
+
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]config.PullBranchStrategy{

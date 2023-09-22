@@ -9,6 +9,7 @@ import (
 
 func TestOrderedSet(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		t.Run("element doesn't exist in set", func(t *testing.T) {

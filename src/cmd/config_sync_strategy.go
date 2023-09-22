@@ -24,7 +24,7 @@ func syncStrategyCommand() *cobra.Command {
 		Short: syncStrategyDesc,
 		Long:  long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return syncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return runConfigSyncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -32,7 +32,7 @@ func syncStrategyCommand() *cobra.Command {
 	return &cmd
 }
 
-func syncStrategy(args []string, global, debug bool) error {
+func runConfigSyncStrategy(args []string, global, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

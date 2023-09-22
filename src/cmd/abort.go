@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/spf13/cobra"
 )
@@ -26,14 +27,14 @@ func abortCmd() *cobra.Command {
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return abort(readDebugFlag(cmd))
+			return runAbort(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func abort(debug bool) error {
+func runAbort(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
@@ -44,23 +45,16 @@ func abort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.AbortNothingToDo)
-	}
 	config, err := determineAbortConfig(&repo.Runner)
 	if err != nil {
 		return err
 	}
-	abortRunState := runState.CreateAbortRunState()
+	abortRunState, err := determineAbortRunstate(&repo)
 	if err != nil {
 		return err
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &abortRunState,
+		RunState:  abortRunState,
 		Run:       &repo.Runner,
 		Connector: config.connector,
 		Lineage:   config.lineage,
@@ -95,4 +89,16 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 type abortConfig struct {
 	connector hosting.Connector
 	lineage   config.Lineage
+}
+
+func determineAbortRunstate(repo *execute.OpenRepoResult) (*runstate.RunState, error) {
+	runState, err := persistence.Load(repo.RootDir)
+	if err != nil {
+		return nil, fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return nil, fmt.Errorf(messages.AbortNothingToDo)
+	}
+	abortRunState := runState.CreateAbortRunState()
+	return &abortRunState, nil
 }

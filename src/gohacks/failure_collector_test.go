@@ -12,6 +12,7 @@ import (
 
 func TestCollector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Bool", func(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
 			t.Parallel()

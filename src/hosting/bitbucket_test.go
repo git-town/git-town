@@ -11,6 +11,7 @@ import (
 
 func TestNewBitbucketConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Bitbucket SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
@@ -27,6 +28,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
+
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
@@ -43,6 +45,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		}
 		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
+
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
@@ -53,6 +56,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 		assert.Nil(t, have)
 		assert.NoError(t, err)
 	})
+
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
