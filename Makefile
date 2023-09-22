@@ -35,6 +35,7 @@ docs: build tools/node_modules  # tests the documentation
 
 fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
+	go run tools/format.go format
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
@@ -84,6 +85,7 @@ test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VER
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory unit &
 	make --no-print-directory build &
+	go run tools/format.go test &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 
 todo:  # displays all TODO items
