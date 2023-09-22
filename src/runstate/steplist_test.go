@@ -198,7 +198,8 @@ StepList:
 	{
 		"data": {
 			"Hard": false,
-			"SHA": "abcdef"
+			"MustHaveSHA": "abcdef",
+			"SetToSHA": "123456"
 		},
 		"type": "ResetCurrentBranchToSHAStep"
 	},
@@ -212,8 +213,9 @@ StepList:
 		assert.Nil(t, err)
 		want := runstate.StepList{List: []steps.Step{
 			&steps.ResetCurrentBranchToSHAStep{
-				Hard: false,
-				SHA:  domain.NewSHA("abcdef"),
+				Hard:        false,
+				MustHaveSHA: domain.NewSHA("abcdef"),
+				SetToSHA:    domain.NewSHA("123456"),
 			},
 			&steps.StashOpenChangesStep{},
 		}}
