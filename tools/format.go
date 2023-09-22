@@ -8,6 +8,16 @@ import (
 	"strings"
 )
 
+func displayUsage() {
+	fmt.Println(`
+Usage: format <command>
+
+Available commands:
+   format  Formats the test files
+	 test    Runs the internal tests for this tool
+`[1:])
+}
+
 func shouldIgnore(path string) bool {
 	return path == "main_test.go"
 }
@@ -24,15 +34,12 @@ func isEmptyLine(line string) bool {
 	return line == ""
 }
 
-func formatFile(path string, perm os.FileMode) error {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
+func formatContent(content string) string {
+	lines := strings.Split(content, "\n")
 	newContent := []string{}
 	foundTestLine := false
 	foundParallelLine := false
-	for _, line := range strings.Split(string(content), "\n") {
+	for _, line := range lines {
 		if isTestLine(line) {
 			foundTestLine = true
 			newContent = append(newContent, line)
@@ -41,7 +48,7 @@ func formatFile(path string, perm os.FileMode) error {
 		if foundTestLine {
 			if !isParallelLine(line) {
 				// tests without a "t.Parallel()" line will not be formatted
-				return nil
+				return content
 			}
 			foundTestLine = false
 			foundParallelLine = true
@@ -60,15 +67,10 @@ func formatFile(path string, perm os.FileMode) error {
 		}
 		newContent = append(newContent, line)
 	}
-	err = os.WriteFile(path, []byte(strings.Join(newContent, "\n")), perm)
-	if err != nil {
-		return err
-	}
-	fmt.Print(".")
-	return nil
+	return strings.Join(newContent, "\n")
 }
 
-func main() {
+func formatFiles() {
 	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -82,11 +84,37 @@ func main() {
 		if !strings.HasSuffix(dirEntry.Name(), "_test.go") {
 			return nil
 		}
-		return formatFile(path, dirEntry.Type().Perm())
+		fmt.Print(".")
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		dirEntry.Type().Perm()
+		newContent := formatContent(string(content))
+		perm := dirEntry.Type().Perm()
+		return os.WriteFile(path, []byte(newContent), perm)
 	})
 	fmt.Println()
 	if err != nil {
 		fmt.Printf("ERROR: %s\n", err)
+		os.Exit(1)
+	}
+}
+
+func runTests() {
+	fmt.Println("running tests")
+}
+
+func main() {
+	if len(os.Args) == 1 && len(os.Args) > 2 {
+		displayUsage()
+	}
+	if len(os.Args) == 2 && os.Args[1] == "format" {
+		formatFiles()
+	} else if len(os.Args) == 2 && os.Args[1] == "test" {
+		runTests()
+	} else {
+		fmt.Printf("Error: unknown argument: %s", os.Args[1])
 		os.Exit(1)
 	}
 }
