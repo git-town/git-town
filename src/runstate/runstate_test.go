@@ -17,13 +17,31 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			Command: "sync",
 			AbortStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
 			RunStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
 			UndoStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
@@ -34,7 +52,8 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
@@ -46,7 +65,8 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
@@ -55,7 +75,8 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
