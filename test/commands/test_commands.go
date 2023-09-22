@@ -288,7 +288,7 @@ func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote 
 	r.MustRun("git", "push", "-u", remote.String(), branch.String())
 }
 
-// TODO: rename r to t
+// TODO: rename r to t.
 func (r *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
 	return r.Run("git", "rebase", branch.String())
 }
