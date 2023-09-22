@@ -1,6 +1,7 @@
 package domain_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -51,6 +52,15 @@ func TestBranchName(t *testing.T) {
 		})
 	})
 
+	t.Run("MarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		branch := domain.NewBranchName("branch-1")
+		have, err := json.MarshalIndent(branch, "", "  ")
+		assert.Nil(t, err)
+		want := `"branch-1"`
+		assert.Equal(t, want, string(have))
+	})
+
 	t.Run("RemoteName", func(t *testing.T) {
 		t.Run("local branch name", func(t *testing.T) {
 			t.Parallel()
@@ -64,5 +74,15 @@ func TestBranchName(t *testing.T) {
 			want := domain.NewRemoteBranchName("origin/branch-1")
 			assert.Equal(t, want, branch.RemoteName())
 		})
+	})
+
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		give := `"branch-1"`
+		have := domain.BranchName{}
+		err := json.Unmarshal([]byte(give), &have)
+		assert.Nil(t, err)
+		want := domain.NewBranchName("branch-1")
+		assert.Equal(t, want, have)
 	})
 }

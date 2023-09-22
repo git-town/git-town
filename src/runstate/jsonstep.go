@@ -10,7 +10,7 @@ import (
 )
 
 // JSONStep is used to store a step in JSON.
-type JSONStep struct {
+type JSONStep struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
 	Step steps.Step
 }
 
