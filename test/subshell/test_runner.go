@@ -148,9 +148,9 @@ func (r *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) st
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) MustRun(name string, arguments ...string) {
-	err := r.Run(name, arguments...)
+	output, err := r.Query(name, arguments...)
 	if err != nil {
-		panic(fmt.Sprintf("Error executing \"%s %v\": %v", name, arguments, err))
+		panic(fmt.Sprintf("Error executing \"%s %v\": %v\n%s", name, arguments, err, output))
 	}
 }
 

@@ -45,6 +45,7 @@ func (r BackendRunner) execute(executable string, args ...string) ([]byte, error
 	if r.Dir != nil {
 		subProcess.Dir = *r.Dir
 	}
+	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 	outputBytes, err := subProcess.CombinedOutput()
 	if err != nil {
 		err = ErrorDetails(executable, args, err, outputBytes)
