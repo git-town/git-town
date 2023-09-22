@@ -55,10 +55,7 @@ func formatFileContent(content string) string {
 			newLines = append(newLines, "")
 		}
 		newLines = append(newLines, line)
-		previousLineEmpty = false
-		if isEmptyLine(line) {
-			previousLineEmpty = true
-		}
+		previousLineEmpty = isEmptyLine(line)
 	}
 	return strings.Join(newLines, "\n")
 }
