@@ -289,8 +289,8 @@ func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote 
 }
 
 // TODO: rename r to t
-func (r *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) {
-	r.Run("git", "rebase", branch.String())
+func (r *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
+	return r.Run("git", "rebase", branch.String())
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.

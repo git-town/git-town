@@ -183,7 +183,7 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "content on initial",
 				Message:     "Create file1",
 			})
-			runtime.RebaseAgainstBranch(domain.NewLocalBranchName("branch1"))
+			_ = runtime.RebaseAgainstBranch(domain.NewLocalBranchName("branch1")) // this is expected to fail here
 			has, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
 			assert.False(t, has)
