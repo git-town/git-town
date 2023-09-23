@@ -1,7 +1,6 @@
 package undo
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
@@ -44,12 +43,12 @@ func EmptyBranchChanges() BranchChanges {
 }
 
 func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
-	fmt.Println("111111111111111111111111")
-	fmt.Println(c)
 	result := runstate.StepList{}
 	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
+	// TODO: Iterate these maps in alphabetical order to fix flaky tests.
+	//       To do this, get the keys, sort them, and iterate the keys.
 	for branch, change := range omniChangedPerennials {
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Append(&steps.CheckoutStep{Branch: branch})
@@ -92,9 +91,11 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 
 	// remove remotely added branches
 	for _, addedRemoteBranch := range c.RemoteAdded {
-		result.Append(&steps.DeleteTrackingBranchStep{
-			Branch: addedRemoteBranch.LocalBranchName(),
-		})
+		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
+			result.Append(&steps.DeleteTrackingBranchStep{
+				Branch: addedRemoteBranch.LocalBranchName(),
+			})
+		}
 	}
 
 	// re-create remotely removed feature branches

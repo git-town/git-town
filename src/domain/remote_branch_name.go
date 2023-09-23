@@ -58,6 +58,11 @@ func (r RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
 }
 
+func (r RemoteBranchName) Remote() Remote {
+	remote, _ := r.Parts()
+	return remote
+}
+
 // Implementation of the fmt.Stringer interface.
 func (r RemoteBranchName) String() string { return r.id }
 

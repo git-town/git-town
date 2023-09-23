@@ -1598,7 +1598,9 @@ func TestChanges(t *testing.T) {
 				// No changes should happen here since all changes were syncs on perennial branches.
 				// We don't want to undo these commits because that would undo commits
 				// already committed to perennial branches by others for everybody on the team.
-				List: []steps.Step{},
+				List: []steps.Step{
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
 		})
