@@ -15,16 +15,16 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status                                        |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status                                        |
       |         | backend  | git remote get-url origin                         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status                                        |
       | feature | frontend | git checkout main                                 |
       |         | backend  | git rev-parse --short HEAD                        |
       | main    | frontend | git rebase origin/main                            |
