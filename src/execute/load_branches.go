@@ -1,8 +1,6 @@
 package execute
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
@@ -62,8 +60,6 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, undo.BranchesSnapshot
 			return domain.EmptyBranches(), undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 		}
 	}
-	fmt.Println("333333333333333333333")
-	fmt.Printf("%#v\n", allBranches)
 	if initialBranch.IsEmpty() {
 		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
 		if err != nil {

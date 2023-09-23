@@ -1525,5 +1525,82 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantSteps, haveSteps)
 		})
+
+		t.Run("sync with a new upstream remote", func(t *testing.T) {
+			t.Parallel()
+			branchTypes := domain.BranchTypes{
+				MainBranch:        domain.NewLocalBranchName("main"),
+				PerennialBranches: domain.NewLocalBranchNames(),
+			}
+			lineage := config.Lineage{
+				domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
+			}
+			before := undo.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("main"),
+						LocalSHA:   domain.NewSHA("111111"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/main"),
+						RemoteSHA:  domain.NewSHA("111111"),
+					},
+				},
+				Active: domain.NewLocalBranchName("main"),
+			}
+			after := undo.BranchesSnapshot{
+				Branches: domain.BranchInfos{
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("main"),
+						LocalSHA:   domain.NewSHA("222222"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/main"),
+						RemoteSHA:  domain.NewSHA("222222"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.LocalBranchName{},
+						LocalSHA:   domain.SHA{},
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("upstream/main"),
+						RemoteSHA:  domain.NewSHA("222222"),
+					},
+				},
+				Active: domain.NewLocalBranchName("feature-branch"),
+			}
+			span := before.Span(after)
+			haveChanges := span.Changes()
+			wantChanges := undo.BranchChanges{
+				LocalAdded:   domain.LocalBranchNames{},
+				LocalRemoved: map[domain.LocalBranchName]domain.SHA{}, // TODO: replace with domain.LocalBranchesSHAs everywhere
+				LocalChanged: domain.LocalBranchChange{},
+				RemoteAdded: []domain.RemoteBranchName{ // TODO: replace with domain.RemoteBranchNames everywhere
+					domain.NewRemoteBranchName("upstream/main"),
+				},
+				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{}, // TODO: replace with domain.RemoteBranchesSHAs everywhere
+				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+				OmniRemoved:   domain.LocalBranchesSHAs{},
+				OmniChanged: domain.LocalBranchChange{
+					domain.NewLocalBranchName("main"): {
+						Before: domain.NewSHA("111111"),
+						After:  domain.NewSHA("222222"),
+					},
+				},
+				InconsistentlyChanged: domain.InconsistentChanges{},
+			}
+			assert.Equal(t, wantChanges, haveChanges)
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
+			})
+			wantSteps := runstate.StepList{
+				// No changes should happen here since all changes were syncs on perennial branches.
+				// We don't want to undo these commits because that would undo commits
+				// already committed to perennial branches by others for everybody on the team.
+				List: []steps.Step{},
+			}
+			assert.Equal(t, wantSteps, haveSteps)
+		})
 	})
 }

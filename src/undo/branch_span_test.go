@@ -603,6 +603,7 @@ func TestBranchSpan(t *testing.T) {
 			}
 			assert.True(t, bs.RemoteRemoved())
 		})
+
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
@@ -619,6 +620,27 @@ func TestBranchSpan(t *testing.T) {
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("222222"),
+				},
+			}
+			assert.False(t, bs.RemoteRemoved())
+		})
+
+		t.Run("upstream branch", func(t *testing.T) {
+			t.Parallel()
+			bs := undo.BranchSpan{
+				Before: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.NewRemoteBranchName("upstream/main"),
+					RemoteSHA:  domain.NewSHA("111111"),
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusRemoteOnly,
+					RemoteName: domain.NewRemoteBranchName("upstream/main"),
+					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
 			assert.False(t, bs.RemoteRemoved())
