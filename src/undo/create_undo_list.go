@@ -13,7 +13,7 @@ import (
 )
 
 func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
-	// TODO: provide a StepListBuilder here instead of creating so many separate StepLists and cut down on the redundant error checking.
+	// TODO: use a StepListBuilder here instead of creating so many separate StepLists and cut down on the redundant error checking.
 	undoConfigSteps, err := determineUndoConfigSteps(args.InitialConfigSnapshot, &args.Run.Backend)
 	if err != nil {
 		return runstate.StepList{}, err
