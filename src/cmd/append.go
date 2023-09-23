@@ -63,9 +63,8 @@ func runAppend(arg string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "append",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "append",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

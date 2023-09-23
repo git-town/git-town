@@ -66,9 +66,8 @@ func runPrepend(args []string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "prepend",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "prepend",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

@@ -53,9 +53,8 @@ func runPruneBranches(debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "prune-branches",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "prune-branches",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

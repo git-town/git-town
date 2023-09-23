@@ -15,13 +15,13 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	Command                  string                     `json:"Command"`
-	IsAbort                  bool                       `exhaustruct:"optional"          json:"IsAbort"`
-	IsUndo                   bool                       `exhaustruct:"optional"          json:"IsUndo"`
-	AbortStepList            StepList                   `exhaustruct:"optional"          json:"AbortStepList"`
+	IsAbort                  bool                       `exhaustruct:"optional" json:"IsAbort"`
+	IsUndo                   bool                       `exhaustruct:"optional" json:"IsUndo"`
+	AbortStepList            StepList                   `exhaustruct:"optional" json:"AbortStepList"`
 	RunStepList              StepList                   `json:"RunStepList"`
-	UndoStepList             StepList                   `exhaustruct:"optional"          json:"UndoStepList"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"          json:"UnfinishedDetails"`
-	UndoablePerennialCommits []domain.SHA               `json:"UndoablePerennialCommits"`
+	UndoStepList             StepList                   `exhaustruct:"optional" json:"UndoStepList"`
+	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional" json:"UnfinishedDetails"`
+	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional" json:"UndoablePerennialCommits"`
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -57,10 +57,9 @@ func (runState *RunState) CreateAbortRunState() RunState {
 	stepList := runState.AbortStepList
 	stepList.AppendList(runState.UndoStepList)
 	return RunState{
-		Command:                  runState.Command,
-		IsAbort:                  true,
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     runState.Command,
+		IsAbort:     true,
+		RunStepList: stepList,
 	}
 }
 
@@ -68,9 +67,8 @@ func (runState *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (runState *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:                  runState.Command,
-		RunStepList:              runState.AbortStepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     runState.Command,
+		RunStepList: runState.AbortStepList,
 	}
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutStep(step) {

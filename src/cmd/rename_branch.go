@@ -72,9 +72,8 @@ func runRenameBranch(args []string, force, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "rename-branch",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "rename-branch",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

@@ -74,9 +74,8 @@ func runSync(all, dryRun, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "sync",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "sync",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

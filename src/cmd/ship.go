@@ -97,9 +97,8 @@ func runShip(args []string, message string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "ship",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "ship",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

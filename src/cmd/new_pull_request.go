@@ -74,9 +74,8 @@ func runNewPullRequest(debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "new-pull-request",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "new-pull-request",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

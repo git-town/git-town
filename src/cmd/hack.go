@@ -67,9 +67,8 @@ func runHack(args []string, promptForParent, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:                  "hack",
-		RunStepList:              stepList,
-		UndoablePerennialCommits: []domain.SHA{},
+		Command:     "hack",
+		RunStepList: stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
