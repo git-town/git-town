@@ -26,10 +26,9 @@ Feature: delete a local branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
-      | main   | git branch local {{ sha 'WIP on local' }} |
+      | main   | git branch local {{ sha 'local commit' }} |
       |        | git checkout local                        |
-      | local  | git reset {{ sha 'local commit' }}        |
     And the current branch is now "local"
-    And the uncommitted file still exists
+    And no uncommitted files exist
     And now the initial commits exist
     And the initial branches and hierarchy exist
