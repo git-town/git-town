@@ -359,12 +359,16 @@ func (bc *BackendCommands) HasMergeInProgress() bool {
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
+// TODO: merge this with HasRebaseInProgress and return two bools.
 func (bc *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := bc.QueryTrim("git", "status", "--porcelain", "--ignore-submodules")
+	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
 		return false, fmt.Errorf(messages.OpenChangesProblem, err)
 	}
-	if output == "" {
+	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
+		return false, nil
+	}
+	if outputIndicatesRebaseInProgress(output) {
 		return false, nil
 	}
 	for _, line := range strings.Split(output, "\n") {
@@ -381,13 +385,11 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.RebaseProblem, err)
 	}
-	if strings.Contains(output, "You are currently rebasing") {
-		return true, nil
-	}
-	if strings.Contains(output, "rebase in progress") {
-		return true, nil
-	}
-	return false, nil
+	return outputIndicatesRebaseInProgress(output), nil
+}
+
+func outputIndicatesRebaseInProgress(output string) bool {
+	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
 }
 
 // HasShippableChanges indicates whether the given branch has changes

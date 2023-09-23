@@ -168,25 +168,43 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("during rebase", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
-			runtime.CheckoutBranch(domain.NewLocalBranchName("branch1"))
+			branch1 := domain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch1, initial)
+			runtime.CheckoutBranch(branch1)
 			runtime.CreateCommit(testgit.Commit{
-				Branch:      domain.NewLocalBranchName("branch1"),
+				Branch:      branch1,
 				FileName:    "file",
 				FileContent: "content on branch1",
-				Message:     "Create file",
+				// TODO: make Message optional and remove it from here since it doesn't matter here
+				Message: "Create file",
 			})
-			runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
+			runtime.CheckoutBranch(initial)
 			runtime.CreateCommit(testgit.Commit{
-				Branch:      domain.NewLocalBranchName("initial"),
+				Branch:      initial,
 				FileName:    "file",
 				FileContent: "content on initial",
 				Message:     "Create file1",
 			})
-			_ = runtime.RebaseAgainstBranch(domain.NewLocalBranchName("branch1")) // this is expected to fail here
+			_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail here
 			has, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
 			assert.False(t, has)
+		})
+		t.Run("unstashed conflicting changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("file", "stashed content")
+			runtime.StashOpenFiles()
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileName:    "file",
+				FileContent: "committed content",
+				Message:     "Create file",
+			})
+			_ = runtime.UnstashOpenFiles() // we expect an error here
+			has, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.True(t, has)
 		})
 	})
 

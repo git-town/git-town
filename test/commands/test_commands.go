@@ -359,3 +359,7 @@ func (r *TestCommands) UncommittedFiles() []string {
 	}
 	return result
 }
+
+func (r *TestCommands) UnstashOpenFiles() error {
+	return r.Run("git", "stash", "pop")
+}
