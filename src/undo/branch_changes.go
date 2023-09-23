@@ -184,5 +184,4 @@ func (c BranchChanges) String() string {
 	s.WriteString(strings.Join(c.InconsistentlyChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n")
 	return s.String()
-
 }
