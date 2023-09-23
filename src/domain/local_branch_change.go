@@ -15,6 +15,14 @@ func (lbc LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerenni
 	return changedPerennials, changedFeatures
 }
 
+func (lbc LocalBranchChange) BranchNames() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(lbc))
+	for branch := range lbc {
+		result = append(result, branch)
+	}
+	return result
+}
+
 type Change[T any] struct {
 	Before T
 	After  T

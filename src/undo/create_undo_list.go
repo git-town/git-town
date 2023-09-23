@@ -2,6 +2,7 @@ package undo
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v9/src/config"
@@ -62,7 +63,9 @@ func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoab
 	}
 	branchSpans := initialBranchesSnapshot.Span(finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
-	return branchChanges.Steps(StepsArgs{
+	fmt.Println("22222222222222222222222222222")
+	fmt.Println(branchChanges)
+	return branchChanges.UndoSteps(StepsArgs{
 		Lineage:                  runner.Config.Lineage(),
 		BranchTypes:              runner.Config.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,

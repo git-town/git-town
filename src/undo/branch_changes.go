@@ -1,6 +1,9 @@
 package undo
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -10,12 +13,12 @@ import (
 
 type BranchChanges struct {
 	LocalAdded    domain.LocalBranchNames
-	LocalRemoved  map[domain.LocalBranchName]domain.SHA
+	LocalRemoved  domain.LocalBranchesSHAs
 	LocalChanged  domain.LocalBranchChange
-	RemoteAdded   []domain.RemoteBranchName
+	RemoteAdded   domain.RemoteBranchNames
 	RemoteRemoved domain.RemoteBranchesSHAs
 	RemoteChanged domain.RemoteBranchChange
-	OmniRemoved   map[domain.LocalBranchName]domain.SHA
+	OmniRemoved   domain.LocalBranchesSHAs
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
 	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
 	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
@@ -43,7 +46,9 @@ func EmptyBranchChanges() BranchChanges {
 	}
 }
 
-func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
+func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
+	fmt.Println("111111111111111111111111")
+	fmt.Println(c)
 	result := runstate.StepList{}
 	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
 
@@ -154,4 +159,30 @@ type StepsArgs struct {
 	InitialBranch            domain.LocalBranchName
 	FinalBranch              domain.LocalBranchName
 	UndoablePerennialCommits []domain.SHA
+}
+
+func (c BranchChanges) String() string {
+	s := strings.Builder{}
+	s.WriteString("BranchChanges {")
+	s.WriteString("\n  LocalAdded: ")
+	s.WriteString(strings.Join(c.LocalAdded.Strings(), ", "))
+	s.WriteString("\n  LocalRemoved: ")
+	s.WriteString(strings.Join(c.LocalRemoved.BranchNames().Strings(), ", "))
+	s.WriteString("\n  LocalChanged: ")
+	s.WriteString(strings.Join(c.LocalChanged.BranchNames().Strings(), ", "))
+	s.WriteString("\n  RemoteAdded: ")
+	s.WriteString(strings.Join(c.RemoteAdded.Strings(), ", "))
+	s.WriteString("\n  RemoteRemoved: ")
+	s.WriteString(strings.Join(c.RemoteRemoved.BranchNames().Strings(), ", "))
+	s.WriteString("\n  RemoteChanged: ")
+	s.WriteString(strings.Join(c.RemoteChanged.BranchNames().Strings(), ", "))
+	s.WriteString("\n  OmniRemoved: ")
+	s.WriteString(strings.Join(c.OmniRemoved.BranchNames().Strings(), ", "))
+	s.WriteString("\n  OmniChanged: ")
+	s.WriteString(strings.Join(c.OmniChanged.BranchNames().Strings(), ", "))
+	s.WriteString("\n  InconsistentlyChanged: ")
+	s.WriteString(strings.Join(c.InconsistentlyChanged.BranchNames().Strings(), ", "))
+	s.WriteString("\n")
+	return s.String()
+
 }

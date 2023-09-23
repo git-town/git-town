@@ -74,7 +74,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -134,7 +134,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -224,7 +224,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -315,7 +315,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -450,7 +450,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -608,7 +608,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -710,7 +710,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -807,7 +807,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -917,7 +917,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
 				InitialBranch: before.Active,
@@ -1018,7 +1018,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
 				InitialBranch: before.Active,
@@ -1137,7 +1137,7 @@ func TestChanges(t *testing.T) {
 				},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -1234,7 +1234,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -1332,7 +1332,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -1417,7 +1417,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
@@ -1504,7 +1504,7 @@ func TestChanges(t *testing.T) {
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
 			assert.Equal(t, wantChanges, haveChanges)
-			haveSteps := haveChanges.Steps(undo.StepsArgs{
+			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,

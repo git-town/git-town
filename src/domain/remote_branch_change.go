@@ -14,3 +14,11 @@ func (rbc RemoteBranchChange) Categorize(branchTypes BranchTypes) (perennialChan
 	}
 	return
 }
+
+func (rbc RemoteBranchChange) BranchNames() RemoteBranchNames {
+	result := make(RemoteBranchNames, 0, len(rbc))
+	for branch := range rbc {
+		result = append(result, branch)
+	}
+	return result
+}

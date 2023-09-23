@@ -2,6 +2,14 @@ package domain
 
 type InconsistentChanges []InconsistentChange
 
+func (ic InconsistentChanges) BranchNames() LocalBranchNames {
+	result := make(LocalBranchNames, len(ic))
+	for i, change := range ic {
+		result[i] = change.Before.LocalName
+	}
+	return result
+}
+
 // InconsistentChange describes a change where both local and remote branch exist before and after,
 // but it's not an OmniChange, i.e. the SHA are different.
 type InconsistentChange struct {
