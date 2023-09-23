@@ -11,6 +11,10 @@ func (bs BranchSpans) Changes() BranchChanges {
 		if ba.NoChanges() {
 			continue
 		}
+		if ba.IsOmniRemove() {
+			result.OmniRemoved[ba.Before.LocalName] = ba.Before.LocalSHA
+			continue
+		}
 		if ba.IsOmniChange() {
 			result.OmniChanged[ba.Before.LocalName] = domain.Change[domain.SHA]{
 				Before: ba.Before.LocalSHA,

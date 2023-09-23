@@ -14,6 +14,10 @@ func (b BranchSpan) IsOmniChange() bool {
 	return b.Before.IsOmniBranch() && b.After.IsOmniBranch() && b.LocalChanged()
 }
 
+func (b BranchSpan) IsOmniRemove() bool {
+	return b.Before.IsOmniBranch() && b.After.IsEmpty()
+}
+
 func (b BranchSpan) IsInconsintentChange() bool {
 	return !b.Before.LocalSHA.IsEmpty() &&
 		!b.Before.RemoteSHA.IsEmpty() &&

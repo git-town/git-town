@@ -15,6 +15,7 @@ type BranchChanges struct {
 	RemoteAdded   []domain.RemoteBranchName
 	RemoteRemoved domain.RemoteBranchesSHAs
 	RemoteChanged domain.RemoteBranchChange
+	OmniRemoved   map[domain.LocalBranchName]domain.SHA
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
 	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
 	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
@@ -36,6 +37,7 @@ func EmptyBranchChanges() BranchChanges {
 		RemoteAdded:           []domain.RemoteBranchName{},
 		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
 		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+		OmniRemoved:           map[domain.LocalBranchName]domain.SHA{},
 		OmniChanged:           domain.LocalBranchChange{},
 		InconsistentlyChanged: domain.InconsistentChanges{},
 	}
@@ -49,8 +51,8 @@ func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 	for branch, change := range omniChangedPerennials {
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Append(&steps.CheckoutStep{Branch: branch})
-			result.Append(&steps.RevertCommitStep{SHA: change.Before})
-			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false})
+			result.Append(&steps.RevertCommitStep{SHA: change.After})
+			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: true})
 		}
 	}
 
@@ -58,7 +60,13 @@ func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 	for branch, change := range omniChangedFeatures {
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
+		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: true})
+	}
+
+	// re-create removed omni-branches
+	for branch, sha := range c.OmniRemoved {
+		result.Append(&steps.CreateBranchStep{Branch: branch, StartingPoint: sha.Location()})
+		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: true})
 	}
 
 	// ignore inconsistently changed perennial branches
@@ -93,7 +101,7 @@ func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 		result.Append(&steps.CreateRemoteBranchStep{
 			Branch:     branch.LocalBranchName(),
 			SHA:        sha,
-			NoPushHook: false,
+			NoPushHook: true,
 		})
 	}
 
