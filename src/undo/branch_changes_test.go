@@ -233,16 +233,16 @@ func TestChanges(t *testing.T) {
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
-					&steps.ResetCurrentBranchToSHAStep{
-						MustHaveSHA: domain.NewSHA("333333"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        true,
-					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("444444"),
 						SetToSHA:    domain.NewSHA("222222"),
+						Hard:        true,
+					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("333333"),
+						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
@@ -719,16 +719,16 @@ func TestChanges(t *testing.T) {
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
-					&steps.ResetCurrentBranchToSHAStep{
-						MustHaveSHA: domain.NewSHA("333333"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        true,
-					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("444444"),
 						SetToSHA:    domain.NewSHA("222222"),
+						Hard:        true,
+					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("333333"),
+						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
@@ -1243,17 +1243,16 @@ func TestChanges(t *testing.T) {
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
-					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
-					&steps.ResetCurrentBranchToSHAStep{
-						MustHaveSHA: domain.NewSHA("222222"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        true,
-					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("444444"),
 						SetToSHA:    domain.NewSHA("333333"),
+						Hard:        true,
+					},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},

@@ -47,9 +47,8 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
-	// TODO: Iterate these maps in alphabetical order to fix flaky tests.
-	//       To do this, get the keys, sort them, and iterate the keys.
-	for branch, change := range omniChangedPerennials {
+	for _, branch := range omniChangedPerennials.BranchNames() {
+		change := omniChangedPerennials[branch]
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Append(&steps.CheckoutStep{Branch: branch})
 			result.Append(&steps.RevertCommitStep{SHA: change.After})
@@ -58,14 +57,16 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// reset omni-changed feature branches
-	for branch, change := range omniChangedFeatures {
+	for _, branch := range omniChangedFeatures.BranchNames() {
+		change := omniChangedFeatures[branch]
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: true})
 	}
 
 	// re-create removed omni-branches
-	for branch, sha := range c.OmniRemoved {
+	for _, branch := range c.OmniRemoved.BranchNames() {
+		sha := c.OmniRemoved[branch]
 		result.Append(&steps.CreateBranchStep{Branch: branch, StartingPoint: sha.Location()})
 		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: true})
 	}
@@ -100,7 +101,8 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 
 	// re-create remotely removed feature branches
 	_, removedFeatureTrackingBranches := c.RemoteRemoved.Categorize(args.BranchTypes)
-	for branch, sha := range removedFeatureTrackingBranches {
+	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
+		sha := removedFeatureTrackingBranches[branch]
 		result.Append(&steps.CreateRemoteBranchStep{
 			Branch:     branch.LocalBranchName(),
 			SHA:        sha,
@@ -109,7 +111,8 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// reset locally changed branches
-	for localBranch, change := range c.LocalChanged {
+	for _, localBranch := range c.LocalChanged.BranchNames() {
+		change := c.LocalChanged[localBranch]
 		result.Append(&steps.CheckoutStep{Branch: localBranch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
@@ -127,7 +130,8 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// re-create locally removed branches
-	for removedLocalBranch, startingPoint := range c.LocalRemoved {
+	for _, removedLocalBranch := range c.LocalRemoved.BranchNames() {
+		startingPoint := c.LocalRemoved[removedLocalBranch]
 		result.Append(&steps.CreateBranchStep{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
@@ -139,7 +143,8 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
-	for remoteChangedFeatureBranch, change := range remoteFeatureChanges {
+	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
+		change := remoteFeatureChanges[remoteChangedFeatureBranch]
 		result.Append(&steps.ResetRemoteBranchToSHAStep{
 			Branch:      remoteChangedFeatureBranch,
 			MustHaveSHA: change.After,

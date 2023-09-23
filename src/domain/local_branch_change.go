@@ -20,6 +20,7 @@ func (lbc LocalBranchChange) BranchNames() LocalBranchNames {
 	for branch := range lbc {
 		result = append(result, branch)
 	}
+	result.Sort()
 	return result
 }
 

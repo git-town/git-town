@@ -29,7 +29,6 @@ Feature: on a forked repo
       | main   | local, origin, upstream | upstream commit |
       | new    | local                   | upstream commit |
 
-  @debug @this
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
