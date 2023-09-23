@@ -18,15 +18,12 @@ type BranchChanges struct {
 	RemoteAdded   domain.RemoteBranchNames
 	RemoteRemoved domain.RemoteBranchesSHAs
 	RemoteChanged domain.RemoteBranchChange
-	OmniRemoved   domain.LocalBranchesSHAs
-	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change, and the SHA before and the SHA after are different.
-	// Git Town recognizes OmniChanges because only they allow undoing changes made to remote perennial branches.
-	// The reason is that perennial branches have protected remote branches, i.e. don't allow force-pushes to their remote branch. One can only do normal pushes.
-	// So, to revert a change on a remote perennial branch one needs to perform a revert commit on the local perennial branch,
-	// then normal-push (not force-push) that new commit up to the remote branch.
-	// This is only possible if the local and remote branches have an identical SHA before as well as after.
+	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
+	OmniRemoved domain.LocalBranchesSHAs
+	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
 	OmniChanged domain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
-	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch don't have the same SHA before or after.
+	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch
+	// don't have the same SHA before or after.
 	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
 	InconsistentlyChanged domain.InconsistentChanges
 }
