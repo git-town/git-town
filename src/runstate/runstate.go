@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -13,13 +14,14 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	Command           string                     `json:"Command"`
-	IsAbort           bool                       `exhaustruct:"optional" json:"IsAbort"`
-	IsUndo            bool                       `exhaustruct:"optional"`
-	AbortStepList     StepList                   `exhaustruct:"optional" json:"AbortStepList"`
-	RunStepList       StepList                   `json:"RunStepList"`
-	UndoStepList      StepList                   `exhaustruct:"optional" json:"UndoStepList"`
-	UnfinishedDetails *UnfinishedRunStateDetails `exhaustruct:"optional" json:"UnfinishedDetails"`
+	Command                  string                     `json:"Command"`
+	IsAbort                  bool                       `exhaustruct:"optional"          json:"IsAbort"`
+	IsUndo                   bool                       `exhaustruct:"optional"          json:"IsUndo"`
+	AbortStepList            StepList                   `exhaustruct:"optional"          json:"AbortStepList"`
+	RunStepList              StepList                   `json:"RunStepList"`
+	UndoStepList             StepList                   `exhaustruct:"optional"          json:"UndoStepList"`
+	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"          json:"UnfinishedDetails"`
+	UndoablePerennialCommits []domain.SHA               `json:"UndoablePerennialCommits"`
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -43,6 +45,11 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.
 	return nil
 }
 
+// TODO: rename runState to rs.
+func (runState *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
+	runState.UndoablePerennialCommits = append(runState.UndoablePerennialCommits, commit)
+}
+
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
@@ -50,9 +57,10 @@ func (runState *RunState) CreateAbortRunState() RunState {
 	stepList := runState.AbortStepList
 	stepList.AppendList(runState.UndoStepList)
 	return RunState{
-		Command:     runState.Command,
-		IsAbort:     true,
-		RunStepList: stepList,
+		Command:                  runState.Command,
+		IsAbort:                  true,
+		RunStepList:              stepList,
+		UndoablePerennialCommits: []domain.SHA{},
 	}
 }
 
@@ -60,8 +68,9 @@ func (runState *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (runState *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:     runState.Command,
-		RunStepList: runState.AbortStepList,
+		Command:                  runState.Command,
+		RunStepList:              runState.AbortStepList,
+		UndoablePerennialCommits: []domain.SHA{},
 	}
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutStep(step) {
@@ -86,9 +95,10 @@ func (runState *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (runState *RunState) CreateUndoRunState() RunState {
 	return RunState{
-		Command:     runState.Command,
-		IsUndo:      true,
-		RunStepList: runState.UndoStepList,
+		Command:                  runState.Command,
+		IsUndo:                   true,
+		RunStepList:              runState.UndoStepList,
+		UndoablePerennialCommits: []domain.SHA{},
 	}
 }
 

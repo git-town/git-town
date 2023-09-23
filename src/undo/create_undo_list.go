@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -16,7 +17,7 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.Run)
+	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.Run)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
@@ -30,10 +31,11 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 }
 
 type CreateUndoListArgs struct {
-	Run                     *git.ProdRunner
-	InitialBranchesSnapshot BranchesSnapshot
-	InitialConfigSnapshot   ConfigSnapshot
-	InitialStashSnapshot    StashSnapshot
+	Run                      *git.ProdRunner
+	InitialBranchesSnapshot  BranchesSnapshot
+	InitialConfigSnapshot    ConfigSnapshot
+	InitialStashSnapshot     StashSnapshot
+	UndoablePerennialCommits []domain.SHA
 }
 
 func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (runstate.StepList, error) {
@@ -49,7 +51,7 @@ func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git
 	return configDiff.UndoSteps(), nil
 }
 
-func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, runner *git.ProdRunner) (runstate.StepList, error) {
+func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoablePerennialCommits []domain.SHA, runner *git.ProdRunner) (runstate.StepList, error) {
 	allBranches, active, err := runner.Backend.BranchInfos()
 	if err != nil {
 		return runstate.StepList{}, err
@@ -61,10 +63,11 @@ func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, runner
 	branchSpans := initialBranchesSnapshot.Span(finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.Steps(StepsArgs{
-		Lineage:       runner.Config.Lineage(),
-		BranchTypes:   runner.Config.BranchTypes(),
-		InitialBranch: initialBranchesSnapshot.Active,
-		FinalBranch:   finalBranchesSnapshot.Active,
+		Lineage:                  runner.Config.Lineage(),
+		BranchTypes:              runner.Config.BranchTypes(),
+		InitialBranch:            initialBranchesSnapshot.Active,
+		FinalBranch:              finalBranchesSnapshot.Active,
+		UndoablePerennialCommits: undoablePerennialCommits,
 	}), nil
 }
 

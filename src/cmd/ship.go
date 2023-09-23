@@ -66,7 +66,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-// TODO: rename to executeShip (also all the other functions in the other commands)
+// TODO: rename to executeShip (also all the other functions in the other commands).
 func runShip(args []string, message string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
@@ -97,8 +97,9 @@ func runShip(args []string, message string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "ship",
-		RunStepList: stepList,
+		Command:                  "ship",
+		RunStepList:              stepList,
+		UndoablePerennialCommits: []domain.SHA{},
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

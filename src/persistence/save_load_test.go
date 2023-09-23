@@ -33,10 +33,10 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			AbortStepList: runstate.StepList{},
 			Command:       "command",
 			IsAbort:       true,
 			IsUndo:        true,
+			AbortStepList: runstate.StepList{},
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
@@ -156,14 +156,15 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: domain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
+			UndoablePerennialCommits: []domain.SHA{},
 		}
 
 		wantJSON := `
 {
-  "AbortStepList": [],
   "Command": "command",
   "IsAbort": true,
   "IsUndo": true,
+  "AbortStepList": [],
   "RunStepList": [
     {
       "data": {},
@@ -410,7 +411,8 @@ func TestLoadSave(t *testing.T) {
     "CanSkip": true,
     "EndBranch": "end-branch",
     "EndTime": "0001-01-01T00:00:00Z"
-  }
+  },
+  "UndoablePerennialCommits": []
 }`[1:]
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")

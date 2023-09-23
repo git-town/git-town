@@ -32,9 +32,10 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := step.Run(steps.RunArgs{
-			Runner:    args.Run,
-			Connector: args.Connector,
-			Lineage:   args.Lineage,
+			Runner:                          args.Run,
+			Connector:                       args.Connector,
+			Lineage:                         args.Lineage,
+			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
 		})
 		if err != nil {
 			return errored(step, err, args)

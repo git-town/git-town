@@ -47,7 +47,16 @@ func (step *SquashMergeStep) Run(args RunArgs) error {
 	if repoAuthor == author {
 		author = ""
 	}
-	return args.Runner.Frontend.Commit(step.CommitMessage, author)
+	err = args.Runner.Frontend.Commit(step.CommitMessage, author)
+	if err != nil {
+		return err
+	}
+	squashedCommitSHA, err := args.Runner.Backend.SHAForBranch(step.Parent.BranchName())
+	if err != nil {
+		return err
+	}
+	args.RegisterUndoablePerennialCommit(squashedCommitSHA)
+	return nil
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

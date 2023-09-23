@@ -58,8 +58,9 @@ func runKill(args []string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "kill",
-		RunStepList: stepList,
+		Command:                  "kill",
+		RunStepList:              stepList,
+		UndoablePerennialCommits: []domain.SHA{},
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

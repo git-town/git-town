@@ -74,10 +74,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -132,10 +133,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -220,10 +222,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -309,10 +312,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -442,10 +446,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -598,10 +603,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -698,10 +704,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -793,10 +800,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -825,18 +833,25 @@ func TestChanges(t *testing.T) {
 			before := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("perennial-branch"),
+						LocalName:  domain.NewLocalBranchName("main"),
 						LocalSHA:   domain.NewSHA("111111"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
+						RemoteName: domain.NewRemoteBranchName("origin/main"),
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalName:  domain.NewLocalBranchName("perennial-branch"),
 						LocalSHA:   domain.NewSHA("222222"),
 						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("222222"),
+					},
+					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("feature-branch"),
+						LocalSHA:   domain.NewSHA("333333"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
+						RemoteSHA:  domain.NewSHA("333333"),
 					},
 				},
 				Active: domain.NewLocalBranchName("feature-branch"),
@@ -844,18 +859,25 @@ func TestChanges(t *testing.T) {
 			after := undo.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
+						LocalName:  domain.NewLocalBranchName("main"),
+						LocalSHA:   domain.NewSHA("444444"),
+						SyncStatus: domain.SyncStatusUpToDate,
+						RemoteName: domain.NewRemoteBranchName("origin/main"),
+						RemoteSHA:  domain.NewSHA("444444"),
+					},
+					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("perennial-branch"),
-						LocalSHA:   domain.NewSHA("333333"),
+						LocalSHA:   domain.NewSHA("555555"),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
-						RemoteSHA:  domain.NewSHA("333333"),
+						RemoteSHA:  domain.NewSHA("555555"),
 					},
 					domain.BranchInfo{
 						LocalName:  domain.NewLocalBranchName("feature-branch"),
-						LocalSHA:   domain.NewSHA("444444"),
+						LocalSHA:   domain.NewSHA("666666"),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
-						RemoteSHA:  domain.NewSHA("444444"),
+						RemoteSHA:  domain.NewSHA("666666"),
 					},
 				},
 				Active: domain.NewLocalBranchName("feature-branch"),
@@ -870,13 +892,17 @@ func TestChanges(t *testing.T) {
 				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniChanged: domain.LocalBranchChange{
-					domain.NewLocalBranchName("perennial-branch"): {
+					domain.NewLocalBranchName("main"): {
 						Before: domain.NewSHA("111111"),
-						After:  domain.NewSHA("333333"),
+						After:  domain.NewSHA("444444"),
+					},
+					domain.NewLocalBranchName("perennial-branch"): {
+						Before: domain.NewSHA("222222"),
+						After:  domain.NewSHA("555555"),
 					},
 					domain.NewLocalBranchName("feature-branch"): {
-						Before: domain.NewSHA("222222"),
-						After:  domain.NewSHA("444444"),
+						Before: domain.NewSHA("333333"),
+						After:  domain.NewSHA("666666"),
 					},
 				},
 				InconsistentlyChanged: domain.InconsistentChanges{},
@@ -887,16 +913,19 @@ func TestChanges(t *testing.T) {
 				BranchTypes:   branchTypes,
 				InitialBranch: before.Active,
 				FinalBranch:   after.Active,
+				UndoablePerennialCommits: []domain.SHA{
+					domain.NewSHA("444444"),
+				},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					// revert the commit on the perennial branch
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("perennial-branch")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
 					&steps.RevertCommitStep{SHA: domain.NewSHA("111111")},
-					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("perennial-branch"), NoPushHook: false},
+					&steps.PushCurrentBranchStep{CurrentBranch: domain.NewLocalBranchName("main"), NoPushHook: false},
 					// reset the feature branch to the previous SHA
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
-					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("444444"), SetToSHA: domain.NewSHA("222222"), Hard: true},
+					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: false},
 					// check out the initial branch
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
@@ -999,10 +1028,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1094,10 +1124,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1190,10 +1221,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1273,10 +1305,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
@@ -1358,10 +1391,11 @@ func TestChanges(t *testing.T) {
 			}
 			assert.Equal(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.Steps(undo.StepsArgs{
-				Lineage:       lineage,
-				BranchTypes:   branchTypes,
-				InitialBranch: before.Active,
-				FinalBranch:   after.Active,
+				Lineage:                  lineage,
+				BranchTypes:              branchTypes,
+				InitialBranch:            before.Active,
+				FinalBranch:              after.Active,
+				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
 				List: []steps.Step{

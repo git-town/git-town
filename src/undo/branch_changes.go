@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -46,9 +47,11 @@ func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 
 	// revert omni-changed perennial branches
 	for branch, change := range omniChangedPerennials {
-		result.Append(&steps.CheckoutStep{Branch: branch})
-		result.Append(&steps.RevertCommitStep{SHA: change.Before})
-		result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false})
+		if slice.Contains(args.UndoablePerennialCommits, change.After) {
+			result.Append(&steps.CheckoutStep{Branch: branch})
+			result.Append(&steps.RevertCommitStep{SHA: change.Before})
+			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: false})
+		}
 	}
 
 	// reset omni-changed feature branches
@@ -138,8 +141,9 @@ func (c BranchChanges) Steps(args StepsArgs) runstate.StepList {
 }
 
 type StepsArgs struct {
-	Lineage       config.Lineage
-	BranchTypes   domain.BranchTypes
-	InitialBranch domain.LocalBranchName
-	FinalBranch   domain.LocalBranchName
+	Lineage                  config.Lineage
+	BranchTypes              domain.BranchTypes
+	InitialBranch            domain.LocalBranchName
+	FinalBranch              domain.LocalBranchName
+	UndoablePerennialCommits []domain.SHA
 }

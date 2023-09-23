@@ -44,11 +44,15 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
+			UndoablePerennialCommits: []domain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		assert.NoError(t, err)
 		want := `
 {
+  "Command": "sync",
+  "IsAbort": false,
+  "IsUndo": false,
   "AbortStepList": [
     {
       "data": {
@@ -59,9 +63,6 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "Command": "sync",
-  "IsAbort": false,
-  "IsUndo": false,
   "RunStepList": [
     {
       "data": {
@@ -82,7 +83,8 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "UnfinishedDetails": null
+  "UnfinishedDetails": null,
+  "UndoablePerennialCommits": []
 }`[1:]
 		assert.Equal(t, want, string(encoded))
 		newRunState := &runstate.RunState{} //nolint:exhaustruct

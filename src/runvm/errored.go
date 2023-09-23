@@ -13,10 +13,11 @@ import (
 func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
 	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
-		Run:                     args.Run,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Run:                      args.Run,
+		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:    args.InitialConfigSnapshot,
+		InitialStashSnapshot:     args.InitialStashSnapshot,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	if err != nil {
 		return err

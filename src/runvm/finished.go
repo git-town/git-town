@@ -12,10 +12,11 @@ import (
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
 	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
-		Run:                     args.Run,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Run:                      args.Run,
+		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:    args.InitialConfigSnapshot,
+		InitialStashSnapshot:     args.InitialStashSnapshot,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	if err != nil {
 		return err
