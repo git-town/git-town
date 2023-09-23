@@ -18,7 +18,7 @@ func (b BranchSpan) IsOmniRemove() bool {
 	return b.Before.IsOmniBranch() && b.After.IsEmpty()
 }
 
-func (b BranchSpan) IsInconsintentChange() bool {
+func (b BranchSpan) IsInconsistentChange() bool {
 	return !b.Before.LocalSHA.IsEmpty() &&
 		!b.Before.RemoteSHA.IsEmpty() &&
 		!b.After.LocalSHA.IsEmpty() &&

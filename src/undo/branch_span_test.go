@@ -55,7 +55,51 @@ func TestBranchSpan(t *testing.T) {
 		})
 	})
 
-	t.Run("IsInconsintentChange", func(t *testing.T) {
+	t.Run("IsOmniRemove", func(t *testing.T) {
+		t.Parallel()
+		t.Run("is an omni remove", func(t *testing.T) {
+			t.Parallel()
+			bs := undo.BranchSpan{
+				Before: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("111111"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+					RemoteSHA:  domain.NewSHA("111111"),
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+			}
+			assert.True(t, bs.IsOmniRemove())
+		})
+		t.Run("not an omni change", func(t *testing.T) {
+			t.Parallel()
+			bs := undo.BranchSpan{
+				Before: domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("333333"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+					RemoteSHA:  domain.NewSHA("111111"),
+				},
+				After: domain.BranchInfo{
+					LocalName:  domain.LocalBranchName{},
+					LocalSHA:   domain.SHA{},
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
+				},
+			}
+			assert.False(t, bs.IsOmniRemove())
+		})
+	})
+
+	t.Run("IsInconsistentChange", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is an inconsistent change", func(t *testing.T) {
 			t.Parallel()
@@ -75,7 +119,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.True(t, bs.IsInconsintentChange())
+			assert.True(t, bs.IsInconsistentChange())
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
@@ -95,7 +139,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsintentChange())
+			assert.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -115,7 +159,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsintentChange())
+			assert.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -135,7 +179,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsintentChange())
+			assert.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -155,7 +199,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.False(t, bs.IsInconsintentChange())
+			assert.False(t, bs.IsInconsistentChange())
 		})
 	})
 
