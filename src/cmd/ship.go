@@ -66,6 +66,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
+// TODO: rename to executeShip (also all the other functions in the other commands)
 func runShip(args []string, message string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,

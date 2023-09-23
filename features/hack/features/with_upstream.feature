@@ -29,8 +29,11 @@ Feature: on a forked repo
       | main   | local, origin, upstream | upstream commit |
       | new    | local                   | upstream commit |
 
+  @debug @this
   Scenario: undo
     When I run "git town undo"
+    # it shouldn't revert the upstream commit on main here
+    # that would be VERY wrong
     Then it runs the commands
       | BRANCH | COMMAND           |
       | new    | git add -A        |
