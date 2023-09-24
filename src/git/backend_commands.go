@@ -368,7 +368,7 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
 		return false, nil
 	}
-	if outputIndicatesRebaseInProgress(output) {
+	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
 		return false, nil
 	}
 	for _, line := range strings.Split(output, "\n") {
@@ -377,6 +377,10 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+func outputIndicatesMergeInProgress(output string) bool {
+	return strings.Contains(output, "You have unmerged paths")
 }
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.

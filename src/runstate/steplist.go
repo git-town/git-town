@@ -79,10 +79,18 @@ func (stepList *StepList) PrependList(otherList StepList) {
 
 // Implementation of the fmt.Stringer interface.
 func (stepList *StepList) String() string {
+	return stepList.StringIndented("")
+}
+
+func (stepList *StepList) StringIndented(indent string) string {
 	sb := strings.Builder{}
-	sb.WriteString("StepList:\n")
-	for s, step := range stepList.List {
-		sb.WriteString(fmt.Sprintf("%d: %#v\n", s+1, step))
+	if stepList.IsEmpty() {
+		sb.WriteString("(empty StepList)\n")
+	} else {
+		sb.WriteString("StepList:\n")
+		for s, step := range stepList.List {
+			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
+		}
 	}
 	return sb.String()
 }

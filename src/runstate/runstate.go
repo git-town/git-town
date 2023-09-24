@@ -150,14 +150,22 @@ func (runState *RunState) SkipCurrentBranchSteps() {
 
 func (runState *RunState) String() string {
 	result := strings.Builder{}
-	result.WriteString("RunState {\n")
+	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
 	result.WriteString(runState.Command)
 	result.WriteString("\n  IsAbort: ")
 	result.WriteString(fmt.Sprintf("%t", runState.IsAbort))
 	result.WriteString("\n  IsUndo: ")
 	result.WriteString(fmt.Sprintf("%t", runState.IsUndo))
-	result.WriteString("\n  RunStepList: ")
-	result.WriteString("}")
+	result.WriteString("\n  AbortStepList: ")
+	result.WriteString(runState.AbortStepList.StringIndented("    "))
+	result.WriteString("  RunStepList: ")
+	result.WriteString(runState.RunStepList.StringIndented("    "))
+	result.WriteString("  UndoStepList: ")
+	result.WriteString(runState.UndoStepList.StringIndented("    "))
+	if runState.UnfinishedDetails != nil {
+		result.WriteString("  UnfineshedDetails: ")
+		result.WriteString(runState.UnfinishedDetails.String())
+	}
 	return result.String()
 }

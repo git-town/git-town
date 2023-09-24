@@ -190,6 +190,31 @@ func TestBackendCommands(t *testing.T) {
 			assert.NoError(t, err)
 			assert.False(t, has)
 		})
+		t.Run("during merge conflict", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch1, initial)
+			runtime.CheckoutBranch(branch1)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileName:    "file",
+				FileContent: "content on branch1",
+				// TODO: make Message optional and remove it from here since it doesn't matter here
+				Message: "Create file",
+			})
+			runtime.CheckoutBranch(initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileName:    "file",
+				FileContent: "content on initial",
+				Message:     "Create file1",
+			})
+			_ = runtime.MergeBranch(branch1) // this is expected to fail here
+			has, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.False(t, has)
+		})
 		t.Run("unstashed conflicting changes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)

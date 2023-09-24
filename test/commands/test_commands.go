@@ -280,6 +280,10 @@ func (r *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName)
 	return slice.Hoist(branches, mainBranch), nil
 }
 
+func (r *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
+	return r.Run("git", "merge", branch.String())
+}
+
 func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
