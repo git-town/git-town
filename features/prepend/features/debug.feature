@@ -56,17 +56,26 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                          |
       |        | backend  | git config -lz --local                           |
       |        | backend  | git rev-parse --show-toplevel                    |
+      |        | backend  | git stash list                                   |
       |        | backend  | git branch -vva                                  |
-      | parent | frontend | git checkout old                                 |
-      |        | backend  | git config git-town-branch.old.parent main       |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git status                                       |
       |        | backend  | git config --unset git-town-branch.parent.parent |
-      |        | backend  | git rev-parse --short parent                     |
+      |        | backend  | git config git-town-branch.old.parent main       |
+      | parent | frontend | git checkout old                                 |
       |        | backend  | git log main..parent                             |
       | old    | frontend | git branch -D parent                             |
-      |        | frontend | git checkout main                                |
-      | main   | frontend | git checkout old                                 |
+      |        | backend  | git show-ref --quiet refs/heads/old              |
+      |        | backend  | git show-ref --quiet refs/heads/parent           |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git checkout old                                 |
+      |        | backend  | git checkout old                                 |
+      |        | backend  | git config -lz --global                          |
+      |        | backend  | git config -lz --local                           |
+      |        | backend  | git branch -vva                                  |
+      |        | backend  | git stash list                                   |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "old"
