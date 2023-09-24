@@ -32,11 +32,10 @@ Feature: in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'WIP on feature' }} |
-      |         | git checkout feature                          |
-      | feature | git reset {{ sha 'feature commit' }}          |
+      | BRANCH | COMMAND                                       |
+      | main   | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout feature                          |
     And the current branch is now "feature"
-    And the uncommitted file still exists
+    And no uncommitted files exist
     And now the initial commits exist
     And the initial branches and hierarchy exist
