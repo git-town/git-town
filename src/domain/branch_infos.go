@@ -17,6 +17,27 @@ func (bs BranchInfos) Clone() BranchInfos {
 	return result
 }
 
+// FindByRemote provides the local branch that has the given remote branch as its tracking branch
+// or nil if no such branch exists.
+func (bs BranchInfos) FindByRemote(remoteBranch RemoteBranchName) *BranchInfo {
+	for b, branch := range bs {
+		if branch.RemoteName == remoteBranch {
+			return &bs[b]
+		}
+	}
+	return nil
+}
+
+// FindLocalBranch provides the branch with the given name if one exists.
+func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
+	for bi, branch := range bs {
+		if branch.LocalName == branchName {
+			return &bs[bi]
+		}
+	}
+	return nil
+}
+
 func (bs BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	for _, branchInfo := range bs {
 		if branchInfo.LocalName == other.LocalName && !other.LocalName.IsEmpty() {
@@ -70,27 +91,6 @@ func (bs BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 		}
 	}
 	return result
-}
-
-// FindLocalBranch provides the branch with the given name if one exists.
-func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
-	for bi, branch := range bs {
-		if branch.LocalName == branchName {
-			return &bs[bi]
-		}
-	}
-	return nil
-}
-
-// FindByRemote provides the local branch that has the given remote branch as its tracking branch
-// or nil if no such branch exists.
-func (bs BranchInfos) FindByRemote(remoteBranch RemoteBranchName) *BranchInfo {
-	for b, branch := range bs {
-		if branch.RemoteName == remoteBranch {
-			return &bs[b]
-		}
-	}
-	return nil
 }
 
 // Names provides the names of all local branches in this BranchesSyncStatus instance.
