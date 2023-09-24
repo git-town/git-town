@@ -35,13 +35,12 @@ Feature: the branch to kill has a deleted tracking branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | main   | git branch old {{ sha 'WIP on old' }} |
+      | main   | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
-      | old    | git reset {{ sha 'old commit' }}      |
     And the current branch is now "old"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
-    And the uncommitted file still exists
+    And no uncommitted files exist
     And the initial branches and hierarchy exist
