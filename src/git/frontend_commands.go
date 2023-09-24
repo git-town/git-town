@@ -246,3 +246,7 @@ func (fc *FrontendCommands) StageFiles(names ...string) error {
 func (fc *FrontendCommands) StartCommit() error {
 	return fc.Run("git", "commit")
 }
+
+func (fc *FrontendCommands) UndoLastCommit() error {
+	return fc.Run("git", "reset", "--soft", "HEAD^")
+}

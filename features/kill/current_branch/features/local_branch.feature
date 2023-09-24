@@ -29,7 +29,8 @@ Feature: delete a local branch
       | BRANCH | COMMAND                                   |
       | main   | git branch local {{ sha 'WIP on local' }} |
       |        | git checkout local                        |
+      | local  | git reset --soft HEAD^                    |
     And the current branch is now "local"
-    And no uncommitted files exist
+    And the uncommitted file still exist
     And now the initial commits exist
     And the initial branches and hierarchy exist
