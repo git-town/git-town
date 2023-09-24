@@ -36,6 +36,7 @@ func Execute(args ExecuteArgs) error {
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
 			return errored(step, err, args)

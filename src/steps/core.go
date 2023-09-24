@@ -41,4 +41,5 @@ type RunArgs struct {
 	Connector                       hosting.Connector
 	Lineage                         config.Lineage
 	RegisterUndoablePerennialCommit func(domain.SHA)
+	UpdateInitialBranchLocalSHA     func(domain.LocalBranchName, domain.SHA) error
 }

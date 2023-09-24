@@ -126,3 +126,14 @@ func (bs BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	}
 	return result, nil
 }
+
+// TODO: rename bs to bis.
+func (bs BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
+	for b := range bs {
+		if bs[b].LocalName == branch {
+			bs[b].LocalSHA = sha
+			return nil
+		}
+	}
+	return fmt.Errorf("branch %q not found", branch)
+}

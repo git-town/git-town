@@ -22,11 +22,12 @@ Feature: delete a local branch
       | local, origin | main     |
     And no branch hierarchy exists now
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
-      | main   | git branch local {{ sha 'local commit' }} |
+      | main   | git branch local {{ sha 'WIP on local' }} |
       |        | git checkout local                        |
     And the current branch is now "local"
     And no uncommitted files exist
