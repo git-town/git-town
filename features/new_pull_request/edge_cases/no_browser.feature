@@ -21,9 +21,7 @@ Feature: print the URL when no browser installed
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
+  @this
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+    Then it runs no commands
