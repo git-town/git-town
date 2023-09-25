@@ -37,7 +37,7 @@ Feature: commit message with double-quotes
     Then it runs the commands
       | BRANCH | COMMAND                                                       |
       | main   | git revert {{ sha 'with "double quotes"' }}                   |
-      |        | git push --no-verify                                          |
+      |        | git push                                                      |
       |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
       |        | git branch feature {{ sha 'feature commit' }}                 |
       |        | git checkout feature                                          |

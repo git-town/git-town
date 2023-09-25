@@ -52,7 +52,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Append(&steps.CheckoutStep{Branch: branch})
 			result.Append(&steps.RevertCommitStep{SHA: change.After})
-			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: true})
+			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: args.NoPushHook})
 		}
 	}
 
