@@ -13,7 +13,7 @@ Feature: can undo a ship even after additional commits to the main branch
     Then it runs the commands
       | BRANCH | COMMAND                                       |
       | main   | git revert {{ sha 'feature done' }}           |
-      |        | git push --no-verify                          |
+      |        | git push                                      |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git push -u origin feature                    |
       |        | git checkout feature                          |
