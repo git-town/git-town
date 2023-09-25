@@ -28,8 +28,7 @@ Feature: abort the ship via empty commit message
       |         | git reset --hard                            |
       |         | git checkout feature                        |
       | feature | git reset --hard {{ sha 'feature commit' }} |
-      |         | git checkout main                           |
-      | main    | git checkout other                          |
+      |         | git checkout other                          |
       | other   | git stash pop                               |
     And it prints the error:
       """
