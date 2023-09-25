@@ -40,9 +40,7 @@ Feature: prepend a branch to a feature branch
       |        | git stash            |
       |        | git checkout old     |
       | old    | git branch -D parent |
-      |        | git checkout main    |
-      | main   | git checkout old     |
-      | old    | git stash pop        |
+      |        | git stash pop        |
     And the current branch is now "old"
     And the uncommitted file still exists
     And now the initial commits exist
