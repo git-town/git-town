@@ -13,7 +13,7 @@ import (
 type RunState struct {
 	Command           string                     `json:"Command"`
 	IsAbort           bool                       `exhaustruct:"optional" json:"IsAbort"`
-	IsUndo            bool                       `exhaustruct:"optional"`
+	IsUndo            bool                       `exhaustruct:"optional" json:"IsUndo"`
 	AbortStepList     StepList                   `exhaustruct:"optional" json:"AbortStepList"`
 	RunStepList       StepList                   `json:"RunStepList"`
 	UndoStepList      StepList                   `exhaustruct:"optional" json:"UndoStepList"`
