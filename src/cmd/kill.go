@@ -53,13 +53,14 @@ func runKill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := killStepList(config)
+	stepList, finalUndoSteps, err := killStepList(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "kill",
-		RunStepList: stepList,
+		Command:           "kill",
+		RunStepList:       stepList,
+		FinalUndoStepList: finalUndoSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -152,22 +153,21 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killStepList(config *killConfig) (runstate.StepList, error) {
-	result := runstate.StepList{}
-	killFeatureBranch(&result, *config)
-	err := result.Wrap(runstate.WrapOptions{
+func killStepList(config *killConfig) (steps runstate.StepList, finalUndoSteps runstate.StepList, err error) {
+	killFeatureBranch(&steps, &finalUndoSteps, *config)
+	err = steps.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	return result, err
+	return steps, finalUndoSteps, err
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 // TODO: inline this method?
-func killFeatureBranch(list *runstate.StepList, config killConfig) {
+func killFeatureBranch(list *runstate.StepList, finalUndoist *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.LocalName})
 	}
@@ -175,6 +175,8 @@ func killFeatureBranch(list *runstate.StepList, config killConfig) {
 		if config.hasOpenChanges {
 			list.Append(&steps.CommitOpenChangesStep{})
 			list.Append(&steps.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
+			finalUndoist.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
+			finalUndoist.Append(&steps.UndoLastCommitStep{})
 		}
 		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}

@@ -22,7 +22,6 @@ Feature: delete a local branch
       | local, origin | main     |
     And no branch hierarchy exists now
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
@@ -31,6 +30,6 @@ Feature: delete a local branch
       |        | git checkout local                        |
       | local  | git reset --soft HEAD^                    |
     And the current branch is now "local"
-    And the uncommitted file still exist
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist
