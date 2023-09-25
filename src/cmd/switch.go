@@ -41,11 +41,16 @@ func runSwitch(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})

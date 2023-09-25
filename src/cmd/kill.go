@@ -71,6 +71,7 @@ func runKill(args []string, debug bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              config.noPushHook,
 	})
 }
 
@@ -87,11 +88,16 @@ type killConfig struct {
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -126,10 +132,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}

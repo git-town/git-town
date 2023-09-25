@@ -79,6 +79,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -139,6 +140,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -229,6 +231,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -320,6 +323,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -455,6 +459,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -613,6 +618,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -715,6 +721,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               false,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -812,6 +819,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               false,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -922,6 +930,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:   branchTypes,
 				InitialBranch: before.Active,
 				FinalBranch:   after.Active,
+				NoPushHook:    true,
 				UndoablePerennialCommits: []domain.SHA{
 					domain.NewSHA("444444"),
 				},
@@ -1023,6 +1032,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:   branchTypes,
 				InitialBranch: before.Active,
 				FinalBranch:   after.Active,
+				NoPushHook:    true,
 				UndoablePerennialCommits: []domain.SHA{
 					domain.NewSHA("444444"),
 				},
@@ -1142,6 +1152,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -1239,6 +1250,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -1336,6 +1348,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -1421,6 +1434,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -1508,6 +1522,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{
@@ -1591,6 +1606,7 @@ func TestChanges(t *testing.T) {
 				BranchTypes:              branchTypes,
 				InitialBranch:            before.Active,
 				FinalBranch:              after.Active,
+				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
 			wantSteps := runstate.StepList{

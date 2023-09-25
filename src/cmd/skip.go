@@ -41,11 +41,16 @@ func runSkip(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -72,5 +77,6 @@ func runSkip(debug bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }

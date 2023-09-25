@@ -86,6 +86,7 @@ func runNewPullRequest(debug bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
@@ -107,11 +108,16 @@ type newPullRequestConfig struct {
 
 func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -143,10 +149,6 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		lineage = repo.Runner.Config.Lineage()
 	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}

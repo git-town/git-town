@@ -24,13 +24,6 @@ func Execute(args ExecuteArgs) error {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
 		}
-		if stepName == "PushBranchAfterCurrentBranchSteps" {
-			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
-			if err != nil {
-				return err
-			}
-			continue
-		}
 		err := step.Run(steps.RunArgs{
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
@@ -53,4 +46,5 @@ type ExecuteArgs struct {
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    undo.StashSnapshot
 	Lineage                 config.Lineage
+	NoPushHook              bool
 }

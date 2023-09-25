@@ -13,7 +13,7 @@ import (
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has been done so far.
-// TODO: rename the "XXXStepList" fields to "XXXSteps"
+// TODO: rename the "XXXStepList" fields to "XXXSteps".
 type RunState struct {
 	Command                  string                     `json:"Command"`
 	IsAbort                  bool                       `exhaustruct:"optional" json:"IsAbort"`

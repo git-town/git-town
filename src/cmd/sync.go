@@ -82,6 +82,7 @@ func runSync(all, dryRun, debug bool) error {
 		Run:                     &repo.Runner,
 		Connector:               nil,
 		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -107,11 +108,16 @@ type syncConfig struct {
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -172,10 +178,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -259,9 +261,9 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
 		case !args.branch.HasTrackingBranch():
-			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.LocalName, NoPushHook: false})
+			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.LocalName, NoPushHook: !args.pushHook})
 		case !isFeatureBranch:
-			list.Add(&steps.PushCurrentBranchStep{CurrentBranch: args.branch.LocalName, NoPushHook: false})
+			list.Add(&steps.PushCurrentBranchStep{CurrentBranch: args.branch.LocalName, NoPushHook: !args.pushHook})
 		default:
 			pushFeatureBranchSteps(list, args.branch.LocalName, args.syncStrategy, args.pushHook)
 		}
@@ -350,7 +352,7 @@ func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.LocalB
 	case config.SyncStrategyMerge:
 		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: !pushHook})
 	case config.SyncStrategyRebase:
-		list.Add(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
+		list.Add(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: !pushHook})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}

@@ -17,6 +17,7 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSnapshot:     args.InitialStashSnapshot,
+		NoPushHook:               args.NoPushHook,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	if err != nil {

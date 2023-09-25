@@ -17,7 +17,7 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.Run)
+	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.NoPushHook, args.Run)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
@@ -35,6 +35,7 @@ type CreateUndoListArgs struct {
 	InitialBranchesSnapshot  BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot
 	InitialStashSnapshot     StashSnapshot
+	NoPushHook               bool
 	UndoablePerennialCommits []domain.SHA
 }
 
@@ -51,7 +52,7 @@ func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git
 	return configDiff.UndoSteps(), nil
 }
 
-func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoablePerennialCommits []domain.SHA, runner *git.ProdRunner) (runstate.StepList, error) {
+func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (runstate.StepList, error) {
 	allBranches, active, err := runner.Backend.BranchInfos()
 	if err != nil {
 		return runstate.StepList{}, err
@@ -68,6 +69,7 @@ func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoab
 		InitialBranch:            initialBranchesSnapshot.Active,
 		FinalBranch:              finalBranchesSnapshot.Active,
 		UndoablePerennialCommits: undoablePerennialCommits,
+		NoPushHook:               noPushHook,
 	}), nil
 }
 

@@ -3,8 +3,8 @@ package steps
 import "github.com/git-town/git-town/v9/src/domain"
 
 type UpdateInitialBranchLocalSHA struct {
-	Branch domain.LocalBranchName
-	EmptyStep
+	Branch    domain.LocalBranchName
+	EmptyStep `exhaustruct:"optional"`
 }
 
 func (step *UpdateInitialBranchLocalSHA) Run(args RunArgs) error {

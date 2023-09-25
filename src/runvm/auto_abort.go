@@ -24,6 +24,7 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              args.NoPushHook,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortStepProblem, err)

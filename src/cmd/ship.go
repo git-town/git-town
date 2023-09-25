@@ -105,6 +105,7 @@ func runShip(args []string, message string, debug bool) error {
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
 		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -138,11 +139,16 @@ type shipConfig struct {
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
@@ -214,7 +220,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	var proposal *hosting.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
-	pushHook, err := repo.Runner.Config.PushHook()
+	pushHook, err = repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -335,7 +341,7 @@ func shipStepList(config *shipConfig, commitMessage string) (runstate.StepList, 
 			})
 		}
 		// push
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
 		list.Add(&steps.ConnectorMergeProposalStep{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
@@ -347,7 +353,7 @@ func shipStepList(config *shipConfig, commitMessage string) (runstate.StepList, 
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, NoPushHook: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)

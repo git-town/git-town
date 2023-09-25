@@ -63,6 +63,7 @@ func runAbort(debug bool) error {
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
@@ -87,11 +88,16 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.Stas
 	if err != nil {
 		return nil, undo.EmptyStashSnapshot(), err
 	}
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyStashSnapshot(), err
+	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -110,6 +116,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.Stas
 		lineage:                 lineage,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
+		pushHook:                pushHook,
 	}, initialStashSnapshot, err
 }
 
@@ -120,6 +127,7 @@ type abortConfig struct {
 	mainBranch              domain.LocalBranchName
 	lineage                 config.Lineage
 	previousBranch          domain.LocalBranchName
+	pushHook                bool
 }
 
 func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {

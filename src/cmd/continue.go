@@ -62,16 +62,22 @@ func runContinue(debug bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -104,12 +110,14 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, und
 	return &continueConfig{
 		connector: connector,
 		lineage:   lineage,
+		pushHook:  pushHook,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
 
 type continueConfig struct {
 	connector hosting.Connector
 	lineage   config.Lineage
+	pushHook  bool
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, error) {

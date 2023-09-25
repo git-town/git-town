@@ -75,6 +75,7 @@ func runHack(args []string, promptForParent, debug bool) error {
 		Run:                     &repo.Runner,
 		Connector:               nil,
 		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -84,18 +85,20 @@ func runHack(args []string, promptForParent, debug bool) error {
 
 func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	fc := gohacks.FailureCollector{}
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	fc := gohacks.FailureCollector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	targetBranch := domain.NewLocalBranchName(args[0])
@@ -117,7 +120,6 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}

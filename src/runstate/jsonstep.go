@@ -91,8 +91,6 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.PreserveCheckoutHistoryStep{}
 	case "PullCurrentBranchStep":
 		return &steps.PullCurrentBranchStep{}
-	case "PushBranchAfterCurrentBranchSteps":
-		return &steps.PushBranchAfterCurrentBranchSteps{}
 	case "PushCurrentBranchStep":
 		return &steps.PushCurrentBranchStep{}
 	case "PushTagsStep":

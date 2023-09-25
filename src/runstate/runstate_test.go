@@ -83,6 +83,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
+  "FinalUndoStepList": [],
   "UnfinishedDetails": null,
   "UndoablePerennialCommits": []
 }`[1:]

@@ -75,6 +75,7 @@ func runAppend(arg string, debug bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
 		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
@@ -98,11 +99,14 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult) (*appendConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
+	fc := gohacks.FailureCollector{}
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		Lineage:               lineage,
 		HandleUnfinishedState: true,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -110,10 +114,8 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	fc := gohacks.FailureCollector{}
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	mainBranch := repo.Runner.Config.MainBranch()
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())

@@ -100,7 +100,6 @@ func TestLoadSave(t *testing.T) {
 						MainBranch:                        domain.NewLocalBranchName("main"),
 					},
 					&steps.PullCurrentBranchStep{},
-					&steps.PushBranchAfterCurrentBranchSteps{},
 					&steps.PushCurrentBranchStep{
 						CurrentBranch: domain.NewLocalBranchName("branch"),
 						NoPushHook:    true,
@@ -305,10 +304,6 @@ func TestLoadSave(t *testing.T) {
       "type": "PullCurrentBranchStep"
     },
     {
-      "data": {},
-      "type": "PushBranchAfterCurrentBranchSteps"
-    },
-    {
       "data": {
         "CurrentBranch": "branch",
         "NoPushHook": true
@@ -407,6 +402,7 @@ func TestLoadSave(t *testing.T) {
     }
   ],
   "UndoStepList": [],
+  "FinalUndoStepList": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

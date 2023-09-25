@@ -61,14 +61,14 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		change := omniChangedFeatures[branch]
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: true})
+		result.Append(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
 	// re-create removed omni-branches
 	for _, branch := range c.OmniRemoved.BranchNames() {
 		sha := c.OmniRemoved[branch]
 		result.Append(&steps.CreateBranchStep{Branch: branch, StartingPoint: sha.Location()})
-		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: true})
+		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
 	// ignore inconsistently changed perennial branches
@@ -106,7 +106,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		result.Append(&steps.CreateRemoteBranchStep{
 			Branch:     branch.LocalBranchName(),
 			SHA:        sha,
-			NoPushHook: true,
+			NoPushHook: args.NoPushHook,
 		})
 	}
 
@@ -161,6 +161,7 @@ type StepsArgs struct {
 	BranchTypes              domain.BranchTypes
 	InitialBranch            domain.LocalBranchName
 	FinalBranch              domain.LocalBranchName
+	NoPushHook               bool
 	UndoablePerennialCommits []domain.SHA
 }
 

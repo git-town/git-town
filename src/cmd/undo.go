@@ -57,6 +57,7 @@ func runUndo(debug bool) error {
 		Run:                     &repo.Runner,
 		Connector:               nil,
 		Lineage:                 lineage,
+		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -69,15 +70,21 @@ type undoConfig struct {
 	mainBranch              domain.LocalBranchName
 	initialBranchesSnapshot undo.BranchesSnapshot
 	previousBranch          domain.LocalBranchName
+	pushHook                bool
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, undo.EmptyStashSnapshot(), lineage, err
+	}
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -95,6 +102,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.StashS
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
+		pushHook:                pushHook,
 	}, initialStashSnapshot, lineage, nil
 }
 
