@@ -36,8 +36,6 @@ Feature: auto-push new branches
       | new    | git push origin :new |
       |        | git checkout old     |
       | old    | git branch -D new    |
-      |        | git checkout main    |
-      | main   | git checkout old     |
     And the current branch is now "old"
     And now the initial commits exist
     And the initial branch hierarchy exists
