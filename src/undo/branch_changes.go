@@ -117,6 +117,15 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
 
+	// re-create locally removed branches
+	for _, removedLocalBranch := range c.LocalRemoved.BranchNames() {
+		startingPoint := c.LocalRemoved[removedLocalBranch]
+		result.Append(&steps.CreateBranchStep{
+			Branch:        removedLocalBranch,
+			StartingPoint: startingPoint.Location(),
+		})
+	}
+
 	// remove locally added branches
 	for _, addedLocalBranch := range c.LocalAdded {
 		if args.FinalBranch == addedLocalBranch {
@@ -126,15 +135,6 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 			Branch: addedLocalBranch,
 			Parent: args.Lineage.Parent(addedLocalBranch).Location(),
 			Force:  true,
-		})
-	}
-
-	// re-create locally removed branches
-	for _, removedLocalBranch := range c.LocalRemoved.BranchNames() {
-		startingPoint := c.LocalRemoved[removedLocalBranch]
-		result.Append(&steps.CreateBranchStep{
-			Branch:        removedLocalBranch,
-			StartingPoint: startingPoint.Location(),
 		})
 	}
 
