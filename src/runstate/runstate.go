@@ -14,7 +14,7 @@ type RunState struct {
 	AbortStepList     StepList                   `exhaustruct:"optional" json:"AbortStepList"`
 	Command           string                     `json:"Command"`
 	IsAbort           bool                       `exhaustruct:"optional" json:"IsAbort"`
-	IsUndo            bool                       `exhaustruct:"optional"`
+	IsUndo            bool                       `exhaustruct:"optional" json:"IsUndo"`
 	RunStepList       StepList                   `json:"RunStepList"`
 	UndoStepList      StepList                   `exhaustruct:"optional" json:"UndoStepList"`
 	UnfinishedDetails *UnfinishedRunStateDetails `exhaustruct:"optional" json:"UnfinishedDetails"`
