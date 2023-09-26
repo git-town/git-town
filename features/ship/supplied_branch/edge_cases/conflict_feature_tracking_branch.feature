@@ -38,8 +38,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |
-      |         | git checkout main  |
-      | main    | git checkout other |
+      |         | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
