@@ -27,29 +27,13 @@ Feature: offline mode
       | feature | origin   | feature commit |
     And no branch hierarchy exists now
 
-  @broken
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
-    # | main    | git reset --hard {{ sha 'Initial commit' }}   |
-    # |         | git checkout feature                          |
-    And it prints the error:
-      """
-      cannot reset branch "main"
-      """
-    And it prints the error:
-      """
-      it received additional commits in the meantime
-      """
-    And the current branch is now "main"
-    And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local         | feature done          |
-      |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
+      | BRANCH | COMMAND                                       |
+      | main   | git reset --hard {{ sha 'Initial commit' }}   |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout feature                          |
+    And the current branch is now "feature"
+    And now the initial commits exist
     And the initial branches and hierarchy exist
