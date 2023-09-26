@@ -42,18 +42,12 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     Then it runs the commands
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
-      |        | git checkout alpha |
-      | alpha  | git checkout main  |
+      |        | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | origin        | main commit        |
-      | alpha  | local, origin | alpha commit       |
-      | beta   | local         | local beta commit  |
-      |        | origin        | origin beta commit |
-      | gamma  | local, origin | gamma commit       |
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: skip
     When I run "git-town skip"
