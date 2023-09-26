@@ -38,19 +38,14 @@ Feature: ship the supplied feature branch in a local repo
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | other   | git add -A                                    |
-      |         | git stash                                     |
-      |         | git checkout main                             |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git checkout feature                          |
-      | feature | git checkout other                            |
-      | other   | git stash pop                                 |
+      | BRANCH | COMMAND                                       |
+      | other  | git add -A                                    |
+      |        | git stash                                     |
+      |        | git checkout main                             |
+      | main   | git reset --hard {{ sha 'Initial commit' }}   |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout other                            |
+      | other  | git stash pop                                 |
     And the current branch is now "other"
-    And now these commits exist
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | feature done          |
-      |         |          | Revert "feature done" |
-      | feature | local    | feature commit        |
+    And now the initial commits exist
     And the initial branches and hierarchy exist
