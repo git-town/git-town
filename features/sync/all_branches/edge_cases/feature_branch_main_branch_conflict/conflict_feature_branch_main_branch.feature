@@ -43,29 +43,19 @@ Feature: handle merge conflicts between feature branch and main branch
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH | COMMAND            |
-      | beta   | git merge --abort  |
-      |        | git checkout alpha |
-      | alpha  | git checkout main  |
-      | main   | git stash pop      |
+      | BRANCH | COMMAND                                     |
+      | beta   | git merge --abort                           |
+      |        | git checkout alpha                          |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}   |
+      |        | git push --force-with-lease                 |
+      |        | git checkout main                           |
+      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      |        | git stash pop                               |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      |        |               | main commit                    |
-      |        |               | Merge branch 'main' into alpha |
-      | beta   | local, origin | beta commit                    |
-      | gamma  | local, origin | gamma commit                   |
-    And these committed files exist now
-      | BRANCH | NAME             | CONTENT       |
-      | main   | conflicting_file | main content  |
-      | alpha  | conflicting_file | main content  |
-      |        | feature1_file    | alpha content |
-      | beta   | conflicting_file | beta content  |
-      | gamma  | feature2_file    | gamma content |
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: skip
     When I run "git-town skip"
