@@ -51,4 +51,4 @@ Feature: ship a parent branch
       |        |               | Revert "parent done" |
       | child  | local, origin | child commit         |
       | parent | local, origin | parent commit        |
-    And the initial branch hierarchy exists
+    And the initial branches and hierarchy exist
