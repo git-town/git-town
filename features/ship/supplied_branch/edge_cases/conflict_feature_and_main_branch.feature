@@ -35,13 +35,13 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the uncommitted file is stashed
     And a merge is now in progress
 
+  @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |
-      |         | git checkout main  |
-      | main    | git checkout other |
+      |         | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
