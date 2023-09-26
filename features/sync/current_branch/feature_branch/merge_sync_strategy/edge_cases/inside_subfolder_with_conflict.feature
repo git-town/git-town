@@ -34,15 +34,14 @@ Feature: sync inside a folder that doesn't exist on the main branch
   Scenario: abort
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | current | git merge --abort    |
-      |         | git checkout main    |
-      | main    | git checkout current |
-      | current | git stash pop        |
+      | BRANCH  | COMMAND           |
+      | current | git merge --abort |
+      |         | git stash pop     |
     And the current branch is still "current"
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder
