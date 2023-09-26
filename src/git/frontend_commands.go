@@ -215,7 +215,7 @@ func (fc *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) e
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
 func (fc *FrontendCommands) ResetRemoteBranchToSHA(branch domain.RemoteBranchName, sha domain.SHA) error {
-	return fc.Run("git", "push", domain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
+	return fc.Run("git", "push", "--force-with-lease", domain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
