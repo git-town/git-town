@@ -26,8 +26,6 @@ Feature: restores deleted tracking branch
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git push origin :feature |
-      |         | git checkout main        |
-      | main    | git checkout feature     |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
