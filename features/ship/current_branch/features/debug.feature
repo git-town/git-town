@@ -75,7 +75,7 @@ Feature: display debug statistics
       |        | backend  | git log --pretty=format:%h -10                 |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
-      | main   | frontend | git push --no-verify                           |
+      | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
       |        | frontend | git checkout feature                           |
