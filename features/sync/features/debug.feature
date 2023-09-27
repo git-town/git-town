@@ -17,32 +17,30 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                            |
       |         | backend  | git config -lz --local                             |
       |         | backend  | git rev-parse --show-toplevel                      |
+      |         | backend  | git stash list                                     |
+      |         | backend  | git branch -vva                                    |
       |         | backend  | git remote                                         |
-      |         | backend  | git status                                         |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                    |
       | feature | frontend | git fetch --prune --tags                           |
       |         | backend  | git branch -vva                                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | backend  | git status                                         |
       | feature | frontend | git checkout main                                  |
-      |         | backend  | git rev-parse --short HEAD                         |
       | main    | frontend | git rebase origin/main                             |
-      |         | backend  | git rev-parse HEAD                                 |
       |         | backend  | git rev-list --left-right main...origin/main       |
       | main    | frontend | git push                                           |
       |         | frontend | git checkout feature                               |
-      |         | backend  | git rev-parse --short HEAD                         |
       | feature | frontend | git merge --no-edit origin/feature                 |
-      |         | backend  | git rev-parse --short HEAD                         |
-      |         | backend  | git rev-parse --short HEAD                         |
-      | feature | frontend | git merge --no-edit main                           |
-      |         | backend  | git rev-parse HEAD                                 |
+      |         | frontend | git merge --no-edit main                           |
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
       |         | backend  | git show-ref --quiet refs/heads/main               |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
+      |         | backend  | git config -lz --global                            |
+      |         | backend  | git config -lz --local                             |
+      |         | backend  | git branch -vva                                    |
+      |         | backend  | git stash list                                     |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 26 shell commands.
       """
     And all branches are now synchronized
