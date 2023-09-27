@@ -47,7 +47,6 @@ func TestSlice(t *testing.T) {
 
 	t.Run("Hoist", func(t *testing.T) {
 		t.Parallel()
-
 		t.Run("already hoisted", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"initial", "one", "two"}
@@ -55,7 +54,6 @@ func TestSlice(t *testing.T) {
 			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
 		})
-
 		t.Run("contains the element to hoist", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"alpha", "initial", "omega"}
@@ -63,7 +61,6 @@ func TestSlice(t *testing.T) {
 			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
 		})
-
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := []string{}
@@ -73,11 +70,54 @@ func TestSlice(t *testing.T) {
 		})
 	})
 
+	t.Run("LastIndex", func(t *testing.T) {
+		t.Parallel()
+		panic("TODO")
+	})
+
+	t.Run("LowerLast", func(t *testing.T) {
+		t.Parallel()
+		t.Run("list contains element at the last position", func(t *testing.T) {
+			t.Parallel()
+			give := []string{"one", "two", "last"}
+			want := []string{"one", "two", "last"}
+			have := slice.LowerLast(give, "last")
+			assert.Equal(t, want, have)
+		})
+		t.Run("list contains element in the middle", func(t *testing.T) {
+			t.Parallel()
+			give := []string{"one", "last", "two"}
+			want := []string{"one", "two", "last"}
+			have := slice.LowerLast(give, "last")
+			assert.Equal(t, want, have)
+		})
+		t.Run("list does not contain the element", func(t *testing.T) {
+			t.Parallel()
+			give := []string{"one", "two", "three"}
+			want := []string{"one", "two", "three"}
+			have := slice.LowerLast(give, "last")
+			assert.Equal(t, want, have)
+		})
+	})
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two", "three"}
 		have := slice.Remove(give, "two")
 		want := []string{"one", "three"}
 		assert.Equal(t, have, want)
+	})
+
+	t.Run("RemoveAt", func(t *testing.T) {
+		t.Parallel()
+		panic("TODO")
+		t.Run("index is within the list", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("index is at end of list", func(t *testing.T) {
+			t.Parallel()
+		})
+		t.Run("index is at beginning of list", func(t *testing.T) {
+			t.Parallel()
+		})
 	})
 }

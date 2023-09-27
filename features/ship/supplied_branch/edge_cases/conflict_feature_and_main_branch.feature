@@ -96,35 +96,21 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the uncommitted file still exists
 
   @broken
+  @this
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                         |
-      | other  | git add -A                                                      |
-      |        | git stash                                                       |
-      |        | git checkout main                                               |
-      | main   | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
-      |        | git push -u origin feature                                      |
-      |        | git revert {{ sha 'feature done' }}                             |
-      |        | git push                                                        |
-      |        | git checkout feature                                            |
-    And it prints the error:
-      """
-      cannot reset branch "feature"
-      """
-    And it prints the error:
-      """
-      it received additional commits in the meantime
-      """
-    And the current branch is now "feature"
+      | BRANCH | COMMAND                             |
+      | other  | git add -A                          |
+      |        | git stash                           |
+      |        | git stash pop                       |
+      |        | git checkout main                   |
+      | main   | git revert {{ sha 'feature done' }} |
+    And the current branch is now "main"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, origin | conflicting main commit          |
-      |         |               | feature done                     |
-      |         |               | Revert "feature done"            |
-      | feature | local, origin | conflicting feature commit       |
-      |         |               | conflicting main commit          |
-      |         |               | Merge branch 'main' into feature |
+      | BRANCH | LOCATION      | MESSAGE                 |
+      | main   | local, origin | conflicting main commit |
+      |        |               | feature done            |
     And the initial branches and hierarchy exist

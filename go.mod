@@ -1,6 +1,6 @@
 module github.com/git-town/git-town/v9
 
-go 1.19
+go 1.20
 
 require (
 	atomicgo.dev/cursor v0.1.1
