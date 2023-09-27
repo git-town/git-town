@@ -48,6 +48,6 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 22 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "existing"

@@ -100,16 +100,16 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                       |
-      | other   | git add -A                                                    |
-      |         | git stash                                                     |
-      |         | git checkout main                                             |
-      | main    | git revert {{ sha 'feature done' }}                           |
-      |         | git push                                                      |
-      |         | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
-      |         | git branch feature {{ sha 'conflicting feature commit' }}     |
-      |         | git checkout feature                                          |
-      | feature | git stash pop                                                 |
+      | BRANCH | COMMAND                                                       |
+      | other  | git add -A                                                    |
+      |        | git stash                                                     |
+      |        | git checkout main                                             |
+      | main   | git revert {{ sha 'feature done' }}                           |
+      |        | git push                                                      |
+      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'conflicting feature commit' }}     |
+      |        | git checkout other                                            |
+      | other  | git stash pop                                                 |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    |

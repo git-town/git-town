@@ -54,8 +54,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     Then it runs the commands
       | BRANCH | COMMAND                 |
       | beta   | git rebase --abort      |
-      |        | git checkout main       |
-      | main   | git checkout gamma      |
+      |        | git checkout gamma      |
       | gamma  | git rebase origin/gamma |
       |        | git checkout main       |
       | main   | git rebase origin/main  |

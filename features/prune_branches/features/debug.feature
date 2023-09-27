@@ -63,8 +63,7 @@ Feature: display debug statistics
       |        | backend  | git status                                 |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'old commit' }}      |
-      |        | backend  | git show-ref --quiet refs/heads/old        |
-      | main   | frontend | git checkout old                           |
+      |        | frontend | git checkout old                           |
       |        | backend  | git show-ref --quiet refs/heads/main       |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
       |        | backend  | git config -lz --global                    |
@@ -73,7 +72,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                             |
     And it prints:
       """
-      Ran 18 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist

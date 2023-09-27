@@ -78,7 +78,6 @@ Feature: display debug statistics
       | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
-      |        | backend  | git show-ref --quiet refs/heads/feature        |
       | main   | frontend | git checkout feature                           |
       |        | backend  | git show-ref --quiet refs/heads/main           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
@@ -88,6 +87,6 @@ Feature: display debug statistics
       |        | backend  | git stash list                                 |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "feature"

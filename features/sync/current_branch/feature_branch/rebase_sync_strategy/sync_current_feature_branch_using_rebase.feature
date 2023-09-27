@@ -33,12 +33,14 @@ Feature: sync the current feature branch using the "rebase" sync strategy
       |         |               | origin feature commit |
       |         |               | local feature commit  |
 
+  @this
   Scenario: undo
+    And inspect the repo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git reset --hard                                                             |
+      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

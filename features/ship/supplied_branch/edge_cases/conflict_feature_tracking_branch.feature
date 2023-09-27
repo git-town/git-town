@@ -96,16 +96,16 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                  |
-      | other   | git add -A                                                               |
-      |         | git stash                                                                |
-      |         | git checkout main                                                        |
-      | main    | git revert {{ sha 'feature done' }}                                      |
-      |         | git push                                                                 |
-      |         | git push origin {{ sha 'conflicting origin commit' }}:refs/heads/feature |
-      |         | git branch feature {{ sha 'conflicting local commit' }}                  |
-      |         | git checkout feature                                                     |
-      | feature | git stash pop                                                            |
+      | BRANCH | COMMAND                                                                  |
+      | other  | git add -A                                                               |
+      |        | git stash                                                                |
+      |        | git checkout main                                                        |
+      | main   | git revert {{ sha 'feature done' }}                                      |
+      |        | git push                                                                 |
+      |        | git push origin {{ sha 'conflicting origin commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'conflicting local commit' }}                  |
+      |        | git checkout other                                                       |
+      | other  | git stash pop                                                            |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                   |

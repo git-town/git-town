@@ -107,7 +107,7 @@ func (runState *RunState) CreateUndoRunState() RunState {
 		UndoablePerennialCommits: []domain.SHA{},
 	}
 	result.RunStepList.Append(&steps.CheckoutStep{Branch: runState.InitialActiveBranch})
-	result.RunStepList.RemoveDuplicateCheckoutSteps()
+	result.RunStepList = result.RunStepList.RemoveDuplicateCheckoutSteps()
 	return result
 }
 
