@@ -90,7 +90,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -149,7 +149,7 @@ func TestChanges(t *testing.T) {
 						Branch:        domain.NewLocalBranchName("branch-1"),
 						StartingPoint: domain.NewSHA("111111").Location(),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-1")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -248,7 +248,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -334,7 +334,7 @@ func TestChanges(t *testing.T) {
 					&steps.DeleteTrackingBranchStep{
 						Branch: domain.NewLocalBranchName("feature-branch"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -474,7 +474,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -640,7 +640,7 @@ func TestChanges(t *testing.T) {
 						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -738,7 +738,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -831,7 +831,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("333333"),
 						MustHaveSHA: domain.NewSHA("444444"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -946,7 +946,7 @@ func TestChanges(t *testing.T) {
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
 					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
 					// check out the initial branch
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1047,7 +1047,7 @@ func TestChanges(t *testing.T) {
 					&steps.CreateBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), StartingPoint: domain.NewSHA("222222").Location()},
 					&steps.CreateTrackingBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
 					// check out the initial branch
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1169,7 +1169,7 @@ func TestChanges(t *testing.T) {
 						MustHaveSHA: domain.NewSHA("666666"),
 						SetToSHA:    domain.NewSHA("222222"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1267,7 +1267,7 @@ func TestChanges(t *testing.T) {
 						SetToSHA:    domain.NewSHA("111111"),
 						Hard:        true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1359,7 +1359,7 @@ func TestChanges(t *testing.T) {
 						MustHaveSHA: domain.NewSHA("444444"),
 						SetToSHA:    domain.NewSHA("333333"),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1447,7 +1447,7 @@ func TestChanges(t *testing.T) {
 						Branch:        domain.NewLocalBranchName("feature-branch"),
 						StartingPoint: domain.NewSHA("222222").Location(),
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1534,7 +1534,7 @@ func TestChanges(t *testing.T) {
 						SHA:        domain.NewSHA("222222"),
 						NoPushHook: true,
 					},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)
@@ -1614,7 +1614,7 @@ func TestChanges(t *testing.T) {
 				// We don't want to undo these commits because that would undo commits
 				// already committed to perennial branches by others for everybody on the team.
 				List: []steps.Step{
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
 			assert.Equal(t, wantSteps, haveSteps)

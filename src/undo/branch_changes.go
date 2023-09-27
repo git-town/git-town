@@ -152,7 +152,9 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		})
 	}
 
-	result.Append(&steps.CheckoutStep{Branch: args.InitialBranch})
+	// This must be a CheckoutIfExistsStep because this branch might not exist
+	// when a Git Town command fails, stores this undo step, then gets continued and deletes this branch.
+	result.Append(&steps.CheckoutIfExistsStep{Branch: args.InitialBranch})
 	return result
 }
 
