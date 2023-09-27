@@ -73,7 +73,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                             |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 18 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist
