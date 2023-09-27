@@ -63,7 +63,8 @@ Feature: display debug statistics
       |        | backend  | git status                                 |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'old commit' }}      |
-      |        | frontend | git checkout old                           |
+      |        | backend  | git show-ref --quiet refs/heads/old        |
+      | main   | frontend | git checkout old                           |
       |        | backend  | git show-ref --quiet refs/heads/main       |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
       |        | backend  | git config -lz --global                    |

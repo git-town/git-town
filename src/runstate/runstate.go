@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -87,6 +88,7 @@ func (runState *RunState) CreateSkipRunState() RunState {
 			result.RunStepList.Append(step)
 		}
 	}
+	result.RunStepList.List = slice.LowerAll[steps.Step](result.RunStepList.List, &steps.RestoreOpenChangesStep{})
 	return result
 }
 
