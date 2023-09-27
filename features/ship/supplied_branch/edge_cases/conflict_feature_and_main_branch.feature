@@ -96,18 +96,23 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the uncommitted file still exists
 
   @broken
-  @this
+  @debug @this
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                             |
-      | other  | git add -A                          |
-      |        | git stash                           |
-      |        | git stash pop                       |
-      |        | git checkout main                   |
-      | main   | git revert {{ sha 'feature done' }} |
+      | BRANCH  | COMMAND                                                       |
+      | other   | git add -A                                                    |
+      |         | git stash                                                     |
+      |         | git checkout main                                             |
+      | main    | git revert {{ sha 'feature done' }}                           |
+      |         | git push                                                      |
+      |         | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |         | git branch feature {{ sha 'conflicting feature commit' }}     |
+      |         | git checkout feature                                          |
+      | feature | git stash pop                                                 |
+    And inspect the repo
     And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                 |

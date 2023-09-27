@@ -72,7 +72,34 @@ func TestSlice(t *testing.T) {
 
 	t.Run("LastIndex", func(t *testing.T) {
 		t.Parallel()
-		panic("TODO")
+		t.Run("element is last in list", func(t *testing.T) {
+			t.Parallel()
+			give := []int{1, 2, 3, 2, 3}
+			have := slice.LastIndex(give, 3)
+			want := 4
+			assert.Equal(t, want, have)
+		})
+		t.Run("element is first in list", func(t *testing.T) {
+			t.Parallel()
+			give := []int{1, 2, 3, 2, 3}
+			have := slice.LastIndex(give, 1)
+			want := 0
+			assert.Equal(t, want, have)
+		})
+		t.Run("element is in the middle of the list", func(t *testing.T) {
+			t.Parallel()
+			give := []int{1, 2, 3, 1, 3}
+			have := slice.LastIndex(give, 2)
+			want := 1
+			assert.Equal(t, want, have)
+		})
+		t.Run("element is not in the list", func(t *testing.T) {
+			t.Parallel()
+			give := []int{1, 2, 3, 1, 3}
+			have := slice.LastIndex(give, 4)
+			want := -1
+			assert.Equal(t, want, have)
+		})
 	})
 
 	t.Run("LowerLast", func(t *testing.T) {
@@ -109,15 +136,26 @@ func TestSlice(t *testing.T) {
 
 	t.Run("RemoveAt", func(t *testing.T) {
 		t.Parallel()
-		panic("TODO")
 		t.Run("index is within the list", func(t *testing.T) {
 			t.Parallel()
+			give := []int{1, 2, 3}
+			have := slice.RemoveAt(give, 1)
+			want := []int{1, 3}
+			assert.Equal(t, want, have)
 		})
 		t.Run("index is at end of list", func(t *testing.T) {
 			t.Parallel()
+			give := []int{1, 2, 3}
+			have := slice.RemoveAt(give, 2)
+			want := []int{1, 2}
+			assert.Equal(t, want, have)
 		})
 		t.Run("index is at beginning of list", func(t *testing.T) {
 			t.Parallel()
+			give := []int{1, 2, 3}
+			have := slice.RemoveAt(give, 0)
+			want := []int{2, 3}
+			assert.Equal(t, want, have)
 		})
 	})
 }
