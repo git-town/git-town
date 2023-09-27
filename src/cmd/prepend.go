@@ -66,8 +66,9 @@ func runPrepend(args []string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "prepend",
-		RunStepList: stepList,
+		Command:             "prepend",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

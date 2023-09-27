@@ -31,5 +31,6 @@ func (u UnfinishedRunStateDetails) String() string {
 }
 
 func isCheckoutStep(step steps.Step) bool {
-	return gohacks.TypeName(step) == "CheckoutStep"
+	typeName := gohacks.TypeName(step)
+	return typeName == "CheckoutStep" || typeName == "CheckoutIfExistsStep"
 }

@@ -72,8 +72,9 @@ func runRenameBranch(args []string, force, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "rename-branch",
-		RunStepList: stepList,
+		Command:             "rename-branch",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

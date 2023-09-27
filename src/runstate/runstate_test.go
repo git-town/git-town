@@ -45,6 +45,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			UndoablePerennialCommits: []domain.SHA{},
+			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		assert.NoError(t, err)
@@ -83,6 +84,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
+  "InitialActiveBranch": "initial",
   "FinalUndoStepList": [],
   "UnfinishedDetails": null,
   "UndoablePerennialCommits": []

@@ -82,6 +82,28 @@ func (stepList *StepList) String() string {
 	return stepList.StringIndented("")
 }
 
+// RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
+func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
+	result := make([]steps.Step, 0, len(stepList.List))
+	// this one is populated only if the last step is a checkout step
+	var lastStep steps.Step
+	for _, step := range stepList.List {
+		if isCheckoutStep(step) {
+			lastStep = step
+			continue
+		}
+		if lastStep != nil {
+			result = append(result, lastStep)
+		}
+		lastStep = nil
+		result = append(result, step)
+	}
+	if lastStep != nil {
+		result = append(result, lastStep)
+	}
+	return StepList{List: result}
+}
+
 func (stepList *StepList) StringIndented(indent string) string {
 	sb := strings.Builder{}
 	if stepList.IsEmpty() {

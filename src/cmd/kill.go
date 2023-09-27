@@ -58,9 +58,10 @@ func runKill(args []string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:           "kill",
-		RunStepList:       stepList,
-		FinalUndoStepList: finalUndoSteps,
+		Command:             "kill",
+		RunStepList:         stepList,
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		FinalUndoStepList:   finalUndoSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

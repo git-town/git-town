@@ -155,6 +155,7 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: domain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
+			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
 			UndoablePerennialCommits: []domain.SHA{},
 		}
 
@@ -402,6 +403,7 @@ func TestLoadSave(t *testing.T) {
     }
   ],
   "UndoStepList": [],
+  "InitialActiveBranch": "initial",
   "FinalUndoStepList": [],
   "UnfinishedDetails": {
     "CanSkip": true,
