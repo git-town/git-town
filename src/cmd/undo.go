@@ -115,6 +115,8 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
+	fmt.Println("3333333333333 RAW UNDO RUNSTATE")
+	fmt.Printf("%#v\n", undoRunState.RunStepList)
 	err = undoRunState.RunStepList.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
