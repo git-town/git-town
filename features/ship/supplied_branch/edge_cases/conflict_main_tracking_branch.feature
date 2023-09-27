@@ -101,28 +101,21 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I run "git-town continue" and close the editor
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                         |
-      | other   | git add -A                                                      |
-      |         | git stash                                                       |
-      |         | git checkout main                                               |
-      | main    | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
-      |         | git push -u origin feature                                      |
-      |         | git revert {{ sha 'feature done' }}                             |
-      |         | git push                                                        |
-      |         | git checkout feature                                            |
-      | feature | git reset --hard {{ sha 'feature commit' }}                     |
-      |         | git checkout main                                               |
-      | main    | git checkout other                                              |
-      | other   | git stash pop                                                   |
-    And the current branch is now "other"
+      | BRANCH | COMMAND                                                       |
+      | other  | git add -A                                                    |
+      |        | git stash                                                     |
+      |        | git checkout main                                             |
+      | main   | git revert {{ sha 'feature done' }}                           |
+      |        | git push                                                      |
+      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'feature commit' }}                 |
+      |        | git stash pop                                                 |
+    And the current branch is now "main"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, origin | conflicting origin commit        |
-      |         |               | conflicting local commit         |
-      |         |               | feature done                     |
-      |         |               | Revert "feature done"            |
-      | feature | local, origin | feature commit                   |
-      |         | origin        | conflicting origin commit        |
-      |         |               | conflicting local commit         |
-      |         |               | Merge branch 'main' into feature |
+      | BRANCH  | LOCATION      | MESSAGE                   |
+      | main    | local, origin | conflicting origin commit |
+      |         |               | conflicting local commit  |
+      |         |               | feature done              |
+      |         |               | Revert "feature done"     |
+      | feature | local         | feature commit            |
     And the initial branches and hierarchy exist

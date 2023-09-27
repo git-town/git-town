@@ -73,7 +73,17 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 
 	// ignore inconsistently changed perennial branches
 	// because we can't change the remote and we therefore don't want to reset the local part either
-	_, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(args.BranchTypes)
+	inconsistentlyChangedPerennials, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(args.BranchTypes)
+
+	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
+		if inconsistentlyChangedPerennial.After.LocalSHA == inconsistentlyChangedPerennial.After.RemoteSHA {
+			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
+				result.Append(&steps.CheckoutStep{Branch: inconsistentlyChangedPerennial.Before.LocalName})
+				result.Append(&steps.RevertCommitStep{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
+				result.Append(&steps.PushCurrentBranchStep{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})
+			}
+		}
+	}
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
