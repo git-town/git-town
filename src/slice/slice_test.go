@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -102,27 +103,42 @@ func TestSlice(t *testing.T) {
 		})
 	})
 
-	t.Run("LowerLast", func(t *testing.T) {
+	t.Run("LowerAll", func(t *testing.T) {
 		t.Parallel()
 		t.Run("list contains element at the last position", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one", "two", "last"}
+			have := slice.LowerAll(give, "last")
 			want := []string{"one", "two", "last"}
-			have := slice.LowerLast(give, "last")
 			assert.Equal(t, want, have)
 		})
 		t.Run("list contains element in the middle", func(t *testing.T) {
 			t.Parallel()
-			give := []string{"one", "last", "two"}
-			want := []string{"one", "two", "last"}
-			have := slice.LowerLast(give, "last")
+			give := []steps.Step{
+				&steps.AbortMergeStep{},
+				&steps.RestoreOpenChangesStep{EmptyStep: steps.EmptyStep{}},
+				&steps.AbortRebaseStep{},
+			}
+			have := slice.LowerAll[steps.Step](give, &steps.RestoreOpenChangesStep{})
+			want := []steps.Step{
+				&steps.AbortMergeStep{},
+				&steps.AbortRebaseStep{},
+				&steps.RestoreOpenChangesStep{},
+			}
 			assert.Equal(t, want, have)
 		})
 		t.Run("list does not contain the element", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one", "two", "three"}
+			have := slice.LowerAll(give, "last")
 			want := []string{"one", "two", "three"}
-			have := slice.LowerLast(give, "last")
+			assert.Equal(t, want, have)
+		})
+		t.Run("complex example", func(t *testing.T) {
+			t.Parallel()
+			give := []int{1, 2, 1, 3, 1}
+			have := slice.LowerAll(give, 1)
+			want := []int{2, 3, 1}
 			assert.Equal(t, want, have)
 		})
 	})

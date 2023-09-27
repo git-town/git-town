@@ -11,6 +11,8 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
@@ -115,8 +117,6 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	fmt.Println("3333333333333 RAW UNDO RUNSTATE")
-	fmt.Printf("%#v\n", undoRunState.RunStepList)
 	err = undoRunState.RunStepList.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
@@ -124,5 +124,19 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		InitialBranch:    config.initialBranchesSnapshot.Active,
 		PreviousBranch:   config.previousBranch,
 	})
+	if err != nil {
+		return runstate.RunState{}, err
+	}
+	// HACK: if the command to undo failed and was continued,
+	// there might be steps in the undo stack that became obsolete
+	// when the command was continued.
+	// Example: the command stashed away uncommitted changes,
+	// failed, and remembered in the undo list to pop the stack.
+	// When continuing, it finishes and pops the stack as part of the continue list.
+	// When we run undo now, it still wants to pop the stack even though that was already done.
+	// This seems to apply only to popping the stack and switching back to the initial branch.
+	// The branch switching is re-entrant, but popping the stack multiple times causes problems.
+	// Hence we consolidate this step type here.
+	undoRunState.RunStepList.List = slice.LowerAll[steps.Step](undoRunState.RunStepList.List, &steps.RestoreOpenChangesStep{})
 	return undoRunState, err
 }

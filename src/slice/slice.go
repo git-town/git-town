@@ -39,6 +39,7 @@ func Hoist[C comparable](list []C, element C) []C {
 			result = append(result, list[l])
 		}
 	}
+	// TODO: remove the negation from the if condition so that there is only one return statement
 	if !hasElement {
 		return result
 	}
@@ -56,13 +57,20 @@ func LastIndex[C comparable](list []C, element C) int {
 }
 
 // LowerLast provides the given slice with the last element of the given type moved to the last position in the list.
-func LowerLast[C comparable](list []C, element C) []C {
-	index := LastIndex(list, element)
-	if index == -1 {
-		return list
+func LowerAll[C comparable](haystack []C, needle C) []C {
+	result := make([]C, 0, len(haystack))
+	hasNeedle := false
+	for _, element := range haystack {
+		if element == needle {
+			hasNeedle = true
+		} else {
+			result = append(result, element)
+		}
 	}
-	removed := RemoveAt(list, index)
-	return append(removed, element)
+	if hasNeedle {
+		result = append(result, needle)
+	}
+	return result
 }
 
 // Remove returns a new slice which is the given slice with the given element removed.

@@ -25,8 +25,6 @@ func finished(args ExecuteArgs) error {
 	args.RunState.UndoStepList.AppendList(undoSteps)
 	args.RunState.UndoStepList.AppendList(args.RunState.FinalUndoStepList)
 	// slice.LowerLast[steps.Step](args.RunState.UndoStepList.List, &steps.RestoreOpenChangesStep{})
-	fmt.Println("111111111111111111111")
-	fmt.Printf("%#v\n", args.RunState.UndoStepList.List)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
 		err := persistence.Delete(args.RootDir)
 		if err != nil {

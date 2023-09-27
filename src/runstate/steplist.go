@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -32,11 +31,6 @@ func (stepList *StepList) Append(step ...steps.Step) {
 // AppendList adds all elements of the given StepList to the end of this StepList.
 func (stepList *StepList) AppendList(otherList StepList) {
 	stepList.List = append(stepList.List, otherList.List...)
-}
-
-func (stepList *StepList) AppendListBeforeStashPop(otherList StepList) {
-	stepList.AppendList(otherList)
-	slice.LowerLast[steps.Step](stepList.List, &steps.RestoreOpenChangesStep{})
 }
 
 // IsEmpty returns whether or not this StepList has any elements.
