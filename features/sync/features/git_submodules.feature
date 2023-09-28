@@ -4,10 +4,8 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
     Given my repo has a Git submodule
     And the current branch is a feature branch "feature"
     And an uncommitted file with name "submodule/file" and content "a change in the submodule"
-    And inspect the repo
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |

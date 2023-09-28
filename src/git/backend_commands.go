@@ -363,7 +363,7 @@ func (bc *BackendCommands) HasMergeInProgress() bool {
 // HasOpenChanges indicates whether this repo has open changes.
 // TODO: merge this with HasRebaseInProgress and return two bools.
 func (bc *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := bc.QueryTrim("git", "status")
+	output, err := bc.QueryTrim("git", "status", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf(messages.OpenChangesProblem, err)
 	}
