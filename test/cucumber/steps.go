@@ -969,7 +969,7 @@ func updateInitialSHAs(state *ScenarioState) {
 	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
 		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
 	}
-	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo {
+	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
 		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
 	}
 }
