@@ -171,7 +171,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToShip := branches.All.FindLocalBranch(branchNameToShip)
+	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
@@ -212,7 +212,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	targetBranch := branches.All.FindLocalBranch(targetBranchName)
+	targetBranch := branches.All.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}

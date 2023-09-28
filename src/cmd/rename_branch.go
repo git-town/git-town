@@ -140,7 +140,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if oldBranchName == newBranchName {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameToSameName)
 	}
-	oldBranch := branches.All.FindLocalBranch(oldBranchName)
+	oldBranch := branches.All.FindByLocalName(oldBranchName)
 	if oldBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}

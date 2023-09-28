@@ -28,8 +28,8 @@ func (bs BranchInfos) FindByRemote(remoteBranch RemoteBranchName) *BranchInfo {
 	return nil
 }
 
-// FindLocalBranch provides the branch with the given name if one exists.
-func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
+// FindByLocalName provides the branch with the given name if one exists.
+func (bs BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
 	for bi, branch := range bs {
 		if branch.LocalName == branchName {
 			return &bs[bi]
@@ -118,7 +118,7 @@ func (bs BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 func (bs BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for n, name := range names {
-		branch := bs.FindLocalBranch(name)
+		branch := bs.FindByLocalName(name)
 		if branch == nil {
 			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}

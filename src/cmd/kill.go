@@ -110,7 +110,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := branches.All.FindLocalBranch(targetBranchName)
+	targetBranch := branches.All.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
