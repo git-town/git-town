@@ -170,7 +170,7 @@ func killStepList(config *killConfig) (steps runstate.StepList, finalUndoSteps r
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 // TODO: inline this method?
-func killFeatureBranch(list *runstate.StepList, finalUndoist *runstate.StepList, config killConfig) {
+func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.LocalName})
 	}
@@ -178,8 +178,8 @@ func killFeatureBranch(list *runstate.StepList, finalUndoist *runstate.StepList,
 		if config.hasOpenChanges {
 			list.Append(&steps.CommitOpenChangesStep{})
 			list.Append(&steps.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
-			finalUndoist.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
-			finalUndoist.Append(&steps.UndoLastCommitStep{})
+			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
+			finalUndoList.Append(&steps.UndoLastCommitStep{})
 		}
 		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
