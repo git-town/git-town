@@ -53,6 +53,18 @@ func (r *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
 	asserts.NoError(r.BackendCommands.CheckoutBranch(branch))
 }
 
+func (r *TestCommands) CommitSHAs() map[string]domain.SHA {
+	result := map[string]domain.SHA{}
+	output := r.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
+	for _, line := range strings.Split(output, "\n") {
+		parts := strings.SplitN(line, " ", 2)
+		sha := parts[0]
+		commitMessage := parts[1]
+		result[commitMessage] = domain.NewSHA(sha)
+	}
+	return result
+}
+
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.

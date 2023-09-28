@@ -9,8 +9,10 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
+	"golang.org/x/exp/maps"
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
@@ -73,7 +75,7 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
+func (table *DataTable) Expand(localRepo runner, remoteRepo runner, initialSHAs map[string]domain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -93,6 +95,17 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 					commitName := match[18 : len(match)-4]
 					sha := remoteRepo.SHAForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
+				case strings.HasPrefix(match, "{{ sha-before-run "):
+					commitName := match[19 : len(match)-4]
+					sha, found := initialSHAs[commitName]
+					if !found {
+						fmt.Printf("I cannot find the initial commit %q.\n", commitName)
+						fmt.Println("I have these commits:")
+						for _, key := range maps.Keys(initialSHAs) {
+							fmt.Println("  -", key)
+						}
+					}
+					cell = strings.Replace(cell, match, sha.String(), 1)
 				default:
 					log.Fatalf("DataTable.Expand: unknown template expression %q", cell)
 				}

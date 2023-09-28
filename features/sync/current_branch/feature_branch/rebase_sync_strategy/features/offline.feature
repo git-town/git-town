@@ -32,8 +32,8 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git reset --hard {{ sha 'local feature commit' }} |
+      | BRANCH  | COMMAND                                                      |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit' }} |
     And the current branch is still "feature"
     And now the initial commits exist
     And the initial branches and hierarchy exist

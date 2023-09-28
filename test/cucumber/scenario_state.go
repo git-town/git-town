@@ -22,6 +22,13 @@ type ScenarioState struct {
 	// initialRemoteBranches contains the remote branches before the WHEN steps run
 	initialRemoteBranches domain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
+	// initialSHAs is only for looking up SHAs that existing before the first Git Town command ran.
+	// It's not a source of truth for which branches existed at that time
+	// because it might contain non-existing remote branches or miss existing remote branches.
+	// An example is when origin removes a branch. initialSHAs will still list it
+	// because the developer workspace hasn't fetched updates yet.
+	initialSHAs map[string]domain.SHA
+
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
@@ -30,6 +37,9 @@ type ScenarioState struct {
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch domain.LocalBranchName
+
+	// insideGitRepo indicates whether the developer workspace contains a Git repository
+	insideGitRepo bool
 
 	// the error of the last run of Git Town
 	runExitCode int
@@ -52,9 +62,10 @@ func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.fixture = gitEnv
 	state.initialLocalBranches = domain.NewLocalBranchNames("main")
 	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
-	state.initialCommits = nil
+	state.initialSHAs = map[string]domain.SHA{}
 	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = domain.LocalBranchName{}
+	state.insideGitRepo = true
 	state.runOutput = ""
 	state.runExitCode = 0
 	state.runExitCodeChecked = false
