@@ -142,6 +142,7 @@ func TestSlice(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 	})
+
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two", "three"}
