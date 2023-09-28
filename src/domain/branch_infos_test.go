@@ -12,7 +12,7 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
-		bis := domain.BranchInfos{
+		give := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
@@ -21,15 +21,15 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.NewSHA("111111"),
 			},
 		}
-		have := bis.Clone()
+		have := give.Clone()
 		have[0].LocalName = domain.NewLocalBranchName("branch-2")
 		have[0].LocalSHA = domain.NewSHA("222222")
 		have[0].RemoteName = domain.NewRemoteBranchName("origin/branch-2")
 		have[0].RemoteSHA = domain.NewSHA("222222")
-		assert.Equal(t, bis[0].LocalName, domain.NewLocalBranchName("branch-1"))
-		assert.Equal(t, bis[0].LocalSHA, domain.NewSHA("111111"))
-		assert.Equal(t, bis[0].RemoteName, domain.NewRemoteBranchName("origin/branch-1"))
-		assert.Equal(t, bis[0].RemoteSHA, domain.NewSHA("111111"))
+		assert.Equal(t, give[0].LocalName, domain.NewLocalBranchName("branch-1"))
+		assert.Equal(t, give[0].LocalSHA, domain.NewSHA("111111"))
+		assert.Equal(t, give[0].RemoteName, domain.NewRemoteBranchName("origin/branch-1"))
+		assert.Equal(t, give[0].RemoteSHA, domain.NewSHA("111111"))
 	})
 
 	t.Run("FindMatchingRecord", func(t *testing.T) {

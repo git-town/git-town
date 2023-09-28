@@ -12,7 +12,7 @@ func TestInconsistentChange(t *testing.T) {
 
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
-		ics := domain.InconsistentChanges{
+		give := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("perennial-1"),
@@ -50,7 +50,7 @@ func TestInconsistentChange(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-1"),
 		}
-		havePerennials, haveFeatures := ics.Categorize(branchTypes)
+		havePerennials, haveFeatures := give.Categorize(branchTypes)
 		wantPerennials := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
