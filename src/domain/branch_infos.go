@@ -63,13 +63,7 @@ func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
 func (bs BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
 	// TODO: rename .RemoteBranch to .TrackingBranchName
-	remoteBranch := localBranch.RemoteBranch()
-	for _, branch := range bs {
-		if branch.RemoteName == remoteBranch {
-			return true
-		}
-	}
-	return false
+	return bs.FindByRemoteName(localBranch.RemoteBranch()) != nil
 }
 
 // LocalBranches provides only the branches that exist on the local machine.
