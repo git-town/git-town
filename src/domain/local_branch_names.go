@@ -23,7 +23,7 @@ func (l LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, featu
 			perennials = append(perennials, branch)
 		}
 	}
-	return perennials, features
+	return
 }
 
 // Join provides the names of all branches in this collection connected by the given separator.
