@@ -39,4 +39,5 @@ Feature: on the main branch
       |        | git branch -D new                           |
       |        | git stash pop                               |
     And the current branch is now "main"
+    And the uncommitted file still exists
     And the initial branches and hierarchy exist
