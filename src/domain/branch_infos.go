@@ -17,22 +17,22 @@ func (bs BranchInfos) Clone() BranchInfos {
 	return result
 }
 
+// FindByLocalName provides the branch with the given name if one exists.
+func (bs BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
+	for bi, branch := range bs {
+		if branch.LocalName == branchName {
+			return &bs[bi]
+		}
+	}
+	return nil
+}
+
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
 func (bs BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, branch := range bs {
 		if branch.RemoteName == remoteBranch {
 			return &bs[b]
-		}
-	}
-	return nil
-}
-
-// FindByLocalName provides the branch with the given name if one exists.
-func (bs BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
-	for bi, branch := range bs {
-		if branch.LocalName == branchName {
-			return &bs[bi]
 		}
 	}
 	return nil
@@ -62,6 +62,7 @@ func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
 func (bs BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
+	// TODO: rename .RemoteBranch to .TrackingBranchName
 	remoteBranch := localBranch.RemoteBranch()
 	for _, branch := range bs {
 		if branch.RemoteName == remoteBranch {
