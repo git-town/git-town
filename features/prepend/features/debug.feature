@@ -57,7 +57,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                   |
       |        | backend  | git branch -vva                                  |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
-      |        | backend  | git status                                       |
+      |        | backend  | git status --ignore-submodules                   |
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
