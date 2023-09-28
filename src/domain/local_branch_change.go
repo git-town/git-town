@@ -12,7 +12,7 @@ func (lbc LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerenni
 			changedPerennials[branch] = change
 		}
 	}
-	return changedPerennials, changedFeatures
+	return
 }
 
 func (lbc LocalBranchChange) BranchNames() LocalBranchNames {
