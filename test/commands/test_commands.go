@@ -56,8 +56,7 @@ func (r *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
 func (r *TestCommands) CommitSHAs() map[string]domain.SHA {
 	result := map[string]domain.SHA{}
 	output := r.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
+	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
 		commitMessage := parts[1]
