@@ -12,4 +12,4 @@ Feature: preserve the previous Git branch
   Scenario: undo
     When I run "git-town undo"
     Then the current branch is still "current"
-    And the previous Git branch is now "main"
+    And the previous Git branch is now "previous"
