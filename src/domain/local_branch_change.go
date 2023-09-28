@@ -1,5 +1,10 @@
 package domain
 
+type Change[T any] struct {
+	Before T
+	After  T
+}
+
 type LocalBranchChange map[LocalBranchName]Change[SHA]
 
 func (lbc LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerennials, changedFeatures LocalBranchChange) {
@@ -22,9 +27,4 @@ func (lbc LocalBranchChange) BranchNames() LocalBranchNames {
 	}
 	result.Sort()
 	return result
-}
-
-type Change[T any] struct {
-	Before T
-	After  T
 }
