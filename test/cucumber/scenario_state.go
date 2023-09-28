@@ -22,9 +22,10 @@ type ScenarioState struct {
 	// initialRemoteBranches contains the remote branches before the WHEN steps run
 	initialRemoteBranches domain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
-	// initialSHAs is only for looking up SHAs as they were before the first Git Town command ran.
-	// It's not a source of truth for which branches existed at that time because it might contain wrong branches.
-	// An example is when origin removes a branch, initialSHAs will still list it
+	// initialSHAs is only for looking up SHAs that existing before the first Git Town command ran.
+	// It's not a source of truth for which branches existed at that time
+	// because it might contain non-existing remote branches or miss existing remote branches.
+	// An example is when origin removes a branch. initialSHAs will still list it
 	// because the developer workspace hasn't fetched updates yet.
 	initialSHAs map[string]domain.SHA
 
