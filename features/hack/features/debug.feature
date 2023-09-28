@@ -20,7 +20,7 @@ Feature: display debug statistics
       | main   | frontend | git fetch --prune --tags                     |
       |        | backend  | git branch -vva                              |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
-      |        | backend  | git status                                   |
+      |        | backend  | git status --ignore-submodules               |
       | main   | frontend | git rebase origin/main                       |
       |        | backend  | git rev-list --left-right main...origin/main |
       | main   | frontend | git branch new main                          |
@@ -50,7 +50,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status                                    |
+      |        | backend  | git status --ignore-submodules                |
       |        | backend  | git config --unset git-town-branch.new.parent |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |

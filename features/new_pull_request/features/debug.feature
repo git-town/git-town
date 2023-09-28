@@ -18,7 +18,7 @@ Feature: display debug statistics
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git branch -vva                                                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
-      |         | backend  | git status                                                         |
+      |         | backend  | git status --ignore-submodules                                     |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
       |         | backend  | git rev-list --left-right main...origin/main                       |

@@ -39,18 +39,15 @@ Feature: with pull-branch-strategy set to "merge"
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                 |
+      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                    |
       | main    | local, origin | local main commit                          |
       |         |               | origin main commit                         |
       |         |               | Merge remote-tracking branch 'origin/main' |
-      | feature | local, origin | local main commit                          |
-      |         |               | origin main commit                         |
-      |         |               | Merge remote-tracking branch 'origin/main' |
-      |         |               | origin feature commit                      |
-      |         |               | local feature commit                       |
+      | feature | local         | local feature commit                       |
+      |         | origin        | origin feature commit                      |
     And the initial branches and hierarchy exist

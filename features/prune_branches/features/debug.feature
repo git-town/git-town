@@ -60,7 +60,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                             |
       |        | backend  | git branch -vva                            |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
-      |        | backend  | git status                                 |
+      |        | backend  | git status --ignore-submodules             |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'old commit' }}      |
       |        | frontend | git checkout old                           |
