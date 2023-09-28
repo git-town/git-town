@@ -12,7 +12,7 @@ func TestLocalBranchChange(t *testing.T) {
 
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
-		lbc := domain.LocalBranchChange{
+		give := domain.LocalBranchChange{
 			domain.NewLocalBranchName("branch-1"): {
 				Before: domain.NewSHA("111111"),
 				After:  domain.NewSHA("222222"),
@@ -26,7 +26,7 @@ func TestLocalBranchChange(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := lbc.Categorize(branchTypes)
+		havePerennials, haveFeatures := give.Categorize(branchTypes)
 		wantPerennials := domain.LocalBranchChange{
 			domain.NewLocalBranchName("dev"): {
 				Before: domain.NewSHA("333333"),
