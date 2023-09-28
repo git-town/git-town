@@ -17,9 +17,9 @@ func (bs BranchInfos) Clone() BranchInfos {
 	return result
 }
 
-// FindByRemote provides the local branch that has the given remote branch as its tracking branch
+// FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (bs BranchInfos) FindByRemote(remoteBranch RemoteBranchName) *BranchInfo {
+func (bs BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, branch := range bs {
 		if branch.RemoteName == remoteBranch {
 			return &bs[b]

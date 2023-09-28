@@ -123,7 +123,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			})
 		} else {
 			remoteBranchName := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			existingBranchWithTracking := result.FindByRemote(remoteBranchName)
+			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
 			if existingBranchWithTracking != nil {
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
