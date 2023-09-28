@@ -26,7 +26,7 @@ type ScenarioState struct {
 	// It's not a source of truth for which branches existed at that time because it might contain wrong branches.
 	// An example is when origin removes a branch, initialSHAs will still list it
 	// because the developer workspace hasn't fetched updates yet.
-	initialSHAs domain.BranchInfos
+	initialSHAs map[string]domain.SHA
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
@@ -58,7 +58,7 @@ func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.fixture = gitEnv
 	state.initialLocalBranches = domain.NewLocalBranchNames("main")
 	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
-	state.initialSHAs = domain.BranchInfos{}
+	state.initialSHAs = map[string]domain.SHA{}
 	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = domain.LocalBranchName{}
 	state.runOutput = ""

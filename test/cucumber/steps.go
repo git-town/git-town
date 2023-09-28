@@ -260,7 +260,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
 		state.fixture.DevRepo.Config.Reload()
 		return err
@@ -268,7 +270,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
 		state.fixture.DevRepo.Config.Reload()
 		return err
@@ -276,7 +280,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
@@ -285,7 +291,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
@@ -294,7 +302,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
@@ -303,7 +313,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
 		state.fixture.DevRepo.Config.Reload()
@@ -312,7 +324,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		var err error
-		state.initialSHAs, _, err = state.fixture.DevRepo.BranchInfos()
+		if len(state.initialSHAs) == 0 {
+			state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		state.fixture.DevRepo.Config.Reload()
 		return err
@@ -406,6 +420,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,
+			state.initialSHAs,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
