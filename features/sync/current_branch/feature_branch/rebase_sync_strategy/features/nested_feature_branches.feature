@@ -47,7 +47,6 @@ Feature: nested feature branches
       |        |               | origin parent commit |
       |        |               | local parent commit  |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
