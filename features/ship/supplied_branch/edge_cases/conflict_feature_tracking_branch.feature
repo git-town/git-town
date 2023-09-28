@@ -106,7 +106,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |        | git branch feature {{ sha 'conflicting local commit' }}                  |
       |        | git checkout other                                                       |
       | other  | git stash pop                                                            |
-    And the current branch is now "feature"
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                   |
       | main    | local, origin | feature done              |

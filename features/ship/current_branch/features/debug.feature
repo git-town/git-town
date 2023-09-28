@@ -78,7 +78,7 @@ Feature: display debug statistics
       | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
-      | main   | frontend | git checkout feature                           |
+      |        | frontend | git checkout feature                           |
       |        | backend  | git show-ref --quiet refs/heads/main           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git config -lz --global                        |
