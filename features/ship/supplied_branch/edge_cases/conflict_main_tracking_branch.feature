@@ -109,8 +109,9 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        | git push                                                      |
       |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
       |        | git branch feature {{ sha 'feature commit' }}                 |
-      |        | git stash pop                                                 |
-    And the current branch is now "main"
+      |        | git checkout other                                            |
+      | other  | git stash pop                                                 |
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                   |
       | main    | local, origin | conflicting origin commit |
