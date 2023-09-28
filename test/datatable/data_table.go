@@ -75,7 +75,7 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo runner, remoteRepo runner, initialSHAs map[string]domain.SHA) DataTable {
+func (table *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]domain.SHA, initialOriginSHAs map[string]domain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -97,11 +97,22 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner, initialSHAs 
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-before-run "):
 					commitName := match[19 : len(match)-4]
-					sha, found := initialSHAs[commitName]
+					sha, found := initialDevSHAs[commitName]
 					if !found {
-						fmt.Printf("I cannot find the initial commit %q.\n", commitName)
+						fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
 						fmt.Println("I have these commits:")
-						for _, key := range maps.Keys(initialSHAs) {
+						for _, key := range maps.Keys(initialDevSHAs) {
+							fmt.Println("  -", key)
+						}
+					}
+					cell = strings.Replace(cell, match, sha.String(), 1)
+				case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+					commitName := match[29 : len(match)-4]
+					sha, found := initialOriginSHAs[commitName]
+					if !found {
+						fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
+						fmt.Println("I have these commits:")
+						for _, key := range maps.Keys(initialOriginSHAs) {
 							fmt.Println("  -", key)
 						}
 					}
