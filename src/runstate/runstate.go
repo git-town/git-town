@@ -49,6 +49,8 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.
 	return nil
 }
 
+// RegisterUndoablePerennialCommit stores the given commit on a perennial branch as undoable.
+// This method is used as a callback.
 // TODO: rename runState to rs.
 func (runState *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 	runState.UndoablePerennialCommits = append(runState.UndoablePerennialCommits, commit)
