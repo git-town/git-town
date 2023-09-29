@@ -15,7 +15,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 	if err != nil {
 		return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
-	initialStashSnapshot := undo.StashSnapshot{
+	stashSnapshot := undo.StashSnapshot{
 		Amount: stashSize,
 	}
 	if args.HandleUnfinishedState {
@@ -23,7 +23,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		if err != nil {
 			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 		}
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, branchesSnapshot, args.Repo.ConfigSnapshot, initialStashSnapshot, args.PushHook)
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, branchesSnapshot, args.Repo.ConfigSnapshot, stashSnapshot, args.PushHook)
 		if err != nil || exit {
 			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), exit, err
 		}
@@ -70,7 +70,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 	if args.ValidateIsConfigured {
 		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
 	}
-	return branches, branchesSnapshot, initialStashSnapshot, false, err
+	return branches, branchesSnapshot, stashSnapshot, false, err
 }
 
 type LoadBranchesArgs struct {
