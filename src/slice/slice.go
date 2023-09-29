@@ -57,16 +57,6 @@ func Hoist[C comparable](list []C, element C) []C {
 	return append([]C{element}, result...)
 }
 
-// LastIndex provides the zero-based index of the last occurrence of the given element in the given list.
-func LastIndex[C comparable](list []C, element C) int {
-	for l := len(list) - 1; l >= 0; l-- {
-		if list[l] == element {
-			return l
-		}
-	}
-	return -1
-}
-
 // LowerLast provides the given slice with the last element of the given type moved to the last position in the list.
 func LowerAll[C comparable](haystack []C, needle C) []C {
 	result := make([]C, 0, len(haystack))

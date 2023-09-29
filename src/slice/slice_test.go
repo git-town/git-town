@@ -89,38 +89,6 @@ func TestSlice(t *testing.T) {
 		})
 	})
 
-	t.Run("LastIndex", func(t *testing.T) {
-		t.Parallel()
-		t.Run("element is last in list", func(t *testing.T) {
-			t.Parallel()
-			give := []int{1, 2, 3, 2, 3}
-			have := slice.LastIndex(give, 3)
-			want := 4
-			assert.Equal(t, want, have)
-		})
-		t.Run("element is first in list", func(t *testing.T) {
-			t.Parallel()
-			give := []int{1, 2, 3, 2, 3}
-			have := slice.LastIndex(give, 1)
-			want := 0
-			assert.Equal(t, want, have)
-		})
-		t.Run("element is in the middle of the list", func(t *testing.T) {
-			t.Parallel()
-			give := []int{1, 2, 3, 1, 3}
-			have := slice.LastIndex(give, 2)
-			want := 1
-			assert.Equal(t, want, have)
-		})
-		t.Run("element is not in the list", func(t *testing.T) {
-			t.Parallel()
-			give := []int{1, 2, 3, 1, 3}
-			have := slice.LastIndex(give, 4)
-			want := -1
-			assert.Equal(t, want, have)
-		})
-	})
-
 	t.Run("LowerAll", func(t *testing.T) {
 		t.Parallel()
 		t.Run("list contains element at the last position", func(t *testing.T) {
