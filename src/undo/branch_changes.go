@@ -10,6 +10,8 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
+// BranchChanges describes the changes made to the branches in a Git repo.
+// Various types of changes are distinguished.
 type BranchChanges struct {
 	LocalAdded    domain.LocalBranchNames
 	LocalRemoved  domain.LocalBranchesSHAs
@@ -42,6 +44,7 @@ func EmptyBranchChanges() BranchChanges {
 	}
 }
 
+// UndoSteps provides the steps to undo the changes described by this BranchChanges instance.
 func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	result := runstate.StepList{}
 	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
@@ -71,10 +74,9 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
-	// ignore inconsistently changed perennial branches
-	// because we can't change the remote and we therefore don't want to reset the local part either
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(args.BranchTypes)
 
+	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if inconsistentlyChangedPerennial.After.LocalSHA == inconsistentlyChangedPerennial.After.RemoteSHA {
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
@@ -148,11 +150,11 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		})
 	}
 
-	_, remoteFeatureChanges := c.RemoteChanged.Categorize(args.BranchTypes)
 	// Ignore remotely changed perennial branches because we can't force-push to them
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
+	_, remoteFeatureChanges := c.RemoteChanged.Categorize(args.BranchTypes)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
 		result.Append(&steps.ResetRemoteBranchToSHAStep{

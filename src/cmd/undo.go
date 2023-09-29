@@ -136,5 +136,6 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	// This seems to apply only to popping the stack and switching back to the initial branch.
 	// Hence we consolidate this step type here.
 	undoRunState.RunStepList.List = slice.LowerAll[steps.Step](undoRunState.RunStepList.List, &steps.RestoreOpenChangesStep{})
+	undoRunState.RunStepList.List = slice.RemoveAllButLast[steps.Step](undoRunState.RunStepList.List, &steps.CheckoutIfExistsStep{})
 	return undoRunState, err
 }

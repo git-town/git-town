@@ -20,6 +20,17 @@ func Contains[C comparable](list []C, value C) bool {
 	return false
 }
 
+// FindAll provides the indexes of all occurrences of the given element in the given list.
+func FindAll[C comparable](list []C, element C) []int {
+	result := []int{}
+	for l, li := range list {
+		if li == element {
+			result = append(result, l)
+		}
+	}
+	return result
+}
+
 // FirstElementOr provides the first element of the given list or the given alternative if the list is empty.
 func FirstElementOr[C comparable](list []C, alternative C) C { //nolint:ireturn // there should never be any nil values here
 	if len(list) > 0 {
@@ -84,7 +95,25 @@ func Remove[C comparable](list []C, value C) []C {
 	return result
 }
 
+func RemoveAllButLast[C comparable](list []C, element C) []C {
+	occurrences := FindAll(list, element)
+	occurrencesToRemove := TruncateLast(occurrences)
+	for i := len(occurrencesToRemove) - 1; i >= 0; i-- {
+		list = RemoveAt(list, occurrencesToRemove[i])
+	}
+	return list
+}
+
 // RemoveAt provides the given list with the element at the given position removed.
 func RemoveAt[C comparable](list []C, index int) []C {
 	return append(list[:index], list[index+1:]...)
+}
+
+// TruncateLast provides the given list with its last element removed.
+func TruncateLast[C comparable](list []C) []C {
+	listLength := len(list)
+	if listLength == 0 {
+		return list
+	}
+	return list[:listLength-1]
 }
