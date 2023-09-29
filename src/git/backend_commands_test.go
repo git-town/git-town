@@ -153,17 +153,17 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("no open changes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			has, err := runtime.Backend.HasOpenChanges()
+			have, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.False(t, has)
+			assert.False(t, have)
 		})
 		t.Run("has open changes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateFile("foo", "bar")
-			has, err := runtime.Backend.HasOpenChanges()
+			have, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.True(t, has)
+			assert.True(t, have)
 		})
 		t.Run("during rebase", func(t *testing.T) {
 			t.Parallel()
@@ -185,10 +185,10 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "content on initial",
 				Message:     "Create file1",
 			})
-			_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail here
-			has, err := runtime.Backend.HasOpenChanges()
+			_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.False(t, has)
+			assert.False(t, have)
 		})
 		t.Run("during merge conflict", func(t *testing.T) {
 			t.Parallel()
@@ -210,10 +210,10 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "content on initial",
 				Message:     "Create file1",
 			})
-			_ = runtime.MergeBranch(branch1) // this is expected to fail here
-			has, err := runtime.Backend.HasOpenChanges()
+			_ = runtime.MergeBranch(branch1) // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.False(t, has)
+			assert.False(t, have)
 		})
 		t.Run("unstashed conflicting changes", func(t *testing.T) {
 			t.Parallel()
@@ -226,25 +226,27 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "committed content",
 				Message:     "Create file",
 			})
-			_ = runtime.UnstashOpenFiles() // we expect an error here
-			has, err := runtime.Backend.HasOpenChanges()
+			_ = runtime.UnstashOpenFiles() // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
 			assert.NoError(t, err)
-			assert.True(t, has)
+			assert.True(t, have)
 		})
 	})
 
 	t.Run("HasRebaseInProgress", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		has, err := runtime.Backend.HasRebaseInProgress()
+		have, err := runtime.Backend.HasRebaseInProgress()
 		assert.NoError(t, err)
-		assert.False(t, has)
+		assert.False(t, have)
 	})
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes the current branch", func(t *testing.T) {
+			t.Parallel()
 			t.Run("marker is at the first entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
 * branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
   branch-2                     da796a69 [origin/branch-2] Commit message 2
@@ -253,6 +255,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, domain.NewLocalBranchName("branch-1"), currentBranch)
 			})
 			t.Run("marker is at the middle entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
@@ -261,6 +264,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 			})
 			t.Run("marker is at the last entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
   branch-2                     da796a69 [origin/branch-2] Commit message 2
