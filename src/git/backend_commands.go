@@ -73,8 +73,8 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchNam
 	return out != "", nil
 }
 
-// BranchInfos provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchInfos() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
+// BranchesSnapshot provides detailed information about the sync status of all branches.
+func (bc *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
 		return domain.EmptyBranchesSnapshot(), err

@@ -19,7 +19,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		Amount: stashSize,
 	}
 	if args.HandleUnfinishedState {
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchInfos()
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
 			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 		}
@@ -50,13 +50,13 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 				return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 			}
 		}
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchInfos()
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
 			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 		}
 	}
 	if branchesSnapshot.IsEmpty() {
-		branchesSnapshot, err = args.Repo.Runner.Backend.BranchInfos()
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
 			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 		}

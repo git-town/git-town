@@ -63,7 +63,7 @@ func runRepo(debug bool) error {
 }
 
 func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
-	branchesSnapshot, err := repo.Runner.Backend.BranchInfos()
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return nil, err
 	}

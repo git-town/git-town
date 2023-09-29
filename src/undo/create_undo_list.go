@@ -53,7 +53,7 @@ func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git
 }
 
 func determineUndoBranchesSteps(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (runstate.StepList, error) {
-	finalBranchesSnapshot, err := runner.Backend.BranchInfos()
+	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return runstate.StepList{}, err
 	}
