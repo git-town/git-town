@@ -65,7 +65,7 @@ func (bi BranchInfo) HasTrackingBranch() bool {
 
 // IsEmpty indicates whether this BranchInfo is completely empty, i.e. not a single branch contains something.
 func (bi BranchInfo) IsEmpty() bool {
-	return bi.LocalName.IsEmpty() && bi.LocalSHA.IsEmpty() && bi.RemoteName.IsEmpty() && bi.RemoteSHA.IsEmpty()
+	return !bi.HasLocalBranch() && !bi.HasRemoteBranch()
 }
 
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
