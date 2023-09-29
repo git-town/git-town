@@ -77,11 +77,6 @@ func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
 }
 
-// Implementation of the fmt.Stringer interface.
-func (stepList *StepList) String() string {
-	return stepList.StringIndented("")
-}
-
 // RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
 func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
 	result := make([]steps.Step, 0, len(stepList.List))
@@ -102,6 +97,11 @@ func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
 		result = append(result, lastStep)
 	}
 	return StepList{List: result}
+}
+
+// Implementation of the fmt.Stringer interface.
+func (stepList *StepList) String() string {
+	return stepList.StringIndented("")
 }
 
 func (stepList *StepList) StringIndented(indent string) string {
