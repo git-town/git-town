@@ -1,5 +1,7 @@
 package domain
 
+import "golang.org/x/exp/maps"
+
 type RemoteBranchChange map[RemoteBranchName]Change[SHA]
 
 func (rbc RemoteBranchChange) Categorize(branchTypes BranchTypes) (perennialChanges, featureChanges RemoteBranchChange) {
@@ -16,9 +18,5 @@ func (rbc RemoteBranchChange) Categorize(branchTypes BranchTypes) (perennialChan
 }
 
 func (rbc RemoteBranchChange) BranchNames() RemoteBranchNames {
-	result := make(RemoteBranchNames, 0, len(rbc))
-	for branch := range rbc {
-		result = append(result, branch)
-	}
-	return result
+	return maps.Keys(rbc)
 }
