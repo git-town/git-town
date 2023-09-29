@@ -197,9 +197,38 @@ func TestStepList(t *testing.T) {
 		})
 		t.Run("has a mix of Checkout and CheckoutIfExists steps", func(t *testing.T) {
 			t.Parallel()
+			give := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			have := give.RemoveDuplicateCheckoutSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			assert.Equal(t, want, have)
 		})
 		t.Run("has no duplicate checkout steps", func(t *testing.T) {
 			t.Parallel()
+			give := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			have := give.RemoveDuplicateCheckoutSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			assert.Equal(t, want, have)
 		})
 	})
 
