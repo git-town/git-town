@@ -83,11 +83,10 @@ func (bc *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) {
 	if !currentBranch.IsEmpty() {
 		bc.CurrentBranchCache.Set(currentBranch)
 	}
-	snapshot := domain.BranchesSnapshot{
+	return domain.BranchesSnapshot{
 		Branches: branches,
 		Active:   currentBranch,
-	}
-	return snapshot, nil
+	}, nil
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
