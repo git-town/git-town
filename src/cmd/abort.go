@@ -123,7 +123,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.Stas
 type abortConfig struct {
 	connector               hosting.Connector
 	hasOpenChanges          bool
-	initialBranchesSnapshot undo.BranchesSnapshot
+	initialBranchesSnapshot domain.BranchesSnapshot
 	mainBranch              domain.LocalBranchName
 	lineage                 config.Lineage
 	previousBranch          domain.LocalBranchName

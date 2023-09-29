@@ -42,7 +42,7 @@ type ExecuteArgs struct {
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
 	RootDir                 domain.RepoRootDir
-	InitialBranchesSnapshot undo.BranchesSnapshot
+	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    undo.StashSnapshot
 	Lineage                 config.Lineage

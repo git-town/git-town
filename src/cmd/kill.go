@@ -87,11 +87,11 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+		return nil, domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

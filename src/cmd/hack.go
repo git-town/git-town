@@ -84,7 +84,7 @@ func runHack(args []string, promptForParent, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())

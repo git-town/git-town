@@ -138,11 +138,11 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+		return nil, domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

@@ -63,15 +63,15 @@ func runRepo(debug bool) error {
 }
 
 func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
-	allBranches, initialBranch, err := repo.Runner.Backend.BranchInfos()
+	branchesSnapshot, err := repo.Runner.Backend.BranchInfos()
 	if err != nil {
 		return nil, err
 	}
 	branchTypes := repo.Runner.Config.BranchTypes()
 	branches := domain.Branches{
-		All:     allBranches,
+		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
-		Initial: initialBranch,
+		Initial: branchesSnapshot.Active,
 	}
 	_, err = validate.IsConfigured(&repo.Runner.Backend, branches)
 	if err != nil {

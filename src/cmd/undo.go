@@ -70,7 +70,7 @@ func runUndo(debug bool) error {
 type undoConfig struct {
 	hasOpenChanges          bool
 	mainBranch              domain.LocalBranchName
-	initialBranchesSnapshot undo.BranchesSnapshot
+	initialBranchesSnapshot domain.BranchesSnapshot
 	previousBranch          domain.LocalBranchName
 	pushHook                bool
 }

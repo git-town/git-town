@@ -101,7 +101,7 @@ type prependConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())

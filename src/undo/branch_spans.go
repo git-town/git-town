@@ -4,6 +4,26 @@ import "github.com/git-town/git-town/v9/src/domain"
 
 type BranchSpans []BranchSpan
 
+func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) BranchSpans {
+	result := BranchSpans{}
+	for _, before := range beforeSnapshot.Branches {
+		after := afterSnapshot.Branches.FindMatchingRecord(before)
+		result = append(result, BranchSpan{
+			Before: before,
+			After:  after,
+		})
+	}
+	for _, after := range afterSnapshot.Branches {
+		if beforeSnapshot.Branches.FindMatchingRecord(after).IsEmpty() {
+			result = append(result, BranchSpan{
+				Before: domain.EmptyBranchInfo(),
+				After:  after,
+			})
+		}
+	}
+	return result
+}
+
 // Changes describes the changes made in this BranchesBeforeAfter structure.
 func (bss BranchSpans) Changes() BranchChanges {
 	result := EmptyBranchChanges()

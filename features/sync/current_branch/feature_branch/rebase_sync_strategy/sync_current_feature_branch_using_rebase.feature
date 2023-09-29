@@ -36,9 +36,9 @@ Feature: sync the current feature branch using the "rebase" sync strategy
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                      |
-      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                 |
-      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
+      | BRANCH  | COMMAND                                                                                           |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
+      |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

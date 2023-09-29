@@ -32,7 +32,7 @@ func CreateUndoList(args CreateUndoListArgs) (runstate.StepList, error) {
 
 type CreateUndoListArgs struct {
 	Run                      *git.ProdRunner
-	InitialBranchesSnapshot  BranchesSnapshot
+	InitialBranchesSnapshot  domain.BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot
 	InitialStashSnapshot     StashSnapshot
 	NoPushHook               bool
@@ -52,16 +52,12 @@ func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git
 	return configDiff.UndoSteps(), nil
 }
 
-func determineUndoBranchesSteps(initialBranchesSnapshot BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (runstate.StepList, error) {
-	allBranches, active, err := runner.Backend.BranchInfos()
+func determineUndoBranchesSteps(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (runstate.StepList, error) {
+	finalBranchesSnapshot, err := runner.Backend.BranchInfos()
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	finalBranchesSnapshot := BranchesSnapshot{
-		Branches: allBranches,
-		Active:   active,
-	}
-	branchSpans := initialBranchesSnapshot.Span(finalBranchesSnapshot)
+	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoSteps(StepsArgs{
 		Lineage:                  runner.Config.Lineage(),

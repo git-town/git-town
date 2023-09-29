@@ -107,11 +107,11 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+		return nil, domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -66,11 +67,11 @@ func runContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+		return nil, domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

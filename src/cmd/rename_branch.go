@@ -100,11 +100,11 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, undo.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+		return nil, domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

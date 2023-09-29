@@ -74,16 +74,20 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchNam
 }
 
 // BranchInfos provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchInfos() (branches domain.BranchInfos, currentBranch domain.LocalBranchName, err error) { //nolint:nonamedreturns
+func (bc *BackendCommands) BranchInfos() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
-		return
+		return domain.EmptyBranchesSnapshot(), err
 	}
-	branches, currentBranch = ParseVerboseBranchesOutput(output)
+	branches, currentBranch := ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
 		bc.CurrentBranchCache.Set(currentBranch)
 	}
-	return branches, currentBranch, nil
+	snapshot := domain.BranchesSnapshot{
+		Branches: branches,
+		Active:   currentBranch,
+	}
+	return snapshot, nil
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
