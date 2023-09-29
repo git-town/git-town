@@ -34,7 +34,7 @@ func EmptyBranchInfo() BranchInfo {
 
 // ExistsEverywhere indicates whether this BranchInfo has values for all branches, i.e. both local and remote branches exist.
 func (bi BranchInfo) ExistsEverywhere() bool {
-	return !bi.LocalName.IsEmpty() && !bi.LocalSHA.IsEmpty() && !bi.RemoteName.IsEmpty() && !bi.RemoteSHA.IsEmpty()
+	return bi.HasLocalBranch() && bi.HasRemoteBranch()
 }
 
 func (bi BranchInfo) HasLocalBranch() bool {
