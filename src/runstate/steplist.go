@@ -128,6 +128,7 @@ func (stepList *StepList) StringIndented(indent string) string {
 	return sb.String()
 }
 
+// StepTypes provides the names of the types of the steps in this list.
 func (stepList *StepList) StepTypes() []string {
 	result := make([]string, len(stepList.List))
 	for s, step := range stepList.List {
