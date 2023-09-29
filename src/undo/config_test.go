@@ -38,7 +38,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{
@@ -82,7 +82,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{},
@@ -130,7 +130,7 @@ func TestConfigSnapshot(t *testing.T) {
 					Local: config.GitConfigCache{},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
@@ -182,7 +182,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.EmptyConfigDiff(),
 				Local: undo.ConfigDiff{
@@ -226,7 +226,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
@@ -274,7 +274,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added:   []config.Key{},
@@ -333,7 +333,7 @@ func TestConfigSnapshot(t *testing.T) {
 					},
 				},
 			}
-			haveDiff := before.Diff(after)
+			haveDiff := undo.NewConfigDiffs(before, after)
 			wantDiff := undo.ConfigDiffs{
 				Global: undo.ConfigDiff{
 					Added: []config.Key{

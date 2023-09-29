@@ -11,6 +11,13 @@ type ConfigDiffs struct {
 	Local  ConfigDiff
 }
 
+func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
+	return ConfigDiffs{
+		Global: NewConfigDiff(before.GitConfig.Global, after.GitConfig.Global),
+		Local:  NewConfigDiff(before.GitConfig.Local, after.GitConfig.Local),
+	}
+}
+
 func (cd ConfigDiffs) UndoSteps() runstate.StepList {
 	result := runstate.StepList{}
 	for _, key := range cd.Global.Added {

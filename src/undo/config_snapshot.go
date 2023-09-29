@@ -9,10 +9,3 @@ type ConfigSnapshot struct {
 	Cwd       string // the current working directory
 	GitConfig config.GitConfig
 }
-
-func (cs ConfigSnapshot) Diff(other ConfigSnapshot) ConfigDiffs {
-	return ConfigDiffs{
-		Global: NewConfigDiff(cs.GitConfig.Global, other.GitConfig.Global),
-		Local:  NewConfigDiff(cs.GitConfig.Local, other.GitConfig.Local),
-	}
-}

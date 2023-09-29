@@ -48,7 +48,7 @@ func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backend),
 	}
-	configDiff := initialConfigSnapshot.Diff(finalConfigSnapshot)
+	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoSteps(), nil
 }
 
