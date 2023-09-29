@@ -176,7 +176,9 @@ func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
 			list.Append(&steps.CommitOpenChangesStep{})
+			// update the registered initial SHA for this branch so that undo restores the just committed changes
 			list.Append(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
+			// when undoing, manually undo the just committed changes so that they are uncommitted again
 			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
 			finalUndoList.Append(&steps.UndoLastCommitStep{})
 		}
