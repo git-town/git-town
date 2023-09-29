@@ -10,6 +10,54 @@ import (
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
 
+	t.Run("ExistsEverywhere", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has both branches", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName("branch-1"),
+				LocalSHA:   domain.NewSHA("111111"),
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+				RemoteSHA:  domain.NewSHA("111111"),
+			}
+			assert.True(t, give.ExistsEverywhere())
+		})
+		t.Run("has local branch", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName("branch-1"),
+				LocalSHA:   domain.NewSHA("111111"),
+				SyncStatus: domain.SyncStatusLocalOnly,
+				RemoteName: domain.RemoteBranchName{},
+				RemoteSHA:  domain.SHA{},
+			}
+			assert.False(t, give.ExistsEverywhere())
+		})
+		t.Run("has remote branch", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.LocalBranchName{},
+				LocalSHA:   domain.SHA{},
+				SyncStatus: domain.SyncStatusLocalOnly,
+				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+				RemoteSHA:  domain.NewSHA("111111"),
+			}
+			assert.False(t, give.ExistsEverywhere())
+		})
+		t.Run("is empty", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.LocalBranchName{},
+				LocalSHA:   domain.SHA{},
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.RemoteBranchName{},
+				RemoteSHA:  domain.SHA{},
+			}
+			assert.False(t, give.ExistsEverywhere())
+		})
+	})
+
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch", func(t *testing.T) {

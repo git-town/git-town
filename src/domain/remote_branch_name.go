@@ -40,7 +40,7 @@ func (r RemoteBranchName) BranchName() BranchName {
 }
 
 func (r RemoteBranchName) IsEmpty() bool {
-	return len(r.id) == 0
+	return r.id == ""
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.

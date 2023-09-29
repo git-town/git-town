@@ -19,12 +19,7 @@ func (b BranchSpan) IsOmniRemove() bool {
 }
 
 func (b BranchSpan) IsInconsistentChange() bool {
-	return !b.Before.LocalSHA.IsEmpty() &&
-		!b.Before.RemoteSHA.IsEmpty() &&
-		!b.After.LocalSHA.IsEmpty() &&
-		!b.After.RemoteSHA.IsEmpty() &&
-		b.LocalChanged() &&
-		b.RemoteChanged()
+	return b.Before.ExistsEverywhere() && b.After.ExistsEverywhere() && b.LocalChanged() && b.RemoteChanged()
 }
 
 func (b BranchSpan) LocalAdded() bool {

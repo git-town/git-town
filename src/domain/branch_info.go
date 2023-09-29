@@ -32,6 +32,11 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
+// ExistsEverywhere indicates whether this BranchInfo has values for all branches, i.e. both local and remote branches exist.
+func (bi BranchInfo) ExistsEverywhere() bool {
+	return !bi.LocalName.IsEmpty() && !bi.LocalSHA.IsEmpty() && !bi.RemoteName.IsEmpty() && !bi.RemoteSHA.IsEmpty()
+}
+
 func (bi BranchInfo) HasLocalBranch() bool {
 	return !bi.LocalName.IsEmpty() && !bi.LocalSHA.IsEmpty()
 }
@@ -58,6 +63,7 @@ func (bi BranchInfo) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
+// IsEmpty indicates whether this BranchInfo is completely empty, i.e. not a single branch contains something.
 func (bi BranchInfo) IsEmpty() bool {
 	return bi.LocalName.IsEmpty() && bi.LocalSHA.IsEmpty() && bi.RemoteName.IsEmpty() && bi.RemoteSHA.IsEmpty()
 }
