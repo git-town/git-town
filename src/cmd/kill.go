@@ -176,7 +176,7 @@ func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
 			list.Append(&steps.CommitOpenChangesStep{})
-			list.Append(&steps.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
+			list.Append(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
 			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
 			finalUndoList.Append(&steps.UndoLastCommitStep{})
 		}
