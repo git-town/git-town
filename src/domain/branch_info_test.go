@@ -10,7 +10,7 @@ import (
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ExistsEverywhere", func(t *testing.T) {
+	t.Run("HasAllBranches", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has both branches", func(t *testing.T) {
 			t.Parallel()
@@ -21,7 +21,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			assert.True(t, give.ExistsEverywhere())
+			assert.True(t, give.HasAllBranches())
 		})
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
@@ -32,7 +32,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			assert.False(t, give.ExistsEverywhere())
+			assert.False(t, give.HasAllBranches())
 		})
 		t.Run("has remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -43,7 +43,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			assert.False(t, give.ExistsEverywhere())
+			assert.False(t, give.HasAllBranches())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -54,7 +54,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			assert.False(t, give.ExistsEverywhere())
+			assert.False(t, give.HasAllBranches())
 		})
 	})
 

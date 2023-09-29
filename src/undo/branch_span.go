@@ -19,7 +19,7 @@ func (b BranchSpan) IsOmniRemove() bool {
 }
 
 func (b BranchSpan) IsInconsistentChange() bool {
-	return b.Before.ExistsEverywhere() && b.After.ExistsEverywhere() && b.LocalChanged() && b.RemoteChanged() && !b.IsOmniChange()
+	return b.Before.HasAllBranches() && b.After.HasAllBranches() && b.LocalChanged() && b.RemoteChanged() && !b.IsOmniChange()
 }
 
 func (b BranchSpan) LocalAdded() bool {
