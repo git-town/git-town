@@ -136,10 +136,10 @@ func TestLoadSave(t *testing.T) {
 
 		wantJSON := `
 {
-  "AbortStepList": [],
   "Command": "command",
   "IsAbort": true,
   "IsUndo": true,
+  "AbortStepList": [],
   "RunStepList": [
     {
       "data": {},

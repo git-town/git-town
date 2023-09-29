@@ -31,6 +31,9 @@ func TestRunState(t *testing.T) {
 		assert.NoError(t, err)
 		want := `
 {
+  "Command": "sync",
+  "IsAbort": false,
+  "IsUndo": false,
   "AbortStepList": [
     {
       "data": {
@@ -40,9 +43,6 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "Command": "sync",
-  "IsAbort": false,
-  "IsUndo": false,
   "RunStepList": [
     {
       "data": {
