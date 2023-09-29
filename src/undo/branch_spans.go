@@ -2,6 +2,7 @@ package undo
 
 import "github.com/git-town/git-town/v9/src/domain"
 
+// BranchSpans describes how a Git Town command has modified the branches in a Git repository.
 type BranchSpans []BranchSpan
 
 func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) BranchSpans {
