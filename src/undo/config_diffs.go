@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
+// ConfigDiffs describes the changes made to the local and global Git configuration.
 type ConfigDiffs struct {
 	Global ConfigDiff
 	Local  ConfigDiff
