@@ -44,7 +44,7 @@ type ExecuteArgs struct {
 	RootDir                 domain.RepoRootDir
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
-	InitialStashSnapshot    undo.StashSnapshot
+	InitialStashSnapshot    domain.StashSnapshot
 	Lineage                 config.Lineage
 	NoPushHook              bool
 }

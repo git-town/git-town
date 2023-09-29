@@ -535,16 +535,22 @@ func TestBackendCommands(t *testing.T) {
 			runtime.StashOpenFiles()
 			runtime.CreateFile("file2", "content")
 			runtime.StashOpenFiles()
-			have, err := runtime.StashSize()
+			have, err := runtime.StashSnapshot()
+			want := domain.StashSnapshot{
+				Amount: 2,
+			}
 			assert.Nil(t, err)
-			assert.Equal(t, 2, have)
+			assert.Equal(t, want, have)
 		})
 		t.Run("no stash entries", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			have, err := runtime.StashSize()
+			have, err := runtime.StashSnapshot()
+			want := domain.StashSnapshot{
+				Amount: 0,
+			}
 			assert.Nil(t, err)
-			assert.Equal(t, 0, have)
+			assert.Equal(t, want, have)
 		})
 	})
 }

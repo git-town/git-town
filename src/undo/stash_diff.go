@@ -1,6 +1,7 @@
 package undo
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -11,12 +12,13 @@ type StashDiff struct {
 	EntriesAdded int
 }
 
+func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
+	return StashDiff{
+		EntriesAdded: after.Amount - before.Amount,
+	}
+}
+
 func (sd StashDiff) Steps() runstate.StepList {
-	// if sd.EntriesAdded < 0 {
-	// fmt.Println("1111111111111111111111111")
-	// fmt.Println(sd.EntriesAdded)
-	// panic("unexpected smaller Git stash found")
-	// }
 	result := runstate.StepList{}
 	if sd.EntriesAdded > 0 {
 		for sd.EntriesAdded > 0 {

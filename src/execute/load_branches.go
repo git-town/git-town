@@ -3,20 +3,16 @@ package execute
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapshot, undo.StashSnapshot, bool, error) {
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	var branchesSnapshot domain.BranchesSnapshot
 	var err error
-	stashSize, err := args.Repo.Runner.Backend.StashSize()
+	stashSnapshot, err := args.Repo.Runner.Backend.StashSnapshot()
 	if err != nil {
-		return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
-	}
-	stashSnapshot := undo.StashSnapshot{
-		Amount: stashSize,
+		return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), stashSnapshot, false, err
 	}
 	if args.HandleUnfinishedState {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()

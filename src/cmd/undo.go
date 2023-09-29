@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -75,11 +74,11 @@ type undoConfig struct {
 	pushHook                bool
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, undo.StashSnapshot, config.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyStashSnapshot(), lineage, err
+		return nil, domain.EmptyStashSnapshot(), lineage, err
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,

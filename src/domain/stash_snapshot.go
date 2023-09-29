@@ -1,4 +1,4 @@
-package undo
+package domain
 
 // StashSnapshot is a snapshot of th state of Git stash at a given point in time.
 type StashSnapshot struct {
@@ -7,10 +7,4 @@ type StashSnapshot struct {
 
 func EmptyStashSnapshot() StashSnapshot {
 	return StashSnapshot{Amount: 0}
-}
-
-func (s StashSnapshot) Diff(later StashSnapshot) StashDiff {
-	return StashDiff{
-		EntriesAdded: later.Amount - s.Amount,
-	}
 }

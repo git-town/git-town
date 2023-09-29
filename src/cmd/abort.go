@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/spf13/cobra"
 )
 
@@ -67,11 +66,11 @@ func runAbort(debug bool) error {
 	})
 }
 
-func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.StashSnapshot, error) {
+func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, domain.StashSnapshot, error) {
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, undo.EmptyStashSnapshot(), err
+		return nil, domain.EmptyStashSnapshot(), err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	lineage := repo.Runner.Config.Lineage()
@@ -86,11 +85,11 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.Stas
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, undo.EmptyStashSnapshot(), err
+		return nil, domain.EmptyStashSnapshot(), err
 	}
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, undo.EmptyStashSnapshot(), err
+		return nil, domain.EmptyStashSnapshot(), err
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
@@ -106,7 +105,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, undo.Stas
 	}
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, undo.EmptyStashSnapshot(), err
+		return nil, initialStashSnapshot, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &abortConfig{

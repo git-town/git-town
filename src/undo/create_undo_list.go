@@ -34,7 +34,7 @@ type CreateUndoListArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  domain.BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot
-	InitialStashSnapshot     StashSnapshot
+	InitialStashSnapshot     domain.StashSnapshot
 	NoPushHook               bool
 	UndoablePerennialCommits []domain.SHA
 }
@@ -69,14 +69,11 @@ func determineUndoBranchesSteps(initialBranchesSnapshot domain.BranchesSnapshot,
 	}), nil
 }
 
-func determineUndoStashSteps(initialStashSnapshot StashSnapshot, backend *git.BackendCommands) (runstate.StepList, error) {
-	stashSize, err := backend.StashSize()
+func determineUndoStashSteps(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (runstate.StepList, error) {
+	finalStashSnapshot, err := backend.StashSnapshot()
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	finalStashSnapshot := StashSnapshot{
-		Amount: stashSize,
-	}
-	stashDiff := initialStashSnapshot.Diff(finalStashSnapshot)
+	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
 	return stashDiff.Steps(), nil
 }
