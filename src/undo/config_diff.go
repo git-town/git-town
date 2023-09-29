@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
-// ConfigDiff describes the changes made to a Git config type (local or global).
+// ConfigDiff describes the changes made to the local or global Git configuration.
 type ConfigDiff struct {
 	Added   []config.Key
 	Removed map[config.Key]string
