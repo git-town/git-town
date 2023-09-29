@@ -12,7 +12,7 @@ func TestRemoteBranchChange(t *testing.T) {
 
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
-		rbc := domain.RemoteBranchChange{
+		give := domain.RemoteBranchChange{
 			domain.NewRemoteBranchName("origin/branch-1"): {
 				Before: domain.NewSHA("111111"),
 				After:  domain.NewSHA("222222"),
@@ -26,7 +26,7 @@ func TestRemoteBranchChange(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := rbc.Categorize(branchTypes)
+		havePerennials, haveFeatures := give.Categorize(branchTypes)
 		wantPerennials := domain.RemoteBranchChange{
 			domain.NewRemoteBranchName("origin/dev"): {
 				Before: domain.NewSHA("333333"),
