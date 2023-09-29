@@ -95,15 +95,6 @@ func Remove[C comparable](list []C, value C) []C {
 	return result
 }
 
-func RemoveAllButLast[C comparable](list []C, element C) []C {
-	occurrences := FindAll(list, element)
-	occurrencesToRemove := TruncateLast(occurrences)
-	for i := len(occurrencesToRemove) - 1; i >= 0; i-- {
-		list = RemoveAt(list, occurrencesToRemove[i])
-	}
-	return list
-}
-
 // RemoveAt provides the given list with the element at the given position removed.
 func RemoveAt[C comparable](list []C, index int) []C {
 	return append(list[:index], list[index+1:]...)

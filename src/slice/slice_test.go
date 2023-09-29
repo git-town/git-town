@@ -169,32 +169,6 @@ func TestSlice(t *testing.T) {
 		assert.Equal(t, have, want)
 	})
 
-	t.Run("RemoveAllButLast", func(t *testing.T) {
-		t.Parallel()
-		t.Run("list contains element at end", func(t *testing.T) {
-			t.Parallel()
-			list := []int{1, 2, 3}
-			have := slice.RemoveAllButLast(list, 3)
-			want := []int{1, 2, 3}
-			assert.Equal(t, want, have)
-		})
-		t.Run("list contains element in middle", func(t *testing.T) {
-			t.Parallel()
-			list := []int{1, 2, 3}
-			have := slice.RemoveAllButLast(list, 2)
-			want := []int{1, 2, 3}
-			assert.Equal(t, want, have)
-		})
-		t.Run("list contains element in middle and at end", func(t *testing.T) {
-			t.Parallel()
-			list := []int{1, 2, 3, 2}
-			have := slice.RemoveAllButLast(list, 2)
-			want := []int{1, 3, 2}
-			assert.Equal(t, want, have)
-		})
-		t.Run("list does not contain element", func(t *testing.T) {})
-	})
-
 	t.Run("RemoveAt", func(t *testing.T) {
 		t.Parallel()
 		t.Run("index is within the list", func(t *testing.T) {

@@ -3,9 +3,11 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -77,6 +79,15 @@ func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
 }
 
+func (stepList *StepList) RemoveAllButLast(removeType string) {
+	typeList := stepList.StepTypes()
+	occurrences := slice.FindAll(typeList, removeType)
+	occurrencesToRemove := slice.TruncateLast(occurrences)
+	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
+		stepList.List = slice.RemoveAt(stepList.List, occurrencesToRemove[o])
+	}
+}
+
 // RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
 func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
 	result := make([]steps.Step, 0, len(stepList.List))
@@ -115,6 +126,14 @@ func (stepList *StepList) StringIndented(indent string) string {
 		}
 	}
 	return sb.String()
+}
+
+func (stepList *StepList) StepTypes() []string {
+	result := make([]string, len(stepList.List))
+	for s, step := range stepList.List {
+		result[s] = reflect.TypeOf(step).String()
+	}
+	return result
 }
 
 // UnmarshalJSON unmarshals the step list from JSON.
