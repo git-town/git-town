@@ -72,8 +72,7 @@ func TestLoadSave(t *testing.T) {
 						Force:  false,
 					},
 					&steps.DeleteRemoteBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
+						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.DeleteParentBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
@@ -245,8 +244,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
-        "NoPushHook": true
+        "Branch": "branch"
       },
       "type": "DeleteRemoteBranchStep"
     },

@@ -6,8 +6,7 @@ import (
 
 // DeleteRemoteBranchStep deletes the tracking branch of the given local branch.
 type DeleteRemoteBranchStep struct {
-	Branch     domain.LocalBranchName
-	NoPushHook bool
+	Branch domain.LocalBranchName
 	EmptyStep
 }
 
