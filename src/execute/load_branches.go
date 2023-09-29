@@ -21,49 +21,49 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 	if args.HandleUnfinishedState {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, branchesSnapshot, args.Repo.ConfigSnapshot, stashSnapshot, args.PushHook)
 		if err != nil || exit {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), exit, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
 		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 		err = validate.NoOpenChanges(hasOpenChanges)
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes domain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline {
 			err = args.Repo.Runner.Frontend.Fetch()
 			if err != nil {
-				return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+				return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 			}
 		}
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
 	if branchesSnapshot.IsEmpty() {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), undo.EmptyStashSnapshot(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	branches := domain.Branches{
-		All:     branchesSnapshot.Branches,
+		All:     branchesSnapshot.Branches.Clone(),
 		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
 	}
