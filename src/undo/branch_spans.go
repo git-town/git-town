@@ -25,7 +25,7 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) Branc
 	return result
 }
 
-// Changes describes the changes made in this BranchesBeforeAfter structure.
+// Changes describes the specific changes made in this BranchSpans.
 func (bss BranchSpans) Changes() BranchChanges {
 	result := EmptyBranchChanges()
 	for _, branchSpan := range bss {
