@@ -12,7 +12,7 @@ func TestRemoteBranchesSHAs(t *testing.T) {
 
 	t.Run("Categorize", func(t *testing.T) {
 		t.Parallel()
-		rbs := domain.RemoteBranchesSHAs{
+		give := domain.RemoteBranchesSHAs{
 			domain.NewRemoteBranchName("origin/feature-branch"):   domain.NewSHA("111111"),
 			domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("222222"),
 		}
@@ -20,7 +20,7 @@ func TestRemoteBranchesSHAs(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		havePerennials, haveFeatures := rbs.Categorize(branchTypes)
+		havePerennials, haveFeatures := give.Categorize(branchTypes)
 		wantPerennials := domain.RemoteBranchesSHAs{
 			domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("222222"),
 		}
