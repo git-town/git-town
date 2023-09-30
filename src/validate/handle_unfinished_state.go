@@ -16,7 +16,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error) {
+func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	runState, err := persistence.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -49,7 +49,7 @@ func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error
 	}
 }
 
-type HandleUnfinishedStateArgs struct {
+type UnfinishedStateArgs struct {
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
 	RootDir                 domain.RepoRootDir
@@ -60,7 +60,7 @@ type HandleUnfinishedStateArgs struct {
 	PushHook                bool
 }
 
-func abortRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) (bool, error) {
+func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &abortRunState,
@@ -75,7 +75,7 @@ func abortRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) 
 	})
 }
 
-func continueRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) (bool, error) {
+func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	hasConflicts, err := args.Run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
@@ -101,7 +101,7 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) (bool, error) {
+func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &skipRunState,
