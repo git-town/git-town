@@ -1309,12 +1309,12 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.CreateBranchStep{
-						Branch:        domain.NewLocalBranchName("perennial-branch"),
-						StartingPoint: domain.NewSHA("111111").Location(),
-					},
-					&steps.CreateBranchStep{
 						Branch:        domain.NewLocalBranchName("feature-branch"),
 						StartingPoint: domain.NewSHA("222222").Location(),
+					},
+					&steps.CreateBranchStep{
+						Branch:        domain.NewLocalBranchName("perennial-branch"),
+						StartingPoint: domain.NewSHA("111111").Location(),
 					},
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
