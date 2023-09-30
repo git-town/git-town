@@ -89,7 +89,6 @@ func TestLoadSave(t *testing.T) {
 						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.ForcePushCurrentBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 					},
 					&steps.MergeStep{Branch: domain.NewBranchName("branch")},
@@ -279,7 +278,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
         "NoPushHook": true
       },
       "type": "ForcePushCurrentBranchStep"
