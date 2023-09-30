@@ -352,7 +352,7 @@ func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.LocalB
 	case config.SyncStrategyMerge:
 		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: !pushHook})
 	case config.SyncStrategyRebase:
-		list.Add(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: !pushHook})
+		list.Add(&steps.ForcePushCurrentBranchStep{Branch: branch, NoPushHook: !pushHook})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
