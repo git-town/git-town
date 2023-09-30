@@ -14,40 +14,40 @@ func TestStringSlice(t *testing.T) {
 		t.Run("no element", func(t *testing.T) {
 			t.Parallel()
 			give := []string{}
-			want := ""
 			have := stringslice.Connect(give)
+			want := ""
 			assert.Equal(t, want, have)
 		})
 
 		t.Run("single element", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one"}
-			want := "\"one\""
 			have := stringslice.Connect(give)
+			want := "\"one\""
 			assert.Equal(t, want, have)
 		})
 
 		t.Run("two elements", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one", "two"}
-			want := "\"one\" and \"two\""
 			have := stringslice.Connect(give)
+			want := "\"one\" and \"two\""
 			assert.Equal(t, want, have)
 		})
 
 		t.Run("three elements", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one", "two", "three"}
-			want := "\"one\", \"two\", and \"three\""
 			have := stringslice.Connect(give)
+			want := "\"one\", \"two\", and \"three\""
 			assert.Equal(t, want, have)
 		})
 
 		t.Run("four elements", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"one", "two", "three", "four"}
-			want := "\"one\", \"two\", \"three\", and \"four\""
 			have := stringslice.Connect(give)
+			want := "\"one\", \"two\", \"three\", and \"four\""
 			assert.Equal(t, want, have)
 		})
 	})

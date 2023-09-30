@@ -164,8 +164,8 @@ func TestLineage(t *testing.T) {
 			lineage[oneA1] = oneA
 			lineage[oneA2] = oneA
 			lineage[two] = main
-			want := domain.LocalBranchNames{one, oneA, oneA1, oneA2, oneB, two}
 			have := lineage.BranchNames()
+			want := domain.LocalBranchNames{one, oneA, oneA1, oneA2, oneB, two}
 			lineage.OrderHierarchically(have)
 			assert.Equal(t, want, have)
 		})
