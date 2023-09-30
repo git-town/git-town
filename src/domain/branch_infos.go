@@ -12,9 +12,7 @@ import (
 type BranchInfos []BranchInfo
 
 func (bs BranchInfos) Clone() BranchInfos {
-	result := make(BranchInfos, len(bs))
-	copy(result, bs)
-	return result
+	return append(bs[:0:0], bs...)
 }
 
 // FindByLocalName provides the branch with the given name if one exists.
