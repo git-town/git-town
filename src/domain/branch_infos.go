@@ -12,6 +12,7 @@ import (
 type BranchInfos []BranchInfo
 
 func (bs BranchInfos) Clone() BranchInfos {
+	// appending to a slice with zero capacity (zero value) allocates only once
 	return append(bs[:0:0], bs...)
 }
 
