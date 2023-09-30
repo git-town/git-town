@@ -97,7 +97,7 @@ func executeShip(args []string, message string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "ship",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

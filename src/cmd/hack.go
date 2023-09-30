@@ -68,7 +68,7 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "hack",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

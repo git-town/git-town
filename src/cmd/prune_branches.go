@@ -54,7 +54,7 @@ func executePruneBranches(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prune-branches",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

@@ -14,16 +14,15 @@ import (
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has been done so far.
-// TODO: rename the "XXXStepList" fields to "XXXSteps".
 type RunState struct {
 	Command                  string                     `json:"Command"`
 	IsAbort                  bool                       `exhaustruct:"optional"     json:"IsAbort"`
 	IsUndo                   bool                       `exhaustruct:"optional"     json:"IsUndo"`
-	AbortStepList            StepList                   `exhaustruct:"optional"     json:"AbortStepList"`
-	RunStepList              StepList                   `json:"RunStepList"`
-	UndoStepList             StepList                   `exhaustruct:"optional"     json:"UndoStepList"`
+	AbortSteps               StepList                   `exhaustruct:"optional"     json:"AbortStepList"`
+	RunSteps                 StepList                   `json:"RunStepList"`
+	UndoSteps                StepList                   `exhaustruct:"optional"     json:"UndoStepList"`
 	InitialActiveBranch      domain.LocalBranchName     `json:"InitialActiveBranch"`
-	FinalUndoStepList        StepList                   `exhaustruct:"optional"     json:"FinalUndoStepList"`
+	FinalUndoSteps           StepList                   `exhaustruct:"optional"     json:"FinalUndoStepList"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
 }
@@ -33,16 +32,16 @@ type RunState struct {
 func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
 	popped := StepList{}
 	for {
-		step := runState.RunStepList.Peek()
+		step := runState.RunSteps.Peek()
 		if !isCheckoutStep(step) {
-			popped.Append(runState.RunStepList.Pop())
+			popped.Append(runState.RunSteps.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushCurrentBranchStep{CurrentBranch: currentBranch, NoPushHook: false})
-			runState.RunStepList.PrependList(popped)
+			runState.RunSteps.Prepend(&steps.PushCurrentBranchStep{CurrentBranch: currentBranch, NoPushHook: false})
+			runState.RunSteps.PrependList(popped)
 			break
 		}
 	}
@@ -60,13 +59,13 @@ func (runState *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
 func (runState *RunState) CreateAbortRunState() RunState {
-	stepList := runState.AbortStepList
-	stepList.AppendList(runState.UndoStepList)
+	stepList := runState.AbortSteps
+	stepList.AppendList(runState.UndoSteps)
 	return RunState{
 		Command:             runState.Command,
 		IsAbort:             true,
 		InitialActiveBranch: runState.InitialActiveBranch,
-		RunStepList:         stepList,
+		RunSteps:            stepList,
 	}
 }
 
@@ -76,24 +75,24 @@ func (runState *RunState) CreateSkipRunState() RunState {
 	result := RunState{
 		Command:             runState.Command,
 		InitialActiveBranch: runState.InitialActiveBranch,
-		RunStepList:         runState.AbortStepList,
+		RunSteps:            runState.AbortSteps,
 	}
-	for _, step := range runState.UndoStepList.List {
+	for _, step := range runState.UndoSteps.List {
 		if isCheckoutStep(step) {
 			break
 		}
-		result.RunStepList.Append(step)
+		result.RunSteps.Append(step)
 	}
 	skipping := true
-	for _, step := range runState.RunStepList.List {
+	for _, step := range runState.RunSteps.List {
 		if isCheckoutStep(step) {
 			skipping = false
 		}
 		if !skipping {
-			result.RunStepList.Append(step)
+			result.RunSteps.Append(step)
 		}
 	}
-	result.RunStepList.List = slice.LowerAll[steps.Step](result.RunStepList.List, &steps.RestoreOpenChangesStep{})
+	result.RunSteps.List = slice.LowerAll[steps.Step](result.RunSteps.List, &steps.RestoreOpenChangesStep{})
 	return result
 }
 
@@ -105,24 +104,24 @@ func (runState *RunState) CreateUndoRunState() RunState {
 		Command:                  runState.Command,
 		InitialActiveBranch:      runState.InitialActiveBranch,
 		IsUndo:                   true,
-		RunStepList:              runState.UndoStepList,
+		RunSteps:                 runState.UndoSteps,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
-	result.RunStepList.Append(&steps.CheckoutStep{Branch: runState.InitialActiveBranch})
-	result.RunStepList = result.RunStepList.RemoveDuplicateCheckoutSteps()
+	result.RunSteps.Append(&steps.CheckoutStep{Branch: runState.InitialActiveBranch})
+	result.RunSteps = result.RunSteps.RemoveDuplicateCheckoutSteps()
 	return result
 }
 
 func (runState *RunState) HasAbortSteps() bool {
-	return !runState.AbortStepList.IsEmpty()
+	return !runState.AbortSteps.IsEmpty()
 }
 
 func (runState *RunState) HasRunSteps() bool {
-	return !runState.RunStepList.IsEmpty()
+	return !runState.RunSteps.IsEmpty()
 }
 
 func (runState *RunState) HasUndoSteps() bool {
-	return !runState.UndoStepList.IsEmpty()
+	return !runState.UndoSteps.IsEmpty()
 }
 
 // IsUnfinished returns whether or not the run state is unfinished.
@@ -153,11 +152,11 @@ func (runState *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 // from this run state.
 func (runState *RunState) SkipCurrentBranchSteps() {
 	for {
-		step := runState.RunStepList.Peek()
+		step := runState.RunSteps.Peek()
 		if isCheckoutStep(step) {
 			break
 		}
-		runState.RunStepList.Pop()
+		runState.RunSteps.Pop()
 	}
 }
 
@@ -171,11 +170,11 @@ func (runState *RunState) String() string {
 	result.WriteString("\n  IsUndo: ")
 	result.WriteString(fmt.Sprintf("%t", runState.IsUndo))
 	result.WriteString("\n  AbortStepList: ")
-	result.WriteString(runState.AbortStepList.StringIndented("    "))
+	result.WriteString(runState.AbortSteps.StringIndented("    "))
 	result.WriteString("  RunStepList: ")
-	result.WriteString(runState.RunStepList.StringIndented("    "))
+	result.WriteString(runState.RunSteps.StringIndented("    "))
 	result.WriteString("  UndoStepList: ")
-	result.WriteString(runState.UndoStepList.StringIndented("    "))
+	result.WriteString(runState.UndoSteps.StringIndented("    "))
 	if runState.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")
 		result.WriteString(runState.UnfinishedDetails.String())

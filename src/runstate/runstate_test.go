@@ -17,7 +17,7 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			Command: "sync",
-			AbortStepList: runstate.StepList{
+			AbortSteps: runstate.StepList{
 				List: []steps.Step{
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -26,7 +26,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			RunStepList: runstate.StepList{
+			RunSteps: runstate.StepList{
 				List: []steps.Step{
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -35,7 +35,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			UndoStepList: runstate.StepList{
+			UndoSteps: runstate.StepList{
 				List: []steps.Step{
 					&steps.ResetCurrentBranchToSHAStep{
 						MustHaveSHA: domain.NewSHA("222222"),

@@ -75,7 +75,7 @@ func executeSync(all, dryRun, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

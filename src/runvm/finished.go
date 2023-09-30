@@ -22,8 +22,8 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoStepList.AppendList(undoSteps)
-	args.RunState.UndoStepList.AppendList(args.RunState.FinalUndoStepList)
+	args.RunState.UndoSteps.AppendList(undoSteps)
+	args.RunState.UndoSteps.AppendList(args.RunState.FinalUndoSteps)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
 		err := persistence.Delete(args.RootDir)
 		if err != nil {

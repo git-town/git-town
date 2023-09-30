@@ -33,11 +33,11 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:       "command",
-			IsAbort:       true,
-			IsUndo:        true,
-			AbortStepList: runstate.StepList{},
-			RunStepList: runstate.StepList{
+			Command:    "command",
+			IsAbort:    true,
+			IsUndo:     true,
+			AbortSteps: runstate.StepList{},
+			RunSteps: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
 					&steps.AbortRebaseStep{},
@@ -148,7 +148,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoStepList: runstate.StepList{},
+			UndoSteps: runstate.StepList{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
