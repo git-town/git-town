@@ -83,10 +83,10 @@ test: fix docs unit cuke  # runs all the tests
 
 test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
-	make --no-print-directory unit &
 	make --no-print-directory build &
+	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
 	go run tools/format.go test &
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run
+	make --no-print-directory unit
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
