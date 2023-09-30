@@ -84,11 +84,11 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, dom
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, exit, err
 	}
-	hasConflicts, err := repo.Runner.Backend.HasConflicts()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
-	if hasConflicts {
+	if repoStatus.Conflicts {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	originURL := repo.Runner.Config.OriginURL()

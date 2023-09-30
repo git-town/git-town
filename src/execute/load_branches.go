@@ -34,11 +34,11 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
+		repoStatus, err := args.Repo.Runner.Backend.RepoStatus()
 		if err != nil {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
-		err = validate.NoOpenChanges(hasOpenChanges)
+		err = validate.NoOpenChanges(repoStatus.OpenChanges)
 		if err != nil {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}

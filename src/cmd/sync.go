@@ -125,7 +125,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -193,7 +193,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 	return &syncConfig{
 		branches:           branches,
 		branchesToSync:     branchesToSync,
-		hasOpenChanges:     hasOpenChanges,
+		hasOpenChanges:     repoStatus.OpenChanges,
 		remotes:            remotes,
 		isOffline:          repo.IsOffline,
 		lineage:            lineage,

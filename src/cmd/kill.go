@@ -131,12 +131,12 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 		}
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	return &killConfig{
-		hasOpenChanges: hasOpenChanges,
+		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
 		isOffline:      repo.IsOffline,
 		lineage:        lineage,

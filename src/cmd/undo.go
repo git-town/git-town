@@ -94,12 +94,12 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, domain.Stas
 	}
 	mainBranch := repo.Runner.Backend.Config.MainBranch()
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
 	return &undoConfig{
-		hasOpenChanges:          hasOpenChanges,
+		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,

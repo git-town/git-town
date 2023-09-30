@@ -36,11 +36,11 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	rebasing, err := args.Run.Backend.HasRebaseInProgress()
+	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return err
 	}
-	if args.RunState.Command == "sync" && !(rebasing && args.Run.Config.IsMainBranch(currentBranch)) {
+	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Run.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
 	err = persistence.Save(args.RunState, args.RootDir)

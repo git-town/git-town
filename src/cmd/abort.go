@@ -103,14 +103,14 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, domain.St
 	if err != nil || exit {
 		return nil, initialStashSnapshot, err
 	}
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, initialStashSnapshot, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &abortConfig{
 		connector:               connector,
-		hasOpenChanges:          hasOpenChanges,
+		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		lineage:                 lineage,
 		mainBranch:              mainBranch,

@@ -130,9 +130,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
-		hasRebase, err := state.fixture.DevRepo.HasRebaseInProgress()
+		repoStatus, err := state.fixture.DevRepo.RepoStatus()
 		asserts.NoError(err)
-		if !hasRebase {
+		if !repoStatus.RebaseInProgress {
 			return fmt.Errorf("expected rebase in progress")
 		}
 		return nil
@@ -459,11 +459,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no rebase is in progress$`, func() error {
-		hasRebase, err := state.fixture.DevRepo.HasRebaseInProgress()
+		repoStatus, err := state.fixture.DevRepo.RepoStatus()
 		if err != nil {
 			return err
 		}
-		if hasRebase {
+		if repoStatus.RebaseInProgress {
 			return fmt.Errorf("expected no rebase in progress")
 		}
 		return nil
