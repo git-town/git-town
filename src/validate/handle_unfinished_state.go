@@ -17,8 +17,8 @@ import (
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 // TODO: convert arguments to struct.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (quit bool, err error) {
-	runState, err := persistence.Load(rootDir)
+func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error) {
+	runState, err := persistence.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -36,18 +36,29 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		return discardRunstate(rootDir)
+		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return continueRunstate(args.Run, runState, args.Connector, args.RootDir, args.Lineage, args.InitialBranchesSnapshot, args.InitialConfigSnapshot, args.InitialStashSnapshot, args.PushHook)
 	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return abortRunstate(args.Run, runState, args.Connector, args.RootDir, args.Lineage, args.InitialBranchesSnapshot, args.InitialConfigSnapshot, args.InitialStashSnapshot, args.PushHook)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return skipRunstate(args.Run, runState, args.Connector, args.RootDir, args.Lineage, args.InitialBranchesSnapshot, args.InitialConfigSnapshot, args.InitialStashSnapshot, args.PushHook)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
 		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 	}
+}
+
+type HandleUnfinishedStateArgs struct {
+	Run                     *git.ProdRunner
+	Connector               hosting.Connector
+	RootDir                 domain.RepoRootDir
+	Lineage                 config.Lineage
+	InitialBranchesSnapshot domain.BranchesSnapshot
+	InitialConfigSnapshot   undo.ConfigSnapshot
+	InitialStashSnapshot    domain.StashSnapshot
+	PushHook                bool
 }
 
 func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {

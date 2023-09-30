@@ -19,7 +19,16 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		if err != nil {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, branchesSnapshot, args.Repo.ConfigSnapshot, stashSnapshot, args.PushHook)
+		exit, err := validate.HandleUnfinishedState(validate.HandleUnfinishedStateArgs{
+			Run:                     &args.Repo.Runner,
+			Connector:               nil,
+			RootDir:                 args.Repo.RootDir,
+			Lineage:                 args.Lineage,
+			InitialBranchesSnapshot: branchesSnapshot,
+			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
+			InitialStashSnapshot:    stashSnapshot,
+			PushHook:                args.PushHook,
+		})
 		if err != nil || exit {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, exit, err
 		}
