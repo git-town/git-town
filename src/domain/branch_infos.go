@@ -11,16 +11,16 @@ import (
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchInfos []BranchInfo
 
-func (bs BranchInfos) Clone() BranchInfos {
+func (bis BranchInfos) Clone() BranchInfos {
 	// appending to a slice with zero capacity (zero value) allocates only once
-	return append(bs[:0:0], bs...)
+	return append(bis[:0:0], bis...)
 }
 
 // FindByLocalName provides the branch with the given name if one exists.
-func (bs BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
-	for bi, branch := range bs {
+func (bis BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
+	for bi, branch := range bis {
 		if branch.LocalName == branchName {
-			return &bs[bi]
+			return &bis[bi]
 		}
 	}
 	return nil
@@ -28,31 +28,31 @@ func (bs BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (bs BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
-	for b, branch := range bs {
-		if branch.RemoteName == remoteBranch {
-			return &bs[b]
+func (bis BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
+	for b, bi := range bis {
+		if bi.RemoteName == remoteBranch {
+			return &bis[b]
 		}
 	}
 	return nil
 }
 
-func (bs BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
-	for _, branchInfo := range bs {
-		if branchInfo.LocalName == other.LocalName && !other.LocalName.IsEmpty() {
-			return branchInfo
+func (bis BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
+	for _, bi := range bis {
+		if bi.LocalName == other.LocalName && !other.LocalName.IsEmpty() {
+			return bi
 		}
-		if branchInfo.RemoteName == other.RemoteName && !other.RemoteName.IsEmpty() {
-			return branchInfo
+		if bi.RemoteName == other.RemoteName && !other.RemoteName.IsEmpty() {
+			return bi
 		}
 	}
 	return EmptyBranchInfo()
 }
 
 // IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
-func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
-	for _, branch := range bs {
-		if branch.LocalName == localBranch {
+func (bis BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
+	for _, bi := range bis {
+		if bi.LocalName == localBranch {
 			return true
 		}
 	}
@@ -60,72 +60,71 @@ func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 }
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (bs BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
+func (bis BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
 	// TODO: rename .RemoteBranch to .TrackingBranchName
-	return bs.FindByRemoteName(localBranch.RemoteBranch()) != nil
+	return bis.FindByRemoteName(localBranch.RemoteBranch()) != nil
 }
 
 // LocalBranches provides only the branches that exist on the local machine.
-func (bs BranchInfos) LocalBranches() BranchInfos {
+func (bis BranchInfos) LocalBranches() BranchInfos {
 	result := BranchInfos{}
-	for _, branch := range bs {
-		if branch.IsLocal() {
-			result = append(result, branch)
+	for _, bi := range bis {
+		if bi.IsLocal() {
+			result = append(result, bi)
 		}
 	}
 	return result
 }
 
 // LocalBranchesWithDeletedTrackingBranches provides only the branches that exist locally and have a deleted tracking branch.
-func (bs BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
+func (bis BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 	result := BranchInfos{}
-	for _, branch := range bs {
-		if branch.SyncStatus == SyncStatusDeletedAtRemote {
-			result = append(result, branch)
+	for _, bi := range bis {
+		if bi.SyncStatus == SyncStatusDeletedAtRemote {
+			result = append(result, bi)
 		}
 	}
 	return result
 }
 
 // Names provides the names of all local branches in this BranchesSyncStatus instance.
-func (bs BranchInfos) Names() LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(bs))
-	for _, branch := range bs {
-		if !branch.LocalName.IsEmpty() {
-			result = append(result, branch.LocalName)
+func (bis BranchInfos) Names() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(bis))
+	for _, bi := range bis {
+		if !bi.LocalName.IsEmpty() {
+			result = append(result, bi.LocalName)
 		}
 	}
 	return result
 }
 
-func (bs BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
+func (bis BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 	result := BranchInfos{}
-	for _, branch := range bs {
-		if branch.LocalName != branchName {
-			result = append(result, branch)
+	for _, bi := range bis {
+		if bi.LocalName != branchName {
+			result = append(result, bi)
 		}
 	}
 	return result
 }
 
 // Select provides the BranchSyncStatus elements with the given names.
-func (bs BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
+func (bis BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
-	for n, name := range names {
-		branch := bs.FindByLocalName(name)
+	for b, bi := range names {
+		branch := bis.FindByLocalName(bi)
 		if branch == nil {
-			return result, fmt.Errorf(messages.BranchDoesntExist, name)
+			return result, fmt.Errorf(messages.BranchDoesntExist, bi)
 		}
-		result[n] = *branch
+		result[b] = *branch
 	}
 	return result, nil
 }
 
-// TODO: rename bs to bis.
-func (bs BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
-	for b := range bs {
-		if bs[b].LocalName == branch {
-			bs[b].LocalSHA = sha
+func (bis BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
+	for b := range bis {
+		if bis[b].LocalName == branch {
+			bis[b].LocalSHA = sha
 			return nil
 		}
 	}
