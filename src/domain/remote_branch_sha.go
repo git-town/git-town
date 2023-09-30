@@ -19,5 +19,7 @@ func (rbs RemoteBranchesSHAs) Categorize(branchTypes BranchTypes) (perennials, f
 
 // BranchNames provides the names of the involved branches as strings.
 func (rbs RemoteBranchesSHAs) BranchNames() RemoteBranchNames {
-	return maps.Keys(rbs)
+	result := RemoteBranchNames(maps.Keys(rbs))
+	result.Sort()
+	return result
 }
