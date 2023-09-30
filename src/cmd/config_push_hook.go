@@ -26,7 +26,7 @@ func pushHookCommand() *cobra.Command {
 		Short: pushHookDesc,
 		Long:  long(pushHookDesc, pushHookHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return executeConfigPushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -34,7 +34,7 @@ func pushHookCommand() *cobra.Command {
 	return &cmd
 }
 
-func runConfigPushHook(args []string, global, debug bool) error {
+func executeConfigPushHook(args []string, global, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

@@ -30,14 +30,14 @@ func killCommand() *cobra.Command {
 		Short: killDesc,
 		Long:  long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runKill(args, readDebugFlag(cmd))
+			return executeKill(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runKill(args []string, debug bool) error {
+func executeKill(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
@@ -168,7 +168,6 @@ func killStepList(config *killConfig) (steps runstate.StepList, finalUndoSteps r
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-// TODO: inline this method?
 func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.LocalName})

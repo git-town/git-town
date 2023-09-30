@@ -44,7 +44,7 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
+			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
@@ -53,7 +53,7 @@ func syncCmd() *cobra.Command {
 	return &cmd
 }
 
-func runSync(all, dryRun, debug bool) error {
+func executeSync(all, dryRun, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           dryRun,

@@ -57,7 +57,7 @@ func shipCmd() *cobra.Command {
 		Short:   shipDesc,
 		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.KeyGithubToken, config.KeyShipDeleteRemoteBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runShip(args, readMessageFlag(cmd), readDebugFlag(cmd))
+			return executeShip(args, readMessageFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -65,8 +65,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-// TODO: rename to executeShip (also all the other functions in the other commands).
-func runShip(args []string, message string, debug bool) error {
+func executeShip(args []string, message string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

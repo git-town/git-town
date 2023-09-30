@@ -21,14 +21,14 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    long(setParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSetParent(readDebugFlag(cmd))
+			return executeSetParent(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runSetParent(debug bool) error {
+func executeSetParent(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

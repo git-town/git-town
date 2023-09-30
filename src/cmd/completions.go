@@ -52,14 +52,14 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		Short:                 completionsDesc,
 		Long:                  long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCompletions(args, completionsNoDescFlag, rootCmd)
+			return executeCompletions(args, completionsNoDescFlag, rootCmd)
 		},
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
 }
 
-func runCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
+func executeCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
 	completionType, err := NewCompletionType(args[0])
 	if err != nil {
 		return err

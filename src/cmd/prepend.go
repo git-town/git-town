@@ -38,14 +38,14 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runPrepend(args, readDebugFlag(cmd))
+			return executePrepend(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runPrepend(args []string, debug bool) error {
+func executePrepend(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
