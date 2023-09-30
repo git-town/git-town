@@ -123,7 +123,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
+	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})
