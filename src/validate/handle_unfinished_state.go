@@ -38,7 +38,7 @@ func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error
 	case dialog.ResponseDiscard:
 		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(args.Run, runState, args.Connector, args.RootDir, args.Lineage, args.InitialBranchesSnapshot, args.InitialConfigSnapshot, args.InitialStashSnapshot, args.PushHook)
+		return continueRunstate(runState, args)
 	case dialog.ResponseAbort:
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
@@ -76,8 +76,8 @@ func abortRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) 
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
-	hasConflicts, err := run.Backend.HasConflicts()
+func continueRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) (bool, error) {
+	hasConflicts, err := args.Run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
 	}
@@ -86,14 +86,14 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 	}
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                runState,
-		Run:                     run,
-		Connector:               connector,
-		Lineage:                 lineage,
-		RootDir:                 rootDir,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   initialConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
+		Run:                     args.Run,
+		Connector:               args.Connector,
+		Lineage:                 args.Lineage,
+		RootDir:                 args.RootDir,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              !args.PushHook,
 	})
 }
 
