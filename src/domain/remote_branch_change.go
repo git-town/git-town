@@ -18,5 +18,7 @@ func (rbc RemoteBranchChange) Categorize(branchTypes BranchTypes) (perennialChan
 }
 
 func (rbc RemoteBranchChange) BranchNames() RemoteBranchNames {
-	return maps.Keys(rbc)
+	result := RemoteBranchNames(maps.Keys(rbc))
+	result.Sort()
+	return result
 }
