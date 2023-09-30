@@ -190,6 +190,13 @@ func TestSlice(t *testing.T) {
 			want := []int{2, 3}
 			assert.Equal(t, want, have)
 		})
+		t.Run("slice alias type", func(t *testing.T) {
+			t.Parallel()
+			give := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
+			have := slice.RemoveAt(give, 0)
+			want := domain.SHAs{domain.NewSHA("222222"), domain.NewSHA("333333")}
+			assert.Equal(t, want, have)
+		})
 	})
 
 	t.Run("TruncateLast", func(t *testing.T) {
@@ -213,6 +220,13 @@ func TestSlice(t *testing.T) {
 			list := []int{1, 2, 3}
 			have := slice.TruncateLast(list)
 			want := []int{1, 2}
+			assert.Equal(t, want, have)
+		})
+		t.Run("slice alias type", func(t *testing.T) {
+			t.Parallel()
+			list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
+			have := slice.TruncateLast(list)
+			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222")}
 			assert.Equal(t, want, have)
 		})
 	})

@@ -87,12 +87,12 @@ func Remove[S ~[]C, C comparable](list S, value C) S {
 }
 
 // RemoveAt provides the given list with the element at the given position removed.
-func RemoveAt[C comparable](list []C, index int) []C {
+func RemoveAt[S ~[]C, C comparable](list S, index int) S {
 	return append(list[:index], list[index+1:]...)
 }
 
 // TruncateLast provides the given list with its last element removed.
-func TruncateLast[C comparable](list []C) []C {
+func TruncateLast[S ~[]C, C comparable](list S) S {
 	listLength := len(list)
 	if listLength == 0 {
 		return list
