@@ -20,9 +20,8 @@ func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
 
 func (sd StashDiff) Steps() runstate.StepList {
 	result := runstate.StepList{}
-	for sd.EntriesAdded > 0 {
+	for ; sd.EntriesAdded > 0; sd.EntriesAdded-- {
 		result.Append(&steps.RestoreOpenChangesStep{})
-		sd.EntriesAdded--
 	}
 	return result
 }
