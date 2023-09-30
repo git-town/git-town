@@ -53,7 +53,7 @@ func TestOrderedSet(t *testing.T) {
 			want := "one, two, three"
 			assert.Equal(t, want, have)
 		})
-		t.Run("numbers", func(t *testing.T) {
+		t.Run("ints", func(t *testing.T) {
 			set := helpers.NewOrderedSet(1, 2, 3)
 			have := set.Join(", ")
 			want := "1, 2, 3"
