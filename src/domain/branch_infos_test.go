@@ -136,7 +136,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.True(t, bs.HasMatchingRemoteBranchFor(domain.NewLocalBranchName("one")))
+			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a remote-only branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -149,7 +149,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.True(t, bs.HasMatchingRemoteBranchFor(domain.NewLocalBranchName("one")))
+			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a local branch with a matching name", func(t *testing.T) {
 			t.Parallel()
@@ -162,7 +162,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.False(t, bs.HasMatchingRemoteBranchFor(domain.NewLocalBranchName("one")))
+			assert.False(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 	})
 
