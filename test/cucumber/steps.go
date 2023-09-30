@@ -511,6 +511,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^origin ships the "([^"]*)" branch$`, func(name string) error {
+		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
+		state.fixture.OriginRepo.RemoveBranch(name)
+		return nil
+	})
+
 	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {
 		return state.fixture.DevRepo.Config.SetColorUI(value)
 	})
@@ -588,6 +594,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
+		return nil
+	})
+
+	suite.Step(`^the feature branch "([^"]+)"$`, func(branch string) error {
+		err := state.fixture.DevRepo.CreateFeatureBranch(branch)
+		if err != nil {
+			return err
+		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialBranchHierarchy.AddRow(branch, "main")
+		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return nil
 	})
 

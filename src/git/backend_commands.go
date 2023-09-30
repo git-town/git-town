@@ -63,10 +63,15 @@ func (bc *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName) 
 	return result, nil
 }
 
+func (bc *BackendCommands) BranchExists(name string) bool {
+	err := bc.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+name)
+	return err == nil
+}
+
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchName, parent domain.Location) (bool, error) {
-	out, err := bc.QueryTrim("git", "log", parent.String()+".."+branch.String())
+	out, err := bc.QueryTrim("git", "diff", parent+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
