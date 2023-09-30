@@ -67,7 +67,7 @@ var All = map[string]Step{ //nolint:gochecknoglobals
 	"EmptyStep":                       &EmptyStep{},
 	"EnsureHasShippableChangesStep":   &EnsureHasShippableChangesStep{},
 	"FetchUpstreamStep":               &FetchUpstreamStep{},
-	"ForcePushBranchStep":             &ForcePushBranchStep{},
+	"ForcePushCurrentBranchStep":      &ForcePushCurrentBranchStep{},
 	"MergeStep":                       &MergeStep{},
 	"PreserveCheckoutHistoryStep":     &PreserveCheckoutHistoryStep{},
 	"PullCurrentBranchStep":           &PullCurrentBranchStep{},
