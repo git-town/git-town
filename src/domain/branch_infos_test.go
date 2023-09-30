@@ -212,8 +212,8 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.SHA{},
 			},
 		}
-		want := domain.NewLocalBranchNames("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
 		have := bs.LocalBranches().Names()
+		want := domain.NewLocalBranchNames("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
 		assert.Equal(t, want, have)
 	})
 
