@@ -34,7 +34,11 @@ func TestRemoteBranchNames(t *testing.T) {
 			domain.NewRemoteBranchName("origin/branch-3"),
 		}
 		have := give.Strings()
-		want := []string{"origin/branch-1", "origin/branch-2", "origin/branch-3"}
+		want := []string{
+			"origin/branch-1",
+			"origin/branch-2",
+			"origin/branch-3",
+		}
 		assert.Equal(t, want, have)
 	})
 }
