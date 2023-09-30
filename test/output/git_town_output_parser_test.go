@@ -65,8 +65,8 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 	t.Run("line withouth a command", func(t *testing.T) {
 		t.Parallel()
 		give := "hello world"
-		want := []output.ExecutedGitCommand{}
 		have := output.GitCommandsInGitTownOutput(give)
+		want := []output.ExecutedGitCommand{}
 		assert.Equal(t, want, have)
 	})
 }
