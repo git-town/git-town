@@ -128,7 +128,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
+	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
