@@ -17,14 +17,14 @@ func setupConfigCommand() *cobra.Command {
 		Short: setupConfigDesc,
 		Long:  long(setupConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigSetup(readDebugFlag(cmd))
+			return executeConfigSetup(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigSetup(debug bool) error {
+func executeConfigSetup(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

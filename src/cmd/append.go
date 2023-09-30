@@ -35,14 +35,14 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAppend(args[0], readDebugFlag(cmd))
+			return executeAppend(args[0], readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runAppend(arg string, debug bool) error {
+func executeAppend(arg string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

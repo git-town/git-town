@@ -24,7 +24,7 @@ func perennialBranchesCmd() *cobra.Command {
 		Short: perennialDesc,
 		Long:  long(perennialDesc, perennialHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPerennialBranches(readDisplayDebugFlag(cmd))
+			return executeConfigPerennialBranches(readDisplayDebugFlag(cmd))
 		},
 	}
 	addDisplayDebugFlag(&displayCmd)
@@ -44,7 +44,7 @@ func perennialBranchesCmd() *cobra.Command {
 	return &displayCmd
 }
 
-func runConfigPerennialBranches(debug bool) error {
+func executeConfigPerennialBranches(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
