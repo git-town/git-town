@@ -35,14 +35,14 @@ func repoCommand() *cobra.Command {
 		Short: repoDesc,
 		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRepo(readDebugFlag(cmd))
+			return executeRepo(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runRepo(debug bool) error {
+func executeRepo(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

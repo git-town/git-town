@@ -22,14 +22,14 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSwitch(readDebugFlag(cmd))
+			return executeSwitch(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runSwitch(debug bool) error {
+func executeSwitch(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

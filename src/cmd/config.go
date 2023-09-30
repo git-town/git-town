@@ -24,7 +24,7 @@ func configCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfig(readDebugFlag(cmd))
+			return executeConfig(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&configCmd)
@@ -40,7 +40,7 @@ func configCmd() *cobra.Command {
 	return &configCmd
 }
 
-func runConfig(debug bool) error {
+func executeConfig(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

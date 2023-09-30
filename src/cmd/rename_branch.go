@@ -43,7 +43,7 @@ func renameBranchCommand() *cobra.Command {
 		Short: renameBranchDesc,
 		Long:  long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRenameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
+			return executeRenameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -51,7 +51,7 @@ func renameBranchCommand() *cobra.Command {
 	return &cmd
 }
 
-func runRenameBranch(args []string, force, debug bool) error {
+func executeRenameBranch(args []string, force, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,

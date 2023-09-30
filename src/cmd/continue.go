@@ -27,14 +27,14 @@ func continueCmd() *cobra.Command {
 		Short:   continueDesc,
 		Long:    long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runContinue(readDebugFlag(cmd))
+			return executeContinue(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runContinue(debug bool) error {
+func executeContinue(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
