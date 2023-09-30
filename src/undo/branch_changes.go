@@ -64,7 +64,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 		change := omniChangedFeatures[branch]
 		result.Append(&steps.CheckoutStep{Branch: branch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Append(&steps.ForcePushCurrentBranchStep{Branch: branch, NoPushHook: args.NoPushHook})
+		result.Append(&steps.ForcePushCurrentBranchStep{NoPushHook: args.NoPushHook})
 	}
 
 	// re-create removed omni-branches
@@ -106,7 +106,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	for _, addedRemoteBranch := range c.RemoteAdded {
 		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
 			result.Append(&steps.DeleteTrackingBranchStep{
-				Branch: addedRemoteBranch.LocalBranchName(),
+				Branch: addedRemoteBranch,
 			})
 		}
 	}

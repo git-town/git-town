@@ -72,13 +72,13 @@ func TestLoadSave(t *testing.T) {
 						Force:  false,
 					},
 					&steps.DeleteRemoteBranchStep{
-						Branch: domain.NewLocalBranchName("branch"),
+						Branch: domain.NewRemoteBranchName("origin/branch"),
 					},
 					&steps.DeleteParentBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("branch"),
+						Branch: domain.NewRemoteBranchName("origin/branch"),
 					},
 					&steps.DiscardOpenChangesStep{},
 					&steps.EnsureHasShippableChangesStep{
@@ -89,7 +89,6 @@ func TestLoadSave(t *testing.T) {
 						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.ForcePushCurrentBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 					},
 					&steps.MergeStep{Branch: domain.NewBranchName("branch")},
@@ -244,7 +243,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "origin/branch"
       },
       "type": "DeleteRemoteBranchStep"
     },
@@ -256,7 +255,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch"
+        "Branch": "origin/branch"
       },
       "type": "DeleteTrackingBranchStep"
     },
@@ -279,7 +278,6 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
         "NoPushHook": true
       },
       "type": "ForcePushCurrentBranchStep"

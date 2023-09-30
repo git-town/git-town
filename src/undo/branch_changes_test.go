@@ -329,10 +329,10 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("perennial-branch"),
+						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("feature-branch"),
+						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 					},
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
@@ -493,10 +493,10 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("perennial-branch"),
+						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("feature-branch"),
+						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 					},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
@@ -813,7 +813,7 @@ func TestChanges(t *testing.T) {
 					// reset the feature branch to the previous SHA
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
-					&steps.ForcePushCurrentBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
+					&steps.ForcePushCurrentBranchStep{NoPushHook: true},
 					// check out the initial branch
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},

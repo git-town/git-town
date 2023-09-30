@@ -183,7 +183,7 @@ func renameBranchSteps(config *renameBranchConfig) (runstate.StepList, error) {
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.LocalName})
+		result.Append(&steps.DeleteTrackingBranchStep{Branch: config.oldBranch.RemoteName})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.LocalName, Parent: config.mainBranch.Location(), Force: false})
 	err := result.Wrap(runstate.WrapOptions{
