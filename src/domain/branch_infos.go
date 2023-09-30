@@ -60,7 +60,7 @@ func (bis BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 }
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (bis BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
+func (bis BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName) bool {
 	return bis.FindByRemoteName(localBranch.TrackingBranch()) != nil
 }
 
