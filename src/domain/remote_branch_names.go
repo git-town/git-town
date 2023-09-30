@@ -4,18 +4,18 @@ import "sort"
 
 type RemoteBranchNames []RemoteBranchName
 
+// Sort orders the branches in this collection alphabetically.
+func (rbns RemoteBranchNames) Sort() {
+	sort.Slice(rbns, func(a, b int) bool {
+		return rbns[a].id < rbns[b].id
+	})
+}
+
 // Strings provides these remote branch names as strings.
-func (r RemoteBranchNames) Strings() []string {
-	result := make([]string, len(r))
-	for b, branch := range r {
+func (rbns RemoteBranchNames) Strings() []string {
+	result := make([]string, len(rbns))
+	for b, branch := range rbns {
 		result[b] = branch.String()
 	}
 	return result
-}
-
-// Sort orders the branches in this collection alphabetically.
-func (l RemoteBranchNames) Sort() {
-	sort.Slice(l, func(a, b int) bool {
-		return l[a].id < l[b].id
-	})
 }
