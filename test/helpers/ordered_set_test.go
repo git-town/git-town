@@ -60,7 +60,11 @@ func TestOrderedSet(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 		t.Run("SHAs", func(t *testing.T) {
-			set := helpers.NewOrderedSet(domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"))
+			set := helpers.NewOrderedSet(
+				domain.NewSHA("111111"),
+				domain.NewSHA("222222"),
+				domain.NewSHA("333333"),
+			)
 			have := set.Join(", ")
 			want := "111111, 222222, 333333"
 			assert.Equal(t, want, have)
