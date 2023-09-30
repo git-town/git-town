@@ -13,16 +13,33 @@ func TestStashDiff(t *testing.T) {
 
 	t.Run("Diff", func(t *testing.T) {
 		t.Parallel()
-		before := domain.StashSnapshot{
-			Amount: 1,
-		}
-		after := domain.StashSnapshot{
-			Amount: 3,
-		}
-		have := undo.NewStashDiff(before, after)
-		want := undo.StashDiff{
-			EntriesAdded: 2,
-		}
-		assert.Equal(t, want, have)
+		t.Run("entries added", func(t *testing.T) {
+			t.Parallel()
+			before := domain.StashSnapshot{
+				Amount: 1,
+			}
+			after := domain.StashSnapshot{
+				Amount: 3,
+			}
+			have := undo.NewStashDiff(before, after)
+			want := undo.StashDiff{
+				EntriesAdded: 2,
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("no entries added", func(t *testing.T) {
+			t.Parallel()
+			before := domain.StashSnapshot{
+				Amount: 1,
+			}
+			after := domain.StashSnapshot{
+				Amount: 1,
+			}
+			have := undo.NewStashDiff(before, after)
+			want := undo.StashDiff{
+				EntriesAdded: 0,
+			}
+			assert.Equal(t, want, have)
+		})
 	})
 }
