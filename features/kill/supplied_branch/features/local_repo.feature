@@ -33,7 +33,10 @@ Feature: local repository
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
-      | good   | git branch other {{ sha 'other commit' }} |
+      | good   | git add -A                                |
+      |        | git stash                                 |
+      |        | git branch other {{ sha 'other commit' }} |
+      |        | git stash pop                             |
     And the current branch is still "good"
     And the uncommitted file still exists
     And now the initial commits exist

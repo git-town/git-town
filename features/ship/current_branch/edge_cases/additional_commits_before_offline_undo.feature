@@ -11,12 +11,7 @@ Feature: undoing an offline ship with additional commits to main
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
+    Then it runs no commands
     And it prints the error:
       """
       cannot reset branch "main"
@@ -27,9 +22,12 @@ Feature: undoing an offline ship with additional commits to main
       """
     And the current branch is now "main"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local         | feature done          |
-      |         |               | additional commit     |
-      |         |               | Revert "feature done" |
-      | feature | local, origin | feature commit        |
-    And the initial branches and hierarchy exist
+      | BRANCH  | LOCATION | MESSAGE           |
+      | main    | local    | feature done      |
+      |         |          | additional commit |
+      | feature | origin   | feature commit    |
+    And the branches are now
+      | REPOSITORY | BRANCHES      |
+      | local      | main          |
+      | origin     | main, feature |
+    And the initial branch hierarchy exists

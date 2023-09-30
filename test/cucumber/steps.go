@@ -400,7 +400,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,
-			state.initialSHAs,
+			state.initialDevSHAs,
+			state.initialOriginSHAs,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
@@ -891,9 +892,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSize := state.fixture.DevRepo.StashSize()
-		if stashSize != 1 {
-			return fmt.Errorf("expected 1 stash but found %d", stashSize)
+		stashSnapshot, err := state.fixture.DevRepo.StashSnapshot()
+		if err != nil {
+			return err
+		}
+		if stashSnapshot.Amount != 1 {
+			return fmt.Errorf("expected 1 stash but found %d", stashSnapshot.Amount)
 		}
 		return nil
 	})
@@ -962,7 +966,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 }
 
 func updateInitialSHAs(state *ScenarioState) {
-	if len(state.initialSHAs) == 0 && state.insideGitRepo {
-		state.initialSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+	if len(state.initialDevSHAs) == 0 && state.insideGitRepo {
+		state.initialDevSHAs = state.fixture.DevRepo.TestCommands.CommitSHAs()
+	}
+	if len(state.initialOriginSHAs) == 0 && state.insideGitRepo && state.fixture.OriginRepo != nil {
+		state.initialOriginSHAs = state.fixture.OriginRepo.TestCommands.CommitSHAs()
 	}
 }

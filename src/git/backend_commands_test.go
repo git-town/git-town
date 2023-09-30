@@ -150,28 +150,103 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("HasOpenChanges", func(t *testing.T) {
 		t.Parallel()
-		runtime := testruntime.Create(t)
-		has, err := runtime.Backend.HasOpenChanges()
-		assert.NoError(t, err)
-		assert.False(t, has)
-		runtime.CreateFile("foo", "bar")
-		has, err = runtime.Backend.HasOpenChanges()
-		assert.NoError(t, err)
-		assert.True(t, has)
+		t.Run("no open changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			have, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.False(t, have)
+		})
+		t.Run("has open changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("foo", "bar")
+			have, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.True(t, have)
+		})
+		t.Run("during rebase", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch1, initial)
+			runtime.CheckoutBranch(branch1)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileName:    "file",
+				FileContent: "content on branch1",
+				// TODO: make Message optional and remove it from here since it doesn't matter here
+				Message: "Create file",
+			})
+			runtime.CheckoutBranch(initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileName:    "file",
+				FileContent: "content on initial",
+				Message:     "Create file1",
+			})
+			_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.False(t, have)
+		})
+		t.Run("during merge conflict", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("branch1")
+			runtime.CreateBranch(branch1, initial)
+			runtime.CheckoutBranch(branch1)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch1,
+				FileName:    "file",
+				FileContent: "content on branch1",
+				// TODO: make Message optional and remove it from here since it doesn't matter here
+				Message: "Create file",
+			})
+			runtime.CheckoutBranch(initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileName:    "file",
+				FileContent: "content on initial",
+				Message:     "Create file1",
+			})
+			_ = runtime.MergeBranch(branch1) // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.False(t, have)
+		})
+		t.Run("unstashed conflicting changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("file", "stashed content")
+			runtime.StashOpenFiles()
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				FileName:    "file",
+				FileContent: "committed content",
+				Message:     "Create file",
+			})
+			_ = runtime.UnstashOpenFiles() // this is expected to fail
+			have, err := runtime.Backend.HasOpenChanges()
+			assert.NoError(t, err)
+			assert.True(t, have)
+		})
 	})
 
 	t.Run("HasRebaseInProgress", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		has, err := runtime.Backend.HasRebaseInProgress()
+		have, err := runtime.Backend.HasRebaseInProgress()
 		assert.NoError(t, err)
-		assert.False(t, has)
+		assert.False(t, have)
 	})
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes the current branch", func(t *testing.T) {
+			t.Parallel()
 			t.Run("marker is at the first entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
 * branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
   branch-2                     da796a69 [origin/branch-2] Commit message 2
@@ -180,6 +255,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, domain.NewLocalBranchName("branch-1"), currentBranch)
 			})
 			t.Run("marker is at the middle entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
@@ -188,6 +264,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 			})
 			t.Run("marker is at the last entry", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
   branch-2                     da796a69 [origin/branch-2] Commit message 2
@@ -450,6 +527,34 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have := cmds.RootDirectory()
 			assert.Empty(t, have)
+		})
+	})
+
+	t.Run("StashEntries", func(t *testing.T) {
+		t.Parallel()
+		t.Run("some stash entries", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("file1", "content")
+			runtime.StashOpenFiles()
+			runtime.CreateFile("file2", "content")
+			runtime.StashOpenFiles()
+			have, err := runtime.StashSnapshot()
+			want := domain.StashSnapshot{
+				Amount: 2,
+			}
+			assert.Nil(t, err)
+			assert.Equal(t, want, have)
+		})
+		t.Run("no stash entries", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			have, err := runtime.StashSnapshot()
+			want := domain.StashSnapshot{
+				Amount: 0,
+			}
+			assert.Nil(t, err)
+			assert.Equal(t, want, have)
 		})
 	})
 }

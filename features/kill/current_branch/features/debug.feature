@@ -8,7 +8,6 @@ Feature: display debug statistics
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
 
-  # TODO: remove redundant "git config -lz --local"
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
@@ -17,16 +16,16 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
+      |         | backend  | git stash list                                    |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status --ignore-submodules                    |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout main                                 |
-      |         | backend  | git rev-parse --short current                     |
       |         | backend  | git log main..current                             |
       | main    | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
@@ -35,8 +34,12 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |
+      |         | backend  | git config -lz --global                           |
+      |         | backend  | git config -lz --local                            |
+      |         | backend  | git branch -vva                                   |
+      |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "main"

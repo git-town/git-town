@@ -11,14 +11,12 @@ Feature: can undo a ship even after additional commits to the main branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git push -u origin feature                    |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git push                                      |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
-      | main    | git checkout feature                          |
+      | BRANCH | COMMAND                                       |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git push -u origin feature                    |
+      |        | git checkout feature                          |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

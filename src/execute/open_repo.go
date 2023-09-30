@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
@@ -41,9 +42,17 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	if err != nil {
 		return
 	}
-	gitConfig := config.LoadGitConfig(backendRunner)
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		err = errors.New(messages.DirCurrentProblem)
+		return
+	}
+	configSnapshot := undo.ConfigSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(backendRunner),
+	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(gitConfig, backendRunner),
+		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
@@ -86,9 +95,10 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		}
 	}
 	return OpenRepoResult{
-		Runner:    prodRunner,
-		RootDir:   rootDir,
-		IsOffline: isOffline,
+		Runner:         prodRunner,
+		RootDir:        rootDir,
+		IsOffline:      isOffline,
+		ConfigSnapshot: configSnapshot,
 	}, err
 }
 
@@ -101,9 +111,10 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner    git.ProdRunner
-	RootDir   domain.RepoRootDir
-	IsOffline bool
+	Runner         git.ProdRunner
+	RootDir        domain.RepoRootDir
+	IsOffline      bool
+	ConfigSnapshot undo.ConfigSnapshot
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

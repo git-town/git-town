@@ -23,7 +23,8 @@ Feature: does not ship empty feature branches
       |        | git merge --no-edit main                    |
       |        | git reset --hard {{ sha 'feature commit' }} |
       |        | git checkout main                           |
-      | main   | git checkout other                          |
+      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      |        | git checkout other                          |
       | other  | git stash pop                               |
     And it prints the error:
       """
@@ -31,7 +32,8 @@ Feature: does not ship empty feature branches
       """
     And the current branch is still "other"
     And the uncommitted file still exists
-    And the initial branch hierarchy exists
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,8 +43,5 @@ Feature: does not ship empty feature branches
       nothing to undo
       """
     And the current branch is still "other"
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | main commit    |
-      | empty  | local         | feature commit |
-    And the initial branch hierarchy exists
+    And now the initial commits exist
+    And the initial branches and hierarchy exist

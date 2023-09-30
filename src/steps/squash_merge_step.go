@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -19,14 +18,6 @@ type SquashMergeStep struct {
 
 func (step *SquashMergeStep) CreateAbortSteps() []Step {
 	return []Step{&DiscardOpenChangesStep{}}
-}
-
-func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
-	currentSHA, err := backend.CurrentSHA()
-	if err != nil {
-		return []Step{}, err
-	}
-	return []Step{&RevertCommitStep{SHA: currentSHA}}, nil
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {
@@ -56,7 +47,17 @@ func (step *SquashMergeStep) Run(args RunArgs) error {
 	if repoAuthor == author {
 		author = ""
 	}
-	return args.Runner.Frontend.Commit(step.CommitMessage, author)
+	err = args.Runner.Frontend.Commit(step.CommitMessage, author)
+	if err != nil {
+		return err
+	}
+	// TODO: read this SHA from the output of commit above and get rid of the SHAForBranch call below
+	squashedCommitSHA, err := args.Runner.Backend.SHAForBranch(step.Parent.BranchName())
+	if err != nil {
+		return err
+	}
+	args.RegisterUndoablePerennialCommit(squashedCommitSHA)
+	return nil
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

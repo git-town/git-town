@@ -18,14 +18,34 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			Command: "sync",
 			AbortStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
 			RunStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
 			UndoStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("222222"), SetToSHA: domain.NewSHA("111111"), Hard: false}},
+				List: []steps.Step{
+					&steps.ResetCurrentBranchToSHAStep{
+						MustHaveSHA: domain.NewSHA("222222"),
+						SetToSHA:    domain.NewSHA("111111"),
+						Hard:        false,
+					},
+				},
 			},
+			UndoablePerennialCommits: []domain.SHA{},
+			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		assert.NoError(t, err)
@@ -38,7 +58,8 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
@@ -47,7 +68,8 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
@@ -56,12 +78,16 @@ func TestRunState(t *testing.T) {
     {
       "data": {
         "Hard": false,
-        "SHA": "abcdef"
+        "MustHaveSHA": "222222",
+        "SetToSHA": "111111"
       },
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "UnfinishedDetails": null
+  "InitialActiveBranch": "initial",
+  "FinalUndoStepList": [],
+  "UnfinishedDetails": null,
+  "UndoablePerennialCommits": []
 }`[1:]
 		assert.Equal(t, want, string(encoded))
 		newRunState := &runstate.RunState{} //nolint:exhaustruct

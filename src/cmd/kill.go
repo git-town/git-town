@@ -48,24 +48,30 @@ func runKill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineKillConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := killStepList(config)
+	stepList, finalUndoSteps, err := killStepList(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "kill",
-		RunStepList: stepList,
+		Command:             "kill",
+		RunStepList:         stepList,
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		FinalUndoStepList:   finalUndoSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              config.noPushHook,
 	})
 }
 
@@ -80,27 +86,32 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
-		return nil, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := branches.All.FindLocalBranch(targetBranchName)
+	targetBranch := branches.All.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	if targetBranch.IsLocal() {
 		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
@@ -112,7 +123,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 			MainBranch:    mainBranch,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 		if updated {
 			repo.Runner.Config.Reload()
@@ -122,11 +133,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
-	}
-	pushHook, err := repo.Runner.Config.PushHook()
-	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	return &killConfig{
 		hasOpenChanges: hasOpenChanges,
@@ -137,7 +144,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
 		targetBranch:   *targetBranch,
-	}, false, nil
+	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
 func (kc killConfig) isOnline() bool {
@@ -148,27 +155,32 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killStepList(config *killConfig) (runstate.StepList, error) {
-	result := runstate.StepList{}
-	killFeatureBranch(&result, *config)
-	err := result.Wrap(runstate.WrapOptions{
+func killStepList(config *killConfig) (steps runstate.StepList, finalUndoSteps runstate.StepList, err error) {
+	killFeatureBranch(&steps, &finalUndoSteps, *config)
+	err = steps.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	return result, err
+	return steps, finalUndoSteps, err
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *runstate.StepList, config killConfig) {
+// TODO: inline this method?
+func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.LocalName, NoPushHook: config.noPushHook})
+		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.LocalName})
 	}
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
 			list.Append(&steps.CommitOpenChangesStep{})
+			// update the registered initial SHA for this branch so that undo restores the just committed changes
+			list.Append(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
+			// when undoing, manually undo the just committed changes so that they are uncommitted again
+			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
+			finalUndoList.Append(&steps.UndoLastCommitStep{})
 		}
 		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
@@ -177,5 +189,5 @@ func killFeatureBranch(list *runstate.StepList, config killConfig) {
 	for _, child := range childBranches {
 		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
 	}
-	list.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.LocalName, Parent: config.targetBranchParent()})
+	list.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.LocalName})
 }

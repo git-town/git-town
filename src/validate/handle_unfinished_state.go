@@ -12,10 +12,12 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/undo"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (quit bool, err error) {
+// TODO: convert arguments to struct.
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (quit bool, err error) {
 	runState, err := persistence.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -36,11 +38,11 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	case dialog.ResponseDiscard:
 		return discardRunstate(rootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage)
+		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
 	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage)
+		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage)
+		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -48,18 +50,22 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
+func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &abortRunState,
-		Run:       run,
-		Connector: connector,
-		RootDir:   rootDir,
-		Lineage:   lineage,
+		RunState:                &abortRunState,
+		Run:                     run,
+		Connector:               connector,
+		RootDir:                 rootDir,
+		Lineage:                 lineage,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
+func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
@@ -68,11 +74,15 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  runState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+		RunState:                runState,
+		Run:                     run,
+		Connector:               connector,
+		Lineage:                 lineage,
+		RootDir:                 rootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }
 
@@ -81,13 +91,17 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
+func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+		RunState:                &skipRunState,
+		Run:                     run,
+		Connector:               connector,
+		Lineage:                 lineage,
+		RootDir:                 rootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   initialConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }

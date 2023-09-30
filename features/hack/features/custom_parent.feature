@@ -29,12 +29,8 @@ Feature: customize the parent for the new feature branch
     When I run "git town undo"
     Then it runs the commands
       | BRANCH   | COMMAND                   |
-      | new      | git checkout existing     |
+      | new      | git push origin :existing |
+      |          | git checkout existing     |
       | existing | git branch -D new         |
-      |          | git push origin :existing |
-      |          | git checkout main         |
-      | main     | git checkout existing     |
     And the current branch is now "existing"
-    And this branch lineage exists now
-      | BRANCH   | PARENT |
-      | existing | main   |
+    And the initial branches and hierarchy exist

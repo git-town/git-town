@@ -37,11 +37,9 @@ Feature: handle conflicts between the current feature branch and its tracking br
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git rebase --abort   |
-      |         | git checkout main    |
-      | main    | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH  | COMMAND            |
+      | feature | git rebase --abort |
+      |         | git stash pop      |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress

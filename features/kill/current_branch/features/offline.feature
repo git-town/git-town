@@ -38,7 +38,7 @@ Feature: offline mode
       | BRANCH  | COMMAND                                       |
       | main    | git branch feature {{ sha 'WIP on feature' }} |
       |         | git checkout feature                          |
-      | feature | git reset {{ sha 'feature commit' }}          |
+      | feature | git reset --soft HEAD^                        |
     And the current branch is now "feature"
     And the uncommitted file still exists
     And now the initial commits exist

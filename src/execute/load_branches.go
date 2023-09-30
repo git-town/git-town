@@ -7,50 +7,66 @@ import (
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+	var branchesSnapshot domain.BranchesSnapshot
+	var err error
+	stashSnapshot, err := args.Repo.Runner.Backend.StashSnapshot()
+	if err != nil {
+		return domain.EmptyBranches(), domain.EmptyBranchesSnapshot(), stashSnapshot, false, err
+	}
 	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage)
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		if err != nil {
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
+		}
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, args.Lineage, branchesSnapshot, args.Repo.ConfigSnapshot, stashSnapshot, args.PushHook)
 		if err != nil || exit {
-			return domain.EmptyBranches(), exit, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
 		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
 		if err != nil {
-			return domain.EmptyBranches(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 		err = validate.NoOpenChanges(hasOpenChanges)
 		if err != nil {
-			return domain.EmptyBranches(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes domain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
-			return domain.EmptyBranches(), false, err
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline {
 			err = args.Repo.Runner.Frontend.Fetch()
 			if err != nil {
-				return domain.EmptyBranches(), false, err
+				return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 			}
 		}
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		if err != nil {
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
+		}
 	}
-	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
-	if err != nil {
-		return domain.EmptyBranches(), false, err
+	if branchesSnapshot.IsEmpty() {
+		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
+		if err != nil {
+			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
+		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
-	result := domain.Branches{
-		All:     allBranches,
+	branches := domain.Branches{
+		All:     branchesSnapshot.Branches.Clone(),
 		Types:   branchTypes,
-		Initial: initialBranch,
+		Initial: branchesSnapshot.Active,
 	}
 	if args.ValidateIsConfigured {
-		result.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, result)
+		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
 	}
-	return result, false, err
+	return branches, branchesSnapshot, stashSnapshot, false, err
 }
 
 type LoadBranchesArgs struct {
@@ -58,6 +74,7 @@ type LoadBranchesArgs struct {
 	Fetch                 bool
 	HandleUnfinishedState bool
 	Lineage               config.Lineage
+	PushHook              bool
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 }

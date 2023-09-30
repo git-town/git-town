@@ -175,6 +175,145 @@ func TestStepList(t *testing.T) {
 		})
 	})
 
+	t.Run("RemoveAllButLast", func(t *testing.T) {
+		t.Parallel()
+		t.Run("contains the given type at the end", func(t *testing.T) {
+			t.Parallel()
+			have := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+				},
+			}
+			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("contains the given type in the middle", func(t *testing.T) {
+			t.Parallel()
+			have := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("contains the given type multiple times", func(t *testing.T) {
+			t.Parallel()
+			have := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.AbortRebaseStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-3")},
+				},
+			}
+			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-3")},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("does not contain the given type", func(t *testing.T) {
+			t.Parallel()
+			have := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+				},
+			}
+			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+	})
+
+	t.Run("RemoveDuplicateCheckoutSteps", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has duplicate checkout steps", func(t *testing.T) {
+			t.Parallel()
+			give := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			have := give.RemoveDuplicateCheckoutSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("has a mix of Checkout and CheckoutIfExists steps", func(t *testing.T) {
+			t.Parallel()
+			give := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			have := give.RemoveDuplicateCheckoutSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("has no duplicate checkout steps", func(t *testing.T) {
+			t.Parallel()
+			give := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			have := give.RemoveDuplicateCheckoutSteps()
+			want := runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+	})
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		list := runstate.StepList{List: []steps.Step{
@@ -192,6 +331,19 @@ StepList:
 		assert.Equal(t, want, have)
 	})
 
+	t.Run("StepTypes", func(t *testing.T) {
+		t.Parallel()
+		list := runstate.StepList{
+			List: []steps.Step{
+				&steps.AbortMergeStep{},
+				&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch")},
+			},
+		}
+		have := list.StepTypes()
+		want := []string{"*steps.AbortMergeStep", "*steps.CheckoutStep"}
+		assert.Equal(t, want, have)
+	})
+
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `
@@ -199,7 +351,8 @@ StepList:
 	{
 		"data": {
 			"Hard": false,
-			"SHA": "abcdef"
+			"MustHaveSHA": "abcdef",
+			"SetToSHA": "123456"
 		},
 		"type": "ResetCurrentBranchToSHAStep"
 	},
@@ -213,8 +366,9 @@ StepList:
 		assert.Nil(t, err)
 		want := runstate.StepList{List: []steps.Step{
 			&steps.ResetCurrentBranchToSHAStep{
-				Hard: false,
-				SHA:  domain.NewSHA("abcdef"),
+				Hard:        false,
+				MustHaveSHA: domain.NewSHA("abcdef"),
+				SetToSHA:    domain.NewSHA("123456"),
 			},
 			&steps.StashOpenChangesStep{},
 		}}

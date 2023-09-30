@@ -35,16 +35,14 @@ Feature: on the main branch
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout main     |
-      | main     | git branch -D new     |
-      |          | git checkout existing |
-      | existing | git stash pop         |
+      | BRANCH   | COMMAND                                     |
+      | new      | git add -A                                  |
+      |          | git stash                                   |
+      |          | git checkout main                           |
+      | main     | git reset --hard {{ sha 'Initial commit' }} |
+      |          | git checkout existing                       |
+      | existing | git branch -D new                           |
+      |          | git stash pop                               |
     And the current branch is now "existing"
-    And now these commits exist
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, origin | main commit     |
-      | existing | local         | existing commit |
-    And the initial branch hierarchy exists
+    And now the initial commits exist
+    And the initial branches and hierarchy exist

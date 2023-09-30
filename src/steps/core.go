@@ -6,6 +6,7 @@ package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -20,9 +21,6 @@ type Step interface {
 
 	// CreateContinueSteps provides the continue step for this step.
 	CreateContinueSteps() []Step
-
-	// CreateUndoSteps provides the undo step for this step.
-	CreateUndoSteps(*git.BackendCommands) ([]Step, error)
 
 	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.
@@ -39,7 +37,9 @@ type Step interface {
 }
 
 type RunArgs struct {
-	Runner    *git.ProdRunner
-	Connector hosting.Connector
-	Lineage   config.Lineage
+	Runner                          *git.ProdRunner
+	Connector                       hosting.Connector
+	Lineage                         config.Lineage
+	RegisterUndoablePerennialCommit func(domain.SHA)
+	UpdateInitialBranchLocalSHA     func(domain.LocalBranchName, domain.SHA) error
 }

@@ -34,7 +34,7 @@ func (p LocalBranchName) BranchName() BranchName {
 
 // IsEmpty indicates whether this branch name is not set.
 func (p LocalBranchName) IsEmpty() bool {
-	return len(p.id) == 0
+	return p.id == ""
 }
 
 // Location widens the type of this LocalBranchName to a more generic Location.

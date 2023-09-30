@@ -36,15 +36,14 @@ Feature: handle conflicts between the current feature branch and its tracking br
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git merge --abort    |
-      |         | git checkout main    |
-      | main    | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+      |         | git stash pop     |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

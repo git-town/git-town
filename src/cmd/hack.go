@@ -57,7 +57,7 @@ func runHack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineHackConfig(args, promptForParent, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, promptForParent, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -66,32 +66,39 @@ func runHack(args []string, promptForParent, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "hack",
-		RunStepList: stepList,
+		Command:             "hack",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, bool, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	fc := gohacks.FailureCollector{}
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	fc := gohacks.FailureCollector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	targetBranch := domain.NewLocalBranchName(args[0])
@@ -105,7 +112,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		targetBranch:    targetBranch,
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
@@ -113,12 +120,11 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	if branches.All.HasLocalBranch(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
@@ -141,7 +147,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		isOffline:           isOffline,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
-	}, false, fc.Err
+	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
 func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.LocalBranchName, updated bool, err error) {

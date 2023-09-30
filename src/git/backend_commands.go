@@ -34,6 +34,8 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (bc *BackendCommands) Author() (string, error) {
+	// TODO: read this from the config cache?
+	// If not possible, comment here why.
 	name, err := bc.QueryTrim("git", "config", "user.name")
 	if err != nil {
 		return "", err
@@ -71,17 +73,20 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchNam
 	return out != "", nil
 }
 
-// BranchInfos provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchInfos() (branches domain.BranchInfos, currentBranch domain.LocalBranchName, err error) { //nolint:nonamedreturns
+// BranchesSnapshot provides detailed information about the sync status of all branches.
+func (bc *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
-		return
+		return domain.EmptyBranchesSnapshot(), err
 	}
-	branches, currentBranch = ParseVerboseBranchesOutput(output)
+	branches, currentBranch := ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
 		bc.CurrentBranchCache.Set(currentBranch)
 	}
-	return branches, currentBranch, nil
+	return domain.BranchesSnapshot{
+		Branches: branches,
+		Active:   currentBranch,
+	}, nil
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
@@ -121,7 +126,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			})
 		} else {
 			remoteBranchName := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			existingBranchWithTracking := result.FindByRemote(remoteBranchName)
+			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
 			if existingBranchWithTracking != nil {
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
@@ -281,7 +286,7 @@ func (bc *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, erro
 	return domain.NewLocalBranchName(output), nil
 }
 
-// CurrentBranch provides the currently checked out branch.
+// CurrentBranch provides the name of the currently checked out branch.
 func (bc *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
 	if bc.Config.DryRun {
 		return bc.CurrentBranchCache.Value(), nil
@@ -359,12 +364,28 @@ func (bc *BackendCommands) HasMergeInProgress() bool {
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
+// TODO: merge this with HasRebaseInProgress and return two bools.
 func (bc *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := bc.QueryTrim("git", "status", "--porcelain", "--ignore-submodules")
+	output, err := bc.QueryTrim("git", "status", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf(messages.OpenChangesProblem, err)
 	}
-	return output != "", nil
+	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
+		return false, nil
+	}
+	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
+		return false, nil
+	}
+	for _, line := range strings.Split(output, "\n") {
+		if strings.HasPrefix(line, "AA ") {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
+func outputIndicatesMergeInProgress(output string) bool {
+	return strings.Contains(output, "You have unmerged paths")
 }
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
@@ -373,13 +394,11 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.RebaseProblem, err)
 	}
-	if strings.Contains(output, "You are currently rebasing") {
-		return true, nil
-	}
-	if strings.Contains(output, "rebase in progress") {
-		return true, nil
-	}
-	return false, nil
+	return outputIndicatesRebaseInProgress(output), nil
+}
+
+func outputIndicatesRebaseInProgress(output string) bool {
+	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
 }
 
 // HasShippableChanges indicates whether the given branch has changes
@@ -477,6 +496,14 @@ func (bc *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, track
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
 	return out != "", nil
+}
+
+// StashSnapshot provides the number of stashes in this repository.
+func (bc *BackendCommands) StashSnapshot() (domain.StashSnapshot, error) {
+	output, err := bc.QueryTrim("git", "stash", "list")
+	return domain.StashSnapshot{
+		Amount: len(stringslice.Lines(output)),
+	}, err
 }
 
 // Version indicates whether the needed Git version is installed.

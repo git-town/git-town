@@ -30,8 +30,11 @@ Feature: delete branches that were shipped or removed on another machine
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | main   | git branch old {{ sha 'old commit' }} |
+      | main   | git add -A                            |
+      |        | git stash                             |
+      |        | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
+      | old    | git stash pop                         |
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist

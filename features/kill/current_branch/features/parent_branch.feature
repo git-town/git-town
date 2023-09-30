@@ -39,11 +39,11 @@ Feature: delete a branch within a branch chain
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                 |
-      | alpha  | git branch beta {{ sha 'WIP on beta' }} |
-      |        | git checkout beta                       |
-      | beta   | git reset {{ sha 'beta commit' }}       |
-      |        | git push -u origin beta                 |
+      | BRANCH | COMMAND                                                 |
+      | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta |
+      |        | git branch beta {{ sha 'WIP on beta' }}                 |
+      |        | git checkout beta                                       |
+      | beta   | git reset --soft HEAD^                                  |
     And the current branch is now "beta"
     And the uncommitted file still exists
     And now the initial commits exist

@@ -21,8 +21,6 @@ Feature: must provide a commit message
       |         | git commit                         |
       |         | git reset --hard                   |
       |         | git checkout feature               |
-      | feature | git checkout main                  |
-      | main    | git checkout feature               |
     And it prints the error:
       """
       aborted because commit exited with error

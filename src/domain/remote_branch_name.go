@@ -11,6 +11,12 @@ type RemoteBranchName struct {
 	id string
 }
 
+func EmptyRemoteBranchName() RemoteBranchName {
+	return RemoteBranchName{
+		id: "",
+	}
+}
+
 func NewRemoteBranchName(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
@@ -33,6 +39,10 @@ func (r RemoteBranchName) BranchName() BranchName {
 	return NewBranchName(r.id)
 }
 
+func (r RemoteBranchName) IsEmpty() bool {
+	return r.id == ""
+}
+
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
 	_, localBranch := r.Parts()
@@ -46,6 +56,11 @@ func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 func (r RemoteBranchName) Parts() (Remote, LocalBranchName) {
 	parts := strings.SplitN(r.id, "/", 2)
 	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
+}
+
+func (r RemoteBranchName) Remote() Remote {
+	remote, _ := r.Parts()
+	return remote
 }
 
 // Implementation of the fmt.Stringer interface.

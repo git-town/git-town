@@ -31,10 +31,8 @@ Feature: handle conflicts between the shipped branch and its tracking branch
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git merge --abort    |
-      |         | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
     And the current branch is still "feature"
     And no merge is in progress
     And now the initial commits exist

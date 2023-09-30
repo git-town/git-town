@@ -41,11 +41,16 @@ func runSkip(debug bool) error {
 		return err
 	}
 	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -64,10 +69,14 @@ func runSkip(debug bool) error {
 	}
 	skipRunState := runState.CreateSkipRunState()
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &skipRunState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }

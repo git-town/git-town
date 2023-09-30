@@ -14,11 +14,11 @@ Feature: undo deleting the current feature branch with disabled push-hook
     When I run "git-town kill"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch current {{ sha 'WIP on current' }} |
-      |         | git checkout current                          |
-      | current | git reset {{ sha 'current commit' }}          |
-      |         | git push --no-verify -u origin current        |
+      | BRANCH  | COMMAND                                                                   |
+      | main    | git push --no-verify origin {{ sha 'current commit' }}:refs/heads/current |
+      |         | git branch current {{ sha 'WIP on current' }}                             |
+      |         | git checkout current                                                      |
+      | current | git reset --soft HEAD^                                                    |
     And the current branch is now "current"
     And the uncommitted file still exists
     And now the initial commits exist
@@ -29,11 +29,11 @@ Feature: undo deleting the current feature branch with disabled push-hook
     When I run "git-town kill"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch current {{ sha 'WIP on current' }} |
-      |         | git checkout current                          |
-      | current | git reset {{ sha 'current commit' }}          |
-      |         | git push -u origin current                    |
+      | BRANCH  | COMMAND                                                       |
+      | main    | git push origin {{ sha 'current commit' }}:refs/heads/current |
+      |         | git branch current {{ sha 'WIP on current' }}                 |
+      |         | git checkout current                                          |
+      | current | git reset --soft HEAD^                                        |
     And the current branch is now "current"
     And the uncommitted file still exists
     And now the initial commits exist

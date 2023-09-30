@@ -43,7 +43,7 @@ func runPruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determinePruneBranchesConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePruneBranchesConfig(&repo)
 	if err != nil || exit {
 		return err
 	}
@@ -52,15 +52,20 @@ func runPruneBranches(debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "prune-branches",
-		RunStepList: stepList,
+		Command:             "prune-branches",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
@@ -70,15 +75,21 @@ type pruneBranchesConfig struct {
 	branchesToDelete domain.LocalBranchNames
 	mainBranch       domain.LocalBranchName
 	previousBranch   domain.LocalBranchName
+	pushHook         bool
 }
 
-func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, bool, error) {
+func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -88,7 +99,8 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		mainBranch:       repo.Runner.Config.MainBranch(),
 		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),
-	}, exit, err
+		pushHook:         pushHook,
+	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
@@ -102,7 +114,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
 				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
+			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote})
 		}
 		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})

@@ -37,8 +37,11 @@ Feature: delete a parent branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                 |
-      | gamma  | git branch beta {{ sha 'beta commit' }} |
+      | gamma  | git add -A                              |
+      |        | git stash                               |
+      |        | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
+      |        | git stash pop                           |
     And the current branch is now "gamma"
     And the uncommitted file still exists
     And now the initial commits exist

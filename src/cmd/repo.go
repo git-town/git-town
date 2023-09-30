@@ -6,9 +6,11 @@ import (
 	"github.com/git-town/git-town/v9/src/browser"
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -51,8 +53,8 @@ func runRepo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineRepoConfig(&repo)
-	if err != nil || exit {
+	config, err := determineRepoConfig(&repo)
+	if err != nil {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
@@ -60,23 +62,25 @@ func runRepo(debug bool) error {
 	return nil
 }
 
-func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  repo,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
-		return nil, exit, err
+func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return nil, err
+	}
+	branchTypes := repo.Runner.Config.BranchTypes()
+	branches := domain.Branches{
+		All:     branchesSnapshot.Branches,
+		Types:   branchTypes,
+		Initial: branchesSnapshot.Active,
+	}
+	_, err = validate.IsConfigured(&repo.Runner.Backend, branches)
+	if err != nil {
+		return nil, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -90,14 +94,14 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, bool, error
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	if connector == nil {
-		return nil, false, hosting.UnsupportedServiceError()
+		return nil, hosting.UnsupportedServiceError()
 	}
 	return &repoConfig{
 		connector: connector,
-	}, false, err
+	}, err
 }
 
 type repoConfig struct {

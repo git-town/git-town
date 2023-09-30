@@ -61,7 +61,7 @@ func runNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineNewPullRequestConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(&repo)
 	if err != nil || exit {
 		return err
 	}
@@ -73,15 +73,20 @@ func runNewPullRequest(debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "new-pull-request",
-		RunStepList: stepList,
+		Command:             "new-pull-request",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
@@ -101,27 +106,32 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, bool, error) {
+func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
@@ -133,31 +143,27 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
 	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, false, err
-	}
-	pushHook, err := repo.Runner.Config.PushHook()
-	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
@@ -170,10 +176,10 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if connector == nil {
-		return nil, false, hosting.UnsupportedServiceError()
+		return nil, branchesSnapshot, stashSnapshot, false, hosting.UnsupportedServiceError()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
@@ -191,7 +197,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		pushHook:           pushHook,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
-	}, false, err
+	}, branchesSnapshot, stashSnapshot, false, err
 }
 
 func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {

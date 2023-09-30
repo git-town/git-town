@@ -37,13 +37,11 @@ Feature: ship hotfixes
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                                     |
-      | production | git branch hotfix {{ sha 'hotfix commit' }} |
-      |            | git push -u origin hotfix                   |
-      |            | git revert {{ sha 'hotfix done' }}          |
+      | production | git revert {{ sha 'hotfix done' }}          |
       |            | git push                                    |
+      |            | git branch hotfix {{ sha 'hotfix commit' }} |
+      |            | git push -u origin hotfix                   |
       |            | git checkout hotfix                         |
-      | hotfix     | git checkout production                     |
-      | production | git checkout hotfix                         |
     And the current branch is now "hotfix"
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE              |

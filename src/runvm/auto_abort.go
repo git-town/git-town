@@ -16,11 +16,15 @@ func autoAbort(step steps.Step, runErr error, args ExecuteArgs) error {
 	cli.PrintError(fmt.Errorf(messages.RunAutoAborting, runErr.Error()))
 	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
-		RunState:  &abortRunState,
-		Run:       args.Run,
-		Connector: args.Connector,
-		RootDir:   args.RootDir,
-		Lineage:   args.Lineage,
+		RunState:                &abortRunState,
+		Run:                     args.Run,
+		Connector:               args.Connector,
+		RootDir:                 args.RootDir,
+		Lineage:                 args.Lineage,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              args.NoPushHook,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortStepProblem, err)

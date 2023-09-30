@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -15,7 +14,6 @@ type ConnectorMergeProposalStep struct {
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	mergeSHA                  domain.SHA
 	ProposalNumber            int
 	EmptyStep
 }
@@ -25,10 +23,6 @@ func (step *ConnectorMergeProposalStep) CreateAbortSteps() []Step {
 		return []Step{&DiscardOpenChangesStep{}}
 	}
 	return []Step{}
-}
-
-func (step *ConnectorMergeProposalStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&RevertCommitStep{SHA: step.mergeSHA}}, nil
 }
 
 func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
@@ -67,7 +61,7 @@ func (step *ConnectorMergeProposalStep) Run(args RunArgs) error {
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	step.mergeSHA, step.mergeError = args.Connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
+	_, step.mergeError = args.Connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
 	return step.mergeError
 }
 

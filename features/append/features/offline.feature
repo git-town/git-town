@@ -31,8 +31,6 @@ Feature: append in offline mode
       | BRANCH   | COMMAND               |
       | new      | git checkout existing |
       | existing | git branch -D new     |
-      |          | git checkout main     |
-      | main     | git checkout existing |
     And the current branch is now "existing"
     And now the initial commits exist
     And the initial branch hierarchy exists

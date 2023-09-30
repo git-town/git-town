@@ -6,7 +6,6 @@ Feature: display debug statistics
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
 
-  # TODO: remove the duplicate calls
   Scenario: result
     When I run "git-town ship -m done --debug"
     Then it runs the commands
@@ -15,28 +14,23 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git stash list                                    |
+      |         | backend  | git branch -vva                                   |
+      |         | backend  | git status --ignore-submodules                    |
       |         | backend  | git remote                                        |
-      |         | backend  | git status                                        |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status --ignore-submodules                    |
       |         | backend  | git remote get-url origin                         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git status --ignore-submodules                    |
       | feature | frontend | git checkout main                                 |
-      |         | backend  | git rev-parse --short HEAD                        |
       | main    | frontend | git rebase origin/main                            |
       |         | backend  | git rev-parse HEAD                                |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git checkout feature                              |
-      |         | backend  | git rev-parse --short HEAD                        |
       | feature | frontend | git merge --no-edit origin/feature                |
-      |         | backend  | git rev-parse --short HEAD                        |
-      |         | backend  | git rev-parse --short HEAD                        |
-      | feature | frontend | git merge --no-edit main                          |
-      |         | backend  | git rev-parse HEAD                                |
+      |         | frontend | git merge --no-edit main                          |
       |         | backend  | git diff main..feature                            |
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash feature                        |
@@ -44,11 +38,10 @@ Feature: display debug statistics
       |         | backend  | git config user.name                              |
       |         | backend  | git config user.email                             |
       | main    | frontend | git commit -m done                                |
-      |         | backend  | git rev-parse --short HEAD                        |
+      |         | backend  | git rev-parse --short main                        |
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
-      |         | backend  | git rev-parse --short feature                     |
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
@@ -56,6 +49,10 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout main                                 |
       |         | backend  | git checkout main                                 |
+      |         | backend  | git config -lz --global                           |
+      |         | backend  | git config -lz --local                            |
+      |         | backend  | git branch -vva                                   |
+      |         | backend  | git stash list                                    |
     And it prints:
       """
       Ran 45 shell commands.
@@ -66,26 +63,31 @@ Feature: display debug statistics
     Given I ran "git-town ship -m done"
     When I run "git-town undo --debug"
     Then it runs the commands
-      | BRANCH  | TYPE     | COMMAND                                        |
-      |         | backend  | git version                                    |
-      |         | backend  | git config -lz --global                        |
-      |         | backend  | git config -lz --local                         |
-      |         | backend  | git rev-parse --show-toplevel                  |
-      |         | backend  | git branch -vva                                |
-      |         | backend  | git config git-town-branch.feature.parent main |
-      | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
-      |         | frontend | git push -u origin feature                     |
-      |         | backend  | git log --pretty=format:%h -10                 |
-      | main    | frontend | git revert {{ sha 'done' }}                    |
-      |         | backend  | git rev-list --left-right main...origin/main   |
-      | main    | frontend | git push                                       |
-      |         | frontend | git checkout feature                           |
-      |         | backend  | git rev-parse --short HEAD                     |
-      |         | backend  | git rev-parse --short HEAD                     |
-      | feature | frontend | git checkout main                              |
-      | main    | frontend | git checkout feature                           |
+      | BRANCH | TYPE     | COMMAND                                        |
+      |        | backend  | git version                                    |
+      |        | backend  | git config -lz --global                        |
+      |        | backend  | git config -lz --local                         |
+      |        | backend  | git rev-parse --show-toplevel                  |
+      |        | backend  | git stash list                                 |
+      |        | backend  | git branch -vva                                |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend  | git status --ignore-submodules                 |
+      |        | backend  | git config git-town-branch.feature.parent main |
+      |        | backend  | git log --pretty=format:%h -10                 |
+      | main   | frontend | git revert {{ sha 'done' }}                    |
+      |        | backend  | git rev-list --left-right main...origin/main   |
+      | main   | frontend | git push                                       |
+      |        | frontend | git branch feature {{ sha 'feature commit' }}  |
+      |        | frontend | git push -u origin feature                     |
+      |        | frontend | git checkout feature                           |
+      |        | backend  | git show-ref --quiet refs/heads/main           |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend  | git config -lz --global                        |
+      |        | backend  | git config -lz --local                         |
+      |        | backend  | git branch -vva                                |
+      |        | backend  | git stash list                                 |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "feature"

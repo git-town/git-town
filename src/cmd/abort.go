@@ -5,9 +5,9 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
@@ -45,60 +45,105 @@ func runAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineAbortConfig(&repo.Runner)
+	config, initialStashSnapshot, err := determineAbortConfig(&repo)
 	if err != nil {
 		return err
 	}
-	abortRunState, err := determineAbortRunstate(&repo)
+	abortRunState, err := determineAbortRunstate(config, &repo)
 	if err != nil {
 		return err
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  abortRunState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &abortRunState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: config.initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
-func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
-	originURL := run.Config.OriginURL()
-	hostingService, err := run.Config.HostingService()
+func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, domain.StashSnapshot, error) {
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, domain.EmptyStashSnapshot(), err
 	}
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
+	lineage := repo.Runner.Config.Lineage()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetSHAForBranch: run.Backend.SHAForBranch,
+		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   run.Config.GiteaToken(),
-		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),
-		GitlabAPIToken:  run.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  hosting.GetGitHubAPIToken(repo.Runner.Config),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
+	if err != nil {
+		return nil, domain.EmptyStashSnapshot(), err
+	}
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyStashSnapshot(), err
+	}
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		Lineage:               lineage,
+		PushHook:              pushHook,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, initialStashSnapshot, err
+	}
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	if err != nil {
+		return nil, initialStashSnapshot, err
+	}
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	return &abortConfig{
-		connector: connector,
-		lineage:   lineage,
-	}, err
+		connector:               connector,
+		hasOpenChanges:          hasOpenChanges,
+		initialBranchesSnapshot: initialBranchesSnapshot,
+		lineage:                 lineage,
+		mainBranch:              mainBranch,
+		previousBranch:          previousBranch,
+		pushHook:                pushHook,
+	}, initialStashSnapshot, err
 }
 
 type abortConfig struct {
-	connector hosting.Connector
-	lineage   config.Lineage
+	connector               hosting.Connector
+	hasOpenChanges          bool
+	initialBranchesSnapshot domain.BranchesSnapshot
+	mainBranch              domain.LocalBranchName
+	lineage                 config.Lineage
+	previousBranch          domain.LocalBranchName
+	pushHook                bool
 }
 
-func determineAbortRunstate(repo *execute.OpenRepoResult) (*runstate.RunState, error) {
+func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
 	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
-		return nil, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return nil, fmt.Errorf(messages.AbortNothingToDo)
+		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
-	return &abortRunState, nil
+	err = abortRunState.RunStepList.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranchesSnapshot.Active,
+		PreviousBranch:   config.previousBranch,
+	})
+	return abortRunState, err
 }

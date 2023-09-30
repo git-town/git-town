@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -16,13 +17,26 @@ import (
 func TestLoadSave(t *testing.T) {
 	t.Parallel()
 
+	t.Run("SanitizePath", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]string{
+			"/home/user/development/git-town":        "home-user-development-git-town",
+			"c:\\Users\\user\\development\\git-town": "c-users-user-development-git-town",
+		}
+		for give, want := range tests {
+			rootDir := domain.NewRepoRootDir(give)
+			have := persistence.SanitizePath(rootDir)
+			assert.Equal(t, want, have)
+		}
+	})
+
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			AbortStepList: runstate.StepList{},
 			Command:       "command",
 			IsAbort:       true,
 			IsUndo:        true,
+			AbortStepList: runstate.StepList{},
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
@@ -58,16 +72,13 @@ func TestLoadSave(t *testing.T) {
 						Force:  false,
 					},
 					&steps.DeleteRemoteBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
+						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.DeleteParentBranchStep{
 						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
+						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.DiscardOpenChangesStep{},
 					&steps.EnsureHasShippableChangesStep{
@@ -88,16 +99,20 @@ func TestLoadSave(t *testing.T) {
 						MainBranch:                        domain.NewLocalBranchName("main"),
 					},
 					&steps.PullCurrentBranchStep{},
-					&steps.PushBranchAfterCurrentBranchSteps{},
 					&steps.PushCurrentBranchStep{
 						CurrentBranch: domain.NewLocalBranchName("branch"),
 						NoPushHook:    true,
-						Undoable:      true,
 					},
 					&steps.PushTagsStep{},
 					&steps.RebaseBranchStep{Branch: domain.NewBranchName("branch")},
 					&steps.RemoveFromPerennialBranchesStep{
 						Branch: domain.NewLocalBranchName("branch"),
+					},
+					&steps.RemoveGlobalConfigStep{
+						Key: config.KeyOffline,
+					},
+					&steps.RemoveLocalConfigStep{
+						Key: config.KeyOffline,
 					},
 					&steps.ResetCurrentBranchToSHAStep{
 						Hard:        true,
@@ -107,6 +122,14 @@ func TestLoadSave(t *testing.T) {
 					&steps.RestoreOpenChangesStep{},
 					&steps.RevertCommitStep{
 						SHA: domain.NewSHA("123456"),
+					},
+					&steps.SetGlobalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "1",
+					},
+					&steps.SetLocalConfigStep{
+						Key:   config.KeyOffline,
+						Value: "1",
 					},
 					&steps.SetParentStep{
 						Branch:       domain.NewLocalBranchName("branch"),
@@ -122,7 +145,6 @@ func TestLoadSave(t *testing.T) {
 					&steps.UpdateProposalTargetStep{
 						ProposalNumber: 123,
 						NewTarget:      domain.NewLocalBranchName("new-target"),
-						ExistingTarget: domain.NewLocalBranchName("existing-target"),
 					},
 				},
 			},
@@ -132,6 +154,8 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: domain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
+			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
+			UndoablePerennialCommits: []domain.SHA{},
 		}
 
 		wantJSON := `
@@ -220,22 +244,19 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "Branch": "branch",
-        "NoPushHook": true
+        "Branch": "branch"
       },
       "type": "DeleteRemoteBranchStep"
     },
     {
       "data": {
-        "Branch": "branch",
-        "Parent": "parent"
+        "Branch": "branch"
       },
       "type": "DeleteParentBranchStep"
     },
     {
       "data": {
-        "Branch": "branch",
-        "NoPushHook": true
+        "Branch": "branch"
       },
       "type": "DeleteTrackingBranchStep"
     },
@@ -282,14 +303,9 @@ func TestLoadSave(t *testing.T) {
       "type": "PullCurrentBranchStep"
     },
     {
-      "data": {},
-      "type": "PushBranchAfterCurrentBranchSteps"
-    },
-    {
       "data": {
         "CurrentBranch": "branch",
-        "NoPushHook": true,
-        "Undoable": true
+        "NoPushHook": true
       },
       "type": "PushCurrentBranchStep"
     },
@@ -311,6 +327,18 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "RemoveGlobalConfigStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline"
+      },
+      "type": "RemoveLocalConfigStep"
+    },
+    {
+      "data": {
         "Hard": true,
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
@@ -326,6 +354,20 @@ func TestLoadSave(t *testing.T) {
         "SHA": "123456"
       },
       "type": "RevertCommitStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "SetGlobalConfigStep"
+    },
+    {
+      "data": {
+        "Key": "git-town.offline",
+        "Value": "1"
+      },
+      "type": "SetLocalConfigStep"
     },
     {
       "data": {
@@ -353,18 +395,20 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "ProposalNumber": 123,
-        "NewTarget": "new-target",
-        "ExistingTarget": "existing-target"
+        "NewTarget": "new-target"
       },
       "type": "UpdateProposalTargetStep"
     }
   ],
   "UndoStepList": [],
+  "InitialActiveBranch": "initial",
+  "FinalUndoStepList": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",
     "EndTime": "0001-01-01T00:00:00Z"
-  }
+  },
+  "UndoablePerennialCommits": []
 }`[1:]
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")

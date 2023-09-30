@@ -21,7 +21,7 @@ func (step *ResetCurrentBranchToSHAStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if step.SetToSHA == currentSHA {
+	if currentSHA == step.SetToSHA {
 		// nothing to do
 		return nil
 	}

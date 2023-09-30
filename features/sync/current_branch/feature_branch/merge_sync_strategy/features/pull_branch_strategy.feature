@@ -40,20 +40,15 @@ Feature: with pull-branch-strategy set to "merge"
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git reset --hard {{ sha 'local feature commit' }}                            |
+      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
     And the current branch is still "feature"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | local main commit                                          |
-      |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main'                 |
-      | feature | local, origin | local feature commit                                       |
-      |         |               | origin feature commit                                      |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | local main commit                                          |
-      |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main'                 |
-      |         |               | Merge branch 'main' into feature                           |
+      | BRANCH  | LOCATION      | MESSAGE                                    |
+      | main    | local, origin | local main commit                          |
+      |         |               | origin main commit                         |
+      |         |               | Merge remote-tracking branch 'origin/main' |
+      | feature | local         | local feature commit                       |
+      |         | origin        | origin feature commit                      |
     And the initial branches and hierarchy exist

@@ -29,13 +29,9 @@ Feature: ship a feature branch in a local repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git branch feature {{ sha 'feature commit' }} |
-      |        | git revert {{ sha 'feature done' }}           |
+      | main   | git reset --hard {{ sha 'Initial commit' }}   |
+      |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And now these commits exist
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | feature done          |
-      |         |          | Revert "feature done" |
-      | feature | local    | feature commit        |
+    And now the initial commits exist
     And the initial branches and hierarchy exist
