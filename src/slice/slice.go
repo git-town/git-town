@@ -2,7 +2,7 @@
 package slice
 
 // AppendAllMissing appends all elements of `additional` that aren't contained in `existing` to `existing`.
-func AppendAllMissing[C comparable](existing []C, additional []C) []C {
+func AppendAllMissing[S ~[]C, C comparable](existing S, additional S) S {
 	for a := range additional {
 		if !Contains(existing, additional[a]) {
 			existing = append(existing, additional[a])
@@ -41,7 +41,7 @@ func FirstElementOr[C comparable](list []C, alternative C) C { //nolint:ireturn 
 }
 
 // Hoist provides the given slice with the given element moved to the first position.
-func Hoist[C comparable](list []C, element C) []C {
+func Hoist[S ~[]C, C comparable](list S, element C) S {
 	result := make([]C, 0, len(list))
 	hasElement := false
 	for l := range list {

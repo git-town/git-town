@@ -3,6 +3,7 @@ package slice_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
@@ -13,11 +14,22 @@ func TestSlice(t *testing.T) {
 
 	t.Run("AppendAllMissing", func(t *testing.T) {
 		t.Parallel()
-		list := []string{"one", "two", "three"}
-		give := []string{"two", "four", "five"}
-		want := []string{"one", "two", "three", "four", "five"}
-		have := slice.AppendAllMissing(list, give)
-		assert.Equal(t, want, have)
+		t.Run("slice type", func(t *testing.T) {
+			t.Parallel()
+			list := []string{"one", "two", "three"}
+			give := []string{"two", "four", "five"}
+			want := []string{"one", "two", "three", "four", "five"}
+			have := slice.AppendAllMissing(list, give)
+			assert.Equal(t, want, have)
+		})
+		t.Run("aliased slice type", func(t *testing.T) {
+			t.Parallel()
+			list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222")}
+			give := domain.SHAs{domain.NewSHA("333333"), domain.NewSHA("444444")}
+			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"), domain.NewSHA("444444")}
+			have := slice.AppendAllMissing(list, give)
+			assert.Equal(t, want, have)
+		})
 	})
 
 	t.Run("Contains", func(t *testing.T) {
@@ -69,6 +81,7 @@ func TestSlice(t *testing.T) {
 		t.Run("already hoisted", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"initial", "one", "two"}
+			// TODO: order have, then want
 			want := []string{"initial", "one", "two"}
 			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
@@ -85,6 +98,13 @@ func TestSlice(t *testing.T) {
 			give := []string{}
 			want := []string{}
 			have := slice.Hoist(give, "initial")
+			assert.Equal(t, want, have)
+		})
+		t.Run("aliased slice type", func(t *testing.T) {
+			t.Parallel()
+			give := domain.LocalBranchNames{domain.NewLocalBranchName("alpha"), domain.NewLocalBranchName("initial"), domain.NewLocalBranchName("omega")}
+			have := slice.Hoist(give, domain.NewLocalBranchName("initial"))
+			want := domain.LocalBranchNames{domain.NewLocalBranchName("initial"), domain.NewLocalBranchName("alpha"), domain.NewLocalBranchName("omega")}
 			assert.Equal(t, want, have)
 		})
 	})
