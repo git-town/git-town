@@ -48,22 +48,20 @@ Feature: ship a coworker's feature branch
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no branch hierarchy exists now
 
-  Scenario:  undo
+  Scenario: undo
     Given I ran "git-town ship -m 'feature done'"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                        |
-      | main    | git branch feature {{ sha 'coworker commit' }} |
-      |         | git push -u origin feature                     |
-      |         | git revert {{ sha 'feature done' }}            |
-      |         | git push                                       |
-      |         | git checkout feature                           |
-      | feature | git checkout main                              |
-      | main    | git checkout feature                           |
+      | BRANCH | COMMAND                                        |
+      | main   | git revert {{ sha 'feature done' }}            |
+      |        | git push                                       |
+      |        | git branch feature {{ sha 'coworker commit' }} |
+      |        | git push -u origin feature                     |
+      |        | git checkout feature                           |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | coworker commit       |
-    And the initial branch hierarchy exists
+    And the initial branches and hierarchy exist

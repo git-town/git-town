@@ -5,11 +5,25 @@ import (
 
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/undo"
 )
 
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
+	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
+		Run:                      args.Run,
+		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:    args.InitialConfigSnapshot,
+		InitialStashSnapshot:     args.InitialStashSnapshot,
+		NoPushHook:               args.NoPushHook,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
+	})
+	if err != nil {
+		return err
+	}
+	args.RunState.UndoStepList.AppendList(undoSteps)
+	args.RunState.UndoStepList.AppendList(args.RunState.FinalUndoStepList)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
 		err := persistence.Delete(args.RootDir)
 		if err != nil {

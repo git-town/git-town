@@ -41,14 +41,12 @@ Feature: skip deleting the remote branch when shipping another branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | other   | git checkout main                             |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git push                                      |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
-      | main    | git checkout other                            |
+      | BRANCH | COMMAND                                       |
+      | other  | git checkout main                             |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout other                            |
     And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
@@ -56,8 +54,4 @@ Feature: skip deleting the remote branch when shipping another branch
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
       | other   | local         | other commit          |
-    And the branches are now
-      | REPOSITORY | BRANCHES             |
-      | local      | main, feature, other |
-      | origin     | main, other          |
-    And the initial branch hierarchy exists
+    And the initial branches and hierarchy exist

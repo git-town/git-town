@@ -40,8 +40,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |
-      |         | git checkout main  |
-      | main    | git checkout other |
+      |         | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
@@ -101,26 +100,21 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                         |
-      | other   | git add -A                                                      |
-      |         | git stash                                                       |
-      |         | git checkout main                                               |
-      | main    | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
-      |         | git push -u origin feature                                      |
-      |         | git revert {{ sha 'feature done' }}                             |
-      |         | git push                                                        |
-      |         | git checkout feature                                            |
-      | feature | git reset --hard {{ sha 'conflicting feature commit' }}         |
-      |         | git checkout main                                               |
-      | main    | git checkout other                                              |
-      | other   | git stash pop                                                   |
+      | BRANCH | COMMAND                                                       |
+      | other  | git add -A                                                    |
+      |        | git stash                                                     |
+      |        | git checkout main                                             |
+      | main   | git revert {{ sha 'feature done' }}                           |
+      |        | git push                                                      |
+      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'conflicting feature commit' }}     |
+      |        | git checkout other                                            |
+      | other  | git stash pop                                                 |
     And the current branch is now "other"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, origin | conflicting main commit          |
-      |         |               | feature done                     |
-      |         |               | Revert "feature done"            |
-      | feature | local, origin | conflicting feature commit       |
-      |         | origin        | conflicting main commit          |
-      |         |               | Merge branch 'main' into feature |
+      | BRANCH  | LOCATION      | MESSAGE                    |
+      | main    | local, origin | conflicting main commit    |
+      |         |               | feature done               |
+      |         |               | Revert "feature done"      |
+      | feature | local         | conflicting feature commit |
     And the initial branches and hierarchy exist

@@ -42,9 +42,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                                 |
       | feature | git merge --abort                                       |
       |         | git reset --hard {{ sha 'conflicting feature commit' }} |
-      |         | git checkout main                                       |
-      | main    | git checkout feature                                    |
-      | feature | git stash pop                                           |
+      |         | git stash pop                                           |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
@@ -53,6 +51,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
+    And the initial branches and hierarchy exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

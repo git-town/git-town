@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -44,8 +45,8 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineContinueConfig(&repo)
-	if err != nil {
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	runState, err := determineContinueRunstate(&repo)
@@ -53,38 +54,47 @@ func runContinue(debug bool) error {
 		return err
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  runState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !config.pushHook,
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	_, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, initialBranchesSnapshot, initialStashSnapshot, exit, err
 	}
 	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
-		return nil, err
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
 	if hasConflicts {
-		return nil, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -100,21 +110,23 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, err
 	return &continueConfig{
 		connector: connector,
 		lineage:   lineage,
-	}, err
+		pushHook:  pushHook,
+	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
 
 type continueConfig struct {
 	connector hosting.Connector
 	lineage   config.Lineage
+	pushHook  bool
 }
 
-func determineContinueRunstate(repo *execute.OpenRepoResult) (*runstate.RunState, error) {
+func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, error) {
 	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
-		return nil, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return nil, fmt.Errorf(messages.ContinueNothingToDo)
+		return runstate.RunState{}, fmt.Errorf(messages.ContinueNothingToDo)
 	}
-	return runState, nil
+	return *runState, nil
 }

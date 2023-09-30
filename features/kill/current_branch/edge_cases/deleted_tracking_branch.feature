@@ -37,7 +37,7 @@ Feature: the branch to kill has a deleted tracking branch
       | BRANCH | COMMAND                               |
       | main   | git branch old {{ sha 'WIP on old' }} |
       |        | git checkout old                      |
-      | old    | git reset {{ sha 'old commit' }}      |
+      | old    | git reset --soft HEAD^                |
     And the current branch is now "old"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |

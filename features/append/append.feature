@@ -41,9 +41,7 @@ Feature: append a new feature branch to an existing feature branch
       |          | git stash             |
       |          | git checkout existing |
       | existing | git branch -D new     |
-      |          | git checkout main     |
-      | main     | git checkout existing |
-      | existing | git stash pop         |
+      |          | git stash pop         |
     And the current branch is now "existing"
     And the uncommitted file still exists
     And now the initial commits exist

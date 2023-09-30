@@ -43,19 +43,16 @@ Feature: ship the supplied feature branch from a subfolder
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | other   | git add -A                                    |
-      |         | git stash                                     |
-      |         | git checkout main                             |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git push -u origin feature                    |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git push                                      |
-      |         | git checkout feature                          |
-      | feature | git reset --hard {{ sha 'Initial commit' }}   |
-      |         | git checkout main                             |
-      | main    | git checkout other                            |
-      | other   | git stash pop                                 |
+      | BRANCH | COMMAND                                                       |
+      | other  | git add -A                                                    |
+      |        | git stash                                                     |
+      |        | git checkout main                                             |
+      | main   | git revert {{ sha 'feature done' }}                           |
+      |        | git push                                                      |
+      |        | git push origin {{ sha 'feature commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'Initial commit' }}                 |
+      |        | git checkout other                                            |
+      | other  | git stash pop                                                 |
     And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

@@ -55,7 +55,7 @@ func TestStringSlice(t *testing.T) {
 	t.Run("Lines", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string][]string{
-			"":                {""},
+			"":                {},
 			"single line":     {"single line"},
 			"multiple\nlines": {"multiple", "lines"},
 		}

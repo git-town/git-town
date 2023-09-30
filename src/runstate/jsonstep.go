@@ -51,6 +51,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.AddToPerennialBranchesStep{}
 	case "CheckoutStep":
 		return &steps.CheckoutStep{}
+	case "CheckoutIfExistsStep":
+		return &steps.CheckoutIfExistsStep{}
 	case "CommitOpenChangesStep":
 		return &steps.CommitOpenChangesStep{}
 	case "ConnectorMergeProposalStep":
@@ -91,8 +93,6 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.PreserveCheckoutHistoryStep{}
 	case "PullCurrentBranchStep":
 		return &steps.PullCurrentBranchStep{}
-	case "PushBranchAfterCurrentBranchSteps":
-		return &steps.PushBranchAfterCurrentBranchSteps{}
 	case "PushCurrentBranchStep":
 		return &steps.PushCurrentBranchStep{}
 	case "PushTagsStep":
@@ -101,12 +101,22 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.RebaseBranchStep{}
 	case "RemoveFromPerennialBranchesStep":
 		return &steps.RemoveFromPerennialBranchesStep{}
+	case "RemoveGlobalConfigStep":
+		return &steps.RemoveGlobalConfigStep{}
+	case "RemoveLocalConfigStep":
+		return &steps.RemoveLocalConfigStep{}
 	case "ResetCurrentBranchToSHAStep":
 		return &steps.ResetCurrentBranchToSHAStep{}
+	case "ResetRemoteBranchToSHAStep":
+		return &steps.ResetRemoteBranchToSHAStep{}
 	case "RestoreOpenChangesStep":
 		return &steps.RestoreOpenChangesStep{}
 	case "RevertCommitStep":
 		return &steps.RevertCommitStep{}
+	case "SetGlobalConfigStep":
+		return &steps.SetGlobalConfigStep{}
+	case "SetLocalConfigStep":
+		return &steps.SetLocalConfigStep{}
 	case "SetParentStep":
 		return &steps.SetParentStep{}
 	case "SquashMergeStep":
@@ -115,6 +125,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.SkipCurrentBranchSteps{}
 	case "StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
+	case "UndoLastCommitStep":
+		return &steps.UndoLastCommitStep{}
 	case "UpdateProposalTargetStep":
 		return &steps.UpdateProposalTargetStep{}
 	}

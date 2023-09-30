@@ -33,20 +33,18 @@ Feature: ship a coworker's feature branch
       | Please choose an author for the squash commit | [ENTER] |
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                        |
-      | main    | git branch feature {{ sha 'coworker commit' }} |
-      |         | git push -u origin feature                     |
-      |         | git revert {{ sha 'feature done' }}            |
-      |         | git push                                       |
-      |         | git checkout feature                           |
-      | feature | git checkout main                              |
-      | main    | git checkout feature                           |
+      | BRANCH | COMMAND                                                       |
+      | main   | git revert {{ sha 'feature done' }}                           |
+      |        | git push                                                      |
+      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'coworker commit' }}                |
+      |        | git checkout feature                                          |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, origin | developer commit 1    |
+      | feature | local         | developer commit 1    |
       |         |               | developer commit 2    |
       |         |               | coworker commit       |
     And the initial branches and hierarchy exist

@@ -40,12 +40,10 @@ Feature: ship a parent branch
     Then it runs the commands
       | BRANCH | COMMAND                                     |
       | child  | git checkout main                           |
-      | main   | git branch parent {{ sha 'parent commit' }} |
-      |        | git revert {{ sha 'parent done' }}          |
+      | main   | git revert {{ sha 'parent done' }}          |
       |        | git push                                    |
-      |        | git checkout parent                         |
-      | parent | git checkout main                           |
-      | main   | git checkout child                          |
+      |        | git branch parent {{ sha 'parent commit' }} |
+      |        | git checkout child                          |
     And the current branch is now "child"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
@@ -53,4 +51,4 @@ Feature: ship a parent branch
       |        |               | Revert "parent done" |
       | child  | local, origin | child commit         |
       | parent | local, origin | parent commit        |
-    And the initial branch hierarchy exists
+    And the initial branches and hierarchy exist

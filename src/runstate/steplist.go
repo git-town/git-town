@@ -3,8 +3,11 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -76,11 +79,60 @@ func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
 }
 
+func (stepList *StepList) RemoveAllButLast(removeType string) {
+	typeList := stepList.StepTypes()
+	occurrences := slice.FindAll(typeList, removeType)
+	occurrencesToRemove := slice.TruncateLast(occurrences)
+	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
+		stepList.List = slice.RemoveAt(stepList.List, occurrencesToRemove[o])
+	}
+}
+
+// RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
+func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
+	result := make([]steps.Step, 0, len(stepList.List))
+	// this one is populated only if the last step is a checkout step
+	var lastStep steps.Step
+	for _, step := range stepList.List {
+		if isCheckoutStep(step) {
+			lastStep = step
+			continue
+		}
+		if lastStep != nil {
+			result = append(result, lastStep)
+		}
+		lastStep = nil
+		result = append(result, step)
+	}
+	if lastStep != nil {
+		result = append(result, lastStep)
+	}
+	return StepList{List: result}
+}
+
 // Implementation of the fmt.Stringer interface.
 func (stepList *StepList) String() string {
-	result := "StepList:\n"
+	return stepList.StringIndented("")
+}
+
+func (stepList *StepList) StringIndented(indent string) string {
+	sb := strings.Builder{}
+	if stepList.IsEmpty() {
+		sb.WriteString("(empty StepList)\n")
+	} else {
+		sb.WriteString("StepList:\n")
+		for s, step := range stepList.List {
+			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
+		}
+	}
+	return sb.String()
+}
+
+// StepTypes provides the names of the types of the steps in this list.
+func (stepList *StepList) StepTypes() []string {
+	result := make([]string, len(stepList.List))
 	for s, step := range stepList.List {
-		result += fmt.Sprintf("%d: %#v\n", s+1, step)
+		result[s] = reflect.TypeOf(step).String()
 	}
 	return result
 }

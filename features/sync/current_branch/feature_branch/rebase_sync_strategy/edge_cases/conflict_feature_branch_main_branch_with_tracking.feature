@@ -43,9 +43,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND                                                           |
       | feature | git rebase --abort                                                |
       |         | git reset --hard {{ sha-in-origin 'conflicting feature commit' }} |
-      |         | git checkout main                                                 |
-      | main    | git checkout feature                                              |
-      | feature | git stash pop                                                     |
+      |         | git stash pop                                                     |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress

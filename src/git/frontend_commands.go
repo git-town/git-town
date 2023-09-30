@@ -213,6 +213,11 @@ func (fc *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) e
 	return fc.Run("git", args...)
 }
 
+// ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
+func (fc *FrontendCommands) ResetRemoteBranchToSHA(branch domain.RemoteBranchName, sha domain.SHA) error {
+	return fc.Run("git", "push", "--force-with-lease", domain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
+}
+
 // RevertCommit reverts the commit with the given SHA.
 func (fc *FrontendCommands) RevertCommit(sha domain.SHA) error {
 	return fc.Run("git", "revert", sha.String())
@@ -240,4 +245,8 @@ func (fc *FrontendCommands) StageFiles(names ...string) error {
 // StartCommit starts a commit and stops at asking the user for the commit message.
 func (fc *FrontendCommands) StartCommit() error {
 	return fc.Run("git", "commit")
+}
+
+func (fc *FrontendCommands) UndoLastCommit() error {
+	return fc.Run("git", "reset", "--soft", "HEAD^")
 }

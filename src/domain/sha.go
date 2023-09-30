@@ -11,6 +11,12 @@ type SHA struct {
 	id string
 }
 
+func EmptySHA() SHA {
+	return SHA{
+		id: "",
+	}
+}
+
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
 func NewSHA(id string) SHA {
@@ -35,6 +41,10 @@ func validateSHA(content string) bool {
 		return false
 	}
 	return true
+}
+
+func (s SHA) IsEmpty() bool {
+	return s.id == ""
 }
 
 // Location widens the type of this SHA to a more generic Location.

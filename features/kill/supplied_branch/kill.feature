@@ -34,8 +34,11 @@ Feature: delete another than the current branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | good   | git branch dead {{ sha 'dead-end commit' }} |
+      | good   | git add -A                                  |
+      |        | git stash                                   |
+      |        | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
+      |        | git stash pop                               |
     And the current branch is still "good"
     And the uncommitted file still exists
     And now the initial commits exist

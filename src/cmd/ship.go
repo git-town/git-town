@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -66,6 +65,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
+// TODO: rename to executeShip (also all the other functions in the other commands).
 func runShip(args []string, message string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
@@ -77,7 +77,7 @@ func runShip(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineShipConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -91,20 +91,25 @@ func runShip(args []string, message string, debug bool) error {
 			return err
 		}
 	}
-	stepList, err := shipStepList(config, message, &repo.Runner)
+	stepList, err := shipStepList(config, message)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "ship",
-		RunStepList: stepList,
+		Command:             "ship",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: config.connector,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               config.connector,
+		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
@@ -132,55 +137,60 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	deleteOrigin, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToShip := branches.All.FindLocalBranch(branchNameToShip)
+	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
-			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
 	if !branches.Types.IsFeatureBranch(branchNameToShip) {
-		return nil, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
@@ -191,33 +201,33 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage()
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Types, lineage)
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	targetBranch := branches.All.FindLocalBranch(targetBranchName)
+	targetBranch := branches.All.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
-		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
 	var proposal *hosting.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
-	pushHook, err := repo.Runner.Config.PushHook()
+	pushHook, err = repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
@@ -230,13 +240,13 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if !repo.IsOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
-				return nil, false, err
+				return nil, branchesSnapshot, stashSnapshot, false, err
 			}
 			if proposal != nil {
 				canShipViaAPI = true
@@ -246,7 +256,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		for _, childBranch := range childBranches {
 			childProposal, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
-				return nil, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
 			if childProposal != nil {
 				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
@@ -275,7 +285,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		pushHook:                 pushHook,
 		shouldSyncUpstream:       shouldSyncUpstream,
 		syncStrategy:             syncStrategy,
-	}, false, nil
+	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage config.Lineage) error {
@@ -290,7 +300,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
+func shipStepList(config *shipConfig, commitMessage string) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
@@ -328,11 +338,10 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 			list.Add(&steps.UpdateProposalTargetStep{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
-				ExistingTarget: childProposal.Target,
 			})
 		}
 		// push
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: false, Undoable: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
 		list.Add(&steps.ConnectorMergeProposalStep{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
@@ -344,7 +353,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, Undoable: true, NoPushHook: false})
+		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -352,11 +361,11 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.LocalName, NoPushHook: false})
+			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.LocalName})
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.LocalName, Parent: run.Config.Lineage().Parent(config.branchToShip.LocalName)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.LocalName})
 	}

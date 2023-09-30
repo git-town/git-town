@@ -35,13 +35,11 @@ Feature: ship-delete-remote-branch disabled
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git push                                      |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
-      | main    | git checkout feature                          |
+      | BRANCH | COMMAND                                       |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git checkout feature                          |
     And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

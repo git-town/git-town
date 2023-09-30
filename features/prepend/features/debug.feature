@@ -15,22 +15,19 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git stash list                                |
+      |        | backend  | git branch -vva                               |
       |        | backend  | git remote                                    |
-      |        | backend  | git status                                    |
-      |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --porcelain --ignore-submodules    |
+      |        | backend  | git status --ignore-submodules                |
       | old    | frontend | git checkout main                             |
-      |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       | main   | frontend | git checkout old                              |
-      |        | backend  | git rev-parse --short HEAD                    |
       | old    | frontend | git merge --no-edit origin/old                |
-      |        | backend  | git rev-parse --short HEAD                    |
-      | old    | frontend | git merge --no-edit main                      |
+      |        | frontend | git merge --no-edit main                      |
       |        | backend  | git rev-list --left-right old...origin/old    |
       | old    | frontend | git branch parent main                        |
       |        | backend  | git config git-town-branch.parent.parent main |
@@ -38,9 +35,13 @@ Feature: display debug statistics
       | old    | frontend | git checkout parent                           |
       |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git config -lz --global                       |
+      |        | backend  | git config -lz --local                        |
+      |        | backend  | git branch -vva                               |
+      |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "parent"
 
@@ -53,17 +54,26 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                          |
       |        | backend  | git config -lz --local                           |
       |        | backend  | git rev-parse --show-toplevel                    |
+      |        | backend  | git stash list                                   |
       |        | backend  | git branch -vva                                  |
-      | parent | frontend | git checkout old                                 |
-      |        | backend  | git config git-town-branch.old.parent main       |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git status --ignore-submodules                   |
       |        | backend  | git config --unset git-town-branch.parent.parent |
-      |        | backend  | git rev-parse --short parent                     |
+      |        | backend  | git config git-town-branch.old.parent main       |
+      | parent | frontend | git checkout old                                 |
       |        | backend  | git log main..parent                             |
       | old    | frontend | git branch -D parent                             |
-      |        | frontend | git checkout main                                |
-      | main   | frontend | git checkout old                                 |
+      |        | backend  | git show-ref --quiet refs/heads/old              |
+      |        | backend  | git show-ref --quiet refs/heads/parent           |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git checkout old                                 |
+      |        | backend  | git checkout old                                 |
+      |        | backend  | git config -lz --global                          |
+      |        | backend  | git config -lz --local                           |
+      |        | backend  | git branch -vva                                  |
+      |        | backend  | git stash list                                   |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "old"

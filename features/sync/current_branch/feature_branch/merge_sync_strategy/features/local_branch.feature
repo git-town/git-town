@@ -39,8 +39,6 @@ Feature: sync the current feature branch without a tracking branch
       | BRANCH  | COMMAND                                           |
       | feature | git push origin :feature                          |
       |         | git reset --hard {{ sha 'local feature commit' }} |
-      |         | git checkout main                                 |
-      | main    | git checkout feature                              |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE              |

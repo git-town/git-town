@@ -9,9 +9,10 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global       |
       |         | backend  | git config -lz --local        |
       |         | backend  | git rev-parse --show-toplevel |
+      |         | backend  | git stash list                |
       |         | backend  | git branch -vva               |
       | feature | frontend | git diff main..feature        |
     And it prints:
       """
-      Ran 6 shell commands.
+      Ran 7 shell commands.
       """

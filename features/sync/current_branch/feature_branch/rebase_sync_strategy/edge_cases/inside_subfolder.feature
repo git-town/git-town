@@ -45,20 +45,16 @@ Feature: sync inside a folder that doesn't exist on the main branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND            |
-      | alpha  | git add -A         |
-      |        | git stash          |
-      |        | git checkout beta  |
-      | beta   | git checkout alpha |
-      | alpha  | git checkout main  |
-      | main   | git checkout alpha |
-      | alpha  | git stash pop      |
+      | BRANCH | COMMAND                                               |
+      | alpha  | git add -A                                            |
+      |        | git stash                                             |
+      |        | git reset --hard {{ sha-before-run 'folder commit' }} |
+      |        | git push --force-with-lease                           |
+      |        | git checkout beta                                     |
+      | beta   | git reset --hard {{ sha-before-run 'beta commit' }}   |
+      |        | git push --force-with-lease                           |
+      |        | git checkout alpha                                    |
+      | alpha  | git stash pop                                         |
     And the current branch is still "alpha"
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | main commit   |
-      | alpha  | local, origin | main commit   |
-      |        |               | folder commit |
-      | beta   | local, origin | main commit   |
-      |        |               | beta commit   |
+    And now the initial commits exist
     And the initial branches and hierarchy exist

@@ -21,10 +21,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+    Then it runs no commands
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE         |

@@ -292,12 +292,21 @@ func (r *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName)
 	return slice.Hoist(branches, mainBranch), nil
 }
 
+func (r *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
+	return r.Run("git", "merge", branch.String())
+}
+
 func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
 
 func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote domain.Remote) {
 	r.MustRun("git", "push", "-u", remote.String(), branch.String())
+}
+
+// TODO: rename r to t.
+func (r *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
+	return r.Run("git", "rebase", branch.String())
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
@@ -334,13 +343,13 @@ func (r *TestCommands) StageFiles(names ...string) {
 	r.MustRun("git", args...)
 }
 
-// StashSize provides the number of stashes in this repository.
-func (r *TestCommands) StashSize() int {
-	output := r.MustQuery("git", "stash", "list")
-	if output == "" {
-		return 0
-	}
-	return len(stringslice.Lines(output))
+// StashOpenFiles stashes the open files away.
+// TODO: rename r to tc.
+func (r *TestCommands) StashOpenFiles() {
+	r.MustRunMany([][]string{
+		{"git", "add", "-A"},
+		{"git", "stash"},
+	})
 }
 
 // Tags provides a list of the tags in this repository.
@@ -365,4 +374,8 @@ func (r *TestCommands) UncommittedFiles() []string {
 		result = append(result, parts[1])
 	}
 	return result
+}
+
+func (r *TestCommands) UnstashOpenFiles() error {
+	return r.Run("git", "stash", "pop")
 }

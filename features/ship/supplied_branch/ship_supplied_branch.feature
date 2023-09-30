@@ -43,18 +43,16 @@ Feature: ship the supplied feature branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                       |
-      | other   | git add -A                                    |
-      |         | git stash                                     |
-      |         | git checkout main                             |
-      | main    | git branch feature {{ sha 'feature commit' }} |
-      |         | git push -u origin feature                    |
-      |         | git revert {{ sha 'feature done' }}           |
-      |         | git push                                      |
-      |         | git checkout feature                          |
-      | feature | git checkout main                             |
-      | main    | git checkout other                            |
-      | other   | git stash pop                                 |
+      | BRANCH | COMMAND                                       |
+      | other  | git add -A                                    |
+      |        | git stash                                     |
+      |        | git checkout main                             |
+      | main   | git revert {{ sha 'feature done' }}           |
+      |        | git push                                      |
+      |        | git branch feature {{ sha 'feature commit' }} |
+      |        | git push -u origin feature                    |
+      |        | git checkout other                            |
+      | other  | git stash pop                                 |
     And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |

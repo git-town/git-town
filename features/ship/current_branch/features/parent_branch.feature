@@ -37,12 +37,10 @@ Feature: ship a parent branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | main   | git branch parent {{ sha 'parent commit' }} |
-      |        | git revert {{ sha 'parent done' }}          |
+      | main   | git revert {{ sha 'parent done' }}          |
       |        | git push                                    |
+      |        | git branch parent {{ sha 'parent commit' }} |
       |        | git checkout parent                         |
-      | parent | git checkout main                           |
-      | main   | git checkout parent                         |
     And the current branch is now "parent"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |

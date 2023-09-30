@@ -56,7 +56,7 @@ func runPrepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determinePrependConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, &repo)
 	if err != nil || exit {
 		return err
 	}
@@ -65,15 +65,20 @@ func runPrepend(args []string, debug bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:     "prepend",
-		RunStepList: stepList,
+		Command:             "prepend",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunStepList:         stepList,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Lineage:                 config.lineage,
+		NoPushHook:              config.pushHook,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
@@ -95,38 +100,39 @@ type prependConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	fc := gohacks.FailureCollector{}
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	fc := gohacks.FailureCollector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	mainBranch := repo.Runner.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
-		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
-		return nil, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
@@ -157,7 +163,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
-	}, false, fc.Err
+	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
 func prependStepList(config *prependConfig) (runstate.StepList, error) {

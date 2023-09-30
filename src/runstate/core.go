@@ -3,6 +3,8 @@
 package runstate
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -17,6 +19,18 @@ type UnfinishedRunStateDetails struct {
 	EndTime   time.Time
 }
 
+func (u UnfinishedRunStateDetails) String() string {
+	result := strings.Builder{}
+	result.WriteString("UnfinishedRunStateDetails {\n")
+	result.WriteString("  CanSkip: ")
+	result.WriteString(fmt.Sprintf("%t\n", u.CanSkip))
+	result.WriteString("  EndBranch: ")
+	result.WriteString(u.EndBranch.String())
+	result.WriteString("\n")
+	return result.String()
+}
+
 func isCheckoutStep(step steps.Step) bool {
-	return gohacks.TypeName(step) == "CheckoutStep"
+	typeName := gohacks.TypeName(step)
+	return typeName == "CheckoutStep" || typeName == "CheckoutIfExistsStep"
 }

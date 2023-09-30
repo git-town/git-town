@@ -43,29 +43,18 @@ Feature: handle merge conflicts between feature branches and their tracking bran
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH | COMMAND            |
-      | beta   | git merge --abort  |
-      |        | git checkout alpha |
-      | alpha  | git checkout main  |
-      | main   | git stash pop      |
+      | BRANCH | COMMAND                                     |
+      | beta   | git merge --abort                           |
+      |        | git checkout alpha                          |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}   |
+      |        | git push --force-with-lease                 |
+      |        | git checkout main                           |
+      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      |        | git stash pop                               |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      |        |               | main commit                    |
-      |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | local beta commit              |
-      |        | origin        | origin beta commit             |
-      | gamma  | local, origin | gamma commit                   |
-    And these committed files exist now
-      | BRANCH | NAME             | CONTENT            |
-      | main   | main_file        | main content       |
-      | alpha  | feature1_file    | alpha content      |
-      |        | main_file        | main content       |
-      | beta   | conflicting_file | local beta content |
-      | gamma  | feature3_file    | gamma content      |
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
 
   Scenario: skip
     When I run "git-town skip"

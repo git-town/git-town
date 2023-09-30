@@ -38,8 +38,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |
-      |         | git checkout main  |
-      | main    | git checkout other |
+      |         | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
@@ -97,24 +96,21 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                                   |
-      | other   | git add -A                                                                                |
-      |         | git stash                                                                                 |
-      |         | git checkout main                                                                         |
-      | main    | git branch feature {{ sha 'Merge remote-tracking branch 'origin/feature' into feature' }} |
-      |         | git push -u origin feature                                                                |
-      |         | git revert {{ sha 'feature done' }}                                                       |
-      |         | git push                                                                                  |
-      |         | git checkout feature                                                                      |
-      | feature | git checkout main                                                                         |
-      | main    | git checkout other                                                                        |
-      | other   | git stash pop                                                                             |
+      | BRANCH | COMMAND                                                                  |
+      | other  | git add -A                                                               |
+      |        | git stash                                                                |
+      |        | git checkout main                                                        |
+      | main   | git revert {{ sha 'feature done' }}                                      |
+      |        | git push                                                                 |
+      |        | git push origin {{ sha 'conflicting origin commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'conflicting local commit' }}                  |
+      |        | git checkout other                                                       |
+      | other  | git stash pop                                                            |
     And the current branch is now "other"
     And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | feature done                                               |
-      |         |               | Revert "feature done"                                      |
-      | feature | local, origin | conflicting local commit                                   |
-      |         |               | conflicting origin commit                                  |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
+      | BRANCH  | LOCATION      | MESSAGE                   |
+      | main    | local, origin | feature done              |
+      |         |               | Revert "feature done"     |
+      | feature | local         | conflicting local commit  |
+      |         | origin        | conflicting origin commit |
     And the initial branches and hierarchy exist
