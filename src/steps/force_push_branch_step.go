@@ -13,7 +13,7 @@ type ForcePushBranchStep struct {
 }
 
 func (step *ForcePushBranchStep) Run(args RunArgs) error {
-	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.Branch, step.Branch.RemoteBranch())
+	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.Branch, step.Branch.TrackingBranch())
 	if err != nil {
 		return err
 	}

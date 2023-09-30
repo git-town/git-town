@@ -149,7 +149,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if branches.All.HasLocalBranch(newBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branches.All.HasMatchingRemoteBranchFor(newBranchName) {
+	if branches.All.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
