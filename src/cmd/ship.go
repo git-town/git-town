@@ -92,7 +92,6 @@ func executeShip(args []string, message string, debug bool) error {
 	}
 	steps, err := shipSteps(config, message)
 	if err != nil {
-
 		return err
 	}
 	runState := runstate.RunState{

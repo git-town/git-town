@@ -18,11 +18,11 @@ type RunState struct {
 	Command                  string                     `json:"Command"`
 	IsAbort                  bool                       `exhaustruct:"optional"     json:"IsAbort"`
 	IsUndo                   bool                       `exhaustruct:"optional"     json:"IsUndo"`
-	AbortSteps               StepList                   `exhaustruct:"optional"     json:"AbortStepList"`
-	RunSteps                 StepList                   `json:"RunStepList"`
-	UndoSteps                StepList                   `exhaustruct:"optional"     json:"UndoStepList"`
+	AbortSteps               StepList                   `exhaustruct:"optional"     json:"AbortSteps"`
+	RunSteps                 StepList                   `json:"RunSteps"`
+	UndoSteps                StepList                   `exhaustruct:"optional"     json:"UndoSteps"`
 	InitialActiveBranch      domain.LocalBranchName     `json:"InitialActiveBranch"`
-	FinalUndoSteps           StepList                   `exhaustruct:"optional"     json:"FinalUndoStepList"`
+	FinalUndoSteps           StepList                   `exhaustruct:"optional"     json:"FinalUndoSteps"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
 }
