@@ -813,7 +813,7 @@ func TestChanges(t *testing.T) {
 					// reset the feature branch to the previous SHA
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("feature-branch")},
 					&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
-					&steps.ForcePushBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
+					&steps.ForcePushCurrentBranchStep{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
 					// check out the initial branch
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
