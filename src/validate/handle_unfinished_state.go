@@ -16,9 +16,8 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-// TODO: convert arguments to struct.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (quit bool, err error) {
-	runState, err := persistence.Load(rootDir)
+func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
+	runState, err := persistence.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -36,13 +35,13 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		return discardRunstate(rootDir)
+		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return continueRunstate(runState, args)
 	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage, initialBranchesSnapshot, initialConfigSnapshot, initialStashSnapshot, pushHook)
+		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -50,23 +49,34 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
+type UnfinishedStateArgs struct {
+	Connector               hosting.Connector
+	Lineage                 config.Lineage
+	InitialBranchesSnapshot domain.BranchesSnapshot
+	InitialConfigSnapshot   undo.ConfigSnapshot
+	InitialStashSnapshot    domain.StashSnapshot
+	PushHook                bool
+	RootDir                 domain.RepoRootDir
+	Run                     *git.ProdRunner
+}
+
+func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
+		Connector:               args.Connector,
+		Lineage:                 args.Lineage,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
 		RunState:                &abortRunState,
-		Run:                     run,
-		Connector:               connector,
-		RootDir:                 rootDir,
-		Lineage:                 lineage,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   initialConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
-	hasConflicts, err := run.Backend.HasConflicts()
+func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+	hasConflicts, err := args.Run.Backend.HasConflicts()
 	if err != nil {
 		return false, err
 	}
@@ -74,15 +84,15 @@ func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connecto
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, runvm.Execute(runvm.ExecuteArgs{
+		Connector:               args.Connector,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
 		RunState:                runState,
-		Run:                     run,
-		Connector:               connector,
-		Lineage:                 lineage,
-		RootDir:                 rootDir,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   initialConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
 	})
 }
 
@@ -91,17 +101,17 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
+func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
+		Connector:               args.Connector,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
 		RunState:                &skipRunState,
-		Run:                     run,
-		Connector:               connector,
-		Lineage:                 lineage,
-		RootDir:                 rootDir,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   initialConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
 	})
 }
