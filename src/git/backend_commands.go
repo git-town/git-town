@@ -25,11 +25,10 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "debug" option is set.
 type BackendCommands struct {
-	BackendRunner                          // executes shell commands in the directory of the Git repo
-	Config             *RepoConfig         // the known state of the Git repository
-	CurrentBranchCache *cache.LocalBranch  // caches the currently checked out Git branch
-	RemoteBranchCache  *cache.RemoteBranch // caches the remote branches of this Git repo
-	RemotesCache       *cache.Remotes      // caches Git remotes
+	BackendRunner                         // executes shell commands in the directory of the Git repo
+	Config             *RepoConfig        // the known state of the Git repository
+	CurrentBranchCache *cache.LocalBranch // caches the currently checked out Git branch
+	RemotesCache       *cache.Remotes     // caches Git remotes
 }
 
 // Author provides the locally Git configured user.

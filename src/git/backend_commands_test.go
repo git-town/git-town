@@ -520,7 +520,6 @@ func TestBackendCommands(t *testing.T) {
 				BackendRunner:      runner,
 				Config:             nil,
 				CurrentBranchCache: &cache.LocalBranch{},
-				RemoteBranchCache:  &cache.RemoteBranch{},
 				RemotesCache:       &cache.Remotes{},
 			}
 			have := cmds.RootDirectory()
