@@ -42,7 +42,7 @@ func (set OrderedSet[T]) Elements() []T {
 func (set OrderedSet[T]) Join(sep string) string {
 	texts := []string{}
 	for _, element := range set.elements {
-		texts = append(texts, fmt.Sprintf("%v", element)) // TODO: this might not work as intended
+		texts = append(texts, fmt.Sprintf("%v", element))
 	}
 	return strings.Join(texts, sep)
 }
