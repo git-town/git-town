@@ -91,8 +91,8 @@ func TestGithubConnector(t *testing.T) {
 			Number: 1,
 			Title:  "my title",
 		}
-		want := "my title (#1)"
 		have := connector.DefaultProposalMessage(give)
+		want := "my title (#1)"
 		assert.Equal(t, want, have)
 	})
 
@@ -145,8 +145,8 @@ func TestGithubConnector(t *testing.T) {
 				Repository:   "repo",
 			},
 		}
-		want := "https://github.com/organization/repo"
 		have := connector.RepositoryURL()
+		want := "https://github.com/organization/repo"
 		assert.Equal(t, have, want)
 	})
 }

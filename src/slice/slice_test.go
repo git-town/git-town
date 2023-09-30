@@ -18,16 +18,16 @@ func TestSlice(t *testing.T) {
 			t.Parallel()
 			list := []string{"one", "two", "three"}
 			give := []string{"two", "four", "five"}
-			want := []string{"one", "two", "three", "four", "five"}
 			have := slice.AppendAllMissing(list, give)
+			want := []string{"one", "two", "three", "four", "five"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("aliased slice type", func(t *testing.T) {
 			t.Parallel()
 			list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222")}
 			give := domain.SHAs{domain.NewSHA("333333"), domain.NewSHA("444444")}
-			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"), domain.NewSHA("444444")}
 			have := slice.AppendAllMissing(list, give)
+			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"), domain.NewSHA("444444")}
 			assert.Equal(t, want, have)
 		})
 	})
@@ -81,23 +81,22 @@ func TestSlice(t *testing.T) {
 		t.Run("already hoisted", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"initial", "one", "two"}
-			// TODO: order have, then want
-			want := []string{"initial", "one", "two"}
 			have := slice.Hoist(give, "initial")
+			want := []string{"initial", "one", "two"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("contains the element to hoist", func(t *testing.T) {
 			t.Parallel()
 			give := []string{"alpha", "initial", "omega"}
-			want := []string{"initial", "alpha", "omega"}
 			have := slice.Hoist(give, "initial")
+			want := []string{"initial", "alpha", "omega"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := []string{}
-			want := []string{}
 			have := slice.Hoist(give, "initial")
+			want := []string{}
 			assert.Equal(t, want, have)
 		})
 		t.Run("aliased slice type", func(t *testing.T) {
