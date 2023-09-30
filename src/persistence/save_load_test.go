@@ -88,7 +88,7 @@ func TestLoadSave(t *testing.T) {
 					&steps.FetchUpstreamStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
-					&steps.ForcePushBranchStep{
+					&steps.ForcePushCurrentBranchStep{
 						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 					},
@@ -282,7 +282,7 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "ForcePushBranchStep"
+      "type": "ForcePushCurrentBranchStep"
     },
     {
       "data": {
