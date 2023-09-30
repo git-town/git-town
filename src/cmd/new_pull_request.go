@@ -68,14 +68,14 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := newPullRequestStepList(config)
+	steps, err := newPullRequestSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -200,7 +200,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {
+func newPullRequestSteps(config *newPullRequestConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{

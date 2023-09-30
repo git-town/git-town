@@ -52,13 +52,13 @@ func executeKill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, finalUndoSteps, err := killStepList(config)
+	steps, finalUndoSteps, err := killSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
-		RunSteps:            stepList,
+		RunSteps:            steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		FinalUndoSteps:      finalUndoSteps,
 	}
@@ -155,7 +155,7 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killStepList(config *killConfig) (steps runstate.StepList, finalUndoSteps runstate.StepList, err error) {
+func killSteps(config *killConfig) (steps runstate.StepList, finalUndoSteps runstate.StepList, err error) {
 	killFeatureBranch(&steps, &finalUndoSteps, *config)
 	err = steps.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,

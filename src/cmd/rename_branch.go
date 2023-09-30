@@ -66,14 +66,14 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := renameBranchStepList(config)
+	steps, err := renameBranchSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "rename-branch",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -164,7 +164,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
+func renameBranchSteps(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.branches.Initial == config.oldBranch.LocalName {
