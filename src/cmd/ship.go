@@ -360,7 +360,7 @@ func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, err
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.LocalName})
+			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.RemoteName})
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
