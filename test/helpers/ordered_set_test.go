@@ -3,6 +3,7 @@ package helpers_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/stretchr/testify/assert"
 )
@@ -46,9 +47,23 @@ func TestOrderedSet(t *testing.T) {
 
 	t.Run("Join", func(t *testing.T) {
 		t.Parallel()
-		set := helpers.NewOrderedSet("one", "two", "three")
-		have := set.Join(", ")
-		want := "one, two, three"
-		assert.Equal(t, want, have)
+		t.Run("strings", func(t *testing.T) {
+			set := helpers.NewOrderedSet("one", "two", "three")
+			have := set.Join(", ")
+			want := "one, two, three"
+			assert.Equal(t, want, have)
+		})
+		t.Run("numbers", func(t *testing.T) {
+			set := helpers.NewOrderedSet(1, 2, 3)
+			have := set.Join(", ")
+			want := "1, 2, 3"
+			assert.Equal(t, want, have)
+		})
+		t.Run("SHAs", func(t *testing.T) {
+			set := helpers.NewOrderedSet(domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"))
+			have := set.Join(", ")
+			want := "111111, 222222, 333333"
+			assert.Equal(t, want, have)
+		})
 	})
 }
