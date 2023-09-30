@@ -47,14 +47,14 @@ func executePruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := pruneBranchesStepList(config)
+	steps, err := pruneBranchesSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "prune-branches",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -103,7 +103,7 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
-func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
+func pruneBranchesSteps(config *pruneBranchesConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.branches.Initial == branchWithDeletedRemote {

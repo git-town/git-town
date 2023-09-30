@@ -14,7 +14,7 @@ import (
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
 	for {
-		step := args.RunState.RunStepList.Pop()
+		step := args.RunState.RunSteps.Pop()
 		if step == nil {
 			return finished(args)
 		}

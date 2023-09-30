@@ -90,14 +90,14 @@ func executeShip(args []string, message string, debug bool) error {
 			return err
 		}
 	}
-	stepList, err := shipStepList(config, message)
+	steps, err := shipSteps(config, message)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "ship",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -299,7 +299,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipStepList(config *shipConfig, commitMessage string) (runstate.StepList, error) {
+func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{

@@ -175,8 +175,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      branch1,
 				FileName:    "file",
 				FileContent: "content on branch1",
-				// TODO: make Message optional and remove it from here since it doesn't matter here
-				Message: "Create file",
+				Message:     "Create file",
 			})
 			runtime.CheckoutBranch(initial)
 			runtime.CreateCommit(testgit.Commit{
@@ -200,8 +199,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      branch1,
 				FileName:    "file",
 				FileContent: "content on branch1",
-				// TODO: make Message optional and remove it from here since it doesn't matter here
-				Message: "Create file",
+				Message:     "Create file",
 			})
 			runtime.CheckoutBranch(initial)
 			runtime.CreateCommit(testgit.Commit{
