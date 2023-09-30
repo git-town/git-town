@@ -76,7 +76,7 @@ func LowerAll[C comparable](haystack []C, needle C) []C {
 }
 
 // Remove returns a new slice which is the given slice with the given element removed.
-func Remove[C comparable](list []C, value C) []C {
+func Remove[S ~[]C, C comparable](list S, value C) S {
 	result := make([]C, 0, len(list)-1)
 	for l := range list {
 		if list[l] != value {

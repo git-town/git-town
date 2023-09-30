@@ -151,10 +151,20 @@ func TestSlice(t *testing.T) {
 
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"one", "two", "three"}
-		have := slice.Remove(give, "two")
-		want := []string{"one", "three"}
-		assert.Equal(t, have, want)
+		t.Run("slice type", func(t *testing.T) {
+			t.Parallel()
+			give := []string{"one", "two", "three"}
+			have := slice.Remove(give, "two")
+			want := []string{"one", "three"}
+			assert.Equal(t, have, want)
+		})
+		t.Run("slice alias type", func(t *testing.T) {
+			t.Parallel()
+			give := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
+			have := slice.Remove(give, domain.NewSHA("222222"))
+			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("333333")}
+			assert.Equal(t, have, want)
+		})
 	})
 
 	t.Run("RemoveAt", func(t *testing.T) {
