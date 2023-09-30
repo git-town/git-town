@@ -329,10 +329,10 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("perennial-branch"),
+						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("feature-branch"),
+						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 					},
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
@@ -493,10 +493,10 @@ func TestChanges(t *testing.T) {
 			wantSteps := runstate.StepList{
 				List: []steps.Step{
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("perennial-branch"),
+						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 					},
 					&steps.DeleteTrackingBranchStep{
-						Branch: domain.NewLocalBranchName("feature-branch"),
+						Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 					},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),

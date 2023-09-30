@@ -106,7 +106,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	for _, addedRemoteBranch := range c.RemoteAdded {
 		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
 			result.Append(&steps.DeleteTrackingBranchStep{
-				Branch: addedRemoteBranch.LocalBranchName(),
+				Branch: addedRemoteBranch,
 			})
 		}
 	}
