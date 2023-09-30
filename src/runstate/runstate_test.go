@@ -54,7 +54,7 @@ func TestRunState(t *testing.T) {
   "Command": "sync",
   "IsAbort": false,
   "IsUndo": false,
-  "AbortStepList": [
+  "AbortSteps": [
     {
       "data": {
         "Hard": false,
@@ -64,7 +64,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "RunStepList": [
+  "RunSteps": [
     {
       "data": {
         "Hard": false,
@@ -74,7 +74,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHAStep"
     }
   ],
-  "UndoStepList": [
+  "UndoSteps": [
     {
       "data": {
         "Hard": false,
@@ -85,7 +85,7 @@ func TestRunState(t *testing.T) {
     }
   ],
   "InitialActiveBranch": "initial",
-  "FinalUndoStepList": [],
+  "FinalUndoSteps": [],
   "UnfinishedDetails": null,
   "UndoablePerennialCommits": []
 }`[1:]

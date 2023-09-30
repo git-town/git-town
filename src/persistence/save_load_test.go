@@ -163,8 +163,8 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "IsAbort": true,
   "IsUndo": true,
-  "AbortStepList": [],
-  "RunStepList": [
+  "AbortSteps": [],
+  "RunSteps": [
     {
       "data": {},
       "type": "AbortMergeStep"
@@ -400,9 +400,9 @@ func TestLoadSave(t *testing.T) {
       "type": "UpdateProposalTargetStep"
     }
   ],
-  "UndoStepList": [],
+  "UndoSteps": [],
   "InitialActiveBranch": "initial",
-  "FinalUndoStepList": [],
+  "FinalUndoSteps": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",
