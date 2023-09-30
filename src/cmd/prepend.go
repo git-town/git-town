@@ -60,14 +60,14 @@ func executePrepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := prependStepList(config)
+	steps, err := prependSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "prepend",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunStepList:         stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -166,7 +166,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependStepList(config *prependConfig) (runstate.StepList, error) {
+func prependSteps(config *prependConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
