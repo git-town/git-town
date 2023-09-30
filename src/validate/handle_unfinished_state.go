@@ -16,7 +16,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-// TODO: convert arguments to struct
+// TODO: convert arguments to struct.
 func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (quit bool, err error) {
 	runState, err := persistence.Load(rootDir)
 	if err != nil {
