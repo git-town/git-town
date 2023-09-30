@@ -68,14 +68,14 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config)
+	steps, err := syncBranchesSteps(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            stepList,
+		RunSteps:            steps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
