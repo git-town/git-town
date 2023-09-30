@@ -1,4 +1,3 @@
-// TODO: rename to comparables
 package slice
 
 // AppendAllMissing appends all elements of `additional` that aren't contained in `existing` to `existing`.
