@@ -31,8 +31,8 @@ func TestIndent(t *testing.T) {
 	t.Run("multiple newlines", func(t *testing.T) {
 		t.Parallel()
 		give := "hello\n\nworld"
-		want := "  hello\n\n  world"
 		have := cli.Indent(give)
+		want := "  hello\n\n  world"
 		assert.Equal(t, want, have)
 	})
 }
