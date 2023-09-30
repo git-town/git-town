@@ -16,7 +16,6 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-// TODO: convert arguments to struct.
 func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error) {
 	runState, err := persistence.Load(args.RootDir)
 	if err != nil {
@@ -42,7 +41,7 @@ func HandleUnfinishedState(args HandleUnfinishedStateArgs) (quit bool, err error
 	case dialog.ResponseAbort:
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
-		return skipRunstate(args.Run, runState, args.Connector, args.RootDir, args.Lineage, args.InitialBranchesSnapshot, args.InitialConfigSnapshot, args.InitialStashSnapshot, args.PushHook)
+		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -102,17 +101,17 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage, initialBranchesSnapshot domain.BranchesSnapshot, initialConfigSnapshot undo.ConfigSnapshot, initialStashSnapshot domain.StashSnapshot, pushHook bool) (bool, error) {
+func skipRunstate(runState *runstate.RunState, args HandleUnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &skipRunState,
-		Run:                     run,
-		Connector:               connector,
-		Lineage:                 lineage,
-		RootDir:                 rootDir,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   initialConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
+		Run:                     args.Run,
+		Connector:               args.Connector,
+		Lineage:                 args.Lineage,
+		RootDir:                 args.RootDir,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              !args.PushHook,
 	})
 }
