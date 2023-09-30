@@ -58,13 +58,13 @@ func (rs *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
-func (runState *RunState) CreateAbortRunState() RunState {
-	stepList := runState.AbortStepList
-	stepList.AppendList(runState.UndoStepList)
+func (rs *RunState) CreateAbortRunState() RunState {
+	stepList := rs.AbortStepList
+	stepList.AppendList(rs.UndoStepList)
 	return RunState{
-		Command:             runState.Command,
+		Command:             rs.Command,
 		IsAbort:             true,
-		InitialActiveBranch: runState.InitialActiveBranch,
+		InitialActiveBranch: rs.InitialActiveBranch,
 		RunStepList:         stepList,
 	}
 }
