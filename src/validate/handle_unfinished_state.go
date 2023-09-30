@@ -50,28 +50,28 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Run                     *git.ProdRunner
 	Connector               hosting.Connector
-	RootDir                 domain.RepoRootDir
 	Lineage                 config.Lineage
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
 	PushHook                bool
+	RootDir                 domain.RepoRootDir
+	Run                     *git.ProdRunner
 }
 
 func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:                &abortRunState,
-		Run:                     args.Run,
 		Connector:               args.Connector,
-		RootDir:                 args.RootDir,
 		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
 		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                &abortRunState,
 	})
 }
 
@@ -84,15 +84,15 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:                runState,
-		Run:                     args.Run,
 		Connector:               args.Connector,
-		Lineage:                 args.Lineage,
-		RootDir:                 args.RootDir,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
 		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                runState,
 	})
 }
 
@@ -104,14 +104,14 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:                &skipRunState,
-		Run:                     args.Run,
 		Connector:               args.Connector,
-		Lineage:                 args.Lineage,
-		RootDir:                 args.RootDir,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
 		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                &skipRunState,
 	})
 }
