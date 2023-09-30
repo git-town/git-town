@@ -3,9 +3,9 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // RevertCommitStep adds a commit to the current branch
@@ -25,7 +25,7 @@ func (step *RevertCommitStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !slice.Contains(commitsInCurrentBranch, step.SHA) {
+	if !comparables.Contains(commitsInCurrentBranch, step.SHA) {
 		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, step.SHA, commitsInCurrentBranch.Join("|"))
 	}
 	return args.Runner.Frontend.RevertCommit(step.SHA)

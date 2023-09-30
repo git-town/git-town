@@ -3,10 +3,10 @@ package undo
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -52,7 +52,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	// revert omni-changed perennial branches
 	for _, branch := range omniChangedPerennials.BranchNames() {
 		change := omniChangedPerennials[branch]
-		if slice.Contains(args.UndoablePerennialCommits, change.After) {
+		if comparables.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Append(&steps.CheckoutStep{Branch: branch})
 			result.Append(&steps.RevertCommitStep{SHA: change.After})
 			result.Append(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: args.NoPushHook})
@@ -79,7 +79,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if inconsistentlyChangedPerennial.After.LocalSHA == inconsistentlyChangedPerennial.After.RemoteSHA {
-			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
+			if comparables.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
 				result.Append(&steps.CheckoutStep{Branch: inconsistentlyChangedPerennial.Before.LocalName})
 				result.Append(&steps.RevertCommitStep{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
 				result.Append(&steps.PushCurrentBranchStep{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})

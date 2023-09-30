@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"github.com/git-town/git-town/v9/src/slice"
-)
+import "github.com/git-town/git-town/v9/src/comparables"
 
 // Remotes answers questions which Git remotes a repo has.
 type Remotes []Remote
@@ -16,9 +14,9 @@ func NewRemotes(remotes ...string) Remotes {
 }
 
 func (r Remotes) HasOrigin() bool {
-	return slice.Contains(r, OriginRemote)
+	return comparables.Contains(r, OriginRemote)
 }
 
 func (r Remotes) HasUpstream() bool {
-	return slice.Contains(r, UpstreamRemote)
+	return comparables.Contains(r, UpstreamRemote)
 }

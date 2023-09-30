@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -82,7 +82,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*di
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branch := domain.NewLocalBranchName(comparables.FirstElementOr(args, branches.Initial.String()))
 	if branch != branches.Initial {
 		if !branches.All.HasLocalBranch(branch) {
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)

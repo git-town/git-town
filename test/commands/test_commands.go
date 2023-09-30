@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	prodgit "github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
@@ -146,11 +146,11 @@ func (r *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []s
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
-		if slice.Contains(fields, "FILE NAME") {
+		if comparables.Contains(fields, "FILE NAME") {
 			filenames := r.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
-		if slice.Contains(fields, "FILE CONTENT") {
+		if comparables.Contains(fields, "FILE CONTENT") {
 			filecontent := r.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 			commit.FileContent = filecontent
 		}
@@ -289,7 +289,7 @@ func (r *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName)
 	if err != nil {
 		return domain.LocalBranchNames{}, err
 	}
-	return slice.Hoist(branches, mainBranch), nil
+	return comparables.Hoist(branches, mainBranch), nil
 }
 
 func (r *TestCommands) MergeBranch(branch domain.LocalBranchName) error {

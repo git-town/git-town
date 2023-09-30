@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/git-town/git-town/v9/src/slice"
+import "github.com/git-town/git-town/v9/src/comparables"
 
 // BranchTypes answers questions about whether branches are long-lived or not.
 type BranchTypes struct {
@@ -17,7 +17,7 @@ func (pb BranchTypes) IsMainBranch(branch LocalBranchName) bool {
 }
 
 func (pb BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
-	return slice.Contains(pb.PerennialBranches, branch)
+	return comparables.Contains(pb.PerennialBranches, branch)
 }
 
 func EmptyBranchTypes() BranchTypes {

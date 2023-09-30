@@ -3,8 +3,8 @@ package config
 import (
 	"sort"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
 	"golang.org/x/exp/maps"
 )
 
@@ -24,7 +24,7 @@ func (l Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) domai
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := l.Ancestors(branchName)
-		result = slice.AppendAllMissing(result, ancestors)
+		result = comparables.AppendAllMissing(result, ancestors)
 	}
 	l.OrderHierarchically(result)
 	return result
@@ -123,7 +123,7 @@ func (l Lineage) Roots() domain.LocalBranchNames {
 	roots := domain.LocalBranchNames{}
 	for _, parent := range l {
 		_, found := l[parent]
-		if !found && !slice.Contains(roots, parent) {
+		if !found && !comparables.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}

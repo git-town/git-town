@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -81,10 +81,10 @@ func (stepList *StepList) PrependList(otherList StepList) {
 
 func (stepList *StepList) RemoveAllButLast(removeType string) {
 	typeList := stepList.StepTypes()
-	occurrences := slice.FindAll(typeList, removeType)
-	occurrencesToRemove := slice.TruncateLast(occurrences)
+	occurrences := comparables.FindAll(typeList, removeType)
+	occurrencesToRemove := comparables.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
-		stepList.List = slice.RemoveAt(stepList.List, occurrencesToRemove[o])
+		stepList.List = comparables.RemoveAt(stepList.List, occurrencesToRemove[o])
 	}
 }
 

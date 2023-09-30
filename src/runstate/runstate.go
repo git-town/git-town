@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -91,7 +91,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			result.RunSteps.Append(step)
 		}
 	}
-	result.RunSteps.List = slice.LowerAll[steps.Step](result.RunSteps.List, &steps.RestoreOpenChangesStep{})
+	result.RunSteps.List = comparables.LowerAll[steps.Step](result.RunSteps.List, &steps.RestoreOpenChangesStep{})
 	return result
 }
 

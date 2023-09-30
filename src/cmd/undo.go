@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -11,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -135,7 +135,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	// When we run undo now, it still wants to pop the stack even though that was already done.
 	// This seems to apply only to popping the stack and switching back to the initial branch.
 	// Hence we consolidate this step type here.
-	undoRunState.RunSteps.List = slice.LowerAll[steps.Step](undoRunState.RunSteps.List, &steps.RestoreOpenChangesStep{})
+	undoRunState.RunSteps.List = comparables.LowerAll[steps.Step](undoRunState.RunSteps.List, &steps.RestoreOpenChangesStep{})
 	undoRunState.RunSteps.RemoveAllButLast("*steps.CheckoutIfExistsStep")
 	return undoRunState, err
 }

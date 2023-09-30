@@ -15,9 +15,9 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
@@ -506,7 +506,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
+		state.initialRemoteBranches = comparables.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
 		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
 		return nil
 	})
@@ -641,7 +641,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		branch := domain.NewLocalBranchName(name)
 		state.initialCurrentBranch = branch
-		if !slice.Contains(state.initialLocalBranches, branch) {
+		if !comparables.Contains(state.initialLocalBranches, branch) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.fixture.DevRepo.CreateBranch(branch, domain.NewLocalBranchName("main"))
 		}

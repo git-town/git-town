@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v9/src/comparables"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -82,9 +82,9 @@ func (state *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	state.initialLocalBranches.Sort()
-	state.initialLocalBranches = slice.Hoist(state.initialLocalBranches, domain.NewLocalBranchName("main"))
+	state.initialLocalBranches = comparables.Hoist(state.initialLocalBranches, domain.NewLocalBranchName("main"))
 	state.initialRemoteBranches.Sort()
-	state.initialRemoteBranches = slice.Hoist(state.initialRemoteBranches, domain.NewLocalBranchName("main"))
+	state.initialRemoteBranches = comparables.Hoist(state.initialRemoteBranches, domain.NewLocalBranchName("main"))
 	localBranchesJoined := state.initialLocalBranches.Join(", ")
 	remoteBranchesJoined := state.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
