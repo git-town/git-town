@@ -81,11 +81,11 @@ func executeShip(args []string, message string, debug bool) error {
 		return err
 	}
 	if config.branchToShip.LocalName == config.branches.Initial {
-		hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+		repoStatus, err := repo.Runner.Backend.RepoStatus()
 		if err != nil {
 			return err
 		}
-		err = validate.NoOpenChanges(hasOpenChanges)
+		err = validate.NoOpenChanges(repoStatus.OpenChanges)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -271,7 +271,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		childBranches:            childBranches,
 		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
-		hasOpenChanges:           hasOpenChanges,
+		hasOpenChanges:           repoStatus.OpenChanges,
 		remotes:                  remotes,
 		isOffline:                repo.IsOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,

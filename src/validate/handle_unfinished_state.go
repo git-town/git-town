@@ -76,11 +76,11 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 }
 
 func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	hasConflicts, err := args.Run.Backend.HasConflicts()
+	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return false, err
 	}
-	if hasConflicts {
+	if repoStatus.Conflicts {
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, runvm.Execute(runvm.ExecuteArgs{
