@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/git"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -67,6 +68,11 @@ func (ec *FailureCollector) PullBranchStrategy(value config.PullBranchStrategy, 
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (ec *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
+	ec.Check(err)
+	return value
+}
+
+func (ec *FailureCollector) RepoStatus(value git.RepoStatus, err error) git.RepoStatus {
 	ec.Check(err)
 	return value
 }

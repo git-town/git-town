@@ -18,7 +18,7 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git stash list                                    |
       |         | backend  | git remote                                        |
-      |         | backend  | git status                                        |
+      |         | backend  | git status --ignore-submodules                    |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |

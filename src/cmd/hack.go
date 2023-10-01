@@ -100,7 +100,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	mainBranch := repo.Runner.Config.MainBranch()
 	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
@@ -136,7 +136,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
-		hasOpenChanges:      hasOpenChanges,
+		hasOpenChanges:      repoStatus.OpenChanges,
 		remotes:             remotes,
 		lineage:             lineage,
 		mainBranch:          mainBranch,

@@ -117,7 +117,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	mainBranch := repo.Runner.Config.MainBranch()
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
-	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
@@ -149,7 +149,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	return &appendConfig{
 		branches:            branches,
 		branchesToSync:      branchesToSync,
-		hasOpenChanges:      hasOpenChanges,
+		hasOpenChanges:      repoStatus.OpenChanges,
 		remotes:             remotes,
 		isOffline:           repo.IsOffline,
 		lineage:             lineage,

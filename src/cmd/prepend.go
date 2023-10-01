@@ -117,7 +117,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	mainBranch := repo.Runner.Config.MainBranch()
@@ -150,7 +150,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	return &prependConfig{
 		branches:            branches,
 		branchesToSync:      branchesToSync,
-		hasOpenChanges:      hasOpenChanges,
+		hasOpenChanges:      repoStatus.OpenChanges,
 		remotes:             remotes,
 		isOffline:           repo.IsOffline,
 		lineage:             lineage,

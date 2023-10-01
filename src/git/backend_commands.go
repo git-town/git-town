@@ -267,11 +267,11 @@ func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) erro
 
 // CurrentBranch provides the currently checked out branch.
 func (bc *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, error) {
-	rebasing, err := bc.HasRebaseInProgress()
+	repoStatus, err := bc.RepoStatus()
 	if err != nil {
 		return domain.LocalBranchName{}, fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
-	if rebasing {
+	if repoStatus.RebaseInProgress {
 		currentBranch, err := bc.currentBranchDuringRebase()
 		if err != nil {
 			return domain.LocalBranchName{}, err
@@ -342,15 +342,6 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 	return mainBranch, nil
 }
 
-// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (bc *BackendCommands) HasConflicts() (bool, error) {
-	output, err := bc.QueryTrim("git", "status")
-	if err != nil {
-		return false, fmt.Errorf(messages.ConflictDetectionProblem, err)
-	}
-	return strings.Contains(output, "Unmerged paths"), nil
-}
-
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (bc *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
 	return bc.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
@@ -360,44 +351,6 @@ func (bc *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
 func (bc *BackendCommands) HasMergeInProgress() bool {
 	err := bc.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
-}
-
-// HasOpenChanges indicates whether this repo has open changes.
-// TODO: merge this with HasRebaseInProgress and return two bools.
-func (bc *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := bc.QueryTrim("git", "status", "--ignore-submodules")
-	if err != nil {
-		return false, fmt.Errorf(messages.OpenChangesProblem, err)
-	}
-	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
-		return false, nil
-	}
-	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
-		return false, nil
-	}
-	for _, line := range strings.Split(output, "\n") {
-		if strings.HasPrefix(line, "AA ") {
-			return false, nil
-		}
-	}
-	return true, nil
-}
-
-func outputIndicatesMergeInProgress(output string) bool {
-	return strings.Contains(output, "You have unmerged paths")
-}
-
-// HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
-func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
-	output, err := bc.QueryTrim("git", "status")
-	if err != nil {
-		return false, fmt.Errorf(messages.RebaseProblem, err)
-	}
-	return outputIndicatesRebaseInProgress(output), nil
-}
-
-func outputIndicatesRebaseInProgress(output string) bool {
-	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
 }
 
 // HasShippableChanges indicates whether the given branch has changes
@@ -468,6 +421,28 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Branch
 	return nil
 }
 
+// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
+func (bc *BackendCommands) RepoStatus() (RepoStatus, error) {
+	output, err := bc.QueryTrim("git", "status", "--ignore-submodules")
+	if err != nil {
+		return RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+	}
+	hasConflicts := strings.Contains(output, "Unmerged paths")
+	hasOpenChanges := outputIndicatesOpenChanges(output)
+	rebaseInProgress := outputIndicatesRebaseInProgress(output)
+	return RepoStatus{
+		Conflicts:        hasConflicts,
+		OpenChanges:      hasOpenChanges,
+		RebaseInProgress: rebaseInProgress,
+	}, nil
+}
+
+type RepoStatus struct {
+	Conflicts        bool // the repo contains merge conflicts
+	OpenChanges      bool // there are uncommitted changes
+	RebaseInProgress bool // a rebase is in progress
+}
+
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() domain.RepoRootDir {
@@ -525,4 +500,28 @@ func (bc *BackendCommands) Version() (major int, minor int, err error) {
 		return 0, 0, fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
 	}
 	return majorVersion, minorVersion, nil
+}
+
+// HasOpenChanges indicates whether this repo has open changes.
+func outputIndicatesOpenChanges(output string) bool {
+	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
+		return false
+	}
+	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
+		return false
+	}
+	for _, line := range strings.Split(output, "\n") {
+		if strings.HasPrefix(line, "AA ") {
+			return false
+		}
+	}
+	return true
+}
+
+func outputIndicatesMergeInProgress(output string) bool {
+	return strings.Contains(output, "You have unmerged paths")
+}
+
+func outputIndicatesRebaseInProgress(output string) bool {
+	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
 }

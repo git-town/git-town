@@ -125,7 +125,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -187,7 +187,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		branches:           branches,
 		branchesToSync:     branchesToSync,
 		connector:          connector,
-		hasOpenChanges:     hasOpenChanges,
+		hasOpenChanges:     repoStatus.OpenChanges,
 		remotes:            remotes,
 		isOffline:          repo.IsOffline,
 		lineage:            lineage,
