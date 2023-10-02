@@ -8,16 +8,16 @@ type BranchTypes struct {
 	PerennialBranches LocalBranchNames
 }
 
-func (pb BranchTypes) IsFeatureBranch(branch LocalBranchName) bool {
-	return !pb.IsMainBranch(branch) && !pb.IsPerennialBranch(branch)
+func (bts BranchTypes) IsFeatureBranch(branch LocalBranchName) bool {
+	return !bts.IsMainBranch(branch) && !bts.IsPerennialBranch(branch)
 }
 
-func (pb BranchTypes) IsMainBranch(branch LocalBranchName) bool {
-	return branch == pb.MainBranch
+func (bts BranchTypes) IsMainBranch(branch LocalBranchName) bool {
+	return branch == bts.MainBranch
 }
 
-func (pb BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
-	return slice.Contains(pb.PerennialBranches, branch)
+func (bts BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
+	return slice.Contains(bts.PerennialBranches, branch)
 }
 
 func EmptyBranchTypes() BranchTypes {

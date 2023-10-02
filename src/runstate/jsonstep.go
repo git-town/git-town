@@ -15,15 +15,15 @@ type JSONStep struct { //nolint:musttag // JSONStep uses a custom serialization 
 }
 
 // MarshalJSON marshals the step to JSON.
-func (j *JSONStep) MarshalJSON() ([]byte, error) {
+func (js *JSONStep) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"data": j.Step,
-		"type": gohacks.TypeName(j.Step),
+		"data": js.Step,
+		"type": gohacks.TypeName(js.Step),
 	})
 }
 
 // UnmarshalJSON unmarshals the step from JSON.
-func (j *JSONStep) UnmarshalJSON(b []byte) error {
+func (js *JSONStep) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {
@@ -34,11 +34,11 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	j.Step = DetermineStep(stepType)
-	if j.Step == nil {
+	js.Step = DetermineStep(stepType)
+	if js.Step == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
-	return json.Unmarshal(mapping["data"], &j.Step)
+	return json.Unmarshal(mapping["data"], &js.Step)
 }
 
 func DetermineStep(stepType string) steps.Step {

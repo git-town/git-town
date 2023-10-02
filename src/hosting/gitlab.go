@@ -20,13 +20,13 @@ type GitLabConnector struct {
 	log Log
 }
 
-func (c *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
+func (gc *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch.String()),
 		TargetBranch: gitlab.String(target.String()),
 	}
-	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
+	mergeRequests, _, err := gc.client.MergeRequests.ListProjectMergeRequests(gc.projectPath(), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -40,36 +40,36 @@ func (c *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
+func (gc *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	c.log.Start(messages.HostingGitlabMergingViaAPI, number)
+	gc.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
-	result, _, err := c.client.MergeRequests.AcceptMergeRequest(c.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+	result, _, err := gc.client.MergeRequests.AcceptMergeRequest(gc.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.String(message),
 		Squash:              gitlab.Bool(true),
 		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: gitlab.Bool(false),
 	})
 	if err != nil {
-		c.log.Failed(err)
+		gc.log.Failed(err)
 		return domain.SHA{}, err
 	}
-	c.log.Success()
+	gc.log.Success()
 	return domain.NewSHA(result.SHA), nil
 }
 
-func (c *GitLabConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
-	c.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
-	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
+func (gc *GitLabConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
+	gc.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
+	_, _, err := gc.client.MergeRequests.UpdateMergeRequest(gc.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.String(target.String()),
 	})
 	if err != nil {
-		c.log.Failed(err)
+		gc.log.Failed(err)
 		return err
 	}
-	c.log.Success()
+	gc.log.Success()
 	return nil
 }
 
@@ -114,31 +114,31 @@ type GitLabConfig struct {
 	CommonConfig
 }
 
-func (c *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
+func (gc *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (c *GitLabConfig) projectPath() string {
-	return fmt.Sprintf("%s/%s", c.Organization, c.Repository)
+func (gc *GitLabConfig) projectPath() string {
+	return fmt.Sprintf("%s/%s", gc.Organization, gc.Repository)
 }
 
-func (c *GitLabConfig) baseURL() string {
-	return fmt.Sprintf("https://%s", c.Hostname)
+func (gc *GitLabConfig) baseURL() string {
+	return fmt.Sprintf("https://%s", gc.Hostname)
 }
 
-func (c *GitLabConfig) HostingServiceName() string {
+func (gc *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *GitLabConfig) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (gc *GitLabConfig) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch.String())
 	query.Add("merge_request[target_branch]", parentBranch.String())
-	return fmt.Sprintf("%s/-/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
+	return fmt.Sprintf("%s/-/merge_requests/new?%s", gc.RepositoryURL(), query.Encode()), nil
 }
 
-func (c *GitLabConfig) RepositoryURL() string {
-	return fmt.Sprintf("%s/%s", c.baseURL(), c.projectPath())
+func (gc *GitLabConfig) RepositoryURL() string {
+	return fmt.Sprintf("%s/%s", gc.baseURL(), gc.projectPath())
 }
 
 // *************************************

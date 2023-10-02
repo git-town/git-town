@@ -22,78 +22,78 @@ type FailureCollector struct {
 
 // Check registers the given error and indicates
 // whether this ErrorChecker contains an error now.
-func (ec *FailureCollector) Check(err error) bool {
-	if ec.Err == nil {
-		ec.Err = err
+func (fc *FailureCollector) Check(err error) bool {
+	if fc.Err == nil {
+		fc.Err = err
 	}
-	return ec.Err != nil
+	return fc.Err != nil
 }
 
 // Fail registers the error constructed using the given format arguments.
-func (ec *FailureCollector) Fail(format string, a ...any) {
-	ec.Check(fmt.Errorf(format, a...))
+func (fc *FailureCollector) Fail(format string, a ...any) {
+	fc.Check(fmt.Errorf(format, a...))
 }
 
 // Bool provides the bool part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Bool(value bool, err error) bool {
-	ec.Check(err)
+func (fc *FailureCollector) Bool(value bool, err error) bool {
+	fc.Check(err)
 	return value
 }
 
-func (ec *FailureCollector) Branches(value domain.Branches, err error) domain.Branches {
-	ec.Check(err)
+func (fc *FailureCollector) Branches(value domain.Branches, err error) domain.Branches {
+	fc.Check(err)
 	return value
 }
 
-func (ec *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
-	ec.Check(err)
+func (fc *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
+	fc.Check(err)
 	return value
 }
 
 // Hosting provides the config.Hosting part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Hosting(value config.Hosting, err error) config.Hosting {
-	ec.Check(err)
+func (fc *FailureCollector) Hosting(value config.Hosting, err error) config.Hosting {
+	fc.Check(err)
 	return value
 }
 
 // PullBranchStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
-	ec.Check(err)
+func (fc *FailureCollector) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
+	fc.Check(err)
 	return value
 }
 
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
-	ec.Check(err)
+func (fc *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
+	fc.Check(err)
 	return value
 }
 
-func (ec *FailureCollector) RepoStatus(value git.RepoStatus, err error) git.RepoStatus {
-	ec.Check(err)
+func (fc *FailureCollector) RepoStatus(value git.RepoStatus, err error) git.RepoStatus {
+	fc.Check(err)
 	return value
 }
 
 // String provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) String(value string, err error) string {
-	ec.Check(err)
+func (fc *FailureCollector) String(value string, err error) string {
+	fc.Check(err)
 	return value
 }
 
 // Strings provides the []string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Strings(value []string, err error) []string {
-	ec.Check(err)
+func (fc *FailureCollector) Strings(value []string, err error) []string {
+	fc.Check(err)
 	return value
 }
 
 // SyncStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) SyncStrategy(value config.SyncStrategy, err error) config.SyncStrategy {
-	ec.Check(err)
+func (fc *FailureCollector) SyncStrategy(value config.SyncStrategy, err error) config.SyncStrategy {
+	fc.Check(err)
 	return value
 }

@@ -22,16 +22,16 @@ type FrontendRunner struct {
 type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
 
 // Run runs the given command in this ShellRunner's directory.
-func (r *FrontendRunner) Run(cmd string, args ...string) (err error) {
-	r.Stats.RegisterRun()
+func (fr *FrontendRunner) Run(cmd string, args ...string) (err error) {
+	fr.Stats.RegisterRun()
 	var branchName domain.LocalBranchName
-	if !r.OmitBranchNames {
-		branchName, err = r.GetCurrentBranch()
+	if !fr.OmitBranchNames {
+		branchName, err = fr.GetCurrentBranch()
 		if err != nil {
 			return err
 		}
 	}
-	PrintCommand(branchName, r.OmitBranchNames, cmd, args...)
+	PrintCommand(branchName, fr.OmitBranchNames, cmd, args...)
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command
@@ -49,9 +49,9 @@ func (r *FrontendRunner) Run(cmd string, args ...string) (err error) {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r *FrontendRunner) RunMany(commands [][]string) error {
+func (fr *FrontendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		err := r.Run(argv[0], argv[1:]...)
+		err := fr.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf(messages.RunCommandProblem, argv, err)
 		}

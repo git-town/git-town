@@ -15,21 +15,21 @@ type FrontendDryRunner struct {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r *FrontendDryRunner) Run(executable string, args ...string) error {
-	currentBranch, err := r.GetCurrentBranch()
+func (fdr *FrontendDryRunner) Run(executable string, args ...string) error {
+	currentBranch, err := fdr.GetCurrentBranch()
 	if err != nil {
 		return err
 	}
-	PrintCommand(currentBranch, r.OmitBranchNames, executable, args...)
+	PrintCommand(currentBranch, fdr.OmitBranchNames, executable, args...)
 	return nil
 }
 
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r *FrontendDryRunner) RunMany(commands [][]string) error {
+func (fdr *FrontendDryRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		err := r.Run(argv[0], argv[1:]...)
+		err := fdr.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf(messages.RunCommandProblem, argv, err)
 		}

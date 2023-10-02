@@ -18,33 +18,33 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	}
 }
 
-func (cd ConfigDiffs) UndoSteps() runstate.StepList {
+func (cds ConfigDiffs) UndoSteps() runstate.StepList {
 	result := runstate.StepList{}
-	for _, key := range cd.Global.Added {
+	for _, key := range cds.Global.Added {
 		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
 	}
-	for key, value := range cd.Global.Removed {
+	for key, value := range cds.Global.Removed {
 		result.Append(&steps.SetGlobalConfigStep{
 			Key:   key,
 			Value: value,
 		})
 	}
-	for key, change := range cd.Global.Changed {
+	for key, change := range cds.Global.Changed {
 		result.Append(&steps.SetGlobalConfigStep{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
-	for _, key := range cd.Local.Added {
+	for _, key := range cds.Local.Added {
 		result.Append(&steps.RemoveLocalConfigStep{Key: key})
 	}
-	for key, value := range cd.Local.Removed {
+	for key, value := range cds.Local.Removed {
 		result.Append(&steps.SetLocalConfigStep{
 			Key:   key,
 			Value: value,
 		})
 	}
-	for key, change := range cd.Local.Changed {
+	for key, change := range cds.Local.Changed {
 		result.Append(&steps.SetLocalConfigStep{
 			Key:   key,
 			Value: change.Before,
