@@ -138,7 +138,6 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	}))

@@ -143,7 +143,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 			AllBranches: localBranches,
 			Backend:     &repo.Runner.Backend,
 			BranchTypes: branches.Types,
-			Lineage:     lineage,
 			MainBranch:  mainBranch,
 		})
 		if err != nil {
@@ -157,7 +156,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 			Backend:       &repo.Runner.Backend,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
-			Lineage:       lineage,
 			MainBranch:    mainBranch,
 		})
 		if err != nil {

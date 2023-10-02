@@ -132,7 +132,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})

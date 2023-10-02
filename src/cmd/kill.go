@@ -118,7 +118,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 			DefaultBranch: mainBranch,
 			Backend:       &repo.Runner.Backend,
 			AllBranches:   branches.All,
-			Lineage:       lineage,
 			BranchTypes:   branches.Types,
 			MainBranch:    mainBranch,
 		})

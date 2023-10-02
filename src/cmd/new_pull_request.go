@@ -138,7 +138,6 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})

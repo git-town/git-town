@@ -163,7 +163,6 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.
 		Backend:       args.backend,
 		BranchTypes:   args.branches.Types,
 		DefaultBranch: args.mainBranch,
-		Lineage:       args.lineage,
 		MainBranch:    args.mainBranch,
 	})
 	if err != nil {

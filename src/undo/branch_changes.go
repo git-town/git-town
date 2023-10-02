@@ -33,12 +33,12 @@ type BranchChanges struct {
 func EmptyBranchChanges() BranchChanges {
 	return BranchChanges{
 		LocalAdded:            domain.LocalBranchNames{},
-		LocalRemoved:          map[domain.LocalBranchName]domain.SHA{},
+		LocalRemoved:          domain.LocalBranchesSHAs{},
 		LocalChanged:          domain.LocalBranchChange{},
-		RemoteAdded:           []domain.RemoteBranchName{},
+		RemoteAdded:           domain.RemoteBranchNames{},
 		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
 		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
-		OmniRemoved:           map[domain.LocalBranchName]domain.SHA{},
+		OmniRemoved:           domain.LocalBranchesSHAs{},
 		OmniChanged:           domain.LocalBranchChange{},
 		InconsistentlyChanged: domain.InconsistentChanges{},
 	}
