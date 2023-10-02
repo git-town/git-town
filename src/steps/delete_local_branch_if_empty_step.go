@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -12,37 +13,14 @@ import (
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchIfEmptyStep struct {
 	EmptyStep
-	Branch        string
-	Parent        string
-	Force         bool
-	branchSha     string
-	branchDeleted bool
-}
-
-func (step *DeleteLocalBranchIfEmptyStep) CreateUndoStep(_ *git.BackendCommands) ([]Step, error) {
-	if !step.branchDeleted {
-		return []Step{}, nil
-	}
-	return []Step{
-		&CreateBranchStep{
-			Branch:        step.Branch,
-			StartingPoint: step.branchSha,
-		},
-		&SetParentStep{
-			Branch:       step.Branch,
-			ParentBranch: step.Parent,
-		},
-	}, nil
+	Branch domain.LocalBranchName
+	Parent domain.LocalBranchName
+	Force  bool
 }
 
 func (step *DeleteLocalBranchIfEmptyStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	var err error
-	step.branchSha, err = run.Backend.ShaForBranch(step.Branch)
-	if err != nil {
-		return err
-	}
 	// ensure branch is empty
-	branchHasUnmergedChanges, err := run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	branchHasUnmergedChanges, err := run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent.Location())
 	if err != nil {
 		return err
 	}
@@ -55,7 +33,6 @@ func (step *DeleteLocalBranchIfEmptyStep) Run(run *git.ProdRunner, _ hosting.Con
 	if err != nil {
 		return err
 	}
-	step.branchDeleted = true
 	// delete the configuration settings for this branch
 	err = run.Backend.Config.RemoveParent(step.Branch)
 	if err != nil {

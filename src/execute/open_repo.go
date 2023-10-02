@@ -133,6 +133,7 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 }
 
 type Statistics interface {
+	RegisterMessage(string)
 	RegisterRun()
 	PrintAnalysis()
 }

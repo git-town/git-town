@@ -10,4 +10,5 @@ type ProdRunner struct {
 
 type Statistics interface {
 	PrintAnalysis()
+	RegisterMessage(message string)
 }
