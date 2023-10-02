@@ -50,11 +50,10 @@ func Hoist[S ~[]C, C comparable](list S, element C) S { //nolint:ireturn
 			result = append(result, list[l])
 		}
 	}
-	// TODO: remove the negation from the if condition so that there is only one return statement
-	if !hasElement {
-		return result
+	if hasElement {
+		result = append([]C{element}, result...)
 	}
-	return append([]C{element}, result...)
+	return result
 }
 
 // LowerLast provides the given slice with the last element of the given type moved to the last position in the list.
