@@ -249,7 +249,7 @@ func (tc *TestCommands) HasBranchesOutOfSync() bool {
 func (tc *TestCommands) HasFile(name, content string) string {
 	rawContent, err := os.ReadFile(filepath.Join(tc.WorkingDir, name))
 	if err != nil {
-		return fmt.Sprintf("repo doesn'tc have file %q", name)
+		return fmt.Sprintf("repo doesn't have file %q", name)
 	}
 	actualContent := string(rawContent)
 	if actualContent != content {
