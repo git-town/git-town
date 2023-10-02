@@ -512,8 +512,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin ships the "([^"]*)" branch$`, func(name string) error {
-		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
-		state.fixture.OriginRepo.RemoveBranch(name)
+		branchName := domain.NewLocalBranchName(name)
+		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, branchName)
+		state.fixture.OriginRepo.RemoveBranch(branchName)
 		return nil
 	})
 
@@ -598,14 +599,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the feature branch "([^"]+)"$`, func(branch string) error {
-		err := state.fixture.DevRepo.CreateFeatureBranch(branch)
+		branchName := domain.NewLocalBranchName(branch)
+		err := state.fixture.DevRepo.CreateFeatureBranch(branchName)
 		if err != nil {
 			return err
 		}
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialLocalBranches = append(state.initialLocalBranches, branchName)
 		state.initialBranchHierarchy.AddRow(branch, "main")
-		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		state.fixture.DevRepo.PushBranchToRemote(branchName, config.OriginRemote)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branchName)
 		return nil
 	})
 
