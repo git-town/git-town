@@ -67,7 +67,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:          domain.LocalBranchesSHAs{},
 				LocalChanged:          domain.LocalBranchChange{},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -128,7 +128,7 @@ func TestChanges(t *testing.T) {
 				},
 				LocalChanged:          domain.LocalBranchChange{},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -219,7 +219,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -311,7 +311,7 @@ func TestChanges(t *testing.T) {
 					domain.NewRemoteBranchName("origin/perennial-branch"),
 					domain.NewRemoteBranchName("origin/feature-branch"),
 				},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -397,7 +397,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:          domain.LocalBranchesSHAs{},
 				LocalChanged:          domain.LocalBranchChange{},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -475,7 +475,7 @@ func TestChanges(t *testing.T) {
 					domain.NewRemoteBranchName("origin/perennial-branch"),
 					domain.NewRemoteBranchName("origin/feature-branch"),
 				},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -578,7 +578,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -667,7 +667,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:  domain.LocalBranchesSHAs{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{
 					domain.NewRemoteBranchName("origin/perennial-branch"): {
 						Before: domain.NewSHA("111111"),
@@ -774,7 +774,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:  domain.LocalBranchesSHAs{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:   domain.LocalBranchesSHAs{},
 				OmniChanged: domain.LocalBranchChange{
@@ -882,7 +882,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:  domain.LocalBranchesSHAs{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved: domain.LocalBranchesSHAs{
 					domain.NewLocalBranchName("feature-branch"): domain.NewSHA("222222"),
@@ -976,7 +976,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:  domain.LocalBranchesSHAs{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:   domain.LocalBranchesSHAs{},
 				OmniChanged:   domain.LocalBranchChange{},
@@ -1107,7 +1107,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -1196,7 +1196,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved:  domain.LocalBranchesSHAs{},
 				LocalChanged:  domain.LocalBranchChange{},
 				RemoteAdded:   []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{
 					domain.NewRemoteBranchName("origin/perennial-branch"): {
 						Before: domain.NewSHA("111111"),
@@ -1291,7 +1291,7 @@ func TestChanges(t *testing.T) {
 				},
 				LocalChanged:          domain.LocalBranchChange{},
 				RemoteAdded:           []domain.RemoteBranchName{},
-				RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
+				RemoteRemoved:         domain.RemoteBranchesSHAs{},
 				RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:           domain.LocalBranchesSHAs{},
 				OmniChanged:           domain.LocalBranchChange{},
@@ -1376,7 +1376,7 @@ func TestChanges(t *testing.T) {
 				LocalRemoved: domain.LocalBranchesSHAs{},
 				LocalChanged: domain.LocalBranchChange{},
 				RemoteAdded:  []domain.RemoteBranchName{},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{
+				RemoteRemoved: domain.RemoteBranchesSHAs{
 					domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("111111"),
 					domain.NewRemoteBranchName("origin/feature-branch"):   domain.NewSHA("222222"),
 				},
@@ -1458,7 +1458,7 @@ func TestChanges(t *testing.T) {
 				RemoteAdded: []domain.RemoteBranchName{ // TODO: replace with domain.RemoteBranchNames everywhere
 					domain.NewRemoteBranchName("upstream/main"),
 				},
-				RemoteRemoved: map[domain.RemoteBranchName]domain.SHA{}, // TODO: replace with domain.RemoteBranchesSHAs everywhere
+				RemoteRemoved: domain.RemoteBranchesSHAs{}, // TODO: replace with domain.RemoteBranchesSHAs everywhere
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:   domain.LocalBranchesSHAs{},
 				OmniChanged: domain.LocalBranchChange{
