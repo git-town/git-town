@@ -606,7 +606,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branchName)
 		state.initialBranchHierarchy.AddRow(branch, "main")
-		state.fixture.DevRepo.PushBranchToRemote(branchName, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branchName, domain.OriginRemote)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branchName)
 		return nil
 	})
