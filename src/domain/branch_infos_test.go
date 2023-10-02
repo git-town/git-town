@@ -460,7 +460,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.SHA{},
 			},
 		}
-		have, err := bs.Select([]domain.LocalBranchName{domain.NewLocalBranchName("one"), domain.NewLocalBranchName("three")})
+		have, err := bs.Select(domain.LocalBranchNames{domain.NewLocalBranchName("one"), domain.NewLocalBranchName("three")})
 		want := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
