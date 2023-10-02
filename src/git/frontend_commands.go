@@ -25,56 +25,56 @@ type FrontendCommands struct {
 type SetCachedCurrentBranchFunc func(domain.LocalBranchName)
 
 // AbortMerge cancels a currently ongoing Git merge operation.
-func (fc *FrontendCommands) AbortMerge() error {
-	return fc.Run("git", "merge", "--abort")
+func (fcs *FrontendCommands) AbortMerge() error {
+	return fcs.Run("git", "merge", "--abort")
 }
 
 // AbortRebase cancels a currently ongoing Git rebase operation.
-func (fc *FrontendCommands) AbortRebase() error {
-	return fc.Run("git", "rebase", "--abort")
+func (fcs *FrontendCommands) AbortRebase() error {
+	return fcs.Run("git", "rebase", "--abort")
 }
 
 // AddGitAlias sets the given Git alias.
-func (fc *FrontendCommands) AddGitAlias(alias config.Alias) error {
+func (fcs *FrontendCommands) AddGitAlias(alias config.Alias) error {
 	aliasKey := config.NewAliasKey(alias)
-	return fc.Run("git", "config", "--global", aliasKey.String(), "town "+alias.String())
+	return fcs.Run("git", "config", "--global", aliasKey.String(), "town "+alias.String())
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (fc *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
-	err := fc.Run("git", "checkout", name.String())
+func (fcs *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
+	err := fcs.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
-	fc.SetCachedCurrentBranch(name)
+	fcs.SetCachedCurrentBranch(name)
 	return nil
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
+func (fcs *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
-func (fc *FrontendCommands) CommitNoEdit() error {
-	return fc.Run("git", "commit", "--no-edit")
+func (fcs *FrontendCommands) CommitNoEdit() error {
+	return fcs.Run("git", "commit", "--no-edit")
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (fc *FrontendCommands) CommitStagedChanges(message string) error {
+func (fcs *FrontendCommands) CommitStagedChanges(message string) error {
 	if message != "" {
-		return fc.Run("git", "commit", "-m", message)
+		return fcs.Run("git", "commit", "-m", message)
 	}
-	return fc.Run("git", "commit", "--no-edit")
+	return fcs.Run("git", "commit", "--no-edit")
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (fc *FrontendCommands) Commit(message, author string) error {
+func (fcs *FrontendCommands) Commit(message, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
 		gitArgs = append(gitArgs, "-m", message)
@@ -82,171 +82,171 @@ func (fc *FrontendCommands) Commit(message, author string) error {
 	if author != "" {
 		gitArgs = append(gitArgs, "--author", author)
 	}
-	return fc.Run("git", gitArgs...)
+	return fcs.Run("git", gitArgs...)
 }
 
 // ContinueRebase continues the currently ongoing rebase.
-func (fc *FrontendCommands) ContinueRebase() error {
-	return fc.Run("git", "rebase", "--continue")
+func (fcs *FrontendCommands) ContinueRebase() error {
+	return fcs.Run("git", "rebase", "--continue")
 }
 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (fc *FrontendCommands) CreateBranch(name domain.LocalBranchName, parent domain.Location) error {
-	return fc.Run("git", "branch", name.String(), parent.String())
+func (fcs *FrontendCommands) CreateBranch(name domain.LocalBranchName, parent domain.Location) error {
+	return fcs.Run("git", "branch", name.String(), parent.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (fc *FrontendCommands) DeleteLastCommit() error {
-	return fc.Run("git", "reset", "--hard", "HEAD~1")
+func (fcs *FrontendCommands) DeleteLastCommit() error {
+	return fcs.Run("git", "reset", "--hard", "HEAD~1")
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
+func (fcs *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "-u", remote.String())
 	args = append(args, branch.String())
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force bool) error {
+func (fcs *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force bool) error {
 	args := []string{"branch", "-d", name.String()}
 	if force {
 		args[1] = "-D"
 	}
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-func (fc *FrontendCommands) DeleteRemoteBranch(name domain.RemoteBranchName) error {
+func (fcs *FrontendCommands) DeleteRemoteBranch(name domain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
-	return fc.Run("git", "push", remote.String(), ":"+localBranchName.String())
+	return fcs.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (fc *FrontendCommands) DiffParent(branch, parentBranch domain.LocalBranchName) error {
-	return fc.Run("git", "diff", parentBranch.String()+".."+branch.String())
+func (fcs *FrontendCommands) DiffParent(branch, parentBranch domain.LocalBranchName) error {
+	return fcs.Run("git", "diff", parentBranch.String()+".."+branch.String())
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
-func (fc *FrontendCommands) DiscardOpenChanges() error {
-	return fc.Run("git", "reset", "--hard")
+func (fcs *FrontendCommands) DiscardOpenChanges() error {
+	return fcs.Run("git", "reset", "--hard")
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (fc *FrontendCommands) Fetch() error {
-	return fc.Run("git", "fetch", "--prune", "--tags")
+func (fcs *FrontendCommands) Fetch() error {
+	return fcs.Run("git", "fetch", "--prune", "--tags")
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (fc *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error {
-	return fc.Run("git", "fetch", domain.UpstreamRemote.String(), branch.String())
+func (fcs *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error {
+	return fcs.Run("git", "fetch", domain.UpstreamRemote.String(), branch.String())
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (fc *FrontendCommands) MergeBranchNoEdit(branch domain.BranchName) error {
-	err := fc.Run("git", "merge", "--no-edit", branch.String())
+func (fcs *FrontendCommands) MergeBranchNoEdit(branch domain.BranchName) error {
+	err := fcs.Run("git", "merge", "--no-edit", branch.String())
 	return err
 }
 
 // NavigateToDir changes into the root directory of the current repository.
-func (fc *FrontendCommands) NavigateToDir(dir domain.RepoRootDir) error {
+func (fcs *FrontendCommands) NavigateToDir(dir domain.RepoRootDir) error {
 	return os.Chdir(dir.String())
 }
 
 // PopStash restores stashed-away changes into the workspace.
-func (fc *FrontendCommands) PopStash() error {
-	return fc.Run("git", "stash", "pop")
+func (fcs *FrontendCommands) PopStash() error {
+	return fcs.Run("git", "stash", "pop")
 }
 
 // Pull fetches updates from origin and updates the currently checked out branch.
-func (fc *FrontendCommands) Pull() error {
-	return fc.Run("git", "pull")
+func (fcs *FrontendCommands) Pull() error {
+	return fcs.Run("git", "pull")
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
-func (fc *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
+func (fcs *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) ForcePushBranch(noPushHook bool) error {
+func (fcs *FrontendCommands) ForcePushBranch(noPushHook bool) error {
 	args := []string{"push", "--force-with-lease"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // PushTags pushes new the Git tags to origin.
-func (fc *FrontendCommands) PushTags() error {
-	return fc.Run("git", "push", "--tags")
+func (fcs *FrontendCommands) PushTags() error {
+	return fcs.Run("git", "push", "--tags")
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (fc *FrontendCommands) Rebase(target domain.BranchName) error {
-	return fc.Run("git", "rebase", target.String())
+func (fcs *FrontendCommands) Rebase(target domain.BranchName) error {
+	return fcs.Run("git", "rebase", target.String())
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
-	return fc.Run("git", "config", "--global", "--unset", "alias."+alias.String())
+func (fcs *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
+	return fcs.Run("git", "config", "--global", "--unset", "alias."+alias.String())
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) error {
+func (fcs *FrontendCommands) ResetCurrentBranchToSHA(sha domain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
 	}
 	args = append(args, sha.String())
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
-func (fc *FrontendCommands) ResetRemoteBranchToSHA(branch domain.RemoteBranchName, sha domain.SHA) error {
-	return fc.Run("git", "push", "--force-with-lease", domain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
+func (fcs *FrontendCommands) ResetRemoteBranchToSHA(branch domain.RemoteBranchName, sha domain.SHA) error {
+	return fcs.Run("git", "push", "--force-with-lease", domain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (fc *FrontendCommands) RevertCommit(sha domain.SHA) error {
-	return fc.Run("git", "revert", sha.String())
+func (fcs *FrontendCommands) RevertCommit(sha domain.SHA) error {
+	return fcs.Run("git", "revert", sha.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (fc *FrontendCommands) SquashMerge(branch domain.LocalBranchName) error {
-	return fc.Run("git", "merge", "--squash", branch.String())
+func (fcs *FrontendCommands) SquashMerge(branch domain.LocalBranchName) error {
+	return fcs.Run("git", "merge", "--squash", branch.String())
 }
 
 // Stash adds the current files to the Git stash.
-func (fc *FrontendCommands) Stash() error {
-	return fc.RunMany([][]string{
+func (fcs *FrontendCommands) Stash() error {
+	return fcs.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
 	})
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (fc *FrontendCommands) StageFiles(names ...string) error {
+func (fcs *FrontendCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
-	return fc.Run("git", args...)
+	return fcs.Run("git", args...)
 }
 
 // StartCommit starts a commit and stops at asking the user for the commit message.
-func (fc *FrontendCommands) StartCommit() error {
-	return fc.Run("git", "commit")
+func (fcs *FrontendCommands) StartCommit() error {
+	return fcs.Run("git", "commit")
 }
 
-func (fc *FrontendCommands) UndoLastCommit() error {
-	return fc.Run("git", "reset", "--soft", "HEAD^")
+func (fcs *FrontendCommands) UndoLastCommit() error {
+	return fcs.Run("git", "reset", "--soft", "HEAD^")
 }

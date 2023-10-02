@@ -19,13 +19,13 @@ type UnfinishedRunStateDetails struct {
 	EndTime   time.Time
 }
 
-func (u UnfinishedRunStateDetails) String() string {
+func (ursd UnfinishedRunStateDetails) String() string {
 	result := strings.Builder{}
 	result.WriteString("UnfinishedRunStateDetails {\n")
 	result.WriteString("  CanSkip: ")
-	result.WriteString(fmt.Sprintf("%t\n", u.CanSkip))
+	result.WriteString(fmt.Sprintf("%t\n", ursd.CanSkip))
 	result.WriteString("  EndBranch: ")
-	result.WriteString(u.EndBranch.String())
+	result.WriteString(ursd.EndBranch.String())
 	result.WriteString("\n")
 	return result.String()
 }

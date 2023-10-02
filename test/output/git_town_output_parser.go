@@ -25,7 +25,7 @@ var (
 	CommandTypeBackend  = CommandType{"backend"}  //nolint:gochecknoglobals
 )
 
-func (c CommandType) String() string { return c.name }
+func (ct CommandType) String() string { return ct.name }
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {

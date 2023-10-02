@@ -15,8 +15,8 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-func (l LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
-	for _, branch := range l {
+func (lbns LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
+	for _, branch := range lbns {
 		if branchTypes.IsFeatureBranch(branch) {
 			features = append(features, branch)
 		} else {
@@ -27,21 +27,21 @@ func (l LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, featu
 }
 
 // Join provides the names of all branches in this collection connected by the given separator.
-func (l LocalBranchNames) Join(sep string) string {
-	return strings.Join(l.Strings(), sep)
+func (lbns LocalBranchNames) Join(sep string) string {
+	return strings.Join(lbns.Strings(), sep)
 }
 
 // Sort orders the branches in this collection alphabetically.
-func (l LocalBranchNames) Sort() {
-	sort.Slice(l, func(a, b int) bool {
-		return l[a].id < l[b].id
+func (lbns LocalBranchNames) Sort() {
+	sort.Slice(lbns, func(a, b int) bool {
+		return lbns[a].id < lbns[b].id
 	})
 }
 
 // Strings provides the names of all branches in this collection as strings.
-func (l LocalBranchNames) Strings() []string {
-	result := make([]string, len(l))
-	for b, branch := range l {
+func (lbns LocalBranchNames) Strings() []string {
+	result := make([]string, len(lbns))
+	for b, branch := range lbns {
 		result[b] = branch.String()
 	}
 	return result

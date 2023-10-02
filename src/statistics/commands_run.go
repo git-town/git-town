@@ -12,10 +12,10 @@ func (s *CommandsRun) RegisterMessage(message string) {
 	s.Messages = append(s.Messages, message)
 }
 
-func (s *CommandsRun) RegisterRun() {
-	s.CommandsCount++
+func (cr *CommandsRun) RegisterRun() {
+	cr.CommandsCount++
 }
 
-func (s *CommandsRun) PrintAnalysis() {
-	fmt.Printf("Ran %d shell commands.", s.CommandsCount)
+func (cr *CommandsRun) PrintAnalysis() {
+	fmt.Printf("Ran %d shell commands.", cr.CommandsCount)
 }

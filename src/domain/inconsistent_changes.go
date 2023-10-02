@@ -2,8 +2,8 @@ package domain
 
 type InconsistentChanges []InconsistentChange
 
-func (ic InconsistentChanges) Categorize(branchTypes BranchTypes) (perennials, features InconsistentChanges) {
-	for _, change := range ic {
+func (ics InconsistentChanges) Categorize(branchTypes BranchTypes) (perennials, features InconsistentChanges) {
+	for _, change := range ics {
 		if branchTypes.IsFeatureBranch(change.Before.LocalName) {
 			features = append(features, change)
 		} else {
@@ -13,9 +13,9 @@ func (ic InconsistentChanges) Categorize(branchTypes BranchTypes) (perennials, f
 	return
 }
 
-func (ic InconsistentChanges) BranchNames() LocalBranchNames {
-	result := make(LocalBranchNames, len(ic))
-	for i, change := range ic {
+func (ics InconsistentChanges) BranchNames() LocalBranchNames {
+	result := make(LocalBranchNames, len(ics))
+	for i, change := range ics {
 		result[i] = change.Before.LocalName
 	}
 	return result

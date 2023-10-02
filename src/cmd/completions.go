@@ -86,7 +86,7 @@ type CompletionType struct {
 	name string
 }
 
-func (c CompletionType) String() string { return c.name }
+func (ct CompletionType) String() string { return ct.name }
 
 var (
 	CompletionTypeBash       = CompletionType{"bash"}       //nolint:gochecknoglobals
