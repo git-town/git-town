@@ -35,7 +35,7 @@ func EmptyBranchChanges() BranchChanges {
 		LocalAdded:            domain.LocalBranchNames{},
 		LocalRemoved:          domain.LocalBranchesSHAs{},
 		LocalChanged:          domain.LocalBranchChange{},
-		RemoteAdded:           []domain.RemoteBranchName{},
+		RemoteAdded:           domain.RemoteBranchNames{},
 		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
 		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 		OmniRemoved:           domain.LocalBranchesSHAs{},
