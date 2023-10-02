@@ -50,8 +50,8 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 	}
 	updated := false
 	for {
-		// TODO: reload the lineage at the end of the loop
-		parent, hasParent := args.Backend.Config.Lineage()[currentBranch] // need to reload the lineage here because ancestry data was changed
+		args.Lineage = args.Backend.Config.Lineage() // need to reload the lineage here because ancestry data was changed
+		parent, hasParent := args.Lineage[currentBranch]
 		var err error
 		if !hasParent { //nolint:nestif
 			if !headerShown {

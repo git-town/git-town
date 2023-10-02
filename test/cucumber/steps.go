@@ -598,7 +598,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		if state.initialCurrentBranch.IsEmpty() {
-			state.fixture.DevRepo.CheckoutBranch(domain.NewLocalBranchName("main")) // TODO: extract into a global constant variable (possibly in the test namespace)
+			state.fixture.DevRepo.CheckoutBranch(domain.NewLocalBranchName("main"))
 			return nil
 		}
 		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
