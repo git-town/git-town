@@ -195,7 +195,6 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 		DefaultBranch: mainBranch,
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})

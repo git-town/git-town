@@ -74,7 +74,6 @@ func executeSetParent(debug bool) error {
 		DefaultBranch: existingParent,
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})
