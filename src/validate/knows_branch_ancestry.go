@@ -2,7 +2,6 @@ package validate
 
 import (
 	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
@@ -19,7 +18,6 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 			DefaultBranch: args.MainBranch,
 			Backend:       args.Backend,
 			AllBranches:   args.AllBranches,
-			Lineage:       args.Lineage,
 			BranchTypes:   args.BranchTypes,
 			MainBranch:    args.MainBranch,
 		})
@@ -37,7 +35,6 @@ type KnowsBranchesAncestorsArgs struct {
 	AllBranches domain.BranchInfos
 	Backend     *git.BackendCommands
 	BranchTypes domain.BranchTypes
-	Lineage     config.Lineage
 	MainBranch  domain.LocalBranchName
 }
 
@@ -50,15 +47,15 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 	}
 	updated := false
 	for {
-		args.Lineage = args.Backend.Config.Lineage() // need to reload the lineage here because ancestry data was changed
-		parent, hasParent := args.Lineage[currentBranch]
+		lineage := args.Backend.Config.Lineage() // need to load a fresh lineage here because ancestry data was changed
+		parent, hasParent := lineage[currentBranch]
 		var err error
 		if !hasParent { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(args.MainBranch)
 				headerShown = true
 			}
-			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, args.Lineage, args.AllBranches)
+			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
 			if err != nil {
 				return false, err
 			}
@@ -89,7 +86,6 @@ type KnowsBranchAncestorsArgs struct {
 	Backend       *git.BackendCommands
 	BranchTypes   domain.BranchTypes
 	DefaultBranch domain.LocalBranchName
-	Lineage       config.Lineage
 	MainBranch    domain.LocalBranchName
 }
 
