@@ -32,14 +32,14 @@ type BackendCommands struct {
 }
 
 // Author provides the locally Git configured user.
-func (bc *BackendCommands) Author() (string, error) {
+func (bcs *BackendCommands) Author() (string, error) {
 	// TODO: read this from the config cache?
 	// If not possible, comment here why.
-	name, err := bc.QueryTrim("git", "config", "user.name")
+	name, err := bcs.QueryTrim("git", "config", "user.name")
 	if err != nil {
 		return "", err
 	}
-	email, err := bc.QueryTrim("git", "config", "user.email")
+	email, err := bcs.QueryTrim("git", "config", "user.email")
 	if err != nil {
 		return "", err
 	}
@@ -48,8 +48,8 @@ func (bc *BackendCommands) Author() (string, error) {
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
-func (bc *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName) ([]string, error) {
-	output, err := bc.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
+func (bcs *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName) ([]string, error) {
+	output, err := bcs.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
 		return []string{}, err
 	}
@@ -64,8 +64,8 @@ func (bc *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName) 
 
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
-func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchName, parent domain.Location) (bool, error) {
-	out, err := bc.QueryTrim("git", "log", parent.String()+".."+branch.String())
+func (bcs *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchName, parent domain.Location) (bool, error) {
+	out, err := bcs.QueryTrim("git", "log", parent.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
@@ -73,14 +73,14 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchNam
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
-	output, err := bc.Query("git", "branch", "-vva")
+func (bcs *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
+	output, err := bcs.Query("git", "branch", "-vva")
 	if err != nil {
 		return domain.EmptyBranchesSnapshot(), err
 	}
 	branches, currentBranch := ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
-		bc.CurrentBranchCache.Set(currentBranch)
+		bcs.CurrentBranchCache.Set(currentBranch)
 	}
 	return domain.BranchesSnapshot{
 		Branches: branches,
@@ -178,8 +178,8 @@ func isLocalBranchName(branch string) bool {
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (bc *BackendCommands) CheckoutBranchUncached(name domain.LocalBranchName) error {
-	err := bc.Run("git", "checkout", name.String())
+func (bcs *BackendCommands) CheckoutBranchUncached(name domain.LocalBranchName) error {
+	err := bcs.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
@@ -187,24 +187,24 @@ func (bc *BackendCommands) CheckoutBranchUncached(name domain.LocalBranchName) e
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (bc *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
-	if !bc.Config.DryRun {
-		err := bc.CheckoutBranchUncached(name)
+func (bcs *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
+	if !bcs.Config.DryRun {
+		err := bcs.CheckoutBranchUncached(name)
 		if err != nil {
 			return err
 		}
 	}
 	if name.String() != "-" {
-		bc.CurrentBranchCache.Set(name)
+		bcs.CurrentBranchCache.Set(name)
 	} else {
-		bc.CurrentBranchCache.Invalidate()
+		bcs.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
-func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
+func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
@@ -218,15 +218,15 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
-func (bc *BackendCommands) CommitsInBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
+func (bcs *BackendCommands) CommitsInBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
 	if parent.IsEmpty() {
-		return bc.CommitsInPerennialBranch()
+		return bcs.CommitsInPerennialBranch()
 	}
-	return bc.CommitsInFeatureBranch(branch, parent)
+	return bcs.CommitsInFeatureBranch(branch, parent)
 }
 
-func (bc *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
-	output, err := bc.QueryTrim("git", "cherry", parent.String(), branch.String())
+func (bcs *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBranchName) (domain.SHAs, error) {
+	output, err := bcs.QueryTrim("git", "cherry", parent.String(), branch.String())
 	if err != nil {
 		return domain.SHAs{}, err
 	}
@@ -240,8 +240,8 @@ func (bc *BackendCommands) CommitsInFeatureBranch(branch, parent domain.LocalBra
 	return result, nil
 }
 
-func (bc *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
-	output, err := bc.QueryTrim("git", "log", "--pretty=format:%h", "-10")
+func (bcs *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
+	output, err := bcs.QueryTrim("git", "log", "--pretty=format:%h", "-10")
 	if err != nil {
 		return domain.SHAs{}, err
 	}
@@ -254,8 +254,8 @@ func (bc *BackendCommands) CommitsInPerennialBranch() (domain.SHAs, error) {
 }
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
-func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) error {
-	err := bc.RunMany([][]string{
+func (bcs *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) error {
+	err := bcs.RunMany([][]string{
 		{"git", "branch", name.String(), "main"},
 		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
 	})
@@ -266,19 +266,19 @@ func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) erro
 }
 
 // CurrentBranch provides the currently checked out branch.
-func (bc *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, error) {
-	repoStatus, err := bc.RepoStatus()
+func (bcs *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, error) {
+	repoStatus, err := bcs.RepoStatus()
 	if err != nil {
 		return domain.LocalBranchName{}, fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if repoStatus.RebaseInProgress {
-		currentBranch, err := bc.currentBranchDuringRebase()
+		currentBranch, err := bcs.currentBranchDuringRebase()
 		if err != nil {
 			return domain.LocalBranchName{}, err
 		}
 		return currentBranch, nil
 	}
-	output, err := bc.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := bcs.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return domain.LocalBranchName{}, fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
@@ -286,22 +286,22 @@ func (bc *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, erro
 }
 
 // CurrentBranch provides the name of the currently checked out branch.
-func (bc *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
-	if bc.Config.DryRun {
-		return bc.CurrentBranchCache.Value(), nil
+func (bcs *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
+	if bcs.Config.DryRun {
+		return bcs.CurrentBranchCache.Value(), nil
 	}
-	if !bc.CurrentBranchCache.Initialized() {
-		currentBranch, err := bc.CurrentBranchUncached()
+	if !bcs.CurrentBranchCache.Initialized() {
+		currentBranch, err := bcs.CurrentBranchUncached()
 		if err != nil {
 			return currentBranch, err
 		}
-		bc.CurrentBranchCache.Set(currentBranch)
+		bcs.CurrentBranchCache.Set(currentBranch)
 	}
-	return bc.CurrentBranchCache.Value(), nil
+	return bcs.CurrentBranchCache.Value(), nil
 }
 
-func (bc *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, error) {
-	rootDir := bc.RootDirectory()
+func (bcs *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, error) {
+	rootDir := bcs.RootDirectory()
 	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
 	if err != nil {
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
@@ -315,16 +315,16 @@ func (bc *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, 
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
-func (bc *BackendCommands) CurrentSHA() (domain.SHA, error) {
-	return bc.SHAForBranch(domain.NewBranchName("HEAD"))
+func (bcs *BackendCommands) CurrentSHA() (domain.SHA, error) {
+	return bcs.SHAForBranch(domain.NewBranchName("HEAD"))
 }
 
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
 // given the inputs.
-func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
-	// TODO: try to avoid repeated lookups to bc.HasLocalBranch
-	if bc.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
-		currentBranch, err := bc.CurrentBranch()
+func (bcs *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
+	// TODO: try to avoid repeated lookups to bcs.HasLocalBranch
+	if bcs.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
+		currentBranch, err := bcs.CurrentBranch()
 		if err != nil {
 			return domain.LocalBranchName{}, err
 		}
@@ -334,7 +334,7 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 		if initialBranch == initialPreviouslyCheckedOutBranch {
 			return initialBranch, nil
 		}
-		if bc.HasLocalBranch(initialBranch) {
+		if bcs.HasLocalBranch(initialBranch) {
 			return initialBranch, nil
 		}
 		return initialPreviouslyCheckedOutBranch, nil
@@ -343,20 +343,20 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
-func (bc *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
-	return bc.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
+func (bcs *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
+	return bcs.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (bc *BackendCommands) HasMergeInProgress() bool {
-	err := bc.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (bcs *BackendCommands) HasMergeInProgress() bool {
+	err := bcs.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
-func (bc *BackendCommands) HasShippableChanges(branch, mainBranch domain.LocalBranchName) (bool, error) {
-	out, err := bc.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
+func (bcs *BackendCommands) HasShippableChanges(branch, mainBranch domain.LocalBranchName) (bool, error) {
+	out, err := bcs.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
@@ -364,8 +364,8 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch domain.LocalBr
 }
 
 // LastCommitMessage provides the commit message for the last commit.
-func (bc *BackendCommands) LastCommitMessage() (string, error) {
-	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
+func (bcs *BackendCommands) LastCommitMessage() (string, error) {
+	out, err := bcs.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
@@ -373,8 +373,8 @@ func (bc *BackendCommands) LastCommitMessage() (string, error) {
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (bc *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
-	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+func (bcs *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
+	output, err := bcs.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return domain.LocalBranchName{}
 	}
@@ -382,8 +382,8 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) RemotesUncached() (domain.Remotes, error) {
-	out, err := bc.QueryTrim("git", "remote")
+func (bcs *BackendCommands) RemotesUncached() (domain.Remotes, error) {
+	out, err := bcs.QueryTrim("git", "remote")
 	if err != nil {
 		return domain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
 	}
@@ -394,25 +394,25 @@ func (bc *BackendCommands) RemotesUncached() (domain.Remotes, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) Remotes() (domain.Remotes, error) {
-	if !bc.RemotesCache.Initialized() {
-		remotes, err := bc.RemotesUncached()
+func (bcs *BackendCommands) Remotes() (domain.Remotes, error) {
+	if !bcs.RemotesCache.Initialized() {
+		remotes, err := bcs.RemotesUncached()
 		if err != nil {
 			return remotes, err
 		}
-		bc.RemotesCache.Set(remotes)
+		bcs.RemotesCache.Set(remotes)
 	}
-	return bc.RemotesCache.Value(), nil
+	return bcs.RemotesCache.Value(), nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
-	for child, parent := range bc.Config.Lineage() {
+func (bcs *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
+	for child, parent := range bcs.Config.Lineage() {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {
 			// TODO
-			err := bc.Config.RemoveParent(child)
+			err := bcs.Config.RemoveParent(child)
 			if err != nil {
 				return err
 			}
@@ -422,8 +422,8 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Branch
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (bc *BackendCommands) RepoStatus() (RepoStatus, error) {
-	output, err := bc.QueryTrim("git", "status", "--ignore-submodules")
+func (bcs *BackendCommands) RepoStatus() (RepoStatus, error) {
+	output, err := bcs.QueryTrim("git", "status", "--ignore-submodules")
 	if err != nil {
 		return RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -445,8 +445,8 @@ type RepoStatus struct {
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectory() domain.RepoRootDir {
-	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
+func (bcs *BackendCommands) RootDirectory() domain.RepoRootDir {
+	output, err := bcs.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return domain.RepoRootDir{}
 	}
@@ -454,8 +454,8 @@ func (bc *BackendCommands) RootDirectory() domain.RepoRootDir {
 }
 
 // SHAForBranch provides the SHA for the local branch with the given name.
-func (bc *BackendCommands) SHAForBranch(name domain.BranchName) (domain.SHA, error) {
-	output, err := bc.QueryTrim("git", "rev-parse", "--short", name.String())
+func (bcs *BackendCommands) SHAForBranch(name domain.BranchName) (domain.SHA, error) {
+	output, err := bcs.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
 		return domain.SHA{}, fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
@@ -464,8 +464,8 @@ func (bc *BackendCommands) SHAForBranch(name domain.BranchName) (domain.SHA, err
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (bc *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, trackingBranch domain.RemoteBranchName) (bool, error) {
-	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
+func (bcs *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, trackingBranch domain.RemoteBranchName) (bool, error) {
+	out, err := bcs.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
@@ -473,17 +473,17 @@ func (bc *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, track
 }
 
 // StashSnapshot provides the number of stashes in this repository.
-func (bc *BackendCommands) StashSnapshot() (domain.StashSnapshot, error) {
-	output, err := bc.QueryTrim("git", "stash", "list")
+func (bcs *BackendCommands) StashSnapshot() (domain.StashSnapshot, error) {
+	output, err := bcs.QueryTrim("git", "stash", "list")
 	return domain.StashSnapshot{
 		Amount: len(stringslice.Lines(output)),
 	}, err
 }
 
 // Version indicates whether the needed Git version is installed.
-func (bc *BackendCommands) Version() (major int, minor int, err error) {
+func (bcs *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
-	output, err := bc.QueryTrim("git", "version")
+	output, err := bcs.QueryTrim("git", "version")
 	if err != nil {
 		return 0, 0, fmt.Errorf(messages.GitVersionProblem, err)
 	}

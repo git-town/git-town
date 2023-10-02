@@ -7,10 +7,10 @@ type CommandsRun struct {
 	CommandsCount int
 }
 
-func (s *CommandsRun) RegisterRun() {
-	s.CommandsCount++
+func (cr *CommandsRun) RegisterRun() {
+	cr.CommandsCount++
 }
 
-func (s *CommandsRun) PrintAnalysis() {
-	fmt.Printf("Ran %d shell commands.", s.CommandsCount)
+func (cr *CommandsRun) PrintAnalysis() {
+	fmt.Printf("Ran %d shell commands.", cr.CommandsCount)
 }

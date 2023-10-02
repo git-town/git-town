@@ -19,34 +19,34 @@ func NewBranchName(id string) BranchName {
 }
 
 // IsLocal indicates whether the branch with this BranchName exists locally.
-func (b BranchName) IsLocal() bool {
-	return !strings.HasPrefix(b.id, "origin/")
+func (bn BranchName) IsLocal() bool {
+	return !strings.HasPrefix(bn.id, "origin/")
 }
 
 // LocalName provides the local version of this branch name.
-func (b BranchName) LocalName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(b.id, "origin/"))
+func (bn BranchName) LocalName() LocalBranchName {
+	return NewLocalBranchName(strings.TrimPrefix(bn.id, "origin/"))
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
-func (b BranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(b.id)
+func (bn BranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(bn.id)
 }
 
 // RemoteName provides the remote version of this branch name.
-func (b BranchName) RemoteName() RemoteBranchName {
-	if strings.HasPrefix(b.id, "origin/") {
-		return NewRemoteBranchName(b.id)
+func (bn BranchName) RemoteName() RemoteBranchName {
+	if strings.HasPrefix(bn.id, "origin/") {
+		return NewRemoteBranchName(bn.id)
 	}
-	return NewRemoteBranchName("origin/" + b.id)
+	return NewRemoteBranchName("origin/" + bn.id)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (b BranchName) String() string { return b.id }
+func (bn BranchName) String() string { return bn.id }
 
 // UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
-func (b *BranchName) UnmarshalJSON(ba []byte) error {
-	return json.Unmarshal(ba, &b.id)
+func (bn *BranchName) UnmarshalJSON(ba []byte) error {
+	return json.Unmarshal(ba, &bn.id)
 }
 
 // isValidBranchName indicates whether the given text is a valid branch name.

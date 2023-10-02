@@ -45,9 +45,9 @@ func EmptyBranchChanges() BranchChanges {
 }
 
 // UndoSteps provides the steps to undo the changes described by this BranchChanges instance.
-func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
+func (bcs BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	result := runstate.StepList{}
-	omniChangedPerennials, omniChangedFeatures := c.OmniChanged.Categorize(args.BranchTypes)
+	omniChangedPerennials, omniChangedFeatures := bcs.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
 	for _, branch := range omniChangedPerennials.BranchNames() {
@@ -68,13 +68,13 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// re-create removed omni-branches
-	for _, branch := range c.OmniRemoved.BranchNames() {
-		sha := c.OmniRemoved[branch]
+	for _, branch := range bcs.OmniRemoved.BranchNames() {
+		sha := bcs.OmniRemoved[branch]
 		result.Append(&steps.CreateBranchStep{Branch: branch, StartingPoint: sha.Location()})
 		result.Append(&steps.CreateTrackingBranchStep{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
-	inconsistentlyChangedPerennials, inconsistentChangedFeatures := c.InconsistentlyChanged.Categorize(args.BranchTypes)
+	inconsistentlyChangedPerennials, inconsistentChangedFeatures := bcs.InconsistentlyChanged.Categorize(args.BranchTypes)
 
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
@@ -103,7 +103,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// remove remotely added branches
-	for _, addedRemoteBranch := range c.RemoteAdded {
+	for _, addedRemoteBranch := range bcs.RemoteAdded {
 		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
 			result.Append(&steps.DeleteTrackingBranchStep{
 				Branch: addedRemoteBranch,
@@ -112,7 +112,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// re-create remotely removed feature branches
-	_, removedFeatureTrackingBranches := c.RemoteRemoved.Categorize(args.BranchTypes)
+	_, removedFeatureTrackingBranches := bcs.RemoteRemoved.Categorize(args.BranchTypes)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
 		result.Append(&steps.CreateRemoteBranchStep{
@@ -123,15 +123,15 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// reset locally changed branches
-	for _, localBranch := range c.LocalChanged.BranchNames() {
-		change := c.LocalChanged[localBranch]
+	for _, localBranch := range bcs.LocalChanged.BranchNames() {
+		change := bcs.LocalChanged[localBranch]
 		result.Append(&steps.CheckoutStep{Branch: localBranch})
 		result.Append(&steps.ResetCurrentBranchToSHAStep{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
 
 	// re-create locally removed branches
-	for _, removedLocalBranch := range c.LocalRemoved.BranchNames() {
-		startingPoint := c.LocalRemoved[removedLocalBranch]
+	for _, removedLocalBranch := range bcs.LocalRemoved.BranchNames() {
+		startingPoint := bcs.LocalRemoved[removedLocalBranch]
 		result.Append(&steps.CreateBranchStep{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
@@ -139,7 +139,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	}
 
 	// remove locally added branches
-	for _, addedLocalBranch := range c.LocalAdded {
+	for _, addedLocalBranch := range bcs.LocalAdded {
 		if args.FinalBranch == addedLocalBranch {
 			result.Append(&steps.CheckoutStep{Branch: args.InitialBranch})
 		}
@@ -154,7 +154,7 @@ func (c BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
-	_, remoteFeatureChanges := c.RemoteChanged.Categorize(args.BranchTypes)
+	_, remoteFeatureChanges := bcs.RemoteChanged.Categorize(args.BranchTypes)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
 		result.Append(&steps.ResetRemoteBranchToSHAStep{
@@ -179,27 +179,27 @@ type StepsArgs struct {
 	UndoablePerennialCommits []domain.SHA
 }
 
-func (c BranchChanges) String() string {
+func (bcs BranchChanges) String() string {
 	s := strings.Builder{}
 	s.WriteString("BranchChanges {")
 	s.WriteString("\n  LocalAdded: ")
-	s.WriteString(strings.Join(c.LocalAdded.Strings(), ", "))
+	s.WriteString(strings.Join(bcs.LocalAdded.Strings(), ", "))
 	s.WriteString("\n  LocalRemoved: ")
-	s.WriteString(strings.Join(c.LocalRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.LocalRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  LocalChanged: ")
-	s.WriteString(strings.Join(c.LocalChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.LocalChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  RemoteAdded: ")
-	s.WriteString(strings.Join(c.RemoteAdded.Strings(), ", "))
+	s.WriteString(strings.Join(bcs.RemoteAdded.Strings(), ", "))
 	s.WriteString("\n  RemoteRemoved: ")
-	s.WriteString(strings.Join(c.RemoteRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.RemoteRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  RemoteChanged: ")
-	s.WriteString(strings.Join(c.RemoteChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.RemoteChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  OmniRemoved: ")
-	s.WriteString(strings.Join(c.OmniRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.OmniRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  OmniChanged: ")
-	s.WriteString(strings.Join(c.OmniChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.OmniChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  InconsistentlyChanged: ")
-	s.WriteString(strings.Join(c.InconsistentlyChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(bcs.InconsistentlyChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n")
 	return s.String()
 }

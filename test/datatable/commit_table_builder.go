@@ -42,36 +42,36 @@ func NewCommitTableBuilder() CommitTableBuilder {
 }
 
 // Add registers the given commit from the given location into this table.
-func (builder *CommitTableBuilder) Add(commit git.Commit, location string) {
-	builder.commits[commit.SHA] = commit
-	commitsInBranch, exists := builder.commitsInBranch[commit.Branch]
+func (ctb *CommitTableBuilder) Add(commit git.Commit, location string) {
+	ctb.commits[commit.SHA] = commit
+	commitsInBranch, exists := ctb.commitsInBranch[commit.Branch]
 	if exists {
-		builder.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
+		ctb.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
 	} else {
-		builder.commitsInBranch[commit.Branch] = helpers.NewOrderedSet(commit.SHA)
+		ctb.commitsInBranch[commit.Branch] = helpers.NewOrderedSet(commit.SHA)
 	}
 	locationKey := commit.SHA.String() + commit.Branch.String()
-	locations, exists := builder.locations[locationKey]
+	locations, exists := ctb.locations[locationKey]
 	if exists {
-		builder.locations[locationKey] = locations.Add(location)
+		ctb.locations[locationKey] = locations.Add(location)
 	} else {
-		builder.locations[locationKey] = helpers.NewOrderedSet(location)
+		ctb.locations[locationKey] = helpers.NewOrderedSet(location)
 	}
 }
 
 // AddMany registers the given commits from the given location into this table.
-func (builder *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
+func (ctb *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
 	for _, commit := range commits {
-		builder.Add(commit, location)
+		ctb.Add(commit, location)
 	}
 }
 
 // branches provides the names of the all branches known to this CommitTableBuilder,
 // sorted alphabetically, with the main branch first.
-func (builder *CommitTableBuilder) branches() domain.LocalBranchNames {
-	result := make(domain.LocalBranchNames, 0, len(builder.commitsInBranch))
+func (ctb *CommitTableBuilder) branches() domain.LocalBranchNames {
+	result := make(domain.LocalBranchNames, 0, len(ctb.commitsInBranch))
 	hasMain := false
-	for branch := range builder.commitsInBranch {
+	for branch := range ctb.commitsInBranch {
 		if branch == domain.NewLocalBranchName("main") {
 			hasMain = true
 		} else {
@@ -86,15 +86,15 @@ func (builder *CommitTableBuilder) branches() domain.LocalBranchNames {
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (builder *CommitTableBuilder) Table(fields []string) DataTable {
+func (ctb *CommitTableBuilder) Table(fields []string) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
 	lastBranch := domain.LocalBranchName{}
 	lastLocation := ""
-	for _, branch := range builder.branches() {
-		SHAs := builder.commitsInBranch[branch]
+	for _, branch := range ctb.branches() {
+		SHAs := ctb.commitsInBranch[branch]
 		for _, SHA := range SHAs.Elements() {
-			commit := builder.commits[SHA]
+			commit := ctb.commits[SHA]
 			row := []string{}
 			for _, field := range fields {
 				switch field {
@@ -105,7 +105,7 @@ func (builder *CommitTableBuilder) Table(fields []string) DataTable {
 						row = append(row, branch.String())
 					}
 				case "LOCATION":
-					locations := builder.locations[SHA.String()+branch.String()].Join(", ")
+					locations := ctb.locations[SHA.String()+branch.String()].Join(", ")
 					if locations == lastLocation && branch == lastBranch {
 						row = append(row, "")
 					} else {

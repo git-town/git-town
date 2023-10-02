@@ -11,7 +11,7 @@ type SyncStrategy struct {
 	name string
 }
 
-func (s SyncStrategy) String() string { return s.name }
+func (ss SyncStrategy) String() string { return ss.name }
 
 var (
 	SyncStrategyMerge  = SyncStrategy{"merge"}  //nolint:gochecknoglobals

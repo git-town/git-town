@@ -61,32 +61,32 @@ type ScenarioState struct {
 }
 
 // Reset restores the null value of this ScenarioState.
-func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	state.fixture = gitEnv
-	state.initialLocalBranches = domain.NewLocalBranchNames("main")
-	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
-	state.initialDevSHAs = map[string]domain.SHA{}
-	state.initialOriginSHAs = map[string]domain.SHA{}
-	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
-	state.initialCurrentBranch = domain.LocalBranchName{}
-	state.insideGitRepo = true
-	state.runOutput = ""
-	state.runExitCode = 0
-	state.runExitCodeChecked = false
-	state.uncommittedFileName = ""
-	state.uncommittedContent = ""
+func (ss *ScenarioState) Reset(gitEnv fixture.Fixture) {
+	ss.fixture = gitEnv
+	ss.initialLocalBranches = domain.NewLocalBranchNames("main")
+	ss.initialRemoteBranches = domain.NewLocalBranchNames("main")
+	ss.initialDevSHAs = map[string]domain.SHA{}
+	ss.initialOriginSHAs = map[string]domain.SHA{}
+	ss.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	ss.initialCurrentBranch = domain.LocalBranchName{}
+	ss.insideGitRepo = true
+	ss.runOutput = ""
+	ss.runExitCode = 0
+	ss.runExitCodeChecked = false
+	ss.uncommittedFileName = ""
+	ss.uncommittedContent = ""
 }
 
 // InitialBranches provides the branches in this Scenario before the WHEN steps ran.
-func (state *ScenarioState) InitialBranches() datatable.DataTable {
+func (ss *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	state.initialLocalBranches.Sort()
-	state.initialLocalBranches = slice.Hoist(state.initialLocalBranches, domain.NewLocalBranchName("main"))
-	state.initialRemoteBranches.Sort()
-	state.initialRemoteBranches = slice.Hoist(state.initialRemoteBranches, domain.NewLocalBranchName("main"))
-	localBranchesJoined := state.initialLocalBranches.Join(", ")
-	remoteBranchesJoined := state.initialRemoteBranches.Join(", ")
+	ss.initialLocalBranches.Sort()
+	ss.initialLocalBranches = slice.Hoist(ss.initialLocalBranches, domain.NewLocalBranchName("main"))
+	ss.initialRemoteBranches.Sort()
+	ss.initialRemoteBranches = slice.Hoist(ss.initialRemoteBranches, domain.NewLocalBranchName("main"))
+	localBranchesJoined := ss.initialLocalBranches.Join(", ")
+	remoteBranchesJoined := ss.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {
@@ -100,9 +100,9 @@ func (state *ScenarioState) InitialBranches() datatable.DataTable {
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (state *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
+func (ss *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable := state.fixture.CommitTable(fields)
+	commitTable := ss.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
