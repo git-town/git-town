@@ -1455,10 +1455,10 @@ func TestChanges(t *testing.T) {
 				LocalAdded:   domain.LocalBranchNames{},
 				LocalRemoved: domain.LocalBranchesSHAs{},
 				LocalChanged: domain.LocalBranchChange{},
-				RemoteAdded: []domain.RemoteBranchName{ // TODO: replace with domain.RemoteBranchNames everywhere
+				RemoteAdded: []domain.RemoteBranchName{
 					domain.NewRemoteBranchName("upstream/main"),
 				},
-				RemoteRemoved: domain.RemoteBranchesSHAs{}, // TODO: replace with domain.RemoteBranchesSHAs everywhere
+				RemoteRemoved: domain.RemoteBranchesSHAs{},
 				RemoteChanged: map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
 				OmniRemoved:   domain.LocalBranchesSHAs{},
 				OmniChanged: domain.LocalBranchChange{
