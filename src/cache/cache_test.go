@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBoolCache(t *testing.T) {
@@ -32,5 +31,5 @@ func TestStringSliceCache(t *testing.T) {
 	test.False(t, ssc.Initialized())
 	ssc.Set([]string{"foo"})
 	test.True(t, ssc.Initialized())
-	assert.Equal(t, []string{"foo"}, ssc.Value())
+	test.Eq(t, []string{"foo"}, ssc.Value())
 }
