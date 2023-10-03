@@ -212,7 +212,14 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
 			parent := config.lineage.Parent(branch.LocalName)
-			deleteBranchSteps(&list, branch, parent, config.lineage)
+			deleteBranchSteps(deleteBranchStepsArgs{
+				branch:      branch,
+				branchTypes: config.branches.Types,
+				lineage:     config.lineage,
+				list:        &list,
+				mainBranch:  config.mainBranch,
+				parent:      parent,
+			})
 		} else {
 			syncBranchSteps(&list, syncBranchStepsArgs{
 				branch:             branch,
@@ -243,14 +250,68 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	return list.Result()
 }
 
-func deleteBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, parent domain.LocalBranchName, lineage config.Lineage) {
-	list.Add(&steps.CheckoutStep{Branch: parent})
-	list.Add(&steps.DeleteLocalBranchStep{
-		Branch: branch.LocalName,
-		Parent: parent.Location(),
+func deleteBranchSteps(args deleteBranchStepsArgs) {
+	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
+		deleteFeatureBranchSteps(deleteFeatureBranchStepsArgs{
+			branch:  args.branch,
+			lineage: args.lineage,
+			list:    args.list,
+			parent:  args.parent,
+		})
+	} else if args.branchTypes.IsPerennialBranch(args.branch.LocalName) {
+		deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
+			branch:     args.branch,
+			lineage:    args.lineage,
+			list:       args.list,
+			mainBranch: args.mainBranch,
+		})
+	}
+}
+
+type deleteBranchStepsArgs struct {
+	branch      domain.BranchInfo
+	branchTypes domain.BranchTypes
+	lineage     config.Lineage
+	list        *runstate.StepListBuilder
+	parent      domain.LocalBranchName
+	mainBranch  domain.LocalBranchName
+}
+
+func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
+	removeBranchFromLineage(args.list, args.branch.LocalName, args.parent, args.lineage)
+	args.list.Add(&steps.CheckoutStep{Branch: args.parent})
+	args.list.Add(&steps.DeleteLocalBranchStep{
+		Branch: args.branch.LocalName,
+		Force:  false,
+		Parent: args.parent.Location(),
 	})
-	removeBranchFromLineage(list, branch.LocalName, parent, lineage)
-	list.Add(&steps.AddMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
+	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+}
+
+type deleteFeatureBranchStepsArgs struct {
+	branch  domain.BranchInfo
+	lineage config.Lineage
+	list    *runstate.StepListBuilder
+	parent  domain.LocalBranchName
+}
+
+func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) {
+	removeBranchFromLineage(args.list, args.branch.LocalName, args.mainBranch, args.lineage)
+	args.list.Add(&steps.RemoveFromPerennialBranchesStep{Branch: args.branch.LocalName})
+	args.list.Add(&steps.CheckoutStep{Branch: args.mainBranch})
+	args.list.Add(&steps.DeleteLocalBranchStep{
+		Branch: args.branch.LocalName,
+		Force:  false,
+		Parent: domain.Location(args.mainBranch),
+	})
+	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+}
+
+type deletePerennialBranchStepsArgs struct {
+	list       *runstate.StepListBuilder
+	branch     domain.BranchInfo
+	mainBranch domain.LocalBranchName
+	lineage    config.Lineage
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.

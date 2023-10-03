@@ -258,7 +258,8 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
 func (gt *GitTown) RemoveParent(branch domain.LocalBranchName) error {
-	return gt.RemoveLocalConfigValue(NewParentKey(branch))
+	_ = gt.RemoveLocalConfigValue(NewParentKey(branch))
+	return nil
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.

@@ -192,6 +192,7 @@ func removeBranchFromLineage(list *runstate.StepListBuilder, branch, parent doma
 	childBranches := lineage.Children(branch)
 	for _, child := range childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: parent})
+		list.Add(&steps.PrintMessageStep{Message: fmt.Sprintf(messages.BranchParentChanged, child, parent)})
 	}
 	list.Add(&steps.DeleteParentBranchStep{Branch: branch})
 }

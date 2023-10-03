@@ -17,6 +17,10 @@ Feature: sync perennial branch whose tracking branch is gone
       |        | git checkout main        |
       | main   | git branch -D old        |
       |        | git push --tags          |
+    And it prints:
+      """
+      branch "old" is no longer perennial
+      """
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES     |
