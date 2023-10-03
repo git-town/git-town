@@ -51,6 +51,13 @@ func (l Lineage) BranchNames() domain.LocalBranchNames {
 	return result
 }
 
+// ChangeParent provides a new Lineage instance with the parent of the given child set to the given value.
+func (l Lineage) ChangeParent(child, parent domain.LocalBranchName) Lineage {
+	result := maps.Clone(l)
+	result[child] = parent
+	return result
+}
+
 // Children provides the names of all branches that have the given branch as their parent.
 func (l Lineage) Children(branch domain.LocalBranchName) domain.LocalBranchNames {
 	result := domain.LocalBranchNames{}

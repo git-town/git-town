@@ -250,16 +250,16 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	return list.Result()
 }
 
-func deleteBranchSteps(args deleteBranchStepsArgs) {
+func deleteBranchSteps(args deleteBranchStepsArgs) config.Lineage {
 	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
-		deleteFeatureBranchSteps(deleteFeatureBranchStepsArgs{
+		return deleteFeatureBranchSteps(deleteFeatureBranchStepsArgs{
 			branch:  args.branch,
 			lineage: args.lineage,
 			list:    args.list,
 			parent:  args.parent,
 		})
 	} else if args.branchTypes.IsPerennialBranch(args.branch.LocalName) {
-		deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
+		return deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
 			branch:     args.branch,
 			lineage:    args.lineage,
 			list:       args.list,
@@ -278,7 +278,6 @@ type deleteBranchStepsArgs struct {
 }
 
 func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
-	removeBranchFromLineage(args.list, args.branch.LocalName, args.parent, args.lineage)
 	args.list.Add(&steps.CheckoutStep{Branch: args.parent})
 	args.list.Add(&steps.DeleteLocalBranchStep{
 		Branch: args.branch.LocalName,
@@ -286,6 +285,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 		Parent: args.parent.Location(),
 	})
 	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+	return removeBranchFromLineage(args.list, args.branch.LocalName, args.parent, args.lineage)
 }
 
 type deleteFeatureBranchStepsArgs struct {

@@ -188,11 +188,12 @@ func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.S
 	removeBranchFromLineage(list, config.targetBranch.LocalName, config.targetBranchParent(), config.lineage)
 }
 
-func removeBranchFromLineage(list *runstate.StepListBuilder, branch, parent domain.LocalBranchName, lineage config.Lineage) {
+func removeBranchFromLineage(list *runstate.StepListBuilder, branch, parent domain.LocalBranchName, lineage config.Lineage) config.Lineage {
 	childBranches := lineage.Children(branch)
 	for _, child := range childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 		list.Add(&steps.PrintMessageStep{Message: fmt.Sprintf(messages.BranchParentChanged, child, parent)})
+		lineage = lineage.ChangeParent(child, parent)
 	}
 	list.Add(&steps.DeleteParentBranchStep{Branch: branch})
 }
