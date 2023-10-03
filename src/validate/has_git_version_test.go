@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/validate"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestIsAcceptableGitVersion(t *testing.T) {
@@ -21,6 +21,6 @@ func TestIsAcceptableGitVersion(t *testing.T) {
 	}
 	for _, tt := range tests {
 		have := validate.IsAcceptableGitVersion(tt.major, tt.minor)
-		test.EqOp(t, tt.want, have)
+		must.EqOp(t, tt.want, have)
 	}
 }

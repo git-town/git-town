@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestRepoRootDir(t *testing.T) {
@@ -19,7 +19,7 @@ func TestRepoRootDir(t *testing.T) {
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
 			have := rootDir.IsEmpty()
-			test.EqOp(t, want, have)
+			must.EqOp(t, want, have)
 		}
 	})
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/envvars"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestPrependPath(t *testing.T) {
@@ -23,7 +23,7 @@ func TestPrependPath(t *testing.T) {
 			want = []string{"ONE=1", "PATH=gamma:alpha:beta", "THREE=3"}
 		}
 		have := envvars.PrependPath(give, "gamma")
-		test.Eq(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("does not contain the given path", func(t *testing.T) {
@@ -31,6 +31,6 @@ func TestPrependPath(t *testing.T) {
 		give := []string{"ONE=1", "TWO=2"}
 		have := envvars.PrependPath(give, "alpha")
 		want := []string{"ONE=1", "TWO=2", "PATH=alpha"}
-		test.Eq(t, want, have)
+		must.Eq(t, want, have)
 	})
 }

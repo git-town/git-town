@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestSHA(t *testing.T) {
@@ -17,12 +17,12 @@ func TestSHA(t *testing.T) {
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
 			sha := domain.SHA{}
-			test.True(t, sha.IsEmpty())
+			must.True(t, sha.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
 			t.Parallel()
 			sha := domain.NewSHA("123456")
-			test.False(t, sha.IsEmpty())
+			must.False(t, sha.IsEmpty())
 		})
 	})
 
@@ -30,9 +30,9 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		sha := domain.NewSHA("123456")
 		have, err := json.MarshalIndent(sha, "", "  ")
-		test.NoError(t, err)
+		must.NoError(t, err)
 		want := `"123456"`
-		test.EqOp(t, want, string(have))
+		must.EqOp(t, want, string(have))
 	})
 
 	t.Run("NewSHA and String", func(t *testing.T) {
@@ -41,7 +41,7 @@ func TestSHA(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
 			sha := domain.NewSHA(text)
-			test.EqOp(t, text, sha.String())
+			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
@@ -72,14 +72,14 @@ func TestSHA(t *testing.T) {
 			sha := domain.NewSHA("123456789abcdef")
 			have := sha.TruncateTo(8)
 			want := domain.NewSHA("12345678")
-			test.EqOp(t, want, have)
+			must.EqOp(t, want, have)
 		})
 		t.Run("SHA is shorter than the new length", func(t *testing.T) {
 			t.Parallel()
 			sha := domain.NewSHA("123456789")
 			have := sha.TruncateTo(12)
 			want := domain.NewSHA("123456789")
-			test.EqOp(t, want, have)
+			must.EqOp(t, want, have)
 		})
 	})
 
@@ -88,8 +88,8 @@ func TestSHA(t *testing.T) {
 		give := `"123456"`
 		have := domain.SHA{}
 		err := json.Unmarshal([]byte(give), &have)
-		test.NoError(t, err)
+		must.NoError(t, err)
 		want := domain.NewSHA("123456")
-		test.EqOp(t, want, have)
+		must.EqOp(t, want, have)
 	})
 }

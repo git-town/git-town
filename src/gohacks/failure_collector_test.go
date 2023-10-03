@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,11 +18,11 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.True(t, fc.Bool(true, nil))
-			test.False(t, fc.Bool(false, nil))
+			must.True(t, fc.Bool(true, nil))
+			must.False(t, fc.Bool(false, nil))
 			err := errors.New("test error")
-			test.True(t, fc.Bool(true, err))
-			test.False(t, fc.Bool(false, err))
+			must.True(t, fc.Bool(true, err))
+			must.False(t, fc.Bool(false, err))
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
@@ -30,7 +30,7 @@ func TestCollector(t *testing.T) {
 			fc := gohacks.FailureCollector{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.Bool(true, errors.New("first"))
 			fc.Bool(false, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -58,10 +58,10 @@ func TestCollector(t *testing.T) {
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)
-			test.Eq(t, syncStatuses, have)
+			must.Eq(t, syncStatuses, have)
 			err := errors.New("test error")
 			have = fc.BranchesSyncStatus(syncStatuses, err)
-			test.Eq(t, syncStatuses, have)
+			must.Eq(t, syncStatuses, have)
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
@@ -69,7 +69,7 @@ func TestCollector(t *testing.T) {
 			fc := gohacks.FailureCollector{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.Bool(true, errors.New("first"))
 			fc.Bool(false, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -81,16 +81,16 @@ func TestCollector(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			fc := gohacks.FailureCollector{}
 			fc.Check(nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.Check(errors.New("first"))
 			fc.Check(errors.New("second"))
 			assert.Error(t, fc.Err, "first")
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
 			fc := gohacks.FailureCollector{}
-			test.False(t, fc.Check(nil))
-			test.True(t, fc.Check(errors.New("")))
-			test.True(t, fc.Check(nil))
+			must.False(t, fc.Check(nil))
+			must.True(t, fc.Check(errors.New("")))
+			must.True(t, fc.Check(nil))
 		})
 	})
 
@@ -108,14 +108,14 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.EqOp(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
-			test.EqOp(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
+			must.EqOp(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
+			must.EqOp(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
 			fc.Hosting(config.HostingNone, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.Hosting(config.HostingGitHub, errors.New("first"))
 			fc.Hosting(config.HostingGitHub, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -127,14 +127,14 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.EqOp(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
-			test.EqOp(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
+			must.EqOp(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
+			must.EqOp(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -146,14 +146,14 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given string value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.EqOp(t, "alpha", fc.String("alpha", nil))
-			test.EqOp(t, "beta", fc.String("beta", errors.New("")))
+			must.EqOp(t, "alpha", fc.String("alpha", nil))
+			must.EqOp(t, "beta", fc.String("beta", errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
 			fc.String("", nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.String("", errors.New("first"))
 			fc.String("", errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -165,14 +165,14 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given string slice", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
-			test.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
+			must.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
+			must.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
 			fc.Strings([]string{}, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.Strings([]string{}, errors.New("first"))
 			fc.Strings([]string{}, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
@@ -184,14 +184,14 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			test.EqOp(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
-			test.EqOp(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
+			must.EqOp(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
+			must.EqOp(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
 			fc.SyncStrategy(config.SyncStrategyMerge, nil)
-			test.Nil(t, fc.Err)
+			must.Nil(t, fc.Err)
 			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
 			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("second"))
 			assert.Error(t, fc.Err, "first")

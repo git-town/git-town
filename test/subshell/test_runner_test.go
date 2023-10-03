@@ -7,7 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/test/ostools"
 	"github.com/git-town/git-town/v9/test/subshell"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +19,7 @@ func TestMockingRunner(t *testing.T) {
 		workDir := t.TempDir()
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
-		test.NoError(t, err)
+		must.NoError(t, err)
 		runner := subshell.TestRunner{
 			WorkingDir: devDir,
 			HomeDir:    workDir,
@@ -28,9 +28,9 @@ func TestMockingRunner(t *testing.T) {
 		runner.MockCommand("foo")
 		// run a program that calls the mocked command
 		res, err := runner.Query("bash", "-c", "foo bar")
-		test.NoError(t, err)
+		must.NoError(t, err)
 		// verify that it called our overridden "foo" command
-		test.EqOp(t, "foo called with: bar", res)
+		must.EqOp(t, "foo called with: bar", res)
 	})
 
 	t.Run("Run", func(t *testing.T) {
@@ -41,8 +41,8 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		res, err := runner.Query("echo", "hello", "world")
-		test.NoError(t, err)
-		test.EqOp(t, "hello world", res)
+		must.NoError(t, err)
+		must.EqOp(t, "hello world", res)
 	})
 
 	t.Run("QueryString", func(t *testing.T) {
@@ -54,9 +54,9 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		_, err := runner.QueryString("touch first")
-		test.NoError(t, err)
+		must.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
-		test.False(t, os.IsNotExist(err))
+		must.False(t, os.IsNotExist(err))
 	})
 
 	t.Run("QueryWith", func(t *testing.T) {
@@ -65,7 +65,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			test.NoError(t, err)
+			must.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -74,8 +74,8 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
-			test.NoError(t, err)
-			test.EqOp(t, ostools.ScriptName("list-dir"), res)
+			must.NoError(t, err)
+			must.EqOp(t, ostools.ScriptName("list-dir"), res)
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -83,7 +83,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			test.NoError(t, err)
+			must.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -93,7 +93,7 @@ func TestMockingRunner(t *testing.T) {
 			ostools.CreateInputTool(toolPath)
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
-			test.NoError(t, err)
+			must.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
 		})
 	})
@@ -108,9 +108,9 @@ func TestMockingRunner(t *testing.T) {
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
-			test.EqOp(t, "hello", output)
-			test.EqOp(t, 0, exitCode)
-			test.NoError(t, err)
+			must.EqOp(t, "hello", output)
+			must.EqOp(t, 0, exitCode)
+			must.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
 			r := subshell.TestRunner{
@@ -120,9 +120,9 @@ func TestMockingRunner(t *testing.T) {
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
-			test.EqOp(t, "hello", output)
-			test.EqOp(t, 1, exitCode)
-			test.NoError(t, err)
+			must.EqOp(t, "hello", output)
+			must.EqOp(t, 1, exitCode)
+			must.NoError(t, err)
 		})
 	})
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewBitbucketConnector(t *testing.T) {
@@ -19,14 +19,14 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "",
 			Hostname:     "bitbucket.org",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		test.EqOp(t, wantConfig, have.CommonConfig)
+		must.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -36,14 +36,14 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		test.EqOp(t, wantConfig, have.CommonConfig)
+		must.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -53,8 +53,8 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -65,7 +65,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       originURL,
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 }

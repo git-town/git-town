@@ -4,5 +4,5 @@ import "testing"
 
 func TestBranchSpans(t *testing.T) {
 	t.Parallel()
-	// BranchSpans are testing in branch_changes_test.go.
+	// BranchSpans are testing in branch_changes_must.go.
 }

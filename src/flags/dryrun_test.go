@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +14,6 @@ func TestDryRun(t *testing.T) {
 	addFlag, readFlag := flags.DryRun()
 	addFlag(&cmd)
 	err := cmd.ParseFlags([]string{"--dry-run"})
-	test.NoError(t, err)
-	test.EqOp(t, true, readFlag(&cmd))
+	must.NoError(t, err)
+	must.EqOp(t, true, readFlag(&cmd))
 }

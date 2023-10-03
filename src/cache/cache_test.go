@@ -4,32 +4,32 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/cache"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestBoolCache(t *testing.T) {
 	t.Parallel()
 	sc := cache.Bool{}
-	test.False(t, sc.Initialized())
+	must.False(t, sc.Initialized())
 	sc.Set(true)
-	test.True(t, sc.Initialized())
-	test.True(t, sc.Value())
+	must.True(t, sc.Initialized())
+	must.True(t, sc.Value())
 }
 
 func TestStringCache(t *testing.T) {
 	t.Parallel()
 	sc := cache.String{}
-	test.False(t, sc.Initialized())
+	must.False(t, sc.Initialized())
 	sc.Set("foo")
-	test.True(t, sc.Initialized())
-	test.EqOp(t, "foo", sc.Value())
+	must.True(t, sc.Initialized())
+	must.EqOp(t, "foo", sc.Value())
 }
 
 func TestStringSliceCache(t *testing.T) {
 	t.Parallel()
 	ssc := cache.Strings{}
-	test.False(t, ssc.Initialized())
+	must.False(t, ssc.Initialized())
 	ssc.Set([]string{"foo"})
-	test.True(t, ssc.Initialized())
-	test.Eq(t, []string{"foo"}, ssc.Value())
+	must.True(t, ssc.Initialized())
+	must.Eq(t, []string{"foo"}, ssc.Value())
 }

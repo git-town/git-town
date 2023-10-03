@@ -1,5 +1,7 @@
+// Code generated via scripts/generate.sh. DO NOT EDIT.
+
 // Package test provides a modern generic testing assertions library.
-package test
+package must
 
 import (
 	"strings"

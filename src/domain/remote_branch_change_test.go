@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestRemoteBranchChange(t *testing.T) {
@@ -33,13 +33,13 @@ func TestRemoteBranchChange(t *testing.T) {
 				After:  domain.NewSHA("444444"),
 			},
 		}
-		test.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.RemoteBranchChange{
 			domain.NewRemoteBranchName("origin/branch-1"): {
 				Before: domain.NewSHA("111111"),
 				After:  domain.NewSHA("222222"),
 			},
 		}
-		test.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, haveFeatures)
 	})
 }

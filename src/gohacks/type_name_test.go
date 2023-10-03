@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestTypeName(t *testing.T) {
@@ -20,6 +20,6 @@ func TestTypeName(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := gohacks.TypeName(give)
-		test.EqOp(t, want, have)
+		must.EqOp(t, want, have)
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewHostingService(t *testing.T) {
@@ -21,8 +21,8 @@ func TestNewHostingService(t *testing.T) {
 		}
 		for give, want := range tests {
 			have, err := config.NewHosting(give)
-			test.NoError(t, err)
-			test.EqOp(t, want, have)
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
 		}
 	})
 
@@ -30,14 +30,14 @@ func TestNewHostingService(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"github", "GitHub", "GITHUB"} {
 			have, err := config.NewHosting(give)
-			test.NoError(t, err)
-			test.EqOp(t, config.HostingGitHub, have)
+			must.NoError(t, err)
+			must.EqOp(t, config.HostingGitHub, have)
 		}
 	})
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.NewHosting("zonk")
-		test.Error(t, err)
+		must.Error(t, err)
 	})
 }

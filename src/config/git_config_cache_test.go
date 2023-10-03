@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestGitConfigCache(t *testing.T) {
@@ -21,8 +21,8 @@ func TestGitConfigCache(t *testing.T) {
 		cloned := original.Clone()
 		cloned[alpha] = "new A"
 		cloned[beta] = "new B"
-		test.EqOp(t, "A", original[alpha])
-		test.EqOp(t, "B", original[beta])
+		must.EqOp(t, "A", original[alpha])
+		must.EqOp(t, "B", original[beta])
 	})
 
 	t.Run("KeysMatching", func(t *testing.T) {
@@ -37,6 +37,6 @@ func TestGitConfigCache(t *testing.T) {
 			{"key1"},
 			{"key2"},
 		}
-		test.Eq(t, want, have)
+		must.Eq(t, want, have)
 	})
 }

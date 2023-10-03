@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/subshell"
 	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,8 +37,8 @@ func TestBackendCommands(t *testing.T) {
 			Message:     "second commit",
 		})
 		authors, err := runtime.Backend.BranchAuthors(branch, initial)
-		test.NoError(t, err)
-		test.Eq(t, []string{"user <email@example.com>"}, authors)
+		must.NoError(t, err)
+		must.Eq(t, []string{"user <email@example.com>"}, authors)
 	})
 
 	t.Run("CheckoutBranch", func(t *testing.T) {
@@ -47,12 +47,12 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
 		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
-		test.NoError(t, err)
-		test.EqOp(t, domain.NewLocalBranchName("branch1"), currentBranch)
+		must.NoError(t, err)
+		must.EqOp(t, domain.NewLocalBranchName("branch1"), currentBranch)
 		runtime.CheckoutBranch(initial)
 		currentBranch, err = runtime.CurrentBranch()
-		test.NoError(t, err)
-		test.EqOp(t, initial, currentBranch)
+		must.NoError(t, err)
+		must.EqOp(t, initial, currentBranch)
 	})
 
 	t.Run("CommitsInBranch", func(t *testing.T) {
@@ -72,16 +72,16 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
-			test.NoError(t, err)
-			test.EqOp(t, 2, len(commits))
+			must.NoError(t, err)
+			must.EqOp(t, 2, len(commits))
 		})
 		t.Run("feature branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
-			test.NoError(t, err)
-			test.EqOp(t, 0, len(commits))
+			must.NoError(t, err)
+			must.EqOp(t, 0, len(commits))
 		})
 		t.Run("main branch contains commits", func(t *testing.T) {
 			t.Parallel()
@@ -97,15 +97,15 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
-			test.NoError(t, err)
-			test.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
+			must.NoError(t, err)
+			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
-			test.NoError(t, err)
-			test.EqOp(t, 1, len(commits)) // the initial commit
+			must.NoError(t, err)
+			must.EqOp(t, 1, len(commits)) // the initial commit
 		})
 	})
 
@@ -113,13 +113,13 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
-		test.NoError(t, err)
+		must.NoError(t, err)
 		runtime.Config.Reload()
-		test.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
+		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
 		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")
-		test.Eq(t, lineageWant, lineageHave)
+		must.Eq(t, lineageWant, lineageHave)
 	})
 
 	t.Run("CurrentBranch", func(t *testing.T) {
@@ -129,12 +129,12 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("b1"))
 		branch, err := runtime.Backend.CurrentBranch()
-		test.NoError(t, err)
-		test.EqOp(t, domain.NewLocalBranchName("b1"), branch)
+		must.NoError(t, err)
+		must.EqOp(t, domain.NewLocalBranchName("b1"), branch)
 		runtime.CheckoutBranch(initial)
 		branch, err = runtime.Backend.CurrentBranch()
-		test.NoError(t, err)
-		test.EqOp(t, initial, branch)
+		must.NoError(t, err)
+		must.EqOp(t, initial, branch)
 	})
 
 	t.Run("HasLocalBranch", func(t *testing.T) {
@@ -144,9 +144,9 @@ func TestBackendCommands(t *testing.T) {
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
 		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
-		test.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1")))
-		test.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2")))
-		test.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
+		must.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1")))
+		must.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2")))
+		must.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
 	})
 
 	t.Run("RepoStatus", func(t *testing.T) {
@@ -156,16 +156,16 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				have, err := runtime.Backend.RepoStatus()
-				test.NoError(t, err)
-				test.False(t, have.OpenChanges)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
 			})
 			t.Run("has open changes", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				runtime.CreateFile("foo", "bar")
 				have, err := runtime.Backend.RepoStatus()
-				test.NoError(t, err)
-				test.True(t, have.OpenChanges)
+				must.NoError(t, err)
+				must.True(t, have.OpenChanges)
 			})
 			t.Run("during rebase", func(t *testing.T) {
 				t.Parallel()
@@ -188,8 +188,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				test.NoError(t, err)
-				test.False(t, have.OpenChanges)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
 			})
 			t.Run("during merge conflict", func(t *testing.T) {
 				t.Parallel()
@@ -212,8 +212,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.MergeBranch(branch1) // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				test.NoError(t, err)
-				test.False(t, have.OpenChanges)
+				must.NoError(t, err)
+				must.False(t, have.OpenChanges)
 			})
 			t.Run("unstashed conflicting changes", func(t *testing.T) {
 				t.Parallel()
@@ -228,8 +228,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.UnstashOpenFiles() // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				test.NoError(t, err)
-				test.True(t, have.OpenChanges)
+				must.NoError(t, err)
+				must.True(t, have.OpenChanges)
 			})
 		})
 
@@ -237,8 +237,8 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have, err := runtime.Backend.RepoStatus()
-			test.NoError(t, err)
-			test.False(t, have.RebaseInProgress)
+			must.NoError(t, err)
+			must.False(t, have.RebaseInProgress)
 		})
 	})
 
@@ -253,7 +253,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				test.EqOp(t, domain.NewLocalBranchName("branch-1"), currentBranch)
+				must.EqOp(t, domain.NewLocalBranchName("branch-1"), currentBranch)
 			})
 			t.Run("marker is at the middle entry", func(t *testing.T) {
 				t.Parallel()
@@ -262,7 +262,7 @@ func TestBackendCommands(t *testing.T) {
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				test.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
+				must.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 			})
 			t.Run("marker is at the last entry", func(t *testing.T) {
 				t.Parallel()
@@ -271,7 +271,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
 * branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				test.EqOp(t, domain.NewLocalBranchName("branch-3"), currentBranch)
+				must.EqOp(t, domain.NewLocalBranchName("branch-3"), currentBranch)
 			})
 		})
 
@@ -292,7 +292,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
@@ -310,7 +310,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
@@ -328,7 +328,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
@@ -346,7 +346,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("remote-only branch", func(t *testing.T) {
@@ -363,7 +363,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("local-only branch", func(t *testing.T) {
@@ -379,7 +379,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
@@ -395,7 +395,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 		})
 
@@ -422,7 +422,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
-				test.Eq(t, want, have)
+				must.Eq(t, want, have)
 			})
 		})
 
@@ -477,8 +477,8 @@ func TestBackendCommands(t *testing.T) {
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			test.Eq(t, want, have)
-			test.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
+			must.Eq(t, want, have)
+			must.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 		})
 	})
 
@@ -490,7 +490,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature1"))
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature2"))
 		have := runtime.Backend.PreviouslyCheckedOutBranch()
-		test.EqOp(t, domain.NewLocalBranchName("feature1"), have)
+		must.EqOp(t, domain.NewLocalBranchName("feature1"), have)
 	})
 
 	t.Run("Remotes", func(t *testing.T) {
@@ -499,8 +499,8 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		runtime.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
-		test.NoError(t, err)
-		test.Eq(t, domain.Remotes{domain.OriginRemote}, remotes)
+		must.NoError(t, err)
+		must.Eq(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
 	t.Run("RootDirectory", func(t *testing.T) {
@@ -509,7 +509,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have := runtime.BackendCommands.RootDirectory()
-			test.False(t, have.IsEmpty())
+			must.False(t, have.IsEmpty())
 		})
 		t.Run("outside a Git repo", func(t *testing.T) {
 			t.Parallel()
@@ -543,8 +543,8 @@ func TestBackendCommands(t *testing.T) {
 			want := domain.StashSnapshot{
 				Amount: 2,
 			}
-			test.NoError(t, err)
-			test.EqOp(t, want, have)
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
 		})
 		t.Run("no stash entries", func(t *testing.T) {
 			t.Parallel()
@@ -553,8 +553,8 @@ func TestBackendCommands(t *testing.T) {
 			want := domain.StashSnapshot{
 				Amount: 0,
 			}
-			test.NoError(t, err)
-			test.EqOp(t, want, have)
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
 		})
 	})
 }

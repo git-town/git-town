@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestGitConfig(t *testing.T) {
@@ -23,7 +23,7 @@ func TestGitConfig(t *testing.T) {
 		clone := original.Clone()
 		clone.Global[config.KeyOffline] = "0"
 		clone.Local[config.KeyMainBranch] = "dev"
-		test.EqOp(t, "1", original.Global[config.KeyOffline])
-		test.EqOp(t, "main", original.Local[config.KeyMainBranch])
+		must.EqOp(t, "1", original.Global[config.KeyOffline])
+		must.EqOp(t, "main", original.Local[config.KeyMainBranch])
 	})
 }

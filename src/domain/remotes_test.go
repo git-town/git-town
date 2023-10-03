@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestRemotes(t *testing.T) {
@@ -15,12 +15,12 @@ func TestRemotes(t *testing.T) {
 		t.Run("origin remote exists", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.Remotes{domain.OriginRemote}
-			test.True(t, remotes.HasOrigin())
+			must.True(t, remotes.HasOrigin())
 		})
 		t.Run("origin remote does not exist", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.NewRemotes("foo")
-			test.False(t, remotes.HasOrigin())
+			must.False(t, remotes.HasOrigin())
 		})
 	})
 
@@ -29,12 +29,12 @@ func TestRemotes(t *testing.T) {
 		t.Run("upstream remote exists", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.Remotes{domain.UpstreamRemote}
-			test.True(t, remotes.HasUpstream())
+			must.True(t, remotes.HasUpstream())
 		})
 		t.Run("upstream remote does not exist", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.NewRemotes("foo")
-			test.False(t, remotes.HasUpstream())
+			must.False(t, remotes.HasUpstream())
 		})
 	})
 }

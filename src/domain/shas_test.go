@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestSHAs(t *testing.T) {
@@ -20,14 +20,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Join(", ")
 			want := "111111, 222222"
-			test.EqOp(t, want, have)
+			must.EqOp(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Join(", ")
 			want := ""
-			test.EqOp(t, want, have)
+			must.EqOp(t, want, have)
 		})
 	})
 
@@ -41,14 +41,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Strings()
 			want := []string{"111111", "222222"}
-			test.Eq(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Strings()
 			want := []string{}
-			test.Eq(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 }

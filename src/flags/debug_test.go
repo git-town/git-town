@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +17,8 @@ func TestDebug(t *testing.T) {
 		addFlag, readFlag := flags.Debug()
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--debug"})
-		test.NoError(t, err)
-		test.EqOp(t, true, readFlag(&cmd))
+		must.NoError(t, err)
+		must.EqOp(t, true, readFlag(&cmd))
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -27,7 +27,7 @@ func TestDebug(t *testing.T) {
 		addFlag, readFlag := flags.Debug()
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-d"})
-		test.NoError(t, err)
-		test.EqOp(t, true, readFlag(&cmd))
+		must.NoError(t, err)
+		must.EqOp(t, true, readFlag(&cmd))
 	})
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewGitlabConnector(t *testing.T) {
@@ -22,7 +22,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
 			CommonConfig: hosting.CommonConfig{
 				APIToken:     "apiToken",
@@ -31,7 +31,7 @@ func TestNewGitlabConnector(t *testing.T) {
 				Repository:   "docs",
 			},
 		}
-		test.EqOp(t, wantConfig, have.GitLabConfig)
+		must.EqOp(t, wantConfig, have.GitLabConfig)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -42,7 +42,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
 			CommonConfig: hosting.CommonConfig{
 				APIToken:     "apiToken",
@@ -51,7 +51,7 @@ func TestNewGitlabConnector(t *testing.T) {
 				Repository:   "docs",
 			},
 		}
-		test.EqOp(t, wantConfig, have.GitLabConfig)
+		must.EqOp(t, wantConfig, have.GitLabConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -62,8 +62,8 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -75,8 +75,8 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 }
 
@@ -101,7 +101,7 @@ func TestGitlabConnector(t *testing.T) {
 		}
 		have := config.DefaultProposalMessage(give)
 		want := "my title (!1)"
-		test.EqOp(t, want, have)
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -140,8 +140,8 @@ func TestGitlabConnector(t *testing.T) {
 					},
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
-				test.NoError(t, err)
-				test.EqOp(t, tt.want, have)
+				must.NoError(t, err)
+				must.EqOp(t, tt.want, have)
 			})
 		}
 	})

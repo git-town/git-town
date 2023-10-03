@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewPullBranchStrategy(t *testing.T) {
@@ -18,8 +18,8 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		}
 		for give, want := range tests {
 			have, err := config.NewPullBranchStrategy(give)
-			test.NoError(t, err)
-			test.EqOp(t, want, have)
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
 		}
 	})
 
@@ -27,21 +27,21 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"merge", "Merge", "MERGE"} {
 			have, err := config.NewPullBranchStrategy(give)
-			test.NoError(t, err)
-			test.EqOp(t, config.PullBranchStrategyMerge, have)
+			must.NoError(t, err)
+			must.EqOp(t, config.PullBranchStrategyMerge, have)
 		}
 	})
 
 	t.Run("defaults to rebase", func(t *testing.T) {
 		t.Parallel()
 		have, err := config.NewPullBranchStrategy("")
-		test.NoError(t, err)
-		test.EqOp(t, config.PullBranchStrategyRebase, have)
+		must.NoError(t, err)
+		must.EqOp(t, config.PullBranchStrategyRebase, have)
 	})
 
 	t.Run("invalid value", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.NewPullBranchStrategy("zonk")
-		test.Error(t, err)
+		must.Error(t, err)
 	})
 }

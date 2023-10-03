@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/envvars"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestReplace(t *testing.T) {
@@ -15,7 +15,7 @@ func TestReplace(t *testing.T) {
 		give := []string{"ONE=1", "TWO=2", "THREE=3"}
 		have := envvars.Replace(give, "TWO", "another")
 		want := []string{"ONE=1", "TWO=another", "THREE=3"}
-		test.Eq(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("doesn't contain the given key", func(t *testing.T) {
@@ -23,6 +23,6 @@ func TestReplace(t *testing.T) {
 		give := []string{"ONE=1", "TWO=2"}
 		have := envvars.Replace(give, "THREE", "new")
 		want := []string{"ONE=1", "TWO=2", "THREE=new"}
-		test.Eq(t, want, have)
+		must.Eq(t, want, have)
 	})
 }

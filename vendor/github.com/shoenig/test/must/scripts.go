@@ -1,4 +1,6 @@
-package test
+// Code generated via scripts/generate.sh. DO NOT EDIT.
+
+package must
 
 import (
 	"fmt"

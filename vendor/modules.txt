@@ -84,12 +84,12 @@ github.com/pmezard/go-difflib/difflib
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shoenig/test v0.6.7
 ## explicit; go 1.18
-github.com/shoenig/test
 github.com/shoenig/test/interfaces
 github.com/shoenig/test/internal/assertions
 github.com/shoenig/test/internal/brokenfs
 github.com/shoenig/test/internal/constraints
 github.com/shoenig/test/internal/util
+github.com/shoenig/test/must
 github.com/shoenig/test/wait
 # github.com/spf13/cobra v1.6.1
 ## explicit; go 1.15

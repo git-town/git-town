@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestBranchInfo(t *testing.T) {
@@ -21,7 +21,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.HasAllBranches())
+			must.True(t, give.HasAllBranches())
 		})
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
@@ -32,7 +32,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasAllBranches())
+			must.False(t, give.HasAllBranches())
 		})
 		t.Run("has remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -43,7 +43,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.HasAllBranches())
+			must.False(t, give.HasAllBranches())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -54,7 +54,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasAllBranches())
+			must.False(t, give.HasAllBranches())
 		})
 	})
 
@@ -69,7 +69,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.True(t, give.HasLocalBranch())
+			must.True(t, give.HasLocalBranch())
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -80,7 +80,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.HasLocalBranch())
+			must.True(t, give.HasLocalBranch())
 		})
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -91,7 +91,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.HasLocalBranch())
+			must.False(t, give.HasLocalBranch())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -102,7 +102,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasLocalBranch())
+			must.False(t, give.HasLocalBranch())
 		})
 	})
 
@@ -117,7 +117,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.True(t, give.HasOnlyLocalBranch())
+			must.True(t, give.HasOnlyLocalBranch())
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -128,7 +128,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.HasOnlyLocalBranch())
+			must.False(t, give.HasOnlyLocalBranch())
 		})
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -139,7 +139,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.HasOnlyLocalBranch())
+			must.False(t, give.HasOnlyLocalBranch())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -150,7 +150,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasOnlyLocalBranch())
+			must.False(t, give.HasOnlyLocalBranch())
 		})
 	})
 
@@ -165,7 +165,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.HasOnlyRemoteBranch())
+			must.True(t, give.HasOnlyRemoteBranch())
 		})
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
@@ -176,7 +176,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasOnlyRemoteBranch())
+			must.False(t, give.HasOnlyRemoteBranch())
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -187,7 +187,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.HasOnlyRemoteBranch())
+			must.False(t, give.HasOnlyRemoteBranch())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -198,7 +198,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasOnlyRemoteBranch())
+			must.False(t, give.HasOnlyRemoteBranch())
 		})
 	})
 
@@ -213,7 +213,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.HasRemoteBranch())
+			must.True(t, give.HasRemoteBranch())
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -224,7 +224,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.HasRemoteBranch())
+			must.True(t, give.HasRemoteBranch())
 		})
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
@@ -235,7 +235,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasRemoteBranch())
+			must.False(t, give.HasRemoteBranch())
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
@@ -246,7 +246,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.HasRemoteBranch())
+			must.False(t, give.HasRemoteBranch())
 		})
 	})
 
@@ -261,7 +261,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.True(t, give.IsEmpty())
+			must.True(t, give.IsEmpty())
 		})
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
@@ -272,7 +272,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.IsEmpty())
+			must.False(t, give.IsEmpty())
 		})
 		t.Run("has remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -283,7 +283,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.False(t, give.IsEmpty())
+			must.False(t, give.IsEmpty())
 		})
 	})
 
@@ -298,7 +298,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
 			}
-			test.True(t, give.IsOmniBranch())
+			must.True(t, give.IsOmniBranch())
 		})
 		t.Run("not an omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -309,7 +309,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("222222"),
 			}
-			test.False(t, give.IsOmniBranch())
+			must.False(t, give.IsOmniBranch())
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
@@ -320,7 +320,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}
-			test.False(t, give.IsOmniBranch())
+			must.False(t, give.IsOmniBranch())
 		})
 	})
 }

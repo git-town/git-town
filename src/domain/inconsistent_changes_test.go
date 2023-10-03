@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestInconsistentChange(t *testing.T) {
@@ -69,7 +69,7 @@ func TestInconsistentChange(t *testing.T) {
 				},
 			},
 		}
-		test.Eq(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
@@ -88,6 +88,6 @@ func TestInconsistentChange(t *testing.T) {
 				},
 			},
 		}
-		test.Eq(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, haveFeatures)
 	})
 }

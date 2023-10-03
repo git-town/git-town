@@ -9,7 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestBackendRunner(t *testing.T) {
@@ -21,8 +21,8 @@ func TestBackendRunner(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.Query("echo", "hello", "world  ")
-			test.NoError(t, err)
-			test.EqOp(t, "hello world  \n", output)
+			must.NoError(t, err)
+			must.EqOp(t, "hello world  \n", output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
@@ -30,9 +30,9 @@ func TestBackendRunner(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			err := runner.Run("zonk")
-			test.Error(t, err)
+			must.Error(t, err)
 			var execError *exec.Error
-			test.True(t, errors.As(err, &execError))
+			must.True(t, errors.As(err, &execError))
 		})
 
 		t.Run("non-zero exit code", func(t *testing.T) {
@@ -51,7 +51,7 @@ hi
 
 OUTPUT END
 ----------------------------------------`
-			test.EqOp(t, expectedError, err.Error())
+			must.EqOp(t, expectedError, err.Error())
 		})
 	})
 
@@ -61,8 +61,8 @@ OUTPUT END
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
-			test.NoError(t, err)
-			test.EqOp(t, "hello world", output)
+			must.NoError(t, err)
+			must.EqOp(t, "hello world", output)
 		})
 	})
 
@@ -75,10 +75,10 @@ OUTPUT END
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
-		test.NoError(t, err)
-		test.EqOp(t, "first", entries[0].Name())
-		test.EqOp(t, "second", entries[1].Name())
+		must.NoError(t, err)
+		must.EqOp(t, "first", entries[0].Name())
+		must.EqOp(t, "second", entries[1].Name())
 	})
 }

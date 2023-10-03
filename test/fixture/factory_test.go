@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/fixture"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestFixtureFactory(t *testing.T) {
@@ -18,7 +18,7 @@ func TestFixtureFactory(t *testing.T) {
 		_ = fixture.NewFactory(dir)
 		memoizedPath := filepath.Join(dir, "memoized")
 		_, err := os.Stat(memoizedPath)
-		test.False(t, os.IsNotExist(err))
+		must.False(t, os.IsNotExist(err))
 	})
 
 	t.Run("CreateFixture", func(t *testing.T) {
@@ -27,6 +27,6 @@ func TestFixtureFactory(t *testing.T) {
 		gm := fixture.NewFactory(dir)
 		result := gm.CreateFixture("foo")
 		_, err := os.Stat(result.DevRepo.WorkingDir)
-		test.False(t, os.IsNotExist(err))
+		must.False(t, os.IsNotExist(err))
 	})
 }

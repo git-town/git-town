@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/shoenig/test"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewGiteaConnector(t *testing.T) {
@@ -23,14 +23,14 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		test.EqOp(t, wantConfig, have.CommonConfig)
+		must.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -41,8 +41,8 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -54,8 +54,8 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.Nil(t, have)
-		test.NoError(t, err)
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 }
 
@@ -69,7 +69,7 @@ func TestGitea(t *testing.T) {
 		want := "my title (#1)"
 		connector := hosting.GiteaConnector{} //nolint:exhaustruct
 		have := connector.DefaultProposalMessage(give)
-		test.EqOp(t, want, have)
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -79,10 +79,10 @@ func TestGitea(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
-		test.NoError(t, err)
-		test.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
+		must.NoError(t, err)
+		must.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
 	})
 
 	t.Run("RepositoryURL", func(t *testing.T) {
@@ -92,9 +92,9 @@ func TestGitea(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		test.NoError(t, err)
+		must.NoError(t, err)
 		have := connector.RepositoryURL()
-		test.EqOp(t, "https://gitea.com/git-town/docs", have)
+		must.EqOp(t, "https://gitea.com/git-town/docs", have)
 	})
 }
 
@@ -149,5 +149,5 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 		},
 	}
 	have := hosting.FilterGiteaPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
-	test.Eq(t, want, have)
+	must.Eq(t, want, have)
 }
