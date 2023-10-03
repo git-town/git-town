@@ -1,4 +1,4 @@
-Feature: a parent branch of a local branch was shipped
+Feature: a parent branch of the current feature branch was shipped
 
   Background:
     Given a feature branch "parent"
@@ -11,6 +11,7 @@ Feature: a parent branch of a local branch was shipped
     And the current branch is "child"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
