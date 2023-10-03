@@ -40,6 +40,49 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
 
+	t.Run("BranchHasUnmergedChanges", func(t *testing.T) {
+		t.Parallel()
+		t.Run("empty branch", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch := domain.NewLocalBranchName("branch")
+			runtime.CreateBranch(branch, initial)
+			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			assert.Nil(t, err)
+			assert.False(t, have)
+		})
+		t.Run("branch with commits but no changes", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      initial,
+				Message:     "commit 1",
+				FileName:    "file1",
+				FileContent: "original file1 content",
+			})
+			branch := domain.NewLocalBranchName("branch")
+			runtime.CreateBranch(branch, initial)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				Message:     "commit 2",
+				FileName:    "file1",
+				FileContent: "modified file1 content",
+			})
+			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			assert.Nil(t, err)
+			assert.True(t, have)
+			runtime.CreateCommit(testgit.Commit{
+				Branch:      branch,
+				Message:     "commit 3",
+				FileName:    "file1",
+				FileContent: "original file1 content",
+			})
+			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			assert.Nil(t, err)
+			assert.False(t, have)
+		})
+	})
+
 	t.Run("CheckoutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)

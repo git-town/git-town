@@ -97,7 +97,7 @@ func (tc *TestCommands) CreateFile(name, content string) {
 	folderPath := filepath.Dir(filePath)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 	//nolint:gosec // need permission 700 here in order for tests to work
-	asserts.NoError(os.WriteFile(filePath, []byte(content), 0x700))
+	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
