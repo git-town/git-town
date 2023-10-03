@@ -478,6 +478,6 @@ func TestBranchInfos(t *testing.T) {
 			},
 		}
 		assert.NoError(t, err)
-		assert.Equal(t, have, want)
+		assert.Equal(t, want, have)
 	})
 }
