@@ -12,6 +12,7 @@ Feature: sync an empty branch whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                  |
@@ -31,7 +32,7 @@ Feature: sync an empty branch whose tracking branch was deleted
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
-  @debug @this
+  @debug @this2
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

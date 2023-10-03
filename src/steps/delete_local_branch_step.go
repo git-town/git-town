@@ -1,6 +1,8 @@
 package steps
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
@@ -17,5 +19,6 @@ func (step *DeleteLocalBranchStep) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(hasUnmergedCommits)
 	return args.Runner.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

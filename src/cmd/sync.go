@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -209,21 +210,26 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
-		})
+		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
+			parent := config.lineage.Parent(branch.LocalName)
+			deleteBranchSteps(&list, branch, parent)
+		} else {
+			syncBranchSteps(&list, syncBranchStepsArgs{
+				branch:             branch,
+				branchTypes:        config.branches.Types,
+				remotes:            config.remotes,
+				isOffline:          config.isOffline,
+				lineage:            config.lineage,
+				mainBranch:         config.mainBranch,
+				pullBranchStrategy: config.pullBranchStrategy,
+				pushBranch:         true,
+				pushHook:           config.pushHook,
+				shouldSyncUpstream: config.shouldSyncUpstream,
+				syncStrategy:       config.syncStrategy,
+			})
+		}
 	}
-	list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
+	list.Add(&steps.CheckoutIfExistsStep{Branch: config.branches.Initial})
 	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
@@ -235,6 +241,16 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()
+}
+
+func deleteBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, parent domain.LocalBranchName) {
+	list.Add(&steps.CheckoutStep{Branch: parent})
+	list.Add(&steps.DeleteLocalBranchStep{
+		Branch: branch.LocalName,
+		Parent: parent.Location(),
+	})
+	list.Add(&steps.Remove)
+	list.Add(&steps.AddMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
