@@ -15,7 +15,7 @@ func TestReplace(t *testing.T) {
 		give := []string{"ONE=1", "TWO=2", "THREE=3"}
 		have := envvars.Replace(give, "TWO", "another")
 		want := []string{"ONE=1", "TWO=another", "THREE=3"}
-		assert.Equal(t, have, want)
+		assert.Equal(t, want, have)
 	})
 
 	t.Run("doesn't contain the given key", func(t *testing.T) {
@@ -23,6 +23,6 @@ func TestReplace(t *testing.T) {
 		give := []string{"ONE=1", "TWO=2"}
 		have := envvars.Replace(give, "THREE", "new")
 		want := []string{"ONE=1", "TWO=2", "THREE=new"}
-		assert.Equal(t, have, want)
+		assert.Equal(t, want, have)
 	})
 }
