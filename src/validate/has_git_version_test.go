@@ -20,8 +20,8 @@ func TestIsAcceptableGitVersion(t *testing.T) {
 		{2, 6, false},
 		{1, 8, false},
 	}
-	for _, test := range tests {
-		have := validate.IsAcceptableGitVersion(test.major, test.minor)
-		assert.Equal(t, test.want, have, fmt.Sprintf("%d.%d --> %t", test.major, test.minor, test.want))
+	for _, tt := range tests {
+		have := validate.IsAcceptableGitVersion(tt.major, tt.minor)
+		assert.Equal(t, tt.want, have, fmt.Sprintf("%d.%d --> %t", tt.major, tt.minor, tt.want))
 	}
 }
