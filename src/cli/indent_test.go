@@ -13,19 +13,19 @@ func TestIndent(t *testing.T) {
 	t.Run("no indent", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("")
-		assert.Equal(t, have, "  ")
+		assert.Equal(t, "  ", have)
 	})
 
 	t.Run("single line of text", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("hello")
-		assert.Equal(t, have, "  hello")
+		assert.Equal(t, "  hello", have)
 	})
 
 	t.Run("multi-line text", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("hello\nworld")
-		assert.Equal(t, have, "  hello\n  world")
+		assert.Equal(t, "  hello\n  world", have)
 	})
 
 	t.Run("multiple newlines", func(t *testing.T) {
