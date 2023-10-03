@@ -132,7 +132,7 @@ func TestGithubConnector(t *testing.T) {
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
 				test.NoError(t, err)
-				assert.Equal(t, have, tt.want)
+				assert.Equal(t, tt.want, have)
 			})
 		}
 	})
@@ -148,7 +148,7 @@ func TestGithubConnector(t *testing.T) {
 		}
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"
-		assert.Equal(t, have, want)
+		assert.Equal(t, want, have)
 	})
 }
 

@@ -70,7 +70,7 @@ func TestGitea(t *testing.T) {
 		want := "my title (#1)"
 		connector := hosting.GiteaConnector{} //nolint:exhaustruct
 		have := connector.DefaultProposalMessage(give)
-		assert.Equal(t, have, want)
+		assert.Equal(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -83,7 +83,7 @@ func TestGitea(t *testing.T) {
 		test.NoError(t, err)
 		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
 		test.NoError(t, err)
-		assert.Equal(t, have, "https://gitea.com/git-town/docs/compare/parent...feature")
+		assert.Equal(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
 	})
 
 	t.Run("RepositoryURL", func(t *testing.T) {
@@ -95,7 +95,7 @@ func TestGitea(t *testing.T) {
 		})
 		test.NoError(t, err)
 		have := connector.RepositoryURL()
-		assert.Equal(t, have, "https://gitea.com/git-town/docs")
+		assert.Equal(t, "https://gitea.com/git-town/docs", have)
 	})
 }
 
