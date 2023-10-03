@@ -39,6 +39,6 @@ func TestNewHostingService(t *testing.T) {
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.NewHosting("zonk")
-		assert.Error(t, err)
+		test.Error(t, err)
 	})
 }

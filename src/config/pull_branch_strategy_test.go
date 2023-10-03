@@ -43,6 +43,6 @@ func TestNewPullBranchStrategy(t *testing.T) {
 	t.Run("invalid value", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.NewPullBranchStrategy("zonk")
-		assert.Error(t, err)
+		test.Error(t, err)
 	})
 }

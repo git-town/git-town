@@ -31,7 +31,7 @@ func TestBackendRunner(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			err := runner.Run("zonk")
-			assert.Error(t, err)
+			test.Error(t, err)
 			var execError *exec.Error
 			test.True(t, errors.As(err, &execError))
 		})
