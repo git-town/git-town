@@ -13,7 +13,7 @@ type DeleteLocalBranchStep struct {
 }
 
 func (step *DeleteLocalBranchStep) Run(args RunArgs) error {
-	hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedChanges(step.Branch, step.Parent)
+	hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
