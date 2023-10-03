@@ -146,8 +146,8 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given string value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.Equal(t, "alpha", fc.String("alpha", nil))
-			assert.Equal(t, "beta", fc.String("beta", errors.New("")))
+			test.EqOp(t, "alpha", fc.String("alpha", nil))
+			test.EqOp(t, "beta", fc.String("beta", errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()

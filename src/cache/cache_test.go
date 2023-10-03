@@ -23,7 +23,7 @@ func TestStringCache(t *testing.T) {
 	test.False(t, sc.Initialized())
 	sc.Set("foo")
 	test.True(t, sc.Initialized())
-	assert.Equal(t, "foo", sc.Value())
+	test.EqOp(t, "foo", sc.Value())
 }
 
 func TestStringSliceCache(t *testing.T) {

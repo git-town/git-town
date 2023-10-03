@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,8 +22,8 @@ func TestGitConfigCache(t *testing.T) {
 		cloned := original.Clone()
 		cloned[alpha] = "new A"
 		cloned[beta] = "new B"
-		assert.Equal(t, "A", original[alpha])
-		assert.Equal(t, "B", original[beta])
+		test.EqOp(t, "A", original[alpha])
+		test.EqOp(t, "B", original[beta])
 	})
 
 	t.Run("KeysMatching", func(t *testing.T) {

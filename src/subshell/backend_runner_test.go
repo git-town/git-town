@@ -23,7 +23,7 @@ func TestBackendRunner(t *testing.T) {
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.Query("echo", "hello", "world  ")
 			test.NoError(t, err)
-			assert.Equal(t, "hello world  \n", output)
+			test.EqOp(t, "hello world  \n", output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
@@ -63,7 +63,7 @@ OUTPUT END
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
 			test.NoError(t, err)
-			assert.Equal(t, "hello world", output)
+			test.EqOp(t, "hello world", output)
 		})
 	})
 
@@ -79,7 +79,7 @@ OUTPUT END
 		test.NoError(t, err)
 		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
 		test.NoError(t, err)
-		assert.Equal(t, "first", entries[0].Name())
-		assert.Equal(t, "second", entries[1].Name())
+		test.EqOp(t, "first", entries[0].Name())
+		test.EqOp(t, "second", entries[1].Name())
 	})
 }

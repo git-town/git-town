@@ -55,7 +55,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Run("valid remote branch name", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("origin/branch")
-			assert.Equal(t, "origin/branch", branch.String())
+			test.EqOp(t, "origin/branch", branch.String())
 		})
 		t.Run("local branch name", func(t *testing.T) {
 			t.Parallel()

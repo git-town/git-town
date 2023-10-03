@@ -38,7 +38,7 @@ func TestLocalBranchName(t *testing.T) {
 	t.Run("NewLocalBranchName and String", func(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch-1")
-		assert.Equal(t, "branch-1", branch.String())
+		test.EqOp(t, "branch-1", branch.String())
 	})
 
 	t.Run("TrackingBranch", func(t *testing.T) {

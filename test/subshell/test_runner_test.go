@@ -30,7 +30,7 @@ func TestMockingRunner(t *testing.T) {
 		res, err := runner.Query("bash", "-c", "foo bar")
 		test.NoError(t, err)
 		// verify that it called our overridden "foo" command
-		assert.Equal(t, "foo called with: bar", res)
+		test.EqOp(t, "foo called with: bar", res)
 	})
 
 	t.Run("Run", func(t *testing.T) {
@@ -42,7 +42,7 @@ func TestMockingRunner(t *testing.T) {
 		}
 		res, err := runner.Query("echo", "hello", "world")
 		test.NoError(t, err)
-		assert.Equal(t, "hello world", res)
+		test.EqOp(t, "hello world", res)
 	})
 
 	t.Run("QueryString", func(t *testing.T) {
@@ -108,7 +108,7 @@ func TestMockingRunner(t *testing.T) {
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
-			assert.Equal(t, "hello", output)
+			test.EqOp(t, "hello", output)
 			assert.Equal(t, 0, exitCode)
 			test.NoError(t, err)
 		})
@@ -120,7 +120,7 @@ func TestMockingRunner(t *testing.T) {
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
-			assert.Equal(t, "hello", output)
+			test.EqOp(t, "hello", output)
 			assert.Equal(t, 1, exitCode)
 			test.NoError(t, err)
 		})

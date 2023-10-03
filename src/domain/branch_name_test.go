@@ -17,7 +17,7 @@ func TestBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("normal branch name", func(t *testing.T) {
 			branchName := domain.NewBranchName("branch-1")
-			assert.Equal(t, "branch-1", branchName.String())
+			test.EqOp(t, "branch-1", branchName.String())
 		})
 		t.Run("does not allow empty branch names", func(t *testing.T) {
 			defer asserts.Paniced(t)
