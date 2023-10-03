@@ -185,15 +185,29 @@ func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.S
 		list.Add(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
-	removeBranchFromLineage(list, config.targetBranch.LocalName, config.targetBranchParent(), config.lineage)
+	removeBranchFromLineage(removeBranchFromLineageArgs{
+		branch:  config.targetBranch.LocalName,
+		lineage: config.lineage,
+		list:    list,
+		parent:  config.targetBranchParent(),
+	})
 }
 
-func removeBranchFromLineage(list *runstate.StepListBuilder, branch, parent domain.LocalBranchName, lineage config.Lineage) config.Lineage {
-	childBranches := lineage.Children(branch)
+func removeBranchFromLineage(args removeBranchFromLineageArgs) config.Lineage {
+	childBranches := args.lineage.Children(args.branch)
+	lineage := args.lineage
 	for _, child := range childBranches {
-		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: parent})
-		list.Add(&steps.PrintMessageStep{Message: fmt.Sprintf(messages.BranchParentChanged, child, parent)})
-		lineage = lineage.ChangeParent(child, parent)
+		args.list.Add(&steps.SetParentStep{Branch: child, ParentBranch: args.parent})
+		args.list.Add(&steps.PrintMessageStep{Message: fmt.Sprintf(messages.BranchParentChanged, child, args.parent)})
+		lineage = lineage.ChangeParent(child, args.parent)
 	}
-	list.Add(&steps.DeleteParentBranchStep{Branch: branch})
+	args.list.Add(&steps.DeleteParentBranchStep{Branch: args.branch})
+	return lineage
+}
+
+type removeBranchFromLineageArgs struct {
+	branch  domain.LocalBranchName
+	lineage config.Lineage
+	list    *runstate.StepListBuilder
+	parent  domain.LocalBranchName
 }
