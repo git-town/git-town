@@ -119,7 +119,7 @@ func TestGithubConnector(t *testing.T) {
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 		}
-		for name, test := range tests {
+		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := hosting.GitHubConnector{
 					CommonConfig: hosting.CommonConfig{ //nolint:exhaustruct
@@ -129,9 +129,9 @@ func TestGithubConnector(t *testing.T) {
 					},
 					MainBranch: domain.NewLocalBranchName("main"),
 				}
-				have, err := connector.NewProposalURL(test.branch, test.parent)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent)
 				assert.Nil(t, err)
-				assert.Equal(t, test.want, have)
+				assert.Equal(t, tt.want, have)
 			})
 		}
 	})

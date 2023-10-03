@@ -127,7 +127,7 @@ func TestGitlabConnector(t *testing.T) {
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
 			},
 		}
-		for name, test := range tests {
+		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := hosting.GitLabConnector{
 					GitLabConfig: hosting.GitLabConfig{
@@ -139,9 +139,9 @@ func TestGitlabConnector(t *testing.T) {
 						},
 					},
 				}
-				have, err := connector.NewProposalURL(test.branch, test.parent)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent)
 				assert.Nil(t, err)
-				assert.Equal(t, test.want, have)
+				assert.Equal(t, tt.want, have)
 			})
 		}
 	})
