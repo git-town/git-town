@@ -17,7 +17,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		workingDir := filepath.Join(dir, "working")
-		err := os.Mkdir(workingDir, 0x744)
+		err := os.Mkdir(workingDir, 0o744)
 		assert.NoError(t, err)
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")

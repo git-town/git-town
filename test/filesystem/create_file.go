@@ -15,6 +15,6 @@ func CreateFile(t *testing.T, dir, filename string) {
 	err := os.MkdirAll(filepath.Dir(filePath), 0o744)
 	assert.NoError(t, err)
 	//nolint:gosec // need permission 700 here for the tests to work
-	err = os.WriteFile(filePath, []byte(filename+" content"), 0x700)
+	err = os.WriteFile(filePath, []byte(filename+" content"), 0o700)
 	assert.NoError(t, err)
 }
