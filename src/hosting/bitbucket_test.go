@@ -54,7 +54,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 
@@ -66,7 +66,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       originURL,
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 }

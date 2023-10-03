@@ -42,7 +42,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 
@@ -55,7 +55,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 }

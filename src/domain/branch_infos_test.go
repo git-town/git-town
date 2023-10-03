@@ -295,7 +295,7 @@ func TestBranchInfos(t *testing.T) {
 				},
 			}
 			have := bs.FindByLocalName(domain.NewLocalBranchName("kg/one"))
-			assert.Nil(t, have)
+			test.Nil(t, have)
 		})
 	})
 
@@ -324,7 +324,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.SHA{},
 			}}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("kg/one"))
-			assert.Nil(t, have)
+			test.Nil(t, have)
 		})
 	})
 

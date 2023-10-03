@@ -63,7 +63,7 @@ func TestNewGithubConnector(t *testing.T) {
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 
@@ -77,7 +77,7 @@ func TestNewGithubConnector(t *testing.T) {
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, have)
+		test.Nil(t, have)
 		test.NoError(t, err)
 	})
 }

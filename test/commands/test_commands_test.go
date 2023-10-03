@@ -159,7 +159,7 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateFile("filename", "content")
 			content, err := os.ReadFile(filepath.Join(runtime.WorkingDir, "filename"))
-			assert.Nil(t, err, "cannot read file")
+			test.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
 
@@ -168,7 +168,7 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateFile("folder/filename", "content")
 			content, err := os.ReadFile(filepath.Join(runtime.WorkingDir, "folder/filename"))
-			assert.Nil(t, err, "cannot read file")
+			test.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
 	})

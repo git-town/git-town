@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,12 +31,12 @@ func TestKey(t *testing.T) {
 			t.Run("lineage key without suffix", func(t *testing.T) {
 				t.Parallel()
 				have := config.ParseKey("git-town-branch.branch-1")
-				assert.Nil(t, have)
+				test.Nil(t, have)
 			})
 			t.Run("lineage key without prefix", func(t *testing.T) {
 				t.Parallel()
 				have := config.ParseKey("git-town.branch-1.parent")
-				assert.Nil(t, have)
+				test.Nil(t, have)
 			})
 		})
 		t.Run("alias key", func(t *testing.T) {
@@ -49,13 +50,13 @@ func TestKey(t *testing.T) {
 			t.Run("invalid alias", func(t *testing.T) {
 				t.Parallel()
 				have := config.ParseKey("alias.zonk")
-				assert.Nil(t, have)
+				test.Nil(t, have)
 			})
 		})
 		t.Run("unknown key", func(t *testing.T) {
 			t.Parallel()
 			have := config.ParseKey("zonk")
-			assert.Nil(t, have)
+			test.Nil(t, have)
 		})
 	})
 }
