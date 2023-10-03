@@ -55,7 +55,7 @@ Feature: display debug statistics
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'Initial commit' }}   |
-      |        | backend  | git log main..new                             |
+      |        | backend  | git diff main..new                            |
       | main   | frontend | git branch -D new                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/new           |

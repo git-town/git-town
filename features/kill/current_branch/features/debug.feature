@@ -26,7 +26,7 @@ Feature: display debug statistics
       |         | backend  | git status --ignore-submodules                    |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout main                                 |
-      |         | backend  | git log main..current                             |
+      |         | backend  | git diff main..current                            |
       | main    | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --quiet refs/heads/other             |

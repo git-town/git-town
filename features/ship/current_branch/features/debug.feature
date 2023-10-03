@@ -41,7 +41,7 @@ Feature: display debug statistics
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
-      |         | backend  | git log main..feature                             |
+      |         | backend  | git diff main..feature                            |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
       |         | backend  | git show-ref --quiet refs/heads/feature           |
@@ -72,7 +72,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git status --ignore-submodules                 |
       |        | backend  | git config git-town-branch.feature.parent main |
-      |        | backend  | git log --pretty=format:%h -10                 |
+      |        | backend  | git diff --pretty=format:%h -10                |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |

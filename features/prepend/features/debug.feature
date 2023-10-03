@@ -61,7 +61,7 @@ Feature: display debug statistics
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
-      |        | backend  | git log main..parent                             |
+      |        | backend  | git diff main..parent                            |
       | old    | frontend | git branch -D parent                             |
       |        | backend  | git show-ref --quiet refs/heads/old              |
       |        | backend  | git show-ref --quiet refs/heads/parent           |
