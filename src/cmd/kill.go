@@ -185,9 +185,25 @@ func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.S
 		list.Add(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
-	childBranches := config.lineage.Children(config.targetBranch.LocalName)
+	removeBranchFromLineage(removeBranchFromLineageArgs{
+		branch:  config.targetBranch.LocalName,
+		lineage: config.lineage,
+		list:    list,
+		parent:  config.targetBranchParent(),
+	})
+}
+
+func removeBranchFromLineage(args removeBranchFromLineageArgs) {
+	childBranches := args.lineage.Children(args.branch)
 	for _, child := range childBranches {
-		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
+		args.list.Add(&steps.SetParentStep{Branch: child, ParentBranch: args.parent})
 	}
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.targetBranch.LocalName})
+	args.list.Add(&steps.DeleteParentBranchStep{Branch: args.branch})
+}
+
+type removeBranchFromLineageArgs struct {
+	branch  domain.LocalBranchName
+	lineage config.Lineage
+	list    *runstate.StepListBuilder
+	parent  domain.LocalBranchName
 }
