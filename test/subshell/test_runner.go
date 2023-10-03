@@ -61,7 +61,7 @@ func (tr *TestRunner) createBinDir() {
 func (tr *TestRunner) createMockBinary(name string, content string) {
 	tr.createBinDir()
 	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(filepath.Join(tr.BinDir, name), []byte(content), 0x744))
+	asserts.NoError(os.WriteFile(filepath.Join(tr.BinDir, name), []byte(content), 0o744))
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
