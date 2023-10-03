@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,7 +26,7 @@ func TestLineage(t *testing.T) {
 			give := domain.LocalBranchNames{two, one}
 			have := lineage.BranchesAndAncestors(give)
 			want := domain.LocalBranchNames{main, one, two}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 	})
 
@@ -35,7 +36,7 @@ func TestLineage(t *testing.T) {
 		lineage[one] = main
 		have := lineage.BranchAndAncestors(one)
 		want := domain.LocalBranchNames{main, one}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("Ancestors", func(t *testing.T) {
