@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,12 +17,12 @@ func TestLocalBranchName(t *testing.T) {
 		t.Run("branch is empty", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.LocalBranchName{}
-			assert.True(t, branch.IsEmpty())
+			test.True(t, branch.IsEmpty())
 		})
 		t.Run("branch is not empty", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewLocalBranchName("branch")
-			assert.False(t, branch.IsEmpty())
+			test.False(t, branch.IsEmpty())
 		})
 	})
 
@@ -29,7 +30,7 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := `"branch-1"`
 		assert.Equal(t, want, string(have))
 	})
@@ -52,7 +53,7 @@ func TestLocalBranchName(t *testing.T) {
 		give := `"branch-1"`
 		have := domain.LocalBranchName{}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := domain.NewLocalBranchName("branch-1")
 		assert.Equal(t, want, have)
 	})

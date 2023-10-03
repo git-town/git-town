@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,12 +18,12 @@ func TestSHA(t *testing.T) {
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
 			sha := domain.SHA{}
-			assert.True(t, sha.IsEmpty())
+			test.True(t, sha.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
 			t.Parallel()
 			sha := domain.NewSHA("123456")
-			assert.False(t, sha.IsEmpty())
+			test.False(t, sha.IsEmpty())
 		})
 	})
 
@@ -30,7 +31,7 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		sha := domain.NewSHA("123456")
 		have, err := json.MarshalIndent(sha, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := `"123456"`
 		assert.Equal(t, want, string(have))
 	})
@@ -88,7 +89,7 @@ func TestSHA(t *testing.T) {
 		give := `"123456"`
 		have := domain.SHA{}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := domain.NewSHA("123456")
 		assert.Equal(t, want, have)
 	})

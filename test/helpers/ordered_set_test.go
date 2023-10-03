@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,9 +33,9 @@ func TestOrderedSet(t *testing.T) {
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
 		set := helpers.NewOrderedSet("one", "two")
-		assert.True(t, set.Contains("one"))
-		assert.True(t, set.Contains("two"))
-		assert.False(t, set.Contains("zonk"))
+		test.True(t, set.Contains("one"))
+		test.True(t, set.Contains("two"))
+		test.False(t, set.Contains("zonk"))
 	})
 
 	t.Run("Elements", func(t *testing.T) {

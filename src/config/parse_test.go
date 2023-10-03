@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -46,7 +47,7 @@ func TestParseBool(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"yes", "Yes", "YES"} {
 			have, err := config.ParseBool(give)
-			assert.Nil(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, true, have)
 		}
 	})
@@ -62,7 +63,7 @@ func verifyParseBool(t *testing.T, tests map[string]bool) {
 	t.Helper()
 	for give, want := range tests {
 		have, err := config.ParseBool(give)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, want, have)
 	}
 }

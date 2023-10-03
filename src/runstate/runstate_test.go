@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,7 +49,7 @@ func TestRunState(t *testing.T) {
 			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		want := `
 {
   "Command": "sync",
@@ -92,7 +93,7 @@ func TestRunState(t *testing.T) {
 		assert.Equal(t, want, string(encoded))
 		newRunState := &runstate.RunState{} //nolint:exhaustruct
 		err = json.Unmarshal(encoded, &newRunState)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, runState, newRunState)
 	})
 }

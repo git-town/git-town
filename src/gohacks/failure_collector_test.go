@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,11 +18,11 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.True(t, fc.Bool(true, nil))
-			assert.False(t, fc.Bool(false, nil))
+			test.True(t, fc.Bool(true, nil))
+			test.False(t, fc.Bool(false, nil))
 			err := errors.New("test error")
-			assert.True(t, fc.Bool(true, err))
-			assert.False(t, fc.Bool(false, err))
+			test.True(t, fc.Bool(true, err))
+			test.False(t, fc.Bool(false, err))
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
@@ -87,9 +88,9 @@ func TestCollector(t *testing.T) {
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
 			fc := gohacks.FailureCollector{}
-			assert.False(t, fc.Check(nil))
-			assert.True(t, fc.Check(errors.New("")))
-			assert.True(t, fc.Check(nil))
+			test.False(t, fc.Check(nil))
+			test.True(t, fc.Check(errors.New("")))
+			test.True(t, fc.Check(nil))
 		})
 	})
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/testruntime"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +19,7 @@ func TestRunner(t *testing.T) {
 		dir := t.TempDir()
 		workingDir := filepath.Join(dir, "working")
 		err := os.Mkdir(workingDir, 0o744)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")
 		runtime := testruntime.New(workingDir, homeDir, binDir)

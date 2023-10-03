@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +24,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
@@ -42,7 +43,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -55,7 +56,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 }
 
@@ -79,9 +80,9 @@ func TestGitea(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, have, "https://gitea.com/git-town/docs/compare/parent...feature")
 	})
 
@@ -92,7 +93,7 @@ func TestGitea(t *testing.T) {
 			APIToken:       "",
 			Log:            cli.SilentLog{},
 		})
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		have := connector.RepositoryURL()
 		assert.Equal(t, have, "https://gitea.com/git-town/docs")
 	})

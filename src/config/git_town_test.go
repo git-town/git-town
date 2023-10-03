@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -131,14 +132,14 @@ func TestGitTown(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		offline, err := repo.Config.IsOffline()
-		assert.Nil(t, err)
-		assert.True(t, offline)
+		test.NoError(t, err)
+		test.True(t, offline)
 		err = repo.Config.SetOffline(false)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		offline, err = repo.Config.IsOffline()
-		assert.Nil(t, err)
-		assert.False(t, offline)
+		test.NoError(t, err)
+		test.False(t, offline)
 	})
 }

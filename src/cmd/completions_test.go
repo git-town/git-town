@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/cmd"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestNewCompletionType(t *testing.T) {
 		}
 		for give, want := range tests {
 			have, err := cmd.NewCompletionType(give)
-			assert.Nil(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, want, have)
 		}
 	})
@@ -29,7 +30,7 @@ func TestNewCompletionType(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"bash", "Bash", "BASH"} {
 			have, err := cmd.NewCompletionType(give)
-			assert.Nil(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, cmd.CompletionTypeBash, have)
 		}
 	})

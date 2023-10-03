@@ -117,12 +117,12 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
-			assert.True(t, lineage.HasParents(two))
+			test.True(t, lineage.HasParents(two))
 		})
 		t.Run("has no parent", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
-			assert.False(t, lineage.HasParents(main))
+			test.False(t, lineage.HasParents(main))
 		})
 	})
 
@@ -134,20 +134,20 @@ func TestLineage(t *testing.T) {
 			lineage[four] = three
 			lineage[three] = two
 			lineage[two] = one
-			assert.True(t, lineage.IsAncestor(one, four))
+			test.True(t, lineage.IsAncestor(one, four))
 		})
 		t.Run("child branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
-			assert.True(t, lineage.IsAncestor(one, two))
+			test.True(t, lineage.IsAncestor(one, two))
 		})
 		t.Run("unrelated branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
 			lineage[three] = one
-			assert.False(t, lineage.IsAncestor(two, three))
+			test.False(t, lineage.IsAncestor(two, three))
 		})
 	})
 
@@ -174,7 +174,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Parent(main)
-			assert.True(t, have.IsEmpty())
+			test.True(t, have.IsEmpty())
 		})
 	})
 

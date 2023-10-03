@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +22,7 @@ func TestJSONStep(t *testing.T) {
 			},
 		}
 		have, err := json.MarshalIndent(jsonstep, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		// NOTE: It's unclear why this doesn't contain the "data" and "type" fields from JSONStep's MarshalJSON method here.
 		//       Marshaling an entire RunState somehow works correctly.
 		want := `
@@ -48,7 +49,7 @@ func TestJSONStep(t *testing.T) {
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := runstate.JSONStep{
 			Step: &steps.CheckoutStep{
 				Branch: domain.NewLocalBranchName("branch-1"),

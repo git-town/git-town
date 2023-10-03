@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +20,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "",
 			Hostname:     "bitbucket.org",
@@ -36,7 +37,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "",
 			Hostname:     "custom-url.com",
@@ -54,7 +55,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -66,6 +67,6 @@ func TestNewBitbucketConnector(t *testing.T) {
 			GetSHAForBranch: emptySHAForBranch,
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 }

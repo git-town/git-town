@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/subshell"
 	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +37,7 @@ func TestBackendCommands(t *testing.T) {
 			Message:     "second commit",
 		})
 		authors, err := runtime.Backend.BranchAuthors(branch, initial)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
 
@@ -46,11 +47,11 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
 		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("branch1"), currentBranch)
 		runtime.CheckoutBranch(initial)
 		currentBranch, err = runtime.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, initial, currentBranch)
 	})
 
@@ -71,7 +72,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, 2, len(commits))
 		})
 		t.Run("feature branch contains no commits", func(t *testing.T) {
@@ -79,7 +80,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, 0, len(commits))
 		})
 		t.Run("main branch contains commits", func(t *testing.T) {
@@ -96,14 +97,14 @@ func TestBackendCommands(t *testing.T) {
 				FileName: "file2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, 1, len(commits)) // the initial commit
 		})
 	})
@@ -112,9 +113,9 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		runtime.Config.Reload()
-		assert.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
+		test.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
 		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")
@@ -128,11 +129,11 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("b1"))
 		branch, err := runtime.Backend.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("b1"), branch)
 		runtime.CheckoutBranch(initial)
 		branch, err = runtime.Backend.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, initial, branch)
 	})
 
@@ -143,9 +144,9 @@ func TestBackendCommands(t *testing.T) {
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
 		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
-		assert.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1")))
-		assert.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2")))
-		assert.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
+		test.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1")))
+		test.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2")))
+		test.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
 	})
 
 	t.Run("RepoStatus", func(t *testing.T) {
@@ -155,16 +156,16 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				have, err := runtime.Backend.RepoStatus()
-				assert.NoError(t, err)
-				assert.False(t, have.OpenChanges)
+				test.NoError(t, err)
+				test.False(t, have.OpenChanges)
 			})
 			t.Run("has open changes", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
 				runtime.CreateFile("foo", "bar")
 				have, err := runtime.Backend.RepoStatus()
-				assert.NoError(t, err)
-				assert.True(t, have.OpenChanges)
+				test.NoError(t, err)
+				test.True(t, have.OpenChanges)
 			})
 			t.Run("during rebase", func(t *testing.T) {
 				t.Parallel()
@@ -187,8 +188,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				assert.NoError(t, err)
-				assert.False(t, have.OpenChanges)
+				test.NoError(t, err)
+				test.False(t, have.OpenChanges)
 			})
 			t.Run("during merge conflict", func(t *testing.T) {
 				t.Parallel()
@@ -211,8 +212,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.MergeBranch(branch1) // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				assert.NoError(t, err)
-				assert.False(t, have.OpenChanges)
+				test.NoError(t, err)
+				test.False(t, have.OpenChanges)
 			})
 			t.Run("unstashed conflicting changes", func(t *testing.T) {
 				t.Parallel()
@@ -227,8 +228,8 @@ func TestBackendCommands(t *testing.T) {
 				})
 				_ = runtime.UnstashOpenFiles() // this is expected to fail
 				have, err := runtime.Backend.RepoStatus()
-				assert.NoError(t, err)
-				assert.True(t, have.OpenChanges)
+				test.NoError(t, err)
+				test.True(t, have.OpenChanges)
 			})
 		})
 
@@ -236,8 +237,8 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have, err := runtime.Backend.RepoStatus()
-			assert.NoError(t, err)
-			assert.False(t, have.RebaseInProgress)
+			test.NoError(t, err)
+			test.False(t, have.RebaseInProgress)
 		})
 	})
 
@@ -498,7 +499,7 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		runtime.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
@@ -508,7 +509,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have := runtime.BackendCommands.RootDirectory()
-			assert.False(t, have.IsEmpty())
+			test.False(t, have.IsEmpty())
 		})
 		t.Run("outside a Git repo", func(t *testing.T) {
 			t.Parallel()
@@ -542,7 +543,7 @@ func TestBackendCommands(t *testing.T) {
 			want := domain.StashSnapshot{
 				Amount: 2,
 			}
-			assert.Nil(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, want, have)
 		})
 		t.Run("no stash entries", func(t *testing.T) {
@@ -552,7 +553,7 @@ func TestBackendCommands(t *testing.T) {
 			want := domain.StashSnapshot{
 				Amount: 0,
 			}
-			assert.Nil(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, want, have)
 		})
 	})

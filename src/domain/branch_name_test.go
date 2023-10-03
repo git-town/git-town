@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,12 +30,12 @@ func TestBranchName(t *testing.T) {
 		t.Run("local branch", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewBranchName("main")
-			assert.True(t, branch.IsLocal())
+			test.True(t, branch.IsLocal())
 		})
 		t.Run("remote branch", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewBranchName("origin/main")
-			assert.False(t, branch.IsLocal())
+			test.False(t, branch.IsLocal())
 		})
 	})
 
@@ -57,7 +58,7 @@ func TestBranchName(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewBranchName("branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := `"branch-1"`
 		assert.Equal(t, want, string(have))
 	})
@@ -82,7 +83,7 @@ func TestBranchName(t *testing.T) {
 		give := `"branch-1"`
 		have := domain.BranchName{}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := domain.NewBranchName("branch-1")
 		assert.Equal(t, want, have)
 	})

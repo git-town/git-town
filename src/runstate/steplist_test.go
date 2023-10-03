@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,12 +62,12 @@ func TestStepList(t *testing.T) {
 		t.Run("list is empty", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
-			assert.True(t, list.IsEmpty())
+			test.True(t, list.IsEmpty())
 		})
 		t.Run("list is not empty", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			assert.False(t, list.IsEmpty())
+			test.False(t, list.IsEmpty())
 		})
 	})
 
@@ -77,7 +78,7 @@ func TestStepList(t *testing.T) {
 			&steps.StashOpenChangesStep{},
 		}}
 		have, err := json.MarshalIndent(list, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		// NOTE: Why does it not serialize the type names here?
 		// This somehow works when serializing a StepList as part of a larger containing structure like a RunState,
 		// but it doesn't work here for some reason.
@@ -363,7 +364,7 @@ StepList:
 ]`[1:]
 		have := runstate.StepList{}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := runstate.StepList{List: []steps.Step{
 			&steps.ResetCurrentBranchToSHAStep{
 				Hard:        false,

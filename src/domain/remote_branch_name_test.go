@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,11 +17,11 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
 			give := domain.RemoteBranchName{}
-			assert.True(t, give.IsEmpty())
+			test.True(t, give.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
 			give := domain.NewRemoteBranchName("origin/branch-1")
-			assert.False(t, give.IsEmpty())
+			test.False(t, give.IsEmpty())
 		})
 	})
 
@@ -44,7 +45,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewRemoteBranchName("origin/branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := `"origin/branch-1"`
 		assert.Equal(t, want, string(have))
 	})
@@ -81,7 +82,7 @@ func TestRemoteBranchName(t *testing.T) {
 		give := `"origin/branch-1"`
 		have := domain.RemoteBranchName{}
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		test.NoError(t, err)
 		want := domain.NewRemoteBranchName("origin/branch-1")
 		assert.Equal(t, want, have)
 	})

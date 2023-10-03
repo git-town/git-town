@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/fixture"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestFixtureFactory(t *testing.T) {
@@ -18,7 +18,7 @@ func TestFixtureFactory(t *testing.T) {
 		_ = fixture.NewFactory(dir)
 		memoizedPath := filepath.Join(dir, "memoized")
 		_, err := os.Stat(memoizedPath)
-		assert.Falsef(t, os.IsNotExist(err), "memoized directory %q not found", memoizedPath)
+		test.False(t, os.IsNotExist(err))
 	})
 
 	t.Run("CreateFixture", func(t *testing.T) {
@@ -27,6 +27,6 @@ func TestFixtureFactory(t *testing.T) {
 		gm := fixture.NewFactory(dir)
 		result := gm.CreateFixture("foo")
 		_, err := os.Stat(result.DevRepo.WorkingDir)
-		assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DevRepo.WorkingDir)
+		test.False(t, os.IsNotExist(err))
 	})
 }

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestRemotes(t *testing.T) {
@@ -15,12 +15,12 @@ func TestRemotes(t *testing.T) {
 		t.Run("origin remote exists", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.Remotes{domain.OriginRemote}
-			assert.True(t, remotes.HasOrigin())
+			test.True(t, remotes.HasOrigin())
 		})
 		t.Run("origin remote does not exist", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.NewRemotes("foo")
-			assert.False(t, remotes.HasOrigin())
+			test.False(t, remotes.HasOrigin())
 		})
 	})
 
@@ -29,12 +29,12 @@ func TestRemotes(t *testing.T) {
 		t.Run("upstream remote exists", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.Remotes{domain.UpstreamRemote}
-			assert.True(t, remotes.HasUpstream())
+			test.True(t, remotes.HasUpstream())
 		})
 		t.Run("upstream remote does not exist", func(t *testing.T) {
 			t.Parallel()
 			remotes := domain.NewRemotes("foo")
-			assert.False(t, remotes.HasUpstream())
+			test.False(t, remotes.HasUpstream())
 		})
 	})
 }

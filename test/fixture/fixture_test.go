@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,13 +35,13 @@ func TestFixture(t *testing.T) {
 		// verify the origin repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("initial"), branch, "the origin should be at the initial branch so that we can push to it")
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("main"), branch)
 	})
 
@@ -130,7 +131,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
@@ -144,11 +145,11 @@ func TestFixture(t *testing.T) {
 		cloned.CreateOriginBranch("b1", "main")
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Contains(t, branches, domain.NewLocalBranchName("b1"))
 		// verify it isn't in the local branches
 		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.NotContains(t, branches, "b1")
 	})
 
@@ -226,6 +227,6 @@ func TestFixture(t *testing.T) {
 		cloned.Remove()
 		// verify
 		_, err := os.Stat(cloned.Dir)
-		assert.True(t, os.IsNotExist(err))
+		test.True(t, os.IsNotExist(err))
 	})
 }

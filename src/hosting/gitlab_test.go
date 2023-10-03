@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,7 +23,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
 			CommonConfig: hosting.CommonConfig{
 				APIToken:     "apiToken",
@@ -42,7 +43,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
 			CommonConfig: hosting.CommonConfig{
 				APIToken:     "apiToken",
@@ -63,7 +64,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -76,7 +77,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 }
 
@@ -127,7 +128,7 @@ func TestGitlabConnector(t *testing.T) {
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
 			},
 		}
-		for name, test := range tests {
+		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := hosting.GitLabConnector{
 					GitLabConfig: hosting.GitLabConfig{
@@ -139,9 +140,9 @@ func TestGitlabConnector(t *testing.T) {
 						},
 					},
 				}
-				have, err := connector.NewProposalURL(test.branch, test.parent)
-				assert.Nil(t, err)
-				assert.Equal(t, test.want, have)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent)
+				test.NoError(t, err)
+				assert.Equal(t, tt.want, have)
 			})
 		}
 	})

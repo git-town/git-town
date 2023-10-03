@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,9 +36,9 @@ func TestSlice(t *testing.T) {
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two"}
-		assert.True(t, slice.Contains(give, "one"))
-		assert.True(t, slice.Contains(give, "two"))
-		assert.False(t, slice.Contains(give, "three"))
+		test.True(t, slice.Contains(give, "one"))
+		test.True(t, slice.Contains(give, "two"))
+		test.False(t, slice.Contains(give, "three"))
 	})
 
 	t.Run("FindAll", func(t *testing.T) {

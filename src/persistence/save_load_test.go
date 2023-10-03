@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -411,15 +412,15 @@ func TestLoadSave(t *testing.T) {
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")
 		err := persistence.Save(&runState, repoRoot)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		filepath, err := persistence.FilePath(repoRoot)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		content, err := os.ReadFile(filepath)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, wantJSON, string(content))
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, runState, newState)
 	})
 }

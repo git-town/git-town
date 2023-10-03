@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,7 +30,7 @@ func TestStepListBuilder(t *testing.T) {
 				err := errors.New("test error")
 				b.AddE(&steps.EmptyStep{}, err)
 				list, builderErr := b.Result()
-				assert.True(t, list.IsEmpty())
+				test.True(t, list.IsEmpty())
 				assert.Equal(t, err, builderErr)
 			})
 		})
@@ -52,7 +53,7 @@ func TestStepListBuilder(t *testing.T) {
 				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
 				list, _ := b.Result()
-				assert.True(t, list.IsEmpty())
+				test.True(t, list.IsEmpty())
 			})
 		})
 	})

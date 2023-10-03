@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +25,7 @@ func TestNewGithubConnector(t *testing.T) {
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "apiToken",
 			Hostname:     "github.com",
@@ -43,7 +44,7 @@ func TestNewGithubConnector(t *testing.T) {
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
 			Log:            cli.SilentLog{},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
 			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
@@ -63,7 +64,7 @@ func TestNewGithubConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
@@ -77,7 +78,7 @@ func TestNewGithubConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 	})
 }
 
@@ -119,7 +120,7 @@ func TestGithubConnector(t *testing.T) {
 				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 		}
-		for name, test := range tests {
+		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := hosting.GitHubConnector{
 					CommonConfig: hosting.CommonConfig{ //nolint:exhaustruct
@@ -129,9 +130,9 @@ func TestGithubConnector(t *testing.T) {
 					},
 					MainBranch: domain.NewLocalBranchName("main"),
 				}
-				have, err := connector.NewProposalURL(test.branch, test.parent)
-				assert.Nil(t, err)
-				assert.Equal(t, have, test.want)
+				have, err := connector.NewProposalURL(tt.branch, tt.parent)
+				test.NoError(t, err)
+				assert.Equal(t, have, tt.want)
 			})
 		}
 	})

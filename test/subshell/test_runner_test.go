@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/test/ostools"
 	"github.com/git-town/git-town/v9/test/subshell"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +19,7 @@ func TestMockingRunner(t *testing.T) {
 		workDir := t.TempDir()
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		runner := subshell.TestRunner{
 			WorkingDir: devDir,
 			HomeDir:    workDir,
@@ -27,7 +28,7 @@ func TestMockingRunner(t *testing.T) {
 		runner.MockCommand("foo")
 		// run a program that calls the mocked command
 		res, err := runner.Query("bash", "-c", "foo bar")
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		// verify that it called our overridden "foo" command
 		assert.Equal(t, "foo called with: bar", res)
 	})
@@ -40,7 +41,7 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		res, err := runner.Query("echo", "hello", "world")
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, "hello world", res)
 	})
 
@@ -53,9 +54,9 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		_, err := runner.QueryString("touch first")
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
-		assert.False(t, os.IsNotExist(err))
+		test.False(t, os.IsNotExist(err))
 	})
 
 	t.Run("QueryWith", func(t *testing.T) {
@@ -64,7 +65,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -73,7 +74,7 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
 		})
 
@@ -82,7 +83,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -92,7 +93,7 @@ func TestMockingRunner(t *testing.T) {
 			ostools.CreateInputTool(toolPath)
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
 		})
 	})
@@ -109,7 +110,7 @@ func TestMockingRunner(t *testing.T) {
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
 			assert.Equal(t, "hello", output)
 			assert.Equal(t, 0, exitCode)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
 			r := subshell.TestRunner{
@@ -121,7 +122,7 @@ func TestMockingRunner(t *testing.T) {
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
 			assert.Equal(t, "hello", output)
 			assert.Equal(t, 1, exitCode)
-			assert.NoError(t, err)
+			test.NoError(t, err)
 		})
 	})
 }

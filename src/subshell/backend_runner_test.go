@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/shoenig/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +22,7 @@ func TestBackendRunner(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.Query("echo", "hello", "world  ")
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, "hello world  \n", output)
 		})
 
@@ -32,7 +33,7 @@ func TestBackendRunner(t *testing.T) {
 			err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
-			assert.True(t, errors.As(err, &execError))
+			test.True(t, errors.As(err, &execError))
 		})
 
 		t.Run("non-zero exit code", func(t *testing.T) {
@@ -61,7 +62,7 @@ OUTPUT END
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
-			assert.NoError(t, err)
+			test.NoError(t, err)
 			assert.Equal(t, "hello world", output)
 		})
 	})
@@ -75,9 +76,9 @@ OUTPUT END
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
 		})
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
-		assert.NoError(t, err)
+		test.NoError(t, err)
 		assert.Equal(t, "first", entries[0].Name())
 		assert.Equal(t, "second", entries[1].Name())
 	})
