@@ -27,7 +27,7 @@ Feature: display debug statistics
       |        | backend  | git config git-town-branch.new.parent main    |
       | new    | frontend | git push -u origin new                        |
       |        | frontend | git push origin :old                          |
-      |        | backend  | git diff main..old                            |
+      |        | backend  | git log main..old                             |
       | new    | frontend | git branch -D old                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/old           |
@@ -63,7 +63,7 @@ Feature: display debug statistics
       |        | frontend | git push -u origin old                        |
       |        | frontend | git push origin :new                          |
       |        | frontend | git checkout old                              |
-      |        | backend  | git diff main..new                            |
+      |        | backend  | git log main..new                             |
       | old    | frontend | git branch -D new                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/new           |
