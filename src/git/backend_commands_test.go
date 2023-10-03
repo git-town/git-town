@@ -58,7 +58,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      initial,
 				Message:     "commit 1",
 				FileName:    "file1",
-				FileContent: "original file1 content",
+				FileContent: "original content",
 			})
 			branch := domain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
@@ -66,7 +66,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      branch,
 				Message:     "commit 2",
 				FileName:    "file1",
-				FileContent: "modified file1 content",
+				FileContent: "modified content",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
 			assert.Nil(t, err)
@@ -75,7 +75,7 @@ func TestBackendCommands(t *testing.T) {
 				Branch:      branch,
 				Message:     "commit 3",
 				FileName:    "file1",
-				FileContent: "original file1 content",
+				FileContent: "original content",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
 			assert.Nil(t, err)
