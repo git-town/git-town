@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/shoenig/test"
 	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestDebug(t *testing.T) {
@@ -19,7 +18,7 @@ func TestDebug(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--debug"})
 		test.NoError(t, err)
-		assert.Equal(t, true, readFlag(&cmd))
+		test.EqOp(t, true, readFlag(&cmd))
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -29,6 +28,6 @@ func TestDebug(t *testing.T) {
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-d"})
 		test.NoError(t, err)
-		assert.Equal(t, true, readFlag(&cmd))
+		test.EqOp(t, true, readFlag(&cmd))
 	})
 }

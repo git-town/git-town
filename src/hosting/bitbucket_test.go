@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBitbucketConnector(t *testing.T) {
@@ -27,7 +26,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		assert.Equal(t, wantConfig, have.CommonConfig)
+		test.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -44,7 +43,7 @@ func TestNewBitbucketConnector(t *testing.T) {
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		assert.Equal(t, wantConfig, have.CommonConfig)
+		test.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {

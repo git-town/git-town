@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestJSONStep(t *testing.T) {
@@ -31,7 +30,7 @@ func TestJSONStep(t *testing.T) {
     "Branch": "branch-1"
   }
 }`[1:]
-		assert.Equal(t, want, string(have))
+		test.EqOp(t, want, string(have))
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -55,6 +54,6 @@ func TestJSONStep(t *testing.T) {
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
 		}
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 }

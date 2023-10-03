@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewHostingService(t *testing.T) {
@@ -23,7 +22,7 @@ func TestNewHostingService(t *testing.T) {
 		for give, want := range tests {
 			have, err := config.NewHosting(give)
 			test.NoError(t, err)
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		}
 	})
 
@@ -32,7 +31,7 @@ func TestNewHostingService(t *testing.T) {
 		for _, give := range []string{"github", "GitHub", "GITHUB"} {
 			have, err := config.NewHosting(give)
 			test.NoError(t, err)
-			assert.Equal(t, config.HostingGitHub, have)
+			test.EqOp(t, config.HostingGitHub, have)
 		}
 	})
 

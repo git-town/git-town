@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestFormat(t *testing.T) {
@@ -21,6 +21,6 @@ func TestFormat(t *testing.T) {
 	}
 	for want, give := range tests {
 		have := subshell.FormatCommand(give.branch, give.omitBranch, give.executable, give.args...)
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	}
 }

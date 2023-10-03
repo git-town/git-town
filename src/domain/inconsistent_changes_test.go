@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestInconsistentChange(t *testing.T) {
@@ -69,7 +69,7 @@ func TestInconsistentChange(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantPerennials, havePerennials)
+		test.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
@@ -88,6 +88,6 @@ func TestInconsistentChange(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantFeatures, haveFeatures)
+		test.Eq(t, wantFeatures, haveFeatures)
 	})
 }

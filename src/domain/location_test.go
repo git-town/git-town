@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestLocation(t *testing.T) {
@@ -18,7 +17,7 @@ func TestLocation(t *testing.T) {
 		have, err := json.MarshalIndent(location, "", "  ")
 		test.NoError(t, err)
 		want := `"branch-1"`
-		assert.Equal(t, want, string(have))
+		test.EqOp(t, want, string(have))
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -28,6 +27,6 @@ func TestLocation(t *testing.T) {
 		err := json.Unmarshal([]byte(give), &have)
 		test.NoError(t, err)
 		want := domain.NewLocation("branch-1")
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 }

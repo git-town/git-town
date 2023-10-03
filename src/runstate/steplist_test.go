@@ -2,13 +2,13 @@ package runstate_test
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestStepList(t *testing.T) {
@@ -21,20 +21,20 @@ func TestStepList(t *testing.T) {
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Append(&steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("append multiple steps", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Append(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortMergeStep{}, &steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("append no steps", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			list.Append()
-			assert.Equal(t, []steps.Step{}, list.List)
+			test.Eq(t, []steps.Step{}, list.List)
 		})
 	})
 
@@ -46,14 +46,14 @@ func TestStepList(t *testing.T) {
 			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
 			list.AppendList(other)
 			want := []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("append an empty list", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			other := runstate.StepList{List: []steps.Step{}}
 			list.AppendList(other)
-			assert.Equal(t, []steps.Step{&steps.AbortMergeStep{}}, list.List)
+			test.Eq(t, []steps.Step{&steps.AbortMergeStep{}}, list.List)
 		})
 	})
 
@@ -89,7 +89,7 @@ func TestStepList(t *testing.T) {
     {}
   ]
 }`[1:]
-		assert.Equal(t, want, string(have))
+		test.EqOp(t, want, string(have))
 	})
 
 	t.Run("Peek", func(t *testing.T) {
@@ -98,17 +98,17 @@ func TestStepList(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			have := list.Peek()
-			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
+			test.Eq(t, "*steps.AbortMergeStep", reflect.TypeOf(have).String())
 			wantList := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
-			assert.Equal(t, wantList, list, "does not modify the list")
+			test.Eq(t, wantList, list)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			have := list.Peek()
-			assert.Equal(t, nil, have)
+			test.EqOp(t, nil, have)
 			wantList := runstate.StepList{List: []steps.Step{}}
-			assert.Equal(t, wantList, list)
+			test.Eq(t, wantList, list)
 		})
 	})
 
@@ -118,17 +118,17 @@ func TestStepList(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			have := list.Pop()
-			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
+			test.EqOp(t, "*steps.AbortMergeStep", reflect.TypeOf(have).String())
 			wantList := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
-			assert.Equal(t, wantList, list, "remotes the popped element from the list")
+			test.Eq(t, wantList, list)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			have := list.Pop()
-			assert.Equal(t, nil, have, "returns nil")
+			test.EqOp(t, nil, have)
 			wantList := runstate.StepList{List: []steps.Step{}}
-			assert.Equal(t, wantList, list, "remotes the popped element from the list")
+			test.Eq(t, wantList, list)
 		})
 	})
 
@@ -139,20 +139,20 @@ func TestStepList(t *testing.T) {
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Prepend(&steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("prepend multiple steps", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Prepend(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("prepend no steps", func(t *testing.T) {
 			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			list.Prepend()
-			assert.Equal(t, []steps.Step{}, list.List)
+			test.Eq(t, []steps.Step{}, list.List)
 		})
 	})
 
@@ -164,7 +164,7 @@ func TestStepList(t *testing.T) {
 			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}}}
 			list.PrependList(other)
 			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}, &steps.AbortMergeStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {
 			t.Parallel()
@@ -172,7 +172,7 @@ func TestStepList(t *testing.T) {
 			other := runstate.StepList{List: []steps.Step{}}
 			list.PrependList(other)
 			want := []steps.Step{&steps.AbortMergeStep{}}
-			assert.Equal(t, want, list.List)
+			test.Eq(t, want, list.List)
 		})
 	})
 
@@ -193,7 +193,7 @@ func TestStepList(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("contains the given type in the middle", func(t *testing.T) {
 			t.Parallel()
@@ -212,7 +212,7 @@ func TestStepList(t *testing.T) {
 					&steps.AbortRebaseStep{},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("contains the given type multiple times", func(t *testing.T) {
 			t.Parallel()
@@ -235,7 +235,7 @@ func TestStepList(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("does not contain the given type", func(t *testing.T) {
 			t.Parallel()
@@ -254,7 +254,7 @@ func TestStepList(t *testing.T) {
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 	})
 
@@ -276,7 +276,7 @@ func TestStepList(t *testing.T) {
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("has a mix of Checkout and CheckoutIfExists steps", func(t *testing.T) {
 			t.Parallel()
@@ -294,7 +294,7 @@ func TestStepList(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("has no duplicate checkout steps", func(t *testing.T) {
 			t.Parallel()
@@ -311,7 +311,7 @@ func TestStepList(t *testing.T) {
 					&steps.AbortRebaseStep{},
 				},
 			}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 	})
 
@@ -329,7 +329,7 @@ StepList:
 1: &steps.AbortMergeStep{EmptyStep:steps.EmptyStep{}}
 2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{id:"branch"}, EmptyStep:steps.EmptyStep{}}
 `[1:]
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 
 	t.Run("StepTypes", func(t *testing.T) {
@@ -342,7 +342,7 @@ StepList:
 		}
 		have := list.StepTypes()
 		want := []string{"*steps.AbortMergeStep", "*steps.CheckoutStep"}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -373,6 +373,6 @@ StepList:
 			},
 			&steps.StashOpenChangesStep{},
 		}}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 }

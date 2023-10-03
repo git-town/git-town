@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRunState(t *testing.T) {
@@ -90,10 +89,10 @@ func TestRunState(t *testing.T) {
   "UnfinishedDetails": null,
   "UndoablePerennialCommits": []
 }`[1:]
-		assert.Equal(t, want, string(encoded))
+		test.EqOp(t, want, string(encoded))
 		newRunState := &runstate.RunState{} //nolint:exhaustruct
 		err = json.Unmarshal(encoded, &newRunState)
 		test.NoError(t, err)
-		assert.Equal(t, runState, newRunState)
+		test.EqOp(t, runState, newRunState)
 	})
 }

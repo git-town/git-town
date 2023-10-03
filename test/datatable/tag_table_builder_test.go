@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestTagTableBuilder(t *testing.T) {
@@ -19,5 +19,5 @@ func TestTagTableBuilder(t *testing.T) {
 | tagB | local, origin |
 | tagC | local         |
 `
-	assert.Equal(t, expected, "\n"+table.String())
+	test.EqOp(t, expected, "\n"+table.String())
 }

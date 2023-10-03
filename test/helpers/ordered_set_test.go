@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestOrderedSet(t *testing.T) {
@@ -19,14 +18,14 @@ func TestOrderedSet(t *testing.T) {
 			set = set.Add("three")
 			have := set.Elements()
 			want := []string{"one", "two", "three"}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("element already exists in set", func(t *testing.T) {
 			set := helpers.NewOrderedSet("one", "two")
 			set = set.Add("two")
 			have := set.Elements()
 			want := []string{"one", "two"}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 	})
 
@@ -43,7 +42,7 @@ func TestOrderedSet(t *testing.T) {
 		set := helpers.NewOrderedSet("one", "two")
 		have := set.Elements()
 		want := []string{"one", "two"}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("Join", func(t *testing.T) {
@@ -52,13 +51,13 @@ func TestOrderedSet(t *testing.T) {
 			set := helpers.NewOrderedSet("one", "two", "three")
 			have := set.Join(", ")
 			want := "one, two, three"
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 		t.Run("ints", func(t *testing.T) {
 			set := helpers.NewOrderedSet(1, 2, 3)
 			have := set.Join(", ")
 			want := "1, 2, 3"
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 		t.Run("SHAs", func(t *testing.T) {
 			set := helpers.NewOrderedSet(
@@ -68,7 +67,7 @@ func TestOrderedSet(t *testing.T) {
 			)
 			have := set.Join(", ")
 			want := "111111, 222222, 333333"
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 	})
 }

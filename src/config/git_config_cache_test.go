@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGitConfigCache(t *testing.T) {
@@ -38,6 +37,6 @@ func TestGitConfigCache(t *testing.T) {
 			{"key1"},
 			{"key2"},
 		}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 }

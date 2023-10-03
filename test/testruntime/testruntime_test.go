@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRunner(t *testing.T) {
@@ -23,9 +22,9 @@ func TestRunner(t *testing.T) {
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")
 		runtime := testruntime.New(workingDir, homeDir, binDir)
-		assert.Equal(t, workingDir, runtime.WorkingDir)
-		assert.Equal(t, homeDir, runtime.HomeDir)
-		assert.Equal(t, binDir, runtime.BinDir)
+		test.EqOp(t, workingDir, runtime.WorkingDir)
+		test.EqOp(t, homeDir, runtime.HomeDir)
+		test.EqOp(t, binDir, runtime.BinDir)
 	})
 
 	t.Run("Clone", func(t *testing.T) {
@@ -33,7 +32,7 @@ func TestRunner(t *testing.T) {
 		origin := testruntime.Create(t)
 		clonedPath := filepath.Join(origin.WorkingDir, "cloned")
 		cloned := testruntime.Clone(origin.TestRunner, clonedPath)
-		assert.Equal(t, clonedPath, cloned.WorkingDir)
+		test.EqOp(t, clonedPath, cloned.WorkingDir)
 		asserts.IsGitRepo(t, clonedPath)
 	})
 }

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestRemoteBranchesSHAs(t *testing.T) {
@@ -24,10 +24,10 @@ func TestRemoteBranchesSHAs(t *testing.T) {
 		wantPerennials := domain.RemoteBranchesSHAs{
 			domain.NewRemoteBranchName("origin/perennial-branch"): domain.NewSHA("222222"),
 		}
-		assert.Equal(t, wantPerennials, havePerennials)
+		test.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.RemoteBranchesSHAs{
 			domain.NewRemoteBranchName("origin/feature-branch"): domain.NewSHA("111111"),
 		}
-		assert.Equal(t, wantFeatures, haveFeatures)
+		test.Eq(t, wantFeatures, haveFeatures)
 	})
 }

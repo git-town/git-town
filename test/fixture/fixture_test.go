@@ -36,13 +36,13 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
 		test.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), branch, "the origin should be at the initial branch so that we can push to it")
+		test.EqOp(t, domain.NewLocalBranchName("initial"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		test.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("main"), branch)
+		test.EqOp(t, domain.NewLocalBranchName("main"), branch)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
@@ -60,7 +60,7 @@ func TestFixture(t *testing.T) {
 			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| origin     | main, o1, o2 |\n"
-			assert.Equal(t, expected, table.String())
+			test.EqOp(t, expected, table.String())
 		})
 
 		t.Run("same branches in dev and origin repo", func(t *testing.T) {
@@ -77,7 +77,7 @@ func TestFixture(t *testing.T) {
 			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY    | BRANCHES     |\n| local, origin | main, b1, b2 |\n"
-			assert.Equal(t, expected, table.String())
+			test.EqOp(t, expected, table.String())
 		})
 	})
 
@@ -132,7 +132,7 @@ func TestFixture(t *testing.T) {
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
 		test.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
+		test.EqOp(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
 	t.Run("CreateOriginBranch", func(t *testing.T) {
@@ -177,12 +177,12 @@ func TestFixture(t *testing.T) {
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.Len(t, table.Cells, 3)
-			assert.Equal(t, table.Cells[1][0], "local, origin")
-			assert.Equal(t, table.Cells[1][1], "local-origin.md")
-			assert.Equal(t, table.Cells[1][2], "one")
-			assert.Equal(t, table.Cells[2][0], "origin")
-			assert.Equal(t, table.Cells[2][1], "origin.md")
-			assert.Equal(t, table.Cells[2][2], "two")
+			test.EqOp(t, table.Cells[1][0], "local, origin")
+			test.EqOp(t, table.Cells[1][1], "local-origin.md")
+			test.EqOp(t, table.Cells[1][2], "one")
+			test.EqOp(t, table.Cells[2][0], "origin")
+			test.EqOp(t, table.Cells[2][1], "origin.md")
+			test.EqOp(t, table.Cells[2][2], "two")
 		})
 
 		t.Run("with upstream repo", func(t *testing.T) {
@@ -208,12 +208,12 @@ func TestFixture(t *testing.T) {
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.Len(t, table.Cells, 3)
-			assert.Equal(t, table.Cells[1][0], "local")
-			assert.Equal(t, table.Cells[1][1], "local.md")
-			assert.Equal(t, table.Cells[1][2], "one")
-			assert.Equal(t, table.Cells[2][0], "upstream")
-			assert.Equal(t, table.Cells[2][1], "upstream.md")
-			assert.Equal(t, table.Cells[2][2], "two")
+			test.EqOp(t, table.Cells[1][0], "local")
+			test.EqOp(t, table.Cells[1][1], "local.md")
+			test.EqOp(t, table.Cells[1][2], "one")
+			test.EqOp(t, table.Cells[2][0], "upstream")
+			test.EqOp(t, table.Cells[2][1], "upstream.md")
+			test.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
 

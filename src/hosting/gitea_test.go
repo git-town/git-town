@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGiteaConnector(t *testing.T) {
@@ -31,7 +30,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		assert.Equal(t, wantConfig, have.CommonConfig)
+		test.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -70,7 +69,7 @@ func TestGitea(t *testing.T) {
 		want := "my title (#1)"
 		connector := hosting.GiteaConnector{} //nolint:exhaustruct
 		have := connector.DefaultProposalMessage(give)
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -150,5 +149,5 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 		},
 	}
 	have := hosting.FilterGiteaPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
-	assert.Equal(t, want, have)
+	test.Eq(t, want, have)
 }

@@ -75,7 +75,7 @@ func TestMockingRunner(t *testing.T) {
 			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
 			test.NoError(t, err)
-			assert.Equal(t, ostools.ScriptName("list-dir"), res)
+			test.EqOp(t, ostools.ScriptName("list-dir"), res)
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -109,7 +109,7 @@ func TestMockingRunner(t *testing.T) {
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
 			test.EqOp(t, "hello", output)
-			assert.Equal(t, 0, exitCode)
+			test.EqOp(t, 0, exitCode)
 			test.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
@@ -121,7 +121,7 @@ func TestMockingRunner(t *testing.T) {
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
 			test.EqOp(t, "hello", output)
-			assert.Equal(t, 1, exitCode)
+			test.EqOp(t, 1, exitCode)
 			test.NoError(t, err)
 		})
 	})

@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestLoadSave(t *testing.T) {
@@ -27,7 +26,7 @@ func TestLoadSave(t *testing.T) {
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
 			have := persistence.SanitizePath(rootDir)
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		}
 	})
 
@@ -417,10 +416,10 @@ func TestLoadSave(t *testing.T) {
 		test.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		test.NoError(t, err)
-		assert.Equal(t, wantJSON, string(content))
+		test.EqOp(t, wantJSON, string(content))
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		test.NoError(t, err)
-		assert.Equal(t, runState, newState)
+		test.Eq(t, runState, newState)
 	})
 }

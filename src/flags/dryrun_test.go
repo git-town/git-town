@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/shoenig/test"
 	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestDryRun(t *testing.T) {
@@ -16,5 +15,5 @@ func TestDryRun(t *testing.T) {
 	addFlag(&cmd)
 	err := cmd.ParseFlags([]string{"--dry-run"})
 	test.NoError(t, err)
-	assert.Equal(t, true, readFlag(&cmd))
+	test.EqOp(t, true, readFlag(&cmd))
 }

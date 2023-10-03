@@ -1,7 +1,6 @@
 package hosting_test
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/cli"
@@ -10,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGithubConnector(t *testing.T) {
@@ -32,7 +30,7 @@ func TestNewGithubConnector(t *testing.T) {
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		assert.Equal(t, wantConfig, have.CommonConfig)
+		test.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -51,7 +49,7 @@ func TestNewGithubConnector(t *testing.T) {
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		assert.Equal(t, wantConfig, have.CommonConfig)
+		test.EqOp(t, wantConfig, have.CommonConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -94,7 +92,7 @@ func TestGithubConnector(t *testing.T) {
 		}
 		have := connector.DefaultProposalMessage(give)
 		want := "my title (#1)"
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -132,7 +130,7 @@ func TestGithubConnector(t *testing.T) {
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
 				test.NoError(t, err)
-				assert.Equal(t, tt.want, have)
+				test.EqOp(t, tt.want, have)
 			})
 		}
 	})
@@ -148,7 +146,7 @@ func TestGithubConnector(t *testing.T) {
 		}
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 }
 
@@ -181,7 +179,7 @@ func TestParseCommitMessage(t *testing.T) {
 	}
 	for give, want := range tests {
 		haveTitle, haveBody := hosting.ParseCommitMessage(give)
-		assert.Equal(t, want.title, haveTitle, give)
-		assert.Equal(t, want.body, haveBody, strings.ReplaceAll(give, "\n", "\\n"))
+		test.EqOp(t, want.title, haveTitle)
+		test.EqOp(t, want.body, haveBody)
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestRemoteBranchNames(t *testing.T) {
@@ -23,7 +23,7 @@ func TestRemoteBranchNames(t *testing.T) {
 			domain.NewRemoteBranchName("origin/branch-2"),
 			domain.NewRemoteBranchName("origin/branch-3"),
 		}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("Strings", func(t *testing.T) {
@@ -39,6 +39,6 @@ func TestRemoteBranchNames(t *testing.T) {
 			"origin/branch-2",
 			"origin/branch-3",
 		}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 }

@@ -58,10 +58,10 @@ func TestCollector(t *testing.T) {
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)
-			assert.Equal(t, syncStatuses, have)
+			test.Eq(t, syncStatuses, have)
 			err := errors.New("test error")
 			have = fc.BranchesSyncStatus(syncStatuses, err)
-			assert.Equal(t, syncStatuses, have)
+			test.Eq(t, syncStatuses, have)
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
@@ -108,8 +108,8 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.Equal(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
-			assert.Equal(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
+			test.EqOp(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
+			test.EqOp(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
@@ -127,8 +127,8 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.Equal(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
-			assert.Equal(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
+			test.EqOp(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
+			test.EqOp(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
@@ -165,8 +165,8 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given string slice", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.Equal(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
-			assert.Equal(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
+			test.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
+			test.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
@@ -184,8 +184,8 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			assert.Equal(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
-			assert.Equal(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
+			test.EqOp(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
+			test.EqOp(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()

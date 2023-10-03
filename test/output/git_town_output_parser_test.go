@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/output"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestGitCommandsInGitTownOutput(t *testing.T) {
@@ -17,7 +17,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "foo bar", Branch: "mybranch", CommandType: output.CommandTypeFrontend},
 		}
 		have := output.GitCommandsInGitTownOutput(give)
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("multiple frontend lines", func(t *testing.T) {
@@ -28,7 +28,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "command two", Branch: "branch2", CommandType: output.CommandTypeFrontend},
 		}
 		have := output.GitCommandsInGitTownOutput(give)
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("frontend line without branch", func(t *testing.T) {
@@ -38,7 +38,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "command one", Branch: "", CommandType: output.CommandTypeFrontend},
 		}
 		have := output.GitCommandsInGitTownOutput(give)
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("single debug line", func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "foo bar", CommandType: output.CommandTypeBackend, Branch: ""},
 		}
 		have := output.GitCommandsInGitTownOutput(give)
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("multiple debug lines", func(t *testing.T) {
@@ -59,7 +59,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "command two", CommandType: output.CommandTypeBackend, Branch: ""},
 		}
 		have := output.GitCommandsInGitTownOutput(give)
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 
 	t.Run("line withouth a command", func(t *testing.T) {
@@ -67,6 +67,6 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		give := "hello world"
 		have := output.GitCommandsInGitTownOutput(give)
 		want := []output.ExecutedGitCommand{}
-		assert.Equal(t, want, have)
+		test.Eq(t, want, have)
 	})
 }

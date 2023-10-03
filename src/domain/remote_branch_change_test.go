@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestRemoteBranchChange(t *testing.T) {
@@ -33,13 +33,13 @@ func TestRemoteBranchChange(t *testing.T) {
 				After:  domain.NewSHA("444444"),
 			},
 		}
-		assert.Equal(t, wantPerennials, havePerennials)
+		test.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.RemoteBranchChange{
 			domain.NewRemoteBranchName("origin/branch-1"): {
 				Before: domain.NewSHA("111111"),
 				After:  domain.NewSHA("222222"),
 			},
 		}
-		assert.Equal(t, wantFeatures, haveFeatures)
+		test.Eq(t, wantFeatures, haveFeatures)
 	})
 }

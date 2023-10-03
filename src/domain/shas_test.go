@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestSHAs(t *testing.T) {
@@ -20,14 +20,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Join(", ")
 			want := "111111, 222222"
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Join(", ")
 			want := ""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 	})
 
@@ -41,14 +41,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Strings()
 			want := []string{"111111", "222222"}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Strings()
 			want := []string{}
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		})
 	})
 }

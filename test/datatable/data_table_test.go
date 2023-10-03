@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/sergi/go-diff/diffmatchpatch"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestDataTable(t *testing.T) {
@@ -37,7 +37,7 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("origin", "initial, bar")
 		table.RemoveText("initial, ")
 		expected := "| local  | main, foo |\n| origin | bar       |\n"
-		assert.Equal(t, expected, table.String())
+		test.EqOp(t, expected, table.String())
 	})
 
 	t.Run("Sort", func(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/stringslice"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test"
 )
 
 func TestStringSlice(t *testing.T) {
@@ -16,7 +16,7 @@ func TestStringSlice(t *testing.T) {
 			give := []string{}
 			have := stringslice.Connect(give)
 			want := ""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 
 		t.Run("single element", func(t *testing.T) {
@@ -24,7 +24,7 @@ func TestStringSlice(t *testing.T) {
 			give := []string{"one"}
 			have := stringslice.Connect(give)
 			want := "\"one\""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 
 		t.Run("two elements", func(t *testing.T) {
@@ -32,7 +32,7 @@ func TestStringSlice(t *testing.T) {
 			give := []string{"one", "two"}
 			have := stringslice.Connect(give)
 			want := "\"one\" and \"two\""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 
 		t.Run("three elements", func(t *testing.T) {
@@ -40,7 +40,7 @@ func TestStringSlice(t *testing.T) {
 			give := []string{"one", "two", "three"}
 			have := stringslice.Connect(give)
 			want := "\"one\", \"two\", and \"three\""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 
 		t.Run("four elements", func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestStringSlice(t *testing.T) {
 			give := []string{"one", "two", "three", "four"}
 			have := stringslice.Connect(give)
 			want := "\"one\", \"two\", \"three\", and \"four\""
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		})
 	})
 
@@ -61,7 +61,7 @@ func TestStringSlice(t *testing.T) {
 		}
 		for give, want := range tests {
 			have := stringslice.Lines(give)
-			assert.Equal(t, want, have)
+			test.Eq(t, want, have)
 		}
 	})
 }

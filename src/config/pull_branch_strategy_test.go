@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewPullBranchStrategy(t *testing.T) {
@@ -20,7 +19,7 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		for give, want := range tests {
 			have, err := config.NewPullBranchStrategy(give)
 			test.NoError(t, err)
-			assert.Equal(t, want, have)
+			test.EqOp(t, want, have)
 		}
 	})
 
@@ -29,7 +28,7 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		for _, give := range []string{"merge", "Merge", "MERGE"} {
 			have, err := config.NewPullBranchStrategy(give)
 			test.NoError(t, err)
-			assert.Equal(t, config.PullBranchStrategyMerge, have)
+			test.EqOp(t, config.PullBranchStrategyMerge, have)
 		}
 	})
 
@@ -37,7 +36,7 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		t.Parallel()
 		have, err := config.NewPullBranchStrategy("")
 		test.NoError(t, err)
-		assert.Equal(t, config.PullBranchStrategyRebase, have)
+		test.EqOp(t, config.PullBranchStrategyRebase, have)
 	})
 
 	t.Run("invalid value", func(t *testing.T) {

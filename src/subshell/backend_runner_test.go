@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBackendRunner(t *testing.T) {
@@ -52,7 +51,7 @@ hi
 
 OUTPUT END
 ----------------------------------------`
-			assert.Equal(t, expectedError, err.Error())
+			test.EqOp(t, expectedError, err.Error())
 		})
 	})
 

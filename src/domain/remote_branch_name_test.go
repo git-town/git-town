@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRemoteBranchName(t *testing.T) {
@@ -31,13 +30,13 @@ func TestRemoteBranchName(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("origin/branch")
 			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			test.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("upstream/branch")
 			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			test.EqOp(t, want, branch.LocalBranchName())
 		})
 	})
 
@@ -47,7 +46,7 @@ func TestRemoteBranchName(t *testing.T) {
 		have, err := json.MarshalIndent(branch, "", "  ")
 		test.NoError(t, err)
 		want := `"origin/branch-1"`
-		assert.Equal(t, want, string(have))
+		test.EqOp(t, want, string(have))
 	})
 
 	t.Run("NewBranchName and String", func(t *testing.T) {
@@ -73,8 +72,8 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		remoteBranch := domain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
-		assert.Equal(t, domain.OriginRemote, remote)
-		assert.Equal(t, domain.NewLocalBranchName("branch"), localBranch)
+		test.EqOp(t, domain.OriginRemote, remote)
+		test.EqOp(t, domain.NewLocalBranchName("branch"), localBranch)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -84,6 +83,6 @@ func TestRemoteBranchName(t *testing.T) {
 		err := json.Unmarshal([]byte(give), &have)
 		test.NoError(t, err)
 		want := domain.NewRemoteBranchName("origin/branch-1")
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 }

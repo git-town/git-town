@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/shoenig/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGitlabConnector(t *testing.T) {
@@ -32,7 +31,7 @@ func TestNewGitlabConnector(t *testing.T) {
 				Repository:   "docs",
 			},
 		}
-		assert.Equal(t, wantConfig, have.GitLabConfig)
+		test.EqOp(t, wantConfig, have.GitLabConfig)
 	})
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
@@ -52,7 +51,7 @@ func TestNewGitlabConnector(t *testing.T) {
 				Repository:   "docs",
 			},
 		}
-		assert.Equal(t, wantConfig, have.GitLabConfig)
+		test.EqOp(t, wantConfig, have.GitLabConfig)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -102,7 +101,7 @@ func TestGitlabConnector(t *testing.T) {
 		}
 		have := config.DefaultProposalMessage(give)
 		want := "my title (!1)"
-		assert.Equal(t, want, have)
+		test.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
@@ -142,7 +141,7 @@ func TestGitlabConnector(t *testing.T) {
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
 				test.NoError(t, err)
-				assert.Equal(t, tt.want, have)
+				test.EqOp(t, tt.want, have)
 			})
 		}
 	})

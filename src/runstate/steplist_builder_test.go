@@ -22,7 +22,7 @@ func TestStepListBuilder(t *testing.T) {
 				b := runstate.StepListBuilder{}
 				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
-				assert.Equal(t, runstate.NewStepList(&step), b.StepList)
+				test.Eq(t, runstate.NewStepList(&step), b.StepList)
 			})
 			t.Run("registers the given error", func(t *testing.T) {
 				t.Parallel()
@@ -31,7 +31,7 @@ func TestStepListBuilder(t *testing.T) {
 				b.AddE(&steps.EmptyStep{}, err)
 				list, builderErr := b.Result()
 				test.True(t, list.IsEmpty())
-				assert.Equal(t, err, builderErr)
+				test.EqOp(t, err, builderErr)
 			})
 		})
 
