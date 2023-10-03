@@ -18,7 +18,6 @@ func Execute(args ExecuteArgs) error {
 		if step == nil {
 			return finished(args)
 		}
-		// TODO: remove this once git skip is sunset
 		stepName := gohacks.TypeName(step)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
