@@ -26,7 +26,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "docs",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("HTTPS URL", func(t *testing.T) {
 			t.Parallel()
@@ -37,7 +37,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "docs",
 				User: "",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
 			t.Parallel()
@@ -48,7 +48,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "www-gitlab-com",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("GitLab repository nested inside a group", func(t *testing.T) {
 			t.Parallel()
@@ -59,7 +59,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "triage-ops",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("self-hosted GitLab server without URL override", func(t *testing.T) {
 			t.Parallel()
@@ -70,7 +70,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("self-hosted GitLab server with URL override", func(t *testing.T) {
 			t.Parallel()
@@ -81,7 +81,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			t.Parallel()
@@ -92,7 +92,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			must.EqOp(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 	})
 

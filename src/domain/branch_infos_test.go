@@ -311,7 +311,7 @@ func TestBranchInfos(t *testing.T) {
 			}
 			bs := domain.BranchInfos{branch}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("origin/two"))
-			must.EqOp(t, &branch, have)
+			must.EqOp(t, branch, *have)
 		})
 		t.Run("has a local branch with the given name", func(t *testing.T) {
 			t.Parallel()

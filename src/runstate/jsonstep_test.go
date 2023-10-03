@@ -54,6 +54,6 @@ func TestJSONStep(t *testing.T) {
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
 		}
-		must.EqOp(t, want, have)
+		must.Eq(t, want, have)
 	})
 }

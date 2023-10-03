@@ -93,6 +93,6 @@ func TestRunState(t *testing.T) {
 		newRunState := &runstate.RunState{} //nolint:exhaustruct
 		err = json.Unmarshal(encoded, &newRunState)
 		must.NoError(t, err)
-		must.EqOp(t, runState, newRunState)
+		must.Eq(t, runState, newRunState)
 	})
 }
