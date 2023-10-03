@@ -154,36 +154,46 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killSteps(config *killConfig) (steps runstate.StepList, finalUndoSteps runstate.StepList, err error) {
-	killFeatureBranch(&steps, &finalUndoSteps, *config)
-	err = steps.Wrap(runstate.WrapOptions{
+func killSteps(config *killConfig) (steps, finalUndoSteps runstate.StepList, err error) {
+	list := runstate.StepListBuilder{}
+	killFeatureBranch(&list, &finalUndoSteps, *config)
+	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	return steps, finalUndoSteps, err
+	stepList, err := list.Result()
+	return stepList, finalUndoSteps, err
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *runstate.StepList, finalUndoList *runstate.StepList, config killConfig) {
+func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Append(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.RemoteName})
+		list.Add(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.RemoteName})
 	}
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
-			list.Append(&steps.CommitOpenChangesStep{})
+			list.Add(&steps.CommitOpenChangesStep{})
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
-			list.Append(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
+			list.Add(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
 			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
 			finalUndoList.Append(&steps.UndoLastCommitStep{})
 		}
-		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
+		list.Add(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
-	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
+	list.Add(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
 	childBranches := config.lineage.Children(config.targetBranch.LocalName)
+	for _, child := range childBranches {
+		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
+	}
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.targetBranch.LocalName})
+}
+
+func removeBranchFromLineage(branch domain.LocalBranchName, lineage config.Lineage) {
+	childBranches := lineage.Children(branch)
 	for _, child := range childBranches {
 		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
 	}
