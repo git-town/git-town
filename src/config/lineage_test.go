@@ -115,12 +115,16 @@ func TestLineage(t *testing.T) {
 		main := domain.NewLocalBranchName("main")
 		branch1 := domain.NewLocalBranchName("branch-1")
 		branch1a := domain.NewLocalBranchName("branch-1a")
-		original := config.Lineage{
+		lineage := config.Lineage{
 			branch1:  main,
 			branch1a: branch1,
 		}
-		have := original.ChangeParent(branch1a, main)
-		assert.Equal(t)
+		have := lineage.ChangeParent(branch1a, main)
+		want := config.Lineage{
+			branch1:  main,
+			branch1a: main,
+		}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Contains", func(t *testing.T) {

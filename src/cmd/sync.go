@@ -258,14 +258,13 @@ func deleteBranchSteps(args deleteBranchStepsArgs) config.Lineage {
 			list:    args.list,
 			parent:  args.parent,
 		})
-	} else if args.branchTypes.IsPerennialBranch(args.branch.LocalName) {
-		return deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
-			branch:     args.branch,
-			lineage:    args.lineage,
-			list:       args.list,
-			mainBranch: args.mainBranch,
-		})
 	}
+	return deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
+		branch:     args.branch,
+		lineage:    args.lineage,
+		list:       args.list,
+		mainBranch: args.mainBranch,
+	})
 }
 
 type deleteBranchStepsArgs struct {
@@ -277,7 +276,7 @@ type deleteBranchStepsArgs struct {
 	mainBranch  domain.LocalBranchName
 }
 
-func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
+func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) config.Lineage {
 	args.list.Add(&steps.CheckoutStep{Branch: args.parent})
 	args.list.Add(&steps.DeleteLocalBranchStep{
 		Branch: args.branch.LocalName,
@@ -285,7 +284,12 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 		Parent: args.parent.Location(),
 	})
 	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
-	return removeBranchFromLineage(args.list, args.branch.LocalName, args.parent, args.lineage)
+	return removeBranchFromLineage(removeBranchFromLineageArgs{
+		branch:  args.branch.LocalName,
+		lineage: args.lineage,
+		list:    args.list,
+		parent:  args.parent,
+	})
 }
 
 type deleteFeatureBranchStepsArgs struct {
@@ -295,8 +299,13 @@ type deleteFeatureBranchStepsArgs struct {
 	parent  domain.LocalBranchName
 }
 
-func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) {
-	removeBranchFromLineage(args.list, args.branch.LocalName, args.mainBranch, args.lineage)
+func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) config.Lineage {
+	result := removeBranchFromLineage(removeBranchFromLineageArgs{
+		list:    args.list,
+		branch:  args.branch.LocalName,
+		parent:  args.mainBranch,
+		lineage: args.lineage,
+	})
 	args.list.Add(&steps.RemoveFromPerennialBranchesStep{Branch: args.branch.LocalName})
 	args.list.Add(&steps.CheckoutStep{Branch: args.mainBranch})
 	args.list.Add(&steps.DeleteLocalBranchStep{
@@ -305,6 +314,7 @@ func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) {
 		Parent: domain.Location(args.mainBranch),
 	})
 	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+	return result
 }
 
 type deletePerennialBranchStepsArgs struct {

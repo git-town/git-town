@@ -48,8 +48,8 @@ func TestBackendCommands(t *testing.T) {
 			branch := domain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.False(t, have)
+			must.NoError(t, err)
+			must.False(t, have)
 		})
 		t.Run("branch with commits but no changes", func(t *testing.T) {
 			t.Parallel()
@@ -69,8 +69,8 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "modified content",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.True(t, have)
+			must.NoError(t, err)
+			must.True(t, have)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
 				Message:     "commit 3",
@@ -78,8 +78,8 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "original content",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.False(t, have)
+			must.NoError(t, err)
+			must.False(t, have)
 		})
 	})
 
@@ -91,8 +91,8 @@ func TestBackendCommands(t *testing.T) {
 			branch := domain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			have, err := runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.False(t, have)
+			must.NoError(t, err)
+			must.False(t, have)
 		})
 		t.Run("branch with commits but no changes", func(t *testing.T) {
 			t.Parallel()
@@ -112,8 +112,8 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "modified content",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.True(t, have)
+			must.NoError(t, err)
+			must.True(t, have)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
 				Message:     "commit 3",
@@ -121,8 +121,8 @@ func TestBackendCommands(t *testing.T) {
 				FileContent: "original content",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
-			assert.Nil(t, err)
-			assert.True(t, have)
+			must.NoError(t, err)
+			must.True(t, have)
 		})
 	})
 
