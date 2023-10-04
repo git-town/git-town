@@ -50,7 +50,7 @@ func (stepList *StepList) MarshalJSON() ([]byte, error) {
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *StepList) Peek() step.Step {
+func (stepList *StepList) Peek() step.Step { //nolint:ireturn
 	if stepList.IsEmpty() {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (stepList *StepList) Peek() step.Step {
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *StepList) Pop() step.Step {
+func (stepList *StepList) Pop() step.Step { //nolint:ireturn
 	if stepList.IsEmpty() {
 		return nil
 	}

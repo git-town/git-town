@@ -41,7 +41,7 @@ func (js *JSONStep) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(mapping["data"], &js.Step)
 }
 
-func DetermineStep(stepType string) step.Step {
+func DetermineStep(stepType string) step.Step { //nolint:ireturn
 	switch stepType {
 	case "AbortMerge":
 		return &step.AbortMerge{}
