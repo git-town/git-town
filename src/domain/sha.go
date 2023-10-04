@@ -7,13 +7,13 @@ import (
 
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
-type SHA struct { //nolint:musttag
-	ID string
+type SHA struct {
+	id string
 }
 
 func EmptySHA() SHA {
 	return SHA{
-		ID: "",
+		id: "",
 	}
 }
 
@@ -44,7 +44,7 @@ func validateSHA(content string) bool {
 }
 
 func (s SHA) IsEmpty() bool {
-	return s.ID == ""
+	return s.id == ""
 }
 
 // Location widens the type of this SHA to a more generic Location.
@@ -54,21 +54,21 @@ func (s SHA) Location() Location {
 
 // MarshalJSON is used when serializing this SHA to JSON.
 func (s SHA) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.ID)
+	return json.Marshal(s.id)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (s SHA) String() string { return s.ID }
+func (s SHA) String() string { return s.id }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
-	if len(s.ID) < newLength {
+	if len(s.id) < newLength {
 		return s
 	}
-	return NewSHA(s.ID[0:newLength])
+	return NewSHA(s.id[0:newLength])
 }
 
 // UnmarshalJSON is used when de-serializing JSON into a SHA.
 func (s *SHA) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &s.ID)
+	return json.Unmarshal(b, &s.id)
 }

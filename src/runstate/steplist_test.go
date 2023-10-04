@@ -327,7 +327,7 @@ func TestStepList(t *testing.T) {
 		want := `
 StepList:
 1: &steps.AbortMergeStep{EmptyStep:steps.EmptyStep{}}
-2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{ID:"branch"}, EmptyStep:steps.EmptyStep{}}
+2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{id:"branch"}, EmptyStep:steps.EmptyStep{}}
 `[1:]
 		must.EqOp(t, want, have)
 	})

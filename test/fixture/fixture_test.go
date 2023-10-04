@@ -145,11 +145,11 @@ func TestFixture(t *testing.T) {
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		must.NoError(t, err)
-		must.SliceContains(t, branches, domain.NewLocalBranchName("b1"))
+		must.SliceContains(t, branches.Strings(), "b1")
 		// verify it isn't in the local branches
 		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		must.NoError(t, err)
-		must.SliceNotContains(t, branches, domain.NewLocalBranchName("b1"))
+		must.SliceNotContains(t, branches.Strings(), "b1")
 	})
 
 	t.Run("CommitTable", func(t *testing.T) {
