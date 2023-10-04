@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -103,8 +104,8 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig) (runstate.StepList, error) {
-	result := runstate.StepList{}
+func pruneBranchesSteps(config *pruneBranchesConfig) (steps.List, error) {
+	result := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.branches.Initial == branchWithDeletedRemote {
 			result.Append(&step.Checkout{Branch: config.mainBranch})
@@ -121,7 +122,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) (runstate.StepList, error) 
 		}
 		result.Append(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
 	}
-	err := result.Wrap(runstate.WrapOptions{
+	err := result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,

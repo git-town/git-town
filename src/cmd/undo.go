@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -116,7 +117,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	err = undoRunState.RunSteps.Wrap(runstate.WrapOptions{
+	err = undoRunState.RunSteps.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

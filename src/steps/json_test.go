@@ -1,21 +1,21 @@
-package runstate_test
+package steps_test
 
 import (
 	"encoding/json"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
 )
 
-func TestJSONStep(t *testing.T) {
+func TestJSON(t *testing.T) {
 	t.Parallel()
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		jsonstep := runstate.JSONStep{
+		jsonstep := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
@@ -42,14 +42,14 @@ func TestJSONStep(t *testing.T) {
   },
 	"type": "Checkout"
 }`[1:]
-		have := runstate.JSONStep{
+		have := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.EmptyLocalBranchName(),
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := runstate.JSONStep{
+		want := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
