@@ -134,7 +134,7 @@ func (gt *GitTown) Lineage() Lineage {
 func (gt *GitTown) MainBranch() domain.LocalBranchName {
 	mainBranch := gt.LocalOrGlobalConfigValue(KeyMainBranch)
 	if mainBranch == "" {
-		return domain.LocalBranchName{}
+		return domain.EmptyLocalBranchName()
 	}
 	return domain.NewLocalBranchName(mainBranch)
 }

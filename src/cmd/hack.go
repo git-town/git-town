@@ -156,7 +156,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.
 	}
 	parentBranch, err = dialog.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
 	if err != nil {
-		return domain.LocalBranchName{}, true, err
+		return domain.EmptyLocalBranchName(), true, err
 	}
 	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
 		AllBranches:   args.branches.All,
@@ -166,7 +166,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.
 		MainBranch:    args.mainBranch,
 	})
 	if err != nil {
-		return domain.LocalBranchName{}, true, err
+		return domain.EmptyLocalBranchName(), true, err
 	}
 	return parentBranch, true, nil
 }

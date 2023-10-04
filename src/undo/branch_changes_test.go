@@ -45,7 +45,7 @@ func TestChanges(t *testing.T) {
 			wantSpan := undo.BranchSpans{
 				undo.BranchSpan{
 					Before: domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.EmptyRemoteBranchName(),
@@ -352,14 +352,14 @@ func TestChanges(t *testing.T) {
 			before := domain.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
@@ -416,7 +416,7 @@ func TestChanges(t *testing.T) {
 				List: []steps.Step{
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
-						Parent: domain.LocalBranchName{}.Location(),
+						Parent: domain.EmptyLocalBranchName().Location(),
 						Force:  true,
 					},
 					&steps.DeleteLocalBranchStep{
@@ -500,7 +500,7 @@ func TestChanges(t *testing.T) {
 					},
 					&steps.DeleteLocalBranchStep{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
-						Parent: domain.LocalBranchName{}.Location(),
+						Parent: domain.EmptyLocalBranchName().Location(),
 						Force:  true,
 					},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("main")},
@@ -847,7 +847,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("upstream/main"),
@@ -866,7 +866,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("444444"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("upstream/main"),
@@ -1265,14 +1265,14 @@ func TestChanges(t *testing.T) {
 			after := domain.BranchesSnapshot{
 				Branches: domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
@@ -1440,7 +1440,7 @@ func TestChanges(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("upstream/main"),

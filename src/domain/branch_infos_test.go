@@ -60,7 +60,7 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			bis := domain.BranchInfos{
 				domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -68,7 +68,7 @@ func TestBranchInfos(t *testing.T) {
 				},
 			}
 			give := domain.BranchInfo{
-				LocalName:  domain.LocalBranchName{},
+				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -99,7 +99,7 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
@@ -142,7 +142,7 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
@@ -286,7 +286,7 @@ func TestBranchInfos(t *testing.T) {
 		t.Run("remote branch with matching name", func(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.NewRemoteBranchName("kg/one"),
@@ -345,7 +345,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
-				LocalName:  domain.LocalBranchName{},
+				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.NewRemoteBranchName("origin/three"),

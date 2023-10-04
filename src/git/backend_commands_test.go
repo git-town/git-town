@@ -95,14 +95,14 @@ func TestBackendCommands(t *testing.T) {
 				Message:  "commit 2",
 				FileName: "file2",
 			})
-			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.EmptyLocalBranchName())
 			must.NoError(t, err)
 			must.EqOp(t, 3, len(commits)) // 1 initial commit + 2 test commits
 		})
 		t.Run("main branch contains no commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.LocalBranchName{})
+			commits, err := runtime.BackendCommands.CommitsInBranch(domain.NewLocalBranchName("initial"), domain.EmptyLocalBranchName())
 			must.NoError(t, err)
 			must.EqOp(t, 1, len(commits)) // the initial commit
 		})
@@ -354,7 +354,7 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1    222222 Commit message 2`[1:]
 				want := domain.BranchInfos{
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -413,7 +413,7 @@ func TestBackendCommands(t *testing.T) {
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
 					domain.BranchInfo{
-						LocalName:  domain.LocalBranchName{},
+						LocalName:  domain.EmptyLocalBranchName(),
 						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),

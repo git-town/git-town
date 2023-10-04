@@ -97,7 +97,7 @@ func TestGitlabConnector(t *testing.T) {
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,
-			Target:          domain.LocalBranchName{},
+			Target:          domain.EmptyLocalBranchName(),
 		}
 		have := config.DefaultProposalMessage(give)
 		want := "my title (!1)"
