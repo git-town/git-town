@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
 )
 
@@ -318,7 +317,7 @@ func TestStepList(t *testing.T) {
 
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
-		list := runstate.StepList{List: []steps.Step{
+		list := runstate.StepList{List: []step.Step{
 			&step.AbortMerge{},
 			&step.AddToPerennialBranches{
 				Branch: domain.NewLocalBranchName("branch"),
@@ -327,7 +326,7 @@ func TestStepList(t *testing.T) {
 		have := list.String()
 		want := `
 StepList:
-1: &step.AbortMerge{EmptyStep:step.Empty{}}
+1: &step.AbortMerge{Empty:step.Empty{}}
 2: &step.AddToPerennialBranches{Branch:domain.LocalBranchName{id:"branch"}, Empty:step.Empty{}}
 `[1:]
 		must.EqOp(t, want, have)
@@ -356,11 +355,11 @@ StepList:
 			"MustHaveSHA": "abcdef",
 			"SetToSHA": "123456"
 		},
-		"type": "ResetCurrentBranchToSHAStep"
+		"type": "ResetCurrentBranchToSHA"
 	},
 	{
 		"data": {},
-		"type": "StashOpenChangesStep"
+		"type": "StashOpenChanges"
 	}
 ]`[1:]
 		have := runstate.StepList{}

@@ -32,8 +32,8 @@ type RunState struct {
 func (rs *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
 	popped := StepList{}
 	for {
-		step := rs.RunSteps.Peek()
-		if !isCheckoutStep(step) {
+		nextStep := rs.RunSteps.Peek()
+		if !isCheckoutStep(nextStep) {
 			popped.Append(rs.RunSteps.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()

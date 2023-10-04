@@ -2,7 +2,7 @@ package runstate
 
 import (
 	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 )
 
 // StepListBuilder allows populating StepList instances
@@ -14,11 +14,11 @@ type StepListBuilder struct {
 	gohacks.FailureCollector `exhaustruct:"optional"`
 }
 
-func (slb *StepListBuilder) Add(step steps.Step) {
+func (slb *StepListBuilder) Add(step step.Step) {
 	slb.StepList.Append(step)
 }
 
-func (slb *StepListBuilder) AddE(step steps.Step, err error) {
+func (slb *StepListBuilder) AddE(step step.Step, err error) {
 	if !slb.Check(err) {
 		slb.Add(step)
 	}

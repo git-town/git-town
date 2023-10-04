@@ -61,7 +61,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHAStep"
+      "type": "ResetCurrentBranchToSHA"
     }
   ],
   "RunSteps": [
@@ -71,7 +71,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHAStep"
+      "type": "ResetCurrentBranchToSHA"
     }
   ],
   "UndoSteps": [
@@ -81,7 +81,7 @@ func TestRunState(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHAStep"
+      "type": "ResetCurrentBranchToSHA"
     }
   ],
   "InitialActiveBranch": "initial",

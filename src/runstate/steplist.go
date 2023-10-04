@@ -8,25 +8,25 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 )
 
 // StepList is a fifo containing Step instances.
 //
 //nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
 type StepList struct {
-	List []steps.Step `exhaustruct:"optional"`
+	List []step.Step `exhaustruct:"optional"`
 }
 
 // NewStepList provides a StepList instance containing the given step.
-func NewStepList(step steps.Step) StepList {
+func NewStepList(initialStep step.Step) StepList {
 	return StepList{
-		List: []steps.Step{step},
+		List: []step.Step{initialStep},
 	}
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *StepList) Append(step ...steps.Step) {
+func (stepList *StepList) Append(step ...step.Step) {
 	stepList.List = append(stepList.List, step...)
 }
 
@@ -50,7 +50,7 @@ func (stepList *StepList) MarshalJSON() ([]byte, error) {
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *StepList) Peek() steps.Step {
+func (stepList *StepList) Peek() step.Step {
 	if stepList.IsEmpty() {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (stepList *StepList) Peek() steps.Step {
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *StepList) Pop() steps.Step {
+func (stepList *StepList) Pop() step.Step {
 	if stepList.IsEmpty() {
 		return nil
 	}
@@ -68,7 +68,7 @@ func (stepList *StepList) Pop() steps.Step {
 }
 
 // Prepend adds the given step to the beginning of this StepList.
-func (stepList *StepList) Prepend(other ...steps.Step) {
+func (stepList *StepList) Prepend(other ...step.Step) {
 	if len(other) > 0 {
 		stepList.List = append(other, stepList.List...)
 	}
@@ -90,9 +90,9 @@ func (stepList *StepList) RemoveAllButLast(removeType string) {
 
 // RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
 func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
-	result := make([]steps.Step, 0, len(stepList.List))
+	result := make([]step.Step, 0, len(stepList.List))
 	// this one is populated only if the last step is a checkout step
-	var lastStep steps.Step
+	var lastStep step.Step
 	for _, step := range stepList.List {
 		if isCheckoutStep(step) {
 			lastStep = step
@@ -145,7 +145,7 @@ func (stepList *StepList) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		stepList.List = make([]steps.Step, len(jsonSteps))
+		stepList.List = make([]step.Step, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
 			stepList.List[j] = jsonStep.Step
 		}
@@ -166,15 +166,15 @@ type WrapOptions struct {
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions) error {
 	if !options.PreviousBranch.IsEmpty() {
-		stepList.Append(&steps.PreserveCheckoutHistoryStep{
+		stepList.Append(&step.PreserveCheckoutHistory{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
 			MainBranch:                        options.MainBranch,
 		})
 	}
 	if options.StashOpenChanges {
-		stepList.Prepend(&steps.StashOpenChangesStep{})
-		stepList.Append(&steps.RestoreOpenChangesStep{})
+		stepList.Prepend(&step.StashOpenChanges{})
+		stepList.Append(&step.RestoreOpenChanges{})
 	}
 	return nil
 }

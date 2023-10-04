@@ -166,27 +166,27 @@ func TestLoadSave(t *testing.T) {
   "RunSteps": [
     {
       "data": {},
-      "type": "AbortMergeStep"
+      "type": "AbortMerge"
     },
     {
       "data": {},
-      "type": "AbortRebaseStep"
+      "type": "AbortRebase"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "AddToPerennialBranchesStep"
+      "type": "AddToPerennialBranches"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "CheckoutStep"
+      "type": "Checkout"
     },
     {
       "data": {},
-      "type": "CommitOpenChangesStep"
+      "type": "CommitOpenChanges"
     },
     {
       "data": {
@@ -195,28 +195,28 @@ func TestLoadSave(t *testing.T) {
         "ProposalMessage": "proposal message",
         "ProposalNumber": 123
       },
-      "type": "ConnectorMergeProposalStep"
+      "type": "ConnectorMergeProposal"
     },
     {
       "data": {},
-      "type": "ContinueMergeStep"
+      "type": "ContinueMerge"
     },
     {
       "data": {},
-      "type": "ContinueRebaseStep"
+      "type": "ContinueRebase"
     },
     {
       "data": {
         "Branch": "branch",
         "StartingPoint": "123456"
       },
-      "type": "CreateBranchStep"
+      "type": "CreateBranch"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "CreateProposalStep"
+      "type": "CreateProposal"
     },
     {
       "data": {
@@ -224,14 +224,14 @@ func TestLoadSave(t *testing.T) {
         "NoPushHook": true,
         "SHA": "123456"
       },
-      "type": "CreateRemoteBranchStep"
+      "type": "CreateRemoteBranch"
     },
     {
       "data": {
         "Branch": "branch",
         "NoPushHook": true
       },
-      "type": "CreateTrackingBranchStep"
+      "type": "CreateTrackingBranch"
     },
     {
       "data": {
@@ -239,54 +239,54 @@ func TestLoadSave(t *testing.T) {
         "Parent": "parent",
         "Force": false
       },
-      "type": "DeleteLocalBranchStep"
+      "type": "DeleteLocalBranch"
     },
     {
       "data": {
         "Branch": "origin/branch"
       },
-      "type": "DeleteRemoteBranchStep"
+      "type": "DeleteRemoteBranch"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "DeleteParentBranchStep"
+      "type": "DeleteParentBranch"
     },
     {
       "data": {
         "Branch": "origin/branch"
       },
-      "type": "DeleteTrackingBranchStep"
+      "type": "DeleteTrackingBranch"
     },
     {
       "data": {},
-      "type": "DiscardOpenChangesStep"
+      "type": "DiscardOpenChanges"
     },
     {
       "data": {
         "Branch": "branch",
         "Parent": "parent"
       },
-      "type": "EnsureHasShippableChangesStep"
+      "type": "EnsureHasShippableChanges"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "FetchUpstreamStep"
+      "type": "FetchUpstream"
     },
     {
       "data": {
         "NoPushHook": true
       },
-      "type": "ForcePushCurrentBranchStep"
+      "type": "ForcePushCurrentBranch"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "MergeStep"
+      "type": "Merge"
     },
     {
       "data": {
@@ -294,46 +294,46 @@ func TestLoadSave(t *testing.T) {
         "InitialPreviouslyCheckedOutBranch": "initial-previous-branch",
         "MainBranch": "main"
       },
-      "type": "PreserveCheckoutHistoryStep"
+      "type": "PreserveCheckoutHistory"
     },
     {
       "data": {},
-      "type": "PullCurrentBranchStep"
+      "type": "PullCurrentBranch"
     },
     {
       "data": {
         "CurrentBranch": "branch",
         "NoPushHook": true
       },
-      "type": "PushCurrentBranchStep"
+      "type": "PushCurrentBranch"
     },
     {
       "data": {},
-      "type": "PushTagsStep"
+      "type": "PushTags"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "RebaseBranchStep"
+      "type": "RebaseBranch"
     },
     {
       "data": {
         "Branch": "branch"
       },
-      "type": "RemoveFromPerennialBranchesStep"
+      "type": "RemoveFromPerennialBranches"
     },
     {
       "data": {
         "Key": "git-town.offline"
       },
-      "type": "RemoveGlobalConfigStep"
+      "type": "RemoveGlobalConfig"
     },
     {
       "data": {
         "Key": "git-town.offline"
       },
-      "type": "RemoveLocalConfigStep"
+      "type": "RemoveLocalConfig"
     },
     {
       "data": {
@@ -341,42 +341,42 @@ func TestLoadSave(t *testing.T) {
         "MustHaveSHA": "222222",
         "SetToSHA": "111111"
       },
-      "type": "ResetCurrentBranchToSHAStep"
+      "type": "ResetCurrentBranchToSHA"
     },
     {
       "data": {},
-      "type": "RestoreOpenChangesStep"
+      "type": "RestoreOpenChanges"
     },
     {
       "data": {
         "SHA": "123456"
       },
-      "type": "RevertCommitStep"
+      "type": "RevertCommit"
     },
     {
       "data": {
         "Key": "git-town.offline",
         "Value": "1"
       },
-      "type": "SetGlobalConfigStep"
+      "type": "SetGlobalConfig"
     },
     {
       "data": {
         "Key": "git-town.offline",
         "Value": "1"
       },
-      "type": "SetLocalConfigStep"
+      "type": "SetLocalConfig"
     },
     {
       "data": {
         "Branch": "branch",
         "ParentBranch": "parent"
       },
-      "type": "SetParentStep"
+      "type": "SetParent"
     },
     {
       "data": {},
-      "type": "SkipCurrentBranchSteps"
+      "type": "SkipCurrentBranch"
     },
     {
       "data": {
@@ -384,18 +384,18 @@ func TestLoadSave(t *testing.T) {
         "CommitMessage": "commit message",
         "Parent": "parent"
       },
-      "type": "SquashMergeStep"
+      "type": "SquashMerge"
     },
     {
       "data": {},
-      "type": "StashOpenChangesStep"
+      "type": "StashOpenChanges"
     },
     {
       "data": {
         "ProposalNumber": 123,
         "NewTarget": "new-target"
       },
-      "type": "UpdateProposalTargetStep"
+      "type": "UpdateProposalTarget"
     }
   ],
   "UndoSteps": [],

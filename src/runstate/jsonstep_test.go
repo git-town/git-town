@@ -40,7 +40,7 @@ func TestJSONStep(t *testing.T) {
 	"data": {
     "Branch": "branch-1"
   },
-	"type": "CheckoutStep"
+	"type": "Checkout"
 }`[1:]
 		have := runstate.JSONStep{
 			Step: &step.Checkout{
