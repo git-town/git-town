@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
 )
@@ -18,23 +19,23 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("append a single step", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			list.Append(&steps.StashOpenChangesStep{})
-			want := []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			list.Append(&step.StashOpenChanges{})
+			want := []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("append multiple steps", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			list.Append(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
-			want := []steps.Step{&steps.AbortMergeStep{}, &steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			list.Append(&step.AbortRebase{}, &step.StashOpenChanges{})
+			want := []step.Step{&step.AbortMerge{}, &step.AbortRebase{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("append no steps", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{}}
 			list.Append()
-			must.Eq(t, []steps.Step{}, list.List)
+			must.Eq(t, []step.Step{}, list.List)
 		})
 	})
 
@@ -42,18 +43,18 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("append a populated list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			other := runstate.StepList{List: []step.Step{&step.StashOpenChanges{}}}
 			list.AppendList(other)
-			want := []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}
+			want := []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("append an empty list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			other := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			other := runstate.StepList{List: []step.Step{}}
 			list.AppendList(other)
-			must.Eq(t, []steps.Step{&steps.AbortMergeStep{}}, list.List)
+			must.Eq(t, []step.Step{&step.AbortMerge{}}, list.List)
 		})
 	})
 
@@ -61,21 +62,21 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("list is empty", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{}}
 			must.True(t, list.IsEmpty())
 		})
 		t.Run("list is not empty", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
 			must.False(t, list.IsEmpty())
 		})
 	})
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		list := runstate.StepList{List: []steps.Step{
-			&steps.AbortMergeStep{},
-			&steps.StashOpenChangesStep{},
+		list := runstate.StepList{List: []step.Step{
+			&step.AbortMerge{},
+			&step.StashOpenChanges{},
 		}}
 		have, err := json.MarshalIndent(list, "", "  ")
 		must.NoError(t, err)
@@ -96,18 +97,18 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
 			have := list.Peek()
-			must.Eq(t, "*steps.AbortMergeStep", reflect.TypeOf(have).String())
-			wantList := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
+			must.Eq(t, "*step.AbortMerge", reflect.TypeOf(have).String())
+			wantList := runstate.StepList{List: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
 			must.Eq(t, wantList, list)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{}}
 			have := list.Peek()
 			must.EqOp(t, nil, have)
-			wantList := runstate.StepList{List: []steps.Step{}}
+			wantList := runstate.StepList{List: []step.Step{}}
 			must.Eq(t, wantList, list)
 		})
 	})
@@ -116,18 +117,18 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
 			have := list.Pop()
-			must.EqOp(t, "*steps.AbortMergeStep", reflect.TypeOf(have).String())
-			wantList := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
+			must.EqOp(t, "*step.AbortMerge", reflect.TypeOf(have).String())
+			wantList := runstate.StepList{List: []step.Step{&step.StashOpenChanges{}}}
 			must.Eq(t, wantList, list)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{}}
 			have := list.Pop()
 			must.EqOp(t, nil, have)
-			wantList := runstate.StepList{List: []steps.Step{}}
+			wantList := runstate.StepList{List: []step.Step{}}
 			must.Eq(t, wantList, list)
 		})
 	})
@@ -136,23 +137,23 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("prepend a single step", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			list.Prepend(&steps.StashOpenChangesStep{})
-			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			list.Prepend(&step.StashOpenChanges{})
+			want := []step.Step{&step.StashOpenChanges{}, &step.AbortMerge{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("prepend multiple steps", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			list.Prepend(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
-			want := []steps.Step{&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			list.Prepend(&step.AbortRebase{}, &step.StashOpenChanges{})
+			want := []step.Step{&step.AbortRebase{}, &step.StashOpenChanges{}, &step.AbortMerge{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("prepend no steps", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{}}
 			list.Prepend()
-			must.Eq(t, []steps.Step{}, list.List)
+			must.Eq(t, []step.Step{}, list.List)
 		})
 	})
 
@@ -160,18 +161,18 @@ func TestStepList(t *testing.T) {
 		t.Parallel()
 		t.Run("prepend a populated list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			other := runstate.StepList{List: []step.Step{&step.StashOpenChanges{}, &step.RestoreOpenChanges{}}}
 			list.PrependList(other)
-			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}, &steps.AbortMergeStep{}}
+			want := []step.Step{&step.StashOpenChanges{}, &step.RestoreOpenChanges{}, &step.AbortMerge{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {
 			t.Parallel()
-			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
-			other := runstate.StepList{List: []steps.Step{}}
+			list := runstate.StepList{List: []step.Step{&step.AbortMerge{}}}
+			other := runstate.StepList{List: []step.Step{}}
 			list.PrependList(other)
-			want := []steps.Step{&steps.AbortMergeStep{}}
+			want := []step.Step{&step.AbortMerge{}}
 			must.Eq(t, want, list.List)
 		})
 	})
@@ -181,16 +182,16 @@ func TestStepList(t *testing.T) {
 		t.Run("contains the given type at the end", func(t *testing.T) {
 			t.Parallel()
 			have := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
 				},
 			}
-			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			have.RemoveAllButLast("*step.CheckoutIfExists")
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
 				},
 			}
 			must.Eq(t, want, have)
@@ -198,18 +199,18 @@ func TestStepList(t *testing.T) {
 		t.Run("contains the given type in the middle", func(t *testing.T) {
 			t.Parallel()
 			have := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
-					&steps.AbortRebaseStep{},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+					&step.AbortRebase{},
 				},
 			}
-			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			have.RemoveAllButLast("*step.CheckoutIfExists")
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch")},
-					&steps.AbortRebaseStep{},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+					&step.AbortRebase{},
 				},
 			}
 			must.Eq(t, want, have)
@@ -217,22 +218,22 @@ func TestStepList(t *testing.T) {
 		t.Run("contains the given type multiple times", func(t *testing.T) {
 			t.Parallel()
 			have := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-1")},
-					&steps.AbortRebaseStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-3")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-1")},
+					&step.AbortRebase{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
-			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			have.RemoveAllButLast("*step.CheckoutIfExists")
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.AbortRebaseStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-3")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.AbortRebase{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
 			must.Eq(t, want, have)
@@ -240,18 +241,18 @@ func TestStepList(t *testing.T) {
 		t.Run("does not contain the given type", func(t *testing.T) {
 			t.Parallel()
 			have := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.AbortRebaseStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.AbortRebase{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
-			have.RemoveAllButLast("*steps.CheckoutIfExistsStep")
+			have.RemoveAllButLast("*step.CheckoutIfExists")
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.AbortRebaseStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-3")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.AbortRebase{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
 				},
 			}
 			must.Eq(t, want, have)
@@ -263,17 +264,17 @@ func TestStepList(t *testing.T) {
 		t.Run("has duplicate checkout steps", func(t *testing.T) {
 			t.Parallel()
 			give := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-2")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
 			have := give.RemoveDuplicateCheckoutSteps()
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-2")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
 			must.Eq(t, want, have)
@@ -281,17 +282,17 @@ func TestStepList(t *testing.T) {
 		t.Run("has a mix of Checkout and CheckoutIfExists steps", func(t *testing.T) {
 			t.Parallel()
 			give := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch-1")},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
 			have := give.RemoveDuplicateCheckoutSteps()
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-2")},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
 			must.Eq(t, want, have)
@@ -299,16 +300,16 @@ func TestStepList(t *testing.T) {
 		t.Run("has no duplicate checkout steps", func(t *testing.T) {
 			t.Parallel()
 			give := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.AbortRebaseStep{},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.AbortRebase{},
 				},
 			}
 			have := give.RemoveDuplicateCheckoutSteps()
 			want := runstate.StepList{
-				List: []steps.Step{
-					&steps.AbortMergeStep{},
-					&steps.AbortRebaseStep{},
+				List: []step.Step{
+					&step.AbortMerge{},
+					&step.AbortRebase{},
 				},
 			}
 			must.Eq(t, want, have)
@@ -318,16 +319,16 @@ func TestStepList(t *testing.T) {
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		list := runstate.StepList{List: []steps.Step{
-			&steps.AbortMergeStep{},
-			&steps.AddToPerennialBranchesStep{
+			&step.AbortMerge{},
+			&step.AddToPerennialBranches{
 				Branch: domain.NewLocalBranchName("branch"),
 			},
 		}}
 		have := list.String()
 		want := `
 StepList:
-1: &steps.AbortMergeStep{EmptyStep:steps.EmptyStep{}}
-2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{id:"branch"}, EmptyStep:steps.EmptyStep{}}
+1: &step.AbortMerge{EmptyStep:step.Empty{}}
+2: &step.AddToPerennialBranches{Branch:domain.LocalBranchName{id:"branch"}, Empty:step.Empty{}}
 `[1:]
 		must.EqOp(t, want, have)
 	})
@@ -335,13 +336,13 @@ StepList:
 	t.Run("StepTypes", func(t *testing.T) {
 		t.Parallel()
 		list := runstate.StepList{
-			List: []steps.Step{
-				&steps.AbortMergeStep{},
-				&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch")},
+			List: []step.Step{
+				&step.AbortMerge{},
+				&step.Checkout{Branch: domain.NewLocalBranchName("branch")},
 			},
 		}
 		have := list.StepTypes()
-		want := []string{"*steps.AbortMergeStep", "*steps.CheckoutStep"}
+		want := []string{"*step.AbortMerge", "*step.Checkout"}
 		must.Eq(t, want, have)
 	})
 
@@ -365,13 +366,13 @@ StepList:
 		have := runstate.StepList{}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := runstate.StepList{List: []steps.Step{
-			&steps.ResetCurrentBranchToSHAStep{
+		want := runstate.StepList{List: []step.Step{
+			&step.ResetCurrentBranchToSHA{
 				Hard:        false,
 				MustHaveSHA: domain.NewSHA("abcdef"),
 				SetToSHA:    domain.NewSHA("123456"),
 			},
-			&steps.StashOpenChangesStep{},
+			&step.StashOpenChanges{},
 		}}
 		must.Eq(t, want, have)
 	})
