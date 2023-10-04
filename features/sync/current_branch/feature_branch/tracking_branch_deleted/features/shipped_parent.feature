@@ -11,7 +11,6 @@ Feature: a parent branch of the current feature branch was shipped
     And the current branch is "child"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -26,7 +25,7 @@ Feature: a parent branch of the current feature branch was shipped
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
 

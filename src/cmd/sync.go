@@ -212,7 +212,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
 			parent := config.lineage.Parent(branch.LocalName)
-			deleteBranchSteps(deleteBranchStepsArgs{
+			config.lineage = deleteBranchSteps(deleteBranchStepsArgs{
 				branch:      branch,
 				branchTypes: config.branches.Types,
 				lineage:     config.lineage,
