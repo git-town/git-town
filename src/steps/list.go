@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 )
 
-// List is a fifo containing Step instances.
+// List is a queue containing Step instances.
 //
 //nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
 type List struct {
