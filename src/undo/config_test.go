@@ -5,8 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/shoenig/test/must"
 )
@@ -48,7 +48,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -96,7 +96,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -147,7 +147,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyOffline,
@@ -192,7 +192,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -240,7 +240,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -291,7 +291,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyOffline,
@@ -363,7 +363,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := runstate.StepList{
+		wantSteps := steps.StepList{
 			List: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,

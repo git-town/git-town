@@ -1,4 +1,4 @@
-package runstate
+package steps
 
 import (
 	"encoding/json"
@@ -94,7 +94,7 @@ func (stepList *StepList) RemoveDuplicateCheckoutSteps() StepList {
 	// this one is populated only if the last step is a checkout step
 	var lastStep step.Step
 	for _, step := range stepList.List {
-		if isCheckoutStep(step) {
+		if IsCheckoutStep(step) {
 			lastStep = step
 			continue
 		}

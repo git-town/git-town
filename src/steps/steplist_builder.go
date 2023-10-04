@@ -1,4 +1,4 @@
-package runstate
+package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/gohacks"

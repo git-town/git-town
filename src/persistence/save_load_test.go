@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
 )
 
@@ -36,8 +37,8 @@ func TestLoadSave(t *testing.T) {
 			Command:    "command",
 			IsAbort:    true,
 			IsUndo:     true,
-			AbortSteps: runstate.StepList{},
-			RunSteps: runstate.StepList{
+			AbortSteps: steps.StepList{},
+			RunSteps: steps.StepList{
 				List: []step.Step{
 					&step.AbortMerge{},
 					&step.AbortRebase{},
@@ -147,7 +148,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoSteps: runstate.StepList{},
+			UndoSteps: steps.StepList{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),

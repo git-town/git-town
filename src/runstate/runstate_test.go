@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,7 +18,7 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			Command: "sync",
-			AbortSteps: runstate.StepList{
+			AbortSteps: steps.StepList{
 				List: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -26,7 +27,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			RunSteps: runstate.StepList{
+			RunSteps: steps.StepList{
 				List: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -35,7 +36,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			UndoSteps: runstate.StepList{
+			UndoSteps: steps.StepList{
 				List: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),

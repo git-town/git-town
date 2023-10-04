@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // RunState represents the current state of a Git Town command,
@@ -18,11 +19,11 @@ type RunState struct {
 	Command                  string                     `json:"Command"`
 	IsAbort                  bool                       `exhaustruct:"optional"     json:"IsAbort"`
 	IsUndo                   bool                       `exhaustruct:"optional"     json:"IsUndo"`
-	AbortSteps               StepList                   `exhaustruct:"optional"     json:"AbortSteps"`
-	RunSteps                 StepList                   `json:"RunSteps"`
-	UndoSteps                StepList                   `exhaustruct:"optional"     json:"UndoSteps"`
+	AbortSteps               steps.StepList             `exhaustruct:"optional"     json:"AbortSteps"`
+	RunSteps                 steps.StepList             `json:"RunSteps"`
+	UndoSteps                steps.StepList             `exhaustruct:"optional"     json:"UndoSteps"`
 	InitialActiveBranch      domain.LocalBranchName     `json:"InitialActiveBranch"`
-	FinalUndoSteps           StepList                   `exhaustruct:"optional"     json:"FinalUndoSteps"`
+	FinalUndoSteps           steps.StepList             `exhaustruct:"optional"     json:"FinalUndoSteps"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
 }
@@ -30,10 +31,10 @@ type RunState struct {
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
 func (rs *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
-	popped := StepList{}
+	popped := steps.StepList{}
 	for {
 		nextStep := rs.RunSteps.Peek()
-		if !isCheckoutStep(nextStep) {
+		if !steps.IsCheckoutStep(nextStep) {
 			popped.Append(rs.RunSteps.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
@@ -77,14 +78,14 @@ func (rs *RunState) CreateSkipRunState() RunState {
 		RunSteps:            rs.AbortSteps,
 	}
 	for _, step := range rs.UndoSteps.List {
-		if isCheckoutStep(step) {
+		if steps.IsCheckoutStep(step) {
 			break
 		}
 		result.RunSteps.Append(step)
 	}
 	skipping := true
 	for _, step := range rs.RunSteps.List {
-		if isCheckoutStep(step) {
+		if steps.IsCheckoutStep(step) {
 			skipping = false
 		}
 		if !skipping {
@@ -152,7 +153,7 @@ func (rs *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 func (rs *RunState) SkipCurrentBranchSteps() {
 	for {
 		step := rs.RunSteps.Peek()
-		if isCheckoutStep(step) {
+		if steps.IsCheckoutStep(step) {
 			break
 		}
 		rs.RunSteps.Pop()

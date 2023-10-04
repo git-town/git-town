@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -298,8 +299,8 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, error) {
-	list := runstate.StepListBuilder{}
+func shipSteps(config *shipConfig, commitMessage string) (steps.StepList, error) {
+	list := steps.StepListBuilder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.targetBranch,
@@ -370,7 +371,7 @@ func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, err
 	if !config.isShippingInitialBranch {
 		list.Add(&step.Checkout{Branch: config.branches.Initial})
 	}
-	list.Wrap(runstate.WrapOptions{
+	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: !config.isShippingInitialBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

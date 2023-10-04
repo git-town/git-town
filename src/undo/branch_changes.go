@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
@@ -45,8 +45,8 @@ func EmptyBranchChanges() BranchChanges {
 }
 
 // UndoSteps provides the steps to undo the changes described by this BranchChanges instance.
-func (bcs BranchChanges) UndoSteps(args StepsArgs) runstate.StepList {
-	result := runstate.StepList{}
+func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.StepList {
+	result := steps.StepList{}
 	omniChangedPerennials, omniChangedFeatures := bcs.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
