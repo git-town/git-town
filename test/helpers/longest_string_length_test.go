@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/helpers"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestLongestStringLength(t *testing.T) {
@@ -14,6 +14,6 @@ func TestLongestStringLength(t *testing.T) {
 		0: {""},
 	}
 	for expected, input := range tests {
-		assert.Equal(t, expected, helpers.LongestStringLength(input))
+		must.EqOp(t, expected, helpers.LongestStringLength(input))
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestIndent(t *testing.T) {
@@ -13,19 +13,19 @@ func TestIndent(t *testing.T) {
 	t.Run("no indent", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("")
-		assert.Equal(t, "  ", have)
+		must.EqOp(t, "  ", have)
 	})
 
 	t.Run("single line of text", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("hello")
-		assert.Equal(t, "  hello", have)
+		must.EqOp(t, "  hello", have)
 	})
 
 	t.Run("multi-line text", func(t *testing.T) {
 		t.Parallel()
 		have := cli.Indent("hello\nworld")
-		assert.Equal(t, "  hello\n  world", have)
+		must.EqOp(t, "  hello\n  world", have)
 	})
 
 	t.Run("multiple newlines", func(t *testing.T) {
@@ -33,6 +33,6 @@ func TestIndent(t *testing.T) {
 		give := "hello\n\nworld"
 		have := cli.Indent(give)
 		want := "  hello\n\n  world"
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	})
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestSanitizePath(t *testing.T) {
@@ -20,7 +20,7 @@ func TestSanitizePath(t *testing.T) {
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
 			have := persistence.SanitizePath(rootDir)
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		}
 	})
 }

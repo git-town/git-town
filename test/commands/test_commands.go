@@ -328,6 +328,7 @@ func (tc *TestCommands) RemoveUnnecessaryFiles() {
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
+// TODO: return a domain.SHA here.
 func (tc *TestCommands) SHAForCommit(name string) string {
 	output := tc.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
 	if output == "" {

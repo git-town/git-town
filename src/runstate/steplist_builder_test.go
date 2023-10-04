@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestStepListBuilder(t *testing.T) {
@@ -21,7 +21,7 @@ func TestStepListBuilder(t *testing.T) {
 				b := runstate.StepListBuilder{}
 				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
-				assert.Equal(t, runstate.NewStepList(&step), b.StepList)
+				must.Eq(t, runstate.NewStepList(&step), b.StepList)
 			})
 			t.Run("registers the given error", func(t *testing.T) {
 				t.Parallel()
@@ -29,8 +29,8 @@ func TestStepListBuilder(t *testing.T) {
 				err := errors.New("test error")
 				b.AddE(&steps.EmptyStep{}, err)
 				list, builderErr := b.Result()
-				assert.True(t, list.IsEmpty())
-				assert.Equal(t, err, builderErr)
+				must.True(t, list.IsEmpty())
+				must.EqOp(t, err, builderErr)
 			})
 		})
 
@@ -43,7 +43,7 @@ func TestStepListBuilder(t *testing.T) {
 				b.Check(firstErr)
 				b.AddE(&steps.EmptyStep{}, errors.New("second error"))
 				_, builderErr := b.Result()
-				assert.Error(t, firstErr, builderErr)
+				must.EqOp(t, firstErr, builderErr)
 			})
 			t.Run("does not add the given step", func(t *testing.T) {
 				t.Parallel()
@@ -52,7 +52,7 @@ func TestStepListBuilder(t *testing.T) {
 				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
 				list, _ := b.Result()
-				assert.True(t, list.IsEmpty())
+				must.True(t, list.IsEmpty())
 			})
 		})
 	})

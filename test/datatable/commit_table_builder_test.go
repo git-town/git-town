@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestCommitTableBuilder(t *testing.T) {
@@ -28,5 +28,5 @@ func TestCommitTableBuilder(t *testing.T) {
 | branch1 | local, origin | commit1 |
 | branch3 | origin        | commit4 |
 `
-	assert.Equal(t, expected, table.String())
+	must.EqOp(t, expected, table.String())
 }

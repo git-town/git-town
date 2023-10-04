@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func FileExists(t *testing.T, dir, filename string) {
 	t.Helper()
 	filePath := filepath.Join(dir, filename)
 	info, err := os.Stat(filePath)
-	assert.Nilf(t, err, "file %q does not exist", filePath)
-	assert.Falsef(t, info.IsDir(), "%q is a directory", filePath)
+	must.NoError(t, err)
+	must.False(t, info.IsDir())
 }

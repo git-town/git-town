@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestBranchInfos(t *testing.T) {
@@ -26,10 +26,10 @@ func TestBranchInfos(t *testing.T) {
 		have[0].LocalSHA = domain.NewSHA("222222")
 		have[0].RemoteName = domain.NewRemoteBranchName("origin/branch-2")
 		have[0].RemoteSHA = domain.NewSHA("222222")
-		assert.Equal(t, give[0].LocalName, domain.NewLocalBranchName("branch-1"))
-		assert.Equal(t, give[0].LocalSHA, domain.NewSHA("111111"))
-		assert.Equal(t, give[0].RemoteName, domain.NewRemoteBranchName("origin/branch-1"))
-		assert.Equal(t, give[0].RemoteSHA, domain.NewSHA("111111"))
+		must.EqOp(t, give[0].LocalName, domain.NewLocalBranchName("branch-1"))
+		must.EqOp(t, give[0].LocalSHA, domain.NewSHA("111111"))
+		must.EqOp(t, give[0].RemoteName, domain.NewRemoteBranchName("origin/branch-1"))
+		must.EqOp(t, give[0].RemoteSHA, domain.NewSHA("111111"))
 	})
 
 	t.Run("FindMatchingRecord", func(t *testing.T) {
@@ -54,7 +54,7 @@ func TestBranchInfos(t *testing.T) {
 			}
 			have := bis.FindMatchingRecord(give)
 			want := bis[0]
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 		t.Run("has matching remote name", func(t *testing.T) {
 			t.Parallel()
@@ -76,7 +76,7 @@ func TestBranchInfos(t *testing.T) {
 			}
 			have := bis.FindMatchingRecord(give)
 			want := bis[0]
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 	})
 
@@ -93,7 +93,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
+			must.True(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a remote branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -106,7 +106,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
+			must.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a local branch with a matching tracking branch", func(t *testing.T) {
 			t.Parallel()
@@ -119,7 +119,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
+			must.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 	})
 
@@ -136,7 +136,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
+			must.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a remote-only branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -149,7 +149,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
+			must.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a local branch with a matching name", func(t *testing.T) {
 			t.Parallel()
@@ -162,7 +162,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
+			must.False(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
 		})
 	})
 
@@ -214,7 +214,7 @@ func TestBranchInfos(t *testing.T) {
 		}
 		have := bs.LocalBranches().Names()
 		want := domain.NewLocalBranchNames("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("LocalBranchesWithDeletedTrackingBranches", func(t *testing.T) {
@@ -265,7 +265,7 @@ func TestBranchInfos(t *testing.T) {
 		}
 		have := bs.LocalBranchesWithDeletedTrackingBranches().Names()
 		want := domain.NewLocalBranchNames("deleted-at-remote")
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("LookupLocalBranch", func(t *testing.T) {
@@ -281,7 +281,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.Equal(t, branchOne, bs.FindByLocalName(branchOne).LocalName)
+			must.EqOp(t, branchOne, bs.FindByLocalName(branchOne).LocalName)
 		})
 		t.Run("remote branch with matching name", func(t *testing.T) {
 			bs := domain.BranchInfos{
@@ -294,7 +294,7 @@ func TestBranchInfos(t *testing.T) {
 				},
 			}
 			have := bs.FindByLocalName(domain.NewLocalBranchName("kg/one"))
-			assert.Nil(t, have)
+			must.Nil(t, have)
 		})
 	})
 
@@ -311,7 +311,7 @@ func TestBranchInfos(t *testing.T) {
 			}
 			bs := domain.BranchInfos{branch}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("origin/two"))
-			assert.Equal(t, &branch, have)
+			must.EqOp(t, branch, *have)
 		})
 		t.Run("has a local branch with the given name", func(t *testing.T) {
 			t.Parallel()
@@ -323,7 +323,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			}}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("kg/one"))
-			assert.Nil(t, have)
+			must.Nil(t, have)
 		})
 	})
 
@@ -354,7 +354,7 @@ func TestBranchInfos(t *testing.T) {
 		}
 		have := bs.Names()
 		want := domain.NewLocalBranchNames("one", "two")
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Remove", func(t *testing.T) {
@@ -386,7 +386,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -425,7 +425,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Select", func(t *testing.T) {
@@ -477,7 +477,7 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
-		assert.NoError(t, err)
-		assert.Equal(t, want, have)
+		must.NoError(t, err)
+		must.Eq(t, want, have)
 	})
 }

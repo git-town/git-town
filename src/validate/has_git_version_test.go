@@ -1,11 +1,10 @@
 package validate_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/validate"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestIsAcceptableGitVersion(t *testing.T) {
@@ -22,6 +21,6 @@ func TestIsAcceptableGitVersion(t *testing.T) {
 	}
 	for _, tt := range tests {
 		have := validate.IsAcceptableGitVersion(tt.major, tt.minor)
-		assert.Equal(t, tt.want, have, fmt.Sprintf("%d.%d --> %t", tt.major, tt.minor, tt.want))
+		must.EqOp(t, tt.want, have)
 	}
 }

@@ -17,9 +17,6 @@ github.com/cucumber/godog/colors
 # github.com/cucumber/messages-go/v10 v10.0.3
 ## explicit; go 1.13
 github.com/cucumber/messages-go/v10
-# github.com/davecgh/go-spew v1.1.1
-## explicit
-github.com/davecgh/go-spew/spew
 # github.com/dustin/go-humanize v1.0.1
 ## explicit; go 1.16
 github.com/dustin/go-humanize
@@ -39,6 +36,13 @@ github.com/gogo/protobuf/proto
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/proto
+# github.com/google/go-cmp v0.5.9
+## explicit; go 1.13
+github.com/google/go-cmp/cmp
+github.com/google/go-cmp/cmp/internal/diff
+github.com/google/go-cmp/cmp/internal/flags
+github.com/google/go-cmp/cmp/internal/function
+github.com/google/go-cmp/cmp/internal/value
 # github.com/google/go-github/v50 v50.0.0
 ## explicit; go 1.17
 github.com/google/go-github/v50/github
@@ -69,21 +73,24 @@ github.com/mattn/go-isatty
 # github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 ## explicit
 github.com/mgutz/ansi
-# github.com/pmezard/go-difflib v1.0.0
-## explicit
-github.com/pmezard/go-difflib/difflib
 # github.com/sergi/go-diff v1.3.1
 ## explicit; go 1.12
 github.com/sergi/go-diff/diffmatchpatch
+# github.com/shoenig/test v0.6.7
+## explicit; go 1.18
+github.com/shoenig/test/interfaces
+github.com/shoenig/test/internal/assertions
+github.com/shoenig/test/internal/brokenfs
+github.com/shoenig/test/internal/constraints
+github.com/shoenig/test/internal/util
+github.com/shoenig/test/must
+github.com/shoenig/test/wait
 # github.com/spf13/cobra v1.6.1
 ## explicit; go 1.15
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.8.1
-## explicit; go 1.13
-github.com/stretchr/testify/assert
 # github.com/xanzy/go-gitlab v0.78.0
 ## explicit; go 1.18
 github.com/xanzy/go-gitlab
@@ -158,6 +165,3 @@ google.golang.org/protobuf/types/descriptorpb
 gopkg.in/AlecAivazis/survey.v1
 gopkg.in/AlecAivazis/survey.v1/core
 gopkg.in/AlecAivazis/survey.v1/terminal
-# gopkg.in/yaml.v3 v3.0.1
-## explicit
-gopkg.in/yaml.v3

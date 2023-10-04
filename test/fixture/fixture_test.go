@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestFixture(t *testing.T) {
@@ -34,14 +34,14 @@ func TestFixture(t *testing.T) {
 		// verify the origin repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
-		assert.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), branch, "the origin should be at the initial branch so that we can push to it")
+		must.NoError(t, err)
+		must.EqOp(t, domain.NewLocalBranchName("initial"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
-		assert.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("main"), branch)
+		must.NoError(t, err)
+		must.EqOp(t, domain.NewLocalBranchName("main"), branch)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
@@ -59,7 +59,7 @@ func TestFixture(t *testing.T) {
 			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| origin     | main, o1, o2 |\n"
-			assert.Equal(t, expected, table.String())
+			must.EqOp(t, expected, table.String())
 		})
 
 		t.Run("same branches in dev and origin repo", func(t *testing.T) {
@@ -76,7 +76,7 @@ func TestFixture(t *testing.T) {
 			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY    | BRANCHES     |\n| local, origin | main, b1, b2 |\n"
-			assert.Equal(t, expected, table.String())
+			must.EqOp(t, expected, table.String())
 		})
 	})
 
@@ -112,26 +112,26 @@ func TestFixture(t *testing.T) {
 		})
 		// verify local commits
 		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
-		assert.Len(t, commits, 2)
-		assert.Equal(t, "local commit", commits[0].Message)
-		assert.Equal(t, "local-file", commits[0].FileName)
-		assert.Equal(t, "lc", commits[0].FileContent)
-		assert.Equal(t, "local and origin commit", commits[1].Message)
-		assert.Equal(t, "loc-rem-file", commits[1].FileName)
-		assert.Equal(t, "lrc", commits[1].FileContent)
+		must.Len(t, 2, commits)
+		must.EqOp(t, "local commit", commits[0].Message)
+		must.EqOp(t, "local-file", commits[0].FileName)
+		must.EqOp(t, "lc", commits[0].FileContent)
+		must.EqOp(t, "local and origin commit", commits[1].Message)
+		must.EqOp(t, "loc-rem-file", commits[1].FileName)
+		must.EqOp(t, "lrc", commits[1].FileContent)
 		// verify origin commits
 		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
-		assert.Len(t, commits, 2)
-		assert.Equal(t, "origin commit", commits[0].Message)
-		assert.Equal(t, "origin-file", commits[0].FileName)
-		assert.Equal(t, "rc", commits[0].FileContent)
-		assert.Equal(t, "local and origin commit", commits[1].Message)
-		assert.Equal(t, "loc-rem-file", commits[1].FileName)
-		assert.Equal(t, "lrc", commits[1].FileContent)
+		must.Len(t, 2, commits)
+		must.EqOp(t, "origin commit", commits[0].Message)
+		must.EqOp(t, "origin-file", commits[0].FileName)
+		must.EqOp(t, "rc", commits[0].FileContent)
+		must.EqOp(t, "local and origin commit", commits[1].Message)
+		must.EqOp(t, "loc-rem-file", commits[1].FileName)
+		must.EqOp(t, "lrc", commits[1].FileContent)
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
-		assert.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
+		must.NoError(t, err)
+		must.EqOp(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
 	t.Run("CreateOriginBranch", func(t *testing.T) {
@@ -144,12 +144,12 @@ func TestFixture(t *testing.T) {
 		cloned.CreateOriginBranch("b1", "main")
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
-		assert.NoError(t, err)
-		assert.Contains(t, branches, domain.NewLocalBranchName("b1"))
+		must.NoError(t, err)
+		must.SliceContains(t, branches.Strings(), "b1")
 		// verify it isn't in the local branches
 		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
-		assert.NoError(t, err)
-		assert.NotContains(t, branches, "b1")
+		must.NoError(t, err)
+		must.SliceNotContains(t, branches.Strings(), "b1")
 	})
 
 	t.Run("CommitTable", func(t *testing.T) {
@@ -175,13 +175,13 @@ func TestFixture(t *testing.T) {
 			})
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			assert.Len(t, table.Cells, 3)
-			assert.Equal(t, table.Cells[1][0], "local, origin")
-			assert.Equal(t, table.Cells[1][1], "local-origin.md")
-			assert.Equal(t, table.Cells[1][2], "one")
-			assert.Equal(t, table.Cells[2][0], "origin")
-			assert.Equal(t, table.Cells[2][1], "origin.md")
-			assert.Equal(t, table.Cells[2][2], "two")
+			must.Len(t, 3, table.Cells)
+			must.EqOp(t, table.Cells[1][0], "local, origin")
+			must.EqOp(t, table.Cells[1][1], "local-origin.md")
+			must.EqOp(t, table.Cells[1][2], "one")
+			must.EqOp(t, table.Cells[2][0], "origin")
+			must.EqOp(t, table.Cells[2][1], "origin.md")
+			must.EqOp(t, table.Cells[2][2], "two")
 		})
 
 		t.Run("with upstream repo", func(t *testing.T) {
@@ -206,13 +206,13 @@ func TestFixture(t *testing.T) {
 			})
 			// get the CommitTable
 			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			assert.Len(t, table.Cells, 3)
-			assert.Equal(t, table.Cells[1][0], "local")
-			assert.Equal(t, table.Cells[1][1], "local.md")
-			assert.Equal(t, table.Cells[1][2], "one")
-			assert.Equal(t, table.Cells[2][0], "upstream")
-			assert.Equal(t, table.Cells[2][1], "upstream.md")
-			assert.Equal(t, table.Cells[2][2], "two")
+			must.Len(t, 3, table.Cells)
+			must.EqOp(t, table.Cells[1][0], "local")
+			must.EqOp(t, table.Cells[1][1], "local.md")
+			must.EqOp(t, table.Cells[1][2], "one")
+			must.EqOp(t, table.Cells[2][0], "upstream")
+			must.EqOp(t, table.Cells[2][1], "upstream.md")
+			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
 
@@ -226,6 +226,6 @@ func TestFixture(t *testing.T) {
 		cloned.Remove()
 		// verify
 		_, err := os.Stat(cloned.Dir)
-		assert.True(t, os.IsNotExist(err))
+		must.True(t, os.IsNotExist(err))
 	})
 }

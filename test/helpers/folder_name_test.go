@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/test/helpers"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestFolderName(t *testing.T) {
@@ -15,6 +15,6 @@ func TestFolderName(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := helpers.FolderName(give)
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	}
 }

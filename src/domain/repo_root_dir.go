@@ -5,6 +5,10 @@ type RepoRootDir struct {
 	value string
 }
 
+func EmptyRepoRootDir() RepoRootDir {
+	return NewRepoRootDir("")
+}
+
 func NewRepoRootDir(dir string) RepoRootDir {
 	return RepoRootDir{value: dir}
 }
