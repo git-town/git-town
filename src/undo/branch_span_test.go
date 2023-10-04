@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestBranchSpan(t *testing.T) {
@@ -31,7 +31,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.True(t, bs.IsOmniChange())
+			must.True(t, bs.IsOmniChange())
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
@@ -51,7 +51,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.False(t, bs.IsOmniChange())
+			must.False(t, bs.IsOmniChange())
 		})
 	})
 
@@ -75,7 +75,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.IsOmniRemove())
+			must.True(t, bs.IsOmniRemove())
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
@@ -95,7 +95,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.IsOmniRemove())
+			must.False(t, bs.IsOmniRemove())
 		})
 	})
 
@@ -119,7 +119,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.True(t, bs.IsInconsistentChange())
+			must.True(t, bs.IsInconsistentChange())
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
@@ -139,7 +139,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsistentChange())
+			must.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
@@ -159,7 +159,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsistentChange())
+			must.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
@@ -179,7 +179,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
 			}
-			assert.False(t, bs.IsInconsistentChange())
+			must.False(t, bs.IsInconsistentChange())
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
@@ -199,7 +199,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.IsInconsistentChange())
+			must.False(t, bs.IsInconsistentChange())
 		})
 	})
 
@@ -222,7 +222,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.LocalAdded())
+			must.True(t, bs.LocalAdded())
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
 			bs := undo.BranchSpan{
@@ -241,7 +241,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.LocalAdded())
+			must.True(t, bs.LocalAdded())
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
 			bs := undo.BranchSpan{
@@ -260,7 +260,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.LocalAdded())
+			must.False(t, bs.LocalAdded())
 		})
 	})
 
@@ -284,7 +284,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.LocalChanged())
+			must.True(t, bs.LocalChanged())
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
@@ -304,7 +304,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.LocalChanged())
+			must.True(t, bs.LocalChanged())
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
@@ -324,7 +324,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.False(t, bs.LocalChanged())
+			must.False(t, bs.LocalChanged())
 		})
 	})
 
@@ -347,7 +347,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.LocalRemoved())
+			must.True(t, bs.LocalRemoved())
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
 			bs := undo.BranchSpan{
@@ -366,7 +366,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.LocalRemoved())
+			must.True(t, bs.LocalRemoved())
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
 			bs := undo.BranchSpan{
@@ -385,7 +385,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.False(t, bs.LocalAdded())
+			must.False(t, bs.LocalAdded())
 		})
 	})
 
@@ -409,7 +409,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.NoChanges())
+			must.True(t, bs.NoChanges())
 		})
 		t.Run("has changes", func(t *testing.T) {
 			t.Parallel()
@@ -429,7 +429,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.False(t, bs.NoChanges())
+			must.False(t, bs.NoChanges())
 		})
 	})
 
@@ -453,7 +453,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.RemoteAdded())
+			must.True(t, bs.RemoteAdded())
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
@@ -473,7 +473,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.True(t, bs.RemoteAdded())
+			must.True(t, bs.RemoteAdded())
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
@@ -493,7 +493,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.False(t, bs.RemoteAdded())
+			must.False(t, bs.RemoteAdded())
 		})
 	})
 
@@ -517,7 +517,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.True(t, bs.RemoteChanged())
+			must.True(t, bs.RemoteChanged())
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -537,7 +537,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.True(t, bs.RemoteChanged())
+			must.True(t, bs.RemoteChanged())
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -557,7 +557,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.False(t, bs.RemoteChanged())
+			must.False(t, bs.RemoteChanged())
 		})
 	})
 
@@ -581,7 +581,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.RemoteRemoved())
+			must.True(t, bs.RemoteRemoved())
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
@@ -601,7 +601,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
-			assert.True(t, bs.RemoteRemoved())
+			must.True(t, bs.RemoteRemoved())
 		})
 
 		t.Run("changes a remote branch", func(t *testing.T) {
@@ -622,7 +622,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 			}
-			assert.False(t, bs.RemoteRemoved())
+			must.False(t, bs.RemoteRemoved())
 		})
 
 		t.Run("upstream branch", func(t *testing.T) {
@@ -643,7 +643,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 			}
-			assert.False(t, bs.RemoteRemoved())
+			must.False(t, bs.RemoteRemoved())
 		})
 	})
 }

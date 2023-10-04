@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestStashDiff(t *testing.T) {
@@ -25,7 +25,7 @@ func TestStashDiff(t *testing.T) {
 			want := undo.StashDiff{
 				EntriesAdded: 2,
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 		t.Run("no entries added", func(t *testing.T) {
 			t.Parallel()
@@ -39,7 +39,7 @@ func TestStashDiff(t *testing.T) {
 			want := undo.StashDiff{
 				EntriesAdded: 0,
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 	})
 }

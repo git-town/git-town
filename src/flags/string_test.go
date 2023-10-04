@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestString(t *testing.T) {
@@ -17,8 +17,8 @@ func TestString(t *testing.T) {
 		addFlag, readFlag := flags.String("myflag", "m", "default", "desc")
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--myflag", "my-value"})
-		assert.NoError(t, err)
-		assert.Equal(t, "my-value", readFlag(&cmd))
+		must.NoError(t, err)
+		must.EqOp(t, "my-value", readFlag(&cmd))
 	})
 
 	t.Run("short version", func(t *testing.T) {
@@ -27,7 +27,7 @@ func TestString(t *testing.T) {
 		addFlag, readFlag := flags.String("myflag", "m", "default", "desc")
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m", "my-value"})
-		assert.NoError(t, err)
-		assert.Equal(t, "my-value", readFlag(&cmd))
+		must.NoError(t, err)
+		must.EqOp(t, "my-value", readFlag(&cmd))
 	})
 }

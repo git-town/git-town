@@ -4,32 +4,32 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/cache"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestBoolCache(t *testing.T) {
 	t.Parallel()
 	sc := cache.Bool{}
-	assert.False(t, sc.Initialized())
+	must.False(t, sc.Initialized())
 	sc.Set(true)
-	assert.True(t, sc.Initialized())
-	assert.True(t, sc.Value())
+	must.True(t, sc.Initialized())
+	must.True(t, sc.Value())
 }
 
 func TestStringCache(t *testing.T) {
 	t.Parallel()
 	sc := cache.String{}
-	assert.False(t, sc.Initialized())
+	must.False(t, sc.Initialized())
 	sc.Set("foo")
-	assert.True(t, sc.Initialized())
-	assert.Equal(t, "foo", sc.Value())
+	must.True(t, sc.Initialized())
+	must.EqOp(t, "foo", sc.Value())
 }
 
 func TestStringSliceCache(t *testing.T) {
 	t.Parallel()
 	ssc := cache.Strings{}
-	assert.False(t, ssc.Initialized())
+	must.False(t, ssc.Initialized())
 	ssc.Set([]string{"foo"})
-	assert.True(t, ssc.Initialized())
-	assert.Equal(t, []string{"foo"}, ssc.Value())
+	must.True(t, ssc.Initialized())
+	must.Eq(t, []string{"foo"}, ssc.Value())
 }

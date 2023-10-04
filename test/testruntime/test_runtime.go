@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/test/commands"
 	testshell "github.com/git-town/git-town/v9/test/subshell"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 // TestRuntime provides Git functionality for test code (unit and end-to-end tests).
@@ -26,13 +26,13 @@ func Create(t *testing.T) TestRuntime {
 	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
 	err := os.Mkdir(workingDir, 0o744)
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	runtime := Initialize(workingDir, homeDir, homeDir)
 	err = runtime.Run("git", "commit", "--allow-empty", "-m", "Initial commit")
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	return runtime
 }
 
@@ -84,9 +84,9 @@ func CreateGitTown(t *testing.T) TestRuntime {
 	repo := Create(t)
 	repo.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
 	err := repo.Config.SetMainBranch(domain.NewLocalBranchName("main"))
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	err = repo.Config.SetPerennialBranches(domain.LocalBranchNames{})
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	return repo
 }
 

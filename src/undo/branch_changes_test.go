@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestChanges(t *testing.T) {
@@ -60,7 +60,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			assert.Equal(t, wantSpan, haveSpan)
+			must.Eq(t, wantSpan, haveSpan)
 			haveChanges := haveSpan.Changes()
 			wantChanges := undo.BranchChanges{
 				LocalAdded:            domain.NewLocalBranchNames("branch-1"),
@@ -73,7 +73,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -93,7 +93,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local-only branch removed", func(t *testing.T) {
@@ -134,7 +134,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -152,7 +152,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("branch-1")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local-only branch changed", func(t *testing.T) {
@@ -225,7 +225,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -251,7 +251,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("local-only branch pushed to origin", func(t *testing.T) {
@@ -317,7 +317,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -337,7 +337,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("remote-only branch downloaded", func(t *testing.T) {
@@ -403,7 +403,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -427,7 +427,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch added", func(t *testing.T) {
@@ -481,7 +481,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -512,7 +512,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch changed locally", func(t *testing.T) {
@@ -584,7 +584,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -610,7 +610,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch remote updated", func(t *testing.T) {
@@ -682,7 +682,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -703,7 +703,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
@@ -793,7 +793,7 @@ func TestChanges(t *testing.T) {
 				},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
@@ -818,7 +818,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
@@ -895,7 +895,7 @@ func TestChanges(t *testing.T) {
 				},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:       lineage,
 				BranchTypes:   branchTypes,
@@ -919,7 +919,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
@@ -1015,7 +1015,7 @@ func TestChanges(t *testing.T) {
 					},
 				},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1041,7 +1041,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch updates pulled down", func(t *testing.T) {
@@ -1113,7 +1113,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1139,7 +1139,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch updates pushed up", func(t *testing.T) {
@@ -1211,7 +1211,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1231,7 +1231,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch deleted locally", func(t *testing.T) {
@@ -1297,7 +1297,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1319,7 +1319,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
@@ -1385,7 +1385,7 @@ func TestChanges(t *testing.T) {
 				OmniChanged:           domain.LocalBranchChange{},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1406,7 +1406,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("feature-branch")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 
 		t.Run("sync with a new upstream remote", func(t *testing.T) {
@@ -1469,7 +1469,7 @@ func TestChanges(t *testing.T) {
 				},
 				InconsistentlyChanged: domain.InconsistentChanges{},
 			}
-			assert.Equal(t, wantChanges, haveChanges)
+			must.Eq(t, wantChanges, haveChanges)
 			haveSteps := haveChanges.UndoSteps(undo.StepsArgs{
 				Lineage:                  lineage,
 				BranchTypes:              branchTypes,
@@ -1486,7 +1486,7 @@ func TestChanges(t *testing.T) {
 					&steps.CheckoutIfExistsStep{Branch: domain.NewLocalBranchName("main")},
 				},
 			}
-			assert.Equal(t, wantSteps, haveSteps)
+			must.Eq(t, wantSteps, haveSteps)
 		})
 	})
 }

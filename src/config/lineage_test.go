@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestLineage(t *testing.T) {
@@ -25,7 +25,7 @@ func TestLineage(t *testing.T) {
 			give := domain.LocalBranchNames{two, one}
 			have := lineage.BranchesAndAncestors(give)
 			want := domain.LocalBranchNames{main, one, two}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -35,7 +35,7 @@ func TestLineage(t *testing.T) {
 		lineage[one] = main
 		have := lineage.BranchAndAncestors(one)
 		want := domain.LocalBranchNames{main, one}
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Ancestors", func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestLineage(t *testing.T) {
 			lineage[one] = main
 			have := lineage.Ancestors(three)
 			want := domain.LocalBranchNames{main, one, two}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("one ancestor", func(t *testing.T) {
 			t.Parallel()
@@ -56,7 +56,7 @@ func TestLineage(t *testing.T) {
 			lineage[one] = main
 			have := lineage.Ancestors(one)
 			want := domain.LocalBranchNames{main}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
@@ -64,7 +64,7 @@ func TestLineage(t *testing.T) {
 			lineage[one] = main
 			have := lineage.Ancestors(two)
 			want := domain.LocalBranchNames{}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -76,7 +76,7 @@ func TestLineage(t *testing.T) {
 		lineage[three] = main
 		have := lineage.BranchNames()
 		want := domain.LocalBranchNames{one, three, two}
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("Children", func(t *testing.T) {
@@ -90,7 +90,7 @@ func TestLineage(t *testing.T) {
 			lineage[twoB] = one
 			have := lineage.Children(one)
 			want := domain.LocalBranchNames{twoA, twoB}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("provides only the immediate children, i.e. no grandchildren", func(t *testing.T) {
 			t.Parallel()
@@ -99,14 +99,14 @@ func TestLineage(t *testing.T) {
 			lineage[three] = two
 			have := lineage.Children(one)
 			want := domain.LocalBranchNames{two}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Children(one)
 			want := domain.LocalBranchNames{}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 
@@ -129,12 +129,12 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
-			assert.True(t, lineage.HasParents(two))
+			must.True(t, lineage.HasParents(two))
 		})
 		t.Run("has no parent", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
-			assert.False(t, lineage.HasParents(main))
+			must.False(t, lineage.HasParents(main))
 		})
 	})
 
@@ -146,20 +146,20 @@ func TestLineage(t *testing.T) {
 			lineage[four] = three
 			lineage[three] = two
 			lineage[two] = one
-			assert.True(t, lineage.IsAncestor(one, four))
+			must.True(t, lineage.IsAncestor(one, four))
 		})
 		t.Run("child branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
-			assert.True(t, lineage.IsAncestor(one, two))
+			must.True(t, lineage.IsAncestor(one, two))
 		})
 		t.Run("unrelated branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[two] = one
 			lineage[three] = one
-			assert.False(t, lineage.IsAncestor(two, three))
+			must.False(t, lineage.IsAncestor(two, three))
 		})
 	})
 
@@ -180,13 +180,13 @@ func TestLineage(t *testing.T) {
 			have := lineage.BranchNames()
 			want := domain.LocalBranchNames{one, oneA, oneA1, oneA2, oneB, two}
 			lineage.OrderHierarchically(have)
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Parent(main)
-			assert.True(t, have.IsEmpty())
+			must.True(t, have.IsEmpty())
 		})
 	})
 
@@ -204,7 +204,7 @@ func TestLineage(t *testing.T) {
 			lineage[hotfix2] = prod
 			have := lineage.Roots()
 			want := domain.LocalBranchNames{main, prod}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("no nested branches", func(t *testing.T) {
 			t.Parallel()
@@ -212,14 +212,14 @@ func TestLineage(t *testing.T) {
 			lineage[one] = main
 			have := lineage.Roots()
 			want := domain.LocalBranchNames{main}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Roots()
 			want := domain.LocalBranchNames{}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 }

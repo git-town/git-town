@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestGitTown(t *testing.T) {
@@ -25,7 +25,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "docs",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("HTTPS URL", func(t *testing.T) {
 			t.Parallel()
@@ -36,7 +36,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "docs",
 				User: "",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
 			t.Parallel()
@@ -47,7 +47,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "www-gitlab-com",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("GitLab repository nested inside a group", func(t *testing.T) {
 			t.Parallel()
@@ -58,7 +58,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "triage-ops",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("self-hosted GitLab server without URL override", func(t *testing.T) {
 			t.Parallel()
@@ -69,7 +69,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("self-hosted GitLab server with URL override", func(t *testing.T) {
 			t.Parallel()
@@ -80,7 +80,7 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			t.Parallel()
@@ -91,21 +91,21 @@ func TestGitTown(t *testing.T) {
 				Repo: "git-town",
 				User: "git",
 			}
-			assert.Equal(t, want, have)
+			must.EqOp(t, *want, *have)
 		})
 	})
 
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		assert.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
-		assert.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
+		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
+		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
 		repo.Config.Reload()
 		have := repo.Config.Lineage()
 		want := config.Lineage{}
 		want[domain.NewLocalBranchName("feature1")] = domain.NewLocalBranchName("main")
 		want[domain.NewLocalBranchName("feature2")] = domain.NewLocalBranchName("main")
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("OriginURL", func(t *testing.T) {
@@ -123,7 +123,7 @@ func TestGitTown(t *testing.T) {
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
 			have := repo.Config.OriginURL()
-			assert.Equal(t, want, *have, give)
+			must.EqOp(t, want, *have)
 		}
 	})
 
@@ -131,14 +131,14 @@ func TestGitTown(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		offline, err := repo.Config.IsOffline()
-		assert.Nil(t, err)
-		assert.True(t, offline)
+		must.NoError(t, err)
+		must.True(t, offline)
 		err = repo.Config.SetOffline(false)
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		offline, err = repo.Config.IsOffline()
-		assert.Nil(t, err)
-		assert.False(t, offline)
+		must.NoError(t, err)
+		must.False(t, offline)
 	})
 }

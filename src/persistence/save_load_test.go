@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestLoadSave(t *testing.T) {
@@ -26,7 +26,7 @@ func TestLoadSave(t *testing.T) {
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
 			have := persistence.SanitizePath(rootDir)
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		}
 	})
 
@@ -411,15 +411,15 @@ func TestLoadSave(t *testing.T) {
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")
 		err := persistence.Save(&runState, repoRoot)
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		filepath, err := persistence.FilePath(repoRoot)
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		content, err := os.ReadFile(filepath)
-		assert.NoError(t, err)
-		assert.Equal(t, wantJSON, string(content))
+		must.NoError(t, err)
+		must.EqOp(t, wantJSON, string(content))
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
-		assert.NoError(t, err)
-		assert.Equal(t, runState, newState)
+		must.NoError(t, err)
+		must.Eq(t, runState, newState)
 	})
 }

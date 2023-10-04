@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestConfigUndo(t *testing.T) {
@@ -46,7 +46,7 @@ func TestConfigUndo(t *testing.T) {
 			},
 			Local: undo.EmptyConfigDiff(),
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -55,7 +55,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("global config removed", func(t *testing.T) {
@@ -94,7 +94,7 @@ func TestConfigUndo(t *testing.T) {
 				Changed: map[config.Key]domain.Change[string]{},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -104,7 +104,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("global config changed", func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestConfigUndo(t *testing.T) {
 				Changed: map[config.Key]domain.Change[string]{},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -155,7 +155,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("local config added", func(t *testing.T) {
@@ -190,7 +190,7 @@ func TestConfigUndo(t *testing.T) {
 				Changed: map[config.Key]domain.Change[string]{},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -199,7 +199,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("local config removed", func(t *testing.T) {
@@ -238,7 +238,7 @@ func TestConfigUndo(t *testing.T) {
 				Changed: map[config.Key]domain.Change[string]{},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -248,7 +248,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("local config changed", func(t *testing.T) {
@@ -289,7 +289,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -299,7 +299,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 
 	t.Run("complex example", func(t *testing.T) {
@@ -361,7 +361,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantDiff, haveDiff)
+		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
 		wantSteps := runstate.StepList{
 			List: []steps.Step{
@@ -389,6 +389,6 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		assert.Equal(t, wantSteps, haveSteps)
+		must.Eq(t, wantSteps, haveSteps)
 	})
 }

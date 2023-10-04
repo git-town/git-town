@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestRemoteBranchName(t *testing.T) {
@@ -16,11 +16,11 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
 			give := domain.EmptyRemoteBranchName()
-			assert.True(t, give.IsEmpty())
+			must.True(t, give.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
 			give := domain.NewRemoteBranchName("origin/branch-1")
-			assert.False(t, give.IsEmpty())
+			must.False(t, give.IsEmpty())
 		})
 	})
 
@@ -30,13 +30,13 @@ func TestRemoteBranchName(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("origin/branch")
 			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			must.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("upstream/branch")
 			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			must.EqOp(t, want, branch.LocalBranchName())
 		})
 	})
 
@@ -44,9 +44,9 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewRemoteBranchName("origin/branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
-		assert.Nil(t, err)
+		must.NoError(t, err)
 		want := `"origin/branch-1"`
-		assert.Equal(t, want, string(have))
+		must.EqOp(t, want, string(have))
 	})
 
 	t.Run("NewBranchName and String", func(t *testing.T) {
@@ -54,7 +54,7 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Run("valid remote branch name", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("origin/branch")
-			assert.Equal(t, "origin/branch", branch.String())
+			must.EqOp(t, "origin/branch", branch.String())
 		})
 		t.Run("local branch name", func(t *testing.T) {
 			t.Parallel()
@@ -72,8 +72,8 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		remoteBranch := domain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
-		assert.Equal(t, domain.OriginRemote, remote)
-		assert.Equal(t, domain.NewLocalBranchName("branch"), localBranch)
+		must.EqOp(t, domain.OriginRemote, remote)
+		must.EqOp(t, domain.NewLocalBranchName("branch"), localBranch)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -81,8 +81,8 @@ func TestRemoteBranchName(t *testing.T) {
 		give := `"origin/branch-1"`
 		have := domain.EmptyRemoteBranchName()
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		must.NoError(t, err)
 		want := domain.NewRemoteBranchName("origin/branch-1")
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	})
 }
