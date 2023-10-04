@@ -355,7 +355,7 @@ func TestBackendCommands(t *testing.T) {
 				want := domain.BranchInfos{
 					domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
-						LocalSHA:   domain.SHA{},
+						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
@@ -374,7 +374,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalSHA:   domain.NewSHA("01a7eded"),
 						SyncStatus: domain.SyncStatusLocalOnly,
 						RemoteName: domain.EmptyRemoteBranchName(),
-						RemoteSHA:  domain.SHA{},
+						RemoteSHA:  domain.EmptySHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -390,7 +390,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalSHA:   domain.NewSHA("01a7eded"),
 						SyncStatus: domain.SyncStatusDeletedAtRemote,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.SHA{},
+						RemoteSHA:  domain.EmptySHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -414,7 +414,7 @@ func TestBackendCommands(t *testing.T) {
 					},
 					domain.BranchInfo{
 						LocalName:  domain.LocalBranchName{},
-						LocalSHA:   domain.SHA{},
+						LocalSHA:   domain.EmptySHA(),
 						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
@@ -472,7 +472,7 @@ func TestBackendCommands(t *testing.T) {
 					LocalSHA:   domain.NewSHA("e4d6bc09"),
 					SyncStatus: domain.SyncStatusDeletedAtRemote,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-4"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

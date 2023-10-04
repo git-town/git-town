@@ -42,7 +42,7 @@ func (gc *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (
 
 func (gc *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
-		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
+		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	gc.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
@@ -54,7 +54,7 @@ func (gc *GitLabConnector) SquashMergeProposal(number int, message string) (merg
 	})
 	if err != nil {
 		gc.log.Failed(err)
-		return domain.SHA{}, err
+		return domain.EmptySHA(), err
 	}
 	gc.log.Success()
 	return domain.NewSHA(result.SHA), nil

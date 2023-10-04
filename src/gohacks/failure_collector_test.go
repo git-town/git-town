@@ -43,17 +43,17 @@ func TestCollector(t *testing.T) {
 			syncStatuses := domain.BranchInfos{
 				{
 					LocalName:  domain.NewLocalBranchName("branch1"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.EmptyRemoteBranchName(),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 				{
 					LocalName:  domain.NewLocalBranchName("branch2"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.EmptyRemoteBranchName(),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)
