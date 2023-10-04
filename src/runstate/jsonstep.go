@@ -6,12 +6,12 @@ import (
 
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 )
 
 // JSONStep is used to store a step in JSON.
 type JSONStep struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
-	Step steps.Step
+	Step step.Step
 }
 
 // MarshalJSON marshals the step to JSON.
@@ -41,94 +41,94 @@ func (js *JSONStep) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(mapping["data"], &js.Step)
 }
 
-func DetermineStep(stepType string) steps.Step {
+func DetermineStep(stepType string) step.Step {
 	switch stepType {
-	case "AbortMergeStep":
-		return &steps.AbortMergeStep{}
-	case "AbortRebaseStep":
-		return &steps.AbortRebaseStep{}
-	case "AddToPerennialBranchesStep":
-		return &steps.AddToPerennialBranchesStep{}
-	case "CheckoutStep":
-		return &steps.CheckoutStep{}
-	case "CheckoutIfExistsStep":
-		return &steps.CheckoutIfExistsStep{}
-	case "CommitOpenChangesStep":
-		return &steps.CommitOpenChangesStep{}
-	case "ConnectorMergeProposalStep":
-		return &steps.ConnectorMergeProposalStep{}
-	case "ContinueMergeStep":
-		return &steps.ContinueMergeStep{}
-	case "ContinueRebaseStep":
-		return &steps.ContinueRebaseStep{}
-	case "CreateBranchStep":
-		return &steps.CreateBranchStep{}
-	case "CreateProposalStep":
-		return &steps.CreateProposalStep{}
-	case "CreateRemoteBranchStep":
-		return &steps.CreateRemoteBranchStep{}
-	case "CreateTrackingBranchStep":
-		return &steps.CreateTrackingBranchStep{}
-	case "DeleteLocalBranchStep":
-		return &steps.DeleteLocalBranchStep{}
-	case "DeleteParentBranchStep":
-		return &steps.DeleteParentBranchStep{}
-	case "DeleteRemoteBranchStep":
-		return &steps.DeleteRemoteBranchStep{}
-	case "DeleteTrackingBranchStep":
-		return &steps.DeleteTrackingBranchStep{}
-	case "DiscardOpenChangesStep":
-		return &steps.DiscardOpenChangesStep{}
-	case "EmptyStep":
-		return &steps.EmptyStep{}
-	case "EnsureHasShippableChangesStep":
-		return &steps.EnsureHasShippableChangesStep{}
-	case "FetchUpstreamStep":
-		return &steps.FetchUpstreamStep{}
-	case "ForcePushCurrentBranchStep":
-		return &steps.ForcePushCurrentBranchStep{}
-	case "MergeStep":
-		return &steps.MergeStep{}
-	case "PreserveCheckoutHistoryStep":
-		return &steps.PreserveCheckoutHistoryStep{}
-	case "PullCurrentBranchStep":
-		return &steps.PullCurrentBranchStep{}
-	case "PushCurrentBranchStep":
-		return &steps.PushCurrentBranchStep{}
-	case "PushTagsStep":
-		return &steps.PushTagsStep{}
-	case "RebaseBranchStep":
-		return &steps.RebaseBranchStep{}
-	case "RemoveFromPerennialBranchesStep":
-		return &steps.RemoveFromPerennialBranchesStep{}
-	case "RemoveGlobalConfigStep":
-		return &steps.RemoveGlobalConfigStep{}
-	case "RemoveLocalConfigStep":
-		return &steps.RemoveLocalConfigStep{}
-	case "ResetCurrentBranchToSHAStep":
-		return &steps.ResetCurrentBranchToSHAStep{}
-	case "ResetRemoteBranchToSHAStep":
-		return &steps.ResetRemoteBranchToSHAStep{}
-	case "RestoreOpenChangesStep":
-		return &steps.RestoreOpenChangesStep{}
-	case "RevertCommitStep":
-		return &steps.RevertCommitStep{}
-	case "SetGlobalConfigStep":
-		return &steps.SetGlobalConfigStep{}
-	case "SetLocalConfigStep":
-		return &steps.SetLocalConfigStep{}
-	case "SetParentStep":
-		return &steps.SetParentStep{}
-	case "SquashMergeStep":
-		return &steps.SquashMergeStep{}
-	case "SkipCurrentBranchSteps":
-		return &steps.SkipCurrentBranchSteps{}
-	case "StashOpenChangesStep":
-		return &steps.StashOpenChangesStep{}
-	case "UndoLastCommitStep":
-		return &steps.UndoLastCommitStep{}
-	case "UpdateProposalTargetStep":
-		return &steps.UpdateProposalTargetStep{}
+	case "AbortMerge":
+		return &step.AbortMerge{}
+	case "AbortRebase":
+		return &step.AbortRebase{}
+	case "AddToPerennialBranches":
+		return &step.AddToPerennialBranches{}
+	case "Checkout":
+		return &step.Checkout{}
+	case "CheckoutIfExists":
+		return &step.CheckoutIfExists{}
+	case "CommitOpenChanges":
+		return &step.CommitOpenChanges{}
+	case "ConnectorMergeProposal":
+		return &step.ConnectorMergeProposal{}
+	case "ContinueMerge":
+		return &step.ContinueMerge{}
+	case "ContinueRebase":
+		return &step.ContinueRebase{}
+	case "CreateBranch":
+		return &step.CreateBranch{}
+	case "CreateProposal":
+		return &step.CreateProposal{}
+	case "CreateRemoteBranch":
+		return &step.CreateRemoteBranch{}
+	case "CreateTrackingBranch":
+		return &step.CreateTrackingBranch{}
+	case "DeleteLocalBranch":
+		return &step.DeleteLocalBranch{}
+	case "DeleteParentBranch":
+		return &step.DeleteParentBranch{}
+	case "DeleteRemoteBranch":
+		return &step.DeleteRemoteBranch{}
+	case "DeleteTrackingBranch":
+		return &step.DeleteTrackingBranch{}
+	case "DiscardOpenChanges":
+		return &step.DiscardOpenChanges{}
+	case "Empty":
+		return &step.Empty{}
+	case "EnsureHasShippableChanges":
+		return &step.EnsureHasShippableChanges{}
+	case "FetchUpstream":
+		return &step.FetchUpstream{}
+	case "ForcePushCurrentBranch":
+		return &step.ForcePushCurrentBranch{}
+	case "Merge":
+		return &step.Merge{}
+	case "PreserveCheckoutHistory":
+		return &step.PreserveCheckoutHistory{}
+	case "PullCurrentBranch":
+		return &step.PullCurrentBranch{}
+	case "PushCurrentBranch":
+		return &step.PushCurrentBranch{}
+	case "PushTags":
+		return &step.PushTags{}
+	case "RebaseBranch":
+		return &step.RebaseBranch{}
+	case "RemoveFromPerennialBranches":
+		return &step.RemoveFromPerennialBranches{}
+	case "RemoveGlobalConfig":
+		return &step.RemoveGlobalConfig{}
+	case "RemoveLocalConfig":
+		return &step.RemoveLocalConfig{}
+	case "ResetCurrentBranchToSHA":
+		return &step.ResetCurrentBranchToSHA{}
+	case "ResetRemoteBranchToSHA":
+		return &step.ResetRemoteBranchToSHA{}
+	case "RestoreOpenChanges":
+		return &step.RestoreOpenChanges{}
+	case "RevertCommit":
+		return &step.RevertCommit{}
+	case "SetGlobalConfig":
+		return &step.SetGlobalConfig{}
+	case "SetLocalConfig":
+		return &step.SetLocalConfig{}
+	case "SetParent":
+		return &step.SetParent{}
+	case "SquashMerge":
+		return &step.SquashMerge{}
+	case "SkipCurrentBranch":
+		return &step.SkipCurrentBranch{}
+	case "StashOpenChanges":
+		return &step.StashOpenChanges{}
+	case "UndoLastCommit":
+		return &step.UndoLastCommit{}
+	case "UpdateProposalTarget":
+		return &step.UpdateProposalTarget{}
 	}
 	return nil
 }

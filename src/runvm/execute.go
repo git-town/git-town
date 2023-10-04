@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/undo"
 )
 
@@ -24,7 +23,7 @@ func Execute(args ExecuteArgs) error {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
 		}
-		err := step.Run(steps.RunArgs{
+		err := step.Run(step.RunArgs{
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,

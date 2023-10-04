@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 )
 
 // RunState represents the current state of a Git Town command,
@@ -40,7 +40,7 @@ func (rs *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.Backen
 			if err != nil {
 				return err
 			}
-			rs.RunSteps.Prepend(&steps.PushCurrentBranchStep{CurrentBranch: currentBranch, NoPushHook: false})
+			rs.RunSteps.Prepend(&step.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
 			rs.RunSteps.PrependList(popped)
 			break
 		}
@@ -91,7 +91,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			result.RunSteps.Append(step)
 		}
 	}
-	result.RunSteps.List = slice.LowerAll[steps.Step](result.RunSteps.List, &steps.RestoreOpenChangesStep{})
+	result.RunSteps.List = slice.LowerAll[step.Step](result.RunSteps.List, &step.RestoreOpenChanges{})
 	return result
 }
 
@@ -106,7 +106,7 @@ func (rs *RunState) CreateUndoRunState() RunState {
 		RunSteps:                 rs.UndoSteps,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
-	result.RunSteps.Append(&steps.CheckoutStep{Branch: rs.InitialActiveBranch})
+	result.RunSteps.Append(&step.Checkout{Branch: rs.InitialActiveBranch})
 	result.RunSteps = result.RunSteps.RemoveDuplicateCheckoutSteps()
 	return result
 }
