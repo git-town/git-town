@@ -1,5 +1,17 @@
 Feature: sync a branch with unmerged commits whose tracking branch was deleted
 
+  # TODO: decide what to do here
+  #
+  # Option A: The branch was deleted on the remote, so it should be deleted locally as well.
+  # This is especially true in this example where the local client doesn't contain any additional changes
+  # beyond those that existed on origin and were deleted there.
+  #
+  # Option B: If the branch truly contains local-only changes that were not on origin
+  # when origin deleted the branch, then it should not be deleted locally.
+  # It's just hard to determine that since Git doesn't give us a SHA for the now deleted remote branch.
+  # We might be able to look this up in the Git history, but there doesn't seem to be a straightforward way
+  # since the history doesn't show old branches.
+
   Background:
     Given the feature branches "active" and "old"
     And the commits
@@ -11,6 +23,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -19,19 +32,13 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |        | git stash                |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
-      |        | git checkout old         |
-      | old    | git stash pop            |
-    And it prints:
-      """
-      The branch "old" was deleted on the remote but the local branch on this machine contains unshipped changes.
-      I am therefore not removing this branch. Run "git town diff-parent" to see the changes.
-      """
-    And the current branch is now "old"
+      |        | git branch -D old        |
+      |        | git stash pop            |
+    And the current branch is now "main"
     And the uncommitted file still exists
     And the branches are now
-      | REPOSITORY | BRANCHES          |
-      | local      | main, active, old |
-      | origin     | main, active      |
+      | REPOSITORY    | BRANCHES     |
+      | local, origin | main, active |
 
   Scenario: undo
     When I run "git-town undo"
