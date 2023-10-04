@@ -11,6 +11,10 @@ type LocalBranchName struct {
 	id string
 }
 
+func EmptyLocalBranchName() LocalBranchName {
+	return LocalBranchName{id: ""}
+}
+
 func NewLocalBranchName(id string) LocalBranchName {
 	if !isValidLocalBranchName(id) {
 		panic("local branch names cannot be empty")

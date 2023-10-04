@@ -44,7 +44,7 @@ func TestJSONStep(t *testing.T) {
 }`[1:]
 		have := runstate.JSONStep{
 			Step: &steps.CheckoutStep{
-				Branch: domain.LocalBranchName{},
+				Branch: domain.EmptyLocalBranchName(),
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)

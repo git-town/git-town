@@ -68,7 +68,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
@@ -88,7 +88,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
@@ -125,7 +125,7 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusAhead,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -172,7 +172,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusAhead,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -208,7 +208,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Run("add a new local branch", func(t *testing.T) {
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
@@ -227,7 +227,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -246,14 +246,14 @@ func TestBranchSpan(t *testing.T) {
 		t.Run("doesn't add anything", func(t *testing.T) {
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.EmptySHA(),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
@@ -340,7 +340,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.EmptySHA(),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
@@ -359,7 +359,7 @@ func TestBranchSpan(t *testing.T) {
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -439,14 +439,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.EmptySHA(),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -479,14 +479,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -503,14 +503,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -567,14 +567,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.RemoteBranchName{},
@@ -608,14 +608,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
@@ -629,14 +629,14 @@ func TestBranchSpan(t *testing.T) {
 			t.Parallel()
 			bs := undo.BranchSpan{
 				Before: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("upstream/main"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("upstream/main"),

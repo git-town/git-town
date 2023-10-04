@@ -93,7 +93,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 	result := domain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
 	lines := stringslice.Lines(output)
-	checkedoutBranch := domain.LocalBranchName{}
+	checkedoutBranch := domain.EmptyLocalBranchName()
 	for _, line := range lines {
 		if line == "" {
 			continue
@@ -130,7 +130,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
 				result = append(result, domain.BranchInfo{
-					LocalName:  domain.LocalBranchName{},
+					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: remoteBranchName,
@@ -269,18 +269,18 @@ func (bcs *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) err
 func (bcs *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, error) {
 	repoStatus, err := bcs.RepoStatus()
 	if err != nil {
-		return domain.LocalBranchName{}, fmt.Errorf(messages.BranchCurrentProblem, err)
+		return domain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if repoStatus.RebaseInProgress {
 		currentBranch, err := bcs.currentBranchDuringRebase()
 		if err != nil {
-			return domain.LocalBranchName{}, err
+			return domain.EmptyLocalBranchName(), err
 		}
 		return currentBranch, nil
 	}
 	output, err := bcs.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return domain.LocalBranchName{}, fmt.Errorf(messages.BranchCurrentProblem, err)
+		return domain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	return domain.NewLocalBranchName(output), nil
 }
@@ -307,7 +307,7 @@ func (bcs *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName,
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
 		rawContent, err = os.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
 		if err != nil {
-			return domain.LocalBranchName{}, err
+			return domain.EmptyLocalBranchName(), err
 		}
 	}
 	content := strings.TrimSpace(string(rawContent))
@@ -326,7 +326,7 @@ func (bcs *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviously
 	if bcs.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
 		currentBranch, err := bcs.CurrentBranch()
 		if err != nil {
-			return domain.LocalBranchName{}, err
+			return domain.EmptyLocalBranchName(), err
 		}
 		if currentBranch == initialBranch {
 			return initialPreviouslyCheckedOutBranch, nil
@@ -376,7 +376,7 @@ func (bcs *BackendCommands) LastCommitMessage() (string, error) {
 func (bcs *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 	output, err := bcs.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return domain.LocalBranchName{}
+		return domain.EmptyLocalBranchName()
 	}
 	return domain.NewLocalBranchName(output)
 }

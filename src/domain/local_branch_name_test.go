@@ -15,7 +15,7 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is empty", func(t *testing.T) {
 			t.Parallel()
-			branch := domain.LocalBranchName{}
+			branch := domain.EmptyLocalBranchName()
 			assert.True(t, branch.IsEmpty())
 		})
 		t.Run("branch is not empty", func(t *testing.T) {
@@ -50,7 +50,7 @@ func TestLocalBranchName(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
-		have := domain.LocalBranchName{}
+		have := domain.EmptyLocalBranchName()
 		err := json.Unmarshal([]byte(give), &have)
 		assert.Nil(t, err)
 		want := domain.NewLocalBranchName("branch-1")
