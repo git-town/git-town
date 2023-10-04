@@ -8,6 +8,10 @@ type Location struct {
 	id string // the textual description of the location
 }
 
+func EmptyLocation() Location {
+	return Location{id: ""}
+}
+
 func NewLocation(id string) Location {
 	return Location{id}
 }

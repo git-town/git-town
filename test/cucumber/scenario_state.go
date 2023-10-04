@@ -68,7 +68,7 @@ func (ss *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	ss.initialDevSHAs = map[string]domain.SHA{}
 	ss.initialOriginSHAs = map[string]domain.SHA{}
 	ss.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
-	ss.initialCurrentBranch = domain.LocalBranchName{}
+	ss.initialCurrentBranch = domain.EmptyLocalBranchName()
 	ss.insideGitRepo = true
 	ss.runOutput = ""
 	ss.runExitCode = 0

@@ -17,7 +17,7 @@ func EnterMainBranch(localBranches domain.LocalBranchNames, oldMainBranch domain
 		Default: oldMainBranch.String(),
 	})
 	if err != nil {
-		return domain.LocalBranchName{}, err
+		return domain.EmptyLocalBranchName(), err
 	}
 	newMainBranch := domain.NewLocalBranchName(newMainBranchName)
 	return newMainBranch, backend.Config.SetMainBranch(newMainBranch)

@@ -89,7 +89,7 @@ func (ctb *CommitTableBuilder) branches() domain.LocalBranchNames {
 func (ctb *CommitTableBuilder) Table(fields []string) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
-	lastBranch := domain.LocalBranchName{}
+	lastBranch := domain.EmptyLocalBranchName()
 	lastLocation := ""
 	for _, branch := range ctb.branches() {
 		SHAs := ctb.commitsInBranch[branch]
