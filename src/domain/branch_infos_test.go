@@ -42,7 +42,7 @@ func TestBranchInfos(t *testing.T) {
 					LocalSHA:   domain.NewSHA("111111"),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			give := domain.BranchInfo{
@@ -50,7 +50,7 @@ func TestBranchInfos(t *testing.T) {
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			}
 			have := bis.FindMatchingRecord(give)
 			want := bis[0]
@@ -61,7 +61,7 @@ func TestBranchInfos(t *testing.T) {
 			bis := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("111111"),
@@ -69,7 +69,7 @@ func TestBranchInfos(t *testing.T) {
 			}
 			give := domain.BranchInfo{
 				LocalName:  domain.LocalBranchName{},
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 				RemoteSHA:  domain.NewSHA("111111"),
@@ -87,10 +87,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("one"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.True(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
@@ -100,10 +100,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
@@ -113,10 +113,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("two"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
@@ -130,10 +130,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("two"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
@@ -143,10 +143,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: domain.NewRemoteBranchName("origin/one"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.True(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
@@ -156,10 +156,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("one"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.False(t, bs.HasMatchingTrackingBranchFor(domain.NewLocalBranchName("one")))
@@ -195,21 +195,21 @@ func TestBranchInfos(t *testing.T) {
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("remote-only"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("deleted-at-remote"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusDeletedAtRemote,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		have := bs.LocalBranches().Names()
@@ -229,38 +229,38 @@ func TestBranchInfos(t *testing.T) {
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("ahead"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusAhead,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("behind"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusBehind,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("local-only"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("remote-only"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("deleted-at-remote"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusDeletedAtRemote,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		have := bs.LocalBranchesWithDeletedTrackingBranches().Names()
@@ -275,10 +275,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  branchOne,
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.Equal(t, branchOne, bs.FindByLocalName(branchOne).LocalName)
@@ -287,10 +287,10 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.NewRemoteBranchName("kg/one"),
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			have := bs.FindByLocalName(domain.NewLocalBranchName("kg/one"))
@@ -304,10 +304,10 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			branch := domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.NewRemoteBranchName("origin/two"),
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			}
 			bs := domain.BranchInfos{branch}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("origin/two"))
@@ -317,10 +317,10 @@ func TestBranchInfos(t *testing.T) {
 			t.Parallel()
 			bs := domain.BranchInfos{domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("kg/one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			}}
 			have := bs.FindByRemoteName(domain.NewRemoteBranchName("kg/one"))
 			assert.Nil(t, have)
@@ -332,24 +332,24 @@ func TestBranchInfos(t *testing.T) {
 		bs := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("two"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.LocalBranchName{},
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
 				RemoteName: domain.NewRemoteBranchName("origin/three"),
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		have := bs.Names()
@@ -363,27 +363,27 @@ func TestBranchInfos(t *testing.T) {
 			bs := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("one"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("two"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			have := bs.Remove(domain.NewLocalBranchName("two"))
 			want := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("one"),
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
-					RemoteSHA:  domain.SHA{},
+					RemoteSHA:  domain.EmptySHA(),
 				},
 			}
 			assert.Equal(t, want, have)
@@ -395,34 +395,34 @@ func TestBranchInfos(t *testing.T) {
 		bs := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("two"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		have := bs.Remove(domain.NewLocalBranchName("zonk"))
 		want := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("two"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		assert.Equal(t, want, have)
@@ -433,48 +433,48 @@ func TestBranchInfos(t *testing.T) {
 		bs := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("two"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("three"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("four"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		have, err := bs.Select(domain.LocalBranchNames{domain.NewLocalBranchName("one"), domain.NewLocalBranchName("three")})
 		want := domain.BranchInfos{
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("one"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName("three"),
-				LocalSHA:   domain.SHA{},
+				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusLocalOnly,
 				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
+				RemoteSHA:  domain.EmptySHA(),
 			},
 		}
 		assert.NoError(t, err)

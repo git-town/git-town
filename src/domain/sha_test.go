@@ -16,7 +16,7 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			sha := domain.SHA{}
+			sha := domain.EmptySHA()
 			assert.True(t, sha.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
@@ -86,7 +86,7 @@ func TestSHA(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`
-		have := domain.SHA{}
+		have := domain.EmptySHA()
 		err := json.Unmarshal([]byte(give), &have)
 		assert.Nil(t, err)
 		want := domain.NewSHA("123456")
