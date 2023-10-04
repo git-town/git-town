@@ -7,7 +7,7 @@ type RemoteBranchNames []RemoteBranchName
 // Sort orders the branches in this collection alphabetically.
 func (rbns RemoteBranchNames) Sort() {
 	sort.Slice(rbns, func(a, b int) bool {
-		return rbns[a].Id < rbns[b].Id
+		return rbns[a].ID < rbns[b].ID
 	})
 }
 

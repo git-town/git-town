@@ -108,7 +108,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			sha = domain.NewSHA(parts[1])
 		} else {
 			// we are rebasing and don't need the SHA
-			sha = domain.SHA{}
+			sha = domain.EmptySHA()
 		}
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
@@ -121,7 +121,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 				LocalSHA:   sha,
 				SyncStatus: syncStatus,
 				RemoteName: trackingBranchName,
-				RemoteSHA:  domain.SHA{}, // will be added later
+				RemoteSHA:  domain.EmptySHA(), // will be added later
 			})
 		} else {
 			remoteBranchName := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
@@ -131,7 +131,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			} else {
 				result = append(result, domain.BranchInfo{
 					LocalName:  domain.LocalBranchName{},
-					LocalSHA:   domain.SHA{},
+					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: remoteBranchName,
 					RemoteSHA:  sha,
@@ -456,7 +456,7 @@ func (bcs *BackendCommands) RootDirectory() domain.RepoRootDir {
 func (bcs *BackendCommands) SHAForBranch(name domain.BranchName) (domain.SHA, error) {
 	output, err := bcs.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
-		return domain.SHA{}, fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
+		return domain.EmptySHA(), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
 	return domain.NewSHA(output), nil
 }
