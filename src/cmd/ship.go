@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -328,30 +328,30 @@ func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, err
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
-	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
-	list.Add(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
+	list.Add(&step.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
+	list.Add(&step.Checkout{Branch: config.targetBranch.LocalName})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
-			list.Add(&steps.UpdateProposalTargetStep{
+			list.Add(&step.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
 		// push
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
-		list.Add(&steps.ConnectorMergeProposalStep{
+		list.Add(&step.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
+		list.Add(&step.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})
-		list.Add(&steps.PullCurrentBranchStep{})
+		list.Add(&step.PullCurrentBranch{})
 	} else {
-		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
+		list.Add(&step.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
+		list.Add(&step.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -359,16 +359,16 @@ func shipSteps(config *shipConfig, commitMessage string) (runstate.StepList, err
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&steps.DeleteTrackingBranchStep{Branch: config.branchToShip.RemoteName})
+			list.Add(&step.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.LocalName})
+	list.Add(&step.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
+	list.Add(&step.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
-		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.LocalName})
+		list.Add(&step.SetParent{Branch: child, ParentBranch: config.targetBranch.LocalName})
 	}
 	if !config.isShippingInitialBranch {
-		list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
+		list.Add(&step.Checkout{Branch: config.branches.Initial})
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,7 +19,7 @@ func TestStepListBuilder(t *testing.T) {
 			t.Run("registers the given step", func(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
-				step := steps.EmptyStep{}
+				step := step.Empty{}
 				b.AddE(&step, nil)
 				must.Eq(t, runstate.NewStepList(&step), b.StepList)
 			})
@@ -27,7 +27,7 @@ func TestStepListBuilder(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
 				err := errors.New("test error")
-				b.AddE(&steps.EmptyStep{}, err)
+				b.AddE(&step.Empty{}, err)
 				list, builderErr := b.Result()
 				must.True(t, list.IsEmpty())
 				must.EqOp(t, err, builderErr)
@@ -41,7 +41,7 @@ func TestStepListBuilder(t *testing.T) {
 				b := runstate.StepListBuilder{}
 				firstErr := errors.New("first error")
 				b.Check(firstErr)
-				b.AddE(&steps.EmptyStep{}, errors.New("second error"))
+				b.AddE(&step.Empty{}, errors.New("second error"))
 				_, builderErr := b.Result()
 				must.EqOp(t, firstErr, builderErr)
 			})
@@ -49,7 +49,7 @@ func TestStepListBuilder(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
 				b.Fail("existing error")
-				step := steps.EmptyStep{}
+				step := step.Empty{}
 				b.AddE(&step, nil)
 				list, _ := b.Result()
 				must.True(t, list.IsEmpty())

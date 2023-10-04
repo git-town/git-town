@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/spf13/cobra"
 )
 
@@ -107,19 +107,19 @@ func pruneBranchesSteps(config *pruneBranchesConfig) (runstate.StepList, error) 
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.branches.Initial == branchWithDeletedRemote {
-			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
+			result.Append(&step.Checkout{Branch: config.mainBranch})
 		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
 			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
-				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
+				result.Append(&step.SetParent{Branch: child, ParentBranch: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote})
+			result.Append(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
 		}
 		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
-			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
+			result.Append(&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
+		result.Append(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,

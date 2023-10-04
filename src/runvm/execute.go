@@ -7,23 +7,23 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
 )
 
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
 	for {
-		step := args.RunState.RunSteps.Pop()
-		if step == nil {
+		nextStep := args.RunState.RunSteps.Pop()
+		if nextStep == nil {
 			return finished(args)
 		}
-		stepName := gohacks.TypeName(step)
+		stepName := gohacks.TypeName(nextStep)
 		if stepName == "SkipCurrentBranchSteps" {
 			args.RunState.SkipCurrentBranchSteps()
 			continue
 		}
-		err := step.Run(steps.RunArgs{
+		err := nextStep.Run(step.RunArgs{
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
@@ -31,7 +31,7 @@ func Execute(args ExecuteArgs) error {
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
-			return errored(step, err, args)
+			return errored(nextStep, err, args)
 		}
 	}
 }
