@@ -207,7 +207,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig) (steps.StepList, error) {
+func syncBranchesSteps(config *syncConfig) (steps.List, error) {
 	list := steps.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{

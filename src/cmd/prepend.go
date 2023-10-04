@@ -166,7 +166,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prepe
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependSteps(config *prependConfig) (steps.StepList, error) {
+func prependSteps(config *prependConfig) (steps.List, error) {
 	list := steps.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{

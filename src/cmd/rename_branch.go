@@ -165,8 +165,8 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchSteps(config *renameBranchConfig) (steps.StepList, error) {
-	result := steps.StepList{}
+func renameBranchSteps(config *renameBranchConfig) (steps.List, error) {
+	result := steps.List{}
 	result.Append(&step.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Append(&step.Checkout{Branch: config.newBranch})

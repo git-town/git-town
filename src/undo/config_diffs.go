@@ -18,8 +18,8 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	}
 }
 
-func (cds ConfigDiffs) UndoSteps() steps.StepList {
-	result := steps.StepList{}
+func (cds ConfigDiffs) UndoSteps() steps.List {
+	result := steps.List{}
 	for _, key := range cds.Global.Added {
 		result.Append(&step.RemoveGlobalConfig{Key: key})
 	}

@@ -104,8 +104,8 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig) (steps.StepList, error) {
-	result := steps.StepList{}
+func pruneBranchesSteps(config *pruneBranchesConfig) (steps.List, error) {
+	result := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.branches.Initial == branchWithDeletedRemote {
 			result.Append(&step.Checkout{Branch: config.mainBranch})

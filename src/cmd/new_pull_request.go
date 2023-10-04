@@ -200,7 +200,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestSteps(config *newPullRequestConfig) (steps.StepList, error) {
+func newPullRequestSteps(config *newPullRequestConfig) (steps.List, error) {
 	list := steps.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{

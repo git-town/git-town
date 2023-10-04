@@ -299,7 +299,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipSteps(config *shipConfig, commitMessage string) (steps.StepList, error) {
+func shipSteps(config *shipConfig, commitMessage string) (steps.List, error) {
 	list := steps.StepListBuilder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{

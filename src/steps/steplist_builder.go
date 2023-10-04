@@ -10,7 +10,7 @@ import (
 //
 // This is based on ideas outlined in https://go.dev/blog/errors-are-values.
 type StepListBuilder struct {
-	StepList                 StepList `exhaustruct:"optional"`
+	StepList                 List `exhaustruct:"optional"`
 	gohacks.FailureCollector `exhaustruct:"optional"`
 }
 
@@ -28,6 +28,6 @@ func (slb *StepListBuilder) Wrap(options WrapOptions) {
 	slb.Check(slb.StepList.Wrap(options))
 }
 
-func (slb *StepListBuilder) Result() (StepList, error) {
+func (slb *StepListBuilder) Result() (List, error) {
 	return slb.StepList, slb.Err
 }

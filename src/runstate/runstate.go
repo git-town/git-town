@@ -19,11 +19,11 @@ type RunState struct {
 	Command                  string                     `json:"Command"`
 	IsAbort                  bool                       `exhaustruct:"optional"     json:"IsAbort"`
 	IsUndo                   bool                       `exhaustruct:"optional"     json:"IsUndo"`
-	AbortSteps               steps.StepList             `exhaustruct:"optional"     json:"AbortSteps"`
-	RunSteps                 steps.StepList             `json:"RunSteps"`
-	UndoSteps                steps.StepList             `exhaustruct:"optional"     json:"UndoSteps"`
+	AbortSteps               steps.List                 `exhaustruct:"optional"     json:"AbortSteps"`
+	RunSteps                 steps.List                 `json:"RunSteps"`
+	UndoSteps                steps.List                 `exhaustruct:"optional"     json:"UndoSteps"`
 	InitialActiveBranch      domain.LocalBranchName     `json:"InitialActiveBranch"`
-	FinalUndoSteps           steps.StepList             `exhaustruct:"optional"     json:"FinalUndoSteps"`
+	FinalUndoSteps           steps.List                 `exhaustruct:"optional"     json:"FinalUndoSteps"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
 }
@@ -31,7 +31,7 @@ type RunState struct {
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
 func (rs *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
-	popped := steps.StepList{}
+	popped := steps.List{}
 	for {
 		nextStep := rs.RunSteps.Peek()
 		if !steps.IsCheckoutStep(nextStep) {

@@ -155,7 +155,7 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.StepList, err error) {
+func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List, err error) {
 	list := steps.StepListBuilder{}
 	killFeatureBranch(&list, &finalUndoSteps, *config)
 	list.Wrap(steps.WrapOptions{
@@ -170,7 +170,7 @@ func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.StepList, err
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *steps.StepListBuilder, finalUndoList *steps.StepList, config killConfig) {
+func killFeatureBranch(list *steps.StepListBuilder, finalUndoList *steps.List, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}

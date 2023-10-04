@@ -48,7 +48,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -96,7 +96,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -147,7 +147,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyOffline,
@@ -192,7 +192,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -240,7 +240,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -291,7 +291,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyOffline,
@@ -363,7 +363,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveSteps := haveDiff.UndoSteps()
-		wantSteps := steps.StepList{
+		wantSteps := steps.List{
 			List: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,

@@ -37,8 +37,8 @@ func TestLoadSave(t *testing.T) {
 			Command:    "command",
 			IsAbort:    true,
 			IsUndo:     true,
-			AbortSteps: steps.StepList{},
-			RunSteps: steps.StepList{
+			AbortSteps: steps.List{},
+			RunSteps: steps.List{
 				List: []step.Step{
 					&step.AbortMerge{},
 					&step.AbortRebase{},
@@ -148,7 +148,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoSteps: steps.StepList{},
+			UndoSteps: steps.List{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
