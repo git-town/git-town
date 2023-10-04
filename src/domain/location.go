@@ -13,10 +13,6 @@ func EmptyLocation() Location {
 	return Location{ID: ""}
 }
 
-func EmptyLocation() Location {
-	return Location{id: ""}
-}
-
 func NewLocation(id string) Location {
 	return Location{id}
 }

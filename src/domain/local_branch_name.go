@@ -12,7 +12,7 @@ type LocalBranchName struct { //nolint:musttag
 }
 
 func EmptyLocalBranchName() LocalBranchName {
-	return LocalBranchName{id: ""}
+	return LocalBranchName{ID: ""}
 }
 
 func NewLocalBranchName(id string) LocalBranchName {
