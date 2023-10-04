@@ -7,7 +7,7 @@ import (
 
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
-type SHA struct {
+type SHA struct { //nolint:musttag
 	ID string
 }
 

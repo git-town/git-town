@@ -7,7 +7,7 @@ import (
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
-type RemoteBranchName struct {
+type RemoteBranchName struct { //nolint:musttag
 	ID string
 }
 

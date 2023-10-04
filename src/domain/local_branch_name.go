@@ -7,7 +7,7 @@ import (
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
-type LocalBranchName struct {
+type LocalBranchName struct { //nolint:musttag
 	ID string
 }
 
