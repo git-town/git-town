@@ -45,14 +45,14 @@ func TestCollector(t *testing.T) {
 					LocalName:  domain.NewLocalBranchName("branch1"),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
-					RemoteName: domain.RemoteBranchName{},
+					RemoteName: domain.EmptyRemoteBranchName(),
 					RemoteSHA:  domain.EmptySHA(),
 				},
 				{
 					LocalName:  domain.NewLocalBranchName("branch2"),
 					LocalSHA:   domain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
-					RemoteName: domain.RemoteBranchName{},
+					RemoteName: domain.EmptyRemoteBranchName(),
 					RemoteSHA:  domain.EmptySHA(),
 				},
 			}

@@ -166,9 +166,9 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
-			return domain.SyncStatusRemoteOnly, domain.RemoteBranchName{}
+			return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
 		}
-		return domain.SyncStatusLocalOnly, domain.RemoteBranchName{}
+		return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
 	}
 }
 

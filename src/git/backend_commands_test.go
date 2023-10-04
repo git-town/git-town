@@ -373,7 +373,7 @@ func TestBackendCommands(t *testing.T) {
 						LocalName:  domain.NewLocalBranchName("branch-1"),
 						LocalSHA:   domain.NewSHA("01a7eded"),
 						SyncStatus: domain.SyncStatusLocalOnly,
-						RemoteName: domain.RemoteBranchName{},
+						RemoteName: domain.EmptyRemoteBranchName(),
 						RemoteSHA:  domain.EmptySHA(),
 					},
 				}

@@ -29,7 +29,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasAllBranches())
@@ -51,7 +51,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasAllBranches())
@@ -66,7 +66,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.True(t, give.HasLocalBranch())
@@ -99,7 +99,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasLocalBranch())
@@ -114,7 +114,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.True(t, give.HasOnlyLocalBranch())
@@ -147,7 +147,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasOnlyLocalBranch())
@@ -173,7 +173,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasOnlyRemoteBranch())
@@ -195,7 +195,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasOnlyRemoteBranch())
@@ -232,7 +232,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasRemoteBranch())
@@ -243,7 +243,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.HasRemoteBranch())
@@ -258,7 +258,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.True(t, give.IsEmpty())
@@ -269,7 +269,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.NewLocalBranchName("branch-1"),
 				LocalSHA:   domain.NewSHA("111111"),
 				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.IsEmpty())
@@ -317,7 +317,7 @@ func TestBranchInfo(t *testing.T) {
 				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.RemoteBranchName{},
+				RemoteName: domain.EmptyRemoteBranchName(),
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			assert.False(t, give.IsOmniBranch())
