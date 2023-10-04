@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/test/ostools"
 	"github.com/git-town/git-town/v9/test/subshell"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestMockingRunner(t *testing.T) {
@@ -94,7 +93,7 @@ func TestMockingRunner(t *testing.T) {
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			must.NoError(t, err)
-			assert.Contains(t, res, "You entered one and two")
+			must.StrContains(t, res, "You entered one and two")
 		})
 	})
 
