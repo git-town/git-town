@@ -102,7 +102,7 @@ func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
 			return parent
 		}
 	}
-	return domain.LocalBranchName{}
+	return domain.EmptyLocalBranchName()
 }
 
 // OrderHierarchically sorts the given branches so that ancestor branches come before their descendants

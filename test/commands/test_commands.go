@@ -222,7 +222,7 @@ func (tc *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datat
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := tc.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	lastBranch := domain.LocalBranchName{}
+	lastBranch := domain.EmptyLocalBranchName()
 	for _, branch := range branches {
 		files := tc.FilesInBranch(branch)
 		for _, file := range files {

@@ -12,9 +12,7 @@ type RemoteBranchName struct {
 }
 
 func EmptyRemoteBranchName() RemoteBranchName {
-	return RemoteBranchName{
-		id: "",
-	}
+	return RemoteBranchName{id: ""}
 }
 
 func NewRemoteBranchName(id string) RemoteBranchName {

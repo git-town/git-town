@@ -18,7 +18,7 @@ func EnterParent(branch, defaultParent domain.LocalBranchName, lineage config.Li
 		Default: defaultParent.String(),
 	})
 	if err != nil {
-		return domain.LocalBranchName{}, err
+		return domain.EmptyLocalBranchName(), err
 	}
 	return domain.NewLocalBranchName(choice), nil
 }

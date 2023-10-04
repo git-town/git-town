@@ -75,14 +75,14 @@ func executeSwitch(debug bool) error {
 func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	entries, err := createEntries(lineage)
 	if err != nil {
-		return domain.LocalBranchName{}, false, err
+		return domain.EmptyLocalBranchName(), false, err
 	}
 	choice, err := dialog.ModalSelect(entries, currentBranch.String())
 	if err != nil {
-		return domain.LocalBranchName{}, false, err
+		return domain.EmptyLocalBranchName(), false, err
 	}
 	if choice == nil {
-		return domain.LocalBranchName{}, false, nil
+		return domain.EmptyLocalBranchName(), false, nil
 	}
 	return domain.NewLocalBranchName(*choice), true, nil
 }
