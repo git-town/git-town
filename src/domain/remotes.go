@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/gohacks/slice"
 )
 
 // Remotes answers questions which Git remotes a repo has.

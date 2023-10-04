@@ -7,7 +7,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
