@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/gohacks/slice"
 )
 
 // EnterParent lets the user select a new parent for the given branch.
