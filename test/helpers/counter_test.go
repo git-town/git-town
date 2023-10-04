@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-// TODO: rename to TestCounter
+// TODO: rename to TestCounter.
 func TestUniqueString(t *testing.T) {
 	t.Parallel()
 	counter := helpers.Counter{}

@@ -15,7 +15,7 @@ func TestRemoteBranchName(t *testing.T) {
 	t.Run("IsEmpty", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
-			give := domain.RemoteBranchName{}
+			give := domain.EmptyRemoteBranchName()
 			must.True(t, give.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
@@ -79,7 +79,7 @@ func TestRemoteBranchName(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"origin/branch-1"`
-		have := domain.RemoteBranchName{}
+		have := domain.EmptyRemoteBranchName()
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := domain.NewRemoteBranchName("origin/branch-1")
