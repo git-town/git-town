@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func HasGitConfiguration(t *testing.T, dir string) {
 	t.Helper()
 	entries, err := os.ReadDir(dir)
-	assert.Nilf(t, err, "cannot list directory %q", dir)
+	must.NoError(t, err)
 	for e := range entries {
 		if entries[e].Name() == ".gitconfig" {
 			return

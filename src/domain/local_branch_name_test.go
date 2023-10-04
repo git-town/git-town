@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestLocalBranchName(t *testing.T) {
@@ -16,12 +16,12 @@ func TestLocalBranchName(t *testing.T) {
 		t.Run("branch is empty", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.EmptyLocalBranchName()
-			assert.True(t, branch.IsEmpty())
+			must.True(t, branch.IsEmpty())
 		})
 		t.Run("branch is not empty", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewLocalBranchName("branch")
-			assert.False(t, branch.IsEmpty())
+			must.False(t, branch.IsEmpty())
 		})
 	})
 
@@ -29,22 +29,22 @@ func TestLocalBranchName(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
-		assert.Nil(t, err)
+		must.NoError(t, err)
 		want := `"branch-1"`
-		assert.Equal(t, want, string(have))
+		must.EqOp(t, want, string(have))
 	})
 
 	t.Run("NewLocalBranchName and String", func(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch-1")
-		assert.Equal(t, "branch-1", branch.String())
+		must.EqOp(t, "branch-1", branch.String())
 	})
 
 	t.Run("TrackingBranch", func(t *testing.T) {
 		t.Parallel()
 		branch := domain.NewLocalBranchName("branch")
 		want := domain.NewRemoteBranchName("origin/branch")
-		assert.Equal(t, want, branch.TrackingBranch())
+		must.EqOp(t, want, branch.TrackingBranch())
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
@@ -52,8 +52,8 @@ func TestLocalBranchName(t *testing.T) {
 		give := `"branch-1"`
 		have := domain.EmptyLocalBranchName()
 		err := json.Unmarshal([]byte(give), &have)
-		assert.Nil(t, err)
+		must.NoError(t, err)
 		want := domain.NewLocalBranchName("branch-1")
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	})
 }

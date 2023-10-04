@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/giturl"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestParse(t *testing.T) {
@@ -37,6 +37,6 @@ func TestParse(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := giturl.Parse(give)
-		assert.Equal(t, want, *have, give)
+		must.EqOp(t, want, *have)
 	}
 }

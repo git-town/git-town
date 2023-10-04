@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestLocalBranchChange(t *testing.T) {
@@ -33,13 +33,13 @@ func TestLocalBranchChange(t *testing.T) {
 				After:  domain.NewSHA("444444"),
 			},
 		}
-		assert.Equal(t, wantPerennials, havePerennials)
+		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := domain.LocalBranchChange{
 			domain.NewLocalBranchName("branch-1"): {
 				Before: domain.NewSHA("111111"),
 				After:  domain.NewSHA("222222"),
 			},
 		}
-		assert.Equal(t, wantFeatures, haveFeatures)
+		must.Eq(t, wantFeatures, haveFeatures)
 	})
 }
