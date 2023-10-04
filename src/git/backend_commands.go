@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/gohacks/cache"
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/messages"
 )

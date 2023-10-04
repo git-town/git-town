@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/gohacks/cache"
 	"github.com/git-town/git-town/v9/test/commands"
 	testshell "github.com/git-town/git-town/v9/test/subshell"
 	"github.com/shoenig/test/must"
