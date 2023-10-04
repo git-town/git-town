@@ -15,5 +15,5 @@ type Counter struct {
 // ToString provides a globally unique text each time it is called.
 func (c *Counter) ToString() string {
 	atomic.AddUint32(&c.value, 1)
-	return strconv.Itoa(int(c.value))
+	return strconv.FormatUint(uint64(c.value), 10)
 }

@@ -7,8 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-// TODO: rename to TestCounter.
-func TestUniqueString(t *testing.T) {
+func TestCounter(t *testing.T) {
 	t.Parallel()
 	counter := helpers.Counter{}
 	must.NotEqOp(t, "0", counter.ToString())
