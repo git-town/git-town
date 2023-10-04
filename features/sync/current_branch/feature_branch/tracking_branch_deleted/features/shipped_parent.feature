@@ -33,8 +33,6 @@ Feature: a parent branch of the current feature branch was shipped
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | child  | git checkout main                           |
-      | main   | git branch parent {{ sha 'parent commit' }} |
-      |        | git checkout child                          |
+      | child  | git branch parent {{ sha 'parent commit' }} |
     And the current branch is still "child"
     And the initial branches and hierarchy exist
