@@ -23,7 +23,7 @@ func TestLocation(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
-		have := domain.Location{}
+		have := domain.EmptyLocation()
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := domain.NewLocation("branch-1")
