@@ -14,8 +14,8 @@ require (
 	github.com/google/go-github/v50 v50.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/sergi/go-diff v1.3.1
+	github.com/shoenig/test v0.6.7
 	github.com/spf13/cobra v1.6.1
-	github.com/stretchr/testify v1.8.1
 	github.com/xanzy/go-gitlab v0.78.0
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 	golang.org/x/oauth2 v0.4.0
@@ -23,7 +23,7 @@ require (
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
 
-require github.com/shoenig/test v0.6.7
+require github.com/stretchr/testify v1.8.1
 
 require (
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect

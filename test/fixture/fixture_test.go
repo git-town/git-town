@@ -113,7 +113,7 @@ func TestFixture(t *testing.T) {
 		})
 		// verify local commits
 		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
-		assert.Len(t, commits, 2)
+		must.Len(t, 2, commits)
 		must.EqOp(t, "local commit", commits[0].Message)
 		must.EqOp(t, "local-file", commits[0].FileName)
 		must.EqOp(t, "lc", commits[0].FileContent)
@@ -122,7 +122,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, "lrc", commits[1].FileContent)
 		// verify origin commits
 		commits = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("main"))
-		assert.Len(t, commits, 2)
+		must.Len(t, 2, commits)
 		must.EqOp(t, "origin commit", commits[0].Message)
 		must.EqOp(t, "origin-file", commits[0].FileName)
 		must.EqOp(t, "rc", commits[0].FileContent)
@@ -146,11 +146,11 @@ func TestFixture(t *testing.T) {
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		must.NoError(t, err)
-		assert.Contains(t, branches, domain.NewLocalBranchName("b1"))
+		must.SliceContains(t, branches, domain.NewLocalBranchName("b1"))
 		// verify it isn't in the local branches
 		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		must.NoError(t, err)
-		assert.NotContains(t, branches, "b1")
+		must.SliceNotContains(t, branches, domain.NewLocalBranchName("b1"))
 	})
 
 	t.Run("CommitTable", func(t *testing.T) {

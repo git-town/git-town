@@ -12,7 +12,6 @@ import (
 	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBackendCommands(t *testing.T) {
@@ -45,7 +44,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
-		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
+		must.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
 		must.NoError(t, err)
 		must.EqOp(t, domain.NewLocalBranchName("branch1"), currentBranch)
@@ -526,7 +525,8 @@ func TestBackendCommands(t *testing.T) {
 				RemotesCache:       &cache.Remotes{},
 			}
 			have := cmds.RootDirectory()
-			assert.Empty(t, have)
+			want := domain.EmptyRepoRootDir()
+			must.EqOp(t, want, have)
 		})
 	})
 

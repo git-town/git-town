@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCollector(t *testing.T) {
@@ -33,7 +32,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Bool(true, errors.New("first"))
 			fc.Bool(false, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -72,7 +71,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Bool(true, errors.New("first"))
 			fc.Bool(false, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -84,7 +83,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Check(errors.New("first"))
 			fc.Check(errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
 			fc := gohacks.FailureCollector{}
@@ -99,7 +98,7 @@ func TestCollector(t *testing.T) {
 		t.Run("registers the given error", func(t *testing.T) {
 			fc := gohacks.FailureCollector{}
 			fc.Fail("failed %s", "reason")
-			assert.Error(t, fc.Err, "failed reason")
+			must.ErrorContains(t, fc.Err, "failed reason")
 		})
 	})
 
@@ -118,7 +117,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Hosting(config.HostingGitHub, errors.New("first"))
 			fc.Hosting(config.HostingGitHub, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -137,7 +136,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -156,7 +155,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.String("", errors.New("first"))
 			fc.String("", errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -175,7 +174,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Strings([]string{}, errors.New("first"))
 			fc.Strings([]string{}, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
@@ -194,7 +193,7 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
 			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("second"))
-			assert.Error(t, fc.Err, "first")
+			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 }

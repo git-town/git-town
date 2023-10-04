@@ -8,7 +8,7 @@ import (
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
 type LocalBranchName struct {
-	id string
+	Id string
 }
 
 func NewLocalBranchName(id string) LocalBranchName {
@@ -24,17 +24,17 @@ func isValidLocalBranchName(value string) bool {
 
 // AtRemote provides the RemoteBranchName of this branch at the given remote.
 func (lbn LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
-	return NewRemoteBranchName(remote.String() + "/" + lbn.id)
+	return NewRemoteBranchName(remote.String() + "/" + lbn.Id)
 }
 
 // BranchName widens the type of this LocalBranchName to a more generic BranchName.
 func (lbn LocalBranchName) BranchName() BranchName {
-	return NewBranchName(lbn.id)
+	return NewBranchName(lbn.Id)
 }
 
 // IsEmpty indicates whether this branch name is not set.
 func (lbn LocalBranchName) IsEmpty() bool {
-	return lbn.id == ""
+	return lbn.Id == ""
 }
 
 // Location widens the type of this LocalBranchName to a more generic Location.
@@ -44,7 +44,7 @@ func (lbn LocalBranchName) Location() Location {
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (lbn LocalBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(lbn.id)
+	return json.Marshal(lbn.Id)
 }
 
 // TrackingBranch provides the name of the tracking branch for this local branch.
@@ -53,9 +53,9 @@ func (lbn LocalBranchName) TrackingBranch() RemoteBranchName {
 }
 
 // Implementation of the fmt.Stringer interface.
-func (lbn LocalBranchName) String() string { return lbn.id }
+func (lbn LocalBranchName) String() string { return lbn.Id }
 
 // UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
 func (lbn *LocalBranchName) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &lbn.id)
+	return json.Unmarshal(b, &lbn.Id)
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestStepListBuilder(t *testing.T) {
@@ -44,7 +43,7 @@ func TestStepListBuilder(t *testing.T) {
 				b.Check(firstErr)
 				b.AddE(&steps.EmptyStep{}, errors.New("second error"))
 				_, builderErr := b.Result()
-				assert.Error(t, firstErr, builderErr)
+				must.EqOp(t, firstErr, builderErr)
 			})
 			t.Run("does not add the given step", func(t *testing.T) {
 				t.Parallel()

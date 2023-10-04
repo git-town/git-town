@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestTestCommands(t *testing.T) {
@@ -48,7 +47,7 @@ func TestTestCommands(t *testing.T) {
 			Message:     "second commit",
 		})
 		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
-		assert.Len(t, commits, 2)
+		must.Len(t, 2, commits)
 		must.EqOp(t, domain.NewLocalBranchName("initial"), commits[0].Branch)
 		must.EqOp(t, "file1", commits[0].FileName)
 		must.EqOp(t, "hello", commits[0].FileContent)
@@ -126,7 +125,7 @@ func TestTestCommands(t *testing.T) {
 				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
-			assert.Len(t, commits, 1)
+			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
 			must.EqOp(t, "test commit", commits[0].Message)
@@ -144,7 +143,7 @@ func TestTestCommands(t *testing.T) {
 				Author:      "developer <developer@example.com>",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
-			assert.Len(t, commits, 1)
+			must.Len(t, 1, commits)
 			must.EqOp(t, "hello.txt", commits[0].FileName)
 			must.EqOp(t, "hello world", commits[0].FileContent)
 			must.EqOp(t, "test commit", commits[0].Message)
@@ -205,7 +204,7 @@ func TestTestCommands(t *testing.T) {
 			Message:     "commit",
 		})
 		commits := runtime.CommitsInBranch(domain.NewLocalBranchName("initial"), []string{})
-		assert.Len(t, commits, 1)
+		must.Len(t, 1, commits)
 		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
 		must.EqOp(t, "hello world", content)
 	})
@@ -218,7 +217,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
 		commits := runtime.Commits([]string{}, domain.NewLocalBranchName("initial"))
-		assert.Len(t, commits, 1)
+		must.Len(t, 1, commits)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		must.Eq(t, []string{"f1.txt", "f2.txt"}, fileNames)
 	})
@@ -353,7 +352,7 @@ func TestTestCommands(t *testing.T) {
 		repo.RemoveRemote(domain.OriginRemote)
 		remotes, err := repo.Remotes()
 		must.NoError(t, err)
-		assert.Len(t, remotes, 0)
+		must.Len(t, 0, remotes)
 	})
 
 	t.Run("SHAForCommit", func(t *testing.T) {
@@ -361,7 +360,7 @@ func TestTestCommands(t *testing.T) {
 		repo := testruntime.Create(t)
 		repo.CreateCommit(git.Commit{Branch: domain.NewLocalBranchName("initial"), FileName: "foo", FileContent: "bar", Message: "commit"})
 		sha := repo.SHAForCommit("commit")
-		assert.Len(t, sha, 7)
+		must.EqOp(t, 7, len(sha))
 	})
 
 	t.Run("UncommittedFiles", func(t *testing.T) {

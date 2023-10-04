@@ -34,7 +34,7 @@ func (lbns LocalBranchNames) Join(sep string) string {
 // Sort orders the branches in this collection alphabetically.
 func (lbns LocalBranchNames) Sort() {
 	sort.Slice(lbns, func(a, b int) bool {
-		return lbns[a].id < lbns[b].id
+		return lbns[a].Id < lbns[b].Id
 	})
 }
 

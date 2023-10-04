@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/shoenig/test/must"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGitTown(t *testing.T) {
@@ -99,8 +98,8 @@ func TestGitTown(t *testing.T) {
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		assert.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
-		assert.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
+		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
+		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
 		repo.Config.Reload()
 		have := repo.Config.Lineage()
 		want := config.Lineage{}
