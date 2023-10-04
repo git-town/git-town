@@ -42,9 +42,9 @@ func (stepList *List) IsEmpty() bool {
 
 // MarshalJSON marshals the step list to JSON.
 func (stepList *List) MarshalJSON() ([]byte, error) {
-	jsonSteps := make([]JSONStep, len(stepList.List))
+	jsonSteps := make([]JSON, len(stepList.List))
 	for s, step := range stepList.List {
-		jsonSteps[s] = JSONStep{Step: step}
+		jsonSteps[s] = JSON{Step: step}
 	}
 	return json.Marshal(jsonSteps)
 }
@@ -139,7 +139,7 @@ func (stepList *List) StepTypes() []string {
 
 // UnmarshalJSON unmarshals the step list from JSON.
 func (stepList *List) UnmarshalJSON(b []byte) error {
-	var jsonSteps []JSONStep
+	var jsonSteps []JSON
 	err := json.Unmarshal(b, &jsonSteps)
 	if err != nil {
 		return err

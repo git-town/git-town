@@ -10,12 +10,12 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestJSONStep(t *testing.T) {
+func TestJSON(t *testing.T) {
 	t.Parallel()
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		jsonstep := steps.JSONStep{
+		jsonstep := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
@@ -42,14 +42,14 @@ func TestJSONStep(t *testing.T) {
   },
 	"type": "Checkout"
 }`[1:]
-		have := steps.JSONStep{
+		have := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.EmptyLocalBranchName(),
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := steps.JSONStep{
+		want := steps.JSON{
 			Step: &step.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
