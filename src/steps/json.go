@@ -1,4 +1,4 @@
-package runstate
+package steps
 
 import (
 	"encoding/json"
@@ -9,13 +9,13 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 )
 
-// JSONStep is used to store a step in JSON.
-type JSONStep struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
+// JSON is used to store a step in JSON.
+type JSON struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
 	Step step.Step
 }
 
 // MarshalJSON marshals the step to JSON.
-func (js *JSONStep) MarshalJSON() ([]byte, error) {
+func (js *JSON) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"data": js.Step,
 		"type": gohacks.TypeName(js.Step),
@@ -23,7 +23,7 @@ func (js *JSONStep) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON unmarshals the step from JSON.
-func (js *JSONStep) UnmarshalJSON(b []byte) error {
+func (js *JSON) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {

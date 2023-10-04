@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/step"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state.
@@ -28,9 +26,4 @@ func (ursd UnfinishedRunStateDetails) String() string {
 	result.WriteString(ursd.EndBranch.String())
 	result.WriteString("\n")
 	return result.String()
-}
-
-func isCheckoutStep(step step.Step) bool {
-	typeName := gohacks.TypeName(step)
-	return typeName == "Checkout" || typeName == "CheckoutIfExists"
 }
