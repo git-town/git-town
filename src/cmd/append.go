@@ -166,7 +166,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 }
 
 func appendSteps(config *appendConfig) (steps.List, error) {
-	list := steps.StepListBuilder{}
+	list := steps.ListBuilder{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
