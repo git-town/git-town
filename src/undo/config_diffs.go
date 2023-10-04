@@ -2,7 +2,7 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
@@ -21,31 +21,31 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 func (cds ConfigDiffs) UndoSteps() runstate.StepList {
 	result := runstate.StepList{}
 	for _, key := range cds.Global.Added {
-		result.Append(&steps.RemoveGlobalConfigStep{Key: key})
+		result.Append(&step.RemoveGlobalConfig{Key: key})
 	}
 	for key, value := range cds.Global.Removed {
-		result.Append(&steps.SetGlobalConfigStep{
+		result.Append(&step.SetGlobalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Global.Changed {
-		result.Append(&steps.SetGlobalConfigStep{
+		result.Append(&step.SetGlobalConfig{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
 	for _, key := range cds.Local.Added {
-		result.Append(&steps.RemoveLocalConfigStep{Key: key})
+		result.Append(&step.RemoveLocalConfig{Key: key})
 	}
 	for key, value := range cds.Local.Removed {
-		result.Append(&steps.SetLocalConfigStep{
+		result.Append(&step.SetLocalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Local.Changed {
-		result.Append(&steps.SetLocalConfigStep{
+		result.Append(&step.SetLocalConfig{
 			Key:   key,
 			Value: change.Before,
 		})

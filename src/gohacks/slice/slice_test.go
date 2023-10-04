@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -119,16 +119,16 @@ func TestSlice(t *testing.T) {
 		})
 		t.Run("list contains element in the middle", func(t *testing.T) {
 			t.Parallel()
-			give := []steps.Step{
-				&steps.AbortMergeStep{},
-				&steps.RestoreOpenChangesStep{EmptyStep: steps.EmptyStep{}},
-				&steps.AbortRebaseStep{},
+			give := []step.Step{
+				&step.AbortMerge{},
+				&step.RestoreOpenChanges{Empty: step.Empty{}},
+				&step.AbortRebase{},
 			}
-			have := slice.LowerAll[steps.Step](give, &steps.RestoreOpenChangesStep{})
-			want := []steps.Step{
-				&steps.AbortMergeStep{},
-				&steps.AbortRebaseStep{},
-				&steps.RestoreOpenChangesStep{},
+			have := slice.LowerAll[step.Step](give, &step.RestoreOpenChanges{})
+			want := []step.Step{
+				&step.AbortMerge{},
+				&step.AbortRebase{},
+				&step.RestoreOpenChanges{},
 			}
 			must.Eq(t, want, have)
 		})

@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -171,20 +171,20 @@ func killSteps(config *killConfig) (steps, finalUndoSteps runstate.StepList, err
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Add(&steps.DeleteTrackingBranchStep{Branch: config.targetBranch.RemoteName})
+		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
-			list.Add(&steps.CommitOpenChangesStep{})
+			list.Add(&step.CommitOpenChanges{})
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
-			list.Add(&steps.UpdateInitialBranchLocalSHAStep{Branch: config.initialBranch})
+			list.Add(&step.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoList.Append(&steps.CheckoutStep{Branch: config.targetBranch.LocalName})
-			finalUndoList.Append(&steps.UndoLastCommitStep{})
+			finalUndoList.Append(&step.Checkout{Branch: config.targetBranch.LocalName})
+			finalUndoList.Append(&step.UndoLastCommit{})
 		}
-		list.Add(&steps.CheckoutStep{Branch: config.targetBranchParent()})
+		list.Add(&step.Checkout{Branch: config.targetBranchParent()})
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
+	list.Add(&step.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		branch:  config.targetBranch.LocalName,
 		lineage: config.lineage,
@@ -196,9 +196,9 @@ func killFeatureBranch(list *runstate.StepListBuilder, finalUndoList *runstate.S
 func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 	childBranches := args.lineage.Children(args.branch)
 	for _, child := range childBranches {
-		args.list.Add(&steps.SetParentStep{Branch: child, ParentBranch: args.parent})
+		args.list.Add(&step.SetParent{Branch: child, ParentBranch: args.parent})
 	}
-	args.list.Add(&steps.DeleteParentBranchStep{Branch: args.branch})
+	args.list.Add(&step.DeleteParentBranch{Branch: args.branch})
 }
 
 type removeBranchFromLineageArgs struct {

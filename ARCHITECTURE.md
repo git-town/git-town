@@ -3,7 +3,7 @@
 The [cmd](src/cmd) package defines all Git Town commands. Each Git Town command
 inspects the current state of the Git repository (branches, Git configuration,
 stash size) and generates a snapshot of the repository's initial status. It
-generates a [list](src/runstate) of [steps](src/steps) that make up the
+generates a [list](src/runstate) of [steps](src/step) that make up the
 functionality of the Git Town command and executes them via Git Town's
 [virtual machine](src/runvm). When the virtual machine is done, it generates
 another snapshot of the Git repository, compares it to the initial snapshot, and

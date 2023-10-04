@@ -5,13 +5,13 @@ import (
 
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
 )
 
 // errored is called when the given step has resulted in the given error.
-func errored(step steps.Step, runErr error, args ExecuteArgs) error {
-	args.RunState.AbortSteps.Append(step.CreateAbortSteps()...)
+func errored(failedStep step.Step, runErr error, args ExecuteArgs) error {
+	args.RunState.AbortSteps.Append(failedStep.CreateAbortSteps()...)
 	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
@@ -24,10 +24,10 @@ func errored(step steps.Step, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.UndoSteps.AppendList(undoSteps)
-	if step.ShouldAutomaticallyAbortOnError() {
-		return autoAbort(step, runErr, args)
+	if failedStep.ShouldAutomaticallyAbortOnError() {
+		return autoAbort(failedStep, runErr, args)
 	}
-	args.RunState.RunSteps.Prepend(step.CreateContinueSteps()...)
+	args.RunState.RunSteps.Prepend(failedStep.CreateContinueSteps()...)
 	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)
 	if err != nil {
 		return err

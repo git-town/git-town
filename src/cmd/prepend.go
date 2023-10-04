@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -182,12 +182,12 @@ func prependSteps(config *prependConfig) (runstate.StepList, error) {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
-	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
-	list.Add(&steps.SetParentStep{Branch: config.branches.Initial, ParentBranch: config.targetBranch})
-	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
+	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
+	list.Add(&step.SetParent{Branch: config.targetBranch, ParentBranch: config.parentBranch})
+	list.Add(&step.SetParent{Branch: config.branches.Initial, ParentBranch: config.targetBranch})
+	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
