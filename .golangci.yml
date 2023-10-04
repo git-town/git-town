@@ -70,9 +70,6 @@ issues:
     - text: (cobra.Command|subshell.Options|gitea.*Options|github.*Options|gitlab.*Options|godog.Options) is missing fields?
       linters:
         - exhaustruct
-    - path: src/cache/cache.go
-      linters:
-        - ireturn
     - path: src/hosting/gitea
       text: missing in (List.*Options|PRBranchInfo|Token)
       linters:
