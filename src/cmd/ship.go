@@ -300,7 +300,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 }
 
 func shipSteps(config *shipConfig, commitMessage string) (steps.List, error) {
-	list := steps.ListBuilder{}
+	list := steps.Builder{}
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.targetBranch,
