@@ -8,7 +8,6 @@ import (
 // Commands counts the commands run by a Git Town command.
 type Commands struct {
 	commandsRun int
-	messages    []string
 }
 
 // NewCommands provides new instances of Commands for testing only!
