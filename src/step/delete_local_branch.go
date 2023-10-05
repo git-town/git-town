@@ -13,9 +13,15 @@ type DeleteLocalBranch struct {
 }
 
 func (step *DeleteLocalBranch) Run(args RunArgs) error {
-	hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
-	if err != nil {
-		return err
+	useForce := step.Force
+	if !useForce {
+		hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+		if err != nil {
+			return err
+		}
+		if hasUnmergedCommits {
+			useForce = true
+		}
 	}
-	return args.Runner.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return args.Runner.Frontend.DeleteLocalBranch(step.Branch, useForce)
 }

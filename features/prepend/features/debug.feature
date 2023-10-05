@@ -61,7 +61,6 @@ Feature: display debug statistics
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
-      |        | backend  | git log main..parent                             |
       | old    | frontend | git branch -D parent                             |
       |        | backend  | git show-ref --quiet refs/heads/old              |
       |        | backend  | git show-ref --quiet refs/heads/parent           |
@@ -74,6 +73,6 @@ Feature: display debug statistics
       |        | backend  | git stash list                                   |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "old"
