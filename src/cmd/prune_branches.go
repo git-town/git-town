@@ -68,12 +68,12 @@ func executePruneBranches(debug bool) error {
 }
 
 type pruneBranchesConfig struct {
-	branches         domain.Branches
-	lineage          config.Lineage
-	branchesToDelete domain.LocalBranchNames
-	mainBranch       domain.LocalBranchName
-	previousBranch   domain.LocalBranchName
-	pushHook         bool
+	branches                  domain.Branches
+	lineage                   config.Lineage
+	branchesWithDeletedRemote domain.LocalBranchNames
+	mainBranch                domain.LocalBranchName
+	previousBranch            domain.LocalBranchName
+	pushHook                  bool
 }
 
 func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pruneBranchesConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -93,26 +93,30 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 		ValidateNoOpenChanges: false,
 	})
 	return &pruneBranchesConfig{
-		branches:         branches,
-		lineage:          lineage,
-		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
-		mainBranch:       repo.Runner.Config.MainBranch(),
-		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),
-		pushHook:         pushHook,
+		branches:                  branches,
+		lineage:                   lineage,
+		branchesWithDeletedRemote: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
+		mainBranch:                repo.Runner.Config.MainBranch(),
+		previousBranch:            repo.Runner.Backend.PreviouslyCheckedOutBranch(),
+		pushHook:                  pushHook,
 	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
 func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 	result := steps.List{}
-	for _, branchWithDeletedRemote := range config.branchesToDelete {
+	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
 		if config.branches.Initial == branchWithDeletedRemote {
 			result.Add(&step.Checkout{Branch: config.mainBranch})
 		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
-		if !parent.IsEmpty() {
-			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
+		for _, child := range config.lineage.Children(branchWithDeletedRemote) {
+			if parent.IsEmpty() {
+				result.Add(&step.DeleteParentBranch{Branch: child})
+			} else {
 				result.Add(&step.SetParent{Branch: child, ParentBranch: parent})
 			}
+		}
+		if config.branches.Types.IsFeatureBranch(branchWithDeletedRemote) {
 			result.Add(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
 		}
 		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
