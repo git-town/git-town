@@ -186,7 +186,7 @@ func killFeatureBranch(list *steps.List, finalUndoList *steps.List, config killC
 		}
 		list.Add(&step.Checkout{Branch: config.targetBranchParent()})
 	}
-	list.Add(&step.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: true})
+	list.Add(&step.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Parent: config.mainBranch.Location(), Force: false})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		branch:  config.targetBranch.LocalName,
 		lineage: config.lineage,
