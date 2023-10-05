@@ -57,7 +57,7 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, promptForParent, repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, promptForParent, repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -70,6 +70,7 @@ func executeHack(args []string, promptForParent, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -79,12 +80,13 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *execute.OpenRepoResult, debug bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

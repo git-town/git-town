@@ -15,9 +15,9 @@ import (
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir           *string
-	CommandsStats CommandsStats
-	Messages      MessagesCollector
+	Dir             *string
+	CommandsCounter Counter
+	Messages        MessagesCollector
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }
@@ -38,7 +38,7 @@ func (br BackendRunner) Run(executable string, args ...string) error {
 }
 
 func (br BackendRunner) execute(executable string, args ...string) ([]byte, error) {
-	br.CommandsStats.RegisterRun()
+	br.CommandsCounter.RegisterRun()
 	if br.Verbose {
 		printHeader(executable, args...)
 	}

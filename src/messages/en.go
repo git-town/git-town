@@ -20,6 +20,7 @@ const (
 	BranchParentChanged               = "branch %q is now a child of %q"
 	BrowserOpen                       = "Please open in a browser: %s\n"
 	CacheUnitialized                  = "using a cached value before initialization"
+	CommandsRun                       = "Ran %d shell commands."
 	CommitMessageProblem              = "cannot determine last commit message: %w"
 	CompletionTypeUnknown             = "unknown completion type: %q"
 	ConfigPullbranchStrategyUnknown   = "unknown pull branch strategy: %q"

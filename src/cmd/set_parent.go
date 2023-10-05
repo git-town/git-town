@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -46,6 +47,7 @@ func executeSetParent(debug bool) error {
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
@@ -79,6 +81,8 @@ func executeSetParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	repo.Runner.CommandsRun.PrintAnalysis()
+	if debug {
+		fmt.Printf(messages.CommandsRun, repo.Runner.CommandsCounter.Count())
+	}
 	return nil
 }

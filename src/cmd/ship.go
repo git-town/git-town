@@ -77,7 +77,7 @@ func executeShip(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -100,6 +100,7 @@ func executeShip(args []string, message string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -133,7 +134,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -141,6 +142,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult) (*shipConf
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

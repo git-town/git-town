@@ -11,7 +11,7 @@ import (
 type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            CommandsStats
+	Stats            Counter
 	Messages         MessagesCollector
 }
 

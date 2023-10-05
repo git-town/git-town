@@ -16,7 +16,7 @@ import (
 type FrontendRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            CommandsStats
+	Stats            Counter
 }
 
 type GetCurrentBranchFunc func() (domain.LocalBranchName, error)

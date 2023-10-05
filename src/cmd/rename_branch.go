@@ -63,7 +63,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -76,6 +76,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		NoPushHook:              config.noPushHook,
 		RootDir:                 repo.RootDir,
@@ -96,7 +97,7 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, debug bool) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -104,6 +105,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

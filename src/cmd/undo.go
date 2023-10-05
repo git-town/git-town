@@ -46,7 +46,7 @@ func executeUndo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo)
+	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo, debug)
 	if err != nil {
 		return err
 	}
@@ -58,6 +58,7 @@ func executeUndo(debug bool) error {
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -75,7 +76,7 @@ type undoConfig struct {
 	pushHook                bool
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult, debug bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -83,6 +84,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult) (*undoConfig, domain.Stas
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

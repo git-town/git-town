@@ -42,6 +42,7 @@ type ExecuteArgs struct {
 	RunState                *runstate.RunState
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
+	Debug                   bool
 	RootDir                 domain.RepoRootDir
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
