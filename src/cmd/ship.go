@@ -77,7 +77,7 @@ func executeShip(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}

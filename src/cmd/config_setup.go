@@ -41,7 +41,7 @@ func executeConfigSetup(debug bool) error {
 		return err
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

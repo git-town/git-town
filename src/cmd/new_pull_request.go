@@ -62,7 +62,7 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo)
 	if err != nil || exit {
 		return err
 	}

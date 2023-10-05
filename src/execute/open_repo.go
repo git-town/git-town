@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
+func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -35,16 +35,16 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
 	if err != nil {
-		return result, err
+		return nil, err
 	}
 	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
-		return
+		return nil, err
 	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		err = errors.New(messages.DirCurrentProblem)
-		return
+		return nil, err
 	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
@@ -71,29 +71,29 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
 			err = errors.New(messages.RepoOutside)
-			return
+			return nil, err
 		}
 	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
-		return
+		return nil, err
 	}
 	if args.ValidateIsOnline && isOffline {
 		err = errors.New(messages.OfflineNotAllowed)
-		return
+		return nil, err
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
 		if err != nil {
 			err = errors.New(messages.DirCurrentProblem)
-			return
+			return nil, err
 		}
 		if currentDirectory != rootDir.String() {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
-	return OpenRepoResult{
+	return &OpenRepoResult{
 		Runner:         prodRunner,
 		RootDir:        rootDir,
 		IsOffline:      isOffline,
