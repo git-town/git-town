@@ -39,6 +39,6 @@ Feature: display debug statistics
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"
