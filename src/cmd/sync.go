@@ -272,7 +272,7 @@ type deleteBranchStepsArgs struct {
 	branch      domain.BranchInfo
 	branchTypes domain.BranchTypes
 	lineage     config.Lineage
-	list        *runstate.StepListBuilder
+	list        *steps.Builder
 	parent      domain.LocalBranchName
 	mainBranch  domain.LocalBranchName
 }
@@ -281,7 +281,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 	// step 1: sync the branch locally
 	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
 	// step 2: determine if the local branch now has changes compared to its parent
-	args.list.Add(&steps.IfBranchChangesStep{
+	args.list.Add(&steps.IfBranchChanges{
 		Branch: args.branch.LocalName,
 		Parent: args.parent,
 		IsEmptySteps: runstate.StepList{
