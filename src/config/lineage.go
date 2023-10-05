@@ -125,6 +125,15 @@ func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 	})
 }
 
+// RemoveBranch removes the given branch completely from this lineage.
+func (l Lineage) RemoveBranch(branch domain.LocalBranchName) {
+	parent := l.Parent(branch)
+	for _, childName := range l.Children(branch) {
+		l[childName] = parent
+	}
+
+}
+
 // Roots provides the branches with children and no parents.
 func (l Lineage) Roots() domain.LocalBranchNames {
 	roots := domain.LocalBranchNames{}
