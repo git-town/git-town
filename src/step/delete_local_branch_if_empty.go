@@ -1,4 +1,4 @@
-package steps
+package step
 
 import (
 	"fmt"
@@ -11,14 +11,14 @@ import (
 
 // DeleteLocalBranchStep deletes the branch with the given name,
 // optionally in a safe or unsafe way.
-type DeleteLocalBranchIfEmptyStep struct {
-	EmptyStep
+type DeleteLocalBranchIfEmpty struct {
+	Empty
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
 	Force  bool
 }
 
-func (step *DeleteLocalBranchIfEmptyStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
+func (step *DeleteLocalBranchIfEmpty) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	// ensure branch is empty
 	branchHasUnmergedChanges, err := run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent.Location())
 	if err != nil {

@@ -37,9 +37,11 @@ type Step interface {
 }
 
 type RunArgs struct {
-	Runner                          *git.ProdRunner
+	AddSteps                        func([]Step) // allows running steps to add additional steps into the runstate's runsteps list
 	Connector                       hosting.Connector
 	Lineage                         config.Lineage
 	RegisterUndoablePerennialCommit func(domain.SHA)
+	RemoveBranchFromLineage         func(domain.LocalBranchName)
+	Runner                          *git.ProdRunner
 	UpdateInitialBranchLocalSHA     func(domain.LocalBranchName, domain.SHA) error
 }

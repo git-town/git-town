@@ -281,30 +281,26 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 	// step 1: sync the branch locally
 	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
 	// step 2: determine if the local branch now has changes compared to its parent
-	args.list.Add(&steps.IfBranchChanges{
+	args.list.Add(&step.IfBranchChanges{
 		Branch: args.branch.LocalName,
 		Parent: args.parent,
-		IsEmptySteps: runstate.StepList{
-			List: []steps.Step{
-				&steps.CheckoutStep{Branch: args.parent},
-				&steps.DeleteLocalBranchStep{
-					Branch: args.branch.LocalName,
-					Force:  false,
-					Parent: args.parent.Location(),
-				},
-				&steps.RemoveBranchFromLineageStep{
-					Branch: args.branch.LocalName,
-				},
-				&steps.QueueMessageStep{
-					Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName),
-				},
+		IsEmptySteps: []step.Step{
+			&step.Checkout{Branch: args.parent},
+			&step.DeleteLocalBranch{
+				Branch: args.branch.LocalName,
+				Force:  false,
+				Parent: args.parent.Location(),
+			},
+			&step.RemoveBranchFromLineage{
+				Branch: args.branch.LocalName,
+			},
+			&step.QueueMessage{
+				Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName),
 			},
 		},
-		HasChangesSteps: runstate.StepList{
-			List: []steps.Step{
-				&steps.QueueMessageStep{
-					Message: fmt.Sprintf("branch %q was shipped at the remote but the local branch contains unshipped changes"),
-				},
+		HasChangesSteps: []step.Step{
+			&step.QueueMessage{
+				Message: fmt.Sprintf("branch %q was shipped at the remote but the local branch contains unshipped changes"),
 			},
 		},
 	})
