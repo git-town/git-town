@@ -219,9 +219,32 @@ func TestLineage(t *testing.T) {
 		})
 		t.Run("branch is a child branch", func(t *testing.T) {
 			t.Parallel()
+			main := domain.NewLocalBranchName("main")
+			branch1 := domain.NewLocalBranchName("branch-1")
+			branch2 := domain.NewLocalBranchName("branch-2")
+			have := config.Lineage{
+				branch1: main,
+				branch2: main,
+			}
+			have.RemoveBranch(branch1)
+			want := config.Lineage{
+				branch2: main,
+			}
+			must.Eq(t, want, have)
 		})
 		t.Run("branch is not in lineage", func(t *testing.T) {
 			t.Parallel()
+			main := domain.NewLocalBranchName("main")
+			branch1 := domain.NewLocalBranchName("branch-1")
+			branch2 := domain.NewLocalBranchName("branch-2")
+			have := config.Lineage{
+				branch1: main,
+			}
+			have.RemoveBranch(branch2)
+			want := config.Lineage{
+				branch1: main,
+			}
+			must.Eq(t, want, have)
 		})
 	})
 
