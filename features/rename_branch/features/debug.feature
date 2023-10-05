@@ -63,7 +63,6 @@ Feature: display debug statistics
       |        | frontend | git push -u origin old                        |
       |        | frontend | git push origin :new                          |
       |        | frontend | git checkout old                              |
-      |        | backend  | git log main..new                             |
       | old    | frontend | git branch -D new                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/new           |
