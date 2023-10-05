@@ -69,8 +69,9 @@ func executePruneBranches(debug bool) error {
 
 type pruneBranchesConfig struct {
 	branches                  domain.Branches
-	lineage                   config.Lineage
 	branchesWithDeletedRemote domain.LocalBranchNames
+	hasOpenChanges            bool
+	lineage                   config.Lineage
 	mainBranch                domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
 	pushHook                  bool
@@ -92,10 +93,12 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	return &pruneBranchesConfig{
 		branches:                  branches,
-		lineage:                   lineage,
 		branchesWithDeletedRemote: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
+		hasOpenChanges:            repoStatus.OpenChanges,
+		lineage:                   lineage,
 		mainBranch:                repo.Runner.Config.MainBranch(),
 		previousBranch:            repo.Runner.Backend.PreviouslyCheckedOutBranch(),
 		pushHook:                  pushHook,
@@ -126,7 +129,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
-		StashOpenChanges: false,
+		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
