@@ -514,9 +514,9 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			dir := t.TempDir()
 			runner := subshell.BackendRunner{
-				Dir:     &dir,
-				Verbose: false,
-				Stats:   &statistics.None{},
+				Dir:             &dir,
+				Verbose:         false,
+				CommandsCounter: &statistics.Counter{},
 			}
 			cmds := git.BackendCommands{
 				BackendRunner:      runner,

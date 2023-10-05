@@ -54,7 +54,9 @@ func executeDiffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	repo.Runner.Stats.PrintAnalysis()
+	if debug {
+		fmt.Printf(messages.CommandsRun, repo.Runner.CommandsCounter.Count())
+	}
 	return nil
 }
 

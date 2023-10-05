@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -80,6 +81,8 @@ func executeSetParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	repo.Runner.Stats.PrintAnalysis()
+	if debug {
+		fmt.Printf(messages.CommandsRun, repo.Runner.CommandsCounter.Count())
+	}
 	return nil
 }

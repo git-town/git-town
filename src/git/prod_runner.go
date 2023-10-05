@@ -2,12 +2,12 @@ package git
 
 // ProdRunner provides Git functionality for production code.
 type ProdRunner struct {
-	Config   RepoConfig
-	Backend  BackendCommands
-	Frontend FrontendCommands
-	Stats    Statistics
+	Config          RepoConfig
+	Backend         BackendCommands
+	Frontend        FrontendCommands
+	CommandsCounter Counter
 }
 
-type Statistics interface {
-	PrintAnalysis()
+type Counter interface {
+	Count() int
 }

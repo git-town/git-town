@@ -16,16 +16,11 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
-	var stats Statistics
-	if args.Debug {
-		stats = &statistics.CommandsRun{CommandsCount: 0}
-	} else {
-		stats = &statistics.None{}
-	}
+	commandsCounter := statistics.Counter{}
 	backendRunner := subshell.BackendRunner{
-		Dir:     nil,
-		Stats:   stats,
-		Verbose: args.Debug,
+		Dir:             nil,
+		CommandsCounter: &commandsCounter,
+		Verbose:         args.Debug,
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
@@ -59,10 +54,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Config:  repoConfig,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, stats),
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, &commandsCounter),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
-		Stats: stats,
+		CommandsCounter: &commandsCounter,
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -134,5 +129,5 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 
 type Statistics interface {
 	RegisterRun()
-	PrintAnalysis()
+	Count() int
 }

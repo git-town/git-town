@@ -17,6 +17,7 @@ const (
 	BranchLocalProblem                = "cannot determine whether the local branch %q exists: %w"
 	BrowserOpen                       = "Please open in a browser: %s\n"
 	CacheUnitialized                  = "using a cached value before initialization"
+	CommandsRun                       = "Ran %d shell commands."
 	CommitMessageProblem              = "cannot determine last commit message: %w"
 	CompletionTypeUnknown             = "unknown completion type: %q"
 	ConfigPullbranchStrategyUnknown   = "unknown pull branch strategy: %q"
