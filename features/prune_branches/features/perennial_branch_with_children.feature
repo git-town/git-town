@@ -27,9 +27,9 @@ Feature: remove parent info of children of deleted perennial branches
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
+      | BRANCH | COMMAND                                   |
+      | main   | git branch old {{ sha 'Initial commit' }} |
+      |        | git checkout old                          |
     And the current branch is now "old"
-    And the initial branches exist
-    And the perennial branches are now "active" and "old"
+    And the initial branches and hierarchy exist
+    And the perennial branches are now "old" and "other"
