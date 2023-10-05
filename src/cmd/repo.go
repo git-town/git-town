@@ -53,7 +53,7 @@ func executeRepo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineRepoConfig(&repo)
+	config, err := determineRepoConfig(repo)
 	if err != nil {
 		return err
 	}

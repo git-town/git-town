@@ -63,7 +63,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo)
 	if err != nil || exit {
 		return err
 	}

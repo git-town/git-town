@@ -66,7 +66,7 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo)
 	if err != nil || exit {
 		return err
 	}

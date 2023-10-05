@@ -57,7 +57,7 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, promptForParent, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, promptForParent, repo)
 	if err != nil || exit {
 		return err
 	}
