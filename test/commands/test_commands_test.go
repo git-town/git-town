@@ -8,9 +8,9 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/test/filesystem"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/shoenig/test/must"
 )
@@ -64,7 +64,7 @@ func TestTestCommands(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := testruntime.Create(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		helpers.CopyDirectory(origin.WorkingDir, repoDir)
+		filesystem.CopyDirectory(origin.WorkingDir, repoDir)
 		runtime := testruntime.New(repoDir, repoDir, "")
 		runtime.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		runtime.Fetch()
