@@ -4,9 +4,9 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
-// IfBranchChanges executes different code paths
+// IfBranchHasChanges executes different code paths
 // depending on whether the given branch contains changes or not.
-type IfBranchChanges struct {
+type IfBranchHasChanges struct {
 	Branch          domain.LocalBranchName
 	Parent          domain.LocalBranchName
 	IsEmptySteps    []Step
@@ -14,7 +14,7 @@ type IfBranchChanges struct {
 	Empty
 }
 
-func (step *IfBranchChanges) Run(args RunArgs) error {
+func (step *IfBranchHasChanges) Run(args RunArgs) error {
 	hasChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(step.Branch, step.Parent.Location())
 	if err != nil {
 		return err

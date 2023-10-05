@@ -209,12 +209,13 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 	for _, branch := range config.branchesToSync {
 		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
 			deleteBranchSteps(deleteBranchStepsArgs{
-				branch:      branch,
-				branchTypes: config.branches.Types,
-				lineage:     config.lineage,
-				list:        &list,
-				mainBranch:  config.mainBranch,
-				parent:      config.lineage.Parent(branch.LocalName),
+				branch:       branch,
+				branchTypes:  config.branches.Types,
+				lineage:      config.lineage,
+				list:         &list,
+				mainBranch:   config.mainBranch,
+				parent:       config.lineage.Parent(branch.LocalName),
+				syncStrategy: config.syncStrategy,
 			})
 		} else {
 			syncBranchSteps(&list, syncBranchStepsArgs{
@@ -249,10 +250,11 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 func deleteBranchSteps(args deleteBranchStepsArgs) {
 	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
 		deleteFeatureBranchSteps(deleteFeatureBranchStepsArgs{
-			branch:  args.branch,
-			lineage: args.lineage,
-			list:    args.list,
-			parent:  args.parent,
+			branch:       args.branch,
+			lineage:      args.lineage,
+			list:         args.list,
+			parent:       args.parent,
+			syncStrategy: args.syncStrategy,
 		})
 	} else {
 		deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
@@ -265,19 +267,20 @@ func deleteBranchSteps(args deleteBranchStepsArgs) {
 }
 
 type deleteBranchStepsArgs struct {
-	branch      domain.BranchInfo
-	branchTypes domain.BranchTypes
-	lineage     config.Lineage
-	list        *steps.List
-	parent      domain.LocalBranchName
-	mainBranch  domain.LocalBranchName
+	branch       domain.BranchInfo
+	branchTypes  domain.BranchTypes
+	lineage      config.Lineage
+	list         *steps.List
+	mainBranch   domain.LocalBranchName
+	parent       domain.LocalBranchName
+	syncStrategy config.SyncStrategy
 }
 
 func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 	// sync the branch locally
 	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
 	// determine if the local branch now has changes compared to its parent
-	args.list.Add(&step.IfBranchChanges{
+	args.list.Add(&step.IfBranchHasChanges{
 		Branch: args.branch.LocalName,
 		Parent: args.parent,
 		IsEmptySteps: []step.Step{
