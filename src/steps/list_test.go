@@ -154,7 +154,7 @@ func TestList(t *testing.T) {
 			list.Prepend()
 			must.Eq(t, []step.Step{}, list.List)
 		})
-		t.Run("used as callback", func(t *testing.T) {
+		t.Run("used as a higher-level function", func(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
 			prepend := list.Prepend
