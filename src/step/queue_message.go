@@ -6,6 +6,6 @@ type QueueMessage struct {
 }
 
 func (step *QueueMessage) Run(args RunArgs) error {
-	args.Runner.Stats.RegisterMessage(step.Message)
+	args.Runner.Messages.QueueMessage(step.Message)
 	return nil
 }

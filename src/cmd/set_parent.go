@@ -79,6 +79,6 @@ func executeSetParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	repo.Runner.Stats.PrintAnalysis()
+	repo.Runner.CommandsRun.PrintAnalysis()
 	return nil
 }

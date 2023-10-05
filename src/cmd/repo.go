@@ -58,7 +58,7 @@ func executeRepo(debug bool) error {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	repo.Runner.Stats.PrintAnalysis()
+	repo.Runner.CommandsRun.PrintAnalysis()
 	return nil
 }
 

@@ -16,12 +16,7 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
-	var stats Statistics
-	if args.Debug {
-		stats = &statistics.CommandsRun{CommandsCount: 0}
-	} else {
-		stats = &statistics.None{}
-	}
+	stats := &statistics.Commands{CommandsCount: 0}
 	backendRunner := subshell.BackendRunner{
 		Dir:     nil,
 		Stats:   stats,
@@ -62,7 +57,7 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, stats),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
-		Stats: stats,
+		CommandsRun: stats,
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -117,12 +112,13 @@ type OpenRepoResult struct {
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats CommandStats, messages Messages) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: getCurrentBranch,
 			OmitBranchNames:  omitBranchNames,
 			Stats:            stats,
+			Messages:         messages,
 		}
 	}
 	return &subshell.FrontendRunner{
@@ -132,8 +128,11 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 	}
 }
 
-type Statistics interface {
-	RegisterMessage(string)
+type CommandStats interface {
 	RegisterRun()
 	PrintAnalysis()
+}
+
+type Messages interface {
+	Queue(string)
 }

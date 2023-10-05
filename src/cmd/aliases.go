@@ -65,7 +65,7 @@ func addAliases(run *git.ProdRunner) error {
 			return err
 		}
 	}
-	run.Stats.PrintAnalysis()
+	run.CommandsRun.PrintAnalysis()
 	return nil
 }
 
@@ -79,6 +79,6 @@ func removeAliases(run *git.ProdRunner) error {
 			}
 		}
 	}
-	run.Stats.PrintAnalysis()
+	run.CommandsRun.PrintAnalysis()
 	return nil
 }

@@ -36,6 +36,6 @@ func finished(args ExecuteArgs) error {
 		}
 	}
 	fmt.Println()
-	args.Run.Stats.PrintAnalysis()
+	args.Run.CommandsRun.PrintAnalysis()
 	return nil
 }

@@ -25,7 +25,7 @@ func (step *DeleteLocalBranchIfEmpty) Run(run *git.ProdRunner, _ hosting.Connect
 		return err
 	}
 	if branchHasUnmergedChanges {
-		run.Stats.RegisterMessage(fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, step.Branch))
+		run.CommandsRun.RegisterMessage(fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, step.Branch))
 		return nil
 	}
 	// delete the local branch
