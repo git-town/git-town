@@ -53,7 +53,7 @@ func executeKill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, finalUndoSteps, err := killSteps(config)
+	steps, finalUndoSteps := killSteps(config)
 	if err != nil {
 		return err
 	}
@@ -155,8 +155,8 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List, err error) {
-	list := steps.Builder{}
+func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List) {
+	list := steps.List{}
 	killFeatureBranch(&list, &finalUndoSteps, *config)
 	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
@@ -165,12 +165,11 @@ func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List, err err
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	stepList, err := list.Result()
-	return stepList, finalUndoSteps, err
+	return list, finalUndoSteps
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *steps.Builder, finalUndoList *steps.List, config killConfig) {
+func killFeatureBranch(list *steps.List, finalUndoList *steps.List, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
@@ -180,8 +179,8 @@ func killFeatureBranch(list *steps.Builder, finalUndoList *steps.List, config ki
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
 			list.Add(&step.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoList.Append(&step.Checkout{Branch: config.targetBranch.LocalName})
-			finalUndoList.Append(&step.UndoLastCommit{})
+			finalUndoList.Add(&step.Checkout{Branch: config.targetBranch.LocalName})
+			finalUndoList.Add(&step.UndoLastCommit{})
 		}
 		list.Add(&step.Checkout{Branch: config.targetBranchParent()})
 	}
@@ -209,6 +208,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) config.Lineage {
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
 	lineage config.Lineage
-	list    *steps.Builder
+	list    *steps.List
 	parent  domain.LocalBranchName
 }

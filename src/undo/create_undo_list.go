@@ -24,8 +24,8 @@ func CreateUndoList(args CreateUndoListArgs) (steps.List, error) {
 	if err != nil {
 		return steps.List{}, err
 	}
-	undoConfigSteps.AppendList(undoBranchesSteps)
-	undoConfigSteps.AppendList(undoStashSteps)
+	undoConfigSteps.AddList(undoBranchesSteps)
+	undoConfigSteps.AddList(undoStashSteps)
 	return undoConfigSteps, nil
 }
 

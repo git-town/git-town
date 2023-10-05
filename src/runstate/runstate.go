@@ -35,7 +35,7 @@ func (rs *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.Backen
 	for {
 		nextStep := rs.RunSteps.Peek()
 		if !steps.IsCheckoutStep(nextStep) {
-			popped.Append(rs.RunSteps.Pop())
+			popped.Add(rs.RunSteps.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
 			if err != nil {
@@ -60,7 +60,7 @@ func (rs *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 // represented by this runstate.
 func (rs *RunState) CreateAbortRunState() RunState {
 	stepList := rs.AbortSteps
-	stepList.AppendList(rs.UndoSteps)
+	stepList.AddList(rs.UndoSteps)
 	return RunState{
 		Command:             rs.Command,
 		IsAbort:             true,
@@ -81,7 +81,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 		if steps.IsCheckoutStep(step) {
 			break
 		}
-		result.RunSteps.Append(step)
+		result.RunSteps.Add(step)
 	}
 	skipping := true
 	for _, step := range rs.RunSteps.List {
@@ -89,7 +89,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			skipping = false
 		}
 		if !skipping {
-			result.RunSteps.Append(step)
+			result.RunSteps.Add(step)
 		}
 	}
 	result.RunSteps.List = slice.LowerAll[step.Step](result.RunSteps.List, &step.RestoreOpenChanges{})
@@ -107,7 +107,7 @@ func (rs *RunState) CreateUndoRunState() RunState {
 		RunSteps:                 rs.UndoSteps,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
-	result.RunSteps.Append(&step.Checkout{Branch: rs.InitialActiveBranch})
+	result.RunSteps.Add(&step.Checkout{Branch: rs.InitialActiveBranch})
 	result.RunSteps = result.RunSteps.RemoveDuplicateCheckoutSteps()
 	return result
 }

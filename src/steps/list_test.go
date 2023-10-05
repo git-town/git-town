@@ -19,21 +19,21 @@ func TestList(t *testing.T) {
 		t.Run("append a single step", func(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
-			list.Append(&step.StashOpenChanges{})
+			list.Add(&step.StashOpenChanges{})
 			want := []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("append multiple steps", func(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
-			list.Append(&step.AbortRebase{}, &step.StashOpenChanges{})
+			list.Add(&step.AbortRebase{}, &step.StashOpenChanges{})
 			want := []step.Step{&step.AbortMerge{}, &step.AbortRebase{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
 		t.Run("append no steps", func(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{}}
-			list.Append()
+			list.Add()
 			must.Eq(t, []step.Step{}, list.List)
 		})
 	})
@@ -44,7 +44,7 @@ func TestList(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
 			other := steps.List{List: []step.Step{&step.StashOpenChanges{}}}
-			list.AppendList(other)
+			list.AddList(other)
 			want := []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, list.List)
 		})
@@ -52,7 +52,7 @@ func TestList(t *testing.T) {
 			t.Parallel()
 			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
 			other := steps.List{List: []step.Step{}}
-			list.AppendList(other)
+			list.AddList(other)
 			must.Eq(t, []step.Step{&step.AbortMerge{}}, list.List)
 		})
 	})

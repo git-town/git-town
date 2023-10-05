@@ -117,16 +117,13 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	err = undoRunState.RunSteps.Wrap(steps.WrapOptions{
+	undoRunState.RunSteps.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranchesSnapshot.Active,
 		PreviousBranch:   config.previousBranch,
 	})
-	if err != nil {
-		return runstate.RunState{}, err
-	}
 	// If the command to undo failed and was continued,
 	// there might be steps in the undo stack that became obsolete
 	// when the command was continued.
