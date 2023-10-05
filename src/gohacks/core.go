@@ -1,2 +1,3 @@
-// Package gohacks implements hacks to work around limitations in Go.
+// Package gohacks implements all the small things that are needed during programming
+// but not present in Go or its standard libary.
 package gohacks
