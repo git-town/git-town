@@ -10,7 +10,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
 )
@@ -166,7 +166,7 @@ func (dt *DataTable) String() string {
 func (dt *DataTable) widths() []int {
 	result := []int{}
 	for _, column := range dt.columns() {
-		result = append(result, helpers.LongestStringLength(column))
+		result = append(result, stringslice.Longest(column))
 	}
 	return result
 }

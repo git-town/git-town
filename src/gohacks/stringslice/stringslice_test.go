@@ -64,4 +64,15 @@ func TestStringSlice(t *testing.T) {
 			must.Eq(t, want, have)
 		}
 	})
+
+	t.Run("Longest", func(t *testing.T) {
+		t.Parallel()
+		tests := map[int][]string{
+			5: {"one", "two", "three"},
+			0: {""},
+		}
+		for expected, input := range tests {
+			must.EqOp(t, expected, stringslice.Longest(input))
+		}
+	})
 }
