@@ -58,14 +58,10 @@ func executeAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, err := appendSteps(config)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		Command:             "append",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            steps,
+		RunSteps:            appendSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -165,8 +161,8 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func appendSteps(config *appendConfig) (steps.List, error) {
-	list := steps.Builder{}
+func appendSteps(config *appendConfig) steps.List {
+	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
@@ -195,5 +191,5 @@ func appendSteps(config *appendConfig) (steps.List, error) {
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list.Result()
+	return list
 }

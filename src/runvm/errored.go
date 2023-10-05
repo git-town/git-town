@@ -11,7 +11,7 @@ import (
 
 // errored is called when the given step has resulted in the given error.
 func errored(failedStep step.Step, runErr error, args ExecuteArgs) error {
-	args.RunState.AbortSteps.Append(failedStep.CreateAbortSteps()...)
+	args.RunState.AbortSteps.Add(failedStep.CreateAbortSteps()...)
 	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
@@ -23,7 +23,7 @@ func errored(failedStep step.Step, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoSteps.AppendList(undoSteps)
+	args.RunState.UndoSteps.AddList(undoSteps)
 	if failedStep.ShouldAutomaticallyAbortOnError() {
 		return autoAbort(failedStep, runErr, args)
 	}
