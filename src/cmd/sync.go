@@ -274,9 +274,9 @@ type deleteBranchStepsArgs struct {
 }
 
 func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
-	// step 1: sync the branch locally
+	// sync the branch locally
 	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
-	// step 2: determine if the local branch now has changes compared to its parent
+	// determine if the local branch now has changes compared to its parent
 	args.list.Add(&step.IfBranchChanges{
 		Branch: args.branch.LocalName,
 		Parent: args.parent,

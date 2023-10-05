@@ -9,21 +9,20 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And origin deletes the "shipped" branch
     And the current branch is "shipped"
     And an uncommitted file
-    When I run "git-town sync"
+    When I run "git-town sync -d"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                    |
-      | shipped | git fetch --prune --tags   |
-      |         | git add -A                 |
-      |         | git stash                  |
-      |         | git checkout main          |
-      | main    | git rebase origin/main     |
-      |         | git checkout shipped       |
-      | shipped | git merge --no-edit main   |
-      |         | git push -u origin shipped |
-      |         | git stash pop              |
+      | BRANCH  | COMMAND                  |
+      | shipped | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
+      |         | git checkout shipped     |
+      | shipped | git merge --no-edit main |
+      |         | git stash pop            |
     And it prints:
       """
       Branch "shipped" was shipped on the remote but contains unshipped changes on your machine.
@@ -33,7 +32,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, shipped |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | shipped | main |
 
   Scenario: undo
