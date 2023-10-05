@@ -55,8 +55,7 @@ Feature: display debug statistics
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'Initial commit' }}   |
-      |        | backend  | git log main..new                             |
-      | main   | frontend | git branch -D new                             |
+      |        | frontend | git branch -D new                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/new           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
@@ -68,6 +67,6 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "main"

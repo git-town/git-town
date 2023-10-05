@@ -26,7 +26,6 @@ Feature: display debug statistics
       |         | backend  | git status --ignore-submodules                    |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout main                                 |
-      |         | backend  | git log main..current                             |
       | main    | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --quiet refs/heads/other             |
@@ -40,6 +39,6 @@ Feature: display debug statistics
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"
