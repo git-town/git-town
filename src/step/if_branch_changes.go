@@ -20,9 +20,9 @@ func (step *IfBranchChanges) Run(args RunArgs) error {
 		return err
 	}
 	if hasChanges {
-		args.AddSteps(step.HasChangesSteps)
+		args.AddSteps(step.HasChangesSteps...)
 	} else {
-		args.AddSteps(step.IsEmptySteps)
+		args.AddSteps(step.IsEmptySteps...)
 	}
 	return nil
 }

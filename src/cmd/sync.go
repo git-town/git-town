@@ -268,7 +268,7 @@ type deleteBranchStepsArgs struct {
 	branch      domain.BranchInfo
 	branchTypes domain.BranchTypes
 	lineage     config.Lineage
-	list        *steps.Builder
+	list        *steps.List
 	parent      domain.LocalBranchName
 	mainBranch  domain.LocalBranchName
 }
@@ -296,7 +296,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 		},
 		HasChangesSteps: []step.Step{
 			&step.QueueMessage{
-				Message: fmt.Sprintf("branch %q was shipped at the remote but the local branch contains unshipped changes"),
+				Message: fmt.Sprintf("branch %q was shipped at the remote but the local branch contains unshipped changes", args.branch.LocalName),
 			},
 		},
 	})
@@ -305,7 +305,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 type deleteFeatureBranchStepsArgs struct {
 	branch       domain.BranchInfo
 	lineage      config.Lineage
-	list         *runstate.StepListBuilder
+	list         *steps.List
 	parent       domain.LocalBranchName
 	syncStrategy config.SyncStrategy
 }
@@ -317,19 +317,19 @@ func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) config.Line
 		parent:  args.mainBranch,
 		lineage: args.lineage,
 	})
-	args.list.Add(&steps.RemoveFromPerennialBranchesStep{Branch: args.branch.LocalName})
-	args.list.Add(&steps.CheckoutStep{Branch: args.mainBranch})
-	args.list.Add(&steps.DeleteLocalBranchStep{
+	args.list.Add(&step.RemoveFromPerennialBranches{Branch: args.branch.LocalName})
+	args.list.Add(&step.Checkout{Branch: args.mainBranch})
+	args.list.Add(&step.DeleteLocalBranch{
 		Branch: args.branch.LocalName,
 		Force:  false,
 		Parent: domain.Location(args.mainBranch),
 	})
-	args.list.Add(&steps.QueueMessageStep{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+	args.list.Add(&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
 	return result
 }
 
 type deletePerennialBranchStepsArgs struct {
-	list       *runstate.StepListBuilder
+	list       *steps.List
 	branch     domain.BranchInfo
 	mainBranch domain.LocalBranchName
 	lineage    config.Lineage
