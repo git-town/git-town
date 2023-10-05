@@ -1,6 +1,8 @@
 package step
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
@@ -20,8 +22,10 @@ func (step *IfBranchHasChanges) Run(args RunArgs) error {
 		return err
 	}
 	if hasChanges {
+		fmt.Println("111111111111111 BRANCH HAS CHANGES")
 		args.AddSteps(step.HasChangesSteps...)
 	} else {
+		fmt.Println("111111111111111 BRANCH IS EMPTY")
 		args.AddSteps(step.IsEmptySteps...)
 	}
 	return nil

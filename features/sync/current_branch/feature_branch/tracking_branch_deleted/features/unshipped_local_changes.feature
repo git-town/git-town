@@ -9,7 +9,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And origin deletes the "shipped" branch
     And the current branch is "shipped"
     And an uncommitted file
-    When I run "git-town sync -d"
+    When I run "git-town sync"
 
   @debug @this
   Scenario: result
