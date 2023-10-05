@@ -11,7 +11,7 @@ import (
 type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            Statistics
+	Stats            Counter
 }
 
 // Run runs the given command in this ShellRunner's directory.

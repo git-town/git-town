@@ -19,6 +19,7 @@ func autoAbort(step step.Step, runErr error, args ExecuteArgs) error {
 		RunState:                &abortRunState,
 		Run:                     args.Run,
 		Connector:               args.Connector,
+		Debug:                   args.Debug,
 		RootDir:                 args.RootDir,
 		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,

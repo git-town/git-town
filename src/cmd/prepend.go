@@ -57,7 +57,7 @@ func executePrepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -70,6 +70,7 @@ func executePrepend(args []string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		NoPushHook:              config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -97,12 +98,13 @@ type prependConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

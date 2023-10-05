@@ -49,7 +49,7 @@ func executeKill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -67,6 +67,7 @@ func executeKill(args []string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -87,7 +88,7 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -95,6 +96,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult) (*killConf
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
