@@ -64,9 +64,9 @@ func executePrepend(args []string, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "prepend",
-		CommandsRun:         statistics.Commands{},
+		CommandsRun:         statistics.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.Messages{},
+		MessagesToUser:      statistics.NewMessages(),
 		RunSteps:            prependSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

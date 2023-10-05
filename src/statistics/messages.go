@@ -10,7 +10,7 @@ type Messages struct {
 	list []string
 }
 
-// NewMessages provides new instances of Messages for testing only!
+// NewMessages provides new instances of Messages.
 func NewMessages(messages ...string) Messages {
 	return Messages{list: messages}
 }

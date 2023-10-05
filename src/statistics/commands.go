@@ -10,11 +10,13 @@ type Commands struct {
 	commandsRun int
 }
 
-// NewCommands provides new instances of Commands for testing only!
-func NewCommands(count int) Commands {
+// NewCommands provides new instances of Commands.
+func NewCommands(count ...int) Commands {
 	commands := Commands{commandsRun: 0}
-	for i := 0; i < count; i++ {
-		commands.RegisterRun()
+	if len(count) > 0 {
+		for i := 0; i < count[0]; i++ {
+			commands.RegisterRun()
+		}
 	}
 	return commands
 }

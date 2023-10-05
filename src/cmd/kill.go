@@ -60,10 +60,10 @@ func executeKill(args []string, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
-		CommandsRun:         statistics.Commands{},
+		CommandsRun:         statistics.NewCommands(),
 		RunSteps:            steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.Messages{},
+		MessagesToUser:      statistics.NewMessages(),
 		FinalUndoSteps:      finalUndoSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

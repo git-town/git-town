@@ -72,9 +72,9 @@ func executeNewPullRequest(debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
-		CommandsRun:         statistics.Commands{},
+		CommandsRun:         statistics.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.Messages{},
+		MessagesToUser:      statistics.NewMessages(),
 		RunSteps:            newPullRequestSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

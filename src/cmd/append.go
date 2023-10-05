@@ -61,9 +61,9 @@ func executeAppend(arg string, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "append",
-		CommandsRun:         statistics.Commands{},
+		CommandsRun:         statistics.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.Messages{},
+		MessagesToUser:      statistics.NewMessages(),
 		RunSteps:            appendSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
