@@ -5,7 +5,7 @@ type Counter struct {
 	count int
 }
 
-func (c *Counter) Count() int {
+func (c Counter) Count() int {
 	return c.count
 }
 
