@@ -88,16 +88,6 @@ func (l Lineage) IsAncestor(ancestor, other domain.LocalBranchName) bool {
 	}
 }
 
-// Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
-func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
-	for child, parent := range l {
-		if child == branch {
-			return parent
-		}
-	}
-	return domain.EmptyLocalBranchName()
-}
-
 // OrderHierarchically sorts the given branches so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
 func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
@@ -116,6 +106,16 @@ func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 		}
 		return first.String() < second.String()
 	})
+}
+
+// Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
+func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
+	for child, parent := range l {
+		if child == branch {
+			return parent
+		}
+	}
+	return domain.EmptyLocalBranchName()
 }
 
 // Roots provides the branches with children and no parents.
