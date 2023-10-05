@@ -61,14 +61,10 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, err := appendSteps(config)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		Command:             "hack",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            steps,
+		RunSteps:            appendSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,

@@ -69,14 +69,10 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, err := syncBranchesSteps(config)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            steps,
+		RunSteps:            syncBranchesSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -207,8 +203,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfi
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig) (steps.List, error) {
-	list := steps.Builder{}
+func syncBranchesSteps(config *syncConfig) steps.List {
+	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
@@ -235,11 +231,11 @@ func syncBranchesSteps(config *syncConfig) (steps.List, error) {
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list.Result()
+	return list
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(list *steps.Builder, args syncBranchStepsArgs) {
+func syncBranchSteps(list *steps.List, args syncBranchStepsArgs) {
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -284,7 +280,7 @@ type syncBranchStepsArgs struct {
 }
 
 // syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name.
-func syncFeatureBranchSteps(list *steps.Builder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
+func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
 	}
@@ -292,7 +288,7 @@ func syncFeatureBranchSteps(list *steps.Builder, branch domain.BranchInfo, linea
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
-func syncPerennialBranchSteps(list *steps.Builder, args syncPerennialBranchStepsArgs) {
+func syncPerennialBranchSteps(list *steps.List, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
 	}
@@ -311,48 +307,40 @@ type syncPerennialBranchStepsArgs struct {
 }
 
 // pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.Builder, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
+func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&step.Merge{Branch: trackingBranch.BranchName()})
 	case config.SyncStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: trackingBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
 	}
 }
 
 // pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *steps.Builder, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&step.Merge{Branch: parentBranch.BranchName()})
 	case config.SyncStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: parentBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
 	}
 }
 
 // updateCurrentPerennialBranchStep provides the steps to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchStep(list *steps.Builder, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
+func updateCurrentPerennialBranchStep(list *steps.List, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
 	switch strategy {
 	case config.PullBranchStrategyMerge:
 		list.Add(&step.Merge{Branch: otherBranch.BranchName()})
 	case config.PullBranchStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: otherBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
 	}
 }
 
-func pushFeatureBranchSteps(list *steps.Builder, branch domain.LocalBranchName, syncStrategy config.SyncStrategy, pushHook bool) {
+func pushFeatureBranchSteps(list *steps.List, branch domain.LocalBranchName, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
 	case config.SyncStrategyMerge:
 		list.Add(&step.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
 	case config.SyncStrategyRebase:
 		list.Add(&step.ForcePushCurrentBranch{NoPushHook: !pushHook})
-	default:
-		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }

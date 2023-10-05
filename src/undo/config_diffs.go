@@ -21,31 +21,31 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 func (cds ConfigDiffs) UndoSteps() steps.List {
 	result := steps.List{}
 	for _, key := range cds.Global.Added {
-		result.Append(&step.RemoveGlobalConfig{Key: key})
+		result.Add(&step.RemoveGlobalConfig{Key: key})
 	}
 	for key, value := range cds.Global.Removed {
-		result.Append(&step.SetGlobalConfig{
+		result.Add(&step.SetGlobalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Global.Changed {
-		result.Append(&step.SetGlobalConfig{
+		result.Add(&step.SetGlobalConfig{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
 	for _, key := range cds.Local.Added {
-		result.Append(&step.RemoveLocalConfig{Key: key})
+		result.Add(&step.RemoveLocalConfig{Key: key})
 	}
 	for key, value := range cds.Local.Removed {
-		result.Append(&step.SetLocalConfig{
+		result.Add(&step.SetLocalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Local.Changed {
-		result.Append(&step.SetLocalConfig{
+		result.Add(&step.SetLocalConfig{
 			Key:   key,
 			Value: change.Before,
 		})

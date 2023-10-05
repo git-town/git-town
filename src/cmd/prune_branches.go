@@ -48,14 +48,10 @@ func executePruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, err := pruneBranchesSteps(config)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		Command:             "prune-branches",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            steps,
+		RunSteps:            pruneBranchesSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -104,30 +100,30 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult) (*pruneBranchesC
 	}, branchesSnapshot, stashSnapshot, exit, err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig) (steps.List, error) {
+func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 	result := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.branches.Initial == branchWithDeletedRemote {
-			result.Append(&step.Checkout{Branch: config.mainBranch})
+			result.Add(&step.Checkout{Branch: config.mainBranch})
 		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
 			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
-				result.Append(&step.SetParent{Branch: child, ParentBranch: parent})
+				result.Add(&step.SetParent{Branch: child, ParentBranch: parent})
 			}
-			result.Append(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
+			result.Add(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
 		}
 		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
-			result.Append(&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote})
+			result.Add(&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
+		result.Add(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
 	}
-	err := result.Wrap(steps.WrapOptions{
+	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return result, err
+	return result
 }

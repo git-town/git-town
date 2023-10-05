@@ -28,12 +28,12 @@ func NewStepList(initialStep step.Step) List {
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *List) Append(step ...step.Step) {
+func (stepList *List) Add(step ...step.Step) {
 	stepList.List = append(stepList.List, step...)
 }
 
 // AppendList adds all elements of the given StepList to the end of this StepList.
-func (stepList *List) AppendList(otherList List) {
+func (stepList *List) AddList(otherList List) {
 	stepList.List = append(stepList.List, otherList.List...)
 }
 
@@ -166,9 +166,9 @@ type WrapOptions struct {
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
-func (stepList *List) Wrap(options WrapOptions) error {
+func (stepList *List) Wrap(options WrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
-		stepList.Append(&step.PreserveCheckoutHistory{
+		stepList.Add(&step.PreserveCheckoutHistory{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
 			MainBranch:                        options.MainBranch,
@@ -176,7 +176,6 @@ func (stepList *List) Wrap(options WrapOptions) error {
 	}
 	if options.StashOpenChanges {
 		stepList.Prepend(&step.StashOpenChanges{})
-		stepList.Append(&step.RestoreOpenChanges{})
+		stepList.Add(&step.RestoreOpenChanges{})
 	}
-	return nil
 }

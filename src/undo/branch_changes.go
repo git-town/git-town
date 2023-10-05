@@ -53,25 +53,25 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	for _, branch := range omniChangedPerennials.BranchNames() {
 		change := omniChangedPerennials[branch]
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
-			result.Append(&step.Checkout{Branch: branch})
-			result.Append(&step.RevertCommit{SHA: change.After})
-			result.Append(&step.PushCurrentBranch{CurrentBranch: branch, NoPushHook: args.NoPushHook})
+			result.Add(&step.Checkout{Branch: branch})
+			result.Add(&step.RevertCommit{SHA: change.After})
+			result.Add(&step.PushCurrentBranch{CurrentBranch: branch, NoPushHook: args.NoPushHook})
 		}
 	}
 
 	// reset omni-changed feature branches
 	for _, branch := range omniChangedFeatures.BranchNames() {
 		change := omniChangedFeatures[branch]
-		result.Append(&step.Checkout{Branch: branch})
-		result.Append(&step.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Append(&step.ForcePushCurrentBranch{NoPushHook: args.NoPushHook})
+		result.Add(&step.Checkout{Branch: branch})
+		result.Add(&step.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&step.ForcePushCurrentBranch{NoPushHook: args.NoPushHook})
 	}
 
 	// re-create removed omni-branches
 	for _, branch := range bcs.OmniRemoved.BranchNames() {
 		sha := bcs.OmniRemoved[branch]
-		result.Append(&step.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
-		result.Append(&step.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
+		result.Add(&step.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
+		result.Add(&step.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := bcs.InconsistentlyChanged.Categorize(args.BranchTypes)
@@ -80,22 +80,22 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if inconsistentlyChangedPerennial.After.LocalSHA == inconsistentlyChangedPerennial.After.RemoteSHA {
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
-				result.Append(&step.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
-				result.Append(&step.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
-				result.Append(&step.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})
+				result.Add(&step.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
+				result.Add(&step.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
+				result.Add(&step.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})
 			}
 		}
 	}
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		result.Append(&step.Checkout{Branch: inconsistentChange.Before.LocalName})
-		result.Append(&step.ResetCurrentBranchToSHA{
+		result.Add(&step.Checkout{Branch: inconsistentChange.Before.LocalName})
+		result.Add(&step.ResetCurrentBranchToSHA{
 			MustHaveSHA: inconsistentChange.After.LocalSHA,
 			SetToSHA:    inconsistentChange.Before.LocalSHA,
 			Hard:        true,
 		})
-		result.Append(&step.ResetRemoteBranchToSHA{
+		result.Add(&step.ResetRemoteBranchToSHA{
 			Branch:      inconsistentChange.Before.RemoteName,
 			MustHaveSHA: inconsistentChange.After.RemoteSHA,
 			SetToSHA:    inconsistentChange.Before.RemoteSHA,
@@ -105,7 +105,7 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	// remove remotely added branches
 	for _, addedRemoteBranch := range bcs.RemoteAdded {
 		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
-			result.Append(&step.DeleteTrackingBranch{
+			result.Add(&step.DeleteTrackingBranch{
 				Branch: addedRemoteBranch,
 			})
 		}
@@ -115,7 +115,7 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	_, removedFeatureTrackingBranches := bcs.RemoteRemoved.Categorize(args.BranchTypes)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
-		result.Append(&step.CreateRemoteBranch{
+		result.Add(&step.CreateRemoteBranch{
 			Branch:     branch.LocalBranchName(),
 			SHA:        sha,
 			NoPushHook: args.NoPushHook,
@@ -125,14 +125,14 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	// reset locally changed branches
 	for _, localBranch := range bcs.LocalChanged.BranchNames() {
 		change := bcs.LocalChanged[localBranch]
-		result.Append(&step.Checkout{Branch: localBranch})
-		result.Append(&step.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&step.Checkout{Branch: localBranch})
+		result.Add(&step.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
 
 	// re-create locally removed branches
 	for _, removedLocalBranch := range bcs.LocalRemoved.BranchNames() {
 		startingPoint := bcs.LocalRemoved[removedLocalBranch]
-		result.Append(&step.CreateBranch{
+		result.Add(&step.CreateBranch{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
 		})
@@ -141,9 +141,9 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	// remove locally added branches
 	for _, addedLocalBranch := range bcs.LocalAdded {
 		if args.FinalBranch == addedLocalBranch {
-			result.Append(&step.Checkout{Branch: args.InitialBranch})
+			result.Add(&step.Checkout{Branch: args.InitialBranch})
 		}
-		result.Append(&step.DeleteLocalBranch{
+		result.Add(&step.DeleteLocalBranch{
 			Branch: addedLocalBranch,
 			Parent: args.Lineage.Parent(addedLocalBranch).Location(),
 			Force:  true,
@@ -157,7 +157,7 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 	_, remoteFeatureChanges := bcs.RemoteChanged.Categorize(args.BranchTypes)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
-		result.Append(&step.ResetRemoteBranchToSHA{
+		result.Add(&step.ResetRemoteBranchToSHA{
 			Branch:      remoteChangedFeatureBranch,
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
@@ -166,7 +166,7 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 
 	// This must be a CheckoutIfExistsStep because this branch might not exist
 	// when a Git Town command fails, stores this undo step, then gets continued and deletes this branch.
-	result.Append(&step.CheckoutIfExists{Branch: args.InitialBranch})
+	result.Add(&step.CheckoutIfExists{Branch: args.InitialBranch})
 	return result
 }
 
