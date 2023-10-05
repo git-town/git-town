@@ -46,7 +46,7 @@ func executeDiffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentConfig(args, &repo)
+	config, exit, err := determineDiffParentConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}

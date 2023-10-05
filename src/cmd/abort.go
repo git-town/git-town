@@ -46,11 +46,11 @@ func executeAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnapshot, err := determineAbortConfig(&repo)
+	config, initialStashSnapshot, err := determineAbortConfig(repo)
 	if err != nil {
 		return err
 	}
-	abortRunState, err := determineAbortRunstate(config, &repo)
+	abortRunState, err := determineAbortRunstate(config, repo)
 	if err != nil {
 		return err
 	}

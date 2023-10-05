@@ -57,7 +57,7 @@ func executePrepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}

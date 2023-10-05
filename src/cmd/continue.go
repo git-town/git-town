@@ -45,11 +45,11 @@ func executeContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo)
 	if err != nil || exit {
 		return err
 	}
-	runState, err := determineContinueRunstate(&repo)
+	runState, err := determineContinueRunstate(repo)
 	if err != nil {
 		return err
 	}
