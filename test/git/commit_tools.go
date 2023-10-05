@@ -23,7 +23,7 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {
 	lastBranch := ""
 	lastLocationName := ""
 	result := []Commit{}
-	counter := helpers.Counter{}
+	counter := helpers.AtomicCounter{}
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit(counter.ToString())
 		for cellNo, cell := range row.Cells {

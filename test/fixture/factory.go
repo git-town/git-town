@@ -15,7 +15,7 @@ import (
 // Making copies of a fully set up Git repo is much faster than creating it from scratch.
 // End-to-end tests run multi-threaded, all threads share a global Factory instance.
 type Factory struct {
-	counter helpers.Counter
+	counter helpers.AtomicCounter
 
 	// path of the folder that this class operates in
 	dir string
@@ -27,7 +27,7 @@ type Factory struct {
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
 func NewFactory(dir string) Factory {
 	return Factory{
-		counter:  helpers.Counter{},
+		counter:  helpers.AtomicCounter{},
 		dir:      dir,
 		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
 	}
