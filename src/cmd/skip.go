@@ -30,7 +30,7 @@ func skipCmd() *cobra.Command {
 }
 
 func executeSkip(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -46,7 +46,7 @@ func executeSkip(debug bool) error {
 		return err
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

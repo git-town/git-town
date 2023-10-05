@@ -45,7 +45,7 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func executeConfigPerennialBranches(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -60,7 +60,7 @@ func executeConfigPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -76,7 +76,7 @@ func updatePerennialBranches(debug bool) error {
 		return err
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

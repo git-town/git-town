@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -40,7 +39,7 @@ func killCommand() *cobra.Command {
 }
 
 func executeKill(args []string, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -50,7 +49,7 @@ func executeKill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}
@@ -60,10 +59,10 @@ func executeKill(args []string, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         runstate.NewCommands(),
 		RunSteps:            steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		FinalUndoSteps:      finalUndoSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

@@ -36,7 +36,7 @@ func diffParentCommand() *cobra.Command {
 }
 
 func executeDiffParent(args []string, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -46,7 +46,7 @@ func executeDiffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentConfig(args, &repo)
+	config, exit, err := determineDiffParentConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}

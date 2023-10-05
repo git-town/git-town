@@ -29,7 +29,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func executeSetParent(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -45,7 +45,7 @@ func executeSetParent(debug bool) error {
 		return err
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

@@ -36,7 +36,7 @@ func undoCmd() *cobra.Command {
 }
 
 func executeUndo(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -46,11 +46,11 @@ func executeUndo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnaphot, lineage, err := determineUndoConfig(&repo)
+	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo)
 	if err != nil {
 		return err
 	}
-	undoRunState, err := determineUndoRunState(config, &repo)
+	undoRunState, err := determineUndoRunState(config, repo)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}

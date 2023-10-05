@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
@@ -11,7 +12,7 @@ import (
 type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            Statistics
+	CommandsCounter  *runstate.CommandsCounter
 }
 
 // Run runs the given command in this ShellRunner's directory.

@@ -9,14 +9,15 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir   *string
-	Stats Statistics
+	Dir             *string
+	CommandsCounter *runstate.CommandsCounter
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }
@@ -37,7 +38,7 @@ func (br BackendRunner) Run(executable string, args ...string) error {
 }
 
 func (br BackendRunner) execute(executable string, args ...string) ([]byte, error) {
-	br.Stats.RegisterRun()
+	br.CommandsCounter.RegisterRun()
 	if br.Verbose {
 		printHeader(executable, args...)
 	}

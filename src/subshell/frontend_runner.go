@@ -10,20 +10,21 @@ import (
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runstate"
 )
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            Statistics
+	CommandsCounter  *runstate.CommandsCounter
 }
 
 type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
 
 // Run runs the given command in this ShellRunner's directory.
 func (fr *FrontendRunner) Run(cmd string, args ...string) (err error) {
-	fr.Stats.RegisterRun()
+	fr.CommandsCounter.RegisterRun()
 	var branchName domain.LocalBranchName
 	if !fr.OmitBranchNames {
 		branchName, err = fr.GetCurrentBranch()

@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -53,7 +52,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func executeNewPullRequest(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -63,7 +62,7 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo)
 	if err != nil || exit {
 		return err
 	}
@@ -72,9 +71,9 @@ func executeNewPullRequest(debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         runstate.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		RunSteps:            newPullRequestSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

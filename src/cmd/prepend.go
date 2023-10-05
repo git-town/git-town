@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -48,7 +47,7 @@ func prependCommand() *cobra.Command {
 }
 
 func executePrepend(args []string, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -58,15 +57,15 @@ func executePrepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "prepend",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         runstate.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		RunSteps:            prependSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

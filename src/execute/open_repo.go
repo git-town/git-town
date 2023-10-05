@@ -9,18 +9,18 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/cache"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/statistics"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
-	stats := &statistics.Commands{}
+func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, runstate.CommandsCounter, error) {
+	commandsCounter := &runstate.CommandsCounter{}
 	backendRunner := subshell.BackendRunner{
-		Dir:     nil,
-		Stats:   stats,
-		Verbose: args.Debug,
+		Dir:             nil,
+		CommandsCounter: commandsCounter,
+		Verbose:         args.Debug,
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
@@ -30,16 +30,16 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
 	if err != nil {
-		return result, err
+		return nil, *commandsCounter, err
 	}
 	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
-		return
+		return nil, *commandsCounter, err
 	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		err = errors.New(messages.DirCurrentProblem)
-		return
+		return nil, *commandsCounter, err
 	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
@@ -54,10 +54,9 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 		Config:  repoConfig,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, stats),
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, commandsCounter),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
-		Stats: stats,
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -66,34 +65,34 @@ func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
 	if args.ValidateGitRepo {
 		if rootDir.IsEmpty() {
 			err = errors.New(messages.RepoOutside)
-			return
+			return nil, *commandsCounter, err
 		}
 	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
-		return
+		return nil, *commandsCounter, err
 	}
 	if args.ValidateIsOnline && isOffline {
 		err = errors.New(messages.OfflineNotAllowed)
-		return
+		return nil, *commandsCounter, err
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()
 		if err != nil {
 			err = errors.New(messages.DirCurrentProblem)
-			return
+			return nil, *commandsCounter, err
 		}
 		if currentDirectory != rootDir.String() {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
-	return OpenRepoResult{
+	return &OpenRepoResult{
 		Runner:         prodRunner,
 		RootDir:        rootDir,
 		IsOffline:      isOffline,
 		ConfigSnapshot: configSnapshot,
-	}, err
+	}, *commandsCounter, err
 }
 
 type OpenRepoArgs struct {
@@ -112,18 +111,18 @@ type OpenRepoResult struct {
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, commandsCounter *runstate.CommandsCounter) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: getCurrentBranch,
 			OmitBranchNames:  omitBranchNames,
-			Stats:            stats,
+			CommandsCounter:  commandsCounter,
 		}
 	}
 	return &subshell.FrontendRunner{
 		GetCurrentBranch: getCurrentBranch,
 		OmitBranchNames:  omitBranchNames,
-		Stats:            stats,
+		CommandsCounter:  commandsCounter,
 	}
 }
 

@@ -1,4 +1,4 @@
-package statistics
+package runstate
 
 import (
 	"encoding/json"

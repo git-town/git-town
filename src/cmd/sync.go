@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -56,7 +55,7 @@ func syncCmd() *cobra.Command {
 }
 
 func executeSync(all, dryRun, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, commandsCounter, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
@@ -66,15 +65,15 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "sync",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         commandsCounter,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		RunSteps:            syncBranchesSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

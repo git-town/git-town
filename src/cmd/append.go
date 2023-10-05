@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -45,7 +44,7 @@ func appendCmd() *cobra.Command {
 }
 
 func executeAppend(arg string, debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, commandsCounter, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -55,15 +54,15 @@ func executeAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), repo)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "append",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         commandsCounter,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		RunSteps:            appendSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

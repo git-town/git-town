@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
@@ -35,7 +34,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func executePruneBranches(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,
@@ -45,15 +44,15 @@ func executePruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePruneBranchesConfig(&repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePruneBranchesConfig(repo)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "prune-branches",
-		CommandsRun:         statistics.NewCommands(),
+		CommandsRun:         runstate.NewCommands(),
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		MessagesToUser:      statistics.NewMessages(),
+		MessagesToUser:      runstate.NewMessages(),
 		RunSteps:            pruneBranchesSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

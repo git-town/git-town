@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -27,8 +26,8 @@ type RunState struct {
 	FinalUndoSteps           steps.List                 `exhaustruct:"optional"     json:"FinalUndoSteps"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
-	CommandsRun              statistics.Commands
-	MessagesToUser           statistics.Messages
+	CommandsRun              CommandsCounter
+	MessagesToUser           Messages
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep

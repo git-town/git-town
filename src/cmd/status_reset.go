@@ -27,7 +27,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func executeStatusReset(debug bool) error {
-	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+	repo, _, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Debug:            debug,
 		DryRun:           false,
 		OmitBranchNames:  false,

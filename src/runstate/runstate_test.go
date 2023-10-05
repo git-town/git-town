@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
@@ -46,8 +45,8 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			CommandsRun:              statistics.NewCommands(3),
-			MessagesToUser:           statistics.NewMessages("one", "two"),
+			CommandsRun:              runstate.NewCommands(3),
+			MessagesToUser:           runstate.NewMessages("one", "two"),
 			UndoablePerennialCommits: []domain.SHA{},
 			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
 		}
