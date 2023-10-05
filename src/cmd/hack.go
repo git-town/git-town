@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -63,7 +64,9 @@ func executeHack(args []string, promptForParent, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "hack",
+		CommandsRun:         statistics.Commands{},
 		InitialActiveBranch: initialBranchesSnapshot.Active,
+		MessagesToUser:      statistics.Messages{},
 		RunSteps:            appendSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

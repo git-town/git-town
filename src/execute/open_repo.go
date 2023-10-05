@@ -16,12 +16,7 @@ import (
 )
 
 func OpenRepo(args OpenRepoArgs) (result OpenRepoResult, err error) {
-	var stats Statistics
-	if args.Debug {
-		stats = &statistics.CommandsRun{CommandsCount: 0}
-	} else {
-		stats = &statistics.None{}
-	}
+	stats := &statistics.Commands{}
 	backendRunner := subshell.BackendRunner{
 		Dir:     nil,
 		Stats:   stats,

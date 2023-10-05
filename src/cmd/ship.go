@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -93,7 +94,9 @@ func executeShip(args []string, message string, debug bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "ship",
+		CommandsRun:         statistics.Commands{},
 		InitialActiveBranch: initialBranchesSnapshot.Active,
+		MessagesToUser:      statistics.Messages{},
 		RunSteps:            shipSteps(config, message),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{

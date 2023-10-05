@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/shoenig/test/must"
@@ -34,10 +35,12 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:    "command",
-			IsAbort:    true,
-			IsUndo:     true,
-			AbortSteps: steps.List{},
+			Command:        "command",
+			CommandsRun:    statistics.NewCommands(3),
+			MessagesToUser: statistics.NewMessages("one", "two"),
+			IsAbort:        true,
+			IsUndo:         true,
+			AbortSteps:     steps.List{},
 			RunSteps: steps.List{
 				List: []step.Step{
 					&step.AbortMerge{},
@@ -407,7 +410,12 @@ func TestLoadSave(t *testing.T) {
     "EndBranch": "end-branch",
     "EndTime": "0001-01-01T00:00:00Z"
   },
-  "UndoablePerennialCommits": []
+  "UndoablePerennialCommits": [],
+  "CommandsRun": 3,
+  "MessagesToUser": [
+    "one",
+    "two"
+  ]
 }`[1:]
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")

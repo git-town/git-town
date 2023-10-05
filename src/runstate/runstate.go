@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -26,6 +27,8 @@ type RunState struct {
 	FinalUndoSteps           steps.List                 `exhaustruct:"optional"     json:"FinalUndoSteps"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
+	CommandsRun              statistics.Commands
+	MessagesToUser           statistics.Messages
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -63,8 +66,10 @@ func (rs *RunState) CreateAbortRunState() RunState {
 	stepList.AddList(rs.UndoSteps)
 	return RunState{
 		Command:             rs.Command,
+		CommandsRun:         rs.CommandsRun,
 		IsAbort:             true,
 		InitialActiveBranch: rs.InitialActiveBranch,
+		MessagesToUser:      rs.MessagesToUser,
 		RunSteps:            stepList,
 	}
 }
@@ -74,7 +79,9 @@ func (rs *RunState) CreateAbortRunState() RunState {
 func (rs *RunState) CreateSkipRunState() RunState {
 	result := RunState{
 		Command:             rs.Command,
+		CommandsRun:         rs.CommandsRun,
 		InitialActiveBranch: rs.InitialActiveBranch,
+		MessagesToUser:      rs.MessagesToUser,
 		RunSteps:            rs.AbortSteps,
 	}
 	for _, step := range rs.UndoSteps.List {
@@ -102,8 +109,10 @@ func (rs *RunState) CreateSkipRunState() RunState {
 func (rs *RunState) CreateUndoRunState() RunState {
 	result := RunState{
 		Command:                  rs.Command,
+		CommandsRun:              rs.CommandsRun,
 		InitialActiveBranch:      rs.InitialActiveBranch,
 		IsUndo:                   true,
+		MessagesToUser:           rs.MessagesToUser,
 		RunSteps:                 rs.UndoSteps,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
