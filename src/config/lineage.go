@@ -131,6 +131,7 @@ func (l Lineage) RemoveBranch(branch domain.LocalBranchName) {
 	for _, childName := range l.Children(branch) {
 		l[childName] = parent
 	}
+	delete(l, branch)
 }
 
 // Roots provides the branches with children and no parents.
