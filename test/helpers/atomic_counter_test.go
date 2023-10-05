@@ -7,9 +7,9 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestCounter(t *testing.T) {
+func TestAtomicCounter(t *testing.T) {
 	t.Parallel()
-	counter := helpers.Counter{}
+	counter := helpers.AtomicCounter{}
 	must.NotEqOp(t, "0", counter.ToString())
 	must.NotEqOp(t, "1", counter.ToString())
 	must.NotEqOp(t, "2", counter.ToString())
