@@ -1,4 +1,4 @@
-package helpers_test
+package filesystem_test
 
 import (
 	"path/filepath"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/filesystem"
-	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/git-town/git-town/v9/test/testruntime"
 )
 
@@ -21,7 +20,7 @@ func TestCopyDirectory(t *testing.T) {
 		filesystem.CreateFile(t, srcDir, "one.txt")
 		filesystem.CreateFile(t, srcDir, "f1/a.txt")
 		filesystem.CreateFile(t, srcDir, "f2/b.txt")
-		helpers.CopyDirectory(srcDir, dstDir)
+		filesystem.CopyDirectory(srcDir, dstDir)
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileExists(t, dstDir, "f1/a.txt")
 		asserts.FileExists(t, dstDir, "f2/b.txt")
@@ -32,7 +31,7 @@ func TestCopyDirectory(t *testing.T) {
 		origin := testruntime.Create(t)
 		filesystem.CreateFile(t, origin.WorkingDir, "one.txt")
 		dstDir := filepath.Join(t.TempDir(), "dest")
-		helpers.CopyDirectory(origin.WorkingDir, dstDir)
+		filesystem.CopyDirectory(origin.WorkingDir, dstDir)
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
 	})

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
+	"github.com/git-town/git-town/v9/test/filesystem"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/git-town/git-town/v9/test/testruntime"
@@ -43,7 +44,7 @@ type Fixture struct {
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) Fixture {
-	helpers.CopyDirectory(original.Dir, dir)
+	filesystem.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, domain.OriginRemote.String())
 	originRepo := testruntime.New(originDir, dir, "")

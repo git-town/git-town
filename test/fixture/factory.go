@@ -3,6 +3,7 @@ package fixture
 import (
 	"path/filepath"
 
+	"github.com/git-town/git-town/v9/test/filesystem"
 	"github.com/git-town/git-town/v9/test/helpers"
 )
 
@@ -35,7 +36,7 @@ func NewFactory(dir string) Factory {
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
 func (f *Factory) CreateFixture(scenarioName string) Fixture {
-	envDirName := helpers.FolderName(scenarioName) + "_" + f.counter.ToString()
+	envDirName := filesystem.FolderName(scenarioName) + "_" + f.counter.ToString()
 	envPath := filepath.Join(f.dir, envDirName)
 	return CloneFixture(f.memoized, envPath)
 }
