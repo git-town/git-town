@@ -1,4 +1,4 @@
-package statistics
+package gohacks
 
 // Counter is a Statistics implementation that counts how many commands were run.
 type Counter struct {
