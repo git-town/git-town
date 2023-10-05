@@ -313,8 +313,6 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 		list.Add(&step.Merge{Branch: trackingBranch.BranchName()})
 	case config.SyncStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: trackingBranch.BranchName()})
-	default:
-		panic(fmt.Sprintf("unknown syncStrategy: %q", strategy))
 	}
 }
 
@@ -325,8 +323,6 @@ func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, parentBranch d
 		list.Add(&step.Merge{Branch: parentBranch.BranchName()})
 	case config.SyncStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: parentBranch.BranchName()})
-	default:
-		panic(fmt.Sprintf("unknown syncStrategy: %q", strategy))
 	}
 }
 
@@ -337,8 +333,6 @@ func updateCurrentPerennialBranchStep(list *steps.List, otherBranch domain.Remot
 		list.Add(&step.Merge{Branch: otherBranch.BranchName()})
 	case config.PullBranchStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: otherBranch.BranchName()})
-	default:
-		panic(fmt.Sprintf("unknown pull branch strategy: %q", strategy))
 	}
 }
 
@@ -348,7 +342,5 @@ func pushFeatureBranchSteps(list *steps.List, branch domain.LocalBranchName, syn
 		list.Add(&step.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
 	case config.SyncStrategyRebase:
 		list.Add(&step.ForcePushCurrentBranch{NoPushHook: !pushHook})
-	default:
-		panic(fmt.Sprintf("unknown pull branch strategy: %q", syncStrategy))
 	}
 }
