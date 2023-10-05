@@ -11,18 +11,15 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town prune-branches"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
       | dead-end | git fetch --prune --tags |
       |          | git add -A               |
       |          | git stash                |
+      |          | git merge --no-edit main |
       |          | git checkout main        |
-      | main     | git rebase origin/main   |
-      |          | git checkout dead-end    |
-      | dead-end | git merge main           |
-      |          | git branch -D dead-end   |
+      | main     | git branch -D dead-end   |
       |          | git stash pop            |
     And the current branch is now "main"
     And the uncommitted file still exists
