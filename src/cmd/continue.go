@@ -45,7 +45,7 @@ func executeContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -57,6 +57,7 @@ func executeContinue(debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -66,7 +67,7 @@ func executeContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult, debug bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -74,6 +75,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult) (*continueConfig, dom
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

@@ -47,6 +47,7 @@ func executeSkip(debug bool) error {
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
@@ -72,6 +73,7 @@ func executeSkip(debug bool) error {
 		RunState:                &skipRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
+		Debug:                   debug,
 		Lineage:                 lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,

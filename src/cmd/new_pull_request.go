@@ -62,7 +62,7 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo, debug)
 	if err != nil || exit {
 		return err
 	}
@@ -78,6 +78,7 @@ func executeNewPullRequest(debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -103,7 +104,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -111,6 +112,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult) (*newPullReques
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

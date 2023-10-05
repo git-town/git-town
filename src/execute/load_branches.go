@@ -21,6 +21,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Connector:               nil,
+			Debug:                   args.Debug,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
 			InitialStashSnapshot:    stashSnapshot,
@@ -81,6 +82,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 type LoadBranchesArgs struct {
 	Repo                  *OpenRepoResult
 	Fetch                 bool
+	Debug                 bool
 	HandleUnfinishedState bool
 	Lineage               config.Lineage
 	PushHook              bool

@@ -78,6 +78,7 @@ func updatePerennialBranches(debug bool) error {
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
+		Debug:                 debug,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
 		PushHook:              pushHook,

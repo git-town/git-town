@@ -47,6 +47,7 @@ func executeSwitch(debug bool) error {
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Debug:                 debug,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

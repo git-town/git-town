@@ -46,7 +46,7 @@ func executeAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnapshot, err := determineAbortConfig(repo)
+	config, initialStashSnapshot, err := determineAbortConfig(repo, debug)
 	if err != nil {
 		return err
 	}
@@ -58,6 +58,7 @@ func executeAbort(debug bool) error {
 		RunState:                &abortRunState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
+		Debug:                   debug,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
@@ -67,7 +68,7 @@ func executeAbort(debug bool) error {
 	})
 }
 
-func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, domain.StashSnapshot, error) {
+func determineAbortConfig(repo *execute.OpenRepoResult, debug bool) (*abortConfig, domain.StashSnapshot, error) {
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
@@ -95,6 +96,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult) (*abortConfig, domain.St
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
+		Debug:                 debug,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
 		PushHook:              pushHook,
