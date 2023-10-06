@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -72,7 +71,7 @@ func (fc *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remo
 	return value
 }
 
-func (fc *FailureCollector) RepoStatus(value git.RepoStatus, err error) git.RepoStatus {
+func (fc *FailureCollector) RepoStatus(value domain.RepoStatus, err error) domain.RepoStatus {
 	fc.Check(err)
 	return value
 }

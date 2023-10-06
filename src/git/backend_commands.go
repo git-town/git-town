@@ -421,25 +421,19 @@ func (bcs *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Branc
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (bcs *BackendCommands) RepoStatus() (RepoStatus, error) {
+func (bcs *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
 	output, err := bcs.QueryTrim("git", "status", "--ignore-submodules")
 	if err != nil {
-		return RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+		return domain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
 	hasConflicts := strings.Contains(output, "Unmerged paths")
 	hasOpenChanges := outputIndicatesOpenChanges(output)
 	rebaseInProgress := outputIndicatesRebaseInProgress(output)
-	return RepoStatus{
+	return domain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges,
 		RebaseInProgress: rebaseInProgress,
 	}, nil
-}
-
-type RepoStatus struct {
-	Conflicts        bool // the repo contains merge conflicts
-	OpenChanges      bool // there are uncommitted changes
-	RebaseInProgress bool // a rebase is in progress
 }
 
 // RootDirectory provides the path of the rood directory of the current repository,
