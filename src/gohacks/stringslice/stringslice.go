@@ -50,6 +50,7 @@ func Longest(strings []string) int {
 	return result
 }
 
+// SurroundEmptyWith surrounds all empty strings in the given list with the given character
 func SurroundEmptyWith(strings []string, surround string) []string {
 	result := make([]string, len(strings))
 	for t, text := range strings {
