@@ -9,8 +9,8 @@ import (
 type IfBranchHasChanges struct {
 	Branch          domain.LocalBranchName
 	Parent          domain.LocalBranchName
-	IsEmptySteps    []Step
-	HasChangesSteps []Step
+	IsEmptySteps    []Step // the steps to execute if the given branch is empty
+	HasChangesSteps []Step // the steps to execute if the given branch is not empty
 	Empty
 }
 
