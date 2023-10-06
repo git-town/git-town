@@ -30,6 +30,7 @@ Feature: display debug statistics
       | main   | frontend | git branch -d old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
       |        | backend  | git config git-town.perennial-branch-names "" |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
@@ -41,7 +42,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
