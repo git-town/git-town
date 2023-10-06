@@ -12,7 +12,6 @@ type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	Stats            Counter
-	Messages         MessagesCollector
 }
 
 // Run runs the given command in this ShellRunner's directory.

@@ -17,7 +17,6 @@ type BackendRunner struct {
 	// If not set, runs the commands in the current working directory.
 	Dir             *string
 	CommandsCounter Counter
-	Messages        MessagesCollector
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }

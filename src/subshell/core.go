@@ -5,5 +5,4 @@ type Counter interface {
 	RegisterRun()
 }
 
-type MessagesCollector interface {
-}
+type MessagesCollector interface{}
