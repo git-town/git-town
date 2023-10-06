@@ -1,2 +1,2 @@
-// Package runvm provides the virtual machine that executes steps of Git Town commands.
+// Package runvm implements the virtual machine for executing steps of Git Town commands.
 package runvm
