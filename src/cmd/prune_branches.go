@@ -147,10 +147,10 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 				syncStrategy:       config.syncStrategy,
 			})
 		}
-		pullParentBranchOfCurrentFeatureBranchStep(&list, parent, config.syncStrategy)
 		if parent.IsEmpty() {
 			parent = config.mainBranch
 		}
+		pullParentBranchOfCurrentFeatureBranchStep(&list, parent, config.syncStrategy)
 		list.Add(&step.IfBranchHasChanges{
 			Branch: branchWithDeletedRemote,
 			Parent: parent.Location(),

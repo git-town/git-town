@@ -13,6 +13,7 @@ Feature: remove perennial branch configuration when pruning a perennial branch
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
+      |        | git merge --no-edit main |
       |        | git checkout main        |
       | main   | git branch -d old        |
     And the current branch is now "main"
