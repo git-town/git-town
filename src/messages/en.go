@@ -9,7 +9,7 @@ const (
 	BranchCheckoutProblem             = "cannot check out branch %q: %w"
 	BranchCurrentProblem              = "cannot determine current branch: %w"
 	BranchDeleted                     = "deleted branch %q"
-	BranchDeletedHasUnmergedChanges   = "The branch %q was deleted on the remote but the local branch on this machine contains unshipped changes.\nI am therefore not removing this branch. Run \"git town diff-parent\" to see the changes."
+	BranchDeletedHasUnmergedChanges   = "Branch %q was deleted at the remote but the local branch contains unshipped changes.\nI am therefore not removing this branch. Run \"git town diff-parent\" to see the changes."
 	BranchDiffProblem                 = "cannot determine if branch %q has unmerged commits: %w"
 	BranchDoesntContainCommit         = "branch %q does not contain commit %q. Found commits %s"
 	BranchDoesntExist                 = "there is no branch %q"

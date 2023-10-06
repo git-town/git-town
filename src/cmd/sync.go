@@ -302,7 +302,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 		},
 		HasChangesSteps: []step.Step{
 			&step.QueueMessage{
-				Message: fmt.Sprintf("branch %q was shipped at the remote but the local branch contains unshipped changes", args.branch.LocalName),
+				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, args.branch.LocalName),
 			},
 		},
 	})

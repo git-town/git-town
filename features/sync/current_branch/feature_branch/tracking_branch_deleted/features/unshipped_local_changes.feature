@@ -11,7 +11,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And an uncommitted file
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -25,25 +24,29 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       |         | git stash pop            |
     And it prints:
       """
-      Branch "shipped" was shipped on the remote but contains unshipped changes on your machine.
+      Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
     And the current branch is now "shipped"
     And the uncommitted file still exists
     And the branches are now
-      | REPOSITORY    | BRANCHES      |
-      | local, origin | main, shipped |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, shipped |
+      | origin     | main          |
     And this branch lineage exists now
-      | shipped | main |
+      | BRANCH  | PARENT |
+      | shipped | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git add -A                            |
-      |        | git stash                             |
-      |        | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
-      | old    | git stash pop                         |
-    And the current branch is now "old"
+      | BRANCH  | COMMAND       |
+      | shipped | git add -A    |
+      |         | git stash     |
+      |         | git stash pop |
+    And the current branch is now "shipped"
     And the uncommitted file still exists
+    And now these commits exist
+      | BRANCH  | LOCATION | MESSAGE          |
+      | shipped | local    | shipped commit   |
+      |         |          | unshipped commit |
     And the initial branches and hierarchy exist
