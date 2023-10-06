@@ -180,6 +180,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 			},
 		})
 	}
+	list.Add(&step.CheckoutIfExists{Branch: config.branches.Initial})
 	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: config.hasOpenChanges,
