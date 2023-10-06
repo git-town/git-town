@@ -8,7 +8,9 @@ type RemoveBranchFromLineage struct {
 }
 
 func (step *RemoveBranchFromLineage) Run(args RunArgs) error {
-	err := args.Runner.Backend.Config.RemoveParent(step.Branch)
+	// Ignoring errors removing the config here since the config entry might not exist,
+	// for example when pruning perennial branches or branches with unknown ancestry.
+	_ = args.Runner.Backend.Config.RemoveParent(step.Branch)
 	args.RemoveBranchFromLineage(step.Branch)
-	return err
+	return nil
 }
