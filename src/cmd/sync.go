@@ -285,7 +285,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 	// determine whether the now synced local branch still contains unshipped changes
 	args.list.Add(&step.IfBranchHasChanges{
 		Branch: args.branch.LocalName,
-		Parent: args.parent,
+		Parent: args.parent.Location(),
 		IsEmptySteps: []step.Step{
 			&step.Checkout{Branch: args.parent},
 			&step.DeleteLocalBranch{

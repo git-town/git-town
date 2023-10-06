@@ -64,7 +64,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
-		FinalMessages:   stringslice.Collector{},
+		FinalMessages:   &stringslice.Collector{},
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
