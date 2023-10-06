@@ -13,7 +13,7 @@ import (
 
 // List is a collection of Step instances.
 // Only use a list if you need the advanced features of this struct.
-// If all you need is to provide a list of steps, using a []step.Step is okay as well.
+// If all you need is an immutable list of steps, using a []step.Step is sufficient.
 //
 //nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
 type List struct {
