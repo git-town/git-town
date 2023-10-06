@@ -74,6 +74,7 @@ type pruneBranchesConfig struct {
 	branches                  domain.Branches
 	branchesWithDeletedRemote domain.LocalBranchNames
 	hasOpenChanges            bool
+	isOffline                 bool
 	lineage                   config.Lineage
 	mainBranch                domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
@@ -123,10 +124,15 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
+	isOffline, err := repo.Runner.Config.IsOffline()
+	if err != nil {
+		return nil, branchesSnapshot, stashSnapshot, false, err
+	}
 	return &pruneBranchesConfig{
 		branches:                  branches,
 		branchesWithDeletedRemote: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		hasOpenChanges:            repoStatus.OpenChanges,
+		isOffline:                 isOffline,
 		lineage:                   lineage,
 		mainBranch:                repo.Runner.Config.MainBranch(),
 		previousBranch:            repo.Runner.Backend.PreviouslyCheckedOutBranch(),
@@ -141,20 +147,23 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 	list := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             *config.branches.All.FindByLocalName(branchWithDeletedRemote),
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          true,
-			lineage:            config.lineage,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
-		})
 		parent := config.lineage.Parent(branchWithDeletedRemote)
+		if !parent.IsEmpty() {
+			syncBranchSteps(&list, syncBranchStepsArgs{
+				branch:             *config.branches.All.FindByLocalName(parent),
+				branchTypes:        config.branches.Types,
+				remotes:            config.remotes,
+				isOffline:          config.isOffline,
+				lineage:            config.lineage,
+				mainBranch:         config.mainBranch,
+				pullBranchStrategy: config.pullBranchStrategy,
+				pushBranch:         true,
+				pushHook:           config.pushHook,
+				shouldSyncUpstream: config.shouldSyncUpstream,
+				syncStrategy:       config.syncStrategy,
+			})
+		}
+		pullParentBranchOfCurrentFeatureBranchStep(&list, parent, config.syncStrategy)
 		if parent.IsEmpty() {
 			parent = config.mainBranch
 		}
