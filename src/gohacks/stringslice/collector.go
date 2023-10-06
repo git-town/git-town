@@ -1,6 +1,7 @@
 package stringslice
 
 // Collector accumulates string instances one at a time.
+// The zero value is an empty collection.
 type Collector struct {
 	data []string
 }
