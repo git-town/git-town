@@ -9,6 +9,6 @@ func (c *Counter) Count() int {
 	return c.count
 }
 
-func (c *Counter) RegisterRun() {
+func (c *Counter) Register() {
 	c.count++
 }

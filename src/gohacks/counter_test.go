@@ -10,7 +10,7 @@ import (
 func TestCounter(t *testing.T) {
 	t.Parallel()
 	counter := gohacks.Counter{}
-	counter.RegisterRun()
-	counter.RegisterRun()
+	counter.Register()
+	counter.Register()
 	must.Eq(t, 2, counter.Count())
 }
