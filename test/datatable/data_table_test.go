@@ -53,4 +53,8 @@ func TestDataTable(t *testing.T) {
 			t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
 		}
 	})
+
+	t.Run("Strings", func(t *testing.T) {
+		t.Parallel()
+	})
 }
