@@ -54,7 +54,12 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Config:  repoConfig,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, &commandsCounter),
+			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
+				omitBranchNames:  args.OmitBranchNames,
+				dryRun:           args.DryRun,
+				getCurrentBranch: backendCommands.CurrentBranch,
+				stats:            &commandsCounter,
+			}),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
@@ -111,20 +116,27 @@ type OpenRepoResult struct {
 	ConfigSnapshot undo.ConfigSnapshot
 }
 
-// NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats Statistics) git.FrontendRunner {
-	if dryRun {
+// newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
+func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
+	if args.dryRun {
 		return &subshell.FrontendDryRunner{
-			GetCurrentBranch: getCurrentBranch,
-			OmitBranchNames:  omitBranchNames,
-			Stats:            stats,
+			GetCurrentBranch: args.getCurrentBranch,
+			OmitBranchNames:  args.omitBranchNames,
+			Stats:            args.stats,
 		}
 	}
 	return &subshell.FrontendRunner{
-		GetCurrentBranch: getCurrentBranch,
-		OmitBranchNames:  omitBranchNames,
-		Stats:            stats,
+		GetCurrentBranch: args.getCurrentBranch,
+		OmitBranchNames:  args.omitBranchNames,
+		Stats:            args.stats,
 	}
+}
+
+type newFrontendRunnerArgs struct {
+	omitBranchNames  bool
+	dryRun           bool
+	getCurrentBranch subshell.GetCurrentBranchFunc
+	stats            Statistics
 }
 
 type Statistics interface {
