@@ -11,6 +11,7 @@ Feature: sync a shipped branch with additional unshipped local changes
     And an uncommitted file
     When I run "git-town prune-branches"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -28,13 +29,7 @@ Feature: sync a shipped branch with additional unshipped local changes
       """
     And the current branch is still "shipped"
     And the uncommitted file still exists
-    And the branches are now
-      | REPOSITORY | BRANCHES      |
-      | local      | main, shipped |
-      | origin     | main          |
-    And this branch lineage exists now
-      | BRANCH  | PARENT |
-      | shipped | main   |
+    And the initial branches and hierarchy exist
 
   Scenario: undo
     When I run "git-town undo"
