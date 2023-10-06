@@ -100,7 +100,13 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
