@@ -3,6 +3,7 @@ package subshell
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -11,7 +12,7 @@ import (
 type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            Counter
+	CommandsCounter  *gohacks.Counter
 }
 
 // Run runs the given command in this ShellRunner's directory.

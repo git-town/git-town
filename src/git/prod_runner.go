@@ -1,17 +1,15 @@
 package git
 
-import "github.com/git-town/git-town/v9/src/gohacks/stringslice"
+import (
+	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
+)
 
 // ProdRunner provides Git functionality for production code.
 type ProdRunner struct {
 	Config          RepoConfig
 	Backend         BackendCommands
 	Frontend        FrontendCommands
-	CommandsCounter Counter
+	CommandsCounter *gohacks.Counter
 	Messages        stringslice.Collector
-}
-
-// TODO: remove this and target gohacks.Counter directly.
-type Counter interface {
-	Count() int
 }

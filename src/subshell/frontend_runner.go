@@ -9,6 +9,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -16,14 +17,14 @@ import (
 type FrontendRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
-	Stats            Counter
+	CommandsCounter  *gohacks.Counter
 }
 
 type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
 
 // Run runs the given command in this ShellRunner's directory.
 func (fr *FrontendRunner) Run(cmd string, args ...string) (err error) {
-	fr.Stats.RegisterRun()
+	fr.CommandsCounter.Register()
 	var branchName domain.LocalBranchName
 	if !fr.OmitBranchNames {
 		branchName, err = fr.GetCurrentBranch()
