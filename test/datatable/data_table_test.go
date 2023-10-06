@@ -57,14 +57,42 @@ func TestDataTable(t *testing.T) {
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
 		table := datatable.DataTable{}
-		table.AddRow("COMMAND")
-		table.AddRow("git config -lz --global")
-		table.AddRow("git rev-parse --verify --abbrev-ref @{-1}")
+		table.AddRow("BRANCH", "TYPE", "COMMAND")
+		table.AddRow("", "backend", "git version")
+		table.AddRow("", "backend", "git config -lz --global")
+		table.AddRow("", "backend", "git config -lz --local")
+		table.AddRow("", "backend", "git rev-parse --show-toplevel")
+		table.AddRow("", "frontend", "git rev-parse --verify --abbrev-ref @{-1}")
+		table.AddRow("", "backend", "git config git-town.perennial-branch-names")
 		have := table.String()
 		want := `
-| COMMAND                                   |
-| git config -lz --global                   |
-| git rev-parse --verify --abbrev-ref @{-1} |
+| BRANCH | TYPE     | COMMAND                                    |
+|        | backend  | git version                                |
+|        | backend  | git config -lz --global                    |
+|        | backend  | git config -lz --local                     |
+|        | backend  | git rev-parse --show-toplevel              |
+|        | backend  | git stash list                             |
+|        | backend  | git branch -vva                            |
+|        | backend  | git remote                                 |
+| old    | frontend | git fetch --prune --tags                   |
+|        | backend  | git branch -vva                            |
+|        | backend  | git status --ignore-submodules             |
+|        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
+| old    | frontend | git merge --no-edit main                   |
+|        | backend  | git diff main..old                         |
+| old    | frontend | git checkout main                          |
+|        | backend  | git log main..old                          |
+| main   | frontend | git branch -d old                          |
+|        | backend  | git config git-town.perennial-branch-names |
+|        | backend  | git show-ref --quiet refs/heads/main       |
+|        | backend  | git show-ref --quiet refs/heads/old        |
+|        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
+|        | backend  | git checkout main                          |
+|        | backend  | git checkout main                          |
+|        | backend  | git config -lz --global                    |
+|        | backend  | git config -lz --local                     |
+|        | backend  | git branch -vva                            |
+|        | backend  | git stash list                             |
 `[1:]
 		must.Eq(t, want, have)
 	})
