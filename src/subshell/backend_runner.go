@@ -9,6 +9,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -84,6 +85,7 @@ OUTPUT END
 }
 
 func printHeader(cmd string, args ...string) {
+	args = stringslice.SurroundEmptyWith(args, `"`)
 	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
 	_, err := color.New(color.Bold).Println(text)
 	if err != nil {
