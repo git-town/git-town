@@ -51,7 +51,6 @@ func (step *SquashMerge) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	// TODO: read this SHA from the output of commit above and get rid of the SHAForBranch call below
 	squashedCommitSHA, err := args.Runner.Backend.SHAForBranch(step.Parent.BranchName())
 	if err != nil {
 		return err
