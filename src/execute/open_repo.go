@@ -122,7 +122,7 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
-			Stats:            args.stats,
+			CommandsCounter:  &args.stats,
 		}
 	}
 	return &subshell.FrontendRunner{
@@ -136,10 +136,5 @@ type newFrontendRunnerArgs struct {
 	omitBranchNames  bool
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
-	stats            Statistics
-}
-
-type Statistics interface {
-	RegisterRun()
-	Count() int
+	counter          *gohacks.Counter
 }

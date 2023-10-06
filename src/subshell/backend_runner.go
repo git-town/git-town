@@ -8,6 +8,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -16,7 +17,7 @@ type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
 	Dir             *string
-	CommandsCounter Counter
+	CommandsCounter *gohacks.Counter
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }
@@ -37,7 +38,7 @@ func (br BackendRunner) Run(executable string, args ...string) error {
 }
 
 func (br BackendRunner) execute(executable string, args ...string) ([]byte, error) {
-	br.CommandsCounter.RegisterRun()
+	br.CommandsCounter.Register()
 	if br.Verbose {
 		printHeader(executable, args...)
 	}
