@@ -74,9 +74,16 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("old", "frontend", "git checkout main")
 		table.AddRow("", "backend", "git log main..old")
 		table.AddRow("main", "frontend", "git branch -d old")
-
-		table.AddRow("", "frontend", "git rev-parse --verify --abbrev-ref @{-1}")
 		table.AddRow("", "backend", "git config git-town.perennial-branch-names")
+		table.AddRow("", "backend", "git show-ref --quiet refs/heads/main")
+		table.AddRow("", "backend", "git show-ref --quiet refs/heads/old")
+		table.AddRow("", "backend", "git rev-parse --verify --abbrev-ref @{-1}")
+		table.AddRow("", "backend", "git checkout main")
+		table.AddRow("", "backend", "git checkout main")
+		table.AddRow("", "backend", "git config -lz --global")
+		table.AddRow("", "backend", "git config -lz --local")
+		table.AddRow("", "backend", "git branch -vva")
+		table.AddRow("", "backend", "git stash list")
 		have := table.String()
 		want := `
 | BRANCH | TYPE     | COMMAND                                    |
