@@ -86,4 +86,12 @@ func TestStringSlice(t *testing.T) {
 			must.Eq(t, 0, have)
 		})
 	})
+
+	t.Run("SurroundEmptyWith", func(t *testing.T) {
+		t.Parallel()
+		give := []string{"git", "config", "perennial-branches", ""}
+		have := stringslice.SurroundEmptyWith(give, `"`)
+		want := []string{"git", "config", "perennial-branches", `""`}
+		must.Eq(t, want, have)
+	})
 }
