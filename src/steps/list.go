@@ -166,6 +166,7 @@ type WrapOptions struct {
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
+// TODO: only wrap if the list actually contains any steps.
 func (stepList *List) Wrap(options WrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
 		stepList.Add(&step.PreserveCheckoutHistory{

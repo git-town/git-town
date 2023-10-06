@@ -67,8 +67,8 @@ func (bcs *BackendCommands) BranchExists(name string) bool {
 	return err == nil
 }
 
-// BranchHasUnmergedCommits indicates whether the branch with the given name
-// contains commits that are not merged into the main branch.
+// BranchHasUnmergedChanges indicates whether the branch with the given name
+// contains changes that were not merged into the main branch.
 func (bcs *BackendCommands) BranchHasUnmergedChanges(branch domain.LocalBranchName, parent domain.Location) (bool, error) {
 	out, err := bcs.QueryTrim("git", "diff", parent.String()+".."+branch.String())
 	if err != nil {

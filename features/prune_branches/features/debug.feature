@@ -5,7 +5,6 @@ Feature: display debug statistics
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
-      | old    | local, origin | old commit    |
     And origin deletes the "old" branch
     And the current branch is "old"
 
@@ -22,11 +21,18 @@ Feature: display debug statistics
       |        | backend  | git remote                                    |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
+      |        | backend  | git status --ignore-submodules                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       | old    | frontend | git checkout main                             |
-      |        | backend  | git config --unset git-town-branch.old.parent |
+      | main   | frontend | git rebase origin/main                        |
+      |        | backend  | git rev-list --left-right main...origin/main  |
+      | main   | frontend | git merge --no-edit main                      |
+      |        | backend  | git diff main..old                            |
       |        | backend  | git log main..old                             |
-      | main   | frontend | git branch -D old                             |
+      | main   | frontend | git branch -d old                             |
+      |        | backend  | git config --unset git-town-branch.old.parent |
+      |        | backend  | git config git-town.perennial-branch-names "" |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
@@ -38,7 +44,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 30 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -62,7 +68,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
       |        | backend  | git status --ignore-submodules             |
       |        | backend  | git config git-town-branch.old.parent main |
-      | main   | frontend | git branch old {{ sha 'old commit' }}      |
+      | main   | frontend | git branch old {{ sha 'Initial commit' }}  |
       |        | frontend | git checkout old                           |
       |        | backend  | git show-ref --quiet refs/heads/main       |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |

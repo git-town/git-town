@@ -11,5 +11,5 @@ type ProdRunner struct {
 	Backend         BackendCommands
 	Frontend        FrontendCommands
 	CommandsCounter *gohacks.Counter
-	FinalMessages   stringslice.Collector
+	FinalMessages   *stringslice.Collector
 }

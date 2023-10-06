@@ -129,7 +129,11 @@ func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
 func (l Lineage) RemoveBranch(branch domain.LocalBranchName) {
 	parent := l.Parent(branch)
 	for _, childName := range l.Children(branch) {
-		l[childName] = parent
+		if parent.IsEmpty() {
+			delete(l, childName)
+		} else {
+			l[childName] = parent
+		}
 	}
 	delete(l, branch)
 }

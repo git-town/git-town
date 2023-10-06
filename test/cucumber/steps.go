@@ -511,10 +511,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^origin ships the "([^"]*)" branch$`, func(name string) error {
-		branchName := domain.NewLocalBranchName(name)
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, branchName)
-		state.fixture.OriginRepo.RemoveBranch(branchName)
+	suite.Step(`^origin ships the "([^"]*)" branch$`, func(branch string) error {
+		state.fixture.OriginRepo.CheckoutBranch(domain.NewLocalBranchName("main"))
+		err := state.fixture.OriginRepo.MergeBranch(domain.NewLocalBranchName(branch))
+		if err != nil {
+			return err
+		}
+		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
+		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
 		return nil
 	})
 
