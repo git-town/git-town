@@ -23,7 +23,7 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
       """
       Branch "dead-end" was deleted at the remote but the local branch contains unshipped changes.
       """
-    And the current branch is now "dead-end"
+    And the current branch is still "dead-end"
     And the uncommitted file still exists
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
