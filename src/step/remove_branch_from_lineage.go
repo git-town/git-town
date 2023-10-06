@@ -8,6 +8,7 @@ type RemoveBranchFromLineage struct {
 }
 
 func (step *RemoveBranchFromLineage) Run(args RunArgs) error {
+	err := args.Runner.Backend.Config.RemoveParent(step.Branch)
 	args.RemoveBranchFromLineage(step.Branch)
-	return nil
+	return err
 }
