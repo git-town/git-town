@@ -56,5 +56,16 @@ func TestDataTable(t *testing.T) {
 
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
+		table := datatable.DataTable{}
+		table.AddRow("COMMAND")
+		table.AddRow("git config -lz --global")
+		table.AddRow("git rev-parse --verify --abbrev-ref @{-1}")
+		have := table.String()
+		want := `
+| COMMAND                                   |
+| git config -lz --global                   |
+| git rev-parse --verify --abbrev-ref @{-1} |
+`[1:]
+		must.Eq(t, want, have)
 	})
 }
