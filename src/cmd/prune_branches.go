@@ -175,7 +175,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 			},
 			HasChangesSteps: []step.Step{
 				&step.QueueMessage{
-					Message: fmt.Sprintf(messages.BranchHasUnshippedChanges, branchWithDeletedRemote),
+					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote),
 				},
 			},
 		})

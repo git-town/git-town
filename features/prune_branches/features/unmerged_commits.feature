@@ -11,7 +11,6 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town prune-branches"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
@@ -22,23 +21,23 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
       |          | git stash pop            |
     And it prints:
       """
-      branch "old" was removed at the remote but contains unshipped changes
+      Branch "dead-end" was deleted at the remote but the local branch contains unshipped changes.
       """
-    And the current branch is now "main"
+    And the current branch is now "dead-end"
     And the uncommitted file still exists
-    And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, other |
+    And now these commits exist
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | dead-end | local         | dead-end commit |
+      | other    | local, origin | other commit    |
+    And the initial branches and hierarchy exist
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                                         |
-      | main     | git add -A                                      |
-      |          | git stash                                       |
-      |          | git branch dead-end {{ sha 'dead-end commit' }} |
-      |          | git checkout dead-end                           |
-      | dead-end | git stash pop                                   |
+      | BRANCH   | COMMAND       |
+      | dead-end | git add -A    |
+      |          | git stash     |
+      |          | git stash pop |
     And the current branch is now "dead-end"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist
