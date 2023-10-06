@@ -1,4 +1,4 @@
-Feature: sync a shipped branch with unshipped local changes
+Feature: sync a shipped branch with additional unshipped local changes
 
   Background:
     Given a feature branch "shipped"
