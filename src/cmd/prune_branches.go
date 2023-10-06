@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/step"
@@ -145,24 +148,31 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
-		if branchWithDeletedRemote == config.branches.Initial {
-			list.Add(&step.Checkout{Branch: config.mainBranch})
-		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
-		for _, child := range config.lineage.Children(branchWithDeletedRemote) {
-			if parent.IsEmpty() {
-				list.Add(&step.DeleteParentBranch{Branch: child})
-			} else {
-				list.Add(&step.SetParent{Branch: child, ParentBranch: parent})
-			}
+		if parent.IsEmpty() {
+			parent = config.mainBranch
 		}
-		if config.branches.Types.IsFeatureBranch(branchWithDeletedRemote) {
-			list.Add(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
-		}
-		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
-			list.Add(&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote})
-		}
-		list.Add(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
+		list.Add(&step.IfBranchHasChanges{
+			Branch: branchWithDeletedRemote,
+			Parent: parent,
+			IsEmptySteps: []step.Step{
+				&step.Checkout{Branch: parent},
+				&step.DeleteLocalBranch{
+					Branch: branchWithDeletedRemote,
+					Force:  false,
+					Parent: parent.Location(),
+				},
+				&step.RemoveBranchFromLineage{
+					Branch: branchWithDeletedRemote,
+				},
+				&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote},
+			},
+			HasChangesSteps: []step.Step{
+				&step.QueueMessage{
+					Message: fmt.Sprintf(messages.BranchHasUnshippedChanges, branchWithDeletedRemote),
+				},
+			},
+		})
 	}
 	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,

@@ -25,10 +25,12 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := nextStep.Run(step.RunArgs{
+			AddSteps:                        args.RunState.RunSteps.Prepend,
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+			RemoveBranchFromLineage:         args.Lineage.RemoveBranch,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {

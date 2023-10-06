@@ -11,6 +11,7 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town prune-branches"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
@@ -18,9 +19,11 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
       |          | git add -A               |
       |          | git stash                |
       |          | git merge --no-edit main |
-      |          | git checkout main        |
-      | main     | git branch -D dead-end   |
       |          | git stash pop            |
+    And it prints:
+      """
+      branch "old" was removed at the remote but contains unshipped changes
+      """
     And the current branch is now "main"
     And the uncommitted file still exists
     And the branches are now
