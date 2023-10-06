@@ -164,6 +164,13 @@ func TestSlice(t *testing.T) {
 			want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("333333")}
 			must.Eq(t, want, have)
 		})
+		t.Run("empty slice", func(t *testing.T) {
+			t.Parallel()
+			give := []string{}
+			have := slice.Remove(give, "foo")
+			want := []string{}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("RemoveAt", func(t *testing.T) {
