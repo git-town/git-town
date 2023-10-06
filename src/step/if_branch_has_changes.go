@@ -8,14 +8,14 @@ import (
 // depending on whether the given branch contains changes or not.
 type IfBranchHasChanges struct {
 	Branch          domain.LocalBranchName
-	Parent          domain.LocalBranchName
+	Parent          domain.Location
 	IsEmptySteps    []Step // the steps to execute if the given branch is empty
 	HasChangesSteps []Step // the steps to execute if the given branch is not empty
 	Empty
 }
 
 func (step *IfBranchHasChanges) Run(args RunArgs) error {
-	hasChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(step.Branch, step.Parent.Location())
+	hasChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}

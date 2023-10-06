@@ -153,7 +153,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 		}
 		list.Add(&step.IfBranchHasChanges{
 			Branch: branchWithDeletedRemote,
-			Parent: parent,
+			Parent: parent.Location(),
 			IsEmptySteps: []step.Step{
 				&step.Checkout{Branch: parent},
 				&step.DeleteLocalBranch{
