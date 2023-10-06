@@ -16,9 +16,9 @@ func TestFormat(t *testing.T) {
 		executable string
 		args       []string
 	}{
-		"[branch] git checkout foo":          {omitBranch: false, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
-		"git checkout foo":                   {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
-		"git config perennial-branches \"\"": {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"config", "perennial-branches", ""}},
+		"[branch] git checkout foo":        {omitBranch: false, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
+		"git checkout foo":                 {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
+		`git config perennial-branches ""`: {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"config", "perennial-branches", ""}},
 	}
 	for want, give := range tests {
 		have := subshell.FormatCommand(give.branch, give.omitBranch, give.executable, give.args...)
