@@ -78,7 +78,9 @@ func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, execut
 		result = executable + " "
 	}
 	for index, part := range args {
-		if strings.Contains(part, " ") {
+		if part == "" {
+			part = `""`
+		} else if strings.Contains(part, " ") {
 			part = `"` + part + `"`
 		}
 		if index != 0 {
