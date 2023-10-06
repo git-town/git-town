@@ -58,7 +58,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 				omitBranchNames:  args.OmitBranchNames,
 				dryRun:           args.DryRun,
 				getCurrentBranch: backendCommands.CurrentBranch,
-				stats:            &commandsCounter,
+				counter:          &commandsCounter,
 			}),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
@@ -122,13 +122,13 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
-			CommandsCounter:  &args.stats,
+			CommandsCounter:  args.counter,
 		}
 	}
 	return &subshell.FrontendRunner{
 		GetCurrentBranch: args.getCurrentBranch,
 		OmitBranchNames:  args.omitBranchNames,
-		Stats:            args.stats,
+		CommandsCounter:  args.counter,
 	}
 }
 
