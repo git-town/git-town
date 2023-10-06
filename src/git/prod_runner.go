@@ -1,6 +1,9 @@
 package git
 
-import "github.com/git-town/git-town/v9/src/gohacks"
+import (
+	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
+)
 
 // ProdRunner provides Git functionality for production code.
 type ProdRunner struct {
@@ -8,4 +11,5 @@ type ProdRunner struct {
 	Backend         BackendCommands
 	Frontend        FrontendCommands
 	CommandsCounter *gohacks.Counter
+	FinalMessages   *stringslice.Collector
 }

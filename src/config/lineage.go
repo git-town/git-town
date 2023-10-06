@@ -118,6 +118,19 @@ func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
 	return domain.EmptyLocalBranchName()
 }
 
+// RemoveBranch removes the given branch completely from this lineage.
+func (l Lineage) RemoveBranch(branch domain.LocalBranchName) {
+	parent := l.Parent(branch)
+	for _, childName := range l.Children(branch) {
+		if parent.IsEmpty() {
+			delete(l, childName)
+		} else {
+			l[childName] = parent
+		}
+	}
+	delete(l, branch)
+}
+
 // Roots provides the branches with children and no parents.
 func (l Lineage) Roots() domain.LocalBranchNames {
 	roots := domain.LocalBranchNames{}

@@ -1,10 +1,14 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/step"
@@ -69,11 +73,17 @@ func executePruneBranches(debug bool) error {
 
 type pruneBranchesConfig struct {
 	branches                  domain.Branches
-	lineage                   config.Lineage
 	branchesWithDeletedRemote domain.LocalBranchNames
+	hasOpenChanges            bool
+	isOffline                 bool
+	lineage                   config.Lineage
 	mainBranch                domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
+	pullBranchStrategy        config.PullBranchStrategy
 	pushHook                  bool
+	remotes                   domain.Remotes
+	shouldSyncUpstream        bool
+	syncStrategy              config.SyncStrategy
 }
 
 func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pruneBranchesConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -92,44 +102,84 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	fc := gohacks.FailureCollector{}
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
 	return &pruneBranchesConfig{
 		branches:                  branches,
-		lineage:                   lineage,
 		branchesWithDeletedRemote: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
+		hasOpenChanges:            repoStatus.OpenChanges,
+		isOffline:                 isOffline,
+		lineage:                   lineage,
 		mainBranch:                repo.Runner.Config.MainBranch(),
 		previousBranch:            repo.Runner.Backend.PreviouslyCheckedOutBranch(),
+		pullBranchStrategy:        pullBranchStrategy,
 		pushHook:                  pushHook,
-	}, branchesSnapshot, stashSnapshot, exit, err
+		remotes:                   remotes,
+		shouldSyncUpstream:        shouldSyncUpstream,
+		syncStrategy:              syncStrategy,
+	}, branchesSnapshot, stashSnapshot, exit, fc.Err
 }
 
 func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
-	result := steps.List{}
+	list := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
-		if config.branches.Initial == branchWithDeletedRemote {
-			result.Add(&step.Checkout{Branch: config.mainBranch})
-		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
-		for _, child := range config.lineage.Children(branchWithDeletedRemote) {
-			if parent.IsEmpty() {
-				result.Add(&step.DeleteParentBranch{Branch: child})
-			} else {
-				result.Add(&step.SetParent{Branch: child, ParentBranch: parent})
-			}
+		if !parent.IsEmpty() {
+			syncBranchSteps(&list, syncBranchStepsArgs{
+				branch:             *config.branches.All.FindByLocalName(parent),
+				branchTypes:        config.branches.Types,
+				remotes:            config.remotes,
+				isOffline:          config.isOffline,
+				lineage:            config.lineage,
+				mainBranch:         config.mainBranch,
+				pullBranchStrategy: config.pullBranchStrategy,
+				pushBranch:         true,
+				pushHook:           config.pushHook,
+				shouldSyncUpstream: config.shouldSyncUpstream,
+				syncStrategy:       config.syncStrategy,
+			})
 		}
-		if config.branches.Types.IsFeatureBranch(branchWithDeletedRemote) {
-			result.Add(&step.DeleteParentBranch{Branch: branchWithDeletedRemote})
+		if parent.IsEmpty() {
+			parent = config.mainBranch
 		}
-		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
-			result.Add(&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote})
-		}
-		result.Add(&step.DeleteLocalBranch{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location(), Force: false})
+		pullParentBranchOfCurrentFeatureBranchStep(&list, parent, config.syncStrategy)
+		list.Add(&step.IfBranchHasChanges{
+			Branch: branchWithDeletedRemote,
+			Parent: parent.Location(),
+			IsEmptySteps: []step.Step{
+				&step.Checkout{Branch: parent},
+				&step.DeleteLocalBranch{
+					Branch: branchWithDeletedRemote,
+					Force:  false,
+					Parent: parent.Location(),
+				},
+				&step.RemoveBranchFromLineage{
+					Branch: branchWithDeletedRemote,
+				},
+				&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote},
+			},
+			HasChangesSteps: []step.Step{
+				&step.QueueMessage{
+					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote),
+				},
+			},
+		})
 	}
-	result.Wrap(steps.WrapOptions{
+	list.Add(&step.CheckoutIfExists{Branch: config.branches.Initial})
+	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
-		StashOpenChanges: false,
+		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return result
+	return list
 }

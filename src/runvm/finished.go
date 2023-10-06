@@ -39,5 +39,6 @@ func finished(args ExecuteArgs) error {
 	if args.Debug {
 		fmt.Printf(messages.CommandsRun, args.Run.CommandsCounter.Count())
 	}
+	printFooter(args.Debug, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	return nil
 }

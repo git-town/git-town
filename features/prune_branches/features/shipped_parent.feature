@@ -4,19 +4,22 @@ Feature: a parent branch of a local branch was shipped
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE       |
-      | parent | local, origin | parent commit |
-      | child  | local, origin | child commit  |
-    And origin deletes the "parent" branch
-    And the current branch is "main"
+      | BRANCH | LOCATION      | MESSAGE      |
+      | child  | local, origin | child commit |
+    And origin ships the "parent" branch
+    And the current branch is "child"
     When I run "git-town prune-branches"
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git branch -D parent     |
-    And the current branch is now "main"
+      | child  | git fetch --prune --tags |
+      |        | git checkout main        |
+      | main   | git rebase origin/main   |
+      |        | git merge --no-edit main |
+      |        | git branch -d parent     |
+      |        | git checkout child       |
+    And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
@@ -27,7 +30,7 @@ Feature: a parent branch of a local branch was shipped
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | main   | git branch parent {{ sha 'parent commit' }} |
-    And the current branch is now "main"
+      | BRANCH | COMMAND                                      |
+      | child  | git branch parent {{ sha 'Initial commit' }} |
+    And the current branch is still "child"
     And the initial branches and hierarchy exist

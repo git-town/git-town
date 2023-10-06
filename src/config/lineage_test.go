@@ -177,6 +177,60 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("RemoveBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("branch is a parent branch", func(t *testing.T) {
+			t.Parallel()
+			main := domain.NewLocalBranchName("main")
+			branch1 := domain.NewLocalBranchName("branch-1")
+			branch1a := domain.NewLocalBranchName("branch-1a")
+			branch1b := domain.NewLocalBranchName("branch-1b")
+			branch2 := domain.NewLocalBranchName("branch-2")
+			have := config.Lineage{
+				branch1:  main,
+				branch1a: branch1,
+				branch1b: branch1,
+				branch2:  main,
+			}
+			have.RemoveBranch(branch1)
+			want := config.Lineage{
+				branch1a: main,
+				branch1b: main,
+				branch2:  main,
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("branch is a child branch", func(t *testing.T) {
+			t.Parallel()
+			main := domain.NewLocalBranchName("main")
+			branch1 := domain.NewLocalBranchName("branch-1")
+			branch2 := domain.NewLocalBranchName("branch-2")
+			have := config.Lineage{
+				branch1: main,
+				branch2: main,
+			}
+			have.RemoveBranch(branch1)
+			want := config.Lineage{
+				branch2: main,
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("branch is not in lineage", func(t *testing.T) {
+			t.Parallel()
+			main := domain.NewLocalBranchName("main")
+			branch1 := domain.NewLocalBranchName("branch-1")
+			branch2 := domain.NewLocalBranchName("branch-2")
+			have := config.Lineage{
+				branch1: main,
+			}
+			have.RemoveBranch(branch2)
+			want := config.Lineage{
+				branch1: main,
+			}
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("Roots", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple roots with nested child branches", func(t *testing.T) {

@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/gohacks/cache"
+	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/undo"
@@ -17,6 +18,7 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	commandsCounter := gohacks.Counter{}
+	finalMessages := stringslice.Collector{}
 	backendRunner := subshell.BackendRunner{
 		Dir:             nil,
 		CommandsCounter: &commandsCounter,
@@ -63,6 +65,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
+		FinalMessages:   &finalMessages,
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
