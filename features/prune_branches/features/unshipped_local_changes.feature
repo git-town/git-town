@@ -33,10 +33,13 @@ Feature: sync a shipped branch with additional unshipped local changes
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND       |
-      | shipped | git add -A    |
-      |         | git stash     |
-      |         | git stash pop |
+      | BRANCH  | COMMAND                                     |
+      | shipped | git add -A                                  |
+      |         | git stash                                   |
+      |         | git checkout main                           |
+      | main    | git reset --hard {{ sha 'Initial commit' }} |
+      |         | git checkout shipped                        |
+      | shipped | git stash pop                               |
     And the current branch is now "shipped"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist
