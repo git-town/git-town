@@ -37,7 +37,7 @@ type Step interface {
 }
 
 type RunArgs struct {
-	AddSteps                        func(...Step) // allows running steps to add additional steps into the runstate's runsteps list
+	AddSteps                        func(...Step) // AddSteps allows currently executing steps to prepend additional steps onto the currently executing step list.
 	Runner                          *git.ProdRunner
 	Connector                       hosting.Connector
 	Lineage                         config.Lineage
