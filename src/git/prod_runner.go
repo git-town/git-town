@@ -11,7 +11,7 @@ type ProdRunner struct {
 	Messages        stringslice.Collector
 }
 
-// TODO: remove this and target gohacks.Counter directly
+// TODO: remove this and target gohacks.Counter directly.
 type Counter interface {
 	Count() int
 }
