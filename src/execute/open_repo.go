@@ -54,7 +54,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Config:  repoConfig,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, &commandsCounter),
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, &commandsCounter, messages),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
