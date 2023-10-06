@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
@@ -104,30 +105,13 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
 	}
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
-	if err != nil {
-		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
-	}
-	syncStrategy, err := repo.Runner.Config.SyncStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	remotes, err := repo.Runner.Backend.Remotes()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	isOffline, err := repo.Runner.Config.IsOffline()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	fc := gohacks.FailureCollector{}
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
 	return &pruneBranchesConfig{
 		branches:                  branches,
 		branchesWithDeletedRemote: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
@@ -141,7 +125,7 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 		remotes:                   remotes,
 		shouldSyncUpstream:        shouldSyncUpstream,
 		syncStrategy:              syncStrategy,
-	}, branchesSnapshot, stashSnapshot, exit, err
+	}, branchesSnapshot, stashSnapshot, exit, fc.Err
 }
 
 func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
