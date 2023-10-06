@@ -11,7 +11,6 @@ Feature: sync a shipped branch with additional unshipped local changes
     And an uncommitted file
     When I run "git-town prune-branches"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
