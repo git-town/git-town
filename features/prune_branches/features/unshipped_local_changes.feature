@@ -26,7 +26,7 @@ Feature: sync a shipped branch with additional unshipped local changes
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.
       """
-    And the current branch is now "shipped"
+    And the current branch is still "shipped"
     And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES      |
