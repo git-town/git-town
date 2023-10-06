@@ -85,8 +85,8 @@ OUTPUT END
 }
 
 func printHeader(cmd string, args ...string) {
-	args = stringslice.SurroundEmptyWith(args, `"`)
-	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
+	quoted := stringslice.SurroundEmptyWith(args, `"`)
+	text := "\n(debug) " + cmd + " " + strings.Join(quoted, " ")
 	_, err := color.New(color.Bold).Println(text)
 	if err != nil {
 		fmt.Println(text)
