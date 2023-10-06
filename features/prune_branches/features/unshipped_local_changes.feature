@@ -1,11 +1,12 @@
-Feature: sync a branch with unshipped local changes whose tracking branch was deleted
+Feature: sync a shipped branch with unshipped local changes
 
   Background:
     Given a feature branch "shipped"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE          |
-      | shipped | local    | unshipped commit |
-    And origin deletes the "shipped" branch
+      | BRANCH  | LOCATION      | MESSAGE          |
+      | shipped | local, origin | shipped commit   |
+      |         | local         | unshipped commit |
+    And origin ships the "shipped" branch
     And the current branch is "shipped"
     And an uncommitted file
     When I run "git-town prune-branches"
