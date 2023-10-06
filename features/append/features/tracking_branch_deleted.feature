@@ -4,17 +4,18 @@ Feature: append a branch to a branch whose tracking branch was deleted
     Given the feature branch "shipped"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
+      | main    | local, origin | shipped commit |
       | shipped | local, origin | shipped commit |
     And origin deletes the "shipped" branch
     And the current branch is "shipped"
     And an uncommitted file
     When I run "git-town append new"
 
-  @this2
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
+      | BRANCH  | COMMAND                  |
+      | shipped | git fetch --prune --tags |
     And it prints:
       """
       Cannot append branch "new" to branch "old"
