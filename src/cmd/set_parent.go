@@ -63,7 +63,9 @@ func executeSetParent(debug bool) error {
 	}
 	existingParent := lineage.Parent(branches.Initial)
 	if !existingParent.IsEmpty() {
+		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.Config.RemoveParent(branches.Initial)
+	} else {
 		existingParent = repo.Runner.Config.MainBranch()
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
