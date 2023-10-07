@@ -210,7 +210,7 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-			deleteBranchSteps(deleteBranchStepsArgs{
+			syncDeletedBranch(syncDeletedBranchArgs{
 				branch:       branch,
 				branchTypes:  config.branches.Types,
 				lineage:      config.lineage,
@@ -249,9 +249,10 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 	return list
 }
 
-func deleteBranchSteps(args deleteBranchStepsArgs) {
+// syncDeletedBranch provides a program that syncs a branch that was deleted at origin.
+func syncDeletedBranch(args syncDeletedBranchArgs) {
 	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
-		deleteFeatureBranchSteps(deleteFeatureBranchStepsArgs{
+		syncDeleteFeatureBranch(syncDeletedFeatureBranchArgs{
 			branch:       args.branch,
 			lineage:      args.lineage,
 			list:         args.list,
@@ -259,7 +260,7 @@ func deleteBranchSteps(args deleteBranchStepsArgs) {
 			syncStrategy: args.syncStrategy,
 		})
 	} else {
-		deletePerennialBranchSteps(deletePerennialBranchStepsArgs{
+		syncDeletedPerennialBranch(deletePerennialBranchStepsArgs{
 			branch:     args.branch,
 			lineage:    args.lineage,
 			list:       args.list,
@@ -268,7 +269,7 @@ func deleteBranchSteps(args deleteBranchStepsArgs) {
 	}
 }
 
-type deleteBranchStepsArgs struct {
+type syncDeletedBranchArgs struct {
 	branch       domain.BranchInfo
 	branchTypes  domain.BranchTypes
 	lineage      config.Lineage
@@ -278,8 +279,8 @@ type deleteBranchStepsArgs struct {
 	syncStrategy config.SyncStrategy
 }
 
-func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
-	// sync the branch locally
+// syncDeleteFeatureBranch syncs a feare branch whose parent has already been synced.
+func syncDeleteFeatureBranch(args syncDeletedFeatureBranchArgs) {
 	args.list.Add(&step.Checkout{Branch: args.branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
 	// determine whether the now synced local branch still contains unshipped changes
@@ -308,7 +309,7 @@ func deleteFeatureBranchSteps(args deleteFeatureBranchStepsArgs) {
 	})
 }
 
-type deleteFeatureBranchStepsArgs struct {
+type syncDeletedFeatureBranchArgs struct {
 	branch       domain.BranchInfo
 	lineage      config.Lineage
 	list         *steps.List
@@ -316,7 +317,7 @@ type deleteFeatureBranchStepsArgs struct {
 	syncStrategy config.SyncStrategy
 }
 
-func deletePerennialBranchSteps(args deletePerennialBranchStepsArgs) config.Lineage {
+func syncDeletedPerennialBranch(args deletePerennialBranchStepsArgs) config.Lineage {
 	result := removeBranchFromLineage(removeBranchFromLineageArgs{
 		list:    args.list,
 		branch:  args.branch.LocalName,
