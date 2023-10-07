@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -55,7 +56,7 @@ func executePruneBranches(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prune-branches",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            pruneBranchesSteps(config),
+		RunSteps:            pruneBranchesSteps(config, repo.Runner.Backend),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -128,7 +129,7 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 	}, branchesSnapshot, stashSnapshot, exit, fc.Err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
+func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands) steps.List {
 	list := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
 		parent := config.lineage.Parent(branchWithDeletedRemote)
@@ -151,10 +152,16 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 			parent = config.mainBranch
 		}
 		pullParentBranchOfCurrentFeatureBranchStep(&list, parent, config.syncStrategy)
-		list.Add(&step.IfBranchHasChanges{
-			Branch: branchWithDeletedRemote,
-			Parent: parent.Location(),
-			IsEmptySteps: []step.Step{
+		list.Add(&step.IfElse{
+			Condition: func() (bool, error) {
+				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())
+			},
+			TrueSteps: []step.Step{
+				&step.QueueMessage{
+					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote),
+				},
+			},
+			FalseSteps: []step.Step{
 				&step.Checkout{Branch: parent},
 				&step.DeleteLocalBranch{
 					Branch: branchWithDeletedRemote,
@@ -165,11 +172,6 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 					Branch: branchWithDeletedRemote,
 				},
 				&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote},
-			},
-			HasChangesSteps: []step.Step{
-				&step.QueueMessage{
-					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote),
-				},
 			},
 		})
 	}
