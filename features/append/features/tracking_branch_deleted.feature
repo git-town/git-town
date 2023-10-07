@@ -6,7 +6,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | shipped commit |
       | shipped | local, origin | shipped commit |
-    And origin deletes the "shipped" branch
+    And origin ships the "shipped" branch
     And the current branch is "shipped"
     And an uncommitted file
     When I run "git-town append new"
@@ -16,6 +16,17 @@ Feature: append a branch to a branch whose tracking branch was deleted
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | shipped | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
+      |         | git checkout shipped     |
+      | shipped | git merge --no-edit main |
+      |         | git checkout main        |
+      | main    | git branch -d shipped    |
+      |         | git branch new main      |
+      |         | git checkout new         |
+      | new     | git stash pop            |
     And it prints:
       """
       Cannot append branch "new" to branch "old"
