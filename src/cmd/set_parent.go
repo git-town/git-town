@@ -63,11 +63,7 @@ func executeSetParent(debug bool) error {
 	}
 	existingParent := lineage.Parent(branches.Initial)
 	if !existingParent.IsEmpty() {
-		err = repo.Runner.Config.RemoveParent(branches.Initial)
-		if err != nil {
-			return err
-		}
-	} else {
+		repo.Runner.Config.RemoveParent(branches.Initial)
 		existingParent = repo.Runner.Config.MainBranch()
 	}
 	mainBranch := repo.Runner.Config.MainBranch()

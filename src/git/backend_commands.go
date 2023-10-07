@@ -426,10 +426,7 @@ func (bcs *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Branc
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {
-			err := bcs.Config.RemoveParent(child)
-			if err != nil {
-				return err
-			}
+			bcs.Config.RemoveParent(child)
 		}
 	}
 	return nil

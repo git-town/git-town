@@ -11,5 +11,6 @@ type DeleteParentBranch struct {
 }
 
 func (step *DeleteParentBranch) Run(args RunArgs) error {
-	return args.Runner.Config.RemoveParent(step.Branch)
+	args.Runner.Config.RemoveParent(step.Branch)
+	return nil
 }
