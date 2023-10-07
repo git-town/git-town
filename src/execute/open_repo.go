@@ -18,7 +18,6 @@ import (
 
 func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	commandsCounter := gohacks.Counter{}
-	finalMessages := stringslice.Collector{}
 	backendRunner := subshell.BackendRunner{
 		Dir:             nil,
 		CommandsCounter: &commandsCounter,
@@ -65,7 +64,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		CommandsCounter: &commandsCounter,
-		FinalMessages:   &finalMessages,
+		FinalMessages:   &stringslice.Collector{},
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
