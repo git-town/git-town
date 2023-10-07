@@ -7,15 +7,19 @@ but uses the native Git installation on your machine.
 
 ## macOS
 
-The easiest way to install Git Town on macOS is via Homebrew:
+You can install Git Town on macOS via
+[Homebrew](https://formulae.brew.sh/formula/git-town):
 
 ```
 brew install git-town
 ```
 
-Git Town is available via [MacPorts](https://ports.macports.org/port/git-town).
-You can also [install Git Town manually](#manual-installation) or
-[compile from source](#compile-from-source).
+Installation via [MacPorts](https://ports.macports.org/port/git-town) is also
+supported:
+
+```
+sudo port install git-town
+```
 
 ## Windows
 
@@ -67,6 +71,11 @@ brew install git-town
 
 You can also [install Git Town manually](#manual-installation) or
 [compile from source](#compile-from-source).
+
+## BSD
+
+You can install Git Town on BSD is via
+[freshports](https://www.freshports.org/devel/git-town).
 
 ## manual installation
 
