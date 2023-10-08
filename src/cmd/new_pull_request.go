@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/state"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -69,7 +69,7 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := state.RunState{
+	runState := runstate.RunState{
 		Command:             "new-pull-request",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            newPullRequestSteps(config),

@@ -7,11 +7,11 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/state"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repoDir domain.RepoRootDir) (*state.RunState, error) {
+func Load(repoDir domain.RepoRootDir) (*runstate.RunState, error) {
 	filename, err := FilePath(repoDir)
 	if err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func Load(repoDir domain.RepoRootDir) (*state.RunState, error) {
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
-	var runState state.RunState
+	var runState runstate.RunState
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileContentInvalidJSON, filename, err)

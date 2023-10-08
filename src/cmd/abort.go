@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/state"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -132,13 +132,13 @@ type abortConfig struct {
 	pushHook                bool
 }
 
-func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (state.RunState, error) {
+func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
 	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
-		return state.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return state.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
+		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
 	abortRunState.RunSteps.Wrap(steps.WrapOptions{

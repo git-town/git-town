@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/state"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
@@ -61,7 +61,7 @@ type UnfinishedStateArgs struct {
 	Run                     *git.ProdRunner
 }
 
-func abortRunstate(runState *state.RunState, args UnfinishedStateArgs) (bool, error) {
+func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               args.Connector,
@@ -77,7 +77,7 @@ func abortRunstate(runState *state.RunState, args UnfinishedStateArgs) (bool, er
 	})
 }
 
-func continueRunstate(runState *state.RunState, args UnfinishedStateArgs) (bool, error) {
+func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return false, err
@@ -104,7 +104,7 @@ func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
 	return false, err
 }
 
-func skipRunstate(runState *state.RunState, args UnfinishedStateArgs) (bool, error) {
+func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               args.Connector,
