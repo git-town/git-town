@@ -49,6 +49,8 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.AbortRebase{}
 	case "AddToPerennialBranches":
 		return &step.AddToPerennialBranches{}
+	case "ChangeParent":
+		return &step.ChangeParent{}
 	case "Checkout":
 		return &step.Checkout{}
 	case "CheckoutIfExists":
