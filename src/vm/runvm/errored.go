@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/vm/persistence"
 )
 
 // errored is called when the given step has resulted in the given error.
