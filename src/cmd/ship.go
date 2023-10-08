@@ -364,7 +364,7 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 	list.Add(&step.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
 	list.Add(&step.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
-		list.Add(&step.SetParent{Branch: child, ParentBranch: config.targetBranch.LocalName})
+		list.Add(&step.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
 	if !config.isShippingInitialBranch {
 		list.Add(&step.Checkout{Branch: config.branches.Initial})

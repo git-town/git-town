@@ -181,7 +181,7 @@ func appendSteps(config *appendConfig) steps.List {
 		})
 	}
 	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
-	list.Add(&step.SetParent{Branch: config.targetBranch, ParentBranch: config.parentBranch})
+	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
