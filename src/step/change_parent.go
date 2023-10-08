@@ -8,7 +8,7 @@ import (
 )
 
 // ChangeParent changes the parent of the given branch to the given parent.
-// To set the parent if no parent existed before use SetParent.
+// Use SetParent to set the parent if no parent existed before.
 type ChangeParent struct {
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
