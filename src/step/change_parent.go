@@ -19,6 +19,6 @@ func (step *ChangeParent) Run(args RunArgs) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf(messages.BranchParentChanged, step.Branch, step.Parent)
+	args.Runner.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, step.Branch, step.Parent))
 	return nil
 }

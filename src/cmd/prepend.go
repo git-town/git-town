@@ -183,7 +183,7 @@ func prependSteps(config *prependConfig) steps.List {
 	}
 	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
 	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
-	list.Add(&step.ChangeParent{Branch: config.branches.Initial, Parent: config.targetBranch})
+	list.Add(&step.SetParent{Branch: config.branches.Initial, Parent: config.targetBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
