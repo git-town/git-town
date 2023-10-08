@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +56,7 @@ func executeStatus(debug bool) error {
 
 type displayStatusConfig struct {
 	filepath string             // filepath of the runstate file
-	state    *runstate.RunState // content of the runstate file
+	state    *state.RunState // content of the runstate file
 }
 
 func loadDisplayStatusConfig(rootDir domain.RepoRootDir) (*displayStatusConfig, error) {

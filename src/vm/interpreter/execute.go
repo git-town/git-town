@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 )
 
 // Execute runs the commands in the given runstate.
@@ -39,7 +39,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	RunState                *runstate.RunState
+	RunState                *state.RunState
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
 	Debug                   bool

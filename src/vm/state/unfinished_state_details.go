@@ -1,4 +1,4 @@
-package runstate
+package state
 
 import (
 	"fmt"

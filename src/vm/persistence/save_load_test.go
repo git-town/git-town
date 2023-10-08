@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/shoenig/test/must"
 )
 
@@ -33,7 +33,7 @@ func TestLoadSave(t *testing.T) {
 
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
-		runState := runstate.RunState{
+		runState := state.RunState{
 			Command:    "command",
 			IsAbort:    true,
 			IsUndo:     true,
@@ -153,7 +153,7 @@ func TestLoadSave(t *testing.T) {
 				},
 			},
 			UndoSteps: steps.List{},
-			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
+			UnfinishedDetails: &state.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
@@ -429,7 +429,7 @@ func TestLoadSave(t *testing.T) {
 		content, err := os.ReadFile(filepath)
 		must.NoError(t, err)
 		must.EqOp(t, wantJSON, string(content))
-		var newState runstate.RunState
+		var newState state.RunState
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
 		must.Eq(t, runState, newState)

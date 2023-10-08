@@ -10,9 +10,9 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	runvm "github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
 
@@ -122,13 +122,13 @@ type continueConfig struct {
 	pushHook  bool
 }
 
-func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, error) {
+func determineContinueRunstate(repo *execute.OpenRepoResult) (state.RunState, error) {
 	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return state.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return runstate.RunState{}, fmt.Errorf(messages.ContinueNothingToDo)
+		return state.RunState{}, fmt.Errorf(messages.ContinueNothingToDo)
 	}
 	return *runState, nil
 }

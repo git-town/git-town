@@ -1,4 +1,4 @@
-package runstate_test
+package state_test
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,7 +16,7 @@ func TestRunState(t *testing.T) {
 
 	t.Run("Marshal and Unmarshal", func(t *testing.T) {
 		t.Parallel()
-		runState := &runstate.RunState{
+		runState := &state.RunState{
 			Command: "sync",
 			AbortSteps: steps.List{
 				List: []step.Step{
@@ -91,7 +91,7 @@ func TestRunState(t *testing.T) {
   "UndoablePerennialCommits": []
 }`[1:]
 		must.EqOp(t, want, string(encoded))
-		newRunState := &runstate.RunState{} //nolint:exhaustruct
+		newRunState := &state.RunState{} //nolint:exhaustruct
 		err = json.Unmarshal(encoded, &newRunState)
 		must.NoError(t, err)
 		must.Eq(t, runState, newRunState)

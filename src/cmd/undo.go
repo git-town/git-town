@@ -11,9 +11,9 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	runvm "github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
 
@@ -110,13 +110,13 @@ func determineUndoConfig(repo *execute.OpenRepoResult, debug bool) (*undoConfig,
 	}, initialStashSnapshot, lineage, nil
 }
 
-func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
+func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (state.RunState, error) {
 	runState, err := persistence.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return state.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || runState.IsUnfinished() {
-		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
+		return state.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
 	undoRunState.RunSteps.Wrap(steps.WrapOptions{

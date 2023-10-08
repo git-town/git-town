@@ -12,8 +12,8 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
-	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	runvm "github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
 
@@ -61,7 +61,7 @@ func executePrepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState := runstate.RunState{
+	runState := state.RunState{
 		Command:             "prepend",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            prependSteps(config),
