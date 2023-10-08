@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
+// TODO: move into file_path.go
 func SanitizePath(dir domain.RepoRootDir) string {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(dir.String(), "-")
