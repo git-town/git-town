@@ -175,10 +175,10 @@ func renameBranchSteps(config *renameBranchConfig) steps.List {
 	} else {
 		lineage := config.lineage
 		result.Add(&step.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-		result.Add(&step.SetParent{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.LocalName)})
+		result.Add(&step.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
-		result.Add(&step.SetParent{Branch: child, ParentBranch: config.newBranch})
+		result.Add(&step.SetParent{Branch: child, Parent: config.newBranch})
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Add(&step.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})

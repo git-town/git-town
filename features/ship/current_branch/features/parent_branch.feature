@@ -23,6 +23,10 @@ Feature: ship a parent branch
       |        | git commit -m "parent done"       |
       |        | git push                          |
       |        | git branch -D parent              |
+    And it prints:
+      """
+      branch "child" is now a child of "main"
+      """
     And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |

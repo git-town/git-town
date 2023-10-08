@@ -43,6 +43,10 @@ func TestLoadSave(t *testing.T) {
 					&step.AbortMerge{},
 					&step.AbortRebase{},
 					&step.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
+					&step.ChangeParent{
+						Branch: domain.NewLocalBranchName("branch"),
+						Parent: domain.NewLocalBranchName("parent"),
+					},
 					&step.Checkout{Branch: domain.NewLocalBranchName("branch")},
 					&step.CommitOpenChanges{},
 					&step.ConnectorMergeProposal{
@@ -132,8 +136,8 @@ func TestLoadSave(t *testing.T) {
 						Value: "1",
 					},
 					&step.SetParent{
-						Branch:       domain.NewLocalBranchName("branch"),
-						ParentBranch: domain.NewLocalBranchName("parent"),
+						Branch: domain.NewLocalBranchName("branch"),
+						Parent: domain.NewLocalBranchName("parent"),
 					},
 					&step.SkipCurrentBranch{},
 					&step.SquashMerge{
@@ -178,6 +182,13 @@ func TestLoadSave(t *testing.T) {
         "Branch": "branch"
       },
       "type": "AddToPerennialBranches"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "ChangeParent"
     },
     {
       "data": {
@@ -371,7 +382,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "ParentBranch": "parent"
+        "Parent": "parent"
       },
       "type": "SetParent"
     },

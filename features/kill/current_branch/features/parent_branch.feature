@@ -22,6 +22,10 @@ Feature: delete a branch within a branch chain
       |        | git commit -m "WIP on beta" |
       |        | git checkout alpha          |
       | alpha  | git branch -D beta          |
+    And it prints:
+      """
+      branch "gamma" is now a child of "alpha"
+      """
     And the current branch is now "alpha"
     And no uncommitted files exist
     And the branches are now
