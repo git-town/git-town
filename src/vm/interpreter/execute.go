@@ -1,4 +1,4 @@
-package runvm
+package interpreter
 
 import (
 	"github.com/git-town/git-town/v9/src/config"

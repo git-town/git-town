@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
-	runvm "github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
@@ -58,7 +58,7 @@ func executePruneBranches(debug bool) error {
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            pruneBranchesSteps(config, repo.Runner.Backend),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,

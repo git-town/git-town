@@ -69,7 +69,7 @@ func executeSkip(debug bool) error {
 		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &skipRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,

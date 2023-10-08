@@ -1,4 +1,4 @@
-package runvm
+package interpreter
 
 import (
 	"fmt"

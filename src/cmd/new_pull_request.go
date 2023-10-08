@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
-	runvm "github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/state"
 	"github.com/spf13/cobra"
 )
@@ -74,7 +74,7 @@ func executeNewPullRequest(debug bool) error {
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            newPullRequestSteps(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,

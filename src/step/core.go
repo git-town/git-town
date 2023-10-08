@@ -1,7 +1,7 @@
-// Package steps defines the individual CLI operations (Git commands) that Git Town can execute.
+// Package step defines the individual CLI operations (Git commands) that Git Town can execute.
 // All steps implement the Step interface defined in step.go.
 // Git Town doesn't execute steps directly.
-// It organizes all Step instances it wants to perform in a StepList and executes that StepList via the runvm package.
+// It organizes all Step instances it wants to perform in a StepList and executes that StepList via the interpreter package.
 package step
 
 import (
