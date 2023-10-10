@@ -284,7 +284,7 @@ type syncDeletedBranchArgs struct {
 // The parent branch must have been fully synced before calling this function.
 func syncDeleteFeatureBranchSteps(args syncDeletedFeatureBranchArgs, backend git.BackendCommands) {
 	args.list.Add(&step.Checkout{Branch: args.branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.lineage.Parent(args.branch.LocalName), args.syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.syncStrategy, args.branch.LocalName)
 	// determine whether the now synced local branch still contains unshipped changes
 	args.list.Add(&step.IfElse{
 		Condition: func() (bool, error) {
@@ -395,7 +395,7 @@ func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, lineage 
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchStep(list, lineage.Parent(branch.LocalName), syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchStep(list, syncStrategy, branch.LocalName)
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
@@ -428,12 +428,12 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 }
 
 // pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, strategy config.SyncStrategy, currentBranch domain.LocalBranchName) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&step.Merge{Branch: parentBranch.BranchName()})
+		list.Add(&step.MergeParent{Branch: currentBranch})
 	case config.SyncStrategyRebase:
-		list.Add(&step.RebaseBranch{Branch: parentBranch.BranchName()})
+		list.Add(&step.RebaseParent{Branch: currentBranch})
 	}
 }
 

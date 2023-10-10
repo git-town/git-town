@@ -7,17 +7,21 @@ Feature: a parent branch of the current feature branch was shipped
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And origin deletes the "parent" branch
+    And origin ships the "parent" branch
     And the current branch is "child"
     When I run "git-town sync"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
       | child  | git fetch --prune --tags         |
       |        | git checkout main                |
       | main   | git rebase origin/main           |
-      |        | git branch -D parent             |
+      |        | git checkout parent              |
+      | parent | git merge --no-edit main         |
+      |        | git checkout main                |
+      | main   | git branch -d parent             |
       |        | git checkout child               |
       | child  | git merge --no-edit origin/child |
       |        | git merge --no-edit main         |
