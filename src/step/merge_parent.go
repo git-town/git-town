@@ -23,5 +23,8 @@ func (step *MergeParent) Run(args RunArgs) error {
 		return err
 	}
 	parent := args.Lineage.Parent(currentBranch)
+	if parent.IsEmpty() {
+		return nil
+	}
 	return args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
 }

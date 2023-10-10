@@ -8,6 +8,7 @@ Feature: display debug statistics
     And origin deletes the "old" branch
     And the current branch is "old"
 
+  # @debug @this
   Scenario: result
     When I run "git-town prune-branches --debug"
     Then it runs the commands
