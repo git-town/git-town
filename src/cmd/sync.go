@@ -110,7 +110,6 @@ type syncConfig struct {
 	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
-	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
@@ -118,6 +117,7 @@ type syncConfig struct {
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool // TODO: is this used?
 	pushHook           bool
+	remotes            domain.Remotes
 	shouldPushTags     bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
@@ -282,6 +282,7 @@ type syncBranchStepsArgs struct {
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
 	pushHook           bool
+	remotes            domain.Remotes
 	shouldPushTags     bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
