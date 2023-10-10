@@ -308,7 +308,7 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&step.Merge{Branch: parentBranch.BranchName()})
+		list.Add(&step.MergeParent{})
 	case config.SyncStrategyRebase:
 		list.Add(&step.RebaseBranch{Branch: parentBranch.BranchName()})
 	}
