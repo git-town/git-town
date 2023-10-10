@@ -6,11 +6,15 @@ type RebaseParent struct {
 }
 
 func (step *RebaseParent) CreateAbortSteps() []Step {
-	return []Step{&AbortRebase{}}
+	return []Step{
+		&AbortRebase{},
+	}
 }
 
 func (step *RebaseParent) CreateContinueSteps() []Step {
-	return []Step{&ContinueRebase{}}
+	return []Step{
+		&ContinueRebase{},
+	}
 }
 
 func (step *RebaseParent) Run(args RunArgs) error {
