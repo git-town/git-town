@@ -7,7 +7,9 @@ type ContinueMerge struct {
 }
 
 func (step *ContinueMerge) CreateContinueSteps() []Step {
-	return []Step{step}
+	return []Step{
+		step,
+	}
 }
 
 func (step *ContinueMerge) Run(args RunArgs) error {

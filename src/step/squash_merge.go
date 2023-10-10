@@ -17,7 +17,9 @@ type SquashMerge struct {
 }
 
 func (step *SquashMerge) CreateAbortSteps() []Step {
-	return []Step{&DiscardOpenChanges{}}
+	return []Step{
+		&DiscardOpenChanges{},
+	}
 }
 
 func (step *SquashMerge) CreateAutomaticAbortError() error {
