@@ -11,7 +11,6 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And an uncommitted file
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -29,10 +28,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       """
     And the current branch is now "shipped"
     And the uncommitted file still exists
-    And the branches are now
-      | REPOSITORY | BRANCHES      |
-      | local      | main, shipped |
-      | origin     | main          |
+    And the initial branches and hierarchy exist
     And this branch lineage exists now
       | BRANCH  | PARENT |
       | shipped | main   |

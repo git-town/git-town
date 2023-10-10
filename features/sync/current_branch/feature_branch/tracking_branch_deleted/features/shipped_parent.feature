@@ -25,6 +25,10 @@ Feature: a parent branch of the current feature branch was shipped
       | child  | git merge --no-edit origin/child |
       |        | git merge --no-edit main         |
       |        | git push                         |
+    And it prints:
+      """
+      deleted branch "parent"
+      """
     And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |

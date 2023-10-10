@@ -22,6 +22,10 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |        | git checkout old         |
       | old    | git merge --no-edit main |
       |        | git stash pop            |
+    And it prints:
+      """
+      Branch "old" was deleted at the remote but the local branch contains unshipped changes.
+      """
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist
