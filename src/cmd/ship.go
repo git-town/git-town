@@ -301,27 +301,37 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 	list := steps.List{}
 	// sync the parent branch
 	syncNonDeletedBranchSteps(&list, config.targetBranch, syncBranchStepsArgs{
+		branches:           config.branches,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
+		hasOpenChanges:     config.hasOpenChanges,
+		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
+		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         true,
 		pushHook:           config.pushHook,
+		shouldPushTags:     false,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
 	syncNonDeletedBranchSteps(&list, config.branchToShip, syncBranchStepsArgs{
+		branches:           config.branches,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
+		hasOpenChanges:     config.hasOpenChanges,
+		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
+		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         false,
 		pushHook:           config.pushHook,
+		shouldPushTags:     false,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})

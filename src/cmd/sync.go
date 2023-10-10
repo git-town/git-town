@@ -79,6 +79,7 @@ func executeSync(all, dryRun, debug bool) error {
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			hasOpenChanges:     config.hasOpenChanges,
+			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
@@ -215,6 +216,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 		mainBranch:         mainBranch,
 		previousBranch:     previousBranch,
 		pullBranchStrategy: pullBranchStrategy,
+		pushBranch:         true,
 		pushHook:           pushHook,
 		shouldPushTags:     shouldPushTags,
 		shouldSyncUpstream: shouldSyncUpstream,
@@ -230,12 +232,16 @@ func syncBranchesSteps(branchesToSync domain.BranchInfos, args syncBranchStepsAr
 			branches:           args.branches,
 			branchTypes:        args.branches.Types,
 			remotes:            args.remotes,
+			hasOpenChanges:     args.hasOpenChanges,
+			hasUpstream:        args.hasUpstream,
 			isOffline:          args.isOffline,
 			lineage:            args.lineage,
 			mainBranch:         args.mainBranch,
+			previousBranch:     args.previousBranch,
 			pullBranchStrategy: args.pullBranchStrategy,
 			pushBranch:         args.pushBranch,
 			pushHook:           args.pushHook,
+			shouldPushTags:     true,
 			shouldSyncUpstream: args.shouldSyncUpstream,
 			syncStrategy:       args.syncStrategy,
 		})
@@ -256,32 +262,14 @@ func syncBranchesSteps(branchesToSync domain.BranchInfos, args syncBranchStepsAr
 
 func syncBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-		syncDeletedBranchSteps(syncDeletedBranchArgs{
-			branch:       branch,
-			branchTypes:  args.branches.Types,
-			lineage:      args.lineage,
-			list:         list,
-			mainBranch:   args.mainBranch,
-			parent:       args.lineage.Parent(branch.LocalName),
-			syncStrategy: args.syncStrategy,
-		})
+		syncDeletedBranchSteps(list, branch, parent, args)
 	} else {
-		syncNonDeletedBranchSteps(list, branch, syncBranchStepsArgs{
-			branchTypes:        args.branches.Types,
-			remotes:            args.remotes,
-			isOffline:          args.isOffline,
-			lineage:            args.lineage,
-			mainBranch:         args.mainBranch,
-			pullBranchStrategy: args.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           args.pushHook,
-			shouldSyncUpstream: args.shouldSyncUpstream,
-			syncStrategy:       args.syncStrategy,
-		})
+		syncNonDeletedBranchSteps(list, branch, args)
 	}
 }
 
 type syncBranchStepsArgs struct {
+	backend            *git.BackendCommands
 	branches           domain.Branches
 	branchTypes        domain.BranchTypes // TODO: branches already contains this
 	remotes            domain.Remotes
@@ -300,99 +288,61 @@ type syncBranchStepsArgs struct {
 }
 
 // syncDeletedBranchSteps provides a program that syncs a branch that was deleted at origin.
-func syncDeletedBranchSteps(args syncDeletedBranchArgs) {
-	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
-		syncDeleteFeatureBranchSteps(syncDeletedFeatureBranchArgs{
-			branch:       args.branch,
-			lineage:      args.lineage,
-			list:         args.list,
-			parent:       args.parent,
-			syncStrategy: args.syncStrategy,
-		})
+func syncDeletedBranchSteps(list *steps.List, branch domain.BranchInfo, parent domain.LocalBranchName, args syncBranchStepsArgs) {
+	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
+		syncDeleteFeatureBranchSteps(list, branch, parent, args)
 	} else {
-		syncDeletedPerennialBranchSteps(deletePerennialBranchStepsArgs{
-			branch:     args.branch,
-			lineage:    args.lineage,
-			list:       args.list,
-			mainBranch: args.mainBranch,
-		})
+		syncDeletedPerennialBranchSteps(list, branch, args)
 	}
-}
-
-type syncDeletedBranchArgs struct {
-	branch       domain.BranchInfo
-	branchTypes  domain.BranchTypes
-	lineage      config.Lineage
-	list         *steps.List
-	mainBranch   domain.LocalBranchName
-	parent       domain.LocalBranchName
-	syncStrategy config.SyncStrategy
 }
 
 // syncDeleteFeatureBranchSteps syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeleteFeatureBranchSteps(args syncDeletedFeatureBranchArgs) {
-	args.list.Add(&step.Checkout{Branch: args.branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchStep(args.list, args.branch.LocalName, args.syncStrategy)
+func syncDeleteFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
+	list.Add(&step.Checkout{Branch: branch.LocalName})
+	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, args.syncStrategy)
 	// determine whether the now synced local branch still contains unshipped changes
-	args.list.Add(&step.IfElse{
+	list.Add(&step.IfElse{
 		Condition: func() (bool, error) {
-			return args.backend.BranchHasUnmergedChanges(args.branch.LocalName, args.parent.Location())
+			return args.backend.BranchHasUnmergedChanges(branch.LocalName)
 		},
 		TrueSteps: []step.Step{
 			&step.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, args.branch.LocalName),
+				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),
 			},
 		},
 		FalseSteps: []step.Step{
-			&step.Checkout{Branch: args.parent},
+			&step.Checkout{Branch: parent},
 			&step.DeleteLocalBranch{
-				Branch: args.branch.LocalName,
+				Branch: branch.LocalName,
 				Force:  false,
-				Parent: args.parent.Location(),
 			},
 			&step.RemoveBranchFromLineage{
-				Branch: args.branch.LocalName,
+				Branch: branch.LocalName,
 			},
 			&step.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName),
+				Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName),
 			},
 		},
 	})
 }
 
-type syncDeletedFeatureBranchArgs struct {
-	backend      *git.BackendCommands
-	branch       domain.BranchInfo
-	lineage      config.Lineage
-	list         *steps.List
-	parent       domain.LocalBranchName
-	syncStrategy config.SyncStrategy
-}
-
-func syncDeletedPerennialBranchSteps(args deletePerennialBranchStepsArgs) config.Lineage {
+func syncDeletedPerennialBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) config.Lineage {
 	result := removeBranchFromLineage(removeBranchFromLineageArgs{
-		list:    args.list,
-		branch:  args.branch.LocalName,
+		list:    list,
+		branch:  branch.LocalName,
 		parent:  args.mainBranch,
 		lineage: args.lineage,
 	})
-	args.list.Add(&step.RemoveFromPerennialBranches{Branch: args.branch.LocalName})
-	args.list.Add(&step.Checkout{Branch: args.mainBranch})
-	args.list.Add(&step.DeleteLocalBranch{
-		Branch: args.branch.LocalName,
+	list.Add(&step.RemoveFromPerennialBranches{Branch: branch.LocalName})
+	list.Add(&step.Checkout{Branch: args.mainBranch})
+	list.Add(&step.DeleteLocalBranch{
+		Branch: branch.LocalName,
 		Force:  false,
 		Parent: domain.Location(args.mainBranch),
 	})
-	args.list.Add(&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, args.branch.LocalName)})
+	list.Add(&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
 	return result
-}
-
-type deletePerennialBranchStepsArgs struct {
-	list       *steps.List
-	branch     domain.BranchInfo
-	mainBranch domain.LocalBranchName
-	lineage    config.Lineage
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.

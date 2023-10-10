@@ -7,7 +7,6 @@ import (
 // DeleteLocalBranch deletes the branch with the given name.
 type DeleteLocalBranch struct {
 	Branch domain.LocalBranchName
-	Parent domain.Location
 	Force  bool
 	Empty
 }
@@ -15,7 +14,8 @@ type DeleteLocalBranch struct {
 func (step *DeleteLocalBranch) Run(args RunArgs) error {
 	useForce := step.Force
 	if !useForce {
-		hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+		parent := args.Lineage.Parent(step.Branch)
+		hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(step.Branch, parent.Location())
 		if err != nil {
 			return err
 		}
