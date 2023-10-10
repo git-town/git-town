@@ -8,7 +8,6 @@ Feature: display debug statistics
     And origin deletes the "old" branch
     And the current branch is "old"
 
-  # @debug @this
   Scenario: result
     When I run "git-town prune-branches --debug"
     Then it runs the commands
@@ -27,7 +26,6 @@ Feature: display debug statistics
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
-      | main   | frontend | git merge --no-edit main                      |
       |        | backend  | git diff main..old                            |
       |        | backend  | git log main..old                             |
       | main   | frontend | git branch -d old                             |
@@ -45,7 +43,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 30 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
