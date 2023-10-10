@@ -19,7 +19,6 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
       |          | git stash                |
       |          | git checkout main        |
       | main     | git rebase origin/main   |
-      |          | git merge --no-edit main |
       |          | git checkout dead-end    |
       | dead-end | git stash pop            |
     And it prints:
