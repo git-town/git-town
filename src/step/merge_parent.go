@@ -11,14 +11,21 @@ type MergeParent struct {
 }
 
 func (step *MergeParent) CreateAbortSteps() []Step {
-	return []Step{&AbortMerge{}}
+	return []Step{
+		&AbortMerge{},
+	}
 }
 
 func (step *MergeParent) CreateContinueSteps() []Step {
-	return []Step{&ContinueMerge{}}
+	return []Step{
+		&ContinueMerge{},
+	}
 }
 
 func (step *MergeParent) Run(args RunArgs) error {
 	parent := args.Lineage.Parent(step.Branch)
+	if parent.IsEmpty() {
+		return nil
+	}
 	return args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
 }

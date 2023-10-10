@@ -19,7 +19,6 @@ Feature: delete branches that were shipped or removed on another machine
       |        | git stash                |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
-      |        | git merge --no-edit main |
       |        | git branch -d old        |
       |        | git stash pop            |
     And the current branch is now "main"

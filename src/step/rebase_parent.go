@@ -21,5 +21,8 @@ func (step *RebaseParent) CreateContinueSteps() []Step {
 
 func (step *RebaseParent) Run(args RunArgs) error {
 	parent := args.Lineage.Parent(step.Branch)
+	if parent.IsEmpty() {
+		return nil
+	}
 	return args.Runner.Frontend.Rebase(parent.BranchName())
 }
