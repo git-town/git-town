@@ -92,13 +92,13 @@ type syncConfig struct {
 	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
-	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
 	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
+	remotes            domain.Remotes
 	shouldPushTags     bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
@@ -270,13 +270,13 @@ func syncBranchSteps(list *steps.List, args syncBranchStepsArgs) {
 type syncBranchStepsArgs struct {
 	branch             domain.BranchInfo
 	branchTypes        domain.BranchTypes
-	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
 	pushHook           bool
+	remotes            domain.Remotes
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }
@@ -302,10 +302,10 @@ func syncPerennialBranchSteps(list *steps.List, args syncPerennialBranchStepsArg
 
 type syncPerennialBranchStepsArgs struct {
 	branch             domain.BranchInfo
+	hasUpstream        bool
 	mainBranch         domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	shouldSyncUpstream bool
-	hasUpstream        bool
 }
 
 // pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
