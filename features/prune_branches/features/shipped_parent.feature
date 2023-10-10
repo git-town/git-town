@@ -16,7 +16,6 @@ Feature: a parent branch of a local branch was shipped
       | child  | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
-      |        | git merge --no-edit main |
       |        | git branch -d parent     |
       |        | git checkout child       |
     And the current branch is still "child"

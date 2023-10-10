@@ -19,7 +19,6 @@ Feature: sync a shipped branch with additional unshipped local changes
       |         | git stash                |
       |         | git checkout main        |
       | main    | git rebase origin/main   |
-      |         | git merge --no-edit main |
       |         | git checkout shipped     |
       | shipped | git stash pop            |
     And it prints:

@@ -245,7 +245,7 @@ func syncBranchSteps(list *steps.List, args syncBranchStepsArgs) {
 	}
 	list.Add(&step.Checkout{Branch: args.branch.LocalName})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
+		syncFeatureBranchSteps(list, args.branch, args.syncStrategy)
 	} else {
 		syncPerennialBranchSteps(list, args)
 	}
@@ -276,11 +276,11 @@ type syncBranchStepsArgs struct {
 }
 
 // syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name.
-func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
+func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchStep(list, lineage.Parent(branch.LocalName), syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchStep(list, syncStrategy)
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
@@ -305,12 +305,12 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 }
 
 // pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&step.Merge{Branch: parentBranch.BranchName()})
+		list.Add(&step.MergeParent{})
 	case config.SyncStrategyRebase:
-		list.Add(&step.RebaseBranch{Branch: parentBranch.BranchName()})
+		list.Add(&step.RebaseParent{})
 	}
 }
 

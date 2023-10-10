@@ -91,6 +91,8 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.ForcePushCurrentBranch{}
 	case "Merge":
 		return &step.Merge{}
+	case "MergeParent":
+		return &step.MergeParent{}
 	case "PreserveCheckoutHistory":
 		return &step.PreserveCheckoutHistory{}
 	case "PullCurrentBranch":
@@ -101,6 +103,8 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.PushTags{}
 	case "RebaseBranch":
 		return &step.RebaseBranch{}
+	case "RebaseParent":
+		return &step.RebaseParent{}
 	case "RemoveFromPerennialBranches":
 		return &step.RemoveFromPerennialBranches{}
 	case "RemoveGlobalConfig":
