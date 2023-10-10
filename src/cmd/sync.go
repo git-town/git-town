@@ -74,7 +74,7 @@ func executeSync(all, dryRun, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            syncBranchesSteps(config),
+		RunSteps:            syncBranchesSteps(config, repo.Runner.Backend),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -207,7 +207,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig) steps.List {
+func syncBranchesSteps(config *syncConfig, backend git.BackendCommands) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
@@ -219,7 +219,7 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 				mainBranch:   config.mainBranch,
 				parent:       config.lineage.Parent(branch.LocalName),
 				syncStrategy: config.syncStrategy,
-			})
+			}, backend)
 		} else {
 			syncBranchSteps(&list, syncBranchStepsArgs{
 				branch:             branch,
@@ -251,7 +251,7 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 }
 
 // syncDeletedBranchSteps provides a program that syncs a branch that was deleted at origin.
-func syncDeletedBranchSteps(args syncDeletedBranchArgs) {
+func syncDeletedBranchSteps(args syncDeletedBranchArgs, backend git.BackendCommands) {
 	if args.branchTypes.IsFeatureBranch(args.branch.LocalName) {
 		syncDeleteFeatureBranchSteps(syncDeletedFeatureBranchArgs{
 			branch:       args.branch,
@@ -259,7 +259,7 @@ func syncDeletedBranchSteps(args syncDeletedBranchArgs) {
 			list:         args.list,
 			parent:       args.parent,
 			syncStrategy: args.syncStrategy,
-		})
+		}, backend)
 	} else {
 		syncDeletedPerennialBranchSteps(deletePerennialBranchStepsArgs{
 			branch:     args.branch,
