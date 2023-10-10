@@ -11,7 +11,7 @@ type Merge struct {
 }
 
 func (step *Merge) CreateAbortSteps() []Step {
-	return []Step{&AbortMerge{}} // TODO: move the step on a new line for readability
+	return []Step{&AbortMerge{}}
 }
 
 func (step *Merge) CreateContinueSteps() []Step {
