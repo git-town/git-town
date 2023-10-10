@@ -1,6 +1,6 @@
 package step
 
-// CheckoutParent checks out the parent of the current branch.
+// CheckoutParent checks out the parent branch of the current branch.
 type CheckoutParent struct {
 	Empty
 }
