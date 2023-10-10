@@ -11,11 +11,15 @@ type Merge struct {
 }
 
 func (step *Merge) CreateAbortSteps() []Step {
-	return []Step{&AbortMerge{}}
+	return []Step{
+		&AbortMerge{},
+	}
 }
 
 func (step *Merge) CreateContinueSteps() []Step {
-	return []Step{&ContinueMerge{}}
+	return []Step{
+		&ContinueMerge{},
+	}
 }
 
 func (step *Merge) Run(args RunArgs) error {
