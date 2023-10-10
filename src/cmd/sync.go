@@ -247,13 +247,7 @@ func syncBranchSteps(list *steps.List, args syncBranchStepsArgs) {
 	if isFeatureBranch {
 		syncFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
 	} else {
-		syncPerennialBranchSteps(list, syncPerennialBranchStepsArgs{
-			branch:             args.branch,
-			mainBranch:         args.mainBranch,
-			pullBranchStrategy: args.pullBranchStrategy,
-			shouldSyncUpstream: args.shouldSyncUpstream,
-			hasUpstream:        args.remotes.HasUpstream(),
-		})
+		syncPerennialBranchSteps(list, args)
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
@@ -290,22 +284,14 @@ func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, lineage 
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
-func syncPerennialBranchSteps(list *steps.List, args syncPerennialBranchStepsArgs) {
+func syncPerennialBranchSteps(list *steps.List, args syncBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
 	}
-	if args.branch.LocalName == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
+	if args.branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
 		list.Add(&step.FetchUpstream{Branch: args.mainBranch})
 		list.Add(&step.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
-}
-
-type syncPerennialBranchStepsArgs struct {
-	branch             domain.BranchInfo
-	hasUpstream        bool
-	mainBranch         domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	shouldSyncUpstream bool
 }
 
 // pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
