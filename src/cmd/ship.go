@@ -300,8 +300,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 func shipSteps(config *shipConfig, commitMessage string) steps.List {
 	list := steps.List{}
 	// sync the parent branch
-	syncBranchSteps(&list, syncBranchStepsArgs{
-		branch:             config.targetBranch,
+	syncNonDeletedBranchSteps(&list, config.targetBranch, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
@@ -314,8 +313,7 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
-	syncBranchSteps(&list, syncBranchStepsArgs{
-		branch:             config.branchToShip,
+	syncNonDeletedBranchSteps(&list, config.branchToShip, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,

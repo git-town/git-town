@@ -134,10 +134,11 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
 		parent := config.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
-			syncBranchSteps(&list, syncBranchStepsArgs{
-				branch:             *config.branches.All.FindByLocalName(parent),
+			syncNonDeletedBranchSteps(&list, *config.branches.All.FindByLocalName(parent), syncBranchStepsArgs{
 				branchTypes:        config.branches.Types,
 				remotes:            config.remotes,
+				hasOpenChanges:     config.hasOpenChanges,
+				hasUpstream:        config.remotes.HasUpstream(),
 				isOffline:          config.isOffline,
 				lineage:            config.lineage,
 				mainBranch:         config.mainBranch,
@@ -151,7 +152,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 		if parent.IsEmpty() {
 			parent = config.mainBranch
 		}
-		pullParentBranchOfCurrentFeatureBranchStep(&list, config.syncStrategy, branchWithDeletedRemote)
+		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
 		list.Add(&step.IfElse{
 			Condition: func() (bool, error) {
 				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())

@@ -167,16 +167,20 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 func prependSteps(config *prependConfig) steps.List {
 	list := steps.List{}
 	for _, branchToSync := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branchToSync,
+		syncNonDeletedBranchSteps(&list, branchToSync, syncBranchStepsArgs{
+			branches:           config.branches,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
+			hasOpenChanges:     config.hasOpenChanges,
+			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
+			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
+			shouldPushTags:     false,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

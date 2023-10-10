@@ -100,6 +100,7 @@ type newPullRequestConfig struct {
 	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
+	pushTags           bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }
@@ -193,6 +194,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 		previousBranch:     previousBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
+		pushTags:           false,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
@@ -201,16 +203,20 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 func newPullRequestSteps(config *newPullRequestConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
+		syncNonDeletedBranchSteps(&list, branch, syncBranchStepsArgs{
+			branches:           config.branches,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
+			hasOpenChanges:     config.hasOpenChanges,
+			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
+			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
+			shouldPushTags:     config.pushTags,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

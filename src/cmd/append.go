@@ -90,6 +90,7 @@ type appendConfig struct {
 	previousBranch      domain.LocalBranchName
 	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
+	shouldPushTags      bool
 	shouldSyncUpstream  bool
 	syncStrategy        config.SyncStrategy
 	targetBranch        domain.LocalBranchName
@@ -157,6 +158,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
+		shouldPushTags:      false,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
@@ -166,16 +168,20 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
+		syncBranchSteps(&list, branch, syncBranchStepsArgs{
+			branches:           config.branches,
 			branchTypes:        config.branches.Types,
+			hasOpenChanges:     config.hasOpenChanges,
+			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
+			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
+			shouldPushTags:     config.shouldPushTags,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

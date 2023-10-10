@@ -19,6 +19,6 @@ func (step *MergeParent) CreateContinueSteps() []Step {
 }
 
 func (step *MergeParent) Run(args RunArgs) error {
-	parent := args.Lineage.Parent(domain.LocalBranchName(step.Branch))
+	parent := args.Lineage.Parent(step.Branch)
 	return args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
 }
