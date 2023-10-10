@@ -4,7 +4,6 @@ Feature: sync an empty branch whose tracking branch was deleted
     Given the feature branches "feature-1" and "feature-2"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
-      | main      | local, origin | feature-1        | feature-1-file | feature 1 content |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
       | feature-2 | local, origin | feature-2 commit | feature-2-file | feature 2 content |
     And origin ships the "feature-1" branch
@@ -20,7 +19,10 @@ Feature: sync an empty branch whose tracking branch was deleted
       |           | git stash                |
       |           | git checkout main        |
       | main      | git rebase origin/main   |
-      |           | git branch -D feature-1  |
+      |           | git checkout feature-1   |
+      | feature-1 | git merge --no-edit main |
+      |           | git checkout main        |
+      | main      | git branch -d feature-1  |
       |           | git stash pop            |
     And the current branch is now "main"
     And the uncommitted file still exists
@@ -37,6 +39,7 @@ Feature: sync an empty branch whose tracking branch was deleted
       | BRANCH    | COMMAND                                           |
       | main      | git add -A                                        |
       |           | git stash                                         |
+      |           | git reset --hard {{ sha 'Initial commit' }}       |
       |           | git branch feature-1 {{ sha 'feature-1 commit' }} |
       |           | git checkout feature-1                            |
       | feature-1 | git stash pop                                     |
