@@ -19,7 +19,7 @@ Feature: sync perennial branch whose tracking branch is gone
       |        | git push --tags          |
     And it prints:
       """
-      branch "old" is no longer perennial
+      deleted branch "old"
       """
     And the current branch is now "main"
     And the branches are now
