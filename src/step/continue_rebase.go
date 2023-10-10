@@ -7,11 +7,15 @@ type ContinueRebase struct {
 }
 
 func (step *ContinueRebase) CreateAbortSteps() []Step {
-	return []Step{&AbortRebase{}}
+	return []Step{
+		&AbortRebase{},
+	}
 }
 
 func (step *ContinueRebase) CreateContinueSteps() []Step {
-	return []Step{step}
+	return []Step{
+		step,
+	}
 }
 
 func (step *ContinueRebase) Run(args RunArgs) error {
