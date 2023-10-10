@@ -11,6 +11,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
     And an uncommitted file
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |

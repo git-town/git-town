@@ -19,23 +19,20 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |        | git stash                |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
-      |        | git branch -D old        |
+      |        | git checkout old         |
+      | old    | git merge --no-edit main |
       |        | git stash pop            |
-    And the current branch is now "main"
+    And the current branch is now "old"
     And the uncommitted file still exists
-    And the branches are now
-      | REPOSITORY    | BRANCHES     |
-      | local, origin | main, active |
+    And the initial branches and hierarchy exist
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git add -A                            |
-      |        | git stash                             |
-      |        | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
-      | old    | git stash pop                         |
+      | BRANCH | COMMAND       |
+      | old    | git add -A    |
+      |        | git stash     |
+      |        | git stash pop |
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist
