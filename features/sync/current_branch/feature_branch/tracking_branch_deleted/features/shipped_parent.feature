@@ -11,7 +11,6 @@ Feature: a parent branch of the current feature branch was shipped
     And the current branch is "child"
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -25,6 +24,7 @@ Feature: a parent branch of the current feature branch was shipped
       |        | git checkout child               |
       | child  | git merge --no-edit origin/child |
       |        | git merge --no-edit main         |
+      |        | git push                         |
     And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -37,6 +37,11 @@ Feature: a parent branch of the current feature branch was shipped
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | child  | git branch parent {{ sha 'parent commit' }} |
+      | child  | git reset --hard {{ sha 'child commit' }}   |
+      |        | git push --force-with-lease                 |
+      |        | git checkout main                           |
+      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      |        | git branch parent {{ sha 'parent commit' }} |
+      |        | git checkout child                          |
     And the current branch is still "child"
     And the initial branches and hierarchy exist
