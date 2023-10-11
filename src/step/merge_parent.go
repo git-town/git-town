@@ -1,8 +1,6 @@
 package step
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
@@ -25,10 +23,7 @@ func (step *MergeParent) CreateContinueSteps() []Step {
 }
 
 func (step *MergeParent) Run(args RunArgs) error {
-	fmt.Println("111111111111111111111 START MERGE PARENT")
 	parent := args.Lineage.Parent(step.CurrentBranch)
-	fmt.Println("111111111111111111111 CURRENT BRANCH", step.CurrentBranch)
-	fmt.Println("111111111111111111111 PARENT", parent)
 	if parent.IsEmpty() {
 		return nil
 	}
@@ -36,6 +31,5 @@ func (step *MergeParent) Run(args RunArgs) error {
 		return nil
 	}
 	err := args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
-	fmt.Println("111111111111111111111 FINISHED MERGE PARENT")
 	return err
 }
