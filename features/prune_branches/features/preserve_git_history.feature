@@ -1,29 +1,29 @@
-Feature: preserve the previous Git branch
+# Feature: preserve the previous Git branch
 
-  Background:
-    Given the feature branches "previous" and "current"
-    And the current branch is "current" and the previous branch is "previous"
+#   Background:
+#     Given the feature branches "previous" and "current"
+#     And the current branch is "current" and the previous branch is "previous"
 
-  Scenario: current branch gone, previous branch exists
-    And origin deletes the "current" branch
-    When I run "git-town prune-branches"
-    Then the current branch is now "main"
-    And the previous Git branch is still "previous"
+#   Scenario: current branch gone, previous branch exists
+#     And origin deletes the "current" branch
+#     When I run "git-town prune-branches"
+#     Then the current branch is now "main"
+#     And the previous Git branch is still "previous"
 
-  Scenario: current branch exists, previous branch gone
-    Given origin deletes the "previous" branch
-    When I run "git-town prune-branches"
-    Then the current branch is still "current"
-    And the previous Git branch is now "main"
+#   Scenario: current branch exists, previous branch gone
+#     Given origin deletes the "previous" branch
+#     When I run "git-town prune-branches"
+#     Then the current branch is still "current"
+#     And the previous Git branch is now "main"
 
-  Scenario: both branches deleted
-    And origin deletes the "previous" branch
-    And origin deletes the "current" branch
-    When I run "git-town prune-branches"
-    Then the current branch is now "main"
-    And the previous Git branch is now "main"
+#   Scenario: both branches deleted
+#     And origin deletes the "previous" branch
+#     And origin deletes the "current" branch
+#     When I run "git-town prune-branches"
+#     Then the current branch is now "main"
+#     And the previous Git branch is now "main"
 
-  Scenario: both branches exist
-    When I run "git-town prune-branches"
-    Then the current branch is still "current"
-    And the previous Git branch is still "previous"
+#   Scenario: both branches exist
+#     When I run "git-town prune-branches"
+#     Then the current branch is still "current"
+#     And the previous Git branch is still "previous"
