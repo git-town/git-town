@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -61,7 +62,7 @@ func executeAppend(arg string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "append",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            appendSteps(config),
+		RunSteps:            appendSteps(config, &repo.Runner.Backend),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -165,10 +166,11 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func appendSteps(config *appendConfig) steps.List {
+func appendSteps(config *appendConfig, backend *git.BackendCommands) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, branch, syncBranchStepsArgs{
+			backend:            backend,
 			branches:           config.branches,
 			branchTypes:        config.branches.Types,
 			hasOpenChanges:     config.hasOpenChanges,

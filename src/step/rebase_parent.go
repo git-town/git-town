@@ -7,7 +7,7 @@ import (
 // RebaseParent rebases the current branch
 // against the branch with the given name.
 type RebaseParent struct {
-	Branch domain.LocalBranchName
+	CurrentBranch domain.LocalBranchName
 	Empty
 }
 
@@ -24,7 +24,7 @@ func (step *RebaseParent) CreateContinueSteps() []Step {
 }
 
 func (step *RebaseParent) Run(args RunArgs) error {
-	parent := args.Lineage.Parent(step.Branch)
+	parent := args.Lineage.Parent(step.CurrentBranch)
 	if parent.IsEmpty() {
 		return nil
 	}

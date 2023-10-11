@@ -60,6 +60,9 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v9/src/hosting.Connector|github.com/git-town/git-town/v9/src/steps.Step)
+    - path: src/gohacks/cache/cache.go
+      linters:
+        - ireturn
     - text: is missing field Empty
       linters:
         - exhaustruct

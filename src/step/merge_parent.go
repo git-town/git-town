@@ -6,7 +6,7 @@ import (
 
 // MergeParent merges the branch that at runtime is the parent branch into the current branch.
 type MergeParent struct {
-	Branch domain.LocalBranchName
+	CurrentBranch domain.LocalBranchName
 	Empty
 }
 
@@ -23,7 +23,7 @@ func (step *MergeParent) CreateContinueSteps() []Step {
 }
 
 func (step *MergeParent) Run(args RunArgs) error {
-	parent := args.Lineage.Parent(step.Branch)
+	parent := args.Lineage.Parent(step.CurrentBranch)
 	if parent.IsEmpty() {
 		return nil
 	}

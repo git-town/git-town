@@ -96,7 +96,7 @@ func TestLoadSave(t *testing.T) {
 						NoPushHook: true,
 					},
 					&step.Merge{Branch: domain.NewBranchName("branch")},
-					&step.MergeParent{},
+					&step.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
 					&step.PreserveCheckoutHistory{
 						InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
 						InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
@@ -109,7 +109,7 @@ func TestLoadSave(t *testing.T) {
 					},
 					&step.PushTags{},
 					&step.RebaseBranch{Branch: domain.NewBranchName("branch")},
-					&step.RebaseParent{},
+					&step.RebaseParent{CurrentBranch: domain.NewLocalBranchName("branch")},
 					&step.RemoveFromPerennialBranches{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
@@ -302,7 +302,9 @@ func TestLoadSave(t *testing.T) {
       "type": "Merge"
     },
     {
-      "data": {},
+      "data": {
+        "CurrentBranch": "branch"
+      },
       "type": "MergeParent"
     },
     {
@@ -335,7 +337,9 @@ func TestLoadSave(t *testing.T) {
       "type": "RebaseBranch"
     },
     {
-      "data": {},
+      "data": {
+        "CurrentBranch": "branch"
+      },
       "type": "RebaseParent"
     },
     {

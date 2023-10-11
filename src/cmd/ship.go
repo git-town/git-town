@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -94,7 +95,7 @@ func executeShip(args []string, message string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "ship",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            shipSteps(config, message),
+		RunSteps:            shipSteps(config, message, &repo.Runner.Backend),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -297,10 +298,11 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipSteps(config *shipConfig, commitMessage string) steps.List {
+func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCommands) steps.List {
 	list := steps.List{}
 	// sync the parent branch
 	syncNonDeletedBranchSteps(&list, config.targetBranch, syncBranchStepsArgs{
+		backend:            backend,
 		branches:           config.branches,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
@@ -319,6 +321,7 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 	})
 	// sync the branch to ship (local sync only)
 	syncNonDeletedBranchSteps(&list, config.branchToShip, syncBranchStepsArgs{
+		backend:            backend,
 		branches:           config.branches,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,

@@ -75,6 +75,7 @@ func executeSync(all, dryRun, debug bool) error {
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps: syncBranchesSteps(config.branchesToSync, syncBranchStepsArgs{
+			backend:            &repo.Runner.Backend,
 			branches:           config.branches,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
@@ -228,23 +229,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 func syncBranchesSteps(branchesToSync domain.BranchInfos, args syncBranchStepsArgs) steps.List {
 	list := steps.List{}
 	for _, branch := range branchesToSync {
-		syncBranchSteps(&list, branch, syncBranchStepsArgs{
-			branches:           args.branches,
-			branchTypes:        args.branches.Types,
-			remotes:            args.remotes,
-			hasOpenChanges:     args.hasOpenChanges,
-			hasUpstream:        args.hasUpstream,
-			isOffline:          args.isOffline,
-			lineage:            args.lineage,
-			mainBranch:         args.mainBranch,
-			previousBranch:     args.previousBranch,
-			pullBranchStrategy: args.pullBranchStrategy,
-			pushBranch:         args.pushBranch,
-			pushHook:           args.pushHook,
-			shouldPushTags:     true,
-			shouldSyncUpstream: args.shouldSyncUpstream,
-			syncStrategy:       args.syncStrategy,
-		})
+		syncBranchSteps(&list, branch, args)
 	}
 	list.Add(&step.CheckoutIfExists{Branch: args.branches.Initial})
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
@@ -402,9 +387,9 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, currentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&step.MergeParent{Branch: currentBranch})
+		list.Add(&step.MergeParent{CurrentBranch: currentBranch})
 	case config.SyncStrategyRebase:
-		list.Add(&step.RebaseParent{Branch: currentBranch})
+		list.Add(&step.RebaseParent{CurrentBranch: currentBranch})
 	}
 }
 
