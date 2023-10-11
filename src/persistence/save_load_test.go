@@ -249,7 +249,6 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "Parent": "parent",
         "Force": false
       },
       "type": "DeleteLocalBranch"
