@@ -73,7 +73,6 @@ func TestLoadSave(t *testing.T) {
 					},
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent").Location(),
 						Force:  false,
 					},
 					&step.DeleteRemoteBranch{

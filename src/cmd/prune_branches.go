@@ -158,7 +158,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
 		list.Add(&step.IfElse{
 			Condition: func() (bool, error) {
-				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())
+				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote)
 			},
 			TrueSteps: []step.Step{
 				&step.QueueMessage{
@@ -170,7 +170,6 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 				&step.DeleteLocalBranch{
 					Branch: branchWithDeletedRemote,
 					Force:  false,
-					Parent: parent.Location(),
 				},
 				&step.RemoveBranchFromLineage{
 					Branch: branchWithDeletedRemote,

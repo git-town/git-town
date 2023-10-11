@@ -184,7 +184,7 @@ func renameBranchSteps(config *renameBranchConfig) steps.List {
 		result.Add(&step.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Add(&step.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
-	result.Add(&step.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Parent: config.mainBranch.Location(), Force: false})
+	result.Add(&step.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,

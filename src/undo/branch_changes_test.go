@@ -87,7 +87,6 @@ func TestChanges(t *testing.T) {
 					&step.Checkout{Branch: domain.NewLocalBranchName("main")},
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("branch-1"),
-						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
 					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
@@ -416,12 +415,10 @@ func TestChanges(t *testing.T) {
 				List: []step.Step{
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
-						Parent: domain.EmptyLocalBranchName().Location(),
 						Force:  true,
 					},
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("feature-branch"),
-						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
 					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
@@ -500,13 +497,11 @@ func TestChanges(t *testing.T) {
 					},
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
-						Parent: domain.EmptyLocalBranchName().Location(),
 						Force:  true,
 					},
 					&step.Checkout{Branch: domain.NewLocalBranchName("main")},
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("feature-branch"),
-						Parent: domain.NewLocalBranchName("main").Location(),
 						Force:  true,
 					},
 					&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},

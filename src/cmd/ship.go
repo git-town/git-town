@@ -369,7 +369,7 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 			list.Add(&step.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
-	list.Add(&step.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Parent: config.mainBranch.Location(), Force: false})
+	list.Add(&step.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
 	list.Add(&step.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
 		list.Add(&step.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})

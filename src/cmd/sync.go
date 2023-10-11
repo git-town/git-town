@@ -262,7 +262,7 @@ func syncBranchesSteps(branchesToSync domain.BranchInfos, args syncBranchStepsAr
 
 func syncBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-		syncDeletedBranchSteps(list, branch, parent, args)
+		syncDeletedBranchSteps(list, branch, args)
 	} else {
 		syncNonDeletedBranchSteps(list, branch, args)
 	}
@@ -272,7 +272,6 @@ type syncBranchStepsArgs struct {
 	backend            *git.BackendCommands
 	branches           domain.Branches
 	branchTypes        domain.BranchTypes // TODO: branches already contains this
-	remotes            domain.Remotes
 	hasOpenChanges     bool
 	hasUpstream        bool
 	isOffline          bool
@@ -289,9 +288,9 @@ type syncBranchStepsArgs struct {
 }
 
 // syncDeletedBranchSteps provides a program that syncs a branch that was deleted at origin.
-func syncDeletedBranchSteps(list *steps.List, branch domain.BranchInfo, parent domain.LocalBranchName, args syncBranchStepsArgs) {
+func syncDeletedBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
-		syncDeleteFeatureBranchSteps(list, branch, parent, args)
+		syncDeleteFeatureBranchSteps(list, branch, args)
 	} else {
 		syncDeletedPerennialBranchSteps(list, branch, args)
 	}
@@ -313,7 +312,7 @@ func syncDeleteFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, ar
 			},
 		},
 		FalseSteps: []step.Step{
-			&step.Checkout{Branch: parent},
+			&step.CheckoutParent{CurrentBranch: branch.LocalName},
 			&step.DeleteLocalBranch{
 				Branch: branch.LocalName,
 				Force:  false,
@@ -340,7 +339,6 @@ func syncDeletedPerennialBranchSteps(list *steps.List, branch domain.BranchInfo,
 	list.Add(&step.DeleteLocalBranch{
 		Branch: branch.LocalName,
 		Force:  false,
-		Parent: domain.Location(args.mainBranch),
 	})
 	list.Add(&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
 	return result

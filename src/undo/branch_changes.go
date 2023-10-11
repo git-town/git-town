@@ -145,7 +145,6 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) steps.List {
 		}
 		result.Add(&step.DeleteLocalBranch{
 			Branch: addedLocalBranch,
-			Parent: args.Lineage.Parent(addedLocalBranch).Location(),
 			Force:  true,
 		})
 	}
