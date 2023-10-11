@@ -280,7 +280,7 @@ func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, syncStra
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchStep(list, syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, syncStrategy)
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
@@ -305,12 +305,12 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *steps.List, trackingBran
 }
 
 // pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, strategy config.SyncStrategy) {
+func pullParentBranchOfCurrentFeatureBranchStep(list *steps.List, branch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
-		list.Add(&step.MergeParent{})
+		list.Add(&step.MergeParent{CurrentBranch: branch})
 	case config.SyncStrategyRebase:
-		list.Add(&step.RebaseParent{})
+		list.Add(&step.RebaseParent{CurrentBranch: branch})
 	}
 }
 

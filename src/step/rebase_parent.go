@@ -1,7 +1,10 @@
 package step
 
+import "github.com/git-town/git-town/v9/src/domain"
+
 // RebaseParent rebases the current branch against its current parent branch.
 type RebaseParent struct {
+	CurrentBranch domain.LocalBranchName
 	Empty
 }
 
@@ -18,10 +21,6 @@ func (step *RebaseParent) CreateContinueSteps() []Step {
 }
 
 func (step *RebaseParent) Run(args RunArgs) error {
-	currentBranch, err := args.Runner.Backend.CurrentBranch()
-	if err != nil {
-		return err
-	}
-	parent := args.Lineage.Parent(currentBranch)
+	parent := args.Lineage.Parent(step.CurrentBranch)
 	return args.Runner.Frontend.Rebase(parent.BranchName())
 }
