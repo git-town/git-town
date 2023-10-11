@@ -1,8 +1,6 @@
 package step
 
-import (
-	"github.com/git-town/git-town/v9/src/domain"
-)
+import "github.com/git-town/git-town/v9/src/domain"
 
 // MergeParent merges the current parent of the current branch into the current branch.
 type MergeParent struct {
