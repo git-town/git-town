@@ -170,6 +170,7 @@ func appendSteps(config *appendConfig, backend *git.BackendCommands) steps.List 
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
+			backend:            backend,
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,

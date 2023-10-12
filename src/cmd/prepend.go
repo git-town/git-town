@@ -169,6 +169,7 @@ func prependSteps(config *prependConfig, backend *git.BackendCommands) steps.Lis
 	list := steps.List{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
+			backend:            backend,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,

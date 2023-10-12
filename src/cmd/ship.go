@@ -302,6 +302,7 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 	list := steps.List{}
 	// sync the parent branch
 	syncBranchSteps(config.targetBranch, syncBranchStepsArgs{
+		backend:            backend,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
@@ -316,6 +317,7 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 	})
 	// sync the branch to ship (local sync only)
 	syncBranchSteps(config.branchToShip, syncBranchStepsArgs{
+		backend:            backend,
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,

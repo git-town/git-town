@@ -205,6 +205,7 @@ func newPullRequestSteps(config *newPullRequestConfig, backend *git.BackendComma
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
+			backend:            backend,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,

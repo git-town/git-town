@@ -136,6 +136,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend *git.BackendCommand
 		if !parent.IsEmpty() {
 			parentInfo := config.branches.All.FindByLocalName(parent)
 			syncBranchSteps(*parentInfo, syncBranchStepsArgs{
+				backend:            backend,
 				branchTypes:        config.branches.Types,
 				remotes:            config.remotes,
 				isOffline:          config.isOffline,
