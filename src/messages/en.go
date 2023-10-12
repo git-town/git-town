@@ -99,6 +99,7 @@ const (
 	SquashCannotReadFile              = "cannot read squash message file %q: %w"
 	SquashCommitAuthorProblem         = "error getting squash commit author: %w"
 	SquashMessageProblem              = "cannot comment out the squash commit message: %w"
+	SyncStatusNotRecognized           = "cannot determine the sync status for Git remote %q and branch name %q"
 	UndoCreateStepProblem             = "cannot create undo step for %q: %w"
 	UndoNothingToDo                   = "nothing to undo"
 )
