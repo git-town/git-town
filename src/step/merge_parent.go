@@ -22,7 +22,7 @@ func (step *MergeParent) CreateContinueSteps() []Step {
 
 func (step *MergeParent) Run(args RunArgs) error {
 	parent := args.Lineage.Parent(step.CurrentBranch)
-	if parent.IsEmpty() || parent == step.CurrentBranch {
+	if parent.IsEmpty() {
 		return nil
 	}
 	return args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())

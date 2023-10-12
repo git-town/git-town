@@ -22,7 +22,7 @@ func (step *RebaseParent) CreateContinueSteps() []Step {
 
 func (step *RebaseParent) Run(args RunArgs) error {
 	parent := args.Lineage.Parent(step.CurrentBranch)
-	if parent.IsEmpty() || parent == step.CurrentBranch {
+	if parent.IsEmpty() {
 		return nil
 	}
 	return args.Runner.Frontend.Rebase(parent.BranchName())
