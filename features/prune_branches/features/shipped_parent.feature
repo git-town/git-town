@@ -21,6 +21,10 @@ Feature: a parent branch of a local branch was shipped
       |        | git checkout main        |
       | main   | git branch -d parent     |
       |        | git checkout child       |
+    And it prints:
+      """
+      deleted branch "parent"
+      """
     And the current branch is still "child"
     And the branches are now
       | REPOSITORY    | BRANCHES    |

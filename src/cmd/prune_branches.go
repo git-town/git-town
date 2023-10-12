@@ -159,9 +159,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())
 			},
 			TrueSteps: []step.Step{
-				&step.QueueMessage{
-					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote),
-				},
+				&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote)},
 			},
 			FalseSteps: []step.Step{
 				&step.Checkout{Branch: parent},
@@ -170,10 +168,9 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 					Force:  false,
 					Parent: parent.Location(),
 				},
-				&step.RemoveBranchFromLineage{
-					Branch: branchWithDeletedRemote,
-				},
+				&step.RemoveBranchFromLineage{Branch: branchWithDeletedRemote},
 				&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote},
+				&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branchWithDeletedRemote)},
 			},
 		})
 	}
