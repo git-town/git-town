@@ -1,6 +1,8 @@
 package step
 
-import "github.com/git-town/git-town/v9/src/domain"
+import (
+	"github.com/git-town/git-town/v9/src/domain"
+)
 
 // Checkout checks out a new branch.
 type Checkout struct {
@@ -16,6 +18,5 @@ func (step *Checkout) Run(args RunArgs) error {
 	if existingBranch == step.Branch {
 		return nil
 	}
-	err = args.Runner.Frontend.CheckoutBranch(step.Branch)
-	return err
+	return args.Runner.Frontend.CheckoutBranch(step.Branch)
 }
