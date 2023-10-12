@@ -28,6 +28,5 @@ func (step *MergeParent) Run(args RunArgs) error {
 	if parent == step.CurrentBranch {
 		return nil
 	}
-	err := args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
-	return err
+	return args.Runner.Frontend.MergeBranchNoEdit(parent.BranchName())
 }
