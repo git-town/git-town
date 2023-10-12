@@ -308,11 +308,9 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 		lineage:            config.lineage,
 		list:               &list,
 		mainBranch:         config.mainBranch,
-		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         true,
 		pushHook:           config.pushHook,
-		shouldPushTags:     false,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
@@ -324,11 +322,9 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 		lineage:            config.lineage,
 		list:               &list,
 		mainBranch:         config.mainBranch,
-		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         false,
 		pushHook:           config.pushHook,
-		shouldPushTags:     false,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})

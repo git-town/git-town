@@ -74,6 +74,7 @@ func executeSync(all, dryRun, debug bool) error {
 	runSteps := steps.List{}
 	syncBranchesSteps(syncBranchesStepsArgs{
 		syncBranchStepsArgs: syncBranchStepsArgs{
+			backend:            &repo.Runner.Backend,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
@@ -271,12 +272,10 @@ type syncBranchStepsArgs struct {
 	lineage            config.Lineage
 	list               *steps.List
 	mainBranch         domain.LocalBranchName
-	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
 	pushHook           bool
 	remotes            domain.Remotes
-	shouldPushTags     bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }

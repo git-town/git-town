@@ -176,11 +176,9 @@ func appendSteps(config *appendConfig, backend *git.BackendCommands) steps.List 
 			list:               &list,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
-			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
-			shouldPushTags:     config.shouldPushTags,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

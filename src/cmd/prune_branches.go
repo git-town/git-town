@@ -142,11 +142,9 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend *git.BackendCommand
 				lineage:            config.lineage,
 				list:               &list,
 				mainBranch:         config.mainBranch,
-				previousBranch:     config.previousBranch,
 				pullBranchStrategy: config.pullBranchStrategy,
 				pushBranch:         true,
 				pushHook:           config.pushHook,
-				shouldPushTags:     false,
 				shouldSyncUpstream: config.shouldSyncUpstream,
 				syncStrategy:       config.syncStrategy,
 			})

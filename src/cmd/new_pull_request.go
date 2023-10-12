@@ -211,11 +211,9 @@ func newPullRequestSteps(config *newPullRequestConfig, backend *git.BackendComma
 			lineage:            config.lineage,
 			list:               &list,
 			mainBranch:         config.mainBranch,
-			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
-			shouldPushTags:     config.pushTags,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

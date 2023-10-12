@@ -175,11 +175,9 @@ func prependSteps(config *prependConfig, backend *git.BackendCommands) steps.Lis
 			lineage:            config.lineage,
 			list:               &list,
 			mainBranch:         config.mainBranch,
-			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
-			shouldPushTags:     false,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
