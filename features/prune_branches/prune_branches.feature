@@ -1,4 +1,4 @@
-Feature: delete branches that were shipped or removed on another machine
+Feature: prune branches that were shipped or removed on another machine
 
   Background:
     Given the feature branches "active" and "old"
