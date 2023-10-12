@@ -113,7 +113,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 			have, err := runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
-			must.True(t, have)
+			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
 				Message:     "commit 3",
@@ -122,7 +122,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 			have, err = runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
-			must.True(t, have)
+			must.True(t, have, must.Sprint("branch with commits that make no changes"))
 		})
 	})
 
