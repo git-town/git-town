@@ -1,4 +1,4 @@
-Feature: delete branches that were shipped or removed on another machine
+Feature: prune branches that were shipped or removed on another machine
 
   Background:
     Given the feature branches "active" and "old"
@@ -19,7 +19,10 @@ Feature: delete branches that were shipped or removed on another machine
       |        | git stash                |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
-      |        | git branch -d old        |
+      |        | git checkout old         |
+      | old    | git merge --no-edit main |
+      |        | git checkout main        |
+      | main   | git branch -d old        |
       |        | git stash pop            |
     And the current branch is now "main"
     And the uncommitted file still exists
