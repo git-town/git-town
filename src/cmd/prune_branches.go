@@ -56,7 +56,7 @@ func executePruneBranches(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prune-branches",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            pruneBranchesSteps(config, repo.Runner.Backend),
+		RunSteps:            pruneBranchesSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -129,7 +129,7 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 	}, branchesSnapshot, stashSnapshot, exit, fc.Err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands) steps.List {
+func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 	list := steps.List{}
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
 		parent := config.lineage.Parent(branchWithDeletedRemote)
@@ -155,7 +155,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 		list.Add(&step.Checkout{Branch: branchWithDeletedRemote})
 		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
 		list.Add(&step.IfElse{
-			Condition: func() (bool, error) {
+			Condition: func(backend *git.BackendCommands) (bool, error) {
 				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())
 			},
 			TrueSteps: []step.Step{
