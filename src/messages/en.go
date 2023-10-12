@@ -8,6 +8,7 @@ const (
 	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchCheckoutProblem             = "cannot check out branch %q: %w"
 	BranchCurrentProblem              = "cannot determine current branch: %w"
+	BranchDeleted                     = "deleted branch %q"
 	BranchDeletedHasUnmergedChanges   = "Branch %q was deleted at the remote but the local branch contains unshipped changes.\nI am therefore not removing this branch. You can see the unshipped changes by running \"git town diff-parent\"."
 	BranchDiffProblem                 = "cannot determine if branch %q has unmerged commits: %w"
 	BranchDoesntContainCommit         = "branch %q does not contain commit %q. Found commits %s"

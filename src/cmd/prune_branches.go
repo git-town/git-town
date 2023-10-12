@@ -174,6 +174,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 					Branch: branchWithDeletedRemote,
 				},
 				&step.RemoveFromPerennialBranches{Branch: branchWithDeletedRemote},
+				&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branchWithDeletedRemote)},
 			},
 		})
 	}
