@@ -208,12 +208,13 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 func syncBranchesSteps(config *syncConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
+		syncBranchSteps(syncBranchStepsArgs{
 			branch:             branch,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -237,26 +238,26 @@ func syncBranchesSteps(config *syncConfig) steps.List {
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(list *steps.List, args syncBranchStepsArgs) {
+func syncBranchSteps(args syncBranchStepsArgs) {
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&step.Checkout{Branch: args.branch.LocalName})
+	args.list.Add(&step.Checkout{Branch: args.branch.LocalName})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, args.branch, args.syncStrategy)
+		syncFeatureBranchSteps(args.list, args.branch, args.syncStrategy)
 	} else {
-		syncPerennialBranchSteps(list, args)
+		syncPerennialBranchSteps(args.list, args)
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
 		case !args.branch.HasTrackingBranch():
-			list.Add(&step.CreateTrackingBranch{Branch: args.branch.LocalName, NoPushHook: !args.pushHook})
+			args.list.Add(&step.CreateTrackingBranch{Branch: args.branch.LocalName, NoPushHook: !args.pushHook})
 		case !isFeatureBranch:
-			list.Add(&step.PushCurrentBranch{CurrentBranch: args.branch.LocalName, NoPushHook: !args.pushHook})
+			args.list.Add(&step.PushCurrentBranch{CurrentBranch: args.branch.LocalName, NoPushHook: !args.pushHook})
 		default:
-			pushFeatureBranchSteps(list, args.branch.LocalName, args.syncStrategy, args.pushHook)
+			pushFeatureBranchSteps(args.list, args.branch.LocalName, args.syncStrategy, args.pushHook)
 		}
 	}
 }
@@ -266,6 +267,7 @@ type syncBranchStepsArgs struct {
 	branchTypes        domain.BranchTypes
 	isOffline          bool
 	lineage            config.Lineage
+	list               *steps.List
 	mainBranch         domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
