@@ -165,12 +165,12 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
-	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
+	syncBranchesSteps(syncBranchesStepsArgs{
+		syncBranchStepsArgs: syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
@@ -178,8 +178,13 @@ func appendSteps(config *appendConfig) steps.List {
 			pushHook:           config.pushHook,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
-		})
-	}
+		},
+		branchesToSync: config.branchesToSync,
+		hasOpenChanges: config.hasOpenChanges,
+		initialBranch:  config.branches.Initial,
+		previousBranch: config.previousBranch,
+		shouldPushTags: false,
+	})
 	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
 	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})

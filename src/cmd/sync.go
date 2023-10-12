@@ -69,10 +69,31 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
+	runSteps := steps.List{}
+	syncBranchesSteps(syncBranchesStepsArgs{
+		syncBranchStepsArgs: syncBranchStepsArgs{
+			branchTypes:        config.branches.Types,
+			remotes:            config.remotes,
+			isOffline:          config.isOffline,
+			lineage:            config.lineage,
+			list:               &runSteps,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			shouldSyncUpstream: config.shouldSyncUpstream,
+			syncStrategy:       config.syncStrategy,
+		},
+		branchesToSync: config.branchesToSync,
+		hasOpenChanges: config.hasOpenChanges,
+		initialBranch:  config.branches.Initial,
+		previousBranch: config.previousBranch,
+		shouldPushTags: config.shouldPushTags,
+	})
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            syncBranchesSteps(config),
+		RunSteps:            runSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -205,65 +226,58 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig) steps.List {
-	list := steps.List{}
-	for _, branch := range config.branchesToSync {
-		syncBranchSteps(syncBranchStepsArgs{
-			branch:             branch,
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			list:               &list,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
-		})
+func syncBranchesSteps(args syncBranchesStepsArgs) {
+	for _, branch := range args.branchesToSync {
+		syncBranchSteps(branch, args.syncBranchStepsArgs)
 	}
-	list.Add(&step.Checkout{Branch: config.branches.Initial})
-	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
-		list.Add(&step.PushTags{})
+	args.list.Add(&step.Checkout{Branch: args.initialBranch})
+	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
+		args.list.Add(&step.PushTags{})
 	}
-	list.Wrap(steps.WrapOptions{
+	args.list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
-		PreviousBranch:   config.previousBranch,
+		StashOpenChanges: args.hasOpenChanges,
+		MainBranch:       args.mainBranch,
+		InitialBranch:    args.initialBranch,
+		PreviousBranch:   args.previousBranch,
 	})
-	return list
+}
+
+type syncBranchesStepsArgs struct {
+	syncBranchStepsArgs
+	branchesToSync domain.BranchInfos
+	hasOpenChanges bool
+	initialBranch  domain.LocalBranchName
+	previousBranch domain.LocalBranchName
+	shouldPushTags bool
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(args syncBranchStepsArgs) {
-	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.LocalName)
+func syncBranchSteps(branch domain.BranchInfo, args syncBranchStepsArgs) {
+	isFeatureBranch := args.branchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	args.list.Add(&step.Checkout{Branch: args.branch.LocalName})
+	args.list.Add(&step.Checkout{Branch: branch.LocalName})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(args.list, args.branch, args.syncStrategy)
+		syncFeatureBranchSteps(args.list, branch, args.syncStrategy)
 	} else {
-		syncPerennialBranchSteps(args.list, args)
+		syncPerennialBranchSteps(branch, args)
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
-		case !args.branch.HasTrackingBranch():
-			args.list.Add(&step.CreateTrackingBranch{Branch: args.branch.LocalName, NoPushHook: !args.pushHook})
+		case !branch.HasTrackingBranch():
+			args.list.Add(&step.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: !args.pushHook})
 		case !isFeatureBranch:
-			args.list.Add(&step.PushCurrentBranch{CurrentBranch: args.branch.LocalName, NoPushHook: !args.pushHook})
+			args.list.Add(&step.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: !args.pushHook})
 		default:
-			pushFeatureBranchSteps(args.list, args.branch.LocalName, args.syncStrategy, args.pushHook)
+			pushFeatureBranchSteps(args.list, branch.LocalName, args.syncStrategy, args.pushHook)
 		}
 	}
 }
 
 type syncBranchStepsArgs struct {
-	branch             domain.BranchInfo
 	branchTypes        domain.BranchTypes
 	isOffline          bool
 	lineage            config.Lineage
@@ -286,13 +300,13 @@ func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, syncStra
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
-func syncPerennialBranchSteps(list *steps.List, args syncBranchStepsArgs) {
-	if args.branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
+func syncPerennialBranchSteps(branch domain.BranchInfo, args syncBranchStepsArgs) {
+	if branch.HasTrackingBranch() {
+		updateCurrentPerennialBranchStep(args.list, branch.RemoteName, args.pullBranchStrategy)
 	}
-	if args.branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
-		list.Add(&step.FetchUpstream{Branch: args.mainBranch})
-		list.Add(&step.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
+	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
+		args.list.Add(&step.FetchUpstream{Branch: args.mainBranch})
+		args.list.Add(&step.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
 }
 
