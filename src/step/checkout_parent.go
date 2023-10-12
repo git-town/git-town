@@ -10,7 +10,7 @@ type CheckoutParent struct {
 
 func (step *CheckoutParent) Run(args RunArgs) error {
 	parent := args.Lineage.Parent(step.CurrentBranch)
-	if step.CurrentBranch == parent {
+	if parent.IsEmpty() || parent == step.CurrentBranch {
 		return nil
 	}
 	return args.Runner.Frontend.CheckoutBranch(parent)
