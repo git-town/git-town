@@ -201,12 +201,12 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 func newPullRequestSteps(config *newPullRequestConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
+		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,

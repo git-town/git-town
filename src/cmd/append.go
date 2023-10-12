@@ -166,11 +166,11 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
+		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
