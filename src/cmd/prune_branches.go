@@ -152,6 +152,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 		if parent.IsEmpty() {
 			parent = config.mainBranch
 		}
+		list.Add(&step.Checkout{Branch: branchWithDeletedRemote})
 		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
 		list.Add(&step.IfElse{
 			Condition: func(backend *git.BackendCommands) (bool, error) {
