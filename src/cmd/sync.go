@@ -233,7 +233,7 @@ func syncBranchesSteps(args syncBranchesStepsArgs) {
 	for _, branch := range args.branchesToSync {
 		syncBranchSteps(branch, args.syncBranchStepsArgs)
 	}
-	list.Add(&step.CheckoutIfExists{Branch: args.branches.Initial})
+	args.list.Add(&step.CheckoutIfExists{Branch: args.branches.Initial})
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
 		args.list.Add(&step.PushTags{})
 	}
