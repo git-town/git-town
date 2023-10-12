@@ -100,7 +100,6 @@ type newPullRequestConfig struct {
 	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
-	pushTags           bool
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }
@@ -194,7 +193,6 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 		previousBranch:     previousBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
-		pushTags:           false,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
