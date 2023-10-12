@@ -261,6 +261,7 @@ type syncBranchStepsArgs struct {
 	hasUpstream        bool
 	isOffline          bool
 	lineage            config.Lineage
+	list               *steps.List
 	mainBranch         domain.LocalBranchName
 	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
