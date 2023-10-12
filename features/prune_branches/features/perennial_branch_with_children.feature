@@ -15,6 +15,10 @@ Feature: remove parent info of children of pruned perennial branches
       | old    | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -d old        |
+    And it prints:
+      """
+      deleted branch "old"
+      """
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES                        |
