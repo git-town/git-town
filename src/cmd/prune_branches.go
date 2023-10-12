@@ -153,7 +153,7 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend git.BackendCommands
 			parent = config.mainBranch
 		}
 		list.Add(&step.Checkout{Branch: branchWithDeletedRemote})
-		pullParentBranchOfCurrentFeatureBranchStep(&list, config.syncStrategy)
+		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
 		list.Add(&step.IfElse{
 			Condition: func() (bool, error) {
 				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent.Location())
