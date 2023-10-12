@@ -15,6 +15,10 @@ Feature: remove perennial branch configuration when pruning a perennial branch
       | old    | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -d old        |
+    And it prints:
+      """
+      deleted branch "old"
+      """
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES     |

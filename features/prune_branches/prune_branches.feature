@@ -24,6 +24,10 @@ Feature: prune branches that were shipped or removed on another machine
       |        | git checkout main        |
       | main   | git branch -d old        |
       |        | git stash pop            |
+    And it prints:
+      """
+      deleted branch "old"
+      """
     And the current branch is now "main"
     And the uncommitted file still exists
     And the branches are now
