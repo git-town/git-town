@@ -27,7 +27,10 @@ Feature: display debug statistics
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
+      | main   | frontend | git checkout old                              |
+      | old    | frontend | git merge --no-edit main                      |
       |        | backend  | git diff main..old                            |
+      | old    | frontend | git checkout main                             |
       |        | backend  | git log main..old                             |
       | main   | frontend | git branch -d old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
@@ -44,7 +47,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 32 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
