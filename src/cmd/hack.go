@@ -143,7 +143,6 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
 		isOffline:           isOffline,
-		shouldPushTags:      false,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err

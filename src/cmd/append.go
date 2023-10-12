@@ -90,7 +90,6 @@ type appendConfig struct {
 	previousBranch      domain.LocalBranchName
 	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
-	shouldPushTags      bool
 	shouldSyncUpstream  bool
 	syncStrategy        config.SyncStrategy
 	targetBranch        domain.LocalBranchName
@@ -158,7 +157,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
-		shouldPushTags:      false,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
