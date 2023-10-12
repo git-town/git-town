@@ -138,8 +138,6 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend *git.BackendCommand
 			syncBranchSteps(*parentInfo, syncBranchStepsArgs{
 				branchTypes:        config.branches.Types,
 				remotes:            config.remotes,
-				hasOpenChanges:     config.hasOpenChanges,
-				hasUpstream:        config.remotes.HasUpstream(),
 				isOffline:          config.isOffline,
 				lineage:            config.lineage,
 				list:               &list,

@@ -304,8 +304,6 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 	syncBranchSteps(config.targetBranch, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
-		hasOpenChanges:     config.hasOpenChanges,
-		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		list:               &list,
@@ -322,8 +320,6 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 	syncBranchSteps(config.branchToShip, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
-		hasOpenChanges:     config.hasOpenChanges,
-		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		list:               &list,

@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
@@ -233,7 +234,7 @@ func syncBranchesSteps(args syncBranchesStepsArgs) {
 	for _, branch := range args.branchesToSync {
 		syncBranchSteps(branch, args.syncBranchStepsArgs)
 	}
-	args.list.Add(&step.CheckoutIfExists{Branch: args.branches.Initial})
+	args.list.Add(&step.CheckoutIfExists{Branch: args.initialBranch})
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
 		args.list.Add(&step.PushTags{})
 	}
@@ -255,15 +256,16 @@ type syncBranchesStepsArgs struct {
 	shouldPushTags bool
 }
 
-func syncBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
+func syncBranchSteps(branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-		syncDeletedBranchSteps(list, branch, args)
+		syncDeletedBranchSteps(args.list, branch, args)
 	} else {
-		syncNonDeletedBranchSteps(list, branch, args)
+		syncNonDeletedBranchSteps(args.list, branch, args)
 	}
 }
 
 type syncBranchStepsArgs struct {
+	backend            *git.BackendCommands
 	branchTypes        domain.BranchTypes
 	isOffline          bool
 	lineage            config.Lineage
@@ -347,7 +349,7 @@ func syncNonDeletedBranchSteps(list *steps.List, branch domain.BranchInfo, args 
 	if isFeatureBranch {
 		syncFeatureBranchSteps(list, branch, args.syncStrategy)
 	} else {
-		syncPerennialBranchSteps(list, branch, args)
+		syncPerennialBranchSteps(branch, args)
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {

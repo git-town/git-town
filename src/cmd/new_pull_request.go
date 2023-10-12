@@ -207,8 +207,6 @@ func newPullRequestSteps(config *newPullRequestConfig, backend *git.BackendComma
 		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
-			hasOpenChanges:     config.hasOpenChanges,
-			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			list:               &list,

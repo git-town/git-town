@@ -171,8 +171,6 @@ func prependSteps(config *prependConfig, backend *git.BackendCommands) steps.Lis
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
-			hasOpenChanges:     config.hasOpenChanges,
-			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			list:               &list,
