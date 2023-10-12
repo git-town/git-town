@@ -42,7 +42,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("BranchHasUnmergedChanges", func(t *testing.T) {
 		t.Parallel()
-		t.Run("empty branch", func(t *testing.T) {
+		t.Run("branch without commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch := domain.NewLocalBranchName("branch")
@@ -51,7 +51,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.False(t, have)
 		})
-		t.Run("branch with commits but no changes", func(t *testing.T) {
+		t.Run("branch with commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
@@ -85,7 +85,7 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("BranchHasUnmergedCommits", func(t *testing.T) {
 		t.Parallel()
-		t.Run("empty branch", func(t *testing.T) {
+		t.Run("branch without commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			branch := domain.NewLocalBranchName("branch")
@@ -94,7 +94,7 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.False(t, have)
 		})
-		t.Run("branch with commits but no changes", func(t *testing.T) {
+		t.Run("branch with commits", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
