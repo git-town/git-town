@@ -134,15 +134,14 @@ func pruneBranchesSteps(config *pruneBranchesConfig, backend *git.BackendCommand
 	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
 		parent := config.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
-			syncNonDeletedBranchSteps(&list, *config.branches.All.FindByLocalName(parent), syncBranchStepsArgs{
-				backend:            backend,
-				branches:           config.branches,
+			syncBranchSteps(*config.branches.All.FindByLocalName(parent), syncBranchStepsArgs{
 				branchTypes:        config.branches.Types,
 				remotes:            config.remotes,
 				hasOpenChanges:     config.hasOpenChanges,
 				hasUpstream:        config.remotes.HasUpstream(),
 				isOffline:          config.isOffline,
 				lineage:            config.lineage,
+				list:               &list,
 				mainBranch:         config.mainBranch,
 				previousBranch:     config.previousBranch,
 				pullBranchStrategy: config.pullBranchStrategy,

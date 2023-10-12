@@ -169,14 +169,13 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 func appendSteps(config *appendConfig, backend *git.BackendCommands) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, branch, syncBranchStepsArgs{
-			backend:            backend,
-			branches:           config.branches,
+		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			hasOpenChanges:     config.hasOpenChanges,
 			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			previousBranch:     config.previousBranch,

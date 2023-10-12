@@ -301,15 +301,14 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCommands) steps.List {
 	list := steps.List{}
 	// sync the parent branch
-	syncNonDeletedBranchSteps(&list, config.targetBranch, syncBranchStepsArgs{
-		backend:            backend,
-		branches:           config.branches,
+	syncBranchSteps(config.targetBranch, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		hasOpenChanges:     config.hasOpenChanges,
 		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
+		list:               &list,
 		mainBranch:         config.mainBranch,
 		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
@@ -320,15 +319,14 @@ func shipSteps(config *shipConfig, commitMessage string, backend *git.BackendCom
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
-	syncNonDeletedBranchSteps(&list, config.branchToShip, syncBranchStepsArgs{
-		backend:            backend,
-		branches:           config.branches,
+	syncBranchSteps(config.branchToShip, syncBranchStepsArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		hasOpenChanges:     config.hasOpenChanges,
 		hasUpstream:        config.remotes.HasUpstream(),
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
+		list:               &list,
 		mainBranch:         config.mainBranch,
 		previousBranch:     config.previousBranch,
 		pullBranchStrategy: config.pullBranchStrategy,

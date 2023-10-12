@@ -204,15 +204,14 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 func newPullRequestSteps(config *newPullRequestConfig, backend *git.BackendCommands) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
-		syncNonDeletedBranchSteps(&list, branch, syncBranchStepsArgs{
-			backend:            backend,
-			branches:           config.branches,
+		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			hasOpenChanges:     config.hasOpenChanges,
 			hasUpstream:        config.remotes.HasUpstream(),
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
+			list:               &list,
 			mainBranch:         config.mainBranch,
 			previousBranch:     config.previousBranch,
 			pullBranchStrategy: config.pullBranchStrategy,

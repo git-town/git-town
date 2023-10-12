@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
@@ -71,27 +70,31 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
+	runSteps := steps.List{}
+	syncBranchesSteps(syncBranchesStepsArgs{
+		syncBranchStepsArgs: syncBranchStepsArgs{
+			branchTypes:        config.branches.Types,
+			remotes:            config.remotes,
+			isOffline:          config.isOffline,
+			lineage:            config.lineage,
+			list:               &runSteps,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			shouldSyncUpstream: config.shouldSyncUpstream,
+			syncStrategy:       config.syncStrategy,
+		},
+		branchesToSync: config.branchesToSync,
+		hasOpenChanges: config.hasOpenChanges,
+		initialBranch:  config.branches.Initial,
+		previousBranch: config.previousBranch,
+		shouldPushTags: config.shouldPushTags,
+	})
 	runState := runstate.RunState{
 		Command:             "sync",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps: syncBranchesSteps(config.branchesToSync, syncBranchStepsArgs{
-			backend:            &repo.Runner.Backend,
-			branches:           config.branches,
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			hasOpenChanges:     config.hasOpenChanges,
-			hasUpstream:        config.remotes.HasUpstream(),
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			mainBranch:         config.mainBranch,
-			previousBranch:     config.previousBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         config.pushBranch,
-			pushHook:           config.pushHook,
-			shouldPushTags:     config.shouldPushTags,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
-		}),
+		RunSteps:            runSteps,
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -226,23 +229,30 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(branchesToSync domain.BranchInfos, args syncBranchStepsArgs) steps.List {
-	list := steps.List{}
-	for _, branch := range branchesToSync {
-		syncBranchSteps(&list, branch, args)
+func syncBranchesSteps(args syncBranchesStepsArgs) {
+	for _, branch := range args.branchesToSync {
+		syncBranchSteps(branch, args.syncBranchStepsArgs)
 	}
 	list.Add(&step.CheckoutIfExists{Branch: args.branches.Initial})
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
-		list.Add(&step.PushTags{})
+		args.list.Add(&step.PushTags{})
 	}
-	list.Wrap(steps.WrapOptions{
+	args.list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: args.hasOpenChanges,
 		MainBranch:       args.mainBranch,
-		InitialBranch:    args.branches.Initial,
+		InitialBranch:    args.initialBranch,
 		PreviousBranch:   args.previousBranch,
 	})
-	return list
+}
+
+type syncBranchesStepsArgs struct {
+	syncBranchStepsArgs
+	branchesToSync domain.BranchInfos
+	hasOpenChanges bool
+	initialBranch  domain.LocalBranchName
+	previousBranch domain.LocalBranchName
+	shouldPushTags bool
 }
 
 func syncBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
@@ -254,11 +264,7 @@ func syncBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranch
 }
 
 type syncBranchStepsArgs struct {
-	backend            *git.BackendCommands
-	branches           domain.Branches
-	branchTypes        domain.BranchTypes // TODO: branches already contains this
-	hasOpenChanges     bool
-	hasUpstream        bool
+	branchTypes        domain.BranchTypes
 	isOffline          bool
 	lineage            config.Lineage
 	list               *steps.List
@@ -364,13 +370,13 @@ func syncFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, syncStra
 }
 
 // syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
-func syncPerennialBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
+func syncPerennialBranchSteps(branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, branch.RemoteName, args.pullBranchStrategy)
+		updateCurrentPerennialBranchStep(args.list, branch.RemoteName, args.pullBranchStrategy)
 	}
-	if branch.LocalName == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
-		list.Add(&step.FetchUpstream{Branch: args.mainBranch})
-		list.Add(&step.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
+	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
+		args.list.Add(&step.FetchUpstream{Branch: args.mainBranch})
+		args.list.Add(&step.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
 }
 
