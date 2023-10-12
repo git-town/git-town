@@ -1,4 +1,4 @@
-Feature: remove parent info of children of deleted perennial branches
+Feature: remove parent info of children of pruned perennial branches
 
   Background:
     Given the perennial branches "old" and "other"
