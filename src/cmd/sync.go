@@ -120,7 +120,6 @@ type syncConfig struct {
 	mainBranch         domain.LocalBranchName
 	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
-	pushBranch         bool // TODO: is this used?
 	pushHook           bool
 	remotes            domain.Remotes
 	shouldPushTags     bool
@@ -221,7 +220,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 		mainBranch:         mainBranch,
 		previousBranch:     previousBranch,
 		pullBranchStrategy: pullBranchStrategy,
-		pushBranch:         true,
 		pushHook:           pushHook,
 		shouldPushTags:     shouldPushTags,
 		shouldSyncUpstream: shouldSyncUpstream,
