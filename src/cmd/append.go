@@ -180,7 +180,8 @@ func appendSteps(config *appendConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
+	// use the first existing ancestor here since the parent might be deleted at this point
+	list.Add(&step.CreateBranchExistingParent{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {

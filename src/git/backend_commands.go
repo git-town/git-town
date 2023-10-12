@@ -62,8 +62,8 @@ func (bcs *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName)
 	return result, nil
 }
 
-func (bcs *BackendCommands) BranchExists(name string) bool {
-	err := bcs.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+name)
+func (bcs *BackendCommands) BranchExists(branch domain.LocalBranchName) bool {
+	err := bcs.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
 	return err == nil
 }
 
@@ -356,6 +356,15 @@ func (bcs *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviously
 		return initialPreviouslyCheckedOutBranch, nil
 	}
 	return mainBranch, nil
+}
+
+func (bcs *BackendCommands) FirstExistingBranch(branches domain.LocalBranchNames, mainBranch domain.LocalBranchName) domain.LocalBranchName {
+	for _, branch := range branches {
+		if bcs.BranchExists(branch) {
+			return branch
+		}
+	}
+	return mainBranch
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
