@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/runvm"
@@ -73,7 +72,7 @@ func executeNewPullRequest(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            newPullRequestSteps(config, &repo.Runner.Backend),
+		RunSteps:            newPullRequestSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -201,11 +200,10 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestSteps(config *newPullRequestConfig, backend *git.BackendCommands) steps.List {
+func newPullRequestSteps(config *newPullRequestConfig) steps.List {
 	list := steps.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
-			backend:            backend,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,

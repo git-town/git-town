@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -65,7 +64,7 @@ func executePrepend(args []string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prepend",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            prependSteps(config, &repo.Runner.Backend),
+		RunSteps:            prependSteps(config),
 	}
 	return runvm.Execute(runvm.ExecuteArgs{
 		RunState:                &runState,
@@ -165,11 +164,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependSteps(config *prependConfig, backend *git.BackendCommands) steps.List {
+func prependSteps(config *prependConfig) steps.List {
 	list := steps.List{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
-			backend:            backend,
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
