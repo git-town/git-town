@@ -20,7 +20,8 @@ Feature: prune a shipped branch with additional unshipped local changes
       |         | git checkout main        |
       | main    | git rebase origin/main   |
       |         | git checkout shipped     |
-      | shipped | git stash pop            |
+      | shipped | git merge --no-edit main |
+      |         | git stash pop            |
     And it prints:
       """
       Branch "shipped" was deleted at the remote but the local branch contains unshipped changes.

@@ -20,7 +20,8 @@ Feature: prune a branch with unmerged commits whose tracking branch was deleted
       |          | git checkout main        |
       | main     | git rebase origin/main   |
       |          | git checkout dead-end    |
-      | dead-end | git stash pop            |
+      | dead-end | git merge --no-edit main |
+      |          | git stash pop            |
     And it prints:
       """
       Branch "dead-end" was deleted at the remote but the local branch contains unshipped changes.
