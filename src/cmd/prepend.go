@@ -175,7 +175,6 @@ func prependSteps(config *prependConfig) steps.List {
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			list:               &list,
@@ -183,6 +182,7 @@ func prependSteps(config *prependConfig) steps.List {
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
+			remotes:            config.remotes,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
