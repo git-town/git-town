@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO: extract strings like these into en.go.
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
