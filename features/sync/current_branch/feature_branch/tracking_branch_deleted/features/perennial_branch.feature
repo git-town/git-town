@@ -1,11 +1,10 @@
-Feature: sync perennial branch whose tracking branch is gone
+Feature: sync perennial branch that was deleted at the remote
 
   Background:
-    Given the perennial branches "active" and "old"
-    And the commits
-      | BRANCH | LOCATION      | MESSAGE       |
-      | active | local, origin | active commit |
-      | old    | local, origin | old commit    |
+    Given the perennial branches "old" and "other"
+    And a feature branch "old1" as a child of "old"
+    And a feature branch "old2" as a child of "old"
+    And a feature branch "other1" as a child of "other"
     And origin deletes the "old" branch
     And the current branch is "old"
     When I run "git-town sync"
@@ -15,7 +14,7 @@ Feature: sync perennial branch whose tracking branch is gone
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
       |        | git checkout main        |
-      | main   | git branch -D old        |
+      | main   | git branch -d old        |
       |        | git push --tags          |
     And it prints:
       """
@@ -23,16 +22,21 @@ Feature: sync perennial branch whose tracking branch is gone
       """
     And the current branch is now "main"
     And the branches are now
-      | REPOSITORY    | BRANCHES     |
-      | local, origin | main, active |
-    And the perennial branches are now "active"
+      | REPOSITORY    | BRANCHES                        |
+      | local, origin | main, old1, old2, other, other1 |
+    And the perennial branches are now "other"
+    And this branch lineage exists now
+      | BRANCH | PARENT |
+      | old1   | main   |
+      | old2   | main   |
+      | other1 | other  |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
+      | BRANCH | COMMAND                                   |
+      | main   | git branch old {{ sha 'Initial commit' }} |
+      |        | git checkout old                          |
     And the current branch is now "old"
-    And the initial branches exist
-    And the perennial branches are now "active" and "old"
+    And the initial branches and hierarchy exist
+    And the perennial branches are now "old" and "other"
