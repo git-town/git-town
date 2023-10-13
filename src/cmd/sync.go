@@ -279,15 +279,15 @@ type syncBranchStepsArgs struct {
 // syncDeletedBranchSteps provides a program that syncs a branch that was deleted at origin.
 func syncDeletedBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
 	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
-		syncDeleteFeatureBranchSteps(list, branch, args)
+		syncDeletedFeatureBranchSteps(list, branch, args)
 	} else {
 		syncDeletedPerennialBranchSteps(list, branch, args)
 	}
 }
 
-// syncDeleteFeatureBranchSteps syncs a feare branch whose remote has been deleted.
+// syncDeletedFeatureBranchSteps syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeleteFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
+func syncDeletedFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
 	list.Add(&step.Checkout{Branch: branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, args.syncStrategy)
 	// determine whether the now synced local branch still contains unshipped changes

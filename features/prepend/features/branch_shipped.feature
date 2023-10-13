@@ -11,7 +11,6 @@ Feature: prepend a branch to a branch that was shipped at the remote
     And the current branch is "child"
     When I run "git-town prepend new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                           |
@@ -46,13 +45,13 @@ Feature: prepend a branch to a branch that was shipped at the remote
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | new    | git checkout child                          |
-      | child  | git reset --hard {{ sha 'child commit' }}   |
-      |        | git push --force-with-lease                 |
+      | new    | git checkout parent                         |
+      | parent | git reset --hard {{ sha 'parent commit' }}  |
+      |        | git push --force-with-lease --no-verify     |
       |        | git checkout main                           |
       | main   | git reset --hard {{ sha 'Initial commit' }} |
-      |        | git branch parent {{ sha 'parent commit' }} |
+      |        | git branch child {{ sha 'child commit' }}   |
       |        | git checkout child                          |
       | child  | git branch -D new                           |
-    And the current branch is still "child"
+    And the current branch is now "child"
     And the initial branches and hierarchy exist

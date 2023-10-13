@@ -19,8 +19,6 @@ func (step *RemoveBranchFromLineage) Run(args RunArgs) error {
 			}
 		}
 	}
-	// Ignoring errors removing the config here since the config entry might not exist,
-	// for example when removing perennial branches or branches with unknown ancestry.
 	args.Runner.Backend.Config.RemoveParent(step.Branch)
 	args.Lineage.RemoveBranch(step.Branch)
 	return nil
