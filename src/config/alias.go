@@ -15,7 +15,6 @@ var (
 	AliasKill           = Alias{"kill"}             //nolint:gochecknoglobals
 	AliasNewPullRequest = Alias{"new-pull-request"} //nolint:gochecknoglobals
 	AliasPrepend        = Alias{"prepend"}          //nolint:gochecknoglobals
-	AliasPruneBranches  = Alias{"prune-branches"}   //nolint:gochecknoglobals
 	AliasRenameBranch   = Alias{"rename-branch"}    //nolint:gochecknoglobals
 	AliasRepo           = Alias{"repo"}             //nolint:gochecknoglobals
 	AliasShip           = Alias{"ship"}             //nolint:gochecknoglobals
@@ -31,7 +30,6 @@ func Aliases() []Alias {
 		AliasKill,
 		AliasNewPullRequest,
 		AliasPrepend,
-		AliasPruneBranches,
 		AliasRenameBranch,
 		AliasRepo,
 		AliasShip,
