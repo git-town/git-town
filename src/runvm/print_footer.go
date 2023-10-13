@@ -16,5 +16,6 @@ func PrintFooter(debug bool, commandsCount int, finalMessages []string) {
 	}
 }
 
-// NoFinalMessages indicates that commands have no final messages to print.
+// NoFinalMessages can be used by callers of PrintFooter to indicate
+// that the command has no final messages to print.
 var NoFinalMessages = []string{} //nolint:gochecknoglobals
