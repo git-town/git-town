@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -166,6 +168,8 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
 	ancestors := config.lineage.Ancestors(config.targetBranch)
+	initialAndAncestors := config.lineage.BranchAndAncestors(config.branches.Initial)
+	slices.Reverse(initialAndAncestors)
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
@@ -187,7 +191,7 @@ func appendSteps(config *appendConfig) steps.List {
 		MainBranch:    config.mainBranch,
 		StartingPoint: config.parentBranch,
 	})
-	list.Add(&step.SetExistingParent{Branch: config.targetBranch, Ancestors: ancestors, MainBranch: config.mainBranch})
+	list.Add(&step.SetExistingParent{Branch: config.targetBranch, Ancestors: initialAndAncestors, MainBranch: config.mainBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
