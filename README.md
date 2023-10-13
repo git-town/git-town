@@ -36,8 +36,6 @@ Flow, and trunk-based development. Check out
 
 - [git kill](https://www.git-town.com/commands/kill.html) - remove a feature
   branch
-- [git prune-branches](https://www.git-town.com/commands/prune-branches.html) -
-  delete all merged branches
 - [git rename-branch](https://www.git-town.com/commands/rename-branch.html) -
   rename a branch
 - [git repo](https://www.git-town.com/commands/repo.html) - view the repository
