@@ -1,42 +1,42 @@
 Feature: sync perennial branch that was deleted at the remote
 
   Background:
-    Given the perennial branches "old" and "other"
-    And a feature branch "old1" as a child of "old"
-    And a feature branch "old2" as a child of "old"
-    And a feature branch "other1" as a child of "other"
-    And origin deletes the "old" branch
-    And the current branch is "old"
+    Given the perennial branches "feature-1" and "feature-2"
+    And a feature branch "feature-1a" as a child of "feature-1"
+    And a feature branch "feature-1b" as a child of "feature-1"
+    And a feature branch "feature-2a" as a child of "feature-2"
+    And origin deletes the "feature-1" branch
+    And the current branch is "feature-1"
     When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git branch -d old        |
-      |        | git push --tags          |
+      | BRANCH    | COMMAND                  |
+      | feature-1 | git fetch --prune --tags |
+      |           | git checkout main        |
+      | main      | git branch -d feature-1  |
+      |           | git push --tags          |
     And it prints:
       """
-      deleted branch "old"
+      deleted branch "feature-1"
       """
     And the current branch is now "main"
     And the branches are now
-      | REPOSITORY    | BRANCHES                        |
-      | local, origin | main, old1, old2, other, other1 |
-    And the perennial branches are now "other"
+      | REPOSITORY    | BRANCHES                                            |
+      | local, origin | main, feature-1a, feature-1b, feature-2, feature-2a |
+    And the perennial branches are now "feature-2"
     And this branch lineage exists now
-      | BRANCH | PARENT |
-      | old1   | main   |
-      | old2   | main   |
-      | other1 | other  |
+      | BRANCH     | PARENT    |
+      | feature-1a | main      |
+      | feature-1b | main      |
+      | feature-2a | feature-2 |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                   |
-      | main   | git branch old {{ sha 'Initial commit' }} |
-      |        | git checkout old                          |
-    And the current branch is now "old"
+      | BRANCH | COMMAND                                         |
+      | main   | git branch feature-1 {{ sha 'Initial commit' }} |
+      |        | git checkout feature-1                          |
+    And the current branch is now "feature-1"
     And the initial branches and hierarchy exist
-    And the perennial branches are now "old" and "other"
+    And the perennial branches are now "feature-1" and "feature-2"
