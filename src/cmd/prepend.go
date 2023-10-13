@@ -193,10 +193,16 @@ func prependSteps(config *prependConfig) steps.List {
 		MainBranch:    config.mainBranch,
 		StartingPoint: config.parentBranch,
 	})
+	// set the parent of the newly created branch
 	list.Add(&step.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
+	})
+	// set the parent of the branch prepended to
+	list.Add(&step.SetParentIfBranchExists{
+		Branch: config.branches.Initial,
+		Parent: config.targetBranch,
 	})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
