@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-func printFooter(debug bool, commandsCount int, finalMessages []string) {
+func PrintFooter(debug bool, commandsCount int, finalMessages []string) {
 	fmt.Println()
 	if debug {
 		fmt.Printf(messages.CommandsRun, commandsCount)
@@ -15,3 +15,6 @@ func printFooter(debug bool, commandsCount int, finalMessages []string) {
 		fmt.Println("\n" + message)
 	}
 }
+
+// NoFinalMessages indicates that commands have no final messages to print.
+var NoFinalMessages = []string{} //nolint:gochecknoglobals
