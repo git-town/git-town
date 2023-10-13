@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -59,9 +59,7 @@ func executeRepo(debug bool) error {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	if debug {
-		fmt.Printf(messages.CommandsRun, repo.Runner.CommandsCounter.Count())
-	}
+	runvm.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), runvm.NoFinalMessages)
 	return nil
 }
 
