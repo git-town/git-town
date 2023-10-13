@@ -1,8 +1,6 @@
 package step
 
-import (
-	"github.com/git-town/git-town/v9/src/domain"
-)
+import "github.com/git-town/git-town/v9/src/domain"
 
 // CreateBranchExistingParent cuts a new branch from the given starting point,
 // or if it doesn't exist its nearest existing ancestor.

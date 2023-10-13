@@ -165,6 +165,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
+	ancestors := config.lineage.Ancestors(config.targetBranch)
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
@@ -180,9 +181,13 @@ func appendSteps(config *appendConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	// use the first existing ancestor here since the parent might be deleted at this point
-	list.Add(&step.CreateBranchExistingParent{Branch: config.targetBranch, StartingPoint: config.parentBranch})
-	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
+	list.Add(&step.CreateBranchExistingParent{
+		Ancestors:     ancestors,
+		Branch:        config.targetBranch,
+		MainBranch:    config.mainBranch,
+		StartingPoint: config.parentBranch,
+	})
+	list.Add(&step.SetExistingParent{Branch: config.targetBranch, Ancestors: ancestors, MainBranch: config.mainBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})

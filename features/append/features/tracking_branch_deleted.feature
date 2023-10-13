@@ -10,7 +10,6 @@ Feature: append a branch to a branch whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town append new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -28,25 +27,30 @@ Feature: append a branch to a branch whose tracking branch was deleted
       | new     | git stash pop            |
     And it prints:
       """
-      Cannot append branch "new" to branch "old"
-      because branch "old" has been deleted at the "origin" remote.
+      deleted branch "shipped"
       """
-    And the current branch is now "main"
+    And the current branch is now "new"
     And the uncommitted file still exists
     And the branches are now
-      | REPOSITORY    | BRANCHES |
-      | local, origin | main     |
-    And no branch hierarchy exists now
+      | REPOSITORY | BRANCHES  |
+      | local      | main, new |
+      | origin     | main      |
+    And this branch lineage exists now
+      | BRANCH | PARENT |
+      | new    | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                               |
-      | main   | git add -A                            |
-      |        | git stash                             |
-      |        | git branch old {{ sha 'old commit' }} |
-      |        | git checkout old                      |
-      | old    | git stash pop                         |
-    And the current branch is now "old"
+      | BRANCH  | COMMAND                                       |
+      | new     | git add -A                                    |
+      |         | git stash                                     |
+      |         | git checkout main                             |
+      | main    | git reset --hard {{ sha 'Initial commit' }}   |
+      |         | git branch shipped {{ sha 'shipped commit' }} |
+      |         | git checkout shipped                          |
+      | shipped | git branch -D new                             |
+      |         | git stash pop                                 |
+    And the current branch is now "shipped"
     And the uncommitted file still exists
     And the initial branches and hierarchy exist
