@@ -4,7 +4,7 @@ Feature: ask for missing parent information
     Given the current branch is "old"
     When I run "git-town prepend new" and answer the prompts:
       | PROMPT                                    | ANSWER  |
-      | Please specify the parent branch of 'new' | [ENTER] |
+      | Please specify the parent branch of "old" | [ENTER] |
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
