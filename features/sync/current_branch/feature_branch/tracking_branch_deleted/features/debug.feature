@@ -9,7 +9,7 @@ Feature: display debug statistics
     And the current branch is "old"
 
   Scenario: result
-    When I run "git-town prune-branches --debug"
+    When I run "git-town sync --debug"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -21,8 +21,8 @@ Feature: display debug statistics
       |        | backend  | git remote                                    |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
-      |        | backend  | git status --ignore-submodules                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git status --ignore-submodules                |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
@@ -33,7 +33,6 @@ Feature: display debug statistics
       |        | backend  | git log main..old                             |
       | main   | frontend | git branch -d old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
-      |        | backend  | git config git-town.perennial-branch-names "" |
       |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/old           |
@@ -46,7 +45,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 32 shell commands.
+      Ran 31 shell commands.
       """
     And the current branch is now "main"
     And the branches are now

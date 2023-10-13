@@ -24,6 +24,10 @@ Feature: sync an empty branch whose tracking branch was deleted
       |           | git checkout main        |
       | main      | git branch -d feature-1  |
       |           | git stash pop            |
+    And it prints:
+      """
+      deleted branch "feature-1"
+      """
     And the current branch is now "main"
     And the uncommitted file still exists
     And the branches are now
