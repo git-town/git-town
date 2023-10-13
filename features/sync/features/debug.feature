@@ -9,7 +9,6 @@ Feature: display debug statistics
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
 
-  @this
   Scenario: result
     When I run "git-town sync --debug"
     Then it runs the commands

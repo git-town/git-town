@@ -1,4 +1,4 @@
-Feature: remove parent info of children of pruned perennial branches
+Feature: remove parent info of children of remotely deleted perennial branches
 
   Background:
     Given the perennial branches "old" and "other"
@@ -7,7 +7,7 @@ Feature: remove parent info of children of pruned perennial branches
     And a feature branch "other1" as a child of "other"
     And origin deletes the "old" branch
     And the current branch is "old"
-    When I run "git-town prune-branches"
+    When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
@@ -15,6 +15,7 @@ Feature: remove parent info of children of pruned perennial branches
       | old    | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -d old        |
+      |        | git push --tags          |
     And it prints:
       """
       deleted branch "old"
@@ -26,6 +27,8 @@ Feature: remove parent info of children of pruned perennial branches
     And the perennial branches are now "other"
     And this branch lineage exists now
       | BRANCH | PARENT |
+      | old1   | main   |
+      | old2   | main   |
       | other1 | other  |
 
   Scenario: undo
