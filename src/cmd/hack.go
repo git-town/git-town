@@ -130,21 +130,22 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Open
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	return &appendConfig{
-		branches:            branches,
-		branchesToSync:      branchesToSync,
-		targetBranch:        targetBranch,
-		parentBranch:        parentBranch,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		remotes:             remotes,
-		lineage:             lineage,
-		mainBranch:          mainBranch,
-		shouldNewBranchPush: shouldNewBranchPush,
-		previousBranch:      previousBranch,
-		pullBranchStrategy:  pullBranchStrategy,
-		pushHook:            pushHook,
-		isOffline:           isOffline,
-		shouldSyncUpstream:  shouldSyncUpstream,
-		syncStrategy:        syncStrategy,
+		branches:                  branches,
+		branchesToSync:            branchesToSync,
+		targetBranch:              targetBranch,
+		parentBranch:              parentBranch,
+		hasOpenChanges:            repoStatus.OpenChanges,
+		remotes:                   remotes,
+		lineage:                   lineage,
+		mainBranch:                mainBranch,
+		newBranchParentCandidates: domain.LocalBranchNames{mainBranch},
+		shouldNewBranchPush:       shouldNewBranchPush,
+		previousBranch:            previousBranch,
+		pullBranchStrategy:        pullBranchStrategy,
+		pushHook:                  pushHook,
+		isOffline:                 isOffline,
+		shouldSyncUpstream:        shouldSyncUpstream,
+		syncStrategy:              syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 

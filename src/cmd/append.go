@@ -80,21 +80,22 @@ func executeAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	branches            domain.Branches
-	branchesToSync      domain.BranchInfos
-	hasOpenChanges      bool
-	remotes             domain.Remotes
-	isOffline           bool
-	lineage             config.Lineage
-	mainBranch          domain.LocalBranchName
-	pushHook            bool
-	parentBranch        domain.LocalBranchName
-	previousBranch      domain.LocalBranchName
-	pullBranchStrategy  config.PullBranchStrategy
-	shouldNewBranchPush bool
-	shouldSyncUpstream  bool
-	syncStrategy        config.SyncStrategy
-	targetBranch        domain.LocalBranchName
+	branches                  domain.Branches
+	branchesToSync            domain.BranchInfos
+	hasOpenChanges            bool
+	remotes                   domain.Remotes
+	isOffline                 bool
+	lineage                   config.Lineage
+	mainBranch                domain.LocalBranchName
+	newBranchParentCandidates domain.LocalBranchNames
+	pushHook                  bool
+	parentBranch              domain.LocalBranchName
+	previousBranch            domain.LocalBranchName
+	pullBranchStrategy        config.PullBranchStrategy
+	shouldNewBranchPush       bool
+	shouldSyncUpstream        bool
+	syncStrategy              config.SyncStrategy
+	targetBranch              domain.LocalBranchName
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, debug bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -146,29 +147,30 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
+	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		branches:            branches,
-		branchesToSync:      branchesToSync,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		remotes:             remotes,
-		isOffline:           repo.IsOffline,
-		lineage:             lineage,
-		mainBranch:          mainBranch,
-		pushHook:            pushHook,
-		parentBranch:        branches.Initial,
-		previousBranch:      previousBranch,
-		pullBranchStrategy:  pullBranchStrategy,
-		shouldNewBranchPush: shouldNewBranchPush,
-		shouldSyncUpstream:  shouldSyncUpstream,
-		syncStrategy:        syncStrategy,
-		targetBranch:        targetBranch,
+		branches:                  branches,
+		branchesToSync:            branchesToSync,
+		hasOpenChanges:            repoStatus.OpenChanges,
+		remotes:                   remotes,
+		isOffline:                 repo.IsOffline,
+		lineage:                   lineage,
+		mainBranch:                mainBranch,
+		newBranchParentCandidates: initialAndAncestors,
+		pushHook:                  pushHook,
+		parentBranch:              branches.Initial,
+		previousBranch:            previousBranch,
+		pullBranchStrategy:        pullBranchStrategy,
+		shouldNewBranchPush:       shouldNewBranchPush,
+		shouldSyncUpstream:        shouldSyncUpstream,
+		syncStrategy:              syncStrategy,
+		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
-	initialAndAncestors := config.lineage.BranchAndAncestors(config.branches.Initial)
-	slices.Reverse(initialAndAncestors)
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
@@ -185,12 +187,12 @@ func appendSteps(config *appendConfig) steps.List {
 		})
 	}
 	list.Add(&step.CreateBranchExistingParent{
-		Ancestors:     initialAndAncestors,
+		Ancestors:     config.newBranchParentCandidates,
 		Branch:        config.targetBranch,
 		MainBranch:    config.mainBranch,
 		StartingPoint: config.parentBranch,
 	})
-	list.Add(&step.SetExistingParent{Branch: config.targetBranch, Ancestors: initialAndAncestors, MainBranch: config.mainBranch})
+	list.Add(&step.SetExistingParent{Branch: config.targetBranch, Ancestors: config.newBranchParentCandidates, MainBranch: config.mainBranch})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
