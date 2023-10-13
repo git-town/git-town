@@ -1,4 +1,4 @@
-Feature: a parent branch of the current feature branch was shipped
+Feature: syncing a branch whose parent was shipped
 
   Background:
     Given a feature branch "parent"
