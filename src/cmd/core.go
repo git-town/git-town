@@ -15,7 +15,6 @@ func Execute() error {
 	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(newPullRequestCommand())
 	rootCmd.AddCommand(prependCommand())
-	rootCmd.AddCommand(pruneBranchesCommand())
 	rootCmd.AddCommand(renameBranchCommand())
 	rootCmd.AddCommand(repoCommand())
 	rootCmd.AddCommand(statusCommand())
