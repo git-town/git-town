@@ -1,4 +1,4 @@
-Feature: sync an empty branch whose tracking branch was shipped
+Feature: sync a branch whose tracking branch was shipped
 
   Background:
     Given the feature branches "feature-1" and "feature-2"
