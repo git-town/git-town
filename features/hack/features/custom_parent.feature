@@ -8,6 +8,7 @@ Feature: customize the parent for the new feature branch
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |
       | Please specify the parent branch of 'existing' | [ENTER]       |
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                     |
@@ -17,7 +18,7 @@ Feature: customize the parent for the new feature branch
       |          | git checkout existing       |
       | existing | git merge --no-edit main    |
       |          | git push -u origin existing |
-      |          | git branch new existing     |
+      |          | git branch new main         |
       |          | git checkout new            |
     And the current branch is now "new"
     And this branch lineage exists now
