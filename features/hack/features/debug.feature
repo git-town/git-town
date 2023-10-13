@@ -9,32 +9,34 @@ Feature: display debug statistics
   Scenario: result
     When I run "git-town hack new --debug"
     Then it runs the commands
-      | BRANCH | TYPE     | COMMAND                                      |
-      |        | backend  | git version                                  |
-      |        | backend  | git config -lz --global                      |
-      |        | backend  | git config -lz --local                       |
-      |        | backend  | git rev-parse --show-toplevel                |
-      |        | backend  | git stash list                               |
-      |        | backend  | git branch -vva                              |
-      |        | backend  | git remote                                   |
-      | main   | frontend | git fetch --prune --tags                     |
-      |        | backend  | git branch -vva                              |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
-      |        | backend  | git status --ignore-submodules               |
-      | main   | frontend | git rebase origin/main                       |
-      |        | backend  | git rev-list --left-right main...origin/main |
-      | main   | frontend | git branch new main                          |
-      |        | backend  | git config git-town-branch.new.parent main   |
-      | main   | frontend | git checkout new                             |
-      |        | backend  | git show-ref --quiet refs/heads/main         |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
-      |        | backend  | git config -lz --global                      |
-      |        | backend  | git config -lz --local                       |
-      |        | backend  | git branch -vva                              |
-      |        | backend  | git stash list                               |
+      | BRANCH | TYPE     | COMMAND                                       |
+      |        | backend  | git version                                   |
+      |        | backend  | git config -lz --global                       |
+      |        | backend  | git config -lz --local                        |
+      |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git stash list                                |
+      |        | backend  | git branch -vva                               |
+      |        | backend  | git remote                                    |
+      | main   | frontend | git fetch --prune --tags                      |
+      |        | backend  | git branch -vva                               |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git status --ignore-submodules                |
+      | main   | frontend | git rebase origin/main                        |
+      |        | backend  | git rev-list --left-right main...origin/main  |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
+      | main   | frontend | git branch new main                           |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
+      |        | backend  | git config git-town-branch.new.parent main    |
+      | main   | frontend | git checkout new                              |
+      |        | backend  | git show-ref --quiet refs/heads/main          |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git config -lz --global                       |
+      |        | backend  | git config -lz --local                        |
+      |        | backend  | git branch -vva                               |
+      |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 24 shell commands.
       """
     And the current branch is now "new"
 
