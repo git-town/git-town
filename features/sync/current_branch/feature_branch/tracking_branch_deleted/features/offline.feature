@@ -1,4 +1,4 @@
-Feature: sync a branch whose tracking branch was shipped when offline
+Feature: sync a branch whose tracking branch was shipped in offline mode
 
   Background:
     Given the feature branches "feature-1" and "feature-2"
