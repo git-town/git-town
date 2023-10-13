@@ -16,7 +16,6 @@ Feature: require a Git repository
       | git-town hack feature              |
       | git-town kill                      |
       | git-town new-pull-request          |
-      | git-town prune-branches            |
       | git-town repo                      |
       | git-town ship                      |
       | git-town sync                      |

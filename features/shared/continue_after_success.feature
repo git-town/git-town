@@ -26,7 +26,6 @@ Feature: continue after successful command
       | offline              |
       | perennial-branches   |
       | prepend new          |
-      | prune-branches       |
       | pull-branch-strategy |
       | rename-branch        |
       | repo                 |
