@@ -28,7 +28,9 @@ Feature: display debug statistics
       | existing | frontend | git merge --no-edit origin/existing                  |
       |          | frontend | git merge --no-edit main                             |
       |          | backend  | git rev-list --left-right existing...origin/existing |
+      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       | existing | frontend | git branch new existing                              |
+      |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
       |          | backend  | git config git-town-branch.new.parent existing       |
       | existing | frontend | git checkout new                                     |
       |          | backend  | git show-ref --quiet refs/heads/existing             |
@@ -39,7 +41,7 @@ Feature: display debug statistics
       |          | backend  | git stash list                                       |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "new"
 
