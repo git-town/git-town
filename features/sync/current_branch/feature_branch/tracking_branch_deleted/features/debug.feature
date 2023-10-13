@@ -56,7 +56,7 @@ Feature: display debug statistics
       | active | main   |
 
   Scenario: undo
-    Given I ran "git-town prune-branches"
+    Given I ran "git-town sync"
     When I run "git-town undo --debug"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                    |

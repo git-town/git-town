@@ -11,7 +11,6 @@ Feature: removing aliases
       | git config --global --unset alias.kill             |
       | git config --global --unset alias.new-pull-request |
       | git config --global --unset alias.prepend          |
-      | git config --global --unset alias.prune-branches   |
       | git config --global --unset alias.rename-branch    |
       | git config --global --unset alias.repo             |
       | git config --global --unset alias.ship             |

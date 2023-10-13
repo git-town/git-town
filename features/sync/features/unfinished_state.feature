@@ -91,7 +91,6 @@ Feature: handle previously unfinished Git Town commands
       | hack foo          |
       | new-pull-request  |
       | prepend foo       |
-      | prune-branches    |
       | rename-branch foo |
       # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument
       | ship              |

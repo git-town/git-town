@@ -26,7 +26,6 @@ Feature: help for commands
       | kill                        |
       | new-pull-request            |
       | prepend                     |
-      | prune-branches              |
       | rename-branch               |
       | repo                        |
       | set-parent                  |

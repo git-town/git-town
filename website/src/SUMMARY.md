@@ -13,7 +13,6 @@
     - [ship](commands/ship.md)
   - [Additional commands](additional-commands.md)
     - [kill](commands/kill.md)
-    - [prune-branches](commands/prune-branches.md)
     - [rename-branch](commands/rename-branch.md)
     - [repo](commands/repo.md)
   - [Nested feature branches](nested-feature-branches.md)

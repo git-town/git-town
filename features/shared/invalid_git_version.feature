@@ -23,7 +23,6 @@ Feature: require minimum Git version
       | kill                        |
       | new-pull-request            |
       | prepend foo                 |
-      | prune-branches              |
       | rename-branch foo           |
       | repo                        |
       | set-parent                  |

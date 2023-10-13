@@ -10,7 +10,6 @@ Feature: shorten Git Town commands
       | git config --global alias.kill "town kill"                         |
       | git config --global alias.new-pull-request "town new-pull-request" |
       | git config --global alias.prepend "town prepend"                   |
-      | git config --global alias.prune-branches "town prune-branches"     |
       | git config --global alias.rename-branch "town rename-branch"       |
       | git config --global alias.repo "town repo"                         |
       | git config --global alias.ship "town ship"                         |
