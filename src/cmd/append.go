@@ -167,7 +167,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 
 func appendSteps(config *appendConfig) steps.List {
 	list := steps.List{}
-	ancestors := config.lineage.Ancestors(config.targetBranch)
 	initialAndAncestors := config.lineage.BranchAndAncestors(config.branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	for _, branch := range config.branchesToSync {
@@ -186,7 +185,7 @@ func appendSteps(config *appendConfig) steps.List {
 		})
 	}
 	list.Add(&step.CreateBranchExistingParent{
-		Ancestors:     ancestors,
+		Ancestors:     initialAndAncestors,
 		Branch:        config.targetBranch,
 		MainBranch:    config.mainBranch,
 		StartingPoint: config.parentBranch,
