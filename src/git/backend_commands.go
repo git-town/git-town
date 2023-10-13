@@ -402,6 +402,9 @@ func (bcs *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName 
 	if err != nil {
 		return domain.EmptyLocalBranchName()
 	}
+	if output == "" {
+		return domain.EmptyLocalBranchName()
+	}
 	return domain.NewLocalBranchName(output)
 }
 
