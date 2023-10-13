@@ -129,34 +129,35 @@ func determinePruneBranchesConfig(repo *execute.OpenRepoResult, debug bool) (*pr
 	}, branchesSnapshot, stashSnapshot, exit, fc.Err
 }
 
-func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
+func pruneBranchesSteps(conf *pruneBranchesConfig) steps.List {
 	list := steps.List{}
-	for _, branchWithDeletedRemote := range config.branchesWithDeletedRemote {
-		parent := config.lineage.Parent(branchWithDeletedRemote)
+	for _, branchWithDeletedRemote := range conf.branchesWithDeletedRemote {
+		parent := conf.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
-			parentInfo := config.branches.All.FindByLocalName(parent)
+			parentInfo := conf.branches.All.FindByLocalName(parent)
 			syncBranchSteps(*parentInfo, syncBranchStepsArgs{
-				branchTypes:        config.branches.Types,
-				remotes:            config.remotes,
-				isOffline:          config.isOffline,
-				lineage:            config.lineage,
+				branchTypes:        conf.branches.Types,
+				remotes:            conf.remotes,
+				isOffline:          conf.isOffline,
+				lineage:            conf.lineage,
 				list:               &list,
-				mainBranch:         config.mainBranch,
-				pullBranchStrategy: config.pullBranchStrategy,
+				mainBranch:         conf.mainBranch,
+				pullBranchStrategy: conf.pullBranchStrategy,
 				pushBranch:         true,
-				pushHook:           config.pushHook,
-				shouldSyncUpstream: config.shouldSyncUpstream,
-				syncStrategy:       config.syncStrategy,
+				pushHook:           conf.pushHook,
+				shouldSyncUpstream: conf.shouldSyncUpstream,
+				syncStrategy:       conf.syncStrategy,
 			})
 		}
 		if parent.IsEmpty() {
-			parent = config.mainBranch
+			parent = conf.mainBranch
 		}
 		list.Add(&step.Checkout{Branch: branchWithDeletedRemote})
-		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, config.syncStrategy)
+		pullParentBranchOfCurrentFeatureBranchStep(&list, branchWithDeletedRemote, conf.syncStrategy)
 		list.Add(&step.IfElse{
-			Condition: func(backend *git.BackendCommands) (bool, error) {
-				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote)
+			Condition: func(backend *git.BackendCommands, lineage config.Lineage) (bool, error) {
+				parent := lineage.Parent(branchWithDeletedRemote)
+				return backend.BranchHasUnmergedChanges(branchWithDeletedRemote, parent)
 			},
 			TrueSteps: []step.Step{
 				&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branchWithDeletedRemote)},
@@ -173,13 +174,13 @@ func pruneBranchesSteps(config *pruneBranchesConfig) steps.List {
 			},
 		})
 	}
-	list.Add(&step.CheckoutIfExists{Branch: config.branches.Initial})
+	list.Add(&step.CheckoutIfExists{Branch: conf.branches.Initial})
 	list.Wrap(steps.WrapOptions{
 		RunInGitRoot:     false,
-		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
-		PreviousBranch:   config.previousBranch,
+		StashOpenChanges: conf.hasOpenChanges,
+		MainBranch:       conf.mainBranch,
+		InitialBranch:    conf.branches.Initial,
+		PreviousBranch:   conf.previousBranch,
 	})
 	return list
 }

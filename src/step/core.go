@@ -41,7 +41,6 @@ type RunArgs struct {
 	Connector                       hosting.Connector
 	Lineage                         config.Lineage
 	RegisterUndoablePerennialCommit func(domain.SHA)
-	RemoveBranchFromLineage         func(domain.LocalBranchName)
 	Runner                          *git.ProdRunner
 	UpdateInitialBranchLocalSHA     func(domain.LocalBranchName, domain.SHA) error
 }

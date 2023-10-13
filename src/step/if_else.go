@@ -1,6 +1,9 @@
 package step
 
-import "github.com/git-town/git-town/v9/src/git"
+import (
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
+)
 
 type IfElse struct {
 	Condition  ConditionFunc
@@ -9,10 +12,10 @@ type IfElse struct {
 	Empty
 }
 
-type ConditionFunc func(*git.BackendCommands) (bool, error)
+type ConditionFunc func(*git.BackendCommands, config.Lineage) (bool, error)
 
 func (step *IfElse) Run(args RunArgs) error {
-	condition, err := step.Condition(&args.Runner.Backend)
+	condition, err := step.Condition(&args.Runner.Backend, args.Lineage)
 	if err != nil {
 		return err
 	}
