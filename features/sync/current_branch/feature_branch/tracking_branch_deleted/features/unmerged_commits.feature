@@ -28,6 +28,10 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       """
     And the current branch is now "old"
     And the uncommitted file still exists
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE       |
+      | active | local, origin | active commit |
+      | old    | local         | old commit    |
     And the initial branches and hierarchy exist
 
   Scenario: undo
