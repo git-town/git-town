@@ -8,7 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 )
 
 // Save stores the given run state for the given Git repo to disk.
