@@ -3,7 +3,7 @@ package undo
 import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/vm/steps"
+	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
 // StashDiff describes the changes made to the Git stash.
@@ -18,8 +18,8 @@ func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
 	}
 }
 
-func (sd StashDiff) Steps() steps.List {
-	result := steps.List{}
+func (sd StashDiff) Steps() program.List {
+	result := program.List{}
 	for ; sd.EntriesAdded > 0; sd.EntriesAdded-- {
 		result.Add(&step.RestoreOpenChanges{})
 	}

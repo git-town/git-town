@@ -12,8 +12,8 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -198,8 +198,8 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestSteps(config *newPullRequestConfig) steps.List {
-	list := steps.List{}
+func newPullRequestSteps(config *newPullRequestConfig) program.List {
+	list := program.List{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(branch, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
@@ -215,7 +215,7 @@ func newPullRequestSteps(config *newPullRequestConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Wrap(steps.WrapOptions{
+	list.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

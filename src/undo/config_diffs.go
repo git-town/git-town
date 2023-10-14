@@ -2,7 +2,7 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/vm/steps"
+	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
@@ -18,8 +18,8 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	}
 }
 
-func (cds ConfigDiffs) UndoSteps() steps.List {
-	result := steps.List{}
+func (cds ConfigDiffs) UndoSteps() program.List {
+	result := program.List{}
 	for _, key := range cds.Global.Added {
 		result.Add(&step.RemoveGlobalConfig{Key: key})
 	}

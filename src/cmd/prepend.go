@@ -13,8 +13,8 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -170,8 +170,8 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependSteps(config *prependConfig) steps.List {
-	list := steps.List{}
+func prependSteps(config *prependConfig) program.List {
+	list := program.List{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
@@ -207,7 +207,7 @@ func prependSteps(config *prependConfig) steps.List {
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(steps.WrapOptions{
+	list.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

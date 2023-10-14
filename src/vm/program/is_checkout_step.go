@@ -1,4 +1,4 @@
-package steps
+package program
 
 import (
 	"github.com/git-town/git-town/v9/src/gohacks"

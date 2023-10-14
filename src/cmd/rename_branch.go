@@ -10,8 +10,8 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -163,8 +163,8 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchSteps(config *renameBranchConfig) steps.List {
-	result := steps.List{}
+func renameBranchSteps(config *renameBranchConfig) program.List {
+	result := program.List{}
 	result.Add(&step.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Add(&step.Checkout{Branch: config.newBranch})
@@ -185,7 +185,7 @@ func renameBranchSteps(config *renameBranchConfig) steps.List {
 		result.Add(&step.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
 	result.Add(&step.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
-	result.Wrap(steps.WrapOptions{
+	result.Wrap(program.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,

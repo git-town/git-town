@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/steps"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/shoenig/test/must"
 )
 
@@ -82,7 +82,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.Checkout{Branch: domain.NewLocalBranchName("main")},
 					&step.DeleteLocalBranch{
@@ -142,7 +142,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.CreateBranch{
 						Branch:        domain.NewLocalBranchName("branch-1"),
@@ -233,7 +233,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 					&step.ResetCurrentBranchToSHA{
@@ -325,7 +325,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.DeleteTrackingBranch{
 						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
@@ -411,7 +411,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("perennial-branch"),
@@ -487,7 +487,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.DeleteTrackingBranch{
 						Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
@@ -588,7 +588,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               false,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 					&step.ResetCurrentBranchToSHA{
@@ -686,7 +686,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               false,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
 					// and we can't revert the commit on it since we cannot change the local perennial branch here.
@@ -799,7 +799,7 @@ func TestChanges(t *testing.T) {
 					domain.NewSHA("444444"),
 				},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// revert the commit on the perennial branch
 					&step.Checkout{Branch: domain.NewLocalBranchName("main")},
@@ -901,7 +901,7 @@ func TestChanges(t *testing.T) {
 					domain.NewSHA("444444"),
 				},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// revert the undoable commit on the main branch
 					&step.Checkout{Branch: domain.NewLocalBranchName("main")},
@@ -1019,7 +1019,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
 					&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
@@ -1117,7 +1117,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 					&step.ResetCurrentBranchToSHA{
@@ -1215,7 +1215,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
 					&step.ResetRemoteBranchToSHA{
@@ -1301,7 +1301,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					&step.CreateBranch{
 						Branch:        domain.NewLocalBranchName("feature-branch"),
@@ -1389,7 +1389,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				List: []step.Step{
 					// don't re-create the tracking branch for the perennial branch
 					// because those are protected
@@ -1473,7 +1473,7 @@ func TestChanges(t *testing.T) {
 				NoPushHook:               true,
 				UndoablePerennialCommits: []domain.SHA{},
 			})
-			wantSteps := steps.List{
+			wantSteps := program.List{
 				// No changes should happen here since all changes were syncs on perennial branches.
 				// We don't want to undo these commits because that would undo commits
 				// already committed to perennial branches by others for everybody on the team.

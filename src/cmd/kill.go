@@ -12,8 +12,8 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -157,10 +157,10 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List) {
-	list := steps.List{}
+func killSteps(config *killConfig) (runSteps, finalUndoSteps program.List) {
+	list := program.List{}
 	killFeatureBranch(&list, &finalUndoSteps, *config)
-	list.Wrap(steps.WrapOptions{
+	list.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
@@ -171,7 +171,7 @@ func killSteps(config *killConfig) (runSteps, finalUndoSteps steps.List) {
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *steps.List, finalUndoList *steps.List, config killConfig) {
+func killFeatureBranch(list *program.List, finalUndoList *program.List, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
@@ -206,6 +206,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
 	lineage config.Lineage
-	list    *steps.List
+	list    *program.List
 	parent  domain.LocalBranchName
 }
