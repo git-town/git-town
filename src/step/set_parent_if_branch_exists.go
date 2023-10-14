@@ -14,8 +14,7 @@ type SetParentIfBranchExists struct {
 }
 
 func (step *SetParentIfBranchExists) Run(args RunArgs) error {
-	branchExists := args.Runner.Backend.BranchExists(step.Branch)
-	if !branchExists {
+	if !args.Runner.Backend.BranchExists(step.Branch) {
 		return nil
 	}
 	return args.Runner.Config.SetParent(step.Branch, step.Parent)
