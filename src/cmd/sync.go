@@ -229,6 +229,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 
 // syncBranchesSteps provides the step list for the "git sync" command.
 func syncBranchesSteps(args syncBranchesStepsArgs) {
+	fmt.Println("111111111111111111", args.branchesToSync)
 	for _, branch := range args.branchesToSync {
 		syncBranchSteps(branch, args.syncBranchStepsArgs)
 	}

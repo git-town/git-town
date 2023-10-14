@@ -17,14 +17,26 @@ func TestLineage(t *testing.T) {
 
 	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
-		t.Run("many branches", func(t *testing.T) {
+		t.Run("deep lineage, multiple branches", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[one] = main
 			lineage[two] = one
+			lineage[three] = two
 			give := domain.LocalBranchNames{two, one}
 			have := lineage.BranchesAndAncestors(give)
 			want := domain.LocalBranchNames{main, one, two}
+			must.Eq(t, want, have)
+		})
+		t.Run("deep lineage, single branch", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			give := domain.LocalBranchNames{three}
+			have := lineage.BranchesAndAncestors(give)
+			want := domain.LocalBranchNames{main, one, two, three}
 			must.Eq(t, want, have)
 		})
 	})
