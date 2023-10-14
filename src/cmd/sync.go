@@ -292,7 +292,7 @@ func syncDeletedFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, a
 	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, args.syncStrategy)
 	// determine whether the now synced local branch still contains unshipped changes
 	list.Add(&step.IfElse{
-		Decision: func(backend *git.BackendCommands, lineage config.Lineage) (bool, error) {
+		Condition: func(backend *git.BackendCommands, lineage config.Lineage) (bool, error) {
 			parent := lineage.Parent(branch.LocalName)
 			return backend.BranchHasUnmergedChanges(branch.LocalName, parent)
 		},
