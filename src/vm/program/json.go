@@ -83,8 +83,6 @@ func DetermineStep(stepType string) opcode.Opcode { //nolint:ireturn
 		return &opcode.DeleteTrackingBranch{}
 	case "DiscardOpenChanges":
 		return &opcode.DiscardOpenChanges{}
-	case "Empty":
-		return &opcode.Empty{}
 	case "EnsureHasShippableChanges":
 		return &opcode.EnsureHasShippableChanges{}
 	case "FetchUpstream":

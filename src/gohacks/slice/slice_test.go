@@ -121,7 +121,7 @@ func TestSlice(t *testing.T) {
 			t.Parallel()
 			give := []opcode.Opcode{
 				&opcode.AbortMerge{},
-				&opcode.RestoreOpenChanges{Empty: opcode.Empty{}},
+				&opcode.RestoreOpenChanges{},
 				&opcode.AbortRebase{},
 			}
 			have := slice.LowerAll[opcode.Opcode](give, &opcode.RestoreOpenChanges{})
