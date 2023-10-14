@@ -602,19 +602,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the feature branch "([^"]+)"$`, func(branch string) error {
-		branchName := domain.NewLocalBranchName(branch)
-		err := state.fixture.DevRepo.CreateFeatureBranch(branchName)
-		if err != nil {
-			return err
-		}
-		state.initialLocalBranches = append(state.initialLocalBranches, branchName)
-		state.initialBranchHierarchy.AddRow(branch, "main")
-		state.fixture.DevRepo.PushBranchToRemote(branchName, domain.OriginRemote)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branchName)
-		return nil
-	})
-
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		// create the commits

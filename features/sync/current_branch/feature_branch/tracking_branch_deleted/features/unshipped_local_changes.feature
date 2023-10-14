@@ -1,7 +1,7 @@
 Feature: sync a branch with unshipped local changes whose tracking branch was deleted
 
   Background:
-    Given the feature branch "shipped"
+    Given a feature branch "shipped"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE          |
       | shipped | local, origin | shipped commit   |
