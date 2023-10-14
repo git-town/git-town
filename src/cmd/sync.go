@@ -196,7 +196,10 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 		}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
+	fmt.Println("22222222222222222222222 NAMES", branchNamesToSync)
+	fmt.Println("22222222222222222222222 LINEAGE", lineage)
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
+	fmt.Println("22222222222222222222222 ALLNAMES", allBranchNamesToSync)
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
@@ -210,7 +213,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
-	fmt.Println("22222222222222222222222 NAMES", allBranchNamesToSync)
 	fmt.Println("22222222222222222222222 BRANCHES", branchesToSync)
 	return &syncConfig{
 		branches:           branches,
