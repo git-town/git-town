@@ -65,7 +65,6 @@ const (
 	KillOnlyFeatureBranches           = "you can only kill feature branches"
 	OfflineNotAllowed                 = "this command requires an active internet connection"
 	OpenChangesProblem                = "cannot determine open changes: %w"
-	PerennialBranchRemoved            = "branch %q is no longer perennial"
 	ProposalMultipleFound             = "found %d proposals from branch %q to branch %q"
 	ProposalNoNumberGiven             = "no pull request number given"
 	ProposalNotFoundForBranch         = "cannot determine proposal for branch %q: %w"
