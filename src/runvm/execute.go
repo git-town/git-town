@@ -29,7 +29,6 @@ func Execute(args ExecuteArgs) error {
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
-			RemoveBranchFromLineage:         args.Lineage.RemoveBranch,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
