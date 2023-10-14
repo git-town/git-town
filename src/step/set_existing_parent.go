@@ -13,9 +13,5 @@ type SetExistingParent struct {
 
 func (step *SetExistingParent) Run(args RunArgs) error {
 	nearestAncestor := args.Runner.Backend.FirstExistingBranch(step.Ancestors, step.MainBranch)
-	err := args.Runner.Config.SetParent(step.Branch, nearestAncestor)
-	if err != nil {
-		return err
-	}
-	return nil
+	return args.Runner.Config.SetParent(step.Branch, nearestAncestor)
 }
