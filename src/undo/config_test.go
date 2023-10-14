@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -49,8 +49,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.RemoveGlobalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
 			},
@@ -97,8 +97,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.SetGlobalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
 				},
@@ -148,8 +148,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.SetGlobalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.SetGlobalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
 				},
@@ -193,8 +193,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.RemoveLocalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
 			},
@@ -241,8 +241,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.SetLocalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
 				},
@@ -292,8 +292,8 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.SetLocalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.SetLocalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
 				},
@@ -364,26 +364,26 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.RemoveGlobalConfig{
+			Steps: []opcode.Opcode{
+				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
-				&step.SetGlobalConfig{
+				&opcode.SetGlobalConfig{
 					Key:   config.KeyPushHook,
 					Value: "0",
 				},
-				&step.SetGlobalConfig{
+				&opcode.SetGlobalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
 				},
-				&step.RemoveLocalConfig{
+				&opcode.RemoveLocalConfig{
 					Key: config.KeyPushHook,
 				},
-				&step.SetLocalConfig{
+				&opcode.SetLocalConfig{
 					Key:   config.KeyGithubToken,
 					Value: "token",
 				},
-				&step.SetLocalConfig{
+				&opcode.SetLocalConfig{
 					Key:   config.KeyPerennialBranches,
 					Value: "prod",
 				},

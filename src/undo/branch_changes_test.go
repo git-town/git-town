@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -81,13 +81,13 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.Checkout{Branch: domain.NewLocalBranchName("main")},
-				&step.DeleteLocalBranch{
+			Steps: []opcode.Opcode{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
+				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("branch-1"),
 					Force:  true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -141,12 +141,12 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.CreateBranch{
+			Steps: []opcode.Opcode{
+				&opcode.CreateBranch{
 					Branch:        domain.NewLocalBranchName("branch-1"),
 					StartingPoint: domain.NewSHA("111111").Location(),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-1")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-1")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -232,20 +232,20 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
-				&step.ResetCurrentBranchToSHA{
+			Steps: []opcode.Opcode{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
 					SetToSHA:    domain.NewSHA("222222"),
 					Hard:        true,
 				},
-				&step.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
-				&step.ResetCurrentBranchToSHA{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("333333"),
 					SetToSHA:    domain.NewSHA("111111"),
 					Hard:        true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -324,14 +324,14 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.DeleteTrackingBranch{
+			Steps: []opcode.Opcode{
+				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 				},
-				&step.DeleteTrackingBranch{
+				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -410,16 +410,16 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.DeleteLocalBranch{
+			Steps: []opcode.Opcode{
+				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("perennial-branch"),
 					Force:  true,
 				},
-				&step.DeleteLocalBranch{
+				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("feature-branch"),
 					Force:  true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -486,23 +486,23 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.DeleteTrackingBranch{
+			Steps: []opcode.Opcode{
+				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 				},
-				&step.DeleteTrackingBranch{
+				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/feature-branch"),
 				},
-				&step.DeleteLocalBranch{
+				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("perennial-branch"),
 					Force:  true,
 				},
-				&step.Checkout{Branch: domain.NewLocalBranchName("main")},
-				&step.DeleteLocalBranch{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
+				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("feature-branch"),
 					Force:  true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -587,20 +587,20 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
-				&step.ResetCurrentBranchToSHA{
+			Steps: []opcode.Opcode{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
 					SetToSHA:    domain.NewSHA("222222"),
 					Hard:        true,
 				},
-				&step.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
-				&step.ResetCurrentBranchToSHA{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("333333"),
 					SetToSHA:    domain.NewSHA("111111"),
 					Hard:        true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -685,15 +685,15 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
 				// and we can't revert the commit on it since we cannot change the local perennial branch here.
-				&step.ResetRemoteBranchToSHA{
+				&opcode.ResetRemoteBranchToSHA{
 					Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
 					SetToSHA:    domain.NewSHA("333333"),
 					MustHaveSHA: domain.NewSHA("444444"),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -798,17 +798,17 @@ func TestChanges(t *testing.T) {
 			},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// revert the commit on the perennial branch
-				&step.Checkout{Branch: domain.NewLocalBranchName("main")},
-				&step.RevertCommit{SHA: domain.NewSHA("444444")},
-				&step.PushCurrentBranch{CurrentBranch: domain.NewLocalBranchName("main"), NoPushHook: true},
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
+				&opcode.RevertCommit{SHA: domain.NewSHA("444444")},
+				&opcode.PushCurrentBranch{CurrentBranch: domain.NewLocalBranchName("main"), NoPushHook: true},
 				// reset the feature branch to the previous SHA
-				&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
-				&step.ResetCurrentBranchToSHA{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
-				&step.ForcePushCurrentBranch{NoPushHook: true},
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.ResetCurrentBranchToSHA{MustHaveSHA: domain.NewSHA("666666"), SetToSHA: domain.NewSHA("333333"), Hard: true},
+				&opcode.ForcePushCurrentBranch{NoPushHook: true},
 				// check out the initial branch
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -900,16 +900,16 @@ func TestChanges(t *testing.T) {
 			},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// revert the undoable commit on the main branch
-				&step.Checkout{Branch: domain.NewLocalBranchName("main")},
-				&step.RevertCommit{SHA: domain.NewSHA("444444")},
-				&step.PushCurrentBranch{CurrentBranch: domain.NewLocalBranchName("main"), NoPushHook: true},
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
+				&opcode.RevertCommit{SHA: domain.NewSHA("444444")},
+				&opcode.PushCurrentBranch{CurrentBranch: domain.NewLocalBranchName("main"), NoPushHook: true},
 				// re-create the feature branch
-				&step.CreateBranch{Branch: domain.NewLocalBranchName("feature-branch"), StartingPoint: domain.NewSHA("222222").Location()},
-				&step.CreateTrackingBranch{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
+				&opcode.CreateBranch{Branch: domain.NewLocalBranchName("feature-branch"), StartingPoint: domain.NewSHA("222222").Location()},
+				&opcode.CreateTrackingBranch{Branch: domain.NewLocalBranchName("feature-branch"), NoPushHook: true},
 				// check out the initial branch
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1018,20 +1018,20 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
-				&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
-				&step.ResetCurrentBranchToSHA{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("555555"),
 					SetToSHA:    domain.NewSHA("222222"),
 					Hard:        true,
 				},
-				&step.ResetRemoteBranchToSHA{
+				&opcode.ResetRemoteBranchToSHA{
 					Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
 					MustHaveSHA: domain.NewSHA("666666"),
 					SetToSHA:    domain.NewSHA("222222"),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1116,20 +1116,20 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
-				&step.ResetCurrentBranchToSHA{
+			Steps: []opcode.Opcode{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
 					SetToSHA:    domain.NewSHA("333333"),
 					Hard:        true,
 				},
-				&step.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
-				&step.ResetCurrentBranchToSHA{
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("perennial-branch")},
+				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("222222"),
 					SetToSHA:    domain.NewSHA("111111"),
 					Hard:        true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1214,14 +1214,14 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
-				&step.ResetRemoteBranchToSHA{
+				&opcode.ResetRemoteBranchToSHA{
 					Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
 					MustHaveSHA: domain.NewSHA("444444"),
 					SetToSHA:    domain.NewSHA("333333"),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1300,16 +1300,16 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
-				&step.CreateBranch{
+			Steps: []opcode.Opcode{
+				&opcode.CreateBranch{
 					Branch:        domain.NewLocalBranchName("feature-branch"),
 					StartingPoint: domain.NewSHA("222222").Location(),
 				},
-				&step.CreateBranch{
+				&opcode.CreateBranch{
 					Branch:        domain.NewLocalBranchName("perennial-branch"),
 					StartingPoint: domain.NewSHA("111111").Location(),
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1388,15 +1388,15 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []step.Step{
+			Steps: []opcode.Opcode{
 				// don't re-create the tracking branch for the perennial branch
 				// because those are protected
-				&step.CreateRemoteBranch{
+				&opcode.CreateRemoteBranch{
 					Branch:     domain.NewLocalBranchName("feature-branch"),
 					SHA:        domain.NewSHA("222222"),
 					NoPushHook: true,
 				},
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("feature-branch")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -1475,8 +1475,8 @@ func TestChanges(t *testing.T) {
 			// No changes should happen here since all changes were syncs on perennial branches.
 			// We don't want to undo these commits because that would undo commits
 			// already committed to perennial branches by others for everybody on the team.
-			Steps: []step.Step{
-				&step.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
+			Steps: []opcode.Opcode{
+				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)

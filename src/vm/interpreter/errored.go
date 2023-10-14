@@ -5,12 +5,12 @@ import (
 
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
-	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // errored is called when the given step has resulted in the given error.
-func errored(failedStep step.Step, runErr error, args ExecuteArgs) error {
+func errored(failedStep opcode.Opcode, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortProgram.Add(failedStep.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		Run:                      args.Run,

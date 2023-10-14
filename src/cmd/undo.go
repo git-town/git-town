@@ -10,10 +10,10 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/spf13/cobra"
 )
 
@@ -135,7 +135,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	// When we run undo now, it still wants to pop the stack even though that was already done.
 	// This seems to apply only to popping the stack and switching back to the initial branch.
 	// Hence we consolidate this step type here.
-	undoRunState.RunProgram.Steps = slice.LowerAll[step.Step](undoRunState.RunProgram.Steps, &step.RestoreOpenChanges{})
-	undoRunState.RunProgram.RemoveAllButLast("*step.CheckoutIfExists")
+	undoRunState.RunProgram.Steps = slice.LowerAll[opcode.Opcode](undoRunState.RunProgram.Steps, &opcode.RestoreOpenChanges{})
+	undoRunState.RunProgram.RemoveAllButLast("*opcode.CheckoutIfExists")
 	return undoRunState, err
 }

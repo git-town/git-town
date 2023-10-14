@@ -8,10 +8,10 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -39,115 +39,115 @@ func TestLoadSave(t *testing.T) {
 			IsUndo:       true,
 			AbortProgram: program.Program{},
 			RunProgram: program.Program{
-				Steps: []step.Step{
-					&step.AbortMerge{},
-					&step.AbortRebase{},
-					&step.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
-					&step.ChangeParent{
+				Steps: []opcode.Opcode{
+					&opcode.AbortMerge{},
+					&opcode.AbortRebase{},
+					&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
+					&opcode.ChangeParent{
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent"),
 					},
-					&step.Checkout{Branch: domain.NewLocalBranchName("branch")},
-					&step.CommitOpenChanges{},
-					&step.ConnectorMergeProposal{
+					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
+					&opcode.CommitOpenChanges{},
+					&opcode.ConnectorMergeProposal{
 						Branch:          domain.NewLocalBranchName("branch"),
 						CommitMessage:   "commit message",
 						ProposalMessage: "proposal message",
 						ProposalNumber:  123,
 					},
-					&step.ContinueMerge{},
-					&step.ContinueRebase{},
-					&step.CreateBranch{
+					&opcode.ContinueMerge{},
+					&opcode.ContinueRebase{},
+					&opcode.CreateBranch{
 						Branch:        domain.NewLocalBranchName("branch"),
 						StartingPoint: domain.NewSHA("123456").Location(),
 					},
-					&step.CreateProposal{Branch: domain.NewLocalBranchName("branch")},
-					&step.CreateRemoteBranch{
+					&opcode.CreateProposal{Branch: domain.NewLocalBranchName("branch")},
+					&opcode.CreateRemoteBranch{
 						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 						SHA:        domain.NewSHA("123456"),
 					},
-					&step.CreateTrackingBranch{
+					&opcode.CreateTrackingBranch{
 						Branch:     domain.NewLocalBranchName("branch"),
 						NoPushHook: true,
 					},
-					&step.DeleteLocalBranch{
+					&opcode.DeleteLocalBranch{
 						Branch: domain.NewLocalBranchName("branch"),
 						Force:  false,
 					},
-					&step.DeleteRemoteBranch{
+					&opcode.DeleteRemoteBranch{
 						Branch: domain.NewRemoteBranchName("origin/branch"),
 					},
-					&step.DeleteParentBranch{
+					&opcode.DeleteParentBranch{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
-					&step.DeleteTrackingBranch{
+					&opcode.DeleteTrackingBranch{
 						Branch: domain.NewRemoteBranchName("origin/branch"),
 					},
-					&step.DiscardOpenChanges{},
-					&step.EnsureHasShippableChanges{
+					&opcode.DiscardOpenChanges{},
+					&opcode.EnsureHasShippableChanges{
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent"),
 					},
-					&step.FetchUpstream{
+					&opcode.FetchUpstream{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
-					&step.ForcePushCurrentBranch{
+					&opcode.ForcePushCurrentBranch{
 						NoPushHook: true,
 					},
-					&step.Merge{Branch: domain.NewBranchName("branch")},
-					&step.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
-					&step.PreserveCheckoutHistory{
+					&opcode.Merge{Branch: domain.NewBranchName("branch")},
+					&opcode.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
+					&opcode.PreserveCheckoutHistory{
 						InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
 						InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
 						MainBranch:                        domain.NewLocalBranchName("main"),
 					},
-					&step.PullCurrentBranch{},
-					&step.PushCurrentBranch{
+					&opcode.PullCurrentBranch{},
+					&opcode.PushCurrentBranch{
 						CurrentBranch: domain.NewLocalBranchName("branch"),
 						NoPushHook:    true,
 					},
-					&step.PushTags{},
-					&step.RebaseBranch{Branch: domain.NewBranchName("branch")},
-					&step.RebaseParent{CurrentBranch: domain.NewLocalBranchName("branch")},
-					&step.RemoveFromPerennialBranches{
+					&opcode.PushTags{},
+					&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
+					&opcode.RebaseParent{CurrentBranch: domain.NewLocalBranchName("branch")},
+					&opcode.RemoveFromPerennialBranches{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
-					&step.RemoveGlobalConfig{
+					&opcode.RemoveGlobalConfig{
 						Key: config.KeyOffline,
 					},
-					&step.RemoveLocalConfig{
+					&opcode.RemoveLocalConfig{
 						Key: config.KeyOffline,
 					},
-					&step.ResetCurrentBranchToSHA{
+					&opcode.ResetCurrentBranchToSHA{
 						Hard:        true,
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
 					},
-					&step.RestoreOpenChanges{},
-					&step.RevertCommit{
+					&opcode.RestoreOpenChanges{},
+					&opcode.RevertCommit{
 						SHA: domain.NewSHA("123456"),
 					},
-					&step.SetGlobalConfig{
+					&opcode.SetGlobalConfig{
 						Key:   config.KeyOffline,
 						Value: "1",
 					},
-					&step.SetLocalConfig{
+					&opcode.SetLocalConfig{
 						Key:   config.KeyOffline,
 						Value: "1",
 					},
-					&step.SetParent{
+					&opcode.SetParent{
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent"),
 					},
-					&step.SkipCurrentBranch{},
-					&step.SquashMerge{
+					&opcode.SkipCurrentBranch{},
+					&opcode.SquashMerge{
 						Branch:        domain.NewLocalBranchName("branch"),
 						CommitMessage: "commit message",
 						Parent:        domain.NewLocalBranchName("parent"),
 					},
-					&step.StashOpenChanges{},
-					&step.UpdateProposalTarget{
+					&opcode.StashOpenChanges{},
+					&opcode.UpdateProposalTarget{
 						ProposalNumber: 123,
 						NewTarget:      domain.NewLocalBranchName("new-target"),
 					},

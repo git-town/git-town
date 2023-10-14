@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,19 +14,19 @@ func TestIsCheckoutStep(t *testing.T) {
 
 	t.Run("given a step.Checkout", func(t *testing.T) {
 		t.Parallel()
-		give := &step.Checkout{Branch: domain.NewLocalBranchName("branch")}
+		give := &opcode.Checkout{Branch: domain.NewLocalBranchName("branch")}
 		must.True(t, program.IsCheckoutStep(give))
 	})
 
 	t.Run("given a step.CheckoutIfExists", func(t *testing.T) {
 		t.Parallel()
-		give := &step.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")}
+		give := &opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")}
 		must.True(t, program.IsCheckoutStep(give))
 	})
 
 	t.Run("given another step", func(t *testing.T) {
 		t.Parallel()
-		give := &step.AbortMerge{}
+		give := &opcode.AbortMerge{}
 		must.False(t, program.IsCheckoutStep(give))
 	})
 }

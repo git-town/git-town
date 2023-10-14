@@ -11,9 +11,9 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/spf13/cobra"
 )
 
@@ -222,6 +222,6 @@ func newPullRequestProgram(config *newPullRequestConfig) program.Program {
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	list.Add(&step.CreateProposal{Branch: config.branches.Initial})
+	list.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
 	return list
 }

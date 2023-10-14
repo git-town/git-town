@@ -12,9 +12,9 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/step"
 	"github.com/spf13/cobra"
 )
 
@@ -187,25 +187,25 @@ func prependProgram(config *prependConfig) program.Program {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&step.CreateBranchExistingParent{
+	list.Add(&opcode.CreateBranchExistingParent{
 		Ancestors:  config.newBranchParentCandidates,
 		Branch:     config.targetBranch,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the newly created branch
-	list.Add(&step.SetExistingParent{
+	list.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the branch prepended to
-	list.Add(&step.SetParentIfBranchExists{
+	list.Add(&opcode.SetParentIfBranchExists{
 		Branch: config.branches.Initial,
 		Parent: config.targetBranch,
 	})
-	list.Add(&step.Checkout{Branch: config.targetBranch})
+	list.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		list.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,

@@ -6,12 +6,12 @@ import (
 
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/step"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 )
 
 // JSON is used to store a step in JSON.
 type JSON struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
-	Step step.Step
+	Step opcode.Opcode
 }
 
 // MarshalJSON marshals the step to JSON.
@@ -41,106 +41,106 @@ func (js *JSON) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(mapping["data"], &js.Step)
 }
 
-func DetermineStep(stepType string) step.Step { //nolint:ireturn
+func DetermineStep(stepType string) opcode.Opcode { //nolint:ireturn
 	switch stepType {
 	case "AbortMerge":
-		return &step.AbortMerge{}
+		return &opcode.AbortMerge{}
 	case "AbortRebase":
-		return &step.AbortRebase{}
+		return &opcode.AbortRebase{}
 	case "AddToPerennialBranches":
-		return &step.AddToPerennialBranches{}
+		return &opcode.AddToPerennialBranches{}
 	case "ChangeParent":
-		return &step.ChangeParent{}
+		return &opcode.ChangeParent{}
 	case "Checkout":
-		return &step.Checkout{}
+		return &opcode.Checkout{}
 	case "CheckoutIfExists":
-		return &step.CheckoutIfExists{}
+		return &opcode.CheckoutIfExists{}
 	case "CommitOpenChanges":
-		return &step.CommitOpenChanges{}
+		return &opcode.CommitOpenChanges{}
 	case "ConnectorMergeProposal":
-		return &step.ConnectorMergeProposal{}
+		return &opcode.ConnectorMergeProposal{}
 	case "ContinueMerge":
-		return &step.ContinueMerge{}
+		return &opcode.ContinueMerge{}
 	case "ContinueRebase":
-		return &step.ContinueRebase{}
+		return &opcode.ContinueRebase{}
 	case "CreateBranch":
-		return &step.CreateBranch{}
+		return &opcode.CreateBranch{}
 	case "CreateBranchExistingParent":
-		return &step.CreateBranchExistingParent{}
+		return &opcode.CreateBranchExistingParent{}
 	case "CreateProposal":
-		return &step.CreateProposal{}
+		return &opcode.CreateProposal{}
 	case "CreateRemoteBranch":
-		return &step.CreateRemoteBranch{}
+		return &opcode.CreateRemoteBranch{}
 	case "CreateTrackingBranch":
-		return &step.CreateTrackingBranch{}
+		return &opcode.CreateTrackingBranch{}
 	case "DeleteLocalBranch":
-		return &step.DeleteLocalBranch{}
+		return &opcode.DeleteLocalBranch{}
 	case "DeleteParentBranch":
-		return &step.DeleteParentBranch{}
+		return &opcode.DeleteParentBranch{}
 	case "DeleteRemoteBranch":
-		return &step.DeleteRemoteBranch{}
+		return &opcode.DeleteRemoteBranch{}
 	case "DeleteTrackingBranch":
-		return &step.DeleteTrackingBranch{}
+		return &opcode.DeleteTrackingBranch{}
 	case "DiscardOpenChanges":
-		return &step.DiscardOpenChanges{}
+		return &opcode.DiscardOpenChanges{}
 	case "Empty":
-		return &step.Empty{}
+		return &opcode.Empty{}
 	case "EnsureHasShippableChanges":
-		return &step.EnsureHasShippableChanges{}
+		return &opcode.EnsureHasShippableChanges{}
 	case "FetchUpstream":
-		return &step.FetchUpstream{}
+		return &opcode.FetchUpstream{}
 	case "ForcePushCurrentBranch":
-		return &step.ForcePushCurrentBranch{}
+		return &opcode.ForcePushCurrentBranch{}
 	case "Merge":
-		return &step.Merge{}
+		return &opcode.Merge{}
 	case "MergeParent":
-		return &step.MergeParent{}
+		return &opcode.MergeParent{}
 	case "PreserveCheckoutHistory":
-		return &step.PreserveCheckoutHistory{}
+		return &opcode.PreserveCheckoutHistory{}
 	case "PullCurrentBranch":
-		return &step.PullCurrentBranch{}
+		return &opcode.PullCurrentBranch{}
 	case "PushCurrentBranch":
-		return &step.PushCurrentBranch{}
+		return &opcode.PushCurrentBranch{}
 	case "PushTags":
-		return &step.PushTags{}
+		return &opcode.PushTags{}
 	case "RebaseBranch":
-		return &step.RebaseBranch{}
+		return &opcode.RebaseBranch{}
 	case "RebaseParent":
-		return &step.RebaseParent{}
+		return &opcode.RebaseParent{}
 	case "RemoveFromPerennialBranches":
-		return &step.RemoveFromPerennialBranches{}
+		return &opcode.RemoveFromPerennialBranches{}
 	case "RemoveGlobalConfig":
-		return &step.RemoveGlobalConfig{}
+		return &opcode.RemoveGlobalConfig{}
 	case "RemoveLocalConfig":
-		return &step.RemoveLocalConfig{}
+		return &opcode.RemoveLocalConfig{}
 	case "ResetCurrentBranchToSHA":
-		return &step.ResetCurrentBranchToSHA{}
+		return &opcode.ResetCurrentBranchToSHA{}
 	case "ResetRemoteBranchToSHA":
-		return &step.ResetRemoteBranchToSHA{}
+		return &opcode.ResetRemoteBranchToSHA{}
 	case "RestoreOpenChanges":
-		return &step.RestoreOpenChanges{}
+		return &opcode.RestoreOpenChanges{}
 	case "RevertCommit":
-		return &step.RevertCommit{}
+		return &opcode.RevertCommit{}
 	case "SetExistingParent":
-		return &step.SetExistingParent{}
+		return &opcode.SetExistingParent{}
 	case "SetGlobalConfig":
-		return &step.SetGlobalConfig{}
+		return &opcode.SetGlobalConfig{}
 	case "SetLocalConfig":
-		return &step.SetLocalConfig{}
+		return &opcode.SetLocalConfig{}
 	case "SetParent":
-		return &step.SetParent{}
+		return &opcode.SetParent{}
 	case "SetParentIfBranchExists":
-		return &step.SetParentIfBranchExists{}
+		return &opcode.SetParentIfBranchExists{}
 	case "SquashMerge":
-		return &step.SquashMerge{}
+		return &opcode.SquashMerge{}
 	case "SkipCurrentBranch":
-		return &step.SkipCurrentBranch{}
+		return &opcode.SkipCurrentBranch{}
 	case "StashOpenChanges":
-		return &step.StashOpenChanges{}
+		return &opcode.StashOpenChanges{}
 	case "UndoLastCommit":
-		return &step.UndoLastCommit{}
+		return &opcode.UndoLastCommit{}
 	case "UpdateProposalTarget":
-		return &step.UpdateProposalTarget{}
+		return &opcode.UpdateProposalTarget{}
 	}
 	return nil
 }

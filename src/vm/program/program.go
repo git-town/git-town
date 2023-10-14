@@ -8,7 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/vm/step"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 )
 
 // Program is a collection of Step instances.
@@ -17,18 +17,18 @@ import (
 //
 //nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {
-	Steps []step.Step `exhaustruct:"optional"`
+	Steps []opcode.Opcode `exhaustruct:"optional"`
 }
 
 // NewProgram provides a program instance containing the given step.
-func NewProgram(initialStep step.Step) Program {
+func NewProgram(initialStep opcode.Opcode) Program {
 	return Program{
-		Steps: []step.Step{initialStep},
+		Steps: []opcode.Opcode{initialStep},
 	}
 }
 
 // Append adds the given step to the end of this program.
-func (p *Program) Add(step ...step.Step) {
+func (p *Program) Add(step ...opcode.Opcode) {
 	p.Steps = append(p.Steps, step...)
 }
 
@@ -52,7 +52,7 @@ func (p *Program) MarshalJSON() ([]byte, error) {
 }
 
 // Peek provides the first element of this program.
-func (p *Program) Peek() step.Step { //nolint:ireturn
+func (p *Program) Peek() opcode.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
@@ -60,7 +60,7 @@ func (p *Program) Peek() step.Step { //nolint:ireturn
 }
 
 // Pop removes and provides the first element of this program.
-func (p *Program) Pop() step.Step { //nolint:ireturn
+func (p *Program) Pop() opcode.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
@@ -70,7 +70,7 @@ func (p *Program) Pop() step.Step { //nolint:ireturn
 }
 
 // Prepend adds the given step to the beginning of this program.
-func (p *Program) Prepend(other ...step.Step) {
+func (p *Program) Prepend(other ...opcode.Opcode) {
 	if len(other) > 0 {
 		p.Steps = append(other, p.Steps...)
 	}
@@ -92,9 +92,9 @@ func (p *Program) RemoveAllButLast(removeType string) {
 
 // RemoveDuplicateCheckoutSteps provides this program with checkout steps that immediately follow each other removed.
 func (p *Program) RemoveDuplicateCheckoutSteps() Program {
-	result := make([]step.Step, 0, len(p.Steps))
+	result := make([]opcode.Opcode, 0, len(p.Steps))
 	// this one is populated only if the last step is a checkout step
-	var lastStep step.Step
+	var lastStep opcode.Opcode
 	for _, step := range p.Steps {
 		if IsCheckoutStep(step) {
 			lastStep = step
@@ -147,7 +147,7 @@ func (p *Program) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		p.Steps = make([]step.Step, len(jsonSteps))
+		p.Steps = make([]opcode.Opcode, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
 			p.Steps[j] = jsonStep.Step
 		}
@@ -169,14 +169,14 @@ type WrapOptions struct {
 // TODO: only wrap if the list actually contains any steps.
 func (p *Program) Wrap(options WrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
-		p.Add(&step.PreserveCheckoutHistory{
+		p.Add(&opcode.PreserveCheckoutHistory{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
 			MainBranch:                        options.MainBranch,
 		})
 	}
 	if options.StashOpenChanges {
-		p.Prepend(&step.StashOpenChanges{})
-		p.Add(&step.RestoreOpenChanges{})
+		p.Prepend(&opcode.StashOpenChanges{})
+		p.Add(&opcode.RestoreOpenChanges{})
 	}
 }

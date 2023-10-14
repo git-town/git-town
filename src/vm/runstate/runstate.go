@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
-	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // RunState represents the current state of a Git Town command,
@@ -41,7 +41,7 @@ func (rs *RunState) AddPushBranchStepAfterCurrentBranchProgram(backend *git.Back
 			if err != nil {
 				return err
 			}
-			rs.RunProgram.Prepend(&step.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
+			rs.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
 			rs.RunProgram.PrependProgram(popped)
 			break
 		}
@@ -92,7 +92,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(step)
 		}
 	}
-	result.RunProgram.Steps = slice.LowerAll[step.Step](result.RunProgram.Steps, &step.RestoreOpenChanges{})
+	result.RunProgram.Steps = slice.LowerAll[opcode.Opcode](result.RunProgram.Steps, &opcode.RestoreOpenChanges{})
 	return result
 }
 
@@ -107,7 +107,7 @@ func (rs *RunState) CreateUndoRunState() RunState {
 		RunProgram:               rs.UndoProgram,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
-	result.RunProgram.Add(&step.Checkout{Branch: rs.InitialActiveBranch})
+	result.RunProgram.Add(&opcode.Checkout{Branch: rs.InitialActiveBranch})
 	result.RunProgram = result.RunProgram.RemoveDuplicateCheckoutSteps()
 	return result
 }
