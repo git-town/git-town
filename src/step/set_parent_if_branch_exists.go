@@ -18,9 +18,5 @@ func (step *SetParentIfBranchExists) Run(args RunArgs) error {
 	if !branchExists {
 		return nil
 	}
-	err := args.Runner.Config.SetParent(step.Branch, step.Parent)
-	if err != nil {
-		return err
-	}
-	return nil
+	return args.Runner.Config.SetParent(step.Branch, step.Parent)
 }
