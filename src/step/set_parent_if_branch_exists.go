@@ -2,7 +2,10 @@ package step
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// SetParentIfBranchExists sets the given parent branch as the parent of the given branch.
+// SetParentIfBranchExists sets the given parent branch as the parent of the given branch,
+// but only the latter exists. This is useful when the branch might or might not be deleted
+// depending on conditions evaluated at runtime.
+// Use SetParent if you are sure that the branch will exist.
 // Use ChangeParent to change an existing parent.
 type SetParentIfBranchExists struct {
 	Branch domain.LocalBranchName
