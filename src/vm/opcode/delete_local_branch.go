@@ -8,7 +8,7 @@ import (
 type DeleteLocalBranch struct {
 	Branch domain.LocalBranchName
 	Force  bool
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *DeleteLocalBranch) Run(args RunArgs) error {

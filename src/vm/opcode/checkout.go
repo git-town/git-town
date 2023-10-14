@@ -7,7 +7,7 @@ import (
 // Checkout checks out a new branch.
 type Checkout struct {
 	Branch domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *Checkout) Run(args RunArgs) error {

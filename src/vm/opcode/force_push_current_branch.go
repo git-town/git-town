@@ -3,7 +3,7 @@ package opcode
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
 	NoPushHook bool
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *ForcePushCurrentBranch) Run(args RunArgs) error {

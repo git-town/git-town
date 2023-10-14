@@ -4,26 +4,25 @@ import (
 	"errors"
 )
 
-// BaseOpcode does nothing.
-// It is used for steps that have no undo or abort steps.
-type BaseOpcode struct{}
+// undeclaredOpcodeMethods makes structs in this package satisfy the Opcode interface even if they don't declare all required methods.
+type undeclaredOpcodeMethods struct{}
 
-func (step *BaseOpcode) CreateAbortProgram() []Opcode {
+func (step *undeclaredOpcodeMethods) CreateAbortProgram() []Opcode {
 	return []Opcode{}
 }
 
-func (step *BaseOpcode) CreateContinueProgram() []Opcode {
+func (step *undeclaredOpcodeMethods) CreateContinueProgram() []Opcode {
 	return []Opcode{}
 }
 
-func (step *BaseOpcode) CreateAutomaticAbortError() error {
+func (step *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *BaseOpcode) Run(_ RunArgs) error {
+func (step *undeclaredOpcodeMethods) Run(_ RunArgs) error {
 	return nil
 }
 
-func (step *BaseOpcode) ShouldAutomaticallyAbortOnError() bool {
+func (step *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }

@@ -7,7 +7,7 @@ import (
 // DeleteParentBranch removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranch struct {
 	Branch domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *DeleteParentBranch) Run(args RunArgs) error {

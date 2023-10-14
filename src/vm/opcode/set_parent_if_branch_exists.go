@@ -7,7 +7,7 @@ import "github.com/git-town/git-town/v9/src/domain"
 type SetParentIfBranchExists struct {
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *SetParentIfBranchExists) Run(args RunArgs) error {

@@ -2,7 +2,7 @@ package opcode
 
 // PushTags pushes newly created Git tags to origin.
 type PushTags struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *PushTags) Run(args RunArgs) error {

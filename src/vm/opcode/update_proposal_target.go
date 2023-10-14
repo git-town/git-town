@@ -11,7 +11,7 @@ import (
 type UpdateProposalTarget struct {
 	ProposalNumber int
 	NewTarget      domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *UpdateProposalTarget) Run(args RunArgs) error {

@@ -11,7 +11,7 @@ import (
 type EnsureHasShippableChanges struct {
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *EnsureHasShippableChanges) CreateAutomaticAbortError() error {

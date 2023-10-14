@@ -3,8 +3,8 @@ package opcode
 import "github.com/git-town/git-town/v9/src/domain"
 
 type UpdateInitialBranchLocalSHA struct {
-	Branch     domain.LocalBranchName
-	BaseOpcode `exhaustruct:"optional"`
+	Branch                  domain.LocalBranchName
+	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
 func (step *UpdateInitialBranchLocalSHA) Run(args RunArgs) error {

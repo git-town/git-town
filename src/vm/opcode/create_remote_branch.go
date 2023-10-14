@@ -9,7 +9,7 @@ type CreateRemoteBranch struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
 	SHA        domain.SHA
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *CreateRemoteBranch) Run(args RunArgs) error {

@@ -7,7 +7,7 @@ import (
 // CommitOpenChanges commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChanges struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *CommitOpenChanges) Run(args RunArgs) error {

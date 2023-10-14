@@ -8,7 +8,7 @@ import (
 type CreateBranch struct {
 	Branch        domain.LocalBranchName
 	StartingPoint domain.Location
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *CreateBranch) Run(args RunArgs) error {

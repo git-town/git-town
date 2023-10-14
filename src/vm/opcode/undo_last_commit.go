@@ -1,7 +1,7 @@
 package opcode
 
 type UndoLastCommit struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *UndoLastCommit) Run(args RunArgs) error {

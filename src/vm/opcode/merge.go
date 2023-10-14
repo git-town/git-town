@@ -7,7 +7,7 @@ import (
 // Merge merges the branch with the given name into the current branch.
 type Merge struct {
 	Branch domain.BranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *Merge) CreateAbortProgram() []Opcode {

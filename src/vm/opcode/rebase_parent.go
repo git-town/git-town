@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v9/src/domain"
 // RebaseParent rebases the given branch against the branch that is its parent at runtime.
 type RebaseParent struct {
 	CurrentBranch domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *RebaseParent) CreateAbortProgram() []Opcode {

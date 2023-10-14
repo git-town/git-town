@@ -6,7 +6,7 @@ import (
 
 type RemoveLocalConfig struct {
 	Key config.Key // the config key to remove
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *RemoveLocalConfig) Run(args RunArgs) error {

@@ -8,7 +8,7 @@ import (
 // against the branch with the given name.
 type RebaseBranch struct {
 	Branch domain.BranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *RebaseBranch) CreateAbortProgram() []Opcode {

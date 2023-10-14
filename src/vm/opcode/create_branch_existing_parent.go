@@ -7,7 +7,7 @@ type CreateBranchExistingParent struct {
 	Branch     domain.LocalBranchName
 	MainBranch domain.LocalBranchName
 	Ancestors  domain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *CreateBranchExistingParent) Run(args RunArgs) error {

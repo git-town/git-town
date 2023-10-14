@@ -8,7 +8,7 @@ import (
 
 // RestoreOpenChanges restores stashed away changes into the workspace.
 type RestoreOpenChanges struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *RestoreOpenChanges) Run(args RunArgs) error {

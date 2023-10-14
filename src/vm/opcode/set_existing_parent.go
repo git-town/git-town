@@ -7,7 +7,7 @@ type SetExistingParent struct {
 	Branch     domain.LocalBranchName
 	Ancestors  domain.LocalBranchNames
 	MainBranch domain.LocalBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *SetExistingParent) Run(args RunArgs) error {

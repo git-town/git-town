@@ -8,7 +8,7 @@ import (
 type PushCurrentBranch struct {
 	CurrentBranch domain.LocalBranchName
 	NoPushHook    bool
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *PushCurrentBranch) Run(args RunArgs) error {

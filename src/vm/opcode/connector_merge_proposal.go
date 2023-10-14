@@ -15,7 +15,7 @@ type ConnectorMergeProposal struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	ProposalNumber            int
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *ConnectorMergeProposal) CreateAbortProgram() []Opcode {

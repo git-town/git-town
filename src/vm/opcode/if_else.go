@@ -10,7 +10,7 @@ type IfElse struct {
 	Condition func(*git.BackendCommands, config.Lineage) (bool, error)
 	WhenTrue  []Opcode // the steps to execute if the given branch is empty
 	WhenFalse []Opcode // the steps to execute if the given branch is not empty
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *IfElse) Run(args RunArgs) error {

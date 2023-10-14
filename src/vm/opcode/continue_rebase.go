@@ -3,7 +3,7 @@ package opcode
 // ContinueRebase finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.
 type ContinueRebase struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *ContinueRebase) CreateAbortProgram() []Opcode {

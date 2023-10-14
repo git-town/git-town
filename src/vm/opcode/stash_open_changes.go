@@ -1,7 +1,7 @@
 package opcode
 
 type StashOpenChanges struct {
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *StashOpenChanges) Run(args RunArgs) error {

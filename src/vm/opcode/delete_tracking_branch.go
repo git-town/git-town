@@ -7,7 +7,7 @@ import (
 // DeleteTrackingBranch deletes the tracking branch of the given local branch.
 type DeleteTrackingBranch struct {
 	Branch domain.RemoteBranchName
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *DeleteTrackingBranch) Run(args RunArgs) error {

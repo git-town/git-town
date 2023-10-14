@@ -13,7 +13,7 @@ type ResetRemoteBranchToSHA struct {
 	Branch      domain.RemoteBranchName
 	MustHaveSHA domain.SHA
 	SetToSHA    domain.SHA
-	BaseOpcode
+	undeclaredOpcodeMethods
 }
 
 func (step *ResetRemoteBranchToSHA) Run(args RunArgs) error {
