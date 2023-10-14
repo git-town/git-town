@@ -11,9 +11,5 @@ type SetParent struct {
 }
 
 func (step *SetParent) Run(args RunArgs) error {
-	err := args.Runner.Config.SetParent(step.Branch, step.Parent)
-	if err != nil {
-		return err
-	}
-	return nil
+	return args.Runner.Config.SetParent(step.Branch, step.Parent)
 }
