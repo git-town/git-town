@@ -13,10 +13,10 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/runvm"
+	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
 

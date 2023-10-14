@@ -7,7 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/shoenig/test/must"
 )
 

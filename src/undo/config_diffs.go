@@ -2,7 +2,7 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/vm/steps"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
