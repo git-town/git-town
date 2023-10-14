@@ -15,6 +15,45 @@ func TestLineage(t *testing.T) {
 	two := domain.NewLocalBranchName("two")
 	three := domain.NewLocalBranchName("three")
 
+	t.Run("Ancestors", func(t *testing.T) {
+		t.Parallel()
+		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[three] = two
+			lineage[two] = one
+			lineage[one] = main
+			have := lineage.Ancestors(three)
+			want := domain.LocalBranchNames{main, one, two}
+			must.Eq(t, want, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[one] = main
+			have := lineage.Ancestors(one)
+			want := domain.LocalBranchNames{main}
+			must.Eq(t, want, have)
+		})
+		t.Run("no ancestors", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[one] = main
+			have := lineage.Ancestors(two)
+			want := domain.LocalBranchNames{}
+			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("BranchAndAncestors", func(t *testing.T) {
+		t.Parallel()
+		lineage := config.Lineage{}
+		lineage[one] = main
+		have := lineage.BranchAndAncestors(one)
+		want := domain.LocalBranchNames{main, one}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("deep lineage, multiple branches", func(t *testing.T) {
@@ -59,36 +98,6 @@ func TestLineage(t *testing.T) {
 		have := lineage.BranchAndAncestors(one)
 		want := domain.LocalBranchNames{main, one}
 		must.Eq(t, want, have)
-	})
-
-	t.Run("Ancestors", func(t *testing.T) {
-		t.Parallel()
-		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{}
-			lineage[three] = two
-			lineage[two] = one
-			lineage[one] = main
-			have := lineage.Ancestors(three)
-			want := domain.LocalBranchNames{main, one, two}
-			must.Eq(t, want, have)
-		})
-		t.Run("one ancestor", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{}
-			lineage[one] = main
-			have := lineage.Ancestors(one)
-			want := domain.LocalBranchNames{main}
-			must.Eq(t, want, have)
-		})
-		t.Run("no ancestors", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{}
-			lineage[one] = main
-			have := lineage.Ancestors(two)
-			want := domain.LocalBranchNames{}
-			must.Eq(t, want, have)
-		})
 	})
 
 	t.Run("BranchNames", func(t *testing.T) {
