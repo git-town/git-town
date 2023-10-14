@@ -6,13 +6,11 @@ import (
 )
 
 type IfElse struct {
-	Condition  ConditionFunc
+	Condition  func(*git.BackendCommands, config.Lineage) (bool, error)
 	TrueSteps  []Step // the steps to execute if the given branch is empty
 	FalseSteps []Step // the steps to execute if the given branch is not empty
 	Empty
 }
-
-type ConditionFunc func(*git.BackendCommands, config.Lineage) (bool, error)
 
 func (step *IfElse) Run(args RunArgs) error {
 	condition, err := step.Condition(&args.Runner.Backend, args.Lineage)
