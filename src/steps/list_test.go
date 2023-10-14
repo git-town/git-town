@@ -154,6 +154,14 @@ func TestList(t *testing.T) {
 			list.Prepend()
 			must.Eq(t, []step.Step{}, list.List)
 		})
+		t.Run("used as a higher-level function", func(t *testing.T) {
+			t.Parallel()
+			list := steps.List{List: []step.Step{&step.AbortMerge{}}}
+			prepend := list.Prepend
+			prepend(&step.AbortRebase{}, &step.StashOpenChanges{})
+			want := []step.Step{&step.AbortRebase{}, &step.StashOpenChanges{}, &step.AbortMerge{}}
+			must.Eq(t, want, list.List)
+		})
 	})
 
 	t.Run("PrependList", func(t *testing.T) {

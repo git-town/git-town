@@ -29,8 +29,11 @@ Feature: display debug statistics
       | old    | frontend | git merge --no-edit origin/old                |
       |        | frontend | git merge --no-edit main                      |
       |        | backend  | git rev-list --left-right old...origin/old    |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       | old    | frontend | git branch parent main                        |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.parent.parent main |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
       |        | backend  | git show-ref --quiet refs/heads/old           |
@@ -41,7 +44,7 @@ Feature: display debug statistics
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 31 shell commands.
       """
     And the current branch is now "parent"
 

@@ -65,6 +65,8 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.ContinueRebase{}
 	case "CreateBranch":
 		return &step.CreateBranch{}
+	case "CreateBranchExistingParent":
+		return &step.CreateBranchExistingParent{}
 	case "CreateProposal":
 		return &step.CreateProposal{}
 	case "CreateRemoteBranch":
@@ -119,12 +121,16 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.RestoreOpenChanges{}
 	case "RevertCommit":
 		return &step.RevertCommit{}
+	case "SetExistingParent":
+		return &step.SetExistingParent{}
 	case "SetGlobalConfig":
 		return &step.SetGlobalConfig{}
 	case "SetLocalConfig":
 		return &step.SetLocalConfig{}
 	case "SetParent":
 		return &step.SetParent{}
+	case "SetParentIfBranchExists":
+		return &step.SetParentIfBranchExists{}
 	case "SquashMerge":
 		return &step.SquashMerge{}
 	case "SkipCurrentBranch":

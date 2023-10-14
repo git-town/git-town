@@ -62,9 +62,14 @@ func (bcs *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName)
 	return result, nil
 }
 
+func (bcs *BackendCommands) BranchExists(branch domain.LocalBranchName) bool {
+	err := bcs.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
+	return err == nil
+}
+
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
-func (bcs *BackendCommands) BranchHasUnmergedChanges(branch domain.LocalBranchName, parent domain.Location) (bool, error) {
+func (bcs *BackendCommands) BranchHasUnmergedChanges(branch, parent domain.LocalBranchName) (bool, error) {
 	out, err := bcs.QueryTrim("git", "diff", parent.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
@@ -114,7 +119,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		}
 		branchName := parts[0]
 		var sha domain.SHA
-		if parts[1] != "branch," {
+		if parts[1] != "branch," { // TODO: switch arms of this if expression to straighten out the !=.
 			sha = domain.NewSHA(parts[1])
 		} else {
 			// we are rebasing and don't need the SHA
@@ -352,6 +357,15 @@ func (bcs *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviously
 	return mainBranch, nil
 }
 
+func (bcs *BackendCommands) FirstExistingBranch(branches domain.LocalBranchNames, mainBranch domain.LocalBranchName) domain.LocalBranchName {
+	for _, branch := range branches {
+		if bcs.BranchExists(branch) {
+			return branch
+		}
+	}
+	return mainBranch
+}
+
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (bcs *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
 	return bcs.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
@@ -386,6 +400,9 @@ func (bcs *BackendCommands) LastCommitMessage() (string, error) {
 func (bcs *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 	output, err := bcs.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
+		return domain.EmptyLocalBranchName()
+	}
+	if output == "" {
 		return domain.EmptyLocalBranchName()
 	}
 	return domain.NewLocalBranchName(output)

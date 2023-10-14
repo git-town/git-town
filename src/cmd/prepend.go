@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
@@ -81,21 +82,22 @@ func executePrepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	branches            domain.Branches
-	branchesToSync      domain.BranchInfos
-	hasOpenChanges      bool
-	remotes             domain.Remotes
-	isOffline           bool
-	lineage             config.Lineage
-	mainBranch          domain.LocalBranchName
-	previousBranch      domain.LocalBranchName
-	pullBranchStrategy  config.PullBranchStrategy
-	pushHook            bool
-	parentBranch        domain.LocalBranchName
-	shouldSyncUpstream  bool
-	shouldNewBranchPush bool
-	syncStrategy        config.SyncStrategy
-	targetBranch        domain.LocalBranchName
+	branches                  domain.Branches
+	branchesToSync            domain.BranchInfos
+	hasOpenChanges            bool
+	remotes                   domain.Remotes
+	isOffline                 bool
+	lineage                   config.Lineage
+	mainBranch                domain.LocalBranchName
+	newBranchParentCandidates domain.LocalBranchNames
+	previousBranch            domain.LocalBranchName
+	pullBranchStrategy        config.PullBranchStrategy
+	pushHook                  bool
+	parentBranch              domain.LocalBranchName
+	shouldSyncUpstream        bool
+	shouldNewBranchPush       bool
+	syncStrategy              config.SyncStrategy
+	targetBranch              domain.LocalBranchName
 }
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -145,22 +147,26 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	parent := lineage.Parent(branches.Initial)
+	parentAndAncestors := lineage.BranchAndAncestors(parent)
+	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
-		branches:            branches,
-		branchesToSync:      branchesToSync,
-		hasOpenChanges:      repoStatus.OpenChanges,
-		remotes:             remotes,
-		isOffline:           repo.IsOffline,
-		lineage:             lineage,
-		mainBranch:          mainBranch,
-		previousBranch:      previousBranch,
-		pullBranchStrategy:  pullBranchStrategy,
-		pushHook:            pushHook,
-		parentBranch:        lineage.Parent(branches.Initial),
-		shouldNewBranchPush: shouldNewBranchPush,
-		shouldSyncUpstream:  shouldSyncUpstream,
-		syncStrategy:        syncStrategy,
-		targetBranch:        targetBranch,
+		branches:                  branches,
+		branchesToSync:            branchesToSync,
+		hasOpenChanges:            repoStatus.OpenChanges,
+		remotes:                   remotes,
+		isOffline:                 repo.IsOffline,
+		lineage:                   lineage,
+		mainBranch:                mainBranch,
+		newBranchParentCandidates: parentAndAncestors,
+		previousBranch:            previousBranch,
+		pullBranchStrategy:        pullBranchStrategy,
+		pushHook:                  pushHook,
+		parentBranch:              parent,
+		shouldNewBranchPush:       shouldNewBranchPush,
+		shouldSyncUpstream:        shouldSyncUpstream,
+		syncStrategy:              syncStrategy,
+		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
@@ -169,7 +175,6 @@ func prependSteps(config *prependConfig) steps.List {
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(branchToSync, syncBranchStepsArgs{
 			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			list:               &list,
@@ -177,13 +182,27 @@ func prependSteps(config *prependConfig) steps.List {
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
+			remotes:            config.remotes,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&step.CreateBranch{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
-	list.Add(&step.SetParent{Branch: config.targetBranch, Parent: config.parentBranch})
-	list.Add(&step.SetParent{Branch: config.branches.Initial, Parent: config.targetBranch})
+	list.Add(&step.CreateBranchExistingParent{
+		Ancestors:  config.newBranchParentCandidates,
+		Branch:     config.targetBranch,
+		MainBranch: config.mainBranch,
+	})
+	// set the parent of the newly created branch
+	list.Add(&step.SetExistingParent{
+		Branch:     config.targetBranch,
+		Ancestors:  config.newBranchParentCandidates,
+		MainBranch: config.mainBranch,
+	})
+	// set the parent of the branch prepended to
+	list.Add(&step.SetParentIfBranchExists{
+		Branch: config.branches.Initial,
+		Parent: config.targetBranch,
+	})
 	list.Add(&step.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})

@@ -47,7 +47,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			branch := domain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
-			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
 			must.False(t, have)
 		})
@@ -68,7 +68,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				FileContent: "modified content",
 			})
-			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
@@ -77,7 +77,7 @@ func TestBackendCommands(t *testing.T) {
 				FileName:    "file1",
 				FileContent: "original content",
 			})
-			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial.Location())
+			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
 			must.False(t, have, must.Sprint("branch with commits that make no changes"))
 		})
@@ -220,6 +220,44 @@ func TestBackendCommands(t *testing.T) {
 		branch, err = runtime.Backend.CurrentBranch()
 		must.NoError(t, err)
 		must.EqOp(t, initial, branch)
+	})
+
+	t.Run("FirstExistingBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("first branch matches", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("b1")
+			branch2 := domain.NewLocalBranchName("b2")
+			runtime.CreateBranch(branch1, initial)
+			runtime.CreateBranch(branch2, initial)
+			branchNames := domain.LocalBranchNames{branch1, branch2}
+			have := runtime.Backend.FirstExistingBranch(branchNames, domain.NewLocalBranchName("main"))
+			want := branch1
+			must.EqOp(t, want, have)
+		})
+		t.Run("second branch matches", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("b1")
+			branch2 := domain.NewLocalBranchName("b2")
+			runtime.CreateBranch(branch2, initial)
+			branchNames := domain.LocalBranchNames{branch1, branch2}
+			have := runtime.Backend.FirstExistingBranch(branchNames, domain.NewLocalBranchName("main"))
+			want := branch2
+			must.EqOp(t, want, have)
+		})
+		t.Run("no branch matches", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			branch1 := domain.NewLocalBranchName("b1")
+			branch2 := domain.NewLocalBranchName("b2")
+			main := domain.NewLocalBranchName("main")
+			branchNames := domain.LocalBranchNames{branch1, branch2}
+			have := runtime.Backend.FirstExistingBranch(branchNames, main)
+			want := main
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("HasLocalBranch", func(t *testing.T) {
