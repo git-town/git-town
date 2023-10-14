@@ -210,6 +210,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
+	fmt.Println("22222222222222222222222 NAMES", allBranchNamesToSync)
+	fmt.Println("22222222222222222222222 BRANCHES", branchesToSync)
 	return &syncConfig{
 		branches:           branches,
 		branchesToSync:     branchesToSync,
