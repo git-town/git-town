@@ -9,8 +9,8 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/runvm"
 	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
@@ -72,7 +72,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            renameBranchSteps(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,

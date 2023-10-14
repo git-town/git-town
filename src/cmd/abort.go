@@ -10,9 +10,9 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/runvm"
 	"github.com/git-town/git-town/v9/src/vm/steps"
 	"github.com/spf13/cobra"
 )
@@ -54,7 +54,7 @@ func executeAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &abortRunState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,

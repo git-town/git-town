@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/runvm"
 	"github.com/spf13/cobra"
 )
 
@@ -60,7 +60,7 @@ func executeHack(args []string, debug bool) error {
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunSteps:            appendSteps(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,

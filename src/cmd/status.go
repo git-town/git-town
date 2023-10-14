@@ -7,9 +7,9 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/runvm"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +48,7 @@ func executeStatus(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
-	runvm.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), runvm.NoFinalMessages)
+	interpreter.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), interpreter.NoFinalMessages)
 	return nil
 }
 
