@@ -56,16 +56,48 @@ func TestLineage(t *testing.T) {
 
 	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
-		t.Run("many branches", func(t *testing.T) {
+		t.Run("deep lineage, multiple branches", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage[one] = main
 			lineage[two] = one
+			lineage[three] = two
 			give := domain.LocalBranchNames{two, one}
 			have := lineage.BranchesAndAncestors(give)
 			want := domain.LocalBranchNames{main, one, two}
 			must.Eq(t, want, have)
 		})
+		t.Run("deep lineage, multiple branches out of order", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			give := domain.LocalBranchNames{one, two, main, three}
+			have := lineage.BranchesAndAncestors(give)
+			want := domain.LocalBranchNames{main, one, two, three}
+			must.Eq(t, want, have)
+		})
+		t.Run("deep lineage, single branch", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			give := domain.LocalBranchNames{three}
+			have := lineage.BranchesAndAncestors(give)
+			want := domain.LocalBranchNames{main, one, two, three}
+			must.Eq(t, want, have)
+		})
+	})
+
+	t.Run("BranchAndAncestors", func(t *testing.T) {
+		t.Parallel()
+		lineage := config.Lineage{}
+		lineage[one] = main
+		have := lineage.BranchAndAncestors(one)
+		want := domain.LocalBranchNames{main, one}
+		must.Eq(t, want, have)
 	})
 
 	t.Run("BranchNames", func(t *testing.T) {
@@ -151,7 +183,7 @@ func TestLineage(t *testing.T) {
 	})
 
 	t.Run("OrderedHierarchically", func(t *testing.T) {
-		t.Run("complex scenario", func(t *testing.T) {
+		t.Run("multiple lineages", func(t *testing.T) {
 			t.Parallel()
 			oneA := domain.NewLocalBranchName("oneA")
 			oneA1 := domain.NewLocalBranchName("oneA1")
@@ -166,6 +198,36 @@ func TestLineage(t *testing.T) {
 			lineage[two] = main
 			have := lineage.BranchNames()
 			want := domain.LocalBranchNames{one, oneA, oneA1, oneA2, oneB, two}
+			lineage.OrderHierarchically(have)
+			must.Eq(t, want, have)
+		})
+		t.Run("deep lineage", func(t *testing.T) {
+			t.Parallel()
+			one := domain.NewLocalBranchName("one")
+			two := domain.NewLocalBranchName("two")
+			three := domain.NewLocalBranchName("three")
+			four := domain.NewLocalBranchName("four")
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			lineage[four] = three
+			have := domain.LocalBranchNames{four, one}
+			want := domain.LocalBranchNames{one, four}
+			lineage.OrderHierarchically(have)
+			must.Eq(t, want, have)
+		})
+		t.Run("elements out of order", func(t *testing.T) {
+			t.Parallel()
+			one := domain.NewLocalBranchName("one")
+			two := domain.NewLocalBranchName("two")
+			three := domain.NewLocalBranchName("three")
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			have := domain.LocalBranchNames{one, two, main, three}
+			want := domain.LocalBranchNames{main, one, two, three}
 			lineage.OrderHierarchically(have)
 			must.Eq(t, want, have)
 		})
