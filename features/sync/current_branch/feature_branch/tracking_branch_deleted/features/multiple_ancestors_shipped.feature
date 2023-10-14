@@ -14,11 +14,12 @@ Feature: multiple shipped parent branches in a lineage
     And the current branch is "feature-3"
     When I run "git-town sync"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-3 | git fetch --prune --tags             |
+      |           | git checkout main                    |
+      | main      | git rebase origin/main               |
       |           | git checkout feature-1               |
       | feature-1 | git merge --no-edit main             |
       |           | git checkout main                    |
@@ -27,10 +28,10 @@ Feature: multiple shipped parent branches in a lineage
       | feature-2 | git merge --no-edit main             |
       |           | git checkout main                    |
       | main      | git branch -d feature-2              |
-      |           | git rebase origin/main               |
       |           | git checkout feature-3               |
       | feature-3 | git merge --no-edit origin/feature-3 |
       |           | git merge --no-edit main             |
+      |           | git push                             |
     And it prints:
       """
       deleted branch "feature-1"
@@ -39,18 +40,24 @@ Feature: multiple shipped parent branches in a lineage
       """
       deleted branch "feature-2"
       """
-    And the current branch is still "child"
+    And the current branch is still "feature-3"
     And the branches are now
-      | REPOSITORY    | BRANCHES    |
-      | local, origin | main, child |
+      | REPOSITORY    | BRANCHES        |
+      | local, origin | main, feature-3 |
     And this branch lineage exists now
-      | BRANCH | PARENT |
-      | child  | main   |
+      | BRANCH    | PARENT |
+      | feature-3 | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                      |
-      | child  | git branch parent {{ sha 'Initial commit' }} |
-    And the current branch is still "child"
+      | BRANCH    | COMMAND                                           |
+      | feature-3 | git reset --hard {{ sha 'feature-3 commit' }}     |
+      |           | git push --force-with-lease                       |
+      |           | git checkout main                                 |
+      | main      | git reset --hard {{ sha 'Initial commit' }}       |
+      |           | git branch feature-1 {{ sha 'feature-1 commit' }} |
+      |           | git branch feature-2 {{ sha 'feature-2 commit' }} |
+      |           | git checkout feature-3                            |
+    And the current branch is still "feature-3"
     And the initial branches and hierarchy exist
