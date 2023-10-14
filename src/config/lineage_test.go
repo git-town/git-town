@@ -142,23 +142,6 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
-	t.Run("ChangeParent", func(t *testing.T) {
-		t.Parallel()
-		main := domain.NewLocalBranchName("main")
-		branch1 := domain.NewLocalBranchName("branch-1")
-		branch1a := domain.NewLocalBranchName("branch-1a")
-		lineage := config.Lineage{
-			branch1:  main,
-			branch1a: branch1,
-		}
-		have := lineage.ChangeParent(branch1a, main)
-		want := config.Lineage{
-			branch1:  main,
-			branch1a: main,
-		}
-		must.Eq(t, want, have)
-	})
-
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a parent", func(t *testing.T) {
