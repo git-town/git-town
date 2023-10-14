@@ -2,7 +2,7 @@ package step
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// SetExistingParent sets the first existing entry in th given ancestor list as the parent branch of the given branch.
+// SetExistingParent sets the first existing entry in the given ancestor list as the parent branch of the given branch.
 type SetExistingParent struct {
 	Branch     domain.LocalBranchName
 	Ancestors  domain.LocalBranchNames
