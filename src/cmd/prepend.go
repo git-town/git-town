@@ -188,10 +188,9 @@ func prependSteps(config *prependConfig) steps.List {
 		})
 	}
 	list.Add(&step.CreateBranchExistingParent{
-		Ancestors:     config.newBranchParentCandidates,
-		Branch:        config.targetBranch,
-		MainBranch:    config.mainBranch,
-		StartingPoint: config.parentBranch,
+		Ancestors:  config.newBranchParentCandidates,
+		Branch:     config.targetBranch,
+		MainBranch: config.mainBranch,
 	})
 	// set the parent of the newly created branch
 	list.Add(&step.SetExistingParent{
