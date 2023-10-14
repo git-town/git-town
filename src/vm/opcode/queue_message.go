@@ -2,7 +2,7 @@ package opcode
 
 type QueueMessage struct {
 	Message string
-	Empty
+	BaseOpcode
 }
 
 func (step *QueueMessage) Run(args RunArgs) error {

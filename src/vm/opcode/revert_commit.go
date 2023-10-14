@@ -12,7 +12,7 @@ import (
 // that reverts the commit with the given SHA.
 type RevertCommit struct {
 	SHA domain.SHA
-	Empty
+	BaseOpcode
 }
 
 func (step *RevertCommit) Run(args RunArgs) error {

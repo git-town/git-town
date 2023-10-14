@@ -4,26 +4,26 @@ import (
 	"errors"
 )
 
-// Empty does nothing.
+// BaseOpcode does nothing.
 // It is used for steps that have no undo or abort steps.
-type Empty struct{}
+type BaseOpcode struct{}
 
-func (step *Empty) CreateAbortProgram() []Opcode {
+func (step *BaseOpcode) CreateAbortProgram() []Opcode {
 	return []Opcode{}
 }
 
-func (step *Empty) CreateContinueProgram() []Opcode {
+func (step *BaseOpcode) CreateContinueProgram() []Opcode {
 	return []Opcode{}
 }
 
-func (step *Empty) CreateAutomaticAbortError() error {
+func (step *BaseOpcode) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *Empty) Run(_ RunArgs) error {
+func (step *BaseOpcode) Run(_ RunArgs) error {
 	return nil
 }
 
-func (step *Empty) ShouldAutomaticallyAbortOnError() bool {
+func (step *BaseOpcode) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }

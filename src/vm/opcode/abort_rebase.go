@@ -3,7 +3,7 @@ package opcode
 // AbortRebase represents aborting on ongoing merge conflict.
 // This step is used in the abort scripts for Git Town commands.
 type AbortRebase struct {
-	Empty
+	BaseOpcode
 }
 
 func (step *AbortRebase) Run(args RunArgs) error {

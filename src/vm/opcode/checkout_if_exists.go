@@ -8,7 +8,7 @@ import (
 // but only if that branch actually exists.
 type CheckoutIfExists struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *CheckoutIfExists) Run(args RunArgs) error {

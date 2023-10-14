@@ -6,7 +6,7 @@ import (
 
 type RemoveGlobalConfig struct {
 	Key config.Key // the config key to remove
-	Empty
+	BaseOpcode
 }
 
 func (step *RemoveGlobalConfig) Run(args RunArgs) error {

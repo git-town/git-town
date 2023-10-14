@@ -8,7 +8,7 @@ import (
 // CreateProposal creates a new pull request for the current branch.
 type CreateProposal struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *CreateProposal) Run(args RunArgs) error {

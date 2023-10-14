@@ -4,7 +4,7 @@ import "github.com/git-town/git-town/v9/src/domain"
 
 type RemoveBranchFromLineage struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *RemoveBranchFromLineage) Run(args RunArgs) error {

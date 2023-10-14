@@ -7,7 +7,7 @@ import (
 type SetGlobalConfig struct {
 	Key   config.Key
 	Value string
-	Empty
+	BaseOpcode
 }
 
 func (step *SetGlobalConfig) Run(args RunArgs) error {

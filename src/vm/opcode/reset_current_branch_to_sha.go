@@ -13,7 +13,7 @@ type ResetCurrentBranchToSHA struct {
 	Hard        bool
 	MustHaveSHA domain.SHA
 	SetToSHA    domain.SHA
-	Empty
+	BaseOpcode
 }
 
 func (step *ResetCurrentBranchToSHA) Run(args RunArgs) error {

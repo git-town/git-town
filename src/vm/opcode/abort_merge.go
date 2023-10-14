@@ -2,7 +2,7 @@ package opcode
 
 // AbortMerge aborts the current merge conflict.
 type AbortMerge struct {
-	Empty
+	BaseOpcode
 }
 
 func (step *AbortMerge) Run(args RunArgs) error {

@@ -7,7 +7,7 @@ import "github.com/git-town/git-town/v9/src/domain"
 type SetParent struct {
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *SetParent) Run(args RunArgs) error {

@@ -2,7 +2,7 @@ package opcode
 
 // PullCurrentBranch updates the branch with the given name with commits from its remote.
 type PullCurrentBranch struct {
-	Empty
+	BaseOpcode
 }
 
 func (step *PullCurrentBranch) Run(args RunArgs) error {

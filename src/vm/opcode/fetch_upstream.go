@@ -8,7 +8,7 @@ import (
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstream struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *FetchUpstream) Run(args RunArgs) error {

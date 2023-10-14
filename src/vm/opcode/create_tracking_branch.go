@@ -9,7 +9,7 @@ import (
 type CreateTrackingBranch struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
-	Empty
+	BaseOpcode
 }
 
 func (step *CreateTrackingBranch) Run(args RunArgs) error {

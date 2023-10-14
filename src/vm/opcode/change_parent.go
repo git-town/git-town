@@ -12,7 +12,7 @@ import (
 type ChangeParent struct {
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *ChangeParent) Run(args RunArgs) error {

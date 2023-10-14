@@ -7,7 +7,7 @@ import (
 // RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranches struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *RemoveFromPerennialBranches) Run(args RunArgs) error {

@@ -13,7 +13,7 @@ type SquashMerge struct {
 	Branch        domain.LocalBranchName
 	CommitMessage string
 	Parent        domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *SquashMerge) CreateAbortProgram() []Opcode {

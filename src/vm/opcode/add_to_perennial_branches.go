@@ -7,7 +7,7 @@ import (
 // AddToPerennialBranches adds the branch with the given name as a perennial branch.
 type AddToPerennialBranches struct {
 	Branch domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *AddToPerennialBranches) Run(args RunArgs) error {

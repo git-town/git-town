@@ -9,7 +9,7 @@ type PreserveCheckoutHistory struct {
 	InitialBranch                     domain.LocalBranchName
 	InitialPreviouslyCheckedOutBranch domain.LocalBranchName
 	MainBranch                        domain.LocalBranchName
-	Empty
+	BaseOpcode
 }
 
 func (step *PreserveCheckoutHistory) Run(args RunArgs) error {

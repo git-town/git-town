@@ -3,7 +3,7 @@ package opcode
 // ContinueMerge finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type ContinueMerge struct {
-	Empty
+	BaseOpcode
 }
 
 func (step *ContinueMerge) CreateContinueProgram() []Opcode {
