@@ -199,7 +199,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 	childBranches := args.lineage.Children(args.branch)
 	for _, child := range childBranches {
 		args.list.Add(&step.ChangeParent{Branch: child, Parent: args.parent})
-		args.lineage.ChangeParent(child, args.parent)
 	}
 	args.list.Add(&step.DeleteParentBranch{Branch: args.branch})
 }
