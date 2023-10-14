@@ -140,7 +140,3 @@ type newFrontendRunnerArgs struct {
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	counter          *gohacks.Counter
 }
-
-type Messages interface {
-	Queue(string)
-}
