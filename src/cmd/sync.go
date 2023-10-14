@@ -317,8 +317,8 @@ func syncDeletedFeatureBranchSteps(list *steps.List, branch domain.BranchInfo, a
 	})
 }
 
-func syncDeletedPerennialBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) config.Lineage {
-	result := removeBranchFromLineage(removeBranchFromLineageArgs{
+func syncDeletedPerennialBranchSteps(list *steps.List, branch domain.BranchInfo, args syncBranchStepsArgs) {
+	removeBranchFromLineage(removeBranchFromLineageArgs{
 		list:    list,
 		branch:  branch.LocalName,
 		parent:  args.mainBranch,
@@ -331,7 +331,6 @@ func syncDeletedPerennialBranchSteps(list *steps.List, branch domain.BranchInfo,
 		Force:  false,
 	})
 	list.Add(&step.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
-	return result
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.

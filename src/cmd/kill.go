@@ -195,7 +195,7 @@ func killFeatureBranch(list *steps.List, finalUndoList *steps.List, config killC
 	})
 }
 
-func removeBranchFromLineage(args removeBranchFromLineageArgs) config.Lineage {
+func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 	childBranches := args.lineage.Children(args.branch)
 	lineage := args.lineage
 	for _, child := range childBranches {
@@ -203,7 +203,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) config.Lineage {
 		lineage = lineage.ChangeParent(child, args.parent)
 	}
 	args.list.Add(&step.DeleteParentBranch{Branch: args.branch})
-	return lineage
 }
 
 type removeBranchFromLineageArgs struct {
