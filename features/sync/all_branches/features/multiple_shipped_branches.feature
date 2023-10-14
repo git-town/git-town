@@ -1,9 +1,7 @@
 Feature: multiple shipped branches
 
   Background:
-    Given a feature branch "feature-1"
-    And a feature branch "feature-2"
-    And a feature branch "feature-3"
+    Given the feature branches "feature-1", "feature-2", and "feature-3"
     And the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, origin | feature-1 commit | feature-1-file | feature 1 content |
