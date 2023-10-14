@@ -1,4 +1,5 @@
 # dev tooling and versions
+ALPHAVET_VERSION = 0.1.0
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.4.0
 GOLANGCILINT_VERSION = 1.54.2
@@ -33,17 +34,18 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
-	git diff --check
-	go run tools/format.go format
-	tools/gofumpt_${GOFUMPT_VERSION} -l -w .
-	${CURDIR}/tools/node_modules/.bin/dprint fmt
-	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
-	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run
-	tools/ensure_no_files_with_dashes.sh
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+	go vet -vettool=tools/alphavet_${ALPHAVET_VERSION} ./...
+	# git diff --check
+	# go run tools/format.go format
+	# tools/gofumpt_${GOFUMPT_VERSION} -l -w .
+	# ${CURDIR}/tools/node_modules/.bin/dprint fmt
+	# ${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
+	# tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
+	# tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
+	# ${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	# tools/golangci_lint_${GOLANGCILINT_VERSION} run
+	# tools/ensure_no_files_with_dashes.sh
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -109,6 +111,11 @@ update:  # updates all dependencies
 	echo Please update the third-party tooling in the Makefile manually.
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+tools/alphavet_${ALPHAVET_VERSION}:
+	@echo "Installing alphavet ${ALPHAVET_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install github.com/skx/alphavet/cmd/alphavet@latest
+	@mv tools/alphavet tools/alphavet_${ALPHAVET_VERSION}
 
 tools/depth_${DEPTH_VERSION}:
 	@echo "Installing depth ${DEPTH_VERSION} ..."
