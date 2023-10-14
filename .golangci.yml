@@ -63,7 +63,7 @@ issues:
     - path: src/gohacks/cache/cache.go
       linters:
         - ireturn
-    - text: is missing field Empty
+    - text: is missing field undeclaredOpcodeMethods
       linters:
         - exhaustruct
     - path: src/vm/program/json.go # ignore all missing fields in jsonstep.go since those are intentional
