@@ -10,13 +10,13 @@ type Merge struct {
 	Empty
 }
 
-func (step *Merge) CreateAbortSteps() []Step {
+func (step *Merge) CreateAbortProgram() []Step {
 	return []Step{
 		&AbortMerge{},
 	}
 }
 
-func (step *Merge) CreateContinueSteps() []Step {
+func (step *Merge) CreateContinueProgram() []Step {
 	return []Step{
 		&ContinueMerge{},
 	}

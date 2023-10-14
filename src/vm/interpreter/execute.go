@@ -14,17 +14,17 @@ import (
 // Execute runs the commands in the given runstate.
 func Execute(args ExecuteArgs) error {
 	for {
-		nextStep := args.RunState.RunSteps.Pop()
+		nextStep := args.RunState.RunProgram.Pop()
 		if nextStep == nil {
 			return finished(args)
 		}
 		stepName := gohacks.TypeName(nextStep)
-		if stepName == "SkipCurrentBranchSteps" {
-			args.RunState.SkipCurrentBranchSteps()
+		if stepName == "SkipCurrentBranchProgram" {
+			args.RunState.SkipCurrentBranchProgram()
 			continue
 		}
 		err := nextStep.Run(step.RunArgs{
-			AddSteps:                        args.RunState.RunSteps.Prepend,
+			AddSteps:                        args.RunState.RunProgram.Prepend,
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,

@@ -11,11 +11,11 @@ type RebaseBranch struct {
 	Empty
 }
 
-func (step *RebaseBranch) CreateAbortSteps() []Step {
+func (step *RebaseBranch) CreateAbortProgram() []Step {
 	return []Step{&AbortRebase{}}
 }
 
-func (step *RebaseBranch) CreateContinueSteps() []Step {
+func (step *RebaseBranch) CreateContinueProgram() []Step {
 	return []Step{&ContinueRebase{}}
 }
 

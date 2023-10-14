@@ -119,7 +119,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	undoRunState.RunSteps.Wrap(program.WrapOptions{
+	undoRunState.RunProgram.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
@@ -135,7 +135,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	// When we run undo now, it still wants to pop the stack even though that was already done.
 	// This seems to apply only to popping the stack and switching back to the initial branch.
 	// Hence we consolidate this step type here.
-	undoRunState.RunSteps.List = slice.LowerAll[step.Step](undoRunState.RunSteps.List, &step.RestoreOpenChanges{})
-	undoRunState.RunSteps.RemoveAllButLast("*step.CheckoutIfExists")
+	undoRunState.RunProgram.Steps = slice.LowerAll[step.Step](undoRunState.RunProgram.Steps, &step.RestoreOpenChanges{})
+	undoRunState.RunProgram.RemoveAllButLast("*step.CheckoutIfExists")
 	return undoRunState, err
 }

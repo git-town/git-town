@@ -141,7 +141,7 @@ func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (
 		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
-	abortRunState.RunSteps.Wrap(program.WrapOptions{
+	abortRunState.RunProgram.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

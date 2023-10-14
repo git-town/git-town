@@ -11,91 +11,91 @@ import (
 	"github.com/git-town/git-town/v9/src/step"
 )
 
-// List is a collection of Step instances.
+// Program is a collection of Step instances.
 // Only use a list if you need the advanced features of this struct.
 // If all you need is an immutable list of steps, using a []step.Step is sufficient.
 //
 //nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
-type List struct {
-	List []step.Step `exhaustruct:"optional"`
+type Program struct {
+	Steps []step.Step `exhaustruct:"optional"`
 }
 
-// NewStepList provides a StepList instance containing the given step.
-func NewStepList(initialStep step.Step) List {
-	return List{
-		List: []step.Step{initialStep},
+// NewProgram provides a StepList instance containing the given step.
+func NewProgram(initialStep step.Step) Program {
+	return Program{
+		Steps: []step.Step{initialStep},
 	}
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *List) Add(step ...step.Step) {
-	stepList.List = append(stepList.List, step...)
+func (p *Program) Add(step ...step.Step) {
+	p.Steps = append(p.Steps, step...)
 }
 
 // AppendList adds all elements of the given StepList to the end of this StepList.
-func (stepList *List) AddList(otherList List) {
-	stepList.List = append(stepList.List, otherList.List...)
+func (p *Program) AddList(otherList Program) {
+	p.Steps = append(p.Steps, otherList.Steps...)
 }
 
 // IsEmpty returns whether or not this StepList has any elements.
-func (stepList *List) IsEmpty() bool {
-	return len(stepList.List) == 0
+func (p *Program) IsEmpty() bool {
+	return len(p.Steps) == 0
 }
 
 // MarshalJSON marshals the step list to JSON.
-func (stepList *List) MarshalJSON() ([]byte, error) {
-	jsonSteps := make([]JSON, len(stepList.List))
-	for s, step := range stepList.List {
+func (p *Program) MarshalJSON() ([]byte, error) {
+	jsonSteps := make([]JSON, len(p.Steps))
+	for s, step := range p.Steps {
 		jsonSteps[s] = JSON{Step: step}
 	}
 	return json.Marshal(jsonSteps)
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *List) Peek() step.Step { //nolint:ireturn
-	if stepList.IsEmpty() {
+func (p *Program) Peek() step.Step { //nolint:ireturn
+	if p.IsEmpty() {
 		return nil
 	}
-	return stepList.List[0]
+	return p.Steps[0]
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *List) Pop() step.Step { //nolint:ireturn
-	if stepList.IsEmpty() {
+func (p *Program) Pop() step.Step { //nolint:ireturn
+	if p.IsEmpty() {
 		return nil
 	}
-	result := stepList.List[0]
-	stepList.List = stepList.List[1:]
+	result := p.Steps[0]
+	p.Steps = p.Steps[1:]
 	return result
 }
 
 // Prepend adds the given step to the beginning of this StepList.
-func (stepList *List) Prepend(other ...step.Step) {
+func (p *Program) Prepend(other ...step.Step) {
 	if len(other) > 0 {
-		stepList.List = append(other, stepList.List...)
+		p.Steps = append(other, p.Steps...)
 	}
 }
 
 // PrependList adds all elements of the given StepList to the start of this StepList.
-func (stepList *List) PrependList(otherList List) {
-	stepList.List = append(otherList.List, stepList.List...)
+func (p *Program) PrependList(otherList Program) {
+	p.Steps = append(otherList.Steps, p.Steps...)
 }
 
-func (stepList *List) RemoveAllButLast(removeType string) {
-	typeList := stepList.StepTypes()
+func (p *Program) RemoveAllButLast(removeType string) {
+	typeList := p.StepTypes()
 	occurrences := slice.FindAll(typeList, removeType)
 	occurrencesToRemove := slice.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
-		stepList.List = slice.RemoveAt(stepList.List, occurrencesToRemove[o])
+		p.Steps = slice.RemoveAt(p.Steps, occurrencesToRemove[o])
 	}
 }
 
 // RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
-func (stepList *List) RemoveDuplicateCheckoutSteps() List {
-	result := make([]step.Step, 0, len(stepList.List))
+func (p *Program) RemoveDuplicateCheckoutSteps() Program {
+	result := make([]step.Step, 0, len(p.Steps))
 	// this one is populated only if the last step is a checkout step
 	var lastStep step.Step
-	for _, step := range stepList.List {
+	for _, step := range p.Steps {
 		if IsCheckoutStep(step) {
 			lastStep = step
 			continue
@@ -109,21 +109,21 @@ func (stepList *List) RemoveDuplicateCheckoutSteps() List {
 	if lastStep != nil {
 		result = append(result, lastStep)
 	}
-	return List{List: result}
+	return Program{Steps: result}
 }
 
 // Implementation of the fmt.Stringer interface.
-func (stepList *List) String() string {
-	return stepList.StringIndented("")
+func (p *Program) String() string {
+	return p.StringIndented("")
 }
 
-func (stepList *List) StringIndented(indent string) string {
+func (p *Program) StringIndented(indent string) string {
 	sb := strings.Builder{}
-	if stepList.IsEmpty() {
+	if p.IsEmpty() {
 		sb.WriteString("(empty StepList)\n")
 	} else {
 		sb.WriteString("StepList:\n")
-		for s, step := range stepList.List {
+		for s, step := range p.Steps {
 			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
 		}
 	}
@@ -131,25 +131,25 @@ func (stepList *List) StringIndented(indent string) string {
 }
 
 // StepTypes provides the names of the types of the steps in this list.
-func (stepList *List) StepTypes() []string {
-	result := make([]string, len(stepList.List))
-	for s, step := range stepList.List {
+func (p *Program) StepTypes() []string {
+	result := make([]string, len(p.Steps))
+	for s, step := range p.Steps {
 		result[s] = reflect.TypeOf(step).String()
 	}
 	return result
 }
 
 // UnmarshalJSON unmarshals the step list from JSON.
-func (stepList *List) UnmarshalJSON(b []byte) error {
+func (p *Program) UnmarshalJSON(b []byte) error {
 	var jsonSteps []JSON
 	err := json.Unmarshal(b, &jsonSteps)
 	if err != nil {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		stepList.List = make([]step.Step, len(jsonSteps))
+		p.Steps = make([]step.Step, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
-			stepList.List[j] = jsonStep.Step
+			p.Steps[j] = jsonStep.Step
 		}
 	}
 	return nil
@@ -167,16 +167,16 @@ type WrapOptions struct {
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 // TODO: only wrap if the list actually contains any steps.
-func (stepList *List) Wrap(options WrapOptions) {
+func (p *Program) Wrap(options WrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
-		stepList.Add(&step.PreserveCheckoutHistory{
+		p.Add(&step.PreserveCheckoutHistory{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
 			MainBranch:                        options.MainBranch,
 		})
 	}
 	if options.StashOpenChanges {
-		stepList.Prepend(&step.StashOpenChanges{})
-		stepList.Add(&step.RestoreOpenChanges{})
+		p.Prepend(&step.StashOpenChanges{})
+		p.Add(&step.RestoreOpenChanges{})
 	}
 }

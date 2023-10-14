@@ -70,7 +70,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "rename-branch",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            renameBranchSteps(config),
+		RunProgram:          renameBranchProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -163,8 +163,8 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchSteps(config *renameBranchConfig) program.List {
-	result := program.List{}
+func renameBranchProgram(config *renameBranchConfig) program.Program {
+	result := program.Program{}
 	result.Add(&step.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Add(&step.Checkout{Branch: config.newBranch})

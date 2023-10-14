@@ -6,13 +6,13 @@ type ContinueRebase struct {
 	Empty
 }
 
-func (step *ContinueRebase) CreateAbortSteps() []Step {
+func (step *ContinueRebase) CreateAbortProgram() []Step {
 	return []Step{
 		&AbortRebase{},
 	}
 }
 
-func (step *ContinueRebase) CreateContinueSteps() []Step {
+func (step *ContinueRebase) CreateContinueProgram() []Step {
 	return []Step{
 		step,
 	}

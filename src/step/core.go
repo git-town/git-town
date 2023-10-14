@@ -16,11 +16,11 @@ import (
 // Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and can provide Steps to continue, abort, and undo them.
 type Step interface {
-	// CreateAbortSteps provides the abort step for this step.
-	CreateAbortSteps() []Step
+	// CreateAbortProgram provides the abort step for this step.
+	CreateAbortProgram() []Step
 
-	// CreateContinueSteps provides the continue step for this step.
-	CreateContinueSteps() []Step
+	// CreateContinueProgram provides the continue step for this step.
+	CreateContinueProgram() []Step
 
 	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.

@@ -58,7 +58,7 @@ func executeHack(args []string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "hack",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            appendSteps(config),
+		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,

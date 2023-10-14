@@ -11,22 +11,22 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
-func CreateUndoList(args CreateUndoListArgs) (program.List, error) {
-	undoConfigSteps, err := determineUndoConfigSteps(args.InitialConfigSnapshot, &args.Run.Backend)
+func CreateUndoProgram(args CreateUndoListArgs) (program.Program, error) {
+	undoConfigProgram, err := determineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Backend)
 	if err != nil {
-		return program.List{}, err
+		return program.Program{}, err
 	}
-	undoBranchesSteps, err := determineUndoBranchesSteps(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.NoPushHook, args.Run)
+	undoBranchesProgram, err := determineUndoBranchesProgram(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.NoPushHook, args.Run)
 	if err != nil {
-		return program.List{}, err
+		return program.Program{}, err
 	}
-	undoStashSteps, err := determineUndoStashSteps(args.InitialStashSnapshot, &args.Run.Backend)
+	undoStashProgram, err := determineUndoStashProgram(args.InitialStashSnapshot, &args.Run.Backend)
 	if err != nil {
-		return program.List{}, err
+		return program.Program{}, err
 	}
-	undoConfigSteps.AddList(undoBranchesSteps)
-	undoConfigSteps.AddList(undoStashSteps)
-	return undoConfigSteps, nil
+	undoConfigProgram.AddList(undoBranchesProgram)
+	undoConfigProgram.AddList(undoStashProgram)
+	return undoConfigProgram, nil
 }
 
 type CreateUndoListArgs struct {
@@ -38,27 +38,27 @@ type CreateUndoListArgs struct {
 	UndoablePerennialCommits []domain.SHA
 }
 
-func determineUndoConfigSteps(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.List, error) {
+func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		return program.List{}, errors.New(messages.DirCurrentProblem)
+		return program.Program{}, errors.New(messages.DirCurrentProblem)
 	}
 	finalConfigSnapshot := ConfigSnapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backend),
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
-	return configDiff.UndoSteps(), nil
+	return configDiff.UndoProgram(), nil
 }
 
-func determineUndoBranchesSteps(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (program.List, error) {
+func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return program.List{}, err
+		return program.Program{}, err
 	}
 	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
-	return branchChanges.UndoSteps(StepsArgs{
+	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		Lineage:                  runner.Config.Lineage(),
 		BranchTypes:              runner.Config.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,
@@ -68,11 +68,11 @@ func determineUndoBranchesSteps(initialBranchesSnapshot domain.BranchesSnapshot,
 	}), nil
 }
 
-func determineUndoStashSteps(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (program.List, error) {
+func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (program.Program, error) {
 	finalStashSnapshot, err := backend.StashSnapshot()
 	if err != nil {
-		return program.List{}, err
+		return program.Program{}, err
 	}
 	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
-	return stashDiff.Steps(), nil
+	return stashDiff.Program(), nil
 }

@@ -16,7 +16,7 @@ type SquashMerge struct {
 	Empty
 }
 
-func (step *SquashMerge) CreateAbortSteps() []Step {
+func (step *SquashMerge) CreateAbortProgram() []Step {
 	return []Step{
 		&DiscardOpenChanges{},
 	}

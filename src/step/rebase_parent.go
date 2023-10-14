@@ -8,13 +8,13 @@ type RebaseParent struct {
 	Empty
 }
 
-func (step *RebaseParent) CreateAbortSteps() []Step {
+func (step *RebaseParent) CreateAbortProgram() []Step {
 	return []Step{
 		&AbortRebase{},
 	}
 }
 
-func (step *RebaseParent) CreateContinueSteps() []Step {
+func (step *RebaseParent) CreateContinueProgram() []Step {
 	return []Step{
 		&ContinueRebase{},
 	}

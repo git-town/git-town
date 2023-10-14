@@ -47,15 +47,15 @@ func TestConfigUndo(t *testing.T) {
 			Local: undo.EmptyConfigDiff(),
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("global config removed", func(t *testing.T) {
@@ -95,16 +95,16 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("global config changed", func(t *testing.T) {
@@ -146,16 +146,16 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.SetGlobalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("local config added", func(t *testing.T) {
@@ -191,15 +191,15 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("local config removed", func(t *testing.T) {
@@ -239,16 +239,16 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("local config changed", func(t *testing.T) {
@@ -290,16 +290,16 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.SetLocalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 
 	t.Run("complex example", func(t *testing.T) {
@@ -362,9 +362,9 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantDiff, haveDiff)
-		haveSteps := haveDiff.UndoSteps()
-		wantSteps := program.List{
-			List: []step.Step{
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			Steps: []step.Step{
 				&step.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
@@ -389,6 +389,6 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		must.Eq(t, wantSteps, haveSteps)
+		must.Eq(t, wantProgram, haveProgram)
 	})
 }

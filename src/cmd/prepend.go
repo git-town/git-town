@@ -65,7 +65,7 @@ func executePrepend(args []string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prepend",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            prependSteps(config),
+		RunProgram:          prependProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -170,10 +170,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependSteps(config *prependConfig) program.List {
-	list := program.List{}
+func prependProgram(config *prependConfig) program.Program {
+	list := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
-		syncBranchSteps(branchToSync, syncBranchStepsArgs{
+		syncBranchProgram(branchToSync, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,

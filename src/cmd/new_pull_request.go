@@ -72,7 +72,7 @@ func executeNewPullRequest(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            newPullRequestSteps(config),
+		RunProgram:          newPullRequestProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -198,10 +198,10 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestSteps(config *newPullRequestConfig) program.List {
-	list := program.List{}
+func newPullRequestProgram(config *newPullRequestConfig) program.Program {
+	list := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(branch, syncBranchStepsArgs{
+		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,

@@ -34,12 +34,12 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:    "command",
-			IsAbort:    true,
-			IsUndo:     true,
-			AbortSteps: program.List{},
-			RunSteps: program.List{
-				List: []step.Step{
+			Command:      "command",
+			IsAbort:      true,
+			IsUndo:       true,
+			AbortProgram: program.Program{},
+			RunProgram: program.Program{
+				Steps: []step.Step{
 					&step.AbortMerge{},
 					&step.AbortRebase{},
 					&step.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
@@ -153,7 +153,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoSteps: program.List{},
+			UndoProgram: program.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
@@ -168,8 +168,8 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "IsAbort": true,
   "IsUndo": true,
-  "AbortSteps": [],
-  "RunSteps": [
+  "AbortProgram": [],
+  "RunProgram": [
     {
       "data": {},
       "type": "AbortMerge"
@@ -422,9 +422,9 @@ func TestLoadSave(t *testing.T) {
       "type": "UpdateProposalTarget"
     }
   ],
-  "UndoSteps": [],
+  "UndoProgram": [],
   "InitialActiveBranch": "initial",
-  "FinalUndoSteps": [],
+  "FinalUndoProgram": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",

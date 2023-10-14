@@ -6,7 +6,7 @@ type ContinueMerge struct {
 	Empty
 }
 
-func (step *ContinueMerge) CreateContinueSteps() []Step {
+func (step *ContinueMerge) CreateContinueProgram() []Step {
 	return []Step{
 		step,
 	}

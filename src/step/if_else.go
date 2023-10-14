@@ -7,9 +7,9 @@ import (
 
 // IfElse allows running different steps based on a condition evaluated at runtime.
 type IfElse struct {
-	Condition  func(*git.BackendCommands, config.Lineage) (bool, error)
-	TrueSteps  []Step // the steps to execute if the given branch is empty
-	FalseSteps []Step // the steps to execute if the given branch is not empty
+	Condition func(*git.BackendCommands, config.Lineage) (bool, error)
+	WhenTrue  []Step // the steps to execute if the given branch is empty
+	WhenFalse []Step // the steps to execute if the given branch is not empty
 	Empty
 }
 
@@ -19,9 +19,9 @@ func (step *IfElse) Run(args RunArgs) error {
 		return err
 	}
 	if condition {
-		args.AddSteps(step.TrueSteps...)
+		args.AddSteps(step.WhenTrue...)
 	} else {
-		args.AddSteps(step.FalseSteps...)
+		args.AddSteps(step.WhenFalse...)
 	}
 	return nil
 }

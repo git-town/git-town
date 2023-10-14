@@ -11,7 +11,7 @@ import (
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
-	undoSteps, err := undo.CreateUndoList(undo.CreateUndoListArgs{
+	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoListArgs{
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
@@ -22,8 +22,8 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoSteps.AddList(undoSteps)
-	args.RunState.UndoSteps.AddList(args.RunState.FinalUndoSteps)
+	args.RunState.UndoProgram.AddList(undoProgram)
+	args.RunState.UndoProgram.AddList(args.RunState.FinalUndoProgram)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
 		err := persistence.Delete(args.RootDir)
 		if err != nil {

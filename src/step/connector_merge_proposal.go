@@ -18,7 +18,7 @@ type ConnectorMergeProposal struct {
 	Empty
 }
 
-func (step *ConnectorMergeProposal) CreateAbortSteps() []Step {
+func (step *ConnectorMergeProposal) CreateAbortProgram() []Step {
 	if step.enteredEmptyCommitMessage {
 		return []Step{&DiscardOpenChanges{}}
 	}

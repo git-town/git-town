@@ -44,9 +44,9 @@ func EmptyBranchChanges() BranchChanges {
 	}
 }
 
-// UndoSteps provides the steps to undo the changes described by this BranchChanges instance.
-func (bcs BranchChanges) UndoSteps(args StepsArgs) program.List {
-	result := program.List{}
+// UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
+func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
+	result := program.Program{}
 	omniChangedPerennials, omniChangedFeatures := bcs.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
@@ -169,7 +169,7 @@ func (bcs BranchChanges) UndoSteps(args StepsArgs) program.List {
 	return result
 }
 
-type StepsArgs struct {
+type BranchChangesUndoProgramArgs struct {
 	Lineage                  config.Lineage
 	BranchTypes              domain.BranchTypes
 	InitialBranch            domain.LocalBranchName

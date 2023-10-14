@@ -18,8 +18,8 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			Command: "sync",
-			AbortSteps: program.List{
-				List: []step.Step{
+			AbortProgram: program.Program{
+				Steps: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -27,8 +27,8 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			RunSteps: program.List{
-				List: []step.Step{
+			RunProgram: program.Program{
+				Steps: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -36,8 +36,8 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			UndoSteps: program.List{
-				List: []step.Step{
+			UndoProgram: program.Program{
+				Steps: []step.Step{
 					&step.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -55,7 +55,7 @@ func TestRunState(t *testing.T) {
   "Command": "sync",
   "IsAbort": false,
   "IsUndo": false,
-  "AbortSteps": [
+  "AbortProgram": [
     {
       "data": {
         "Hard": false,
@@ -65,7 +65,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
-  "RunSteps": [
+  "RunProgram": [
     {
       "data": {
         "Hard": false,
@@ -75,7 +75,7 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
-  "UndoSteps": [
+  "UndoProgram": [
     {
       "data": {
         "Hard": false,
@@ -86,7 +86,7 @@ func TestRunState(t *testing.T) {
     }
   ],
   "InitialActiveBranch": "initial",
-  "FinalUndoSteps": [],
+  "FinalUndoProgram": [],
   "UnfinishedDetails": null,
   "UndoablePerennialCommits": []
 }`[1:]

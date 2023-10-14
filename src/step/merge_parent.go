@@ -8,13 +8,13 @@ type MergeParent struct {
 	Empty
 }
 
-func (step *MergeParent) CreateAbortSteps() []Step {
+func (step *MergeParent) CreateAbortProgram() []Step {
 	return []Step{
 		&AbortMerge{},
 	}
 }
 
-func (step *MergeParent) CreateContinueSteps() []Step {
+func (step *MergeParent) CreateContinueProgram() []Step {
 	return []Step{
 		&ContinueMerge{},
 	}

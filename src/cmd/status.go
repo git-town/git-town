@@ -87,10 +87,10 @@ func displayStatus(config displayStatusConfig) {
 func displayUnfinishedStatus(config displayStatusConfig) {
 	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
 	fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
-	if config.state.HasAbortSteps() {
+	if config.state.HasAbortProgram() {
 		fmt.Println("You can run \"git town abort\" to abort it.")
 	}
-	if config.state.HasRunSteps() {
+	if config.state.HasRunProgram() {
 		fmt.Println("You can run \"git town continue\" to finish it.")
 	}
 	if config.state.UnfinishedDetails.CanSkip {
@@ -100,7 +100,7 @@ func displayUnfinishedStatus(config displayStatusConfig) {
 
 func displayFinishedStatus(config displayStatusConfig) {
 	fmt.Printf("The previous Git Town command (%s) finished successfully.\n", config.state.Command)
-	if config.state.HasUndoSteps() {
+	if config.state.HasUndoProgram() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
 	}
 }

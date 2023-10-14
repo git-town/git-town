@@ -53,15 +53,15 @@ func executeKill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	steps, finalUndoSteps := killSteps(config)
+	steps, finalUndoProgram := killProgram(config)
 	if err != nil {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
-		RunSteps:            steps,
+		RunProgram:          steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		FinalUndoSteps:      finalUndoSteps,
+		FinalUndoProgram:    finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -157,9 +157,9 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.LocalName)
 }
 
-func killSteps(config *killConfig) (runSteps, finalUndoSteps program.List) {
-	list := program.List{}
-	killFeatureBranch(&list, &finalUndoSteps, *config)
+func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
+	list := program.Program{}
+	killFeatureBranch(&list, &finalUndoProgram, *config)
 	list.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
@@ -167,11 +167,11 @@ func killSteps(config *killConfig) (runSteps, finalUndoSteps program.List) {
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list, finalUndoSteps
+	return list, finalUndoProgram
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *program.List, finalUndoList *program.List, config killConfig) {
+func killFeatureBranch(list *program.Program, finalUndoList *program.Program, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
@@ -206,6 +206,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
 	lineage config.Lineage
-	list    *program.List
+	list    *program.Program
 	parent  domain.LocalBranchName
 }

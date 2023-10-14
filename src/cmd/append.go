@@ -63,7 +63,7 @@ func executeAppend(arg string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "append",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            appendSteps(config),
+		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -169,10 +169,10 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func appendSteps(config *appendConfig) program.List {
-	list := program.List{}
+func appendProgram(config *appendConfig) program.Program {
+	list := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(branch, syncBranchStepsArgs{
+		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,

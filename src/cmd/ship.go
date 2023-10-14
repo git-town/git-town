@@ -94,7 +94,7 @@ func executeShip(args []string, message string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "ship",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            shipSteps(config, message),
+		RunProgram:          shipProgram(config, message),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -297,10 +297,10 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipSteps(config *shipConfig, commitMessage string) program.List {
-	list := program.List{}
+func shipProgram(config *shipConfig, commitMessage string) program.Program {
+	list := program.Program{}
 	// sync the parent branch
-	syncBranchSteps(config.targetBranch, syncBranchStepsArgs{
+	syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
@@ -314,7 +314,7 @@ func shipSteps(config *shipConfig, commitMessage string) program.List {
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
-	syncBranchSteps(config.branchToShip, syncBranchStepsArgs{
+	syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,

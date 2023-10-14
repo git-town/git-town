@@ -18,8 +18,8 @@ func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
 	}
 }
 
-func (sd StashDiff) Steps() program.List {
-	result := program.List{}
+func (sd StashDiff) Program() program.Program {
+	result := program.Program{}
 	for ; sd.EntriesAdded > 0; sd.EntriesAdded-- {
 		result.Add(&step.RestoreOpenChanges{})
 	}
