@@ -88,7 +88,7 @@ func (l Lineage) IsAncestor(ancestor, other domain.LocalBranchName) bool {
 	}
 }
 
-// OrderHierarchically sorts the given branches so that ancestor branches come before their descendants
+// OrderHierarchically sorts the given branches in place so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
 func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 	sort.Slice(branches, func(a, b int) bool {
@@ -100,9 +100,11 @@ func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 		if second.IsEmpty() {
 			return false
 		}
-		isAncestor := l.IsAncestor(first, second)
-		if isAncestor {
+		if l.IsAncestor(first, second) {
 			return true
+		}
+		if l.IsAncestor(second, first) {
+			return false
 		}
 		return first.String() < second.String()
 	})
