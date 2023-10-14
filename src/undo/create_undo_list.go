@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
-func CreateUndoProgram(args CreateUndoListArgs) (program.Program, error) {
+func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	undoConfigProgram, err := determineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Backend)
 	if err != nil {
 		return program.Program{}, err
@@ -24,12 +24,12 @@ func CreateUndoProgram(args CreateUndoListArgs) (program.Program, error) {
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoConfigProgram.AddList(undoBranchesProgram)
-	undoConfigProgram.AddList(undoStashProgram)
+	undoConfigProgram.AddProgram(undoBranchesProgram)
+	undoConfigProgram.AddProgram(undoStashProgram)
 	return undoConfigProgram, nil
 }
 
-type CreateUndoListArgs struct {
+type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  domain.BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot

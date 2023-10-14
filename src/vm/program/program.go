@@ -15,29 +15,29 @@ import (
 // Only use a list if you need the advanced features of this struct.
 // If all you need is an immutable list of steps, using a []step.Step is sufficient.
 //
-//nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
+//nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {
 	Steps []step.Step `exhaustruct:"optional"`
 }
 
-// NewProgram provides a StepList instance containing the given step.
+// NewProgram provides a program instance containing the given step.
 func NewProgram(initialStep step.Step) Program {
 	return Program{
 		Steps: []step.Step{initialStep},
 	}
 }
 
-// Append adds the given step to the end of this StepList.
+// Append adds the given step to the end of this program.
 func (p *Program) Add(step ...step.Step) {
 	p.Steps = append(p.Steps, step...)
 }
 
-// AppendList adds all elements of the given StepList to the end of this StepList.
-func (p *Program) AddList(otherList Program) {
-	p.Steps = append(p.Steps, otherList.Steps...)
+// AppendProgram adds all elements of the given Program to the end of this Program.
+func (p *Program) AddProgram(otherProgram Program) {
+	p.Steps = append(p.Steps, otherProgram.Steps...)
 }
 
-// IsEmpty returns whether or not this StepList has any elements.
+// IsEmpty returns whether or not this Program has any elements.
 func (p *Program) IsEmpty() bool {
 	return len(p.Steps) == 0
 }
@@ -51,7 +51,7 @@ func (p *Program) MarshalJSON() ([]byte, error) {
 	return json.Marshal(jsonSteps)
 }
 
-// Peek provides the first element of this StepList.
+// Peek provides the first element of this program.
 func (p *Program) Peek() step.Step { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
@@ -59,7 +59,7 @@ func (p *Program) Peek() step.Step { //nolint:ireturn
 	return p.Steps[0]
 }
 
-// Pop removes and provides the first element of this StepList.
+// Pop removes and provides the first element of this program.
 func (p *Program) Pop() step.Step { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
@@ -69,28 +69,28 @@ func (p *Program) Pop() step.Step { //nolint:ireturn
 	return result
 }
 
-// Prepend adds the given step to the beginning of this StepList.
+// Prepend adds the given step to the beginning of this program.
 func (p *Program) Prepend(other ...step.Step) {
 	if len(other) > 0 {
 		p.Steps = append(other, p.Steps...)
 	}
 }
 
-// PrependList adds all elements of the given StepList to the start of this StepList.
-func (p *Program) PrependList(otherList Program) {
-	p.Steps = append(otherList.Steps, p.Steps...)
+// PrependProgram adds all elements of the given program to the start of this program.
+func (p *Program) PrependProgram(otherProgram Program) {
+	p.Steps = append(otherProgram.Steps, p.Steps...)
 }
 
 func (p *Program) RemoveAllButLast(removeType string) {
-	typeList := p.StepTypes()
-	occurrences := slice.FindAll(typeList, removeType)
+	stepTypes := p.StepTypes()
+	occurrences := slice.FindAll(stepTypes, removeType)
 	occurrencesToRemove := slice.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
 		p.Steps = slice.RemoveAt(p.Steps, occurrencesToRemove[o])
 	}
 }
 
-// RemoveDuplicateCheckoutSteps provides this StepList with checkout steps that immediately follow each other removed.
+// RemoveDuplicateCheckoutSteps provides this program with checkout steps that immediately follow each other removed.
 func (p *Program) RemoveDuplicateCheckoutSteps() Program {
 	result := make([]step.Step, 0, len(p.Steps))
 	// this one is populated only if the last step is a checkout step
@@ -120,9 +120,9 @@ func (p *Program) String() string {
 func (p *Program) StringIndented(indent string) string {
 	sb := strings.Builder{}
 	if p.IsEmpty() {
-		sb.WriteString("(empty StepList)\n")
+		sb.WriteString("(empty program)\n")
 	} else {
-		sb.WriteString("StepList:\n")
+		sb.WriteString("Program:\n")
 		for s, step := range p.Steps {
 			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
 		}

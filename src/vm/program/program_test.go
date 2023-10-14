@@ -38,13 +38,13 @@ func TestProgram(t *testing.T) {
 		})
 	})
 
-	t.Run("AppendList", func(t *testing.T) {
+	t.Run("AddProgram", func(t *testing.T) {
 		t.Parallel()
 		t.Run("append a populated list", func(t *testing.T) {
 			t.Parallel()
 			have := program.Program{Steps: []step.Step{&step.AbortMerge{}}}
 			other := program.Program{Steps: []step.Step{&step.StashOpenChanges{}}}
-			have.AddList(other)
+			have.AddProgram(other)
 			want := []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}
 			must.Eq(t, want, have.Steps)
 		})
@@ -52,7 +52,7 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{Steps: []step.Step{&step.AbortMerge{}}}
 			other := program.Program{Steps: []step.Step{}}
-			have.AddList(other)
+			have.AddProgram(other)
 			must.Eq(t, []step.Step{&step.AbortMerge{}}, have.Steps)
 		})
 	})
@@ -80,7 +80,7 @@ func TestProgram(t *testing.T) {
 		have, err := json.MarshalIndent(give, "", "  ")
 		must.NoError(t, err)
 		// NOTE: Why does it not serialize the type names here?
-		// This somehow works when serializing a StepList as part of a larger containing structure like a RunState,
+		// This somehow works when serializing a program as part of a larger containing structure like a RunState,
 		// but it doesn't work here for some reason.
 		want := `
 {
@@ -99,16 +99,16 @@ func TestProgram(t *testing.T) {
 			give := program.Program{Steps: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
 			have := give.Peek()
 			must.Eq(t, "*step.AbortMerge", reflect.TypeOf(have).String())
-			wantList := program.Program{Steps: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
-			must.Eq(t, wantList, give)
+			wantProgram := program.Program{Steps: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
+			must.Eq(t, wantProgram, give)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Steps: []step.Step{}}
 			have := give.Peek()
 			must.EqOp(t, nil, have)
-			wantList := program.Program{Steps: []step.Step{}}
-			must.Eq(t, wantList, give)
+			wantProgram := program.Program{Steps: []step.Step{}}
+			must.Eq(t, wantProgram, give)
 		})
 	})
 
@@ -119,16 +119,16 @@ func TestProgram(t *testing.T) {
 			give := program.Program{Steps: []step.Step{&step.AbortMerge{}, &step.StashOpenChanges{}}}
 			have := give.Pop()
 			must.EqOp(t, "*step.AbortMerge", reflect.TypeOf(have).String())
-			wantList := program.Program{Steps: []step.Step{&step.StashOpenChanges{}}}
-			must.Eq(t, wantList, give)
+			wantProgram := program.Program{Steps: []step.Step{&step.StashOpenChanges{}}}
+			must.Eq(t, wantProgram, give)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Steps: []step.Step{}}
 			have := give.Pop()
 			must.EqOp(t, nil, have)
-			wantList := program.Program{Steps: []step.Step{}}
-			must.Eq(t, wantList, give)
+			wantProgram := program.Program{Steps: []step.Step{}}
+			must.Eq(t, wantProgram, give)
 		})
 	})
 
@@ -164,13 +164,13 @@ func TestProgram(t *testing.T) {
 		})
 	})
 
-	t.Run("PrependList", func(t *testing.T) {
+	t.Run("PrependProgram", func(t *testing.T) {
 		t.Parallel()
 		t.Run("prepend a populated list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Steps: []step.Step{&step.AbortMerge{}}}
 			other := program.Program{Steps: []step.Step{&step.StashOpenChanges{}, &step.RestoreOpenChanges{}}}
-			give.PrependList(other)
+			give.PrependProgram(other)
 			want := []step.Step{&step.StashOpenChanges{}, &step.RestoreOpenChanges{}, &step.AbortMerge{}}
 			must.Eq(t, want, give.Steps)
 		})
@@ -178,7 +178,7 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Steps: []step.Step{&step.AbortMerge{}}}
 			other := program.Program{Steps: []step.Step{}}
-			give.PrependList(other)
+			give.PrependProgram(other)
 			want := []step.Step{&step.AbortMerge{}}
 			must.Eq(t, want, give.Steps)
 		})
@@ -333,7 +333,7 @@ func TestProgram(t *testing.T) {
 		}}
 		have := give.String()
 		want := `
-StepList:
+Program:
 1: &step.AbortMerge{Empty:step.Empty{}}
 2: &step.AddToPerennialBranches{Branch:domain.LocalBranchName{id:"branch"}, Empty:step.Empty{}}
 `[1:]

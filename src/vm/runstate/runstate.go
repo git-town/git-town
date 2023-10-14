@@ -42,7 +42,7 @@ func (rs *RunState) AddPushBranchStepAfterCurrentBranchProgram(backend *git.Back
 				return err
 			}
 			rs.RunProgram.Prepend(&step.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
-			rs.RunProgram.PrependList(popped)
+			rs.RunProgram.PrependProgram(popped)
 			break
 		}
 	}
@@ -59,13 +59,13 @@ func (rs *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
 func (rs *RunState) CreateAbortRunState() RunState {
-	stepList := rs.AbortProgram
-	stepList.AddList(rs.UndoProgram)
+	abortProgram := rs.AbortProgram
+	abortProgram.AddProgram(rs.UndoProgram)
 	return RunState{
 		Command:             rs.Command,
 		IsAbort:             true,
 		InitialActiveBranch: rs.InitialActiveBranch,
-		RunProgram:          stepList,
+		RunProgram:          abortProgram,
 	}
 }
 
@@ -169,11 +169,11 @@ func (rs *RunState) String() string {
 	result.WriteString(fmt.Sprintf("%t", rs.IsAbort))
 	result.WriteString("\n  IsUndo: ")
 	result.WriteString(fmt.Sprintf("%t", rs.IsUndo))
-	result.WriteString("\n  AbortStepList: ")
+	result.WriteString("\n  AbortProgram: ")
 	result.WriteString(rs.AbortProgram.StringIndented("    "))
-	result.WriteString("  RunStepList: ")
+	result.WriteString("  RunProgram: ")
 	result.WriteString(rs.RunProgram.StringIndented("    "))
-	result.WriteString("  UndoStepList: ")
+	result.WriteString("  UndoProgram: ")
 	result.WriteString(rs.UndoProgram.StringIndented("    "))
 	if rs.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")

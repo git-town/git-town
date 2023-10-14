@@ -171,7 +171,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *program.Program, finalUndoList *program.Program, config killConfig) {
+func killFeatureBranch(list *program.Program, finalUndoProgram *program.Program, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Add(&step.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
@@ -181,8 +181,8 @@ func killFeatureBranch(list *program.Program, finalUndoList *program.Program, co
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
 			list.Add(&step.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoList.Add(&step.Checkout{Branch: config.targetBranch.LocalName})
-			finalUndoList.Add(&step.UndoLastCommit{})
+			finalUndoProgram.Add(&step.Checkout{Branch: config.targetBranch.LocalName})
+			finalUndoProgram.Add(&step.UndoLastCommit{})
 		}
 		list.Add(&step.Checkout{Branch: config.targetBranchParent()})
 	}
