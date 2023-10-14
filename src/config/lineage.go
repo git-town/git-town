@@ -109,12 +109,10 @@ func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 		if second.IsEmpty() {
 			return false
 		}
-		isAncestor := l.IsAncestor(first, second)
-		if isAncestor {
+		if l.IsAncestor(first, second) {
 			return true
 		}
-		isAncestor = l.IsAncestor(second, first)
-		if isAncestor {
+		if l.IsAncestor(second, first) {
 			return false
 		}
 		return first.String() < second.String()
