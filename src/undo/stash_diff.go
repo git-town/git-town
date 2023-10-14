@@ -2,8 +2,8 @@ package undo
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // StashDiff describes the changes made to the Git stash.

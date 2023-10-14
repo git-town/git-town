@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // autoAbort performs an automatic abort of the current Git Town command.

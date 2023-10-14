@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // JSON is used to store a step in JSON.

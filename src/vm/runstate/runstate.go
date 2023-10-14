@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // RunState represents the current state of a Git Town command,

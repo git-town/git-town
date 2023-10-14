@@ -8,7 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/step"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // Program is a collection of Step instances.

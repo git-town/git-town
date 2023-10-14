@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/step"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/step"
 )
 
 // Execute runs the commands in the given runstate.
