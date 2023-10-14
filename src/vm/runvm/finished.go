@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/persistence"
 	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/vm/persistence"
 )
 
 // finished is called when executing all steps has successfully finished.

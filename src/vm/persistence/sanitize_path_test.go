@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/shoenig/test/must"
 )
 
