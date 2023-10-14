@@ -10,8 +10,8 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/runvm"
 	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v9/src/vm/runvm"
 	"github.com/spf13/cobra"
 )
 
