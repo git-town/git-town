@@ -225,6 +225,20 @@ func TestLineage(t *testing.T) {
 			lineage.OrderHierarchically(have)
 			must.Eq(t, want, have)
 		})
+		t.Run("elements out of order", func(t *testing.T) {
+			t.Parallel()
+			one := domain.NewLocalBranchName("one")
+			two := domain.NewLocalBranchName("two")
+			three := domain.NewLocalBranchName("three")
+			lineage := config.Lineage{}
+			lineage[one] = main
+			lineage[two] = one
+			lineage[three] = two
+			have := domain.LocalBranchNames{one, two, main, three}
+			want := domain.LocalBranchNames{main, one, two, three}
+			lineage.OrderHierarchically(have)
+			must.Eq(t, want, have)
+		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}

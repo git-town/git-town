@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -26,6 +27,7 @@ func (l Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) domai
 		ancestors := l.Ancestors(branchName)
 		result = slice.AppendAllMissing(result, ancestors)
 	}
+	fmt.Println("BEFORE ORDER", result)
 	l.OrderHierarchically(result)
 	return result
 }
