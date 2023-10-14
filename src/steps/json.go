@@ -129,6 +129,8 @@ func DetermineStep(stepType string) step.Step { //nolint:ireturn
 		return &step.SetLocalConfig{}
 	case "SetParent":
 		return &step.SetParent{}
+	case "SetParentIfBranchExists":
+		return &step.SetParentIfBranchExists{}
 	case "SquashMerge":
 		return &step.SquashMerge{}
 	case "SkipCurrentBranch":
