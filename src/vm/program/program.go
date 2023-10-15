@@ -12,20 +12,13 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
-// Program is a collection of Step instances.
-// Only use a list if you need the advanced features of this struct.
-// If all you need is an immutable list of steps, using a []step.Step is sufficient.
+// Program is a mutable collection of Opcodes.
+// Only use a program if you need the mutability features of this struct.
+// If all you need is an immutable list of opcodes, a []shared.Opcode is sufficient.
 //
 //nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {
 	Opcodes []shared.Opcode `exhaustruct:"optional"`
-}
-
-// NewProgram provides a program instance containing the given step.
-func NewProgram(initialStep shared.Opcode) Program {
-	return Program{
-		Opcodes: []shared.Opcode{initialStep},
-	}
 }
 
 // Append adds the given step to the end of this program.
