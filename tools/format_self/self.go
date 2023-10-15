@@ -78,7 +78,7 @@ func formatLine(line string) string {
 	if len(matches) < 2 {
 		return line
 	}
-	return strings.Replace(line, matches[1], "self", 1)
+	return strings.Replace(line, "("+matches[1], "(self", 1)
 }
 
 func isGoFile(path string) bool {
@@ -100,7 +100,8 @@ func runTests() {
 func testFormatLine() {
 	tests := map[string]string{
 		"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
-		"	if err != nil {": "	if err != nil {",
+		"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
+		"	if err != nil {":                                                                 "	if err != nil {",
 	}
 	for give, want := range tests {
 		have := formatLine(give)
