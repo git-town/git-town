@@ -149,12 +149,12 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func (kc killConfig) isOnline() bool {
-	return !kc.isOffline
+func (self killConfig) isOnline() bool {
+	return !self.isOffline
 }
 
-func (kc killConfig) targetBranchParent() domain.LocalBranchName {
-	return kc.lineage.Parent(kc.targetBranch.LocalName)
+func (self killConfig) targetBranchParent() domain.LocalBranchName {
+	return self.lineage.Parent(self.targetBranch.LocalName)
 }
 
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
