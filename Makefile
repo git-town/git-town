@@ -36,7 +36,7 @@ docs: build tools/node_modules  # tests the documentation
 fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
-	go run tools/format_self/self.go run
+	go run tools/format_self/format.go run
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
@@ -86,14 +86,17 @@ test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VER
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
-	go run tools/format.go test &
+	go run tools/format_unittests/format.go test &
+	go run tools/format_self/format.go test &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
 
 unit:  # runs only the unit tests for changed code
-	env GOGC=off go test -timeout 30s ./src/... ./test/...
+	@env GOGC=off go test -timeout 30s ./src/... ./test/...
+	@go run tools/format_unittests/format.go test
+	@go run tools/format_self/format.go test
 
 unit-all:  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
