@@ -94,7 +94,7 @@ func displayUnfinishedStatus(config displayStatusConfig) {
 		fmt.Println("You can run \"git town continue\" to finish it.")
 	}
 	if config.state.UnfinishedDetails.CanSkip {
-		fmt.Println("You can run \"git town skip\" to skip the currently failing step.")
+		fmt.Println("You can run \"git town skip\" to skip the currently failing operation.")
 	}
 }
 
