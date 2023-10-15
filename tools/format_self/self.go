@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -69,6 +70,9 @@ func formatFileContent(content string) string {
 }
 
 func formatLine(line string) string {
+	instanceRE := regexp.MustCompile(`^\s*func \((\w+) (\w+)\) [A-Z]`)
+	matches := instanceRE.FindStringSubmatch(line)
+	fmt.Println(matches)
 	return line
 }
 
@@ -84,10 +88,10 @@ func isGoFile(path string) bool {
  */
 
 func runTests() {
-	testOne()
+	testFormatLine()
 	fmt.Println()
 }
 
-func testOne() {
+func testFormatLine() {
 	fmt.Println("testing")
 }
