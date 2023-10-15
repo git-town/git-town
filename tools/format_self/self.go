@@ -70,10 +70,15 @@ func formatFileContent(content string) string {
 }
 
 func formatLine(line string) string {
-	instanceRE := regexp.MustCompile(`func \((\w+) \*?\w+\) `) //\(([a-z]+) ([a-zA-Z]+)\) `)
+	if !strings.HasPrefix(line, "func (") {
+		return line
+	}
+	instanceRE := regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
 	matches := instanceRE.FindStringSubmatch(line)
-	fmt.Println("MATCHES:", matches)
-	return line
+	if len(matches) < 2 {
+		return line
+	}
+	return strings.Replace(line, matches[1], "self", 1)
 }
 
 func isGoFile(path string) bool {
@@ -93,10 +98,14 @@ func runTests() {
 }
 
 func testFormatLine() {
-	give := "	func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {"
-	have := formatLine(give)
-	want := "	func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {"
-	assertEqual(want, have, "testFormatLine")
+	tests := map[string]string{
+		"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
+		"	if err != nil {": "	if err != nil {",
+	}
+	for give, want := range tests {
+		have := formatLine(give)
+		assertEqual(want, have, "testFormatLine")
+	}
 }
 
 func assertEqual[T comparable](want, have T, testName string) {
