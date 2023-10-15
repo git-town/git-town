@@ -177,7 +177,7 @@ func prependProgram(config *prependConfig) program.Program {
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &list,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,

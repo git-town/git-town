@@ -79,7 +79,7 @@ func executeSync(all, dryRun, debug bool) error {
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &runProgram,
+			program:            &runProgram,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -233,11 +233,11 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 	for _, branch := range args.branchesToSync {
 		syncBranchProgram(branch, args.syncBranchProgramArgs)
 	}
-	args.list.Add(&opcode.CheckoutIfExists{Branch: args.initialBranch})
+	args.program.Add(&opcode.CheckoutIfExists{Branch: args.initialBranch})
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
-		args.list.Add(&opcode.PushTags{})
+		args.program.Add(&opcode.PushTags{})
 	}
-	args.list.Wrap(program.WrapOptions{
+	args.program.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: args.hasOpenChanges,
 		MainBranch:       args.mainBranch,
@@ -257,9 +257,9 @@ type syncBranchesProgramArgs struct {
 
 func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-		syncDeletedBranchProgram(args.list, branch, args)
+		syncDeletedBranchProgram(args.program, branch, args)
 	} else {
-		syncNonDeletedBranchProgram(args.list, branch, args)
+		syncNonDeletedBranchProgram(args.program, branch, args)
 	}
 }
 
@@ -267,7 +267,7 @@ type syncBranchProgramArgs struct {
 	branchTypes        domain.BranchTypes
 	isOffline          bool
 	lineage            config.Lineage
-	list               *program.Program
+	program            *program.Program
 	mainBranch         domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
@@ -319,7 +319,7 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.Branch
 
 func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	removeBranchFromLineage(removeBranchFromLineageArgs{
-		list:    list,
+		program: list,
 		branch:  branch.LocalName,
 		parent:  args.mainBranch,
 		lineage: args.lineage,
@@ -369,11 +369,11 @@ func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, s
 // syncPerennialBranchProgram adds all the steps to sync the perennial branch with the given name.
 func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(args.list, branch.RemoteName, args.pullBranchStrategy)
+		updateCurrentPerennialBranchStep(args.program, branch.RemoteName, args.pullBranchStrategy)
 	}
 	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
-		args.list.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
-		args.list.Add(&opcode.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
+		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
+		args.program.Add(&opcode.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
 }
 

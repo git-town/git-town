@@ -171,26 +171,26 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(list *program.Program, finalUndoProgram *program.Program, config killConfig) {
+func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Add(&opcode.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
+		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
 	if config.initialBranch == config.targetBranch.LocalName {
 		if config.hasOpenChanges {
-			list.Add(&opcode.CommitOpenChanges{})
+			prog.Add(&opcode.CommitOpenChanges{})
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
-			list.Add(&opcode.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
+			prog.Add(&opcode.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
 			finalUndoProgram.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
-		list.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
+		prog.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
 	}
-	list.Add(&opcode.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Force: false})
+	prog.Add(&opcode.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Force: false})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		branch:  config.targetBranch.LocalName,
 		lineage: config.lineage,
-		list:    list,
+		program: prog,
 		parent:  config.targetBranchParent(),
 	})
 }
@@ -198,14 +198,14 @@ func killFeatureBranch(list *program.Program, finalUndoProgram *program.Program,
 func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 	childBranches := args.lineage.Children(args.branch)
 	for _, child := range childBranches {
-		args.list.Add(&opcode.ChangeParent{Branch: child, Parent: args.parent})
+		args.program.Add(&opcode.ChangeParent{Branch: child, Parent: args.parent})
 	}
-	args.list.Add(&opcode.DeleteParentBranch{Branch: args.branch})
+	args.program.Add(&opcode.DeleteParentBranch{Branch: args.branch})
 }
 
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
 	lineage config.Lineage
-	list    *program.Program
+	program *program.Program
 	parent  domain.LocalBranchName
 }

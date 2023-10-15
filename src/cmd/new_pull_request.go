@@ -206,7 +206,7 @@ func newPullRequestProgram(config *newPullRequestConfig) program.Program {
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &list,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,

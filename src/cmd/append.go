@@ -170,13 +170,13 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 }
 
 func appendProgram(config *appendConfig) program.Program {
-	list := program.Program{}
+	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &prog,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
@@ -186,26 +186,26 @@ func appendProgram(config *appendConfig) program.Program {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&opcode.CreateBranchExistingParent{
+	prog.Add(&opcode.CreateBranchExistingParent{
 		Ancestors:  config.newBranchParentCandidates,
 		Branch:     config.targetBranch,
 		MainBranch: config.mainBranch,
 	})
-	list.Add(&opcode.SetExistingParent{
+	prog.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
 	})
-	list.Add(&opcode.Checkout{Branch: config.targetBranch})
+	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(program.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list
+	return prog
 }
