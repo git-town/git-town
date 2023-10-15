@@ -25,22 +25,22 @@ type TestCommands struct {
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
-func (tc *TestCommands) AddRemote(name domain.Remote, url string) {
-	tc.MustRun("git", "remote", "add", name.String(), url)
-	tc.RemotesCache.Invalidate()
+func (self *TestCommands) AddRemote(name domain.Remote, url string) {
+	self.MustRun("git", "remote", "add", name.String(), url)
+	self.RemotesCache.Invalidate()
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.
-func (tc *TestCommands) AddSubmodule(url string) {
-	tc.MustRun("git", "submodule", "add", url)
-	tc.MustRun("git", "commit", "-m", "added submodule")
+func (self *TestCommands) AddSubmodule(url string) {
+	self.MustRun("git", "submodule", "add", url)
+	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (tc *TestCommands) BranchHierarchyTable() datatable.DataTable {
+func (self *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
-	tc.Config.Reload()
-	lineage := tc.Config.Lineage()
+	self.Config.Reload()
+	lineage := self.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())
@@ -49,13 +49,13 @@ func (tc *TestCommands) BranchHierarchyTable() datatable.DataTable {
 }
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
-func (tc *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
-	asserts.NoError(tc.BackendCommands.CheckoutBranch(branch))
+func (self *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
+	asserts.NoError(self.BackendCommands.CheckoutBranch(branch))
 }
 
-func (tc *TestCommands) CommitSHAs() map[string]domain.SHA {
+func (self *TestCommands) CommitSHAs() map[string]domain.SHA {
 	result := map[string]domain.SHA{}
-	output := tc.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
+	output := self.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
@@ -68,32 +68,32 @@ func (tc *TestCommands) CommitSHAs() map[string]domain.SHA {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (tc *TestCommands) CreateBranch(name, parent domain.LocalBranchName) {
-	tc.MustRun("git", "branch", name.String(), parent.String())
+func (self *TestCommands) CreateBranch(name, parent domain.LocalBranchName) {
+	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (tc *TestCommands) CreateChildFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) {
-	tc.CreateBranch(branch, parent)
-	asserts.NoError(tc.Config.SetParent(branch, parent))
+func (self *TestCommands) CreateChildFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) {
+	self.CreateBranch(branch, parent)
+	asserts.NoError(self.Config.SetParent(branch, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (tc *TestCommands) CreateCommit(commit git.Commit) {
-	tc.CheckoutBranch(commit.Branch)
-	tc.CreateFile(commit.FileName, commit.FileContent)
-	tc.MustRun("git", "add", commit.FileName)
+func (self *TestCommands) CreateCommit(commit git.Commit) {
+	self.CheckoutBranch(commit.Branch)
+	self.CreateFile(commit.FileName, commit.FileContent)
+	self.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)
 	}
-	tc.MustRun("git", commands...)
+	self.MustRun("git", commands...)
 }
 
 // CreateFile creates a file with the given name and content in this repository.
-func (tc *TestCommands) CreateFile(name, content string) {
-	filePath := filepath.Join(tc.WorkingDir, name)
+func (self *TestCommands) CreateFile(name, content string) {
+	filePath := filepath.Join(self.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 	//nolint:gosec // need permission 700 here in order for tests to work
@@ -101,44 +101,44 @@ func (tc *TestCommands) CreateFile(name, content string) {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (tc *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
+func (self *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
 	for _, name := range names {
-		tc.CreateBranch(name, domain.NewLocalBranchName("main"))
+		self.CreateBranch(name, domain.NewLocalBranchName("main"))
 	}
-	asserts.NoError(tc.Config.AddToPerennialBranches(names...))
+	asserts.NoError(self.Config.AddToPerennialBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
-func (tc *TestCommands) CreateStandaloneTag(name string) {
-	tc.MustRun("git", "checkout", "-b", "temp")
-	tc.MustRun("touch", "a.txt")
-	tc.MustRun("git", "add", "-A")
-	tc.MustRun("git", "commit", "-m", "temp")
-	tc.MustRun("git", "tag", "-a", name, "-m", name)
-	tc.MustRun("git", "checkout", "-")
-	tc.MustRun("git", "branch", "-D", "temp")
+func (self *TestCommands) CreateStandaloneTag(name string) {
+	self.MustRun("git", "checkout", "-b", "temp")
+	self.MustRun("touch", "a.txt")
+	self.MustRun("git", "add", "-A")
+	self.MustRun("git", "commit", "-m", "temp")
+	self.MustRun("git", "tag", "-a", name, "-m", name)
+	self.MustRun("git", "checkout", "-")
+	self.MustRun("git", "branch", "-D", "temp")
 }
 
 // CreateTag creates a tag with the given name.
-func (tc *TestCommands) CreateTag(name string) {
-	tc.MustRun("git", "tag", "-a", name, "-m", name)
+func (self *TestCommands) CreateTag(name string) {
+	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (tc *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
-	branches, err := tc.LocalBranchesMainFirst(mainBranch)
+func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
+	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
-		commits := tc.CommitsInBranch(branch, fields)
+		commits := self.CommitsInBranch(branch, fields)
 		result = append(result, commits...)
 	}
 	return result
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (tc *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
-	output := tc.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+func (self *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
+	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
@@ -147,11 +147,11 @@ func (tc *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []
 			continue
 		}
 		if slice.Contains(fields, "FILE NAME") {
-			filenames := tc.FilesInCommit(commit.SHA)
+			filenames := self.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if slice.Contains(fields, "FILE CONTENT") {
-			filecontent := tc.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -160,36 +160,36 @@ func (tc *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (tc *TestCommands) CommitStagedChanges(message string) {
-	tc.MustRun("git", "commit", "-m", message)
+func (self *TestCommands) CommitStagedChanges(message string) {
+	self.MustRun("git", "commit", "-m", message)
 }
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (tc *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
-	tc.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
+func (self *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
+	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (tc *TestCommands) DeleteMainBranchConfiguration() {
-	tc.MustRun("git", "config", "--unset", config.KeyMainBranch.String())
+func (self *TestCommands) DeleteMainBranchConfiguration() {
+	self.MustRun("git", "config", "--unset", config.KeyMainBranch.String())
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (tc *TestCommands) Fetch() {
-	tc.MustRun("git", "fetch")
+func (self *TestCommands) Fetch() {
+	self.MustRun("git", "fetch")
 }
 
 // FileContent provides the current content of a file.
-func (tc *TestCommands) FileContent(filename string) string {
-	content, err := os.ReadFile(filepath.Join(tc.WorkingDir, filename))
+func (self *TestCommands) FileContent(filename string) string {
+	content, err := os.ReadFile(filepath.Join(self.WorkingDir, filename))
 	asserts.NoError(err)
 	return string(content)
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (tc *TestCommands) FileContentInCommit(location domain.Location, filename string) string {
-	output := tc.MustQuery("git", "show", location.String()+":"+filename)
+func (self *TestCommands) FileContentInCommit(location domain.Location, filename string) string {
+	output := self.MustQuery("git", "show", location.String()+":"+filename)
 	if strings.HasPrefix(output, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
 		return ""
@@ -198,14 +198,14 @@ func (tc *TestCommands) FileContentInCommit(location domain.Location, filename s
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (tc *TestCommands) FilesInCommit(sha domain.SHA) []string {
-	output := tc.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
+func (self *TestCommands) FilesInCommit(sha domain.SHA) []string {
+	output := self.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
 	return strings.Split(output, "\n")
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (tc *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string {
-	output := tc.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
+func (self *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string {
+	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
@@ -217,16 +217,16 @@ func (tc *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (tc *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datatable.DataTable {
+func (self *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := tc.LocalBranchesMainFirst(mainBranch)
+	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	lastBranch := domain.EmptyLocalBranchName()
 	for _, branch := range branches {
-		files := tc.FilesInBranch(branch)
+		files := self.FilesInBranch(branch)
 		for _, file := range files {
-			content := tc.FileContentInCommit(branch.Location(), file)
+			content := self.FileContentInCommit(branch.Location(), file)
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
@@ -239,15 +239,15 @@ func (tc *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datat
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
-func (tc *TestCommands) HasBranchesOutOfSync() bool {
-	output := tc.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
+func (self *TestCommands) HasBranchesOutOfSync() bool {
+	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	return strings.Contains(output, "[")
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 // An empty error message means a file with the given name and content exists.
-func (tc *TestCommands) HasFile(name, content string) string {
-	rawContent, err := os.ReadFile(filepath.Join(tc.WorkingDir, name))
+func (self *TestCommands) HasFile(name, content string) string {
+	rawContent, err := os.ReadFile(filepath.Join(self.WorkingDir, name))
 	if err != nil {
 		return fmt.Sprintf("repo doesn't have file %q", name)
 	}
@@ -259,8 +259,8 @@ func (tc *TestCommands) HasFile(name, content string) string {
 }
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (tc *TestCommands) HasGitTownConfigNow() bool {
-	output, err := tc.Query("git", "config", "--local", "--get-regex", "git-town")
+func (self *TestCommands) HasGitTownConfigNow() bool {
+	output, err := self.Query("git", "config", "--local", "--get-regex", "git-town")
 	if err != nil {
 		return false
 	}
@@ -269,8 +269,8 @@ func (tc *TestCommands) HasGitTownConfigNow() bool {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (tc *TestCommands) LocalBranches() (domain.LocalBranchNames, error) {
-	output, err := tc.QueryTrim("git", "branch")
+func (self *TestCommands) LocalBranches() (domain.LocalBranchNames, error) {
+	output, err := self.QueryTrim("git", "branch")
 	if err != nil {
 		return domain.LocalBranchNames{}, err
 	}
@@ -284,53 +284,53 @@ func (tc *TestCommands) LocalBranches() (domain.LocalBranchNames, error) {
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (tc *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
-	branches, err := tc.LocalBranches()
+func (self *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
+	branches, err := self.LocalBranches()
 	if err != nil {
 		return domain.LocalBranchNames{}, err
 	}
 	return slice.Hoist(branches, mainBranch), nil
 }
 
-func (tc *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
-	return tc.Run("git", "merge", branch.String())
+func (self *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
+	return self.Run("git", "merge", branch.String())
 }
 
-func (tc *TestCommands) PushBranch() {
-	tc.MustRun("git", "push")
+func (self *TestCommands) PushBranch() {
+	self.MustRun("git", "push")
 }
 
-func (tc *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote domain.Remote) {
-	tc.MustRun("git", "push", "-u", remote.String(), branch.String())
+func (self *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote domain.Remote) {
+	self.MustRun("git", "push", "-u", remote.String(), branch.String())
 }
 
-func (tc *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
-	return tc.Run("git", "rebase", branch.String())
+func (self *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
+	return self.Run("git", "rebase", branch.String())
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
-func (tc *TestCommands) RemoveBranch(name domain.LocalBranchName) {
-	tc.MustRun("git", "branch", "-D", name.String())
+func (self *TestCommands) RemoveBranch(name domain.LocalBranchName) {
+	self.MustRun("git", "branch", "-D", name.String())
 }
 
 // RemoveRemote deletes the Git remote with the given name.
-func (tc *TestCommands) RemoveRemote(name domain.Remote) {
-	tc.RemotesCache.Invalidate()
-	tc.MustRun("git", "remote", "rm", name.String())
+func (self *TestCommands) RemoveRemote(name domain.Remote) {
+	self.RemotesCache.Invalidate()
+	self.MustRun("git", "remote", "rm", name.String())
 }
 
-// RemoveUnnecessaryFiles trims all files that aren'tc necessary in this repo.
-func (tc *TestCommands) RemoveUnnecessaryFiles() {
-	fullPath := filepath.Join(tc.WorkingDir, ".git", "hooks")
+// RemoveUnnecessaryFiles trims all files that aren'self necessary in this repo.
+func (self *TestCommands) RemoveUnnecessaryFiles() {
+	fullPath := filepath.Join(self.WorkingDir, ".git", "hooks")
 	asserts.NoError(os.RemoveAll(fullPath))
-	_ = os.Remove(filepath.Join(tc.WorkingDir, ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(tc.WorkingDir, ".git", "description"))
+	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "description"))
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
 // TODO: return a domain.SHA here.
-func (tc *TestCommands) SHAForCommit(name string) string {
-	output := tc.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
+func (self *TestCommands) SHAForCommit(name string) string {
+	output := self.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
 	if output == "" {
 		log.Fatalf("cannot find the SHA of commit %q", name)
 	}
@@ -338,22 +338,22 @@ func (tc *TestCommands) SHAForCommit(name string) string {
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (tc *TestCommands) StageFiles(names ...string) {
+func (self *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)
-	tc.MustRun("git", args...)
+	self.MustRun("git", args...)
 }
 
 // StashOpenFiles stashes the open files away.
-func (tc *TestCommands) StashOpenFiles() {
-	tc.MustRunMany([][]string{
+func (self *TestCommands) StashOpenFiles() {
+	self.MustRunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
 	})
 }
 
 // Tags provides a list of the tags in this repository.
-func (tc *TestCommands) Tags() []string {
-	output := tc.MustQuery("git", "tag")
+func (self *TestCommands) Tags() []string {
+	output := self.MustQuery("git", "tag")
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		result = append(result, strings.TrimSpace(line))
@@ -362,8 +362,8 @@ func (tc *TestCommands) Tags() []string {
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
-func (tc *TestCommands) UncommittedFiles() []string {
-	output := tc.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
+func (self *TestCommands) UncommittedFiles() []string {
+	output := self.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
 	result := []string{}
 	for _, line := range stringslice.Lines(output) {
 		if line == "" {
@@ -375,6 +375,6 @@ func (tc *TestCommands) UncommittedFiles() []string {
 	return result
 }
 
-func (tc *TestCommands) UnstashOpenFiles() error {
-	return tc.Run("git", "stash", "pop")
+func (self *TestCommands) UnstashOpenFiles() error {
+	return self.Run("git", "stash", "pop")
 }

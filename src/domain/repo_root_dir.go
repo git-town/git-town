@@ -13,10 +13,10 @@ func NewRepoRootDir(dir string) RepoRootDir {
 	return RepoRootDir{value: dir}
 }
 
-func (rrd RepoRootDir) IsEmpty() bool {
-	return rrd.value == ""
+func (self RepoRootDir) IsEmpty() bool {
+	return self.value == ""
 }
 
-func (rrd RepoRootDir) String() string {
-	return rrd.value
+func (self RepoRootDir) String() string {
+	return self.value
 }

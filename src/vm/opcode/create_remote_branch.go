@@ -13,6 +13,6 @@ type CreateRemoteBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *CreateRemoteBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.CreateRemoteBranch(op.SHA, op.Branch, op.NoPushHook)
+func (self *CreateRemoteBranch) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.CreateRemoteBranch(self.SHA, self.Branch, self.NoPushHook)
 }

@@ -9,12 +9,12 @@ func NewRemote(id string) Remote {
 	return Remote{id}
 }
 
-func (r Remote) IsEmpty() bool {
-	return r.ID == ""
+func (self Remote) IsEmpty() bool {
+	return self.ID == ""
 }
 
 // Implementation of the fmt.Stringer interface.
-func (r Remote) String() string { return r.ID }
+func (self Remote) String() string { return self.ID }
 
 var (
 	NoRemote       = NewRemote("")         //nolint:gochecknoglobals

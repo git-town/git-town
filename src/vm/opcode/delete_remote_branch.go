@@ -11,6 +11,6 @@ type DeleteRemoteBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *DeleteRemoteBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.DeleteRemoteBranch(op.Branch)
+func (self *DeleteRemoteBranch) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.DeleteRemoteBranch(self.Branch)
 }

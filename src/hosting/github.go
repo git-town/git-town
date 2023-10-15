@@ -24,9 +24,9 @@ type GitHubConnector struct {
 	log        Log
 }
 
-func (gc *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
-	pullRequests, _, err := gc.client.PullRequests.List(context.Background(), gc.Organization, gc.Repository, &github.PullRequestListOptions{
-		Head:  gc.Organization + ":" + branch.String(),
+func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
+	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
+		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
 		State: "open",
 	})
@@ -43,58 +43,58 @@ func (gc *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (
 	return &proposal, nil
 }
 
-func (gc *GitHubConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *GitHubConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (gc *GitHubConnector) HostingServiceName() string {
+func (self *GitHubConnector) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (gc *GitHubConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *GitHubConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
-	if parentBranch != gc.MainBranch {
+	if parentBranch != self.MainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", gc.RepositoryURL(), url.PathEscape(toCompare)), nil
+	return fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (gc *GitHubConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", gc.Hostname, gc.Organization, gc.Repository)
+func (self *GitHubConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", self.Hostname, self.Organization, self.Repository)
 }
 
-func (gc *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
+func (self *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	gc.log.Start(messages.HostingGithubMergingViaAPI, number)
+	self.log.Start(messages.HostingGithubMergingViaAPI, number)
 	title, body := ParseCommitMessage(message)
-	result, _, err := gc.client.PullRequests.Merge(context.Background(), gc.Organization, gc.Repository, number, body, &github.PullRequestOptions{
+	result, _, err := self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
 	sha := domain.NewSHA(result.GetSHA())
 	if err != nil {
-		gc.log.Failed(err)
+		self.log.Failed(err)
 		return sha, err
 	}
-	gc.log.Success()
+	self.log.Success()
 	return sha, nil
 }
 
-func (gc *GitHubConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
-	gc.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
+func (self *GitHubConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
+	self.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	targetName := target.String()
-	_, _, err := gc.client.PullRequests.Edit(context.Background(), gc.Organization, gc.Repository, number, &github.PullRequest{
+	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &(targetName),
 		},
 	})
 	if err != nil {
-		gc.log.Failed(err)
+		self.log.Failed(err)
 		return err
 	}
-	gc.log.Success()
+	self.log.Success()
 	return nil
 }
 

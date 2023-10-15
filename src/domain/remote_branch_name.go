@@ -33,37 +33,37 @@ func isValidRemoteBranchName(value string) bool {
 }
 
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
-func (rbn RemoteBranchName) BranchName() BranchName {
-	return NewBranchName(rbn.id)
+func (self RemoteBranchName) BranchName() BranchName {
+	return NewBranchName(self.id)
 }
 
-func (rbn RemoteBranchName) IsEmpty() bool {
-	return rbn.id == ""
+func (self RemoteBranchName) IsEmpty() bool {
+	return self.id == ""
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
-func (rbn RemoteBranchName) LocalBranchName() LocalBranchName {
-	_, localBranch := rbn.Parts()
+func (self RemoteBranchName) LocalBranchName() LocalBranchName {
+	_, localBranch := self.Parts()
 	return localBranch
 }
 
-func (rbn RemoteBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(rbn.id)
+func (self RemoteBranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(self.id)
 }
 
-func (rbn RemoteBranchName) Parts() (Remote, LocalBranchName) {
-	parts := strings.SplitN(rbn.id, "/", 2)
+func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
+	parts := strings.SplitN(self.id, "/", 2)
 	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
 }
 
-func (rbn RemoteBranchName) Remote() Remote {
-	remote, _ := rbn.Parts()
+func (self RemoteBranchName) Remote() Remote {
+	remote, _ := self.Parts()
 	return remote
 }
 
 // Implementation of the fmt.Stringer interface.
-func (rbn RemoteBranchName) String() string { return rbn.id }
+func (self RemoteBranchName) String() string { return self.id }
 
-func (rbn *RemoteBranchName) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &rbn.id)
+func (self *RemoteBranchName) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, &self.id)
 }

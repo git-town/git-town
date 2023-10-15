@@ -11,7 +11,7 @@ type DeleteParentBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *DeleteParentBranch) Run(args shared.RunArgs) error {
-	args.Runner.Config.RemoveParent(op.Branch)
+func (self *DeleteParentBranch) Run(args shared.RunArgs) error {
+	args.Runner.Config.RemoveParent(self.Branch)
 	return nil
 }

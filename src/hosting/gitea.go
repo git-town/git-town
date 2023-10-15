@@ -19,8 +19,8 @@ type GiteaConnector struct {
 	log Log
 }
 
-func (gc *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
-	openPullRequests, err := gc.client.ListRepoPullRequests(gc.Organization, gc.Repository, gitea.ListPullRequestsOptions{
+func (self *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
+	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -29,7 +29,7 @@ func (gc *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*
 	if err != nil {
 		return nil, err
 	}
-	pullRequests := FilterGiteaPullRequests(openPullRequests, gc.Organization, branch, target)
+	pullRequests := FilterGiteaPullRequests(openPullRequests, self.Organization, branch, target)
 	if len(pullRequests) == 0 {
 		return nil, nil //nolint:nilnil
 	}
@@ -45,29 +45,29 @@ func (gc *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*
 	}, nil
 }
 
-func (gc *GiteaConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *GiteaConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (gc *GiteaConnector) HostingServiceName() string {
+func (self *GiteaConnector) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (gc *GiteaConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *GiteaConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	toCompare := parentBranch.String() + "..." + branch.String()
-	return fmt.Sprintf("%s/compare/%s", gc.RepositoryURL(), url.PathEscape(toCompare)), nil
+	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (gc *GiteaConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", gc.Hostname, gc.Organization, gc.Repository)
+func (self *GiteaConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", self.Hostname, self.Organization, self.Repository)
 }
 
-func (gc *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
+func (self *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	title, body := ParseCommitMessage(message)
-	_, err = gc.client.MergePullRequest(gc.Organization, gc.Repository, int64(number), gitea.MergePullRequestOption{
+	_, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,
 		Message: body,
@@ -75,19 +75,19 @@ func (gc *GiteaConnector) SquashMergeProposal(number int, message string) (merge
 	if err != nil {
 		return domain.EmptySHA(), err
 	}
-	pullRequest, err := gc.client.GetPullRequest(gc.Organization, gc.Repository, int64(number))
+	pullRequest, err := self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
 	if err != nil {
 		return domain.EmptySHA(), err
 	}
 	return domain.NewSHA(*pullRequest.MergedCommitID), nil
 }
 
-func (gc *GiteaConnector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
+func (self *GiteaConnector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
 	// TODO: update the client and uncomment
-	// if gc.log != nil {
-	// 	gc.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
+	// if self.log != nil {
+	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
-	// _, err := gc.client.EditPullRequest(gc.owner, gc.repository, int64(number), gitea.EditPullRequestOption{
+	// _, err := self.client.EditPullRequest(self.owner, self.repository, int64(number), gitea.EditPullRequestOption{
 	// 	Base: newBaseName,
 	// })
 	// return err

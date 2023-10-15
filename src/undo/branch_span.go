@@ -10,43 +10,43 @@ type BranchSpan struct {
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
-func (bs BranchSpan) IsOmniChange() bool {
-	return bs.Before.IsOmniBranch() && bs.After.IsOmniBranch() && bs.LocalChanged()
+func (self BranchSpan) IsOmniChange() bool {
+	return self.Before.IsOmniBranch() && self.After.IsOmniBranch() && self.LocalChanged()
 }
 
-func (bs BranchSpan) IsOmniRemove() bool {
-	return bs.Before.IsOmniBranch() && bs.After.IsEmpty()
+func (self BranchSpan) IsOmniRemove() bool {
+	return self.Before.IsOmniBranch() && self.After.IsEmpty()
 }
 
-func (bs BranchSpan) IsInconsistentChange() bool {
-	return bs.Before.HasAllBranches() && bs.After.HasAllBranches() && bs.LocalChanged() && bs.RemoteChanged() && !bs.IsOmniChange()
+func (self BranchSpan) IsInconsistentChange() bool {
+	return self.Before.HasAllBranches() && self.After.HasAllBranches() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
 }
 
-func (bs BranchSpan) LocalAdded() bool {
-	return !bs.Before.HasLocalBranch() && bs.After.HasLocalBranch()
+func (self BranchSpan) LocalAdded() bool {
+	return !self.Before.HasLocalBranch() && self.After.HasLocalBranch()
 }
 
-func (bs BranchSpan) LocalChanged() bool {
-	return bs.Before.LocalSHA != bs.After.LocalSHA
+func (self BranchSpan) LocalChanged() bool {
+	return self.Before.LocalSHA != self.After.LocalSHA
 }
 
-func (bs BranchSpan) LocalRemoved() bool {
-	return bs.Before.HasLocalBranch() && !bs.After.HasLocalBranch()
+func (self BranchSpan) LocalRemoved() bool {
+	return self.Before.HasLocalBranch() && !self.After.HasLocalBranch()
 }
 
 // NoChanges indicates whether this BranchBeforeAfter contains changes or not.
-func (bs BranchSpan) NoChanges() bool {
-	return !bs.LocalChanged() && !bs.RemoteChanged()
+func (self BranchSpan) NoChanges() bool {
+	return !self.LocalChanged() && !self.RemoteChanged()
 }
 
-func (bs BranchSpan) RemoteAdded() bool {
-	return !bs.Before.HasRemoteBranch() && bs.After.HasRemoteBranch()
+func (self BranchSpan) RemoteAdded() bool {
+	return !self.Before.HasRemoteBranch() && self.After.HasRemoteBranch()
 }
 
-func (bs BranchSpan) RemoteChanged() bool {
-	return bs.Before.RemoteSHA != bs.After.RemoteSHA
+func (self BranchSpan) RemoteChanged() bool {
+	return self.Before.RemoteSHA != self.After.RemoteSHA
 }
 
-func (bs BranchSpan) RemoteRemoved() bool {
-	return bs.Before.HasRemoteBranch() && !bs.After.HasRemoteBranch()
+func (self BranchSpan) RemoteRemoved() bool {
+	return self.Before.HasRemoteBranch() && !self.After.HasRemoteBranch()
 }

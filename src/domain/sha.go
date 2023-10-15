@@ -43,32 +43,32 @@ func validateSHA(content string) bool {
 	return true
 }
 
-func (s SHA) IsEmpty() bool {
-	return s.id == ""
+func (self SHA) IsEmpty() bool {
+	return self.id == ""
 }
 
 // Location widens the type of this SHA to a more generic Location.
-func (s SHA) Location() Location {
-	return Location(s)
+func (self SHA) Location() Location {
+	return Location(self)
 }
 
 // MarshalJSON is used when serializing this SHA to JSON.
-func (s SHA) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.id)
+func (self SHA) MarshalJSON() ([]byte, error) {
+	return json.Marshal(self.id)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (s SHA) String() string { return s.id }
+func (self SHA) String() string { return self.id }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
-func (s SHA) TruncateTo(newLength int) SHA {
-	if len(s.id) < newLength {
-		return s
+func (self SHA) TruncateTo(newLength int) SHA {
+	if len(self.id) < newLength {
+		return self
 	}
-	return NewSHA(s.id[0:newLength])
+	return NewSHA(self.id[0:newLength])
 }
 
 // UnmarshalJSON is used when de-serializing JSON into a SHA.
-func (s *SHA) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &s.id)
+func (self *SHA) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, &self.id)
 }

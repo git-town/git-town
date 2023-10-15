@@ -12,6 +12,6 @@ type FetchUpstream struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *FetchUpstream) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.FetchUpstream(op.Branch)
+func (self *FetchUpstream) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.FetchUpstream(self.Branch)
 }

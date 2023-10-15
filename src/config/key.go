@@ -15,14 +15,14 @@ type Key struct {
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
-	return json.Marshal(k.Name)
+	return json.Marshal(self.Name)
 }
 
-func (self Key) String() string { return k.Name }
+func (self Key) String() string { return self.Name }
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &k.Name)
+	return json.Unmarshal(b, &self.Name)
 }
 
 var (

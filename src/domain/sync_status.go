@@ -10,7 +10,7 @@ type SyncStatus struct {
 	name string
 }
 
-func (ss SyncStatus) String() string { return ss.name }
+func (self SyncStatus) String() string { return self.name }
 
 var (
 	SyncStatusUpToDate        = SyncStatus{"up to date"}        //nolint:gochecknoglobals // the branch exists locally and remotely, the local branch is up to date
@@ -23,12 +23,12 @@ var (
 )
 
 // IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
-func (ss SyncStatus) IsLocal() bool {
-	switch ss {
+func (self SyncStatus) IsLocal() bool {
+	switch self {
 	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusDeletedAtRemote:
 		return true
 	case SyncStatusRemoteOnly:
 		return false
 	}
-	panic(fmt.Sprintf("uncaptured sync status: %v", ss))
+	panic(fmt.Sprintf("uncaptured sync status: %v", self))
 }

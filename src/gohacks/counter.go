@@ -5,10 +5,10 @@ type Counter struct {
 	count int
 }
 
-func (c *Counter) Count() int {
-	return c.count
+func (self *Counter) Count() int {
+	return self.count
 }
 
-func (c *Counter) Register() {
-	c.count++
+func (self *Counter) Register() {
+	self.count++
 }

@@ -4,8 +4,8 @@ import "golang.org/x/exp/maps"
 
 type LocalBranchesSHAs map[LocalBranchName]SHA
 
-func (lbss LocalBranchesSHAs) BranchNames() LocalBranchNames {
-	result := LocalBranchNames(maps.Keys(lbss))
+func (self LocalBranchesSHAs) BranchNames() LocalBranchNames {
+	result := LocalBranchNames(maps.Keys(self))
 	result.Sort()
 	return result
 }

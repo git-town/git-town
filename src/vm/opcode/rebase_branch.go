@@ -12,14 +12,14 @@ type RebaseBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RebaseBranch) CreateAbortProgram() []shared.Opcode {
+func (self *RebaseBranch) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{&AbortRebase{}}
 }
 
-func (op *RebaseBranch) CreateContinueProgram() []shared.Opcode {
+func (self *RebaseBranch) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{&ContinueRebase{}}
 }
 
-func (op *RebaseBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.Rebase(op.Branch)
+func (self *RebaseBranch) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.Rebase(self.Branch)
 }

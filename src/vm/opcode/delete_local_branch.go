@@ -12,11 +12,11 @@ type DeleteLocalBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *DeleteLocalBranch) Run(args shared.RunArgs) error {
-	useForce := op.Force
+func (self *DeleteLocalBranch) Run(args shared.RunArgs) error {
+	useForce := self.Force
 	if !useForce {
-		parent := args.Lineage.Parent(op.Branch)
-		hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(op.Branch, parent.Location())
+		parent := args.Lineage.Parent(self.Branch)
+		hasUnmergedCommits, err := args.Runner.Backend.BranchHasUnmergedCommits(self.Branch, parent.Location())
 		if err != nil {
 			return err
 		}
@@ -24,5 +24,5 @@ func (op *DeleteLocalBranch) Run(args shared.RunArgs) error {
 			useForce = true
 		}
 	}
-	return args.Runner.Frontend.DeleteLocalBranch(op.Branch, useForce)
+	return args.Runner.Frontend.DeleteLocalBranch(self.Branch, useForce)
 }

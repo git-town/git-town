@@ -16,11 +16,11 @@ type ChangeParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *ChangeParent) Run(args shared.RunArgs) error {
-	err := args.Runner.Config.SetParent(op.Branch, op.Parent)
+func (self *ChangeParent) Run(args shared.RunArgs) error {
+	err := args.Runner.Config.SetParent(self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
-	args.Runner.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, op.Branch, op.Parent))
+	args.Runner.FinalMessages.Add(fmt.Sprintf(messages.BranchParentChanged, self.Branch, self.Parent))
 	return nil
 }

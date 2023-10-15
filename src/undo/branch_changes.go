@@ -45,9 +45,9 @@ func EmptyBranchChanges() BranchChanges {
 }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
-func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
+func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
-	omniChangedPerennials, omniChangedFeatures := bcs.OmniChanged.Categorize(args.BranchTypes)
+	omniChangedPerennials, omniChangedFeatures := self.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches
 	for _, branch := range omniChangedPerennials.BranchNames() {
@@ -68,13 +68,13 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	}
 
 	// re-create removed omni-branches
-	for _, branch := range bcs.OmniRemoved.BranchNames() {
-		sha := bcs.OmniRemoved[branch]
+	for _, branch := range self.OmniRemoved.BranchNames() {
+		sha := self.OmniRemoved[branch]
 		result.Add(&opcode.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
 		result.Add(&opcode.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
-	inconsistentlyChangedPerennials, inconsistentChangedFeatures := bcs.InconsistentlyChanged.Categorize(args.BranchTypes)
+	inconsistentlyChangedPerennials, inconsistentChangedFeatures := self.InconsistentlyChanged.Categorize(args.BranchTypes)
 
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
@@ -103,7 +103,7 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	}
 
 	// remove remotely added branches
-	for _, addedRemoteBranch := range bcs.RemoteAdded {
+	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
 			result.Add(&opcode.DeleteTrackingBranch{
 				Branch: addedRemoteBranch,
@@ -112,7 +112,7 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	}
 
 	// re-create remotely removed feature branches
-	_, removedFeatureTrackingBranches := bcs.RemoteRemoved.Categorize(args.BranchTypes)
+	_, removedFeatureTrackingBranches := self.RemoteRemoved.Categorize(args.BranchTypes)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
 		result.Add(&opcode.CreateRemoteBranch{
@@ -123,15 +123,15 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	}
 
 	// reset locally changed branches
-	for _, localBranch := range bcs.LocalChanged.BranchNames() {
-		change := bcs.LocalChanged[localBranch]
+	for _, localBranch := range self.LocalChanged.BranchNames() {
+		change := self.LocalChanged[localBranch]
 		result.Add(&opcode.Checkout{Branch: localBranch})
 		result.Add(&opcode.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
 
 	// re-create locally removed branches
-	for _, removedLocalBranch := range bcs.LocalRemoved.BranchNames() {
-		startingPoint := bcs.LocalRemoved[removedLocalBranch]
+	for _, removedLocalBranch := range self.LocalRemoved.BranchNames() {
+		startingPoint := self.LocalRemoved[removedLocalBranch]
 		result.Add(&opcode.CreateBranch{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
@@ -139,7 +139,7 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	}
 
 	// remove locally added branches
-	for _, addedLocalBranch := range bcs.LocalAdded {
+	for _, addedLocalBranch := range self.LocalAdded {
 		if args.FinalBranch == addedLocalBranch {
 			result.Add(&opcode.Checkout{Branch: args.InitialBranch})
 		}
@@ -153,7 +153,7 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
-	_, remoteFeatureChanges := bcs.RemoteChanged.Categorize(args.BranchTypes)
+	_, remoteFeatureChanges := self.RemoteChanged.Categorize(args.BranchTypes)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
 		result.Add(&opcode.ResetRemoteBranchToSHA{
@@ -178,27 +178,27 @@ type BranchChangesUndoProgramArgs struct {
 	UndoablePerennialCommits []domain.SHA
 }
 
-func (bcs BranchChanges) String() string {
+func (self BranchChanges) String() string {
 	s := strings.Builder{}
 	s.WriteString("BranchChanges {")
 	s.WriteString("\n  LocalAdded: ")
-	s.WriteString(strings.Join(bcs.LocalAdded.Strings(), ", "))
+	s.WriteString(strings.Join(self.LocalAdded.Strings(), ", "))
 	s.WriteString("\n  LocalRemoved: ")
-	s.WriteString(strings.Join(bcs.LocalRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.LocalRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  LocalChanged: ")
-	s.WriteString(strings.Join(bcs.LocalChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.LocalChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  RemoteAdded: ")
-	s.WriteString(strings.Join(bcs.RemoteAdded.Strings(), ", "))
+	s.WriteString(strings.Join(self.RemoteAdded.Strings(), ", "))
 	s.WriteString("\n  RemoteRemoved: ")
-	s.WriteString(strings.Join(bcs.RemoteRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.RemoteRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  RemoteChanged: ")
-	s.WriteString(strings.Join(bcs.RemoteChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.RemoteChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  OmniRemoved: ")
-	s.WriteString(strings.Join(bcs.OmniRemoved.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
 	s.WriteString("\n  OmniChanged: ")
-	s.WriteString(strings.Join(bcs.OmniChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  InconsistentlyChanged: ")
-	s.WriteString(strings.Join(bcs.InconsistentlyChanged.BranchNames().Strings(), ", "))
+	s.WriteString(strings.Join(self.InconsistentlyChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n")
 	return s.String()
 }

@@ -23,36 +23,36 @@ type BackendRunner struct {
 	Verbose bool
 }
 
-func (br BackendRunner) Query(executable string, args ...string) (string, error) {
-	output, err := br.execute(executable, args...)
+func (self BackendRunner) Query(executable string, args ...string) (string, error) {
+	output, err := self.execute(executable, args...)
 	return string(output), err
 }
 
-func (br BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
-	output, err := br.execute(executable, args...)
+func (self BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
+	output, err := self.execute(executable, args...)
 	return strings.TrimSpace(stripansi.Strip(string(output))), err
 }
 
-func (br BackendRunner) Run(executable string, args ...string) error {
-	_, err := br.execute(executable, args...)
+func (self BackendRunner) Run(executable string, args ...string) error {
+	_, err := self.execute(executable, args...)
 	return err
 }
 
-func (br BackendRunner) execute(executable string, args ...string) ([]byte, error) {
-	br.CommandsCounter.Register()
-	if br.Verbose {
+func (self BackendRunner) execute(executable string, args ...string) ([]byte, error) {
+	self.CommandsCounter.Register()
+	if self.Verbose {
 		printHeader(executable, args...)
 	}
 	subProcess := exec.Command(executable, args...) // #nosec
-	if br.Dir != nil {
-		subProcess.Dir = *br.Dir
+	if self.Dir != nil {
+		subProcess.Dir = *self.Dir
 	}
 	subProcess.Env = append(subProcess.Environ(), "LC_ALL=C")
 	outputBytes, err := subProcess.CombinedOutput()
 	if err != nil {
 		err = ErrorDetails(executable, args, err, outputBytes)
 	}
-	if br.Verbose && len(outputBytes) > 0 {
+	if self.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
 	return outputBytes, err
@@ -61,9 +61,9 @@ func (br BackendRunner) execute(executable string, args ...string) ([]byte, erro
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (br BackendRunner) RunMany(commands [][]string) error {
+func (self BackendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		err := br.Run(argv[0], argv[1:]...)
+		err := self.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf(messages.RunCommandProblem, argv, err)
 		}

@@ -10,6 +10,6 @@ type RemoveGlobalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RemoveGlobalConfig) Run(args shared.RunArgs) error {
-	return args.Runner.Config.RemoveGlobalConfigValue(op.Key)
+func (self *RemoveGlobalConfig) Run(args shared.RunArgs) error {
+	return args.Runner.Config.RemoveGlobalConfigValue(self.Key)
 }

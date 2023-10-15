@@ -12,7 +12,7 @@ type PullBranchStrategy struct {
 	name string
 }
 
-func (pbs PullBranchStrategy) String() string { return pbs.name }
+func (self PullBranchStrategy) String() string { return self.name }
 
 var (
 	PullBranchStrategyMerge  = PullBranchStrategy{"merge"}  //nolint:gochecknoglobals
