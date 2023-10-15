@@ -163,7 +163,7 @@ func (bcs BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.
 		})
 	}
 
-	// This must be a CheckoutIfExistsOpcode because this branch might not exist
+	// This must be a CheckoutIfExists opcode because this branch might not exist
 	// when a Git Town command fails, stores this undo opcode, then gets continued and deletes this branch.
 	result.Add(&opcode.CheckoutIfExists{Branch: args.InitialBranch})
 	return result
