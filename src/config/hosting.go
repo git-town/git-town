@@ -13,7 +13,7 @@ type Hosting struct {
 	name string
 }
 
-func (h Hosting) String() string { return h.name }
+func (self Hosting) String() string { return h.name }
 
 var (
 	HostingBitbucket = Hosting{"bitbucket"} //nolint:gochecknoglobals
