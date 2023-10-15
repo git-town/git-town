@@ -1,8 +1,8 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
@@ -18,34 +18,34 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	}
 }
 
-func (cds ConfigDiffs) UndoSteps() steps.List {
-	result := steps.List{}
+func (cds ConfigDiffs) UndoProgram() program.Program {
+	result := program.Program{}
 	for _, key := range cds.Global.Added {
-		result.Add(&step.RemoveGlobalConfig{Key: key})
+		result.Add(&opcode.RemoveGlobalConfig{Key: key})
 	}
 	for key, value := range cds.Global.Removed {
-		result.Add(&step.SetGlobalConfig{
+		result.Add(&opcode.SetGlobalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Global.Changed {
-		result.Add(&step.SetGlobalConfig{
+		result.Add(&opcode.SetGlobalConfig{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
 	for _, key := range cds.Local.Added {
-		result.Add(&step.RemoveLocalConfig{Key: key})
+		result.Add(&opcode.RemoveLocalConfig{Key: key})
 	}
 	for key, value := range cds.Local.Removed {
-		result.Add(&step.SetLocalConfig{
+		result.Add(&opcode.SetLocalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
 	for key, change := range cds.Local.Changed {
-		result.Add(&step.SetLocalConfig{
+		result.Add(&opcode.SetLocalConfig{
 			Key:   key,
 			Value: change.Before,
 		})

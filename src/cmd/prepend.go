@@ -10,11 +10,11 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -65,9 +65,9 @@ func executePrepend(args []string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "prepend",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            prependSteps(config),
+		RunProgram:          prependProgram(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
@@ -170,14 +170,14 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependSteps(config *prependConfig) steps.List {
-	list := steps.List{}
+func prependProgram(config *prependConfig) program.Program {
+	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
-		syncBranchSteps(branchToSync, syncBranchStepsArgs{
+		syncBranchProgram(branchToSync, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &prog,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -187,32 +187,32 @@ func prependSteps(config *prependConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&step.CreateBranchExistingParent{
+	prog.Add(&opcode.CreateBranchExistingParent{
 		Ancestors:  config.newBranchParentCandidates,
 		Branch:     config.targetBranch,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the newly created branch
-	list.Add(&step.SetExistingParent{
+	prog.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the branch prepended to
-	list.Add(&step.SetParentIfBranchExists{
+	prog.Add(&opcode.SetParentIfBranchExists{
 		Branch: config.branches.Initial,
 		Parent: config.targetBranch,
 	})
-	list.Add(&step.Checkout{Branch: config.targetBranch})
+	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(steps.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list
+	return prog
 }

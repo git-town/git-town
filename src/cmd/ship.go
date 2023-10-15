@@ -12,11 +12,11 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -94,9 +94,9 @@ func executeShip(args []string, message string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "ship",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            shipSteps(config, message),
+		RunProgram:          shipProgram(config, message),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
@@ -297,15 +297,15 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipSteps(config *shipConfig, commitMessage string) steps.List {
-	list := steps.List{}
+func shipProgram(config *shipConfig, commitMessage string) program.Program {
+	prog := program.Program{}
 	// sync the parent branch
-	syncBranchSteps(config.targetBranch, syncBranchStepsArgs{
+	syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
-		list:               &list,
+		program:            &prog,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         true,
@@ -314,12 +314,12 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
-	syncBranchSteps(config.branchToShip, syncBranchStepsArgs{
+	syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
 		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
-		list:               &list,
+		program:            &prog,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         false,
@@ -327,30 +327,30 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
-	list.Add(&step.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
-	list.Add(&step.Checkout{Branch: config.targetBranch.LocalName})
+	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
+	prog.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
-			list.Add(&step.UpdateProposalTarget{
+			prog.Add(&opcode.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
 		// push
-		list.Add(&step.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
-		list.Add(&step.ConnectorMergeProposal{
+		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})
-		list.Add(&step.PullCurrentBranch{})
+		prog.Add(&opcode.PullCurrentBranch{})
 	} else {
-		list.Add(&step.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
+		prog.Add(&opcode.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&step.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName, NoPushHook: !config.pushHook})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -358,23 +358,23 @@ func shipSteps(config *shipConfig, commitMessage string) steps.List {
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&step.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
+			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
-	list.Add(&step.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
-	list.Add(&step.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
+	prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	for _, child := range config.childBranches {
-		list.Add(&step.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
+		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
 	if !config.isShippingInitialBranch {
-		list.Add(&step.Checkout{Branch: config.branches.Initial})
+		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
 	}
-	list.Wrap(steps.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: !config.isShippingInitialBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list
+	return prog
 }

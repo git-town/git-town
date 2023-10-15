@@ -5,7 +5,7 @@ make a decision. When this happens, the command stops and prints an error
 message. When you have resolved the issue, you can either:
 
 - run `git continue` to continue executing the interrupted command, starting
-  with the step that failed,
+  with the operation that failed,
 - run `git abort` to abort the Git Town command and go back to where you
   started.
 

@@ -8,10 +8,10 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -70,9 +70,9 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "rename-branch",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            renameBranchSteps(config),
+		RunProgram:          renameBranchProgram(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
@@ -163,29 +163,29 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchSteps(config *renameBranchConfig) steps.List {
-	result := steps.List{}
-	result.Add(&step.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
+func renameBranchProgram(config *renameBranchConfig) program.Program {
+	result := program.Program{}
+	result.Add(&opcode.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.branches.Initial == config.oldBranch.LocalName {
-		result.Add(&step.Checkout{Branch: config.newBranch})
+		result.Add(&opcode.Checkout{Branch: config.newBranch})
 	}
 	if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
-		result.Add(&step.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
-		result.Add(&step.AddToPerennialBranches{Branch: config.newBranch})
+		result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
+		result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
 	} else {
 		lineage := config.lineage
-		result.Add(&step.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-		result.Add(&step.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
+		result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+		result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
-		result.Add(&step.SetParent{Branch: child, Parent: config.newBranch})
+		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
-		result.Add(&step.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Add(&step.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
+		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
+		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
-	result.Add(&step.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
-	result.Wrap(steps.WrapOptions{
+	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
+	result.Wrap(program.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,

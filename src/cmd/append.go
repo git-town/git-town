@@ -9,11 +9,11 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -63,9 +63,9 @@ func executeAppend(arg string, debug bool) error {
 	runState := runstate.RunState{
 		Command:             "append",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            appendSteps(config),
+		RunProgram:          appendProgram(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
@@ -169,14 +169,14 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func appendSteps(config *appendConfig) steps.List {
-	list := steps.List{}
+func appendProgram(config *appendConfig) program.Program {
+	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(branch, syncBranchStepsArgs{
+		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &prog,
 			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
@@ -186,26 +186,26 @@ func appendSteps(config *appendConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&step.CreateBranchExistingParent{
+	prog.Add(&opcode.CreateBranchExistingParent{
 		Ancestors:  config.newBranchParentCandidates,
 		Branch:     config.targetBranch,
 		MainBranch: config.mainBranch,
 	})
-	list.Add(&step.SetExistingParent{
+	prog.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
 	})
-	list.Add(&step.Checkout{Branch: config.targetBranch})
+	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&step.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(steps.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list
+	return prog
 }
