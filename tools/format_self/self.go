@@ -70,7 +70,7 @@ func formatFileContent(content string) string {
 }
 
 func formatLine(line string) string {
-	instanceRE := regexp.MustCompile(`func \(\w+ \*?\w+\) `) //\(([a-z]+) ([a-zA-Z]+)\) `)
+	instanceRE := regexp.MustCompile(`func \((\w+) \*?\w+\) `) //\(([a-z]+) ([a-zA-Z]+)\) `)
 	matches := instanceRE.FindStringSubmatch(line)
 	fmt.Println("MATCHES:", matches)
 	return line
