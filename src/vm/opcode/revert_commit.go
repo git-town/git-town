@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // RevertCommit adds a commit to the current branch
@@ -15,7 +16,7 @@ type RevertCommit struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *RevertCommit) Run(args RunArgs) error {
+func (step *RevertCommit) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch
@@ -16,7 +17,7 @@ type ResetCurrentBranchToSHA struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ResetCurrentBranchToSHA) Run(args RunArgs) error {
+func (step *ResetCurrentBranchToSHA) Run(args shared.RunArgs) error {
 	currentSHA, err := args.Runner.Backend.CurrentSHA()
 	if err != nil {
 		return err

@@ -1,13 +1,16 @@
 package opcode
 
-import "github.com/git-town/git-town/v9/src/domain"
+import (
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
+)
 
 type RemoveBranchFromLineage struct {
 	Branch domain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
-func (step *RemoveBranchFromLineage) Run(args RunArgs) error {
+func (step *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
 	parent := args.Lineage.Parent(step.Branch)
 	for _, child := range args.Lineage.Children(step.Branch) {
 		if parent.IsEmpty() {

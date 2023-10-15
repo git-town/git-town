@@ -2,24 +2,26 @@ package opcode
 
 import (
 	"errors"
+
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // undeclaredOpcodeMethods makes structs in this package satisfy the Opcode interface even if they don't declare all required methods.
 type undeclaredOpcodeMethods struct{}
 
-func (step *undeclaredOpcodeMethods) CreateAbortProgram() []Opcode {
-	return []Opcode{}
+func (step *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
+	return []shared.Opcode{}
 }
 
-func (step *undeclaredOpcodeMethods) CreateContinueProgram() []Opcode {
-	return []Opcode{}
+func (step *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{}
 }
 
 func (step *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *undeclaredOpcodeMethods) Run(_ RunArgs) error {
+func (step *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
 	return nil
 }
 

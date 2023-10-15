@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -39,7 +40,7 @@ func TestLoadSave(t *testing.T) {
 			IsUndo:       true,
 			AbortProgram: program.Program{},
 			RunProgram: program.Program{
-				Steps: []opcode.Opcode{
+				Steps: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
 					&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},

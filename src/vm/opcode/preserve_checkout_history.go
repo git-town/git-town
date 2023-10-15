@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // PreserveCheckoutHistory does stuff.
@@ -12,7 +13,7 @@ type PreserveCheckoutHistory struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *PreserveCheckoutHistory) Run(args RunArgs) error {
+func (step *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
 	if err != nil {
 		return err

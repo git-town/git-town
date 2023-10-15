@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 type RemoveGlobalConfig struct {
@@ -9,6 +10,6 @@ type RemoveGlobalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *RemoveGlobalConfig) Run(args RunArgs) error {
+func (step *RemoveGlobalConfig) Run(args shared.RunArgs) error {
 	return args.Runner.Config.RemoveGlobalConfigValue(step.Key)
 }

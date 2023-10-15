@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // Program is a collection of Step instances.
@@ -17,18 +18,18 @@ import (
 //
 //nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {
-	Steps []opcode.Opcode `exhaustruct:"optional"`
+	Steps []shared.Opcode `exhaustruct:"optional"`
 }
 
 // NewProgram provides a program instance containing the given step.
-func NewProgram(initialStep opcode.Opcode) Program {
+func NewProgram(initialStep shared.Opcode) Program {
 	return Program{
-		Steps: []opcode.Opcode{initialStep},
+		Steps: []shared.Opcode{initialStep},
 	}
 }
 
 // Append adds the given step to the end of this program.
-func (p *Program) Add(step ...opcode.Opcode) {
+func (p *Program) Add(step ...shared.Opcode) {
 	p.Steps = append(p.Steps, step...)
 }
 
@@ -52,7 +53,7 @@ func (p *Program) MarshalJSON() ([]byte, error) {
 }
 
 // Peek provides the first element of this program.
-func (p *Program) Peek() opcode.Opcode { //nolint:ireturn
+func (p *Program) Peek() shared.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
@@ -60,7 +61,7 @@ func (p *Program) Peek() opcode.Opcode { //nolint:ireturn
 }
 
 // Pop removes and provides the first element of this program.
-func (p *Program) Pop() opcode.Opcode { //nolint:ireturn
+func (p *Program) Pop() shared.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
@@ -70,7 +71,7 @@ func (p *Program) Pop() opcode.Opcode { //nolint:ireturn
 }
 
 // Prepend adds the given step to the beginning of this program.
-func (p *Program) Prepend(other ...opcode.Opcode) {
+func (p *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
 		p.Steps = append(other, p.Steps...)
 	}
@@ -92,9 +93,9 @@ func (p *Program) RemoveAllButLast(removeType string) {
 
 // RemoveDuplicateCheckoutSteps provides this program with checkout steps that immediately follow each other removed.
 func (p *Program) RemoveDuplicateCheckoutSteps() Program {
-	result := make([]opcode.Opcode, 0, len(p.Steps))
+	result := make([]shared.Opcode, 0, len(p.Steps))
 	// this one is populated only if the last step is a checkout step
-	var lastStep opcode.Opcode
+	var lastStep shared.Opcode
 	for _, step := range p.Steps {
 		if IsCheckoutStep(step) {
 			lastStep = step
@@ -147,7 +148,7 @@ func (p *Program) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		p.Steps = make([]opcode.Opcode, len(jsonSteps))
+		p.Steps = make([]shared.Opcode, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
 			p.Steps[j] = jsonStep.Step
 		}

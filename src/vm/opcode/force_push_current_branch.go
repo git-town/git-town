@@ -1,12 +1,14 @@
 package opcode
 
+import "github.com/git-town/git-town/v9/src/vm/shared"
+
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
 	NoPushHook bool
 	undeclaredOpcodeMethods
 }
 
-func (step *ForcePushCurrentBranch) Run(args RunArgs) error {
+func (step *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err

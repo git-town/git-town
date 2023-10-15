@@ -2,6 +2,8 @@ package opcode
 
 import (
 	"fmt"
+
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // CommitOpenChanges commits all open changes as a new commit.
@@ -10,7 +12,7 @@ type CommitOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CommitOpenChanges) Run(args RunArgs) error {
+func (step *CommitOpenChanges) Run(args shared.RunArgs) error {
 	err := args.Runner.Frontend.StageFiles("-A")
 	if err != nil {
 		return err

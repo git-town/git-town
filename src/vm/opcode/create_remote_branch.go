@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // CreateRemoteBranch pushes the given local branch up to origin.
@@ -12,6 +13,6 @@ type CreateRemoteBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CreateRemoteBranch) Run(args RunArgs) error {
+func (step *CreateRemoteBranch) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.CreateRemoteBranch(step.SHA, step.Branch, step.NoPushHook)
 }

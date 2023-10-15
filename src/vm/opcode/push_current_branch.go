@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
@@ -11,7 +12,7 @@ type PushCurrentBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *PushCurrentBranch) Run(args RunArgs) error {
+func (step *PushCurrentBranch) Run(args shared.RunArgs) error {
 	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.TrackingBranch())
 	if err != nil {
 		return err

@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // FetchUpstream brings the Git history of the local repository
@@ -11,6 +12,6 @@ type FetchUpstream struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *FetchUpstream) Run(args RunArgs) error {
+func (step *FetchUpstream) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.FetchUpstream(step.Branch)
 }

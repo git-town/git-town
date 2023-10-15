@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA,
@@ -16,7 +17,7 @@ type ResetRemoteBranchToSHA struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ResetRemoteBranchToSHA) Run(args RunArgs) error {
+func (step *ResetRemoteBranchToSHA) Run(args shared.RunArgs) error {
 	currentSHA, err := args.Runner.Backend.SHAForBranch(step.Branch.BranchName())
 	if err != nil {
 		return err

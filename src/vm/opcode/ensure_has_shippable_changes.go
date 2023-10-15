@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // EnsureHasShippableChanges asserts that the branch has unique changes not on the main branch.
@@ -18,7 +19,7 @@ func (step *EnsureHasShippableChanges) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipBranchNothingToDo, step.Branch)
 }
 
-func (step *EnsureHasShippableChanges) Run(args RunArgs) error {
+func (step *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
 	hasShippableChanges, err := args.Runner.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err

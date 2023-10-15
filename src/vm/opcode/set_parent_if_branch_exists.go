@@ -1,6 +1,9 @@
 package opcode
 
-import "github.com/git-town/git-town/v9/src/domain"
+import (
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/shared"
+)
 
 // SetParentIfBranchExists sets the given parent branch as the parent of the given branch,
 // but only the latter exists.
@@ -10,7 +13,7 @@ type SetParentIfBranchExists struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetParentIfBranchExists) Run(args RunArgs) error {
+func (step *SetParentIfBranchExists) Run(args shared.RunArgs) error {
 	if !args.Runner.Backend.BranchExists(step.Branch) {
 		return nil
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,7 +20,7 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			Command: "sync",
 			AbortProgram: program.Program{
-				Steps: []opcode.Opcode{
+				Steps: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -28,7 +29,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			RunProgram: program.Program{
-				Steps: []opcode.Opcode{
+				Steps: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -37,7 +38,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			UndoProgram: program.Program{
-				Steps: []opcode.Opcode{
+				Steps: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),

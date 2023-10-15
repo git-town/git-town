@@ -2,43 +2,106 @@
 // All steps implement the Step interface defined in step.go.
 package opcode
 
-import (
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
-)
+import "github.com/git-town/git-town/v9/src/vm/shared"
 
-// Opcode represents a dedicated CLI activity.
-// Git Town commands consist of many Opcode instances.
-// Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
-// and can provide Steps to continue, abort, and undo them.
-type Opcode interface {
-	// CreateAbortProgram provides the abort step for this step.
-	CreateAbortProgram() []Opcode
-
-	// CreateContinueProgram provides the continue step for this step.
-	CreateContinueProgram() []Opcode
-
-	// CreateAutomaticAbortError provides the error message to display when this step
-	// cause the command to automatically abort.
-	CreateAutomaticAbortError() error
-
-	// Run executes this step.
-	Run(args RunArgs) error
-
-	// ShouldAutomaticallyAbortOnError indicates whether this step should
-	// cause the command to automatically abort if it errors.
-	// When true, automatically runs the abort logic and leaves the user where they started.
-	// When false, stops execution to let the user fix the issue and continue or manually abort.
-	ShouldAutomaticallyAbortOnError() bool
-}
-
-type RunArgs struct {
-	AddSteps                        func(...Opcode) // AddSteps allows currently executing steps to prepend additional steps onto the currently executing step list.
-	Connector                       hosting.Connector
-	Lineage                         config.Lineage
-	RegisterUndoablePerennialCommit func(domain.SHA)
-	Runner                          *git.ProdRunner
-	UpdateInitialBranchLocalSHA     func(domain.LocalBranchName, domain.SHA) error
+func DetermineStep(stepType string) shared.Opcode { //nolint:ireturn
+	switch stepType {
+	case "AbortMerge":
+		return &AbortMerge{}
+	case "AbortRebase":
+		return &AbortRebase{}
+	case "AddToPerennialBranches":
+		return &AddToPerennialBranches{}
+	case "ChangeParent":
+		return &ChangeParent{}
+	case "Checkout":
+		return &Checkout{}
+	case "CheckoutIfExists":
+		return &CheckoutIfExists{}
+	case "CommitOpenChanges":
+		return &CommitOpenChanges{}
+	case "ConnectorMergeProposal":
+		return &ConnectorMergeProposal{}
+	case "ContinueMerge":
+		return &ContinueMerge{}
+	case "ContinueRebase":
+		return &ContinueRebase{}
+	case "CreateBranch":
+		return &CreateBranch{}
+	case "CreateBranchExistingParent":
+		return &CreateBranchExistingParent{}
+	case "CreateProposal":
+		return &CreateProposal{}
+	case "CreateRemoteBranch":
+		return &CreateRemoteBranch{}
+	case "CreateTrackingBranch":
+		return &CreateTrackingBranch{}
+	case "DeleteLocalBranch":
+		return &DeleteLocalBranch{}
+	case "DeleteParentBranch":
+		return &DeleteParentBranch{}
+	case "DeleteRemoteBranch":
+		return &DeleteRemoteBranch{}
+	case "DeleteTrackingBranch":
+		return &DeleteTrackingBranch{}
+	case "DiscardOpenChanges":
+		return &DiscardOpenChanges{}
+	case "EnsureHasShippableChanges":
+		return &EnsureHasShippableChanges{}
+	case "FetchUpstream":
+		return &FetchUpstream{}
+	case "ForcePushCurrentBranch":
+		return &ForcePushCurrentBranch{}
+	case "Merge":
+		return &Merge{}
+	case "MergeParent":
+		return &MergeParent{}
+	case "PreserveCheckoutHistory":
+		return &PreserveCheckoutHistory{}
+	case "PullCurrentBranch":
+		return &PullCurrentBranch{}
+	case "PushCurrentBranch":
+		return &PushCurrentBranch{}
+	case "PushTags":
+		return &PushTags{}
+	case "RebaseBranch":
+		return &RebaseBranch{}
+	case "RebaseParent":
+		return &RebaseParent{}
+	case "RemoveFromPerennialBranches":
+		return &RemoveFromPerennialBranches{}
+	case "RemoveGlobalConfig":
+		return &RemoveGlobalConfig{}
+	case "RemoveLocalConfig":
+		return &RemoveLocalConfig{}
+	case "ResetCurrentBranchToSHA":
+		return &ResetCurrentBranchToSHA{}
+	case "ResetRemoteBranchToSHA":
+		return &ResetRemoteBranchToSHA{}
+	case "RestoreOpenChanges":
+		return &RestoreOpenChanges{}
+	case "RevertCommit":
+		return &RevertCommit{}
+	case "SetExistingParent":
+		return &SetExistingParent{}
+	case "SetGlobalConfig":
+		return &SetGlobalConfig{}
+	case "SetLocalConfig":
+		return &SetLocalConfig{}
+	case "SetParent":
+		return &SetParent{}
+	case "SetParentIfBranchExists":
+		return &SetParentIfBranchExists{}
+	case "SquashMerge":
+		return &SquashMerge{}
+	case "SkipCurrentBranch":
+		return &SkipCurrentBranch{}
+	case "StashOpenChanges":
+		return &StashOpenChanges{}
+	case "UndoLastCommit":
+		return &UndoLastCommit{}
+	case "UpdateProposalTarget":
+		return &UpdateProposalTarget{}
+	}
+	return nil
 }

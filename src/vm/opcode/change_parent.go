@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // ChangeParent changes the parent of the given branch to the given parent.
@@ -15,7 +16,7 @@ type ChangeParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ChangeParent) Run(args RunArgs) error {
+func (step *ChangeParent) Run(args shared.RunArgs) error {
 	err := args.Runner.Config.SetParent(step.Branch, step.Parent)
 	if err != nil {
 		return err

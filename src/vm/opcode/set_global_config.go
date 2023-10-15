@@ -2,6 +2,7 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 type SetGlobalConfig struct {
@@ -10,6 +11,6 @@ type SetGlobalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetGlobalConfig) Run(args RunArgs) error {
+func (step *SetGlobalConfig) Run(args shared.RunArgs) error {
 	return args.Runner.Config.SetGlobalConfigValue(step.Key, step.Value)
 }

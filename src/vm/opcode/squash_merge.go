@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // SquashMerge squash merges the branch with the given name into the current branch.
@@ -16,8 +17,8 @@ type SquashMerge struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SquashMerge) CreateAbortProgram() []Opcode {
-	return []Opcode{
+func (step *SquashMerge) CreateAbortProgram() []shared.Opcode {
+	return []shared.Opcode{
 		&DiscardOpenChanges{},
 	}
 }
@@ -26,7 +27,7 @@ func (step *SquashMerge) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
-func (step *SquashMerge) Run(args RunArgs) error {
+func (step *SquashMerge) Run(args shared.RunArgs) error {
 	err := args.Runner.Frontend.SquashMerge(step.Branch)
 	if err != nil {
 		return err

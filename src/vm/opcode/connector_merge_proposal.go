@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // ConnectorMergeProposal squash merges the branch with the given name into the current branch.
@@ -18,11 +19,11 @@ type ConnectorMergeProposal struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ConnectorMergeProposal) CreateAbortProgram() []Opcode {
+func (step *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 	if step.enteredEmptyCommitMessage {
-		return []Opcode{&DiscardOpenChanges{}}
+		return []shared.Opcode{&DiscardOpenChanges{}}
 	}
-	return []Opcode{}
+	return []shared.Opcode{}
 }
 
 func (step *ConnectorMergeProposal) CreateAutomaticAbortError() error {
@@ -32,7 +33,7 @@ func (step *ConnectorMergeProposal) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *ConnectorMergeProposal) Run(args RunArgs) error {
+func (step *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {

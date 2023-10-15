@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -119,13 +120,13 @@ func TestSlice(t *testing.T) {
 		})
 		t.Run("list contains element in the middle", func(t *testing.T) {
 			t.Parallel()
-			give := []opcode.Opcode{
+			give := []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.RestoreOpenChanges{},
 				&opcode.AbortRebase{},
 			}
-			have := slice.LowerAll[opcode.Opcode](give, &opcode.RestoreOpenChanges{})
-			want := []opcode.Opcode{
+			have := slice.LowerAll[shared.Opcode](give, &opcode.RestoreOpenChanges{})
+			want := []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
 				&opcode.RestoreOpenChanges{},

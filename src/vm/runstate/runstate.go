@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // RunState represents the current state of a Git Town command,
@@ -92,7 +93,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(step)
 		}
 	}
-	result.RunProgram.Steps = slice.LowerAll[opcode.Opcode](result.RunProgram.Steps, &opcode.RestoreOpenChanges{})
+	result.RunProgram.Steps = slice.LowerAll[shared.Opcode](result.RunProgram.Steps, &opcode.RestoreOpenChanges{})
 	return result
 }
 

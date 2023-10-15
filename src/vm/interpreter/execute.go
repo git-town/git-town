@@ -7,8 +7,8 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // Execute runs the commands in the given runstate.
@@ -23,7 +23,7 @@ func Execute(args ExecuteArgs) error {
 			args.RunState.SkipCurrentBranchProgram()
 			continue
 		}
-		err := nextStep.Run(opcode.RunArgs{
+		err := nextStep.Run(shared.RunArgs{
 			AddSteps:                        args.RunState.RunProgram.Prepend,
 			Runner:                          args.Run,
 			Connector:                       args.Connector,

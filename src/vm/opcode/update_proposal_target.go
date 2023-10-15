@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
@@ -14,7 +15,7 @@ type UpdateProposalTarget struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *UpdateProposalTarget) Run(args RunArgs) error {
+func (step *UpdateProposalTarget) Run(args shared.RunArgs) error {
 	return args.Connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 
