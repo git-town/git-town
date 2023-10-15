@@ -93,5 +93,22 @@ func runTests() {
 }
 
 func testFormatLine() {
-	fmt.Println("testing")
+	give := "	func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {"
+	have := formatLine(give)
+	want := "	func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {"
+	assertEqual(want, have, "testFormatLine")
+}
+
+func assertEqual[T comparable](want, have T, testName string) {
+	fmt.Print(".")
+	if have != want {
+		fmt.Printf("\nTEST FAILURE in %q\n", testName)
+		fmt.Println("\n\nWANT")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(want)
+		fmt.Println("\n\nHAVE")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(have)
+		os.Exit(1)
+	}
 }
