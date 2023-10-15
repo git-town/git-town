@@ -85,7 +85,7 @@ func TestProgram(t *testing.T) {
 		// but it doesn't work here for some reason.
 		want := `
 {
-  "Steps": [
+  "Opcodes": [
     {},
     {}
   ]
