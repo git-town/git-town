@@ -1,6 +1,6 @@
 # Git Town architecture
 
-### Requirements
+### Design goals
 
 Git Town solves multiple large problems:
 
