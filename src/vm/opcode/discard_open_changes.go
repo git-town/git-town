@@ -7,6 +7,6 @@ type DiscardOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *DiscardOpenChanges) Run(args shared.RunArgs) error {
+func (op *DiscardOpenChanges) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.DiscardOpenChanges()
 }

@@ -228,7 +228,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-// syncBranchesProgram provides the step list for the "git sync" command.
+// syncBranchesProgram provides the program for the "git sync" command.
 func syncBranchesProgram(args syncBranchesProgramArgs) {
 	for _, branch := range args.branchesToSync {
 		syncBranchProgram(branch, args.syncBranchProgramArgs)
@@ -290,7 +290,7 @@ func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, a
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, args.syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncStrategy)
 	list.Add(&opcode.IfElse{
 		Condition: func(backend *git.BackendCommands, lineage config.Lineage) (bool, error) {
 			parent := lineage.Parent(branch.LocalName)
@@ -333,7 +333,7 @@ func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.Bran
 	list.Add(&opcode.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
 }
 
-// syncNonDeletedBranchProgram provides the steps to sync a particular branch.
+// syncNonDeletedBranchProgram provides the opcode to sync a particular branch.
 func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
@@ -358,18 +358,18 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 	}
 }
 
-// syncFeatureBranchProgram adds all the steps to sync the feature branch with the given name.
+// syncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
 func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
+		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchStep(list, branch.LocalName, syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, syncStrategy)
 }
 
-// syncPerennialBranchProgram adds all the steps to sync the perennial branch with the given name.
+// syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
 func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(args.program, branch.RemoteName, args.pullBranchStrategy)
+		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.pullBranchStrategy)
 	}
 	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
 		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
@@ -377,8 +377,8 @@ func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgram
 	}
 }
 
-// pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchStep(list *program.Program, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
+// pullTrackingBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the remote branch of the current feature branch into the current feature branch.
+func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&opcode.Merge{Branch: trackingBranch.BranchName()})
@@ -387,8 +387,8 @@ func pullTrackingBranchOfCurrentFeatureBranchStep(list *program.Program, trackin
 	}
 }
 
-// pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *program.Program, currentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+// pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
+func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
 		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch})
@@ -397,8 +397,8 @@ func pullParentBranchOfCurrentFeatureBranchStep(list *program.Program, currentBr
 	}
 }
 
-// updateCurrentPerennialBranchStep provides the steps to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchStep(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
+// updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
+func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
 	switch strategy {
 	case config.PullBranchStrategyMerge:
 		list.Add(&opcode.Merge{Branch: otherBranch.BranchName()})

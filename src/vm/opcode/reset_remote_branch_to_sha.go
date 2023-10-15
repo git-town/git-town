@@ -17,13 +17,13 @@ type ResetRemoteBranchToSHA struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ResetRemoteBranchToSHA) Run(args shared.RunArgs) error {
-	currentSHA, err := args.Runner.Backend.SHAForBranch(step.Branch.BranchName())
+func (op *ResetRemoteBranchToSHA) Run(args shared.RunArgs) error {
+	currentSHA, err := args.Runner.Backend.SHAForBranch(op.Branch.BranchName())
 	if err != nil {
 		return err
 	}
-	if currentSHA != step.MustHaveSHA {
-		return fmt.Errorf(messages.BranchHasWrongSHA, step.Branch, step.SetToSHA, step.MustHaveSHA, currentSHA)
+	if currentSHA != op.MustHaveSHA {
+		return fmt.Errorf(messages.BranchHasWrongSHA, op.Branch, op.SetToSHA, op.MustHaveSHA, currentSHA)
 	}
-	return args.Runner.Frontend.ResetRemoteBranchToSHA(step.Branch, step.SetToSHA)
+	return args.Runner.Frontend.ResetRemoteBranchToSHA(op.Branch, op.SetToSHA)
 }

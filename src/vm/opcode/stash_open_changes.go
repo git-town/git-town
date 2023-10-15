@@ -6,6 +6,6 @@ type StashOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *StashOpenChanges) Run(args shared.RunArgs) error {
+func (op *StashOpenChanges) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.Stash()
 }

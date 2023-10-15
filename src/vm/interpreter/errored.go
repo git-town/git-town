@@ -10,9 +10,9 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
-// errored is called when the given step has resulted in the given error.
-func errored(failedStep shared.Opcode, runErr error, args ExecuteArgs) error {
-	args.RunState.AbortProgram.Add(failedStep.CreateAbortProgram()...)
+// errored is called when the given opcode has resulted in the given error.
+func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
+	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
@@ -25,10 +25,10 @@ func errored(failedStep shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.UndoProgram.AddProgram(undoProgram)
-	if failedStep.ShouldAutomaticallyAbortOnError() {
-		return autoAbort(failedStep, runErr, args)
+	if failedOpcode.ShouldAutomaticallyAbortOnError() {
+		return autoAbort(failedOpcode, runErr, args)
 	}
-	args.RunState.RunProgram.Prepend(failedStep.CreateContinueProgram()...)
+	args.RunState.RunProgram.Prepend(failedOpcode.CreateContinueProgram()...)
 	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)
 	if err != nil {
 		return err

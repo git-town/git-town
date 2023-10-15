@@ -11,18 +11,18 @@ type Merge struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *Merge) CreateAbortProgram() []shared.Opcode {
+func (op *Merge) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortMerge{},
 	}
 }
 
-func (step *Merge) CreateContinueProgram() []shared.Opcode {
+func (op *Merge) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ContinueMerge{},
 	}
 }
 
-func (step *Merge) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.MergeBranchNoEdit(step.Branch)
+func (op *Merge) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.MergeBranchNoEdit(op.Branch)
 }

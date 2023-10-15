@@ -13,6 +13,6 @@ type SetParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetParent) Run(args shared.RunArgs) error {
-	return args.Runner.Config.SetParent(step.Branch, step.Parent)
+func (op *SetParent) Run(args shared.RunArgs) error {
+	return args.Runner.Config.SetParent(op.Branch, op.Parent)
 }

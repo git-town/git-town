@@ -12,9 +12,9 @@ type CreateProposal struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CreateProposal) Run(args shared.RunArgs) error {
-	parentBranch := args.Runner.Config.Lineage()[step.Branch]
-	prURL, err := args.Connector.NewProposalURL(step.Branch, parentBranch)
+func (op *CreateProposal) Run(args shared.RunArgs) error {
+	parentBranch := args.Runner.Config.Lineage()[op.Branch]
+	prURL, err := args.Connector.NewProposalURL(op.Branch, parentBranch)
 	if err != nil {
 		return err
 	}

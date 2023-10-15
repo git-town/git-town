@@ -13,9 +13,9 @@ type SetParentIfBranchExists struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetParentIfBranchExists) Run(args shared.RunArgs) error {
-	if !args.Runner.Backend.BranchExists(step.Branch) {
+func (op *SetParentIfBranchExists) Run(args shared.RunArgs) error {
+	if !args.Runner.Backend.BranchExists(op.Branch) {
 		return nil
 	}
-	return args.Runner.Config.SetParent(step.Branch, step.Parent)
+	return args.Runner.Config.SetParent(op.Branch, op.Parent)
 }

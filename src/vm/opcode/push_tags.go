@@ -7,6 +7,6 @@ type PushTags struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *PushTags) Run(args shared.RunArgs) error {
+func (op *PushTags) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.PushTags()
 }

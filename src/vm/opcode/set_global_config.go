@@ -11,6 +11,6 @@ type SetGlobalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetGlobalConfig) Run(args shared.RunArgs) error {
-	return args.Runner.Config.SetGlobalConfigValue(step.Key, step.Value)
+func (op *SetGlobalConfig) Run(args shared.RunArgs) error {
+	return args.Runner.Config.SetGlobalConfigValue(op.Key, op.Value)
 }

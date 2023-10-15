@@ -128,14 +128,14 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		PreviousBranch:   config.previousBranch,
 	})
 	// If the command to undo failed and was continued,
-	// there might be steps in the undo stack that became obsolete
+	// there might be opcodes in the undo stack that became obsolete
 	// when the command was continued.
 	// Example: the command stashed away uncommitted changes,
 	// failed, and remembered in the undo list to pop the stack.
 	// When continuing, it finishes and pops the stack as part of the continue list.
 	// When we run undo now, it still wants to pop the stack even though that was already done.
 	// This seems to apply only to popping the stack and switching back to the initial branch.
-	// Hence we consolidate this step type here.
+	// Hence we consolidate these opcode types here.
 	undoRunState.RunProgram.Opcodes = slice.LowerAll[shared.Opcode](undoRunState.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
 	undoRunState.RunProgram.RemoveAllButLast("*opcode.CheckoutIfExists")
 	return undoRunState, err

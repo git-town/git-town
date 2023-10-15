@@ -11,22 +11,22 @@ import (
 // undeclaredOpcodeMethods can be added to structs in this package to satisfy the shared.Opcode interface even if they don't declare all required methods.
 type undeclaredOpcodeMethods struct{}
 
-func (step *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
+func (op *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (step *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
+func (op *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (step *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
+func (op *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
+func (op *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
 	return nil
 }
 
-func (step *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
+func (op *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }

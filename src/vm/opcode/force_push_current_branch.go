@@ -8,7 +8,7 @@ type ForcePushCurrentBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
+func (op *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
@@ -20,5 +20,5 @@ func (step *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
-	return args.Runner.Frontend.ForcePushBranch(step.NoPushHook)
+	return args.Runner.Frontend.ForcePushBranch(op.NoPushHook)
 }

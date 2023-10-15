@@ -10,6 +10,6 @@ type RemoveLocalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *RemoveLocalConfig) Run(args shared.RunArgs) error {
-	return args.Runner.Config.RemoveLocalConfigValue(step.Key)
+func (op *RemoveLocalConfig) Run(args shared.RunArgs) error {
+	return args.Runner.Config.RemoveLocalConfigValue(op.Key)
 }

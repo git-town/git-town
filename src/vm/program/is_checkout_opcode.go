@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
-func IsCheckoutOpcode(step shared.Opcode) bool {
-	typeName := gohacks.TypeName(step)
+func IsCheckoutOpcode(opcode shared.Opcode) bool {
+	typeName := gohacks.TypeName(opcode)
 	return typeName == "Checkout" || typeName == "CheckoutIfExists"
 }

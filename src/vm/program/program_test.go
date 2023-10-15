@@ -17,21 +17,21 @@ func TestProgram(t *testing.T) {
 
 	t.Run("Append", func(t *testing.T) {
 		t.Parallel()
-		t.Run("append a single step", func(t *testing.T) {
+		t.Run("append a single opcode", func(t *testing.T) {
 			t.Parallel()
 			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			have.Add(&opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}
 			must.Eq(t, want, have.Opcodes)
 		})
-		t.Run("append multiple steps", func(t *testing.T) {
+		t.Run("append multiple opcodes", func(t *testing.T) {
 			t.Parallel()
 			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			have.Add(&opcode.AbortRebase{}, &opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortMerge{}, &opcode.AbortRebase{}, &opcode.StashOpenChanges{}}
 			must.Eq(t, want, have.Opcodes)
 		})
-		t.Run("append no steps", func(t *testing.T) {
+		t.Run("append no opcodes", func(t *testing.T) {
 			t.Parallel()
 			have := program.Program{Opcodes: []shared.Opcode{}}
 			have.Add()
@@ -135,21 +135,21 @@ func TestProgram(t *testing.T) {
 
 	t.Run("Prepend", func(t *testing.T) {
 		t.Parallel()
-		t.Run("prepend a single step", func(t *testing.T) {
+		t.Run("prepend a single opcode", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			give.Prepend(&opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
 		})
-		t.Run("prepend multiple steps", func(t *testing.T) {
+		t.Run("prepend multiple opcodes", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			give.Prepend(&opcode.AbortRebase{}, &opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortRebase{}, &opcode.StashOpenChanges{}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
 		})
-		t.Run("prepend no steps", func(t *testing.T) {
+		t.Run("prepend no opcodes", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{Opcodes: []shared.Opcode{}}
 			give.Prepend()
@@ -267,9 +267,9 @@ func TestProgram(t *testing.T) {
 		})
 	})
 
-	t.Run("RemoveDuplicateCheckoutSteps", func(t *testing.T) {
+	t.Run("RemoveDuplicateCheckout", func(t *testing.T) {
 		t.Parallel()
-		t.Run("has duplicate checkout steps", func(t *testing.T) {
+		t.Run("has duplicate checkout opcodes", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				Opcodes: []shared.Opcode{
@@ -287,7 +287,7 @@ func TestProgram(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("has a mix of Checkout and CheckoutIfExists steps", func(t *testing.T) {
+		t.Run("has a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				Opcodes: []shared.Opcode{
@@ -305,7 +305,7 @@ func TestProgram(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("has no duplicate checkout steps", func(t *testing.T) {
+		t.Run("has no duplicate checkout opcodes", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				Opcodes: []shared.Opcode{
@@ -341,7 +341,7 @@ Program:
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("StepTypes", func(t *testing.T) {
+	t.Run("OpcodeTypes", func(t *testing.T) {
 		t.Parallel()
 		prog := program.Program{
 			Opcodes: []shared.Opcode{

@@ -13,6 +13,6 @@ type CreateTrackingBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CreateTrackingBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.CreateTrackingBranch(step.Branch, domain.OriginRemote, step.NoPushHook)
+func (op *CreateTrackingBranch) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.CreateTrackingBranch(op.Branch, domain.OriginRemote, op.NoPushHook)
 }

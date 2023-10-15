@@ -13,7 +13,7 @@ type CreateBranchExistingParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CreateBranchExistingParent) Run(args shared.RunArgs) error {
-	nearestAncestor := args.Runner.Backend.FirstExistingBranch(step.Ancestors, step.MainBranch)
-	return args.Runner.Frontend.CreateBranch(step.Branch, nearestAncestor.Location())
+func (op *CreateBranchExistingParent) Run(args shared.RunArgs) error {
+	nearestAncestor := args.Runner.Backend.FirstExistingBranch(op.Ancestors, op.MainBranch)
+	return args.Runner.Frontend.CreateBranch(op.Branch, nearestAncestor.Location())
 }

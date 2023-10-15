@@ -29,13 +29,13 @@ type RunState struct {
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
 }
 
-// AddPushBranchStepAfterCurrentBranchProgram inserts a PushBranchStep
-// after all the steps for the current branch.
-func (rs *RunState) AddPushBranchStepAfterCurrentBranchProgram(backend *git.BackendCommands) error {
+// AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
+// after all the opcodes for the current branch.
+func (rs *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {
 	popped := program.Program{}
 	for {
-		nextStep := rs.RunProgram.Peek()
-		if !program.IsCheckoutOpcode(nextStep) {
+		nextOpcode := rs.RunProgram.Peek()
+		if !program.IsCheckoutOpcode(nextOpcode) {
 			popped.Add(rs.RunProgram.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
@@ -78,19 +78,19 @@ func (rs *RunState) CreateSkipRunState() RunState {
 		InitialActiveBranch: rs.InitialActiveBranch,
 		RunProgram:          rs.AbortProgram,
 	}
-	for _, step := range rs.UndoProgram.Opcodes {
-		if program.IsCheckoutOpcode(step) {
+	for _, opcode := range rs.UndoProgram.Opcodes {
+		if program.IsCheckoutOpcode(opcode) {
 			break
 		}
-		result.RunProgram.Add(step)
+		result.RunProgram.Add(opcode)
 	}
 	skipping := true
-	for _, step := range rs.RunProgram.Opcodes {
-		if program.IsCheckoutOpcode(step) {
+	for _, opcode := range rs.RunProgram.Opcodes {
+		if program.IsCheckoutOpcode(opcode) {
 			skipping = false
 		}
 		if !skipping {
-			result.RunProgram.Add(step)
+			result.RunProgram.Add(opcode)
 		}
 	}
 	result.RunProgram.Opcodes = slice.LowerAll[shared.Opcode](result.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
@@ -149,12 +149,12 @@ func (rs *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 	return nil
 }
 
-// SkipCurrentBranchProgram removes the steps for the current branch
+// SkipCurrentBranchProgram removes the opcodes for the current branch
 // from this run state.
 func (rs *RunState) SkipCurrentBranchProgram() {
 	for {
-		step := rs.RunProgram.Peek()
-		if program.IsCheckoutOpcode(step) {
+		opcode := rs.RunProgram.Peek()
+		if program.IsCheckoutOpcode(opcode) {
 			break
 		}
 		rs.RunProgram.Pop()

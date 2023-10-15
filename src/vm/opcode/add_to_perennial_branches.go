@@ -11,6 +11,6 @@ type AddToPerennialBranches struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *AddToPerennialBranches) Run(args shared.RunArgs) error {
-	return args.Runner.Config.AddToPerennialBranches(step.Branch)
+func (op *AddToPerennialBranches) Run(args shared.RunArgs) error {
+	return args.Runner.Config.AddToPerennialBranches(op.Branch)
 }

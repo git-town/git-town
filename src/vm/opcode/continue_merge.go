@@ -8,13 +8,13 @@ type ContinueMerge struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ContinueMerge) CreateContinueProgram() []shared.Opcode {
+func (op *ContinueMerge) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
-		step,
+		op,
 	}
 }
 
-func (step *ContinueMerge) Run(args shared.RunArgs) error {
+func (op *ContinueMerge) Run(args shared.RunArgs) error {
 	if args.Runner.Backend.HasMergeInProgress() {
 		return args.Runner.Frontend.CommitNoEdit()
 	}

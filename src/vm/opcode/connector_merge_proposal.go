@@ -19,32 +19,32 @@ type ConnectorMergeProposal struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
-	if step.enteredEmptyCommitMessage {
+func (op *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
+	if op.enteredEmptyCommitMessage {
 		return []shared.Opcode{&DiscardOpenChanges{}}
 	}
 	return []shared.Opcode{}
 }
 
-func (step *ConnectorMergeProposal) CreateAutomaticAbortError() error {
-	if step.enteredEmptyCommitMessage {
+func (op *ConnectorMergeProposal) CreateAutomaticAbortError() error {
+	if op.enteredEmptyCommitMessage {
 		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}
-	return step.mergeError
+	return op.mergeError
 }
 
-func (step *ConnectorMergeProposal) Run(args shared.RunArgs) error {
-	commitMessage := step.CommitMessage
+func (op *ConnectorMergeProposal) Run(args shared.RunArgs) error {
+	commitMessage := op.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
-		step.enteredEmptyCommitMessage = true
-		err := args.Runner.Frontend.SquashMerge(step.Branch)
+		op.enteredEmptyCommitMessage = true
+		err := args.Runner.Frontend.SquashMerge(op.Branch)
 		if err != nil {
 			return err
 		}
-		err = args.Runner.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
+		err = args.Runner.Backend.CommentOutSquashCommitMessage(op.ProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
@@ -60,14 +60,14 @@ func (step *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 		if err != nil {
 			return err
 		}
-		step.enteredEmptyCommitMessage = false
+		op.enteredEmptyCommitMessage = false
 	}
-	_, step.mergeError = args.Connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
-	return step.mergeError
+	_, op.mergeError = args.Connector.SquashMergeProposal(op.ProposalNumber, commitMessage)
+	return op.mergeError
 }
 
-// ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
+// ShouldAutomaticallyAbortOnError returns whether this opcode should cause the command to
 // automatically abort if it errors.
-func (step *ConnectorMergeProposal) ShouldAutomaticallyAbortOnError() bool {
+func (op *ConnectorMergeProposal) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

@@ -10,9 +10,9 @@ import (
 
 // autoAbort performs an automatic abort of the current Git Town command.
 //
-// Some Git Town steps can indicate that they auto-abort the entire Git Town command that they are a part of
+// Some Git Town opcodes can indicate that they auto-abort the entire Git Town command that they are a part of
 // should they fail.
-func autoAbort(step shared.Opcode, runErr error, args ExecuteArgs) error {
+func autoAbort(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	cli.PrintError(fmt.Errorf(messages.RunAutoAborting, runErr.Error()))
 	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
@@ -28,7 +28,7 @@ func autoAbort(step shared.Opcode, runErr error, args ExecuteArgs) error {
 		NoPushHook:              args.NoPushHook,
 	})
 	if err != nil {
-		return fmt.Errorf(messages.RunstateAbortStepProblem, err)
+		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)
 	}
-	return step.CreateAutomaticAbortError()
+	return opcode.CreateAutomaticAbortError()
 }

@@ -12,7 +12,7 @@ type CommitOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CommitOpenChanges) Run(args shared.RunArgs) error {
+func (op *CommitOpenChanges) Run(args shared.RunArgs) error {
 	err := args.Runner.Frontend.StageFiles("-A")
 	if err != nil {
 		return err

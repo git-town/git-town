@@ -8,21 +8,21 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
-// SquashMergeStep squash merges the branch with the given name into the current branch.
+// UpdateProposalTarget updates the target of the proposal with the given number at the code hosting service.
 type UpdateProposalTarget struct {
 	ProposalNumber int
 	NewTarget      domain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
-func (step *UpdateProposalTarget) Run(args shared.RunArgs) error {
-	return args.Connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
+func (op *UpdateProposalTarget) Run(args shared.RunArgs) error {
+	return args.Connector.UpdateProposalTarget(op.ProposalNumber, op.NewTarget)
 }
 
-func (step *UpdateProposalTarget) ShouldAutomaticallyAbortOnError() bool {
+func (op *UpdateProposalTarget) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }
 
-func (step *UpdateProposalTarget) CreateAutomaticAbortError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, step.ProposalNumber)
+func (op *UpdateProposalTarget) CreateAutomaticAbortError() error {
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, op.ProposalNumber)
 }

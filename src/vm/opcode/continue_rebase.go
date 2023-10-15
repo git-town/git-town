@@ -8,19 +8,19 @@ type ContinueRebase struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *ContinueRebase) CreateAbortProgram() []shared.Opcode {
+func (op *ContinueRebase) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortRebase{},
 	}
 }
 
-func (step *ContinueRebase) CreateContinueProgram() []shared.Opcode {
+func (op *ContinueRebase) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
-		step,
+		op,
 	}
 }
 
-func (step *ContinueRebase) Run(args shared.RunArgs) error {
+func (op *ContinueRebase) Run(args shared.RunArgs) error {
 	repoStatus, err := args.Runner.Backend.RepoStatus()
 	if err != nil {
 		return err

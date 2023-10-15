@@ -13,7 +13,7 @@ type SetExistingParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *SetExistingParent) Run(args shared.RunArgs) error {
-	nearestAncestor := args.Runner.Backend.FirstExistingBranch(step.Ancestors, step.MainBranch)
-	return args.Runner.Config.SetParent(step.Branch, nearestAncestor)
+func (op *SetExistingParent) Run(args shared.RunArgs) error {
+	nearestAncestor := args.Runner.Backend.FirstExistingBranch(op.Ancestors, op.MainBranch)
+	return args.Runner.Config.SetParent(op.Branch, nearestAncestor)
 }

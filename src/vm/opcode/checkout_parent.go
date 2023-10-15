@@ -11,9 +11,9 @@ type CheckoutParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *CheckoutParent) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(step.CurrentBranch)
-	if parent.IsEmpty() || parent == step.CurrentBranch {
+func (op *CheckoutParent) Run(args shared.RunArgs) error {
+	parent := args.Lineage.Parent(op.CurrentBranch)
+	if parent.IsEmpty() || parent == op.CurrentBranch {
 		return nil
 	}
 	return args.Runner.Frontend.CheckoutBranch(parent)

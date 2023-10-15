@@ -12,13 +12,13 @@ type PushCurrentBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *PushCurrentBranch) Run(args shared.RunArgs) error {
-	shouldPush, err := args.Runner.Backend.ShouldPushBranch(step.CurrentBranch, step.CurrentBranch.TrackingBranch())
+func (op *PushCurrentBranch) Run(args shared.RunArgs) error {
+	shouldPush, err := args.Runner.Backend.ShouldPushBranch(op.CurrentBranch, op.CurrentBranch.TrackingBranch())
 	if err != nil {
 		return err
 	}
 	if !shouldPush && !args.Runner.Config.DryRun {
 		return nil
 	}
-	return args.Runner.Frontend.PushCurrentBranch(step.NoPushHook)
+	return args.Runner.Frontend.PushCurrentBranch(op.NoPushHook)
 }

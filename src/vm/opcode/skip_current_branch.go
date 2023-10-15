@@ -1,8 +1,8 @@
 package opcode
 
-// SkipCurrentBranch is a mock step to be used instead of
-// running another list of steps.
-// This is used when ignoring the remaining steps for a particular branch.
+// SkipCurrentBranch is a mock opcode to be used instead of
+// running another program.
+// This is used when ignoring the remaining opcodes for a particular branch.
 type SkipCurrentBranch struct {
 	undeclaredOpcodeMethods
 }

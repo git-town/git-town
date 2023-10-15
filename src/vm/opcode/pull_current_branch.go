@@ -7,6 +7,6 @@ type PullCurrentBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (step *PullCurrentBranch) Run(args shared.RunArgs) error {
+func (op *PullCurrentBranch) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.Pull()
 }
