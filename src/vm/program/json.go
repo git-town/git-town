@@ -35,14 +35,14 @@ func (js *JSON) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	js.Step = DetermineStep(stepType)
+	js.Step = DetermineOpcode(stepType)
 	if js.Step == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
 	return json.Unmarshal(mapping["data"], &js.Step)
 }
 
-func DetermineStep(stepType string) shared.Opcode { //nolint:ireturn
+func DetermineOpcode(stepType string) shared.Opcode { //nolint:ireturn
 	switch stepType {
 	case "AbortMerge":
 		return &opcode.AbortMerge{}
