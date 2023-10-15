@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v9/src/vm/persistence"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +48,7 @@ func executeStatus(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
-	runvm.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), runvm.NoFinalMessages)
+	cli.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), cli.NoFinalMessages)
 	return nil
 }
 
@@ -87,20 +87,20 @@ func displayStatus(config displayStatusConfig) {
 func displayUnfinishedStatus(config displayStatusConfig) {
 	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
 	fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
-	if config.state.HasAbortSteps() {
+	if config.state.HasAbortProgram() {
 		fmt.Println("You can run \"git town abort\" to abort it.")
 	}
-	if config.state.HasRunSteps() {
+	if config.state.HasRunProgram() {
 		fmt.Println("You can run \"git town continue\" to finish it.")
 	}
 	if config.state.UnfinishedDetails.CanSkip {
-		fmt.Println("You can run \"git town skip\" to skip the currently failing step.")
+		fmt.Println("You can run \"git town skip\" to skip the currently failing operation.")
 	}
 }
 
 func displayFinishedStatus(config displayStatusConfig) {
 	fmt.Printf("The previous Git Town command (%s) finished successfully.\n", config.state.Command)
-	if config.state.HasUndoSteps() {
+	if config.state.HasUndoProgram() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
 	}
 }

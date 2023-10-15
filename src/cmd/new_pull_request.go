@@ -9,11 +9,11 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -72,9 +72,9 @@ func executeNewPullRequest(debug bool) error {
 	runState := runstate.RunState{
 		Command:             "new-pull-request",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunSteps:            newPullRequestSteps(config),
+		RunProgram:          newPullRequestProgram(config),
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
@@ -198,15 +198,15 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestSteps(config *newPullRequestConfig) steps.List {
-	list := steps.List{}
+func newPullRequestProgram(config *newPullRequestConfig) program.Program {
+	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(branch, syncBranchStepsArgs{
+		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			list:               &list,
+			program:            &prog,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -215,13 +215,13 @@ func newPullRequestSteps(config *newPullRequestConfig) steps.List {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Wrap(steps.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	list.Add(&step.CreateProposal{Branch: config.branches.Initial})
-	return list
+	prog.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
+	return prog
 }

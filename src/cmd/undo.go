@@ -9,11 +9,12 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/step"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/vm/interpreter"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/persistence"
+	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +55,7 @@ func executeUndo(debug bool) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
@@ -119,7 +120,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	undoRunState.RunSteps.Wrap(steps.WrapOptions{
+	undoRunState.RunProgram.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
@@ -127,15 +128,15 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		PreviousBranch:   config.previousBranch,
 	})
 	// If the command to undo failed and was continued,
-	// there might be steps in the undo stack that became obsolete
+	// there might be opcodes in the undo stack that became obsolete
 	// when the command was continued.
 	// Example: the command stashed away uncommitted changes,
 	// failed, and remembered in the undo list to pop the stack.
 	// When continuing, it finishes and pops the stack as part of the continue list.
 	// When we run undo now, it still wants to pop the stack even though that was already done.
 	// This seems to apply only to popping the stack and switching back to the initial branch.
-	// Hence we consolidate this step type here.
-	undoRunState.RunSteps.List = slice.LowerAll[step.Step](undoRunState.RunSteps.List, &step.RestoreOpenChanges{})
-	undoRunState.RunSteps.RemoveAllButLast("*step.CheckoutIfExists")
+	// Hence we consolidate these opcode types here.
+	undoRunState.RunProgram.Opcodes = slice.LowerAll[shared.Opcode](undoRunState.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
+	undoRunState.RunProgram.RemoveAllButLast("*opcode.CheckoutIfExists")
 	return undoRunState, err
 }

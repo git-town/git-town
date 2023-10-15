@@ -22,7 +22,7 @@ Feature: describe the status of the current/last Git Town command
       The last Git Town command \(sync\) hit a problem .*ms ago.
       You can run "git town abort" to abort it.
       You can run "git town continue" to finish it.
-      You can run "git town skip" to skip the currently failing step.
+      You can run "git town skip" to skip the currently failing operation.
       """
     And it does not print "git town undo"
 
