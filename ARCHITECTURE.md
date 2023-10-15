@@ -2,7 +2,7 @@
 
 ### Design goals
 
-Git Town solves multiple large problems:
+Git Town solves several problems:
 
 1. Execute a number of Git operations depending on conditions in the Git repo.
    Some of these conditions might change at runtime.
