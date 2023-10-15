@@ -47,7 +47,7 @@ func (p *Program) IsEmpty() bool {
 func (p *Program) MarshalJSON() ([]byte, error) {
 	jsonSteps := make([]JSON, len(p.Opcodes))
 	for s, step := range p.Opcodes {
-		jsonSteps[s] = JSON{Step: step}
+		jsonSteps[s] = JSON{Opcode: step}
 	}
 	return json.Marshal(jsonSteps)
 }
@@ -150,7 +150,7 @@ func (p *Program) UnmarshalJSON(b []byte) error {
 	if len(jsonSteps) > 0 {
 		p.Opcodes = make([]shared.Opcode, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
-			p.Opcodes[j] = jsonStep.Step
+			p.Opcodes[j] = jsonStep.Opcode
 		}
 	}
 	return nil

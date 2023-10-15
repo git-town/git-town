@@ -12,14 +12,14 @@ import (
 
 // JSON is used to store a step in JSON.
 type JSON struct { //nolint:musttag // JSONStep uses a custom serialization algorithm
-	Step shared.Opcode
+	Opcode shared.Opcode
 }
 
 // MarshalJSON marshals the step to JSON.
 func (js *JSON) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"data": js.Step,
-		"type": gohacks.TypeName(js.Step),
+		"data": js.Opcode,
+		"type": gohacks.TypeName(js.Opcode),
 	})
 }
 
@@ -35,11 +35,11 @@ func (js *JSON) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	js.Step = DetermineOpcode(stepType)
-	if js.Step == nil {
+	js.Opcode = DetermineOpcode(stepType)
+	if js.Opcode == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
-	return json.Unmarshal(mapping["data"], &js.Step)
+	return json.Unmarshal(mapping["data"], &js.Opcode)
 }
 
 func DetermineOpcode(stepType string) shared.Opcode { //nolint:ireturn

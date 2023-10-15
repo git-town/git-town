@@ -16,7 +16,7 @@ func TestJSON(t *testing.T) {
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		jsonstep := program.JSON{
-			Step: &opcode.Checkout{
+			Opcode: &opcode.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
 		}
@@ -26,7 +26,7 @@ func TestJSON(t *testing.T) {
 		//       Marshaling an entire RunState somehow works correctly.
 		want := `
 {
-  "Step": {
+  "Opcode": {
     "Branch": "branch-1"
   }
 }`[1:]
@@ -43,14 +43,14 @@ func TestJSON(t *testing.T) {
 	"type": "Checkout"
 }`[1:]
 		have := program.JSON{
-			Step: &opcode.Checkout{
+			Opcode: &opcode.Checkout{
 				Branch: domain.EmptyLocalBranchName(),
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := program.JSON{
-			Step: &opcode.Checkout{
+			Opcode: &opcode.Checkout{
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
 		}
