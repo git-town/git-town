@@ -35,7 +35,7 @@ func (rs *RunState) AddPushBranchStepAfterCurrentBranchProgram(backend *git.Back
 	popped := program.Program{}
 	for {
 		nextStep := rs.RunProgram.Peek()
-		if !program.IsCheckoutStep(nextStep) {
+		if !program.IsCheckoutOpcode(nextStep) {
 			popped.Add(rs.RunProgram.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
@@ -79,14 +79,14 @@ func (rs *RunState) CreateSkipRunState() RunState {
 		RunProgram:          rs.AbortProgram,
 	}
 	for _, step := range rs.UndoProgram.Opcodes {
-		if program.IsCheckoutStep(step) {
+		if program.IsCheckoutOpcode(step) {
 			break
 		}
 		result.RunProgram.Add(step)
 	}
 	skipping := true
 	for _, step := range rs.RunProgram.Opcodes {
-		if program.IsCheckoutStep(step) {
+		if program.IsCheckoutOpcode(step) {
 			skipping = false
 		}
 		if !skipping {
@@ -109,7 +109,7 @@ func (rs *RunState) CreateUndoRunState() RunState {
 		UndoablePerennialCommits: []domain.SHA{},
 	}
 	result.RunProgram.Add(&opcode.Checkout{Branch: rs.InitialActiveBranch})
-	result.RunProgram = result.RunProgram.RemoveDuplicateCheckoutSteps()
+	result.RunProgram = result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 
@@ -154,7 +154,7 @@ func (rs *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 func (rs *RunState) SkipCurrentBranchProgram() {
 	for {
 		step := rs.RunProgram.Peek()
-		if program.IsCheckoutStep(step) {
+		if program.IsCheckoutOpcode(step) {
 			break
 		}
 		rs.RunProgram.Pop()

@@ -21,9 +21,9 @@ type Program struct {
 	Opcodes []shared.Opcode `exhaustruct:"optional"`
 }
 
-// Append adds the given step to the end of this program.
-func (p *Program) Add(step ...shared.Opcode) {
-	p.Opcodes = append(p.Opcodes, step...)
+// Append adds the given opcode to the end of this program.
+func (p *Program) Add(opcode ...shared.Opcode) {
+	p.Opcodes = append(p.Opcodes, opcode...)
 }
 
 // AppendProgram adds all elements of the given Program to the end of this Program.
@@ -36,13 +36,13 @@ func (p *Program) IsEmpty() bool {
 	return len(p.Opcodes) == 0
 }
 
-// MarshalJSON marshals the step list to JSON.
+// MarshalJSON marshals this program to JSON.
 func (p *Program) MarshalJSON() ([]byte, error) {
-	jsonSteps := make([]JSON, len(p.Opcodes))
-	for s, step := range p.Opcodes {
-		jsonSteps[s] = JSON{Opcode: step}
+	jsonOpcodes := make([]JSON, len(p.Opcodes))
+	for o, opcode := range p.Opcodes {
+		jsonOpcodes[o] = JSON{Opcode: opcode}
 	}
-	return json.Marshal(jsonSteps)
+	return json.Marshal(jsonOpcodes)
 }
 
 // Peek provides the first element of this program.
@@ -63,7 +63,7 @@ func (p *Program) Pop() shared.Opcode { //nolint:ireturn
 	return result
 }
 
-// Prepend adds the given step to the beginning of this program.
+// Prepend adds the given opcode to the beginning of this program.
 func (p *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
 		p.Opcodes = append(other, p.Opcodes...)
@@ -76,32 +76,32 @@ func (p *Program) PrependProgram(otherProgram Program) {
 }
 
 func (p *Program) RemoveAllButLast(removeType string) {
-	stepTypes := p.StepTypes()
-	occurrences := slice.FindAll(stepTypes, removeType)
+	opcodeTypes := p.OpcodeTypes()
+	occurrences := slice.FindAll(opcodeTypes, removeType)
 	occurrencesToRemove := slice.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
 		p.Opcodes = slice.RemoveAt(p.Opcodes, occurrencesToRemove[o])
 	}
 }
 
-// RemoveDuplicateCheckoutSteps provides this program with checkout steps that immediately follow each other removed.
-func (p *Program) RemoveDuplicateCheckoutSteps() Program {
+// RemoveDuplicateCheckout provides this program with checkout opcodes that immediately follow each other removed.
+func (p *Program) RemoveDuplicateCheckout() Program {
 	result := make([]shared.Opcode, 0, len(p.Opcodes))
-	// this one is populated only if the last step is a checkout step
-	var lastStep shared.Opcode
-	for _, step := range p.Opcodes {
-		if IsCheckoutStep(step) {
-			lastStep = step
+	// this one is populated only if the last opcode is a checkout
+	var lastOpcode shared.Opcode
+	for _, opcode := range p.Opcodes {
+		if IsCheckoutOpcode(opcode) {
+			lastOpcode = opcode
 			continue
 		}
-		if lastStep != nil {
-			result = append(result, lastStep)
+		if lastOpcode != nil {
+			result = append(result, lastOpcode)
 		}
-		lastStep = nil
-		result = append(result, step)
+		lastOpcode = nil
+		result = append(result, opcode)
 	}
-	if lastStep != nil {
-		result = append(result, lastStep)
+	if lastOpcode != nil {
+		result = append(result, lastOpcode)
 	}
 	return Program{Opcodes: result}
 }
@@ -117,33 +117,33 @@ func (p *Program) StringIndented(indent string) string {
 		sb.WriteString("(empty program)\n")
 	} else {
 		sb.WriteString("Program:\n")
-		for s, step := range p.Opcodes {
-			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
+		for o, opcode := range p.Opcodes {
+			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
 		}
 	}
 	return sb.String()
 }
 
-// StepTypes provides the names of the types of the steps in this list.
-func (p *Program) StepTypes() []string {
+// OpcodeTypes provides the names of the types of the opcodes in this program.
+func (p *Program) OpcodeTypes() []string {
 	result := make([]string, len(p.Opcodes))
-	for s, step := range p.Opcodes {
-		result[s] = reflect.TypeOf(step).String()
+	for o, opcode := range p.Opcodes {
+		result[o] = reflect.TypeOf(opcode).String()
 	}
 	return result
 }
 
-// UnmarshalJSON unmarshals the step list from JSON.
+// UnmarshalJSON unmarshals the program from JSON.
 func (p *Program) UnmarshalJSON(b []byte) error {
-	var jsonSteps []JSON
-	err := json.Unmarshal(b, &jsonSteps)
+	var jsonOpcodes []JSON
+	err := json.Unmarshal(b, &jsonOpcodes)
 	if err != nil {
 		return err
 	}
-	if len(jsonSteps) > 0 {
-		p.Opcodes = make([]shared.Opcode, len(jsonSteps))
-		for j, jsonStep := range jsonSteps {
-			p.Opcodes[j] = jsonStep.Opcode
+	if len(jsonOpcodes) > 0 {
+		p.Opcodes = make([]shared.Opcode, len(jsonOpcodes))
+		for j, jsonOpcode := range jsonOpcodes {
+			p.Opcodes[j] = jsonOpcode.Opcode
 		}
 	}
 	return nil
@@ -158,9 +158,9 @@ type WrapOptions struct {
 	PreviousBranch   domain.LocalBranchName
 }
 
-// Wrap wraps the list with steps that
+// Wrap wraps the list with opcodes that
 // change to the Git root directory or stash away open changes.
-// TODO: only wrap if the list actually contains any steps.
+// TODO: only wrap if the list actually contains any opcodes.
 func (p *Program) Wrap(options WrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
 		p.Add(&opcode.PreserveCheckoutHistory{

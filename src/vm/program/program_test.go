@@ -278,7 +278,7 @@ func TestProgram(t *testing.T) {
 					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
-			have := give.RemoveDuplicateCheckoutSteps()
+			have := give.RemoveDuplicateCheckout()
 			want := program.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
@@ -296,7 +296,7 @@ func TestProgram(t *testing.T) {
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
 				},
 			}
-			have := give.RemoveDuplicateCheckoutSteps()
+			have := give.RemoveDuplicateCheckout()
 			want := program.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
@@ -313,7 +313,7 @@ func TestProgram(t *testing.T) {
 					&opcode.AbortRebase{},
 				},
 			}
-			have := give.RemoveDuplicateCheckoutSteps()
+			have := give.RemoveDuplicateCheckout()
 			want := program.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
@@ -349,7 +349,7 @@ Program:
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
 			},
 		}
-		have := prog.StepTypes()
+		have := prog.OpcodeTypes()
 		want := []string{"*opcode.AbortMerge", "*opcode.Checkout"}
 		must.Eq(t, want, have)
 	})
