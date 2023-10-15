@@ -11,17 +11,17 @@ import (
 type GitConfigCache map[Key]string
 
 // Clone provides a copy of this GitConfiguration instance.
-func (gcc GitConfigCache) Clone() GitConfigCache {
+func (self GitConfigCache) Clone() GitConfigCache {
 	result := GitConfigCache{}
-	maps.Copy(result, gcc)
+	maps.Copy(result, self)
 	return result
 }
 
 // KeysMatching provides the keys in this GitConfigCache that match the given regex.
-func (gcc GitConfigCache) KeysMatching(pattern string) []Key {
+func (self GitConfigCache) KeysMatching(pattern string) []Key {
 	result := []Key{}
 	re := regexp.MustCompile(pattern)
-	for key := range gcc {
+	for key := range self {
 		if re.MatchString(key.String()) {
 			result = append(result, key)
 		}
