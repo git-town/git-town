@@ -61,7 +61,15 @@ func formatFiles() {
 }
 
 func formatFileContent(content string) string {
-	return content
+	lines := strings.Split(content, "\n")
+	for l, line := range lines {
+		lines[l] = formatLine(line)
+	}
+	return strings.Join(lines, "\n")
+}
+
+func formatLine(line string) string {
+	return line
 }
 
 func isGoFile(path string) bool {
