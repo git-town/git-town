@@ -78,14 +78,14 @@ func (rs *RunState) CreateSkipRunState() RunState {
 		InitialActiveBranch: rs.InitialActiveBranch,
 		RunProgram:          rs.AbortProgram,
 	}
-	for _, step := range rs.UndoProgram.Steps {
+	for _, step := range rs.UndoProgram.Opcodes {
 		if program.IsCheckoutStep(step) {
 			break
 		}
 		result.RunProgram.Add(step)
 	}
 	skipping := true
-	for _, step := range rs.RunProgram.Steps {
+	for _, step := range rs.RunProgram.Opcodes {
 		if program.IsCheckoutStep(step) {
 			skipping = false
 		}
@@ -93,7 +93,7 @@ func (rs *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(step)
 		}
 	}
-	result.RunProgram.Steps = slice.LowerAll[shared.Opcode](result.RunProgram.Steps, &opcode.RestoreOpenChanges{})
+	result.RunProgram.Opcodes = slice.LowerAll[shared.Opcode](result.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
 	return result
 }
 

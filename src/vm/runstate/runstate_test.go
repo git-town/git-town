@@ -20,7 +20,7 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			Command: "sync",
 			AbortProgram: program.Program{
-				Steps: []shared.Opcode{
+				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -29,7 +29,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			RunProgram: program.Program{
-				Steps: []shared.Opcode{
+				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),
@@ -38,7 +38,7 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			UndoProgram: program.Program{
-				Steps: []shared.Opcode{
+				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
 						SetToSHA:    domain.NewSHA("111111"),

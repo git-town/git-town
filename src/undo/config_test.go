@@ -50,7 +50,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
@@ -98,7 +98,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
@@ -149,7 +149,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.SetGlobalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
@@ -194,7 +194,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},
@@ -242,7 +242,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
 					Value: "1",
@@ -293,7 +293,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.SetLocalConfig{
 					Key:   config.KeyOffline,
 					Value: "0",
@@ -365,7 +365,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
 				},

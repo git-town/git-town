@@ -40,7 +40,7 @@ func TestLoadSave(t *testing.T) {
 			IsUndo:       true,
 			AbortProgram: program.Program{},
 			RunProgram: program.Program{
-				Steps: []shared.Opcode{
+				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
 					&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},

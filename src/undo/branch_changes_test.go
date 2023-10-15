@@ -82,7 +82,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
 				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("branch-1"),
@@ -142,7 +142,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.CreateBranch{
 					Branch:        domain.NewLocalBranchName("branch-1"),
 					StartingPoint: domain.NewSHA("111111").Location(),
@@ -233,7 +233,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
@@ -325,7 +325,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 				},
@@ -411,7 +411,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.DeleteLocalBranch{
 					Branch: domain.NewLocalBranchName("perennial-branch"),
 					Force:  true,
@@ -487,7 +487,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.DeleteTrackingBranch{
 					Branch: domain.NewRemoteBranchName("origin/perennial-branch"),
 				},
@@ -588,7 +588,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
@@ -686,7 +686,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// It doesn't reset the remote perennial branch since those are assumed to be protected against force-pushes
 				// and we can't revert the commit on it since we cannot change the local perennial branch here.
 				&opcode.ResetRemoteBranchToSHA{
@@ -799,7 +799,7 @@ func TestChanges(t *testing.T) {
 			},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// revert the commit on the perennial branch
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
 				&opcode.RevertCommit{SHA: domain.NewSHA("444444")},
@@ -901,7 +901,7 @@ func TestChanges(t *testing.T) {
 			},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// revert the undoable commit on the main branch
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("main")},
 				&opcode.RevertCommit{SHA: domain.NewSHA("444444")},
@@ -1019,7 +1019,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// It doesn't revert the perennial branch because it cannot force-push the changes to the remote branch.
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 				&opcode.ResetCurrentBranchToSHA{
@@ -1117,7 +1117,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("feature-branch")},
 				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: domain.NewSHA("444444"),
@@ -1215,7 +1215,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// It doesn't revert the remote perennial branch because it cannot force-push the changes to it.
 				&opcode.ResetRemoteBranchToSHA{
 					Branch:      domain.NewRemoteBranchName("origin/feature-branch"),
@@ -1301,7 +1301,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.CreateBranch{
 					Branch:        domain.NewLocalBranchName("feature-branch"),
 					StartingPoint: domain.NewSHA("222222").Location(),
@@ -1389,7 +1389,7 @@ func TestChanges(t *testing.T) {
 			UndoablePerennialCommits: []domain.SHA{},
 		})
 		wantProgram := program.Program{
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				// don't re-create the tracking branch for the perennial branch
 				// because those are protected
 				&opcode.CreateRemoteBranch{
@@ -1476,7 +1476,7 @@ func TestChanges(t *testing.T) {
 			// No changes should happen here since all changes were syncs on perennial branches.
 			// We don't want to undo these commits because that would undo commits
 			// already committed to perennial branches by others for everybody on the team.
-			Steps: []shared.Opcode{
+			Opcodes: []shared.Opcode{
 				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("main")},
 			},
 		}

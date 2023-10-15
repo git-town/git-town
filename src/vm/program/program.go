@@ -18,35 +18,35 @@ import (
 //
 //nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {
-	Steps []shared.Opcode `exhaustruct:"optional"`
+	Opcodes []shared.Opcode `exhaustruct:"optional"`
 }
 
 // NewProgram provides a program instance containing the given step.
 func NewProgram(initialStep shared.Opcode) Program {
 	return Program{
-		Steps: []shared.Opcode{initialStep},
+		Opcodes: []shared.Opcode{initialStep},
 	}
 }
 
 // Append adds the given step to the end of this program.
 func (p *Program) Add(step ...shared.Opcode) {
-	p.Steps = append(p.Steps, step...)
+	p.Opcodes = append(p.Opcodes, step...)
 }
 
 // AppendProgram adds all elements of the given Program to the end of this Program.
 func (p *Program) AddProgram(otherProgram Program) {
-	p.Steps = append(p.Steps, otherProgram.Steps...)
+	p.Opcodes = append(p.Opcodes, otherProgram.Opcodes...)
 }
 
 // IsEmpty returns whether or not this Program has any elements.
 func (p *Program) IsEmpty() bool {
-	return len(p.Steps) == 0
+	return len(p.Opcodes) == 0
 }
 
 // MarshalJSON marshals the step list to JSON.
 func (p *Program) MarshalJSON() ([]byte, error) {
-	jsonSteps := make([]JSON, len(p.Steps))
-	for s, step := range p.Steps {
+	jsonSteps := make([]JSON, len(p.Opcodes))
+	for s, step := range p.Opcodes {
 		jsonSteps[s] = JSON{Step: step}
 	}
 	return json.Marshal(jsonSteps)
@@ -57,7 +57,7 @@ func (p *Program) Peek() shared.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
-	return p.Steps[0]
+	return p.Opcodes[0]
 }
 
 // Pop removes and provides the first element of this program.
@@ -65,21 +65,21 @@ func (p *Program) Pop() shared.Opcode { //nolint:ireturn
 	if p.IsEmpty() {
 		return nil
 	}
-	result := p.Steps[0]
-	p.Steps = p.Steps[1:]
+	result := p.Opcodes[0]
+	p.Opcodes = p.Opcodes[1:]
 	return result
 }
 
 // Prepend adds the given step to the beginning of this program.
 func (p *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
-		p.Steps = append(other, p.Steps...)
+		p.Opcodes = append(other, p.Opcodes...)
 	}
 }
 
 // PrependProgram adds all elements of the given program to the start of this program.
 func (p *Program) PrependProgram(otherProgram Program) {
-	p.Steps = append(otherProgram.Steps, p.Steps...)
+	p.Opcodes = append(otherProgram.Opcodes, p.Opcodes...)
 }
 
 func (p *Program) RemoveAllButLast(removeType string) {
@@ -87,16 +87,16 @@ func (p *Program) RemoveAllButLast(removeType string) {
 	occurrences := slice.FindAll(stepTypes, removeType)
 	occurrencesToRemove := slice.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
-		p.Steps = slice.RemoveAt(p.Steps, occurrencesToRemove[o])
+		p.Opcodes = slice.RemoveAt(p.Opcodes, occurrencesToRemove[o])
 	}
 }
 
 // RemoveDuplicateCheckoutSteps provides this program with checkout steps that immediately follow each other removed.
 func (p *Program) RemoveDuplicateCheckoutSteps() Program {
-	result := make([]shared.Opcode, 0, len(p.Steps))
+	result := make([]shared.Opcode, 0, len(p.Opcodes))
 	// this one is populated only if the last step is a checkout step
 	var lastStep shared.Opcode
-	for _, step := range p.Steps {
+	for _, step := range p.Opcodes {
 		if IsCheckoutStep(step) {
 			lastStep = step
 			continue
@@ -110,7 +110,7 @@ func (p *Program) RemoveDuplicateCheckoutSteps() Program {
 	if lastStep != nil {
 		result = append(result, lastStep)
 	}
-	return Program{Steps: result}
+	return Program{Opcodes: result}
 }
 
 // Implementation of the fmt.Stringer interface.
@@ -124,7 +124,7 @@ func (p *Program) StringIndented(indent string) string {
 		sb.WriteString("(empty program)\n")
 	} else {
 		sb.WriteString("Program:\n")
-		for s, step := range p.Steps {
+		for s, step := range p.Opcodes {
 			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, s+1, step))
 		}
 	}
@@ -133,8 +133,8 @@ func (p *Program) StringIndented(indent string) string {
 
 // StepTypes provides the names of the types of the steps in this list.
 func (p *Program) StepTypes() []string {
-	result := make([]string, len(p.Steps))
-	for s, step := range p.Steps {
+	result := make([]string, len(p.Opcodes))
+	for s, step := range p.Opcodes {
 		result[s] = reflect.TypeOf(step).String()
 	}
 	return result
@@ -148,9 +148,9 @@ func (p *Program) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		p.Steps = make([]shared.Opcode, len(jsonSteps))
+		p.Opcodes = make([]shared.Opcode, len(jsonSteps))
 		for j, jsonStep := range jsonSteps {
-			p.Steps[j] = jsonStep.Step
+			p.Opcodes[j] = jsonStep.Step
 		}
 	}
 	return nil
