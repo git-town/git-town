@@ -343,13 +343,13 @@ Program:
 
 	t.Run("StepTypes", func(t *testing.T) {
 		t.Parallel()
-		list := program.Program{
+		prog := program.Program{
 			Steps: []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
 			},
 		}
-		have := list.StepTypes()
+		have := prog.StepTypes()
 		want := []string{"*opcode.AbortMerge", "*opcode.Checkout"}
 		must.Eq(t, want, have)
 	})

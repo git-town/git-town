@@ -158,16 +158,16 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 }
 
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
-	list := program.Program{}
-	killFeatureBranch(&list, &finalUndoProgram, *config)
-	list.Wrap(program.WrapOptions{
+	prog := program.Program{}
+	killFeatureBranch(&prog, &finalUndoProgram, *config)
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list, finalUndoProgram
+	return prog, finalUndoProgram
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).

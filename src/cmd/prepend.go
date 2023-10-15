@@ -171,13 +171,13 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, debug b
 }
 
 func prependProgram(config *prependConfig) program.Program {
-	list := program.Program{}
+	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchProgram(branchToSync, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			program:            &list,
+			program:            &prog,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -187,32 +187,32 @@ func prependProgram(config *prependConfig) program.Program {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&opcode.CreateBranchExistingParent{
+	prog.Add(&opcode.CreateBranchExistingParent{
 		Ancestors:  config.newBranchParentCandidates,
 		Branch:     config.targetBranch,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the newly created branch
-	list.Add(&opcode.SetExistingParent{
+	prog.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
 		Ancestors:  config.newBranchParentCandidates,
 		MainBranch: config.mainBranch,
 	})
 	// set the parent of the branch prepended to
-	list.Add(&opcode.SetParentIfBranchExists{
+	prog.Add(&opcode.SetParentIfBranchExists{
 		Branch: config.branches.Initial,
 		Parent: config.targetBranch,
 	})
-	list.Add(&opcode.Checkout{Branch: config.targetBranch})
+	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(program.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	return list
+	return prog
 }

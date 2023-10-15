@@ -199,14 +199,14 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 }
 
 func newPullRequestProgram(config *newPullRequestConfig) program.Program {
-	list := program.Program{}
+	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			program:            &list,
+			program:            &prog,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -215,13 +215,13 @@ func newPullRequestProgram(config *newPullRequestConfig) program.Program {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Wrap(program.WrapOptions{
+	prog.Wrap(program.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	list.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
-	return list
+	prog.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
+	return prog
 }
