@@ -66,7 +66,7 @@ issues:
     - text: is missing field undeclaredOpcodeMethods
       linters:
         - exhaustruct
-    - path: src/vm/opcode/core.go # ignore all missing fields in jsonstep.go since those are intentional
+    - path: src/vm/program/json.go # ignore all missing fields in jsonstep.go since those are intentional
       text: is missing field
       linters:
         - exhaustruct
