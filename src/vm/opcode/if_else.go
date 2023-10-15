@@ -20,9 +20,9 @@ func (step *IfElse) Run(args shared.RunArgs) error {
 		return err
 	}
 	if condition {
-		args.AddSteps(step.WhenTrue...)
+		args.PrependOpcodes(step.WhenTrue...)
 	} else {
-		args.AddSteps(step.WhenFalse...)
+		args.PrependOpcodes(step.WhenFalse...)
 	}
 	return nil
 }

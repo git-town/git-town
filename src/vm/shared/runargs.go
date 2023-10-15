@@ -8,7 +8,7 @@ import (
 )
 
 type RunArgs struct {
-	AddSteps                        func(...Opcode) // AddSteps allows currently executing steps to prepend additional steps onto the currently executing step list.
+	PrependOpcodes                  func(...Opcode) // AddSteps allows currently executing steps to prepend additional steps onto the currently executing step list.
 	Connector                       hosting.Connector
 	Lineage                         config.Lineage
 	RegisterUndoablePerennialCommit func(domain.SHA)

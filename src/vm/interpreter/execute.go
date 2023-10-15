@@ -24,7 +24,7 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := nextStep.Run(shared.RunArgs{
-			AddSteps:                        args.RunState.RunProgram.Prepend,
+			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
