@@ -14,6 +14,13 @@ func BoolSetting(value bool) string {
 	return "no"
 }
 
+func (self PrintingLog) Failed(failure error) {
+	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
+	if err != nil {
+		fmt.Printf("FAILED: %v\n", err)
+	}
+}
+
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
 func Printf(format string, a ...interface{}) {
@@ -86,13 +93,6 @@ func (self PrintingLog) Success() {
 	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
 	if err != nil {
 		fmt.Println("ok")
-	}
-}
-
-func (self PrintingLog) Failed(failure error) {
-	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
-	if err != nil {
-		fmt.Printf("FAILED: %v\n", err)
 	}
 }
 

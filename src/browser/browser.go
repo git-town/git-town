@@ -8,6 +8,20 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
+// Open opens a new window/tab in the default browser with the given URL.
+// If no browser is found, it prints the URL.
+func Open(url string, frontend frontendRunner, backend backendRunner) {
+	command := OpenBrowserCommand(backend)
+	if command == "" {
+		fmt.Printf(messages.BrowserOpen, url)
+		return
+	}
+	err := frontend.Run(command, url)
+	if err != nil {
+		fmt.Printf(messages.BrowserOpen, url)
+	}
+}
+
 // OpenBrowserCommand provides the console command to open the default browser.
 func OpenBrowserCommand(runner backendRunner) string {
 	if runtime.GOOS == "windows" {
@@ -35,20 +49,6 @@ func OpenBrowserCommand(runner backendRunner) string {
 		}
 	}
 	return ""
-}
-
-// Open opens a new window/tab in the default browser with the given URL.
-// If no browser is found, it prints the URL.
-func Open(url string, frontend frontendRunner, backend backendRunner) {
-	command := OpenBrowserCommand(backend)
-	if command == "" {
-		fmt.Printf(messages.BrowserOpen, url)
-		return
-	}
-	err := frontend.Run(command, url)
-	if err != nil {
-		fmt.Printf(messages.BrowserOpen, url)
-	}
 }
 
 type frontendRunner interface {
