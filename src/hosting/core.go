@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/hosting/gitlab"
 )
@@ -41,8 +42,6 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-type SHAForBranchFunc func(domain.BranchName) (domain.SHA, error)
-
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (common.Connector, error) {
 	githubConnector, err := NewGithubConnector(NewGithubConnectorArgs{
@@ -70,7 +69,7 @@ func NewConnector(args NewConnectorArgs) (common.Connector, error) {
 	if gitlabConnector != nil {
 		return gitlabConnector, nil
 	}
-	bitbucketConnector, err := NewBitbucketConnector(NewBitbucketConnectorArgs{
+	bitbucketConnector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 		OriginURL:       args.OriginURL,
 		HostingService:  args.HostingService,
 		GetSHAForBranch: args.GetSHAForBranch,
@@ -99,7 +98,7 @@ func NewConnector(args NewConnectorArgs) (common.Connector, error) {
 type NewConnectorArgs struct {
 	HostingService  config.Hosting
 	OriginURL       *giturl.Parts
-	GetSHAForBranch SHAForBranchFunc
+	GetSHAForBranch common.SHAForBranchFunc
 	GiteaAPIToken   string
 	GithubAPIToken  string
 	GitlabAPIToken  string
