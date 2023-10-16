@@ -128,8 +128,8 @@ type shipConfig struct {
 	lineage                  config.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
-	proposal                 *common.Proposal
-	proposalsOfChildBranches []common.Proposal
+	proposal                 hosting.Proposal
+	proposalsOfChildBranches []hosting.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
@@ -218,7 +218,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	proposalMessage := ""
 	var proposal *common.Proposal
 	childBranches := lineage.Children(branchNameToShip)
-	proposalsOfChildBranches := []common.Proposal{}
+	proposalsOfChildBranches := []hosting.Proposal{}
 	pushHook, err = repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
@@ -335,7 +335,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
 			prog.Add(&opcode.UpdateProposalTarget{
-				ProposalNumber: childProposal.Number,
+				ProposalNumber: childProposal.GetNumber(),
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
@@ -343,7 +343,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
 		prog.Add(&opcode.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
-			ProposalNumber:  config.proposal.Number,
+			ProposalNumber:  config.proposal.GetNumber(),
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})

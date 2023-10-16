@@ -39,10 +39,10 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*com
 	}
 	pullRequest := pullRequests[0]
 	return &common.Proposal{
-		CanMergeWithAPI: pullRequest.Mergeable,
-		Number:          int(pullRequest.Index),
-		Target:          domain.NewLocalBranchName(pullRequest.Base.Ref),
-		Title:           pullRequest.Title,
+		MergeWithAPI: pullRequest.Mergeable,
+		Number:       int(pullRequest.Index),
+		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
+		Title:        pullRequest.Title,
 	}, nil
 }
 

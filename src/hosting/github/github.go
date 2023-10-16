@@ -145,9 +145,9 @@ func GetAPIToken(gitConfig gitTownConfig) string {
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
 func parsePullRequest(pullRequest *github.PullRequest) common.Proposal {
 	return common.Proposal{
-		Number:          pullRequest.GetNumber(),
-		Target:          domain.NewLocalBranchName(pullRequest.Base.GetRef()),
-		Title:           pullRequest.GetTitle(),
-		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
+		Number:       pullRequest.GetNumber(),
+		Target:       domain.NewLocalBranchName(pullRequest.Base.GetRef()),
+		Title:        pullRequest.GetTitle(),
+		MergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}
 }

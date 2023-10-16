@@ -2,9 +2,6 @@ package common
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// Proposal contains information about a change request
-// on a code hosting platform.
-// Alternative names are "pull request" or "merge request".
 type Proposal struct {
 	// the number used to identify the proposal on the hosting platform
 	Number int
@@ -16,5 +13,21 @@ type Proposal struct {
 	Title string
 
 	// whether this proposal can be merged via the API
-	CanMergeWithAPI bool
+	MergeWithAPI bool
+}
+
+func (self Proposal) GetNumber() int {
+	return self.Number
+}
+
+func (self Proposal) GetTarget() domain.LocalBranchName {
+	return self.Target
+}
+
+func (self Proposal) GetTitle() string {
+	return self.Title
+}
+
+func (self Proposal) CanMergeWithAPI() bool {
+	return self.MergeWithAPI
 }

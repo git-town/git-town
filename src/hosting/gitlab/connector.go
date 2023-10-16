@@ -108,9 +108,9 @@ type NewConnectorArgs struct {
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) common.Proposal {
 	return common.Proposal{
-		Number:          mergeRequest.IID,
-		Target:          domain.NewLocalBranchName(mergeRequest.TargetBranch),
-		Title:           mergeRequest.Title,
-		CanMergeWithAPI: true,
+		Number:       mergeRequest.IID,
+		Target:       domain.NewLocalBranchName(mergeRequest.TargetBranch),
+		Title:        mergeRequest.Title,
+		MergeWithAPI: true,
 	}
 }

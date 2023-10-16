@@ -95,10 +95,10 @@ func TestGitlabConnector(t *testing.T) {
 			},
 		}
 		give := common.Proposal{
-			Number:          1,
-			Title:           "my title",
-			CanMergeWithAPI: true,
-			Target:          domain.EmptyLocalBranchName(),
+			Number:       1,
+			Title:        "my title",
+			MergeWithAPI: true,
+			Target:       domain.EmptyLocalBranchName(),
 		}
 		have := config.DefaultProposalMessage(give)
 		want := "my title (!1)"
