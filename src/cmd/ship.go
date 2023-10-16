@@ -127,7 +127,7 @@ type shipConfig struct {
 	lineage                  config.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
-	proposal                 domain.Proposal
+	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
@@ -277,7 +277,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 		lineage:                  lineage,
 		mainBranch:               mainBranch,
 		previousBranch:           previousBranch,
-		proposal:                 *proposal,
+		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		pullBranchStrategy:       pullBranchStrategy,
 		pushHook:                 pushHook,
