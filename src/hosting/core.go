@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v9/src/hosting/common"
+	"github.com/git-town/git-town/v9/src/hosting/gitea"
 	"github.com/git-town/git-town/v9/src/hosting/gitlab"
 )
 
@@ -80,7 +81,7 @@ func NewConnector(args NewConnectorArgs) (common.Connector, error) {
 	if bitbucketConnector != nil {
 		return bitbucketConnector, nil
 	}
-	giteaConnector, err := NewGiteaConnector(NewGiteaConnectorArgs{
+	giteaConnector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
 		APIToken:       args.GiteaAPIToken,

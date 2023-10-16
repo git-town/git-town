@@ -179,7 +179,7 @@ func TestParseCommitMessage(t *testing.T) {
 		},
 	}
 	for give, want := range tests {
-		haveTitle, haveBody := hosting.ParseCommitMessage(give)
+		haveTitle, haveBody := common.ParseCommitMessage(give)
 		must.EqOp(t, want.title, haveTitle)
 		must.EqOp(t, want.body, haveBody)
 	}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
@@ -69,7 +68,7 @@ func (self *GitHubConnector) SquashMergeProposal(number int, message string) (me
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
-	title, body := ParseCommitMessage(message)
+	title, body := common.ParseCommitMessage(message)
 	result, _, err := self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
@@ -151,18 +150,4 @@ func parsePullRequest(pullRequest *github.PullRequest) common.Proposal {
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}
-}
-
-func ParseCommitMessage(message string) (title, body string) {
-	parts := strings.SplitN(message, "\n", 2)
-	title = parts[0]
-	if len(parts) == 2 {
-		body = parts[1]
-	} else {
-		body = ""
-	}
-	for strings.HasPrefix(body, "\n") {
-		body = body[1:]
-	}
-	return
 }
