@@ -1,4 +1,4 @@
-package hosting_test
+package github_test
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
-	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/hosting/common"
+	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,7 +17,7 @@ func TestNewGithubConnector(t *testing.T) {
 
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+		have, err := github.NewConnector(github.NewConnectorArgs{
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
@@ -36,7 +36,7 @@ func TestNewGithubConnector(t *testing.T) {
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+		have, err := github.NewConnector(github.NewConnectorArgs{
 			HostingService: config.HostingGitHub,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
@@ -55,7 +55,7 @@ func TestNewGithubConnector(t *testing.T) {
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+		have, err := github.NewConnector(github.NewConnectorArgs{
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
@@ -69,7 +69,7 @@ func TestNewGithubConnector(t *testing.T) {
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+		have, err := github.NewConnector(github.NewConnectorArgs{
 			HostingService: config.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
@@ -86,8 +86,8 @@ func TestGithubConnector(t *testing.T) {
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		connector := hosting.GitHubConnector{} //nolint:exhaustruct
-		give := common.Proposal{               //nolint:exhaustruct
+		connector := github.Connector{} //nolint:exhaustruct
+		give := common.Proposal{        //nolint:exhaustruct
 			Number: 1,
 			Title:  "my title",
 		}
@@ -121,7 +121,7 @@ func TestGithubConnector(t *testing.T) {
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
-				connector := hosting.GitHubConnector{
+				connector := github.Connector{
 					Config: common.Config{ //nolint:exhaustruct
 						Hostname:     "github.com",
 						Organization: "organization",
@@ -138,7 +138,7 @@ func TestGithubConnector(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := hosting.GitHubConnector{ //nolint:exhaustruct
+		connector := github.Connector{ //nolint:exhaustruct
 			Config: common.Config{ //nolint:exhaustruct
 				Hostname:     "github.com",
 				Organization: "organization",

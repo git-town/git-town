@@ -1,4 +1,4 @@
-package hosting
+package github
 
 import (
 	"context"
@@ -15,16 +15,16 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GitHubConnector provides standardized connectivity for the given repository (github.com/owner/repo)
+// Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
-type GitHubConnector struct {
+type Connector struct {
 	client *github.Client
 	common.Config
 	MainBranch domain.LocalBranchName
 	log        common.Log
 }
 
-func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
+func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -43,15 +43,15 @@ func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName)
 	return &proposal, nil
 }
 
-func (self *GitHubConnector) DefaultProposalMessage(proposal common.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal common.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *GitHubConnector) HostingServiceName() string {
+func (self *Connector) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (self *GitHubConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != self.MainBranch {
 		toCompare = parentBranch.String() + "..." + branch.String()
@@ -59,11 +59,11 @@ func (self *GitHubConnector) NewProposalURL(branch, parentBranch domain.LocalBra
 	return fmt.Sprintf("%s/compare/%s?expand=1", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (self *GitHubConnector) RepositoryURL() string {
+func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.Hostname, self.Organization, self.Repository)
 }
 
-func (self *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
+func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
@@ -82,7 +82,7 @@ func (self *GitHubConnector) SquashMergeProposal(number int, message string) (me
 	return sha, nil
 }
 
-func (self *GitHubConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
+func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	self.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	targetName := target.String()
 	_, _, err := self.client.PullRequests.Edit(context.Background(), self.Organization, self.Repository, number, &github.PullRequest{
@@ -98,15 +98,15 @@ func (self *GitHubConnector) UpdateProposalTarget(number int, target domain.Loca
 	return nil
 }
 
-// NewGithubConnector provides a fully configured GithubConnector instance
+// NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
-func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
+func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != config.HostingGitHub) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	return &GitHubConnector{
+	return &Connector{
 		client: github.NewClient(httpClient),
 		Config: common.Config{
 			APIToken:     args.APIToken,
@@ -119,7 +119,7 @@ func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
 	}, nil
 }
 
-type NewGithubConnectorArgs struct {
+type NewConnectorArgs struct {
 	HostingService config.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
@@ -131,7 +131,7 @@ type NewGithubConnectorArgs struct {
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func GetGitHubAPIToken(gitConfig gitTownConfig) string {
+func GetAPIToken(gitConfig gitTownConfig) string {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken == "" {
 		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")

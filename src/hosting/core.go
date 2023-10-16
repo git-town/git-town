@@ -13,39 +13,15 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/hosting/gitea"
+	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/git-town/git-town/v9/src/hosting/gitlab"
 )
 
 type Connector common.Connector
 
-// gitTownConfig defines the configuration data needed by the hosting package.
-// This extra interface is necessary to access config.GitTown without creating a cyclic dependency.
-type gitTownConfig interface {
-	// OriginOverride provides the override for the origin URL from the Git Town configuration.
-	OriginOverride() string
-
-	// HostingService provides the name of the hosting service that runs at the origin remote.
-	HostingService() (config.Hosting, error)
-
-	// GiteaToken provides the personal access token for Gitea stored in the Git configuration.
-	GiteaToken() string
-
-	// GitHubToken provides the personal access token for GitHub stored in the Git configuration.
-	GitHubToken() string
-
-	// GitLabToken provides the personal access token for GitLab stored in the Git configuration.
-	GitLabToken() string
-
-	// MainBranch provides the name of the main branch.
-	MainBranch() domain.LocalBranchName
-
-	// OriginURL provides the URL of the origin remote.
-	OriginURL() *giturl.Parts
-}
-
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (common.Connector, error) {
-	githubConnector, err := NewGithubConnector(NewGithubConnectorArgs{
+	githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 		HostingService: args.HostingService,
 		APIToken:       args.GithubAPIToken,
 		MainBranch:     args.MainBranch,

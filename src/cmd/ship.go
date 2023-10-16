@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/hosting/common"
+	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
@@ -232,7 +233,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
-		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
