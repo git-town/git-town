@@ -88,7 +88,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
-		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GithubAPIToken:  hosting.GetGitHubAPIToken(repo.Runner.Config),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
