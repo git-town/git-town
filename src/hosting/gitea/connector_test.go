@@ -1,14 +1,15 @@
-package hosting_test
+package gitea_test
 
 import (
 	"testing"
 
-	"code.gitea.io/sdk/gitea"
+	giteasdk "code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
-	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/hosting/common"
+	"github.com/git-town/git-town/v9/src/hosting/gitea"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,25 +18,25 @@ func TestNewGiteaConnector(t *testing.T) {
 
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			Log:            cli.SilentLog{},
 		})
 		must.NoError(t, err)
-		wantConfig := hosting.CommonConfig{
+		wantConfig := common.Config{
 			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		must.EqOp(t, wantConfig, have.CommonConfig)
+		must.EqOp(t, wantConfig, have.Config)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
@@ -48,7 +49,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
-		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
 			HostingService: config.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
@@ -62,18 +63,18 @@ func TestNewGiteaConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		give := hosting.Proposal{ //nolint:exhaustruct
+		give := domain.Proposal{ //nolint:exhaustruct
 			Number: 1,
 			Title:  "my title",
 		}
 		want := "my title (#1)"
-		connector := hosting.GiteaConnector{} //nolint:exhaustruct
+		connector := gitea.Connector{} //nolint:exhaustruct
 		have := connector.DefaultProposalMessage(give)
 		must.EqOp(t, want, have)
 	})
 
 	t.Run("NewProposalURL", func(t *testing.T) {
-		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
@@ -86,7 +87,7 @@ func TestGitea(t *testing.T) {
 	})
 
 	t.Run("RepositoryURL", func(t *testing.T) {
-		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
@@ -100,54 +101,54 @@ func TestGitea(t *testing.T) {
 
 func TestFilterGiteaPullRequests(t *testing.T) {
 	t.Parallel()
-	give := []*gitea.PullRequest{
+	give := []*giteasdk.PullRequest{
 		// matching branch
 		{
-			Head: &gitea.PRBranchInfo{
+			Head: &giteasdk.PRBranchInfo{
 				Name: "organization/branch",
 			},
-			Base: &gitea.PRBranchInfo{
+			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
 			},
 		},
 		// branch with different name
 		{
-			Head: &gitea.PRBranchInfo{
+			Head: &giteasdk.PRBranchInfo{
 				Name: "organization/other",
 			},
-			Base: &gitea.PRBranchInfo{
+			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
 			},
 		},
 		// branch with different target
 		{
-			Head: &gitea.PRBranchInfo{
+			Head: &giteasdk.PRBranchInfo{
 				Name: "organization/branch",
 			},
-			Base: &gitea.PRBranchInfo{
+			Base: &giteasdk.PRBranchInfo{
 				Name: "other",
 			},
 		},
 		// branch with different organization
 		{
-			Head: &gitea.PRBranchInfo{
+			Head: &giteasdk.PRBranchInfo{
 				Name: "other/branch",
 			},
-			Base: &gitea.PRBranchInfo{
+			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
 			},
 		},
 	}
-	want := []*gitea.PullRequest{
+	want := []*giteasdk.PullRequest{
 		{
-			Head: &gitea.PRBranchInfo{
+			Head: &giteasdk.PRBranchInfo{
 				Name: "organization/branch",
 			},
-			Base: &gitea.PRBranchInfo{
+			Base: &giteasdk.PRBranchInfo{
 				Name: "target",
 			},
 		},
 	}
-	have := hosting.FilterGiteaPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
+	have := gitea.FilterPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
 	must.Eq(t, want, have)
 }
