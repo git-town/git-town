@@ -1,5 +1,7 @@
 package domain
 
+// Proposal contains information about a change request on a code hosting platform.
+// Alternative names are "pull request" or "merge request".
 type Proposal struct {
 	// the number used to identify the proposal on the hosting platform
 	Number int
