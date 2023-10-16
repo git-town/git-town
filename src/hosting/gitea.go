@@ -9,17 +9,18 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/messages"
 	"golang.org/x/oauth2"
 )
 
 type GiteaConnector struct {
 	client *gitea.Client
-	CommonConfig
-	log Log
+	common.Config
+	log common.Log
 }
 
-func (self *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
+func (self *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
 	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -37,7 +38,7 @@ func (self *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) 
 		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
-	return &Proposal{
+	return &common.Proposal{
 		CanMergeWithAPI: pullRequest.Mergeable,
 		Number:          int(pullRequest.Index),
 		Target:          domain.NewLocalBranchName(pullRequest.Base.Ref),
@@ -45,7 +46,7 @@ func (self *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) 
 	}, nil
 }
 
-func (self *GiteaConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *GiteaConnector) DefaultProposalMessage(proposal common.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
@@ -105,7 +106,7 @@ func NewGiteaConnector(args NewGiteaConnectorArgs) (*GiteaConnector, error) {
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &GiteaConnector{
 		client: giteaClient,
-		CommonConfig: CommonConfig{
+		Config: common.Config{
 			APIToken:     args.APIToken,
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
@@ -119,7 +120,7 @@ type NewGiteaConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	HostingService config.Hosting
 	APIToken       string
-	Log            Log
+	Log            common.Log
 }
 
 func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {

@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
@@ -126,8 +127,8 @@ type shipConfig struct {
 	lineage                  config.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
-	proposal                 *hosting.Proposal
-	proposalsOfChildBranches []hosting.Proposal
+	proposal                 *common.Proposal
+	proposalsOfChildBranches []common.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
@@ -214,9 +215,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	var proposal *hosting.Proposal
+	var proposal *common.Proposal
 	childBranches := lineage.Children(branchNameToShip)
-	proposalsOfChildBranches := []hosting.Proposal{}
+	proposalsOfChildBranches := []common.Proposal{}
 	pushHook, err = repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

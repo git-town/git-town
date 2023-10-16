@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/shoenig/test/must"
 )
 
@@ -24,13 +25,13 @@ func TestNewGiteaConnector(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		must.NoError(t, err)
-		wantConfig := hosting.CommonConfig{
+		wantConfig := common.Config{
 			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",
 		}
-		must.EqOp(t, wantConfig, have.CommonConfig)
+		must.EqOp(t, wantConfig, have.Config)
 	})
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
@@ -62,7 +63,7 @@ func TestNewGiteaConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		give := hosting.Proposal{ //nolint:exhaustruct
+		give := common.Proposal{ //nolint:exhaustruct
 			Number: 1,
 			Title:  "my title",
 		}

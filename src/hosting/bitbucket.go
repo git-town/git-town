@@ -9,12 +9,13 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
 type BitbucketConnector struct {
-	CommonConfig
+	common.Config
 	getSHAForBranch SHAForBranchFunc
 }
 
@@ -25,7 +26,7 @@ func NewBitbucketConnector(args NewBitbucketConnectorArgs) (*BitbucketConnector,
 		return nil, nil //nolint:nilnil
 	}
 	return &BitbucketConnector{
-		CommonConfig: CommonConfig{
+		Config: common.Config{
 			APIToken:     "",
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
@@ -41,11 +42,11 @@ type NewBitbucketConnectorArgs struct {
 	GetSHAForBranch SHAForBranchFunc
 }
 
-func (self *BitbucketConnector) FindProposal(_, _ domain.LocalBranchName) (*Proposal, error) {
+func (self *BitbucketConnector) FindProposal(_, _ domain.LocalBranchName) (*common.Proposal, error) {
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
-func (self *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *BitbucketConnector) DefaultProposalMessage(proposal common.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

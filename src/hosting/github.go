@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
@@ -19,12 +20,12 @@ import (
 // via the GitHub API.
 type GitHubConnector struct {
 	client *github.Client
-	CommonConfig
+	common.Config
 	MainBranch domain.LocalBranchName
-	log        Log
+	log        common.Log
 }
 
-func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
+func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -43,7 +44,7 @@ func (self *GitHubConnector) FindProposal(branch, target domain.LocalBranchName)
 	return &proposal, nil
 }
 
-func (self *GitHubConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *GitHubConnector) DefaultProposalMessage(proposal common.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
@@ -108,7 +109,7 @@ func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
 		client: github.NewClient(httpClient),
-		CommonConfig: CommonConfig{
+		Config: common.Config{
 			APIToken:     args.APIToken,
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
@@ -124,7 +125,7 @@ type NewGithubConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	APIToken       string
 	MainBranch     domain.LocalBranchName
-	Log            Log
+	Log            common.Log
 }
 
 // getGitHubApiToken returns the GitHub API token to use.
@@ -143,8 +144,8 @@ func GetGitHubAPIToken(gitConfig gitTownConfig) string {
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
-func parsePullRequest(pullRequest *github.PullRequest) Proposal {
-	return Proposal{
+func parsePullRequest(pullRequest *github.PullRequest) common.Proposal {
+	return common.Proposal{
 		Number:          pullRequest.GetNumber(),
 		Target:          domain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:           pullRequest.GetTitle(),
