@@ -31,19 +31,19 @@ type RunState struct {
 
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
 // after all the opcodes for the current branch.
-func (rs *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {
+func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {
 	popped := program.Program{}
 	for {
-		nextOpcode := rs.RunProgram.Peek()
+		nextOpcode := self.RunProgram.Peek()
 		if !program.IsCheckoutOpcode(nextOpcode) {
-			popped.Add(rs.RunProgram.Pop())
+			popped.Add(self.RunProgram.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rs.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
-			rs.RunProgram.PrependProgram(popped)
+			self.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
+			self.RunProgram.PrependProgram(popped)
 			break
 		}
 	}
@@ -52,40 +52,40 @@ func (rs *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendC
 
 // RegisterUndoablePerennialCommit stores the given commit on a perennial branch as undoable.
 // This method is used as a callback.
-func (rs *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
-	rs.UndoablePerennialCommits = append(rs.UndoablePerennialCommits, commit)
+func (self *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
+	self.UndoablePerennialCommits = append(self.UndoablePerennialCommits, commit)
 }
 
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
-func (rs *RunState) CreateAbortRunState() RunState {
-	abortProgram := rs.AbortProgram
-	abortProgram.AddProgram(rs.UndoProgram)
+func (self *RunState) CreateAbortRunState() RunState {
+	abortProgram := self.AbortProgram
+	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		Command:             rs.Command,
+		Command:             self.Command,
 		IsAbort:             true,
-		InitialActiveBranch: rs.InitialActiveBranch,
+		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          abortProgram,
 	}
 }
 
 // CreateSkipRunState returns a new Runstate
 // that skips operations for the current branch.
-func (rs *RunState) CreateSkipRunState() RunState {
+func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:             rs.Command,
-		InitialActiveBranch: rs.InitialActiveBranch,
-		RunProgram:          rs.AbortProgram,
+		Command:             self.Command,
+		InitialActiveBranch: self.InitialActiveBranch,
+		RunProgram:          self.AbortProgram,
 	}
-	for _, opcode := range rs.UndoProgram.Opcodes {
+	for _, opcode := range self.UndoProgram.Opcodes {
 		if program.IsCheckoutOpcode(opcode) {
 			break
 		}
 		result.RunProgram.Add(opcode)
 	}
 	skipping := true
-	for _, opcode := range rs.RunProgram.Opcodes {
+	for _, opcode := range self.RunProgram.Opcodes {
 		if program.IsCheckoutOpcode(opcode) {
 			skipping = false
 		}
@@ -100,48 +100,48 @@ func (rs *RunState) CreateSkipRunState() RunState {
 // CreateUndoRunState returns a new runstate
 // to be run when undoing the Git Town command
 // represented by this runstate.
-func (rs *RunState) CreateUndoRunState() RunState {
+func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		Command:                  rs.Command,
-		InitialActiveBranch:      rs.InitialActiveBranch,
+		Command:                  self.Command,
+		InitialActiveBranch:      self.InitialActiveBranch,
 		IsUndo:                   true,
-		RunProgram:               rs.UndoProgram,
+		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []domain.SHA{},
 	}
-	result.RunProgram.Add(&opcode.Checkout{Branch: rs.InitialActiveBranch})
+	result.RunProgram.Add(&opcode.Checkout{Branch: self.InitialActiveBranch})
 	result.RunProgram = result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 
-func (rs *RunState) HasAbortProgram() bool {
-	return !rs.AbortProgram.IsEmpty()
+func (self *RunState) HasAbortProgram() bool {
+	return !self.AbortProgram.IsEmpty()
 }
 
-func (rs *RunState) HasRunProgram() bool {
-	return !rs.RunProgram.IsEmpty()
+func (self *RunState) HasRunProgram() bool {
+	return !self.RunProgram.IsEmpty()
 }
 
-func (rs *RunState) HasUndoProgram() bool {
-	return !rs.UndoProgram.IsEmpty()
+func (self *RunState) HasUndoProgram() bool {
+	return !self.UndoProgram.IsEmpty()
 }
 
 // IsUnfinished returns whether or not the run state is unfinished.
-func (rs *RunState) IsUnfinished() bool {
-	return rs.UnfinishedDetails != nil
+func (self *RunState) IsUnfinished() bool {
+	return self.UnfinishedDetails != nil
 }
 
 // MarkAsFinished updates the run state to be marked as finished.
-func (rs *RunState) MarkAsFinished() {
-	rs.UnfinishedDetails = nil
+func (self *RunState) MarkAsFinished() {
+	self.UnfinishedDetails = nil
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (rs *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
+func (self *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 	currentBranch, err := backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	rs.UnfinishedDetails = &UnfinishedRunStateDetails{
+	self.UnfinishedDetails = &UnfinishedRunStateDetails{
 		CanSkip:   false,
 		EndBranch: currentBranch,
 		EndTime:   time.Now(),
@@ -151,34 +151,34 @@ func (rs *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 
 // SkipCurrentBranchProgram removes the opcodes for the current branch
 // from this run state.
-func (rs *RunState) SkipCurrentBranchProgram() {
+func (self *RunState) SkipCurrentBranchProgram() {
 	for {
-		opcode := rs.RunProgram.Peek()
+		opcode := self.RunProgram.Peek()
 		if program.IsCheckoutOpcode(opcode) {
 			break
 		}
-		rs.RunProgram.Pop()
+		self.RunProgram.Pop()
 	}
 }
 
-func (rs *RunState) String() string {
+func (self *RunState) String() string {
 	result := strings.Builder{}
 	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
-	result.WriteString(rs.Command)
+	result.WriteString(self.Command)
 	result.WriteString("\n  IsAbort: ")
-	result.WriteString(fmt.Sprintf("%t", rs.IsAbort))
+	result.WriteString(fmt.Sprintf("%t", self.IsAbort))
 	result.WriteString("\n  IsUndo: ")
-	result.WriteString(fmt.Sprintf("%t", rs.IsUndo))
+	result.WriteString(fmt.Sprintf("%t", self.IsUndo))
 	result.WriteString("\n  AbortProgram: ")
-	result.WriteString(rs.AbortProgram.StringIndented("    "))
+	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
-	result.WriteString(rs.RunProgram.StringIndented("    "))
+	result.WriteString(self.RunProgram.StringIndented("    "))
 	result.WriteString("  UndoProgram: ")
-	result.WriteString(rs.UndoProgram.StringIndented("    "))
-	if rs.UnfinishedDetails != nil {
+	result.WriteString(self.UndoProgram.StringIndented("    "))
+	if self.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")
-		result.WriteString(rs.UnfinishedDetails.String())
+		result.WriteString(self.UnfinishedDetails.String())
 	}
 	return result.String()
 }

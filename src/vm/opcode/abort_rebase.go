@@ -8,6 +8,6 @@ type AbortRebase struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *AbortRebase) Run(args shared.RunArgs) error {
+func (self *AbortRebase) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.AbortRebase()
 }

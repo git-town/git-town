@@ -4,10 +4,10 @@ import "golang.org/x/exp/maps"
 
 type RemoteBranchesSHAs map[RemoteBranchName]SHA
 
-func (rbss RemoteBranchesSHAs) Categorize(branchTypes BranchTypes) (perennials, features RemoteBranchesSHAs) {
+func (self RemoteBranchesSHAs) Categorize(branchTypes BranchTypes) (perennials, features RemoteBranchesSHAs) {
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
-	for branch, sha := range rbss {
+	for branch, sha := range self {
 		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
 			features[branch] = sha
 		} else {
@@ -18,8 +18,8 @@ func (rbss RemoteBranchesSHAs) Categorize(branchTypes BranchTypes) (perennials, 
 }
 
 // BranchNames provides the names of the involved branches as strings.
-func (rbss RemoteBranchesSHAs) BranchNames() RemoteBranchNames {
-	result := RemoteBranchNames(maps.Keys(rbss))
+func (self RemoteBranchesSHAs) BranchNames() RemoteBranchNames {
+	result := RemoteBranchNames(maps.Keys(self))
 	result.Sort()
 	return result
 }

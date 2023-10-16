@@ -11,6 +11,6 @@ type RemoveFromPerennialBranches struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RemoveFromPerennialBranches) Run(args shared.RunArgs) error {
-	return args.Runner.Config.RemoveFromPerennialBranches(op.Branch)
+func (self *RemoveFromPerennialBranches) Run(args shared.RunArgs) error {
+	return args.Runner.Config.RemoveFromPerennialBranches(self.Branch)
 }

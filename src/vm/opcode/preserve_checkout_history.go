@@ -13,8 +13,8 @@ type PreserveCheckoutHistory struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
-	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(op.InitialPreviouslyCheckedOutBranch, op.InitialBranch, op.MainBranch)
+func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
+	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(self.InitialPreviouslyCheckedOutBranch, self.InitialBranch, self.MainBranch)
 	if err != nil {
 		return err
 	}

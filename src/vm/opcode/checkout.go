@@ -11,13 +11,13 @@ type Checkout struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *Checkout) Run(args shared.RunArgs) error {
+func (self *Checkout) Run(args shared.RunArgs) error {
 	existingBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	if existingBranch == op.Branch {
+	if existingBranch == self.Branch {
 		return nil
 	}
-	return args.Runner.Frontend.CheckoutBranch(op.Branch)
+	return args.Runner.Frontend.CheckoutBranch(self.Branch)
 }

@@ -7,6 +7,6 @@ type AbortMerge struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *AbortMerge) Run(args shared.RunArgs) error {
+func (self *AbortMerge) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.AbortMerge()
 }

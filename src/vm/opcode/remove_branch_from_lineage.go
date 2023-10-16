@@ -10,9 +10,9 @@ type RemoveBranchFromLineage struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(op.Branch)
-	for _, child := range args.Lineage.Children(op.Branch) {
+func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
+	parent := args.Lineage.Parent(self.Branch)
+	for _, child := range args.Lineage.Children(self.Branch) {
 		if parent.IsEmpty() {
 			args.Runner.Backend.Config.RemoveParent(child)
 		} else {
@@ -22,7 +22,7 @@ func (op *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
 			}
 		}
 	}
-	args.Runner.Backend.Config.RemoveParent(op.Branch)
-	args.Lineage.RemoveBranch(op.Branch)
+	args.Runner.Backend.Config.RemoveParent(self.Branch)
+	args.Lineage.RemoveBranch(self.Branch)
 	return nil
 }

@@ -11,20 +11,20 @@ type RebaseParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RebaseParent) CreateAbortProgram() []shared.Opcode {
+func (self *RebaseParent) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortRebase{},
 	}
 }
 
-func (op *RebaseParent) CreateContinueProgram() []shared.Opcode {
+func (self *RebaseParent) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ContinueRebase{},
 	}
 }
 
-func (op *RebaseParent) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(op.CurrentBranch)
+func (self *RebaseParent) Run(args shared.RunArgs) error {
+	parent := args.Lineage.Parent(self.CurrentBranch)
 	if parent.IsEmpty() {
 		return nil
 	}

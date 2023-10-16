@@ -36,17 +36,17 @@ func FromGherkin(table *messages.PickleStepArgument_PickleTable) DataTable {
 }
 
 // AddRow adds the given row of table data to this table.
-func (dt *DataTable) AddRow(elements ...string) {
-	dt.Cells = append(dt.Cells, elements)
+func (self *DataTable) AddRow(elements ...string) {
+	self.Cells = append(self.Cells, elements)
 }
 
-// columns provides the dt data organized into columns.
-func (dt *DataTable) columns() [][]string {
+// columns provides the self data organized into columns.
+func (self *DataTable) columns() [][]string {
 	result := [][]string{}
-	for column := range dt.Cells[0] {
+	for column := range self.Cells[0] {
 		colData := []string{}
-		for row := range dt.Cells {
-			colData = append(colData, dt.Cells[row][column])
+		for row := range self.Cells {
+			colData = append(colData, self.Cells[row][column])
 		}
 		result = append(result, colData)
 	}
@@ -55,34 +55,34 @@ func (dt *DataTable) columns() [][]string {
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (dt *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
+func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(other.String(), dt.String(), false)
+	diffs := dmp.DiffMain(other.String(), self.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}
 	return dmp.DiffPrettyText(diffs), len(diffs)
 }
 
-// EqualGherkin compares this DataTable instance to the given Gherkin dt.
+// EqualGherkin compares this DataTable instance to the given Gherkin self.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (dt *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
-	if len(dt.Cells) == 0 {
+func (self *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
+	if len(self.Cells) == 0 {
 		return "your data is empty", 1
 	}
 	dataTable := FromGherkin(other)
-	return dt.EqualDataTable(dataTable)
+	return self.EqualDataTable(dataTable)
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (dt *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]domain.SHA, initialOriginSHAs map[string]domain.SHA) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]domain.SHA, initialOriginSHAs map[string]domain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
-	for row := range dt.Cells {
+	for row := range self.Cells {
 		cells := []string{}
-		for col := range dt.Cells[row] {
-			cell := dt.Cells[row][col]
+		for col := range self.Cells[row] {
+			cell := self.Cells[row][col]
 			if strings.Contains(cell, "{{") {
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
@@ -129,33 +129,33 @@ func (dt *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs 
 }
 
 // RemoveText deletes the given text from each cell.
-func (dt *DataTable) RemoveText(text string) {
-	for row := range dt.Cells {
-		for col := range dt.Cells[row] {
-			dt.Cells[row][col] = strings.Replace(dt.Cells[row][col], text, "", 1)
+func (self *DataTable) RemoveText(text string) {
+	for row := range self.Cells {
+		for col := range self.Cells[row] {
+			self.Cells[row][col] = strings.Replace(self.Cells[row][col], text, "", 1)
 		}
 	}
 }
 
 // Sorted provides a new DataTable that contains the content of this DataTable sorted by the first column.
-func (dt *DataTable) Sort() {
-	sort.Slice(dt.Cells, func(a, b int) bool {
-		return dt.Cells[a][0] < dt.Cells[b][0]
+func (self *DataTable) Sort() {
+	sort.Slice(self.Cells, func(a, b int) bool {
+		return self.Cells[a][0] < self.Cells[b][0]
 	})
 }
 
-// String provides the data in this DataTable instance formatted in Gherkin dt format.
-func (dt *DataTable) String() string {
+// String provides the data in this DataTable instance formatted in Gherkin self format.
+func (self *DataTable) String() string {
 	// determine how to format each column
 	formatStrings := []string{}
-	for _, width := range dt.widths() {
+	for _, width := range self.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
-	// render the dt using this format
+	// render the self using this format
 	result := ""
-	for row := range dt.Cells {
-		for col := range dt.Cells[row] {
-			result += fmt.Sprintf(formatStrings[col], dt.Cells[row][col])
+	for row := range self.Cells {
+		for col := range self.Cells[row] {
+			result += fmt.Sprintf(formatStrings[col], self.Cells[row][col])
 		}
 		result += "|\n"
 	}
@@ -163,9 +163,9 @@ func (dt *DataTable) String() string {
 }
 
 // widths provides the widths of all columns.
-func (dt *DataTable) widths() []int {
+func (self *DataTable) widths() []int {
 	result := []int{}
-	for _, column := range dt.columns() {
+	for _, column := range self.columns() {
 		result = append(result, stringslice.Longest(column))
 	}
 	return result

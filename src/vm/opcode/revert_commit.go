@@ -16,7 +16,7 @@ type RevertCommit struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RevertCommit) Run(args shared.RunArgs) error {
+func (self *RevertCommit) Run(args shared.RunArgs) error {
 	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
@@ -26,8 +26,8 @@ func (op *RevertCommit) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !slice.Contains(commitsInCurrentBranch, op.SHA) {
-		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, op.SHA, commitsInCurrentBranch.Join("|"))
+	if !slice.Contains(commitsInCurrentBranch, self.SHA) {
+		return fmt.Errorf(messages.BranchDoesntContainCommit, currentBranch, self.SHA, commitsInCurrentBranch.Join("|"))
 	}
-	return args.Runner.Frontend.RevertCommit(op.SHA)
+	return args.Runner.Frontend.RevertCommit(self.SHA)
 }

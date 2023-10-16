@@ -13,9 +13,9 @@ func LoadGitConfig(runner runner) GitConfig {
 	}
 }
 
-func (gc GitConfig) Clone() GitConfig {
+func (self GitConfig) Clone() GitConfig {
 	return GitConfig{
-		Global: gc.Global.Clone(),
-		Local:  gc.Local.Clone(),
+		Global: self.Global.Clone(),
+		Local:  self.Local.Clone(),
 	}
 }

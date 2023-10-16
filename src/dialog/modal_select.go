@@ -45,7 +45,7 @@ type modalSelect struct {
 
 // Display shows the dialog and lets the user select an entry.
 // Returns the selected value or nil if the user aborted the dialog.
-func (mi *modalSelect) Display() (*string, error) {
+func (self *modalSelect) Display() (*string, error) {
 	cursor.Hide()
 	defer cursor.Show()
 	err := keyboard.Open()
@@ -53,71 +53,71 @@ func (mi *modalSelect) Display() (*string, error) {
 		return nil, err
 	}
 	defer keyboard.Close()
-	mi.print()
-	for mi.status == modalSelectStatusSelecting {
-		err := mi.handleInput()
+	self.print()
+	for self.status == modalSelectStatusSelecting {
+		err := self.handleInput()
 		if err != nil {
 			return nil, err
 		}
-		mi.print()
+		self.print()
 	}
-	if mi.status == modalSelectStatusAborted {
+	if self.status == modalSelectStatusAborted {
 		return nil, nil //nolint:nilnil
 	}
-	selectedValue := mi.selectedValue()
+	selectedValue := self.selectedValue()
 	return &selectedValue, nil
 }
 
 // print renders the dialog in its current status to the CLI.
-func (mi *modalSelect) print() {
-	if mi.status == modalSelectStatusNew {
-		mi.status = modalSelectStatusSelecting
+func (self *modalSelect) print() {
+	if self.status == modalSelectStatusNew {
+		self.status = modalSelectStatusSelecting
 	} else {
-		cursor.Up(len(mi.entries))
+		cursor.Up(len(self.entries))
 	}
-	for e, entry := range mi.entries {
-		if e == mi.initialPos && e == mi.activePos { //nolint:gocritic
-			mi.activeColor.Println(mi.initialCursor + entry.Text)
-		} else if e == mi.initialPos {
-			mi.initialColor.Println(mi.initialCursor + entry.Text)
-		} else if e == mi.activePos {
-			mi.activeColor.Println(mi.activeCursor + entry.Text)
+	for e, entry := range self.entries {
+		if e == self.initialPos && e == self.activePos { //nolint:gocritic
+			self.activeColor.Println(self.initialCursor + entry.Text)
+		} else if e == self.initialPos {
+			self.initialColor.Println(self.initialCursor + entry.Text)
+		} else if e == self.activePos {
+			self.activeColor.Println(self.activeCursor + entry.Text)
 		} else {
-			fmt.Println(strings.Repeat(" ", len(mi.activeCursor)) + entry.Text)
+			fmt.Println(strings.Repeat(" ", len(self.activeCursor)) + entry.Text)
 		}
 	}
 }
 
 // handleInput waits for keyboard input and updates the dialog state.
-func (mi *modalSelect) handleInput() error {
+func (self *modalSelect) handleInput() error {
 	char, key, err := keyboard.GetSingleKey()
 	if err != nil {
 		return err
 	}
 	switch {
 	case char == 'j', key == keyboard.KeyArrowDown, key == keyboard.KeyTab:
-		if mi.activePos < len(mi.entries)-1 {
-			mi.activePos++
+		if self.activePos < len(self.entries)-1 {
+			self.activePos++
 		} else {
-			mi.activePos = 0
+			self.activePos = 0
 		}
 	case char == 'k', key == keyboard.KeyArrowUp:
-		if mi.activePos > 0 {
-			mi.activePos--
+		if self.activePos > 0 {
+			self.activePos--
 		} else {
-			mi.activePos = len(mi.entries) - 1
+			self.activePos = len(self.entries) - 1
 		}
 	case key == keyboard.KeyEnter, char == 's':
-		mi.status = modalSelectStatusSelected
+		self.status = modalSelectStatusSelected
 	case key == keyboard.KeyEsc:
-		mi.status = modalSelectStatusAborted
+		self.status = modalSelectStatusAborted
 	}
 	return nil
 }
 
 // selectedValue provides the value selected by the user.
-func (mi *modalSelect) selectedValue() string {
-	return mi.entries[mi.activePos].Value
+func (self *modalSelect) selectedValue() string {
+	return self.entries[self.activePos].Value
 }
 
 // ModalEntry contains one of the many entries that the user can choose from.
@@ -131,8 +131,8 @@ type ModalEntries []ModalEntry
 
 // IndexOfValue provides the index of the entry with the given value,
 // or nil if the given value is not in the list.
-func (mes ModalEntries) IndexOfValue(value string) *int {
-	for e, entry := range mes {
+func (self ModalEntries) IndexOfValue(value string) *int {
+	for e, entry := range self {
 		if entry.Value == value {
 			return &e
 		}
@@ -146,7 +146,7 @@ type modalSelectStatus struct {
 	name string
 }
 
-func (m modalSelectStatus) String() string { return m.name }
+func (self modalSelectStatus) String() string { return self.name }
 
 var (
 	modalSelectStatusNew       = modalSelectStatus{"new"}       //nolint:gochecknoglobals

@@ -6,7 +6,7 @@ type Alias struct {
 	name string
 }
 
-func (a Alias) String() string { return a.name }
+func (self Alias) String() string { return self.name }
 
 var (
 	AliasAppend         = Alias{"append"}           //nolint:gochecknoglobals

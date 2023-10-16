@@ -18,9 +18,9 @@ func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
 	}
 }
 
-func (sd StashDiff) Program() program.Program {
+func (self StashDiff) Program() program.Program {
 	result := program.Program{}
-	for ; sd.EntriesAdded > 0; sd.EntriesAdded-- {
+	for ; self.EntriesAdded > 0; self.EntriesAdded-- {
 		result.Add(&opcode.RestoreOpenChanges{})
 	}
 	return result

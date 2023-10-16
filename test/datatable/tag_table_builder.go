@@ -25,35 +25,35 @@ func NewTagTableBuilder() TagTableBuilder {
 }
 
 // Add registers the given tag from the given location into this table.
-func (ttb *TagTableBuilder) Add(tag, location string) {
-	locations, exists := ttb.tagToLocations[tag]
+func (self *TagTableBuilder) Add(tag, location string) {
+	locations, exists := self.tagToLocations[tag]
 	if exists {
-		ttb.tagToLocations[tag] = locations.Add(location)
+		self.tagToLocations[tag] = locations.Add(location)
 	} else {
-		ttb.tagToLocations[tag] = helpers.NewOrderedSet(location)
+		self.tagToLocations[tag] = helpers.NewOrderedSet(location)
 	}
 }
 
 // AddMany registers the given tags from the given location into this table.
-func (ttb *TagTableBuilder) AddMany(tags []string, location string) {
+func (self *TagTableBuilder) AddMany(tags []string, location string) {
 	for _, tag := range tags {
-		ttb.Add(tag, location)
+		self.Add(tag, location)
 	}
 }
 
 // Table provides the data accumulated by this TagTableBuilder as a DataTable.
-func (ttb *TagTableBuilder) Table() DataTable {
+func (self *TagTableBuilder) Table() DataTable {
 	result := DataTable{}
 	result.AddRow("NAME", "LOCATION")
-	tags := make([]string, len(ttb.tagToLocations))
+	tags := make([]string, len(self.tagToLocations))
 	index := 0
-	for tag := range ttb.tagToLocations {
+	for tag := range self.tagToLocations {
 		tags[index] = tag
 		index++
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {
-		result.AddRow(tag, ttb.tagToLocations[tag].Join(", "))
+		result.AddRow(tag, self.tagToLocations[tag].Join(", "))
 	}
 	return result
 }

@@ -18,6 +18,6 @@ func EmptyBranchesSnapshot() BranchesSnapshot {
 	}
 }
 
-func (bss BranchesSnapshot) IsEmpty() bool {
-	return len(bss.Branches) == 0 && bss.Active.IsEmpty()
+func (self BranchesSnapshot) IsEmpty() bool {
+	return len(self.Branches) == 0 && self.Active.IsEmpty()
 }

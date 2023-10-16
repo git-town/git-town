@@ -7,14 +7,14 @@ type Collector struct {
 }
 
 // Add appends a string instance to this collector.
-func (c *Collector) Add(text string) {
-	c.data = append(c.data, text)
+func (self *Collector) Add(text string) {
+	self.data = append(self.data, text)
 }
 
 // Result provides all accumulated string instances.
-func (c *Collector) Result() []string {
-	if c.data == nil {
+func (self *Collector) Result() []string {
+	if self.data == nil {
 		return []string{}
 	}
-	return c.data
+	return self.data
 }
