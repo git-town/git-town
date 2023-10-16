@@ -2,9 +2,8 @@ package hosting
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// Connector describes the activities that Git Town performs on code hosting platforms via their API.
+// Connector describes the activities that Git Town can perform on code hosting platforms.
 // Individual implementations exist to talk to specific hosting platforms.
-// They all conform to this interface.
 type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective hosting platform is prepopulated with.
