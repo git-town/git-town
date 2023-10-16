@@ -17,16 +17,16 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	Command                  string                     `json:"Command"`
-	IsAbort                  bool                       `exhaustruct:"optional"     json:"IsAbort"`
-	IsUndo                   bool                       `exhaustruct:"optional"     json:"IsUndo"`
-	AbortProgram             program.Program            `exhaustruct:"optional"     json:"AbortProgram"`
-	RunProgram               program.Program            `json:"RunProgram"`
-	UndoProgram              program.Program            `exhaustruct:"optional"     json:"UndoProgram"`
-	InitialActiveBranch      domain.LocalBranchName     `json:"InitialActiveBranch"`
-	FinalUndoProgram         program.Program            `exhaustruct:"optional"     json:"FinalUndoProgram"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"     json:"UnfinishedDetails"`
-	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"     json:"UndoablePerennialCommits"`
+	Command                  string
+	IsAbort                  bool            `exhaustruct:"optional"`
+	IsUndo                   bool            `exhaustruct:"optional"`
+	AbortProgram             program.Program `exhaustruct:"optional"`
+	RunProgram               program.Program
+	UndoProgram              program.Program `exhaustruct:"optional"`
+	InitialActiveBranch      domain.LocalBranchName
+	FinalUndoProgram         program.Program            `exhaustruct:"optional"`
+	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
+	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"`
 }
 
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
