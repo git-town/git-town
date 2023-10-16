@@ -20,11 +20,8 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		OriginURL:      args.OriginURL,
 		Log:            args.Log,
 	})
-	if err != nil {
-		return nil, err
-	}
-	if githubConnector != nil {
-		return githubConnector, nil
+	if githubConnector != nil || err != nil {
+		return githubConnector, err
 	}
 	gitlabConnector, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 		HostingService: args.HostingService,
@@ -32,22 +29,16 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GitlabAPIToken,
 		Log:            args.Log,
 	})
-	if err != nil {
-		return nil, err
-	}
-	if gitlabConnector != nil {
-		return gitlabConnector, nil
+	if gitlabConnector != nil || err != nil {
+		return gitlabConnector, err
 	}
 	bitbucketConnector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 		OriginURL:       args.OriginURL,
 		HostingService:  args.HostingService,
 		GetSHAForBranch: args.GetSHAForBranch,
 	})
-	if err != nil {
-		return nil, err
-	}
-	if bitbucketConnector != nil {
-		return bitbucketConnector, nil
+	if bitbucketConnector != nil || err != nil {
+		return bitbucketConnector, err
 	}
 	giteaConnector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 		OriginURL:      args.OriginURL,
@@ -55,11 +46,8 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GiteaAPIToken,
 		Log:            args.Log,
 	})
-	if err != nil {
-		return nil, err
-	}
-	if giteaConnector != nil {
-		return giteaConnector, nil
+	if giteaConnector != nil || err != nil {
+		return giteaConnector, err
 	}
 	return nil, nil //nolint:nilnil
 }
