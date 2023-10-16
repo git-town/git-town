@@ -67,7 +67,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	if number <= 0 {
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	title, body := common.ParseCommitMessage(message)
+	title, body := common.CommitMessageParts(message)
 	_, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,

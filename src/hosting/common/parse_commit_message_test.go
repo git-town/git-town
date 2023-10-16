@@ -35,7 +35,7 @@ func TestParseCommitMessage(t *testing.T) {
 		},
 	}
 	for give, want := range tests {
-		haveTitle, haveBody := common.ParseCommitMessage(give)
+		haveTitle, haveBody := common.CommitMessageParts(give)
 		must.EqOp(t, want.title, haveTitle)
 		must.EqOp(t, want.body, haveBody)
 	}
