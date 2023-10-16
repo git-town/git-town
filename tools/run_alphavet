@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+ALPHAVET_VERSION=$1
+
+for d in ./src/*/ ; do
+  if [ "$d" != "./src/cmd/" ]; then
+    go vet -vettool=tools/alphavet_${ALPHAVET_VERSION} -exclude=executeUndo "$d"...
+  fi
+done
