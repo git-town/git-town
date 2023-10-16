@@ -22,6 +22,37 @@ type FrontendRunner struct {
 
 type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
 
+func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
+	var result string
+	if executable == "git" && !omitBranch {
+		result = "[" + currentBranch.String() + "] git "
+	} else {
+		result = executable + " "
+	}
+	for index, part := range args {
+		if part == "" {
+			part = `""`
+		} else if strings.Contains(part, " ") {
+			part = `"` + part + `"`
+		}
+		if index != 0 {
+			result += " "
+		}
+		result += part
+	}
+	return result
+}
+
+// PrintCommand prints the given command-line operation on the console.
+func PrintCommand(branch domain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
+	header := FormatCommand(branch, omitBranch, cmd, args...)
+	fmt.Println()
+	_, err := color.New(color.Bold).Println(header)
+	if err != nil {
+		fmt.Println(header)
+	}
+}
+
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	self.CommandsCounter.Register()
@@ -58,35 +89,4 @@ func (self *FrontendRunner) RunMany(commands [][]string) error {
 		}
 	}
 	return nil
-}
-
-// PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch domain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, omitBranch, cmd, args...)
-	fmt.Println()
-	_, err := color.New(color.Bold).Println(header)
-	if err != nil {
-		fmt.Println(header)
-	}
-}
-
-func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
-	var result string
-	if executable == "git" && !omitBranch {
-		result = "[" + currentBranch.String() + "] git "
-	} else {
-		result = executable + " "
-	}
-	for index, part := range args {
-		if part == "" {
-			part = `""`
-		} else if strings.Contains(part, " ") {
-			part = `"` + part + `"`
-		}
-		if index != 0 {
-			result += " "
-		}
-		result += part
-	}
-	return result
 }

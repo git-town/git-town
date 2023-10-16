@@ -45,6 +45,15 @@ func (self *Program) MarshalJSON() ([]byte, error) {
 	return json.Marshal(jsonOpcodes)
 }
 
+// OpcodeTypes provides the names of the types of the opcodes in this program.
+func (self *Program) OpcodeTypes() []string {
+	result := make([]string, len(self.Opcodes))
+	for o, opcode := range self.Opcodes {
+		result[o] = reflect.TypeOf(opcode).String()
+	}
+	return result
+}
+
 // Peek provides the first element of this program.
 func (self *Program) Peek() shared.Opcode { //nolint:ireturn
 	if self.IsEmpty() {
@@ -122,15 +131,6 @@ func (self *Program) StringIndented(indent string) string {
 		}
 	}
 	return sb.String()
-}
-
-// OpcodeTypes provides the names of the types of the opcodes in this program.
-func (self *Program) OpcodeTypes() []string {
-	result := make([]string, len(self.Opcodes))
-	for o, opcode := range self.Opcodes {
-		result[o] = reflect.TypeOf(opcode).String()
-	}
-	return result
 }
 
 // UnmarshalJSON unmarshals the program from JSON.

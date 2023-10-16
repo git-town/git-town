@@ -15,14 +15,14 @@ type UpdateProposalTarget struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *UpdateProposalTarget) CreateAutomaticAbortError() error {
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
+}
+
 func (self *UpdateProposalTarget) Run(args shared.RunArgs) error {
 	return args.Connector.UpdateProposalTarget(self.ProposalNumber, self.NewTarget)
 }
 
 func (self *UpdateProposalTarget) ShouldAutomaticallyAbortOnError() bool {
 	return true
-}
-
-func (self *UpdateProposalTarget) CreateAutomaticAbortError() error {
-	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }

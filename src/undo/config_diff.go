@@ -12,6 +12,14 @@ type ConfigDiff struct {
 	Changed map[config.Key]domain.Change[string]
 }
 
+func EmptyConfigDiff() ConfigDiff {
+	return ConfigDiff{
+		Added:   []config.Key{},
+		Removed: map[config.Key]string{},
+		Changed: map[config.Key]domain.Change[string]{},
+	}
+}
+
 func NewConfigDiff(before, after config.GitConfigCache) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []config.Key{},
@@ -38,12 +46,4 @@ func NewConfigDiff(before, after config.GitConfigCache) ConfigDiff {
 		}
 	}
 	return result
-}
-
-func EmptyConfigDiff() ConfigDiff {
-	return ConfigDiff{
-		Added:   []config.Key{},
-		Removed: map[config.Key]string{},
-		Changed: map[config.Key]domain.Change[string]{},
-	}
 }

@@ -50,12 +50,6 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 	return nil
 }
 
-// RegisterUndoablePerennialCommit stores the given commit on a perennial branch as undoable.
-// This method is used as a callback.
-func (self *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
-	self.UndoablePerennialCommits = append(self.UndoablePerennialCommits, commit)
-}
-
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
@@ -147,6 +141,12 @@ func (self *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 		EndTime:   time.Now(),
 	}
 	return nil
+}
+
+// RegisterUndoablePerennialCommit stores the given commit on a perennial branch as undoable.
+// This method is used as a callback.
+func (self *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
+	self.UndoablePerennialCommits = append(self.UndoablePerennialCommits, commit)
 }
 
 // SkipCurrentBranchProgram removes the opcodes for the current branch

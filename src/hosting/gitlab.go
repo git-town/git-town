@@ -40,6 +40,32 @@ func (self *GitLabConnector) FindProposal(branch, target domain.LocalBranchName)
 	return &proposal, nil
 }
 
+// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
+// otherwise nil.
+func NewGitlabConnector(args NewGitlabConnectorArgs) (*GitLabConnector, error) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingGitLab) {
+		return nil, nil //nolint:nilnil
+	}
+	gitlabConfig := GitLabConfig{CommonConfig{
+		APIToken:     args.APIToken,
+		Hostname:     args.OriginURL.Host,
+		Organization: args.OriginURL.Org,
+		Repository:   args.OriginURL.Repo,
+	}}
+	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
+	httpClient := gitlab.WithHTTPClient(&http.Client{})
+	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
+	if err != nil {
+		return nil, err
+	}
+	connector := GitLabConnector{
+		client:       client,
+		GitLabConfig: gitlabConfig,
+		log:          args.Log,
+	}
+	return &connector, nil
+}
+
 func (self *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
@@ -73,32 +99,6 @@ func (self *GitLabConnector) UpdateProposalTarget(number int, target domain.Loca
 	return nil
 }
 
-// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
-// otherwise nil.
-func NewGitlabConnector(args NewGitlabConnectorArgs) (*GitLabConnector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingGitLab) {
-		return nil, nil //nolint:nilnil
-	}
-	gitlabConfig := GitLabConfig{CommonConfig{
-		APIToken:     args.APIToken,
-		Hostname:     args.OriginURL.Host,
-		Organization: args.OriginURL.Org,
-		Repository:   args.OriginURL.Repo,
-	}}
-	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
-	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
-	if err != nil {
-		return nil, err
-	}
-	connector := GitLabConnector{
-		client:       client,
-		GitLabConfig: gitlabConfig,
-		log:          args.Log,
-	}
-	return &connector, nil
-}
-
 type NewGitlabConnectorArgs struct {
 	HostingService config.Hosting
 	OriginURL      *giturl.Parts
@@ -118,14 +118,6 @@ func (self *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (self *GitLabConfig) projectPath() string {
-	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
-}
-
-func (self *GitLabConfig) baseURL() string {
-	return fmt.Sprintf("https://%s", self.Hostname)
-}
-
 func (self *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
@@ -139,6 +131,14 @@ func (self *GitLabConfig) NewProposalURL(branch, parentBranch domain.LocalBranch
 
 func (self *GitLabConfig) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", self.baseURL(), self.projectPath())
+}
+
+func (self *GitLabConfig) baseURL() string {
+	return fmt.Sprintf("https://%s", self.Hostname)
+}
+
+func (self *GitLabConfig) projectPath() string {
+	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
 }
 
 // *************************************

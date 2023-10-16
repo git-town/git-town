@@ -11,75 +11,6 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestNewGithubConnector(t *testing.T) {
-	t.Parallel()
-
-	t.Run("GitHub SaaS", func(t *testing.T) {
-		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
-			HostingService: config.HostingNone,
-			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
-			APIToken:       "apiToken",
-			MainBranch:     domain.NewLocalBranchName("mainBranch"),
-			Log:            cli.SilentLog{},
-		})
-		must.NoError(t, err)
-		wantConfig := hosting.CommonConfig{
-			APIToken:     "apiToken",
-			Hostname:     "github.com",
-			Organization: "git-town",
-			Repository:   "docs",
-		}
-		must.EqOp(t, wantConfig, have.CommonConfig)
-	})
-
-	t.Run("hosted service type provided manually", func(t *testing.T) {
-		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
-			HostingService: config.HostingGitHub,
-			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
-			APIToken:       "apiToken",
-			MainBranch:     domain.NewLocalBranchName("mainBranch"),
-			Log:            cli.SilentLog{},
-		})
-		must.NoError(t, err)
-		wantConfig := hosting.CommonConfig{
-			APIToken:     "apiToken",
-			Hostname:     "custom-url.com",
-			Organization: "git-town",
-			Repository:   "docs",
-		}
-		must.EqOp(t, wantConfig, have.CommonConfig)
-	})
-
-	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
-		t.Parallel()
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
-			HostingService: config.HostingNone,
-			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
-			APIToken:       "",
-			MainBranch:     domain.NewLocalBranchName("mainBranch"),
-			Log:            cli.SilentLog{},
-		})
-		must.Nil(t, have)
-		must.NoError(t, err)
-	})
-
-	t.Run("no origin remote --> no connector", func(t *testing.T) {
-		t.Parallel()
-		var originURL *giturl.Parts
-		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
-			HostingService: config.HostingNone,
-			OriginURL:      originURL,
-			APIToken:       "",
-			MainBranch:     domain.NewLocalBranchName("mainBranch"),
-			Log:            cli.SilentLog{},
-		})
-		must.Nil(t, have)
-		must.NoError(t, err)
-	})
-}
-
 func TestGithubConnector(t *testing.T) {
 	t.Parallel()
 
@@ -147,6 +78,75 @@ func TestGithubConnector(t *testing.T) {
 		have := connector.RepositoryURL()
 		want := "https://github.com/organization/repo"
 		must.EqOp(t, want, have)
+	})
+}
+
+func TestNewGithubConnector(t *testing.T) {
+	t.Parallel()
+
+	t.Run("GitHub SaaS", func(t *testing.T) {
+		t.Parallel()
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingNone,
+			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
+			Log:            cli.SilentLog{},
+		})
+		must.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "apiToken",
+			Hostname:     "github.com",
+			Organization: "git-town",
+			Repository:   "docs",
+		}
+		must.EqOp(t, wantConfig, have.CommonConfig)
+	})
+
+	t.Run("hosted service type provided manually", func(t *testing.T) {
+		t.Parallel()
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingGitHub,
+			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
+			Log:            cli.SilentLog{},
+		})
+		must.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "apiToken",
+			Hostname:     "custom-url.com",
+			Organization: "git-town",
+			Repository:   "docs",
+		}
+		must.EqOp(t, wantConfig, have.CommonConfig)
+	})
+
+	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
+		t.Parallel()
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingNone,
+			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
+			APIToken:       "",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
+			Log:            cli.SilentLog{},
+		})
+		must.Nil(t, have)
+		must.NoError(t, err)
+	})
+
+	t.Run("no origin remote --> no connector", func(t *testing.T) {
+		t.Parallel()
+		var originURL *giturl.Parts
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingNone,
+			OriginURL:      originURL,
+			APIToken:       "",
+			MainBranch:     domain.NewLocalBranchName("mainBranch"),
+			Log:            cli.SilentLog{},
+		})
+		must.Nil(t, have)
+		must.NoError(t, err)
 	})
 }
 
