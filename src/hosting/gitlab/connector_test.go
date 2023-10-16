@@ -94,7 +94,7 @@ func TestGitlabConnector(t *testing.T) {
 				Repository:   "",
 			},
 		}
-		give := common.Proposal{
+		give := domain.Proposal{
 			Number:       1,
 			Title:        "my title",
 			MergeWithAPI: true,

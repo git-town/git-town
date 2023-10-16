@@ -42,11 +42,11 @@ type NewConnectorArgs struct {
 	GetSHAForBranch common.SHAForBranchFunc
 }
 
-func (self *Connector) FindProposal(_, _ domain.LocalBranchName) (*common.Proposal, error) {
+func (self *Connector) FindProposal(_, _ domain.LocalBranchName) (*domain.Proposal, error) {
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
-func (self *Connector) DefaultProposalMessage(proposal common.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

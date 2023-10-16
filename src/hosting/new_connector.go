@@ -11,10 +11,8 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting/gitlab"
 )
 
-type Connector common.Connector
-
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (common.Connector, error) {
+func NewConnector(args NewConnectorArgs) (Connector, error) {
 	githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 		HostingService: args.HostingService,
 		APIToken:       args.GithubAPIToken,
@@ -63,7 +61,7 @@ func NewConnector(args NewConnectorArgs) (common.Connector, error) {
 	if giteaConnector != nil {
 		return giteaConnector, nil
 	}
-	return nil, nil
+	return nil, nil //nolint:nilnil
 }
 
 type NewConnectorArgs struct {

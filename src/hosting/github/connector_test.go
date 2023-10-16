@@ -12,7 +12,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestNewGithubConnector(t *testing.T) {
+func TestNewConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("GitHub SaaS", func(t *testing.T) {
@@ -81,13 +81,13 @@ func TestNewGithubConnector(t *testing.T) {
 	})
 }
 
-func TestGithubConnector(t *testing.T) {
+func TestConnector(t *testing.T) {
 	t.Parallel()
 
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{} //nolint:exhaustruct
-		give := common.Proposal{        //nolint:exhaustruct
+		give := domain.Proposal{        //nolint:exhaustruct
 			Number: 1,
 			Title:  "my title",
 		}
@@ -149,38 +149,4 @@ func TestGithubConnector(t *testing.T) {
 		want := "https://github.com/organization/repo"
 		must.EqOp(t, want, have)
 	})
-}
-
-func TestParseCommitMessage(t *testing.T) {
-	t.Parallel()
-	tests := map[string]struct {
-		title string
-		body  string
-	}{
-		"title": {
-			title: "title",
-			body:  "",
-		},
-		"title\nbody": {
-			title: "title",
-			body:  "body",
-		},
-		"title\n\nbody": {
-			title: "title",
-			body:  "body",
-		},
-		"title\n\n\nbody": {
-			title: "title",
-			body:  "body",
-		},
-		"title\nbody1\nbody2\n": {
-			title: "title",
-			body:  "body1\nbody2\n",
-		},
-	}
-	for give, want := range tests {
-		haveTitle, haveBody := common.ParseCommitMessage(give)
-		must.EqOp(t, want.title, haveTitle)
-		must.EqOp(t, want.body, haveBody)
-	}
 }

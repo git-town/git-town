@@ -20,7 +20,7 @@ type Connector struct {
 	log common.Log
 }
 
-func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
+func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -38,7 +38,7 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*com
 		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
-	return &common.Proposal{
+	return &domain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
@@ -46,7 +46,7 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*com
 	}, nil
 }
 
-func (self *Connector) DefaultProposalMessage(proposal common.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

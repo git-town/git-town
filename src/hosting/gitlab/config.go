@@ -12,7 +12,7 @@ type Config struct {
 	common.Config
 }
 
-func (self *Config) DefaultProposalMessage(proposal common.Proposal) string {
+func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 

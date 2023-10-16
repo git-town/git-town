@@ -24,7 +24,7 @@ type Connector struct {
 	log        common.Log
 }
 
-func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
+func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -43,7 +43,7 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*com
 	return &proposal, nil
 }
 
-func (self *Connector) DefaultProposalMessage(proposal common.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
@@ -143,8 +143,8 @@ func GetAPIToken(gitConfig gitTownConfig) string {
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
-func parsePullRequest(pullRequest *github.PullRequest) common.Proposal {
-	return common.Proposal{
+func parsePullRequest(pullRequest *github.PullRequest) domain.Proposal {
+	return domain.Proposal{
 		Number:       pullRequest.GetNumber(),
 		Target:       domain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:        pullRequest.GetTitle(),

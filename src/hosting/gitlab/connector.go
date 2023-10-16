@@ -20,7 +20,7 @@ type Connector struct {
 	log common.Log
 }
 
-func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*common.Proposal, error) {
+func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch.String()),
@@ -106,8 +106,8 @@ type NewConnectorArgs struct {
 	Log            common.Log
 }
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) common.Proposal {
-	return common.Proposal{
+func parseMergeRequest(mergeRequest *gitlab.MergeRequest) domain.Proposal {
+	return domain.Proposal{
 		Number:       mergeRequest.IID,
 		Target:       domain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,

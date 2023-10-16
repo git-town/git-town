@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/hosting/common"
 	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -128,8 +127,8 @@ type shipConfig struct {
 	lineage                  config.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
-	proposal                 hosting.Proposal
-	proposalsOfChildBranches []hosting.Proposal
+	proposal                 domain.Proposal
+	proposalsOfChildBranches []domain.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
@@ -216,9 +215,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	var proposal *common.Proposal
+	var proposal *domain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
-	proposalsOfChildBranches := []hosting.Proposal{}
+	proposalsOfChildBranches := []domain.Proposal{}
 	pushHook, err = repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
@@ -278,7 +277,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 		lineage:                  lineage,
 		mainBranch:               mainBranch,
 		previousBranch:           previousBranch,
-		proposal:                 proposal,
+		proposal:                 *proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		pullBranchStrategy:       pullBranchStrategy,
 		pushHook:                 pushHook,
@@ -335,7 +334,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
 			prog.Add(&opcode.UpdateProposalTarget{
-				ProposalNumber: childProposal.GetNumber(),
+				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
@@ -343,7 +342,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName, NoPushHook: !config.pushHook})
 		prog.Add(&opcode.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
-			ProposalNumber:  config.proposal.GetNumber(),
+			ProposalNumber:  config.proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})
