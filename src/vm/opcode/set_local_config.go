@@ -11,6 +11,6 @@ type SetLocalConfig struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *SetLocalConfig) Run(args shared.RunArgs) error {
-	return args.Runner.Config.SetLocalConfigValue(op.Key, op.Value)
+func (self *SetLocalConfig) Run(args shared.RunArgs) error {
+	return args.Runner.Config.SetLocalConfigValue(self.Key, self.Value)
 }

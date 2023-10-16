@@ -26,9 +26,9 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) Branc
 }
 
 // Changes describes the specific changes made in this BranchSpans.
-func (bss BranchSpans) Changes() BranchChanges {
+func (self BranchSpans) Changes() BranchChanges {
 	result := EmptyBranchChanges()
-	for _, branchSpan := range bss {
+	for _, branchSpan := range self {
 		if branchSpan.NoChanges() {
 			continue
 		}

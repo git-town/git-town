@@ -16,15 +16,15 @@ type JSON struct { //nolint:musttag // JSON uses a custom serialization algorith
 }
 
 // MarshalJSON marshals the opcode to JSON.
-func (js *JSON) MarshalJSON() ([]byte, error) {
+func (self *JSON) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"data": js.Opcode,
-		"type": gohacks.TypeName(js.Opcode),
+		"data": self.Opcode,
+		"type": gohacks.TypeName(self.Opcode),
 	})
 }
 
 // UnmarshalJSON unmarshals the opcode from JSON.
-func (js *JSON) UnmarshalJSON(b []byte) error {
+func (self *JSON) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {
@@ -35,11 +35,11 @@ func (js *JSON) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	js.Opcode = DetermineOpcode(opcodeType)
-	if js.Opcode == nil {
+	self.Opcode = DetermineOpcode(opcodeType)
+	if self.Opcode == nil {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
-	return json.Unmarshal(mapping["data"], &js.Opcode)
+	return json.Unmarshal(mapping["data"], &self.Opcode)
 }
 
 func DetermineOpcode(opcodeType string) shared.Opcode { //nolint:ireturn

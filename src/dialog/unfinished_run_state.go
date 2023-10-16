@@ -14,7 +14,7 @@ type Response struct {
 	name string
 }
 
-func (r Response) String() string { return r.name }
+func (self Response) String() string { return self.name }
 
 var (
 	// ResponseAbort stands for the user choosing to abort the unfinished run state.

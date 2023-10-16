@@ -12,9 +12,9 @@ type CheckoutIfExists struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *CheckoutIfExists) Run(args shared.RunArgs) error {
-	if !args.Runner.Backend.HasLocalBranch(op.Branch) {
+func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
+	if !args.Runner.Backend.HasLocalBranch(self.Branch) {
 		return nil
 	}
-	return (&Checkout{Branch: op.Branch}).Run(args)
+	return (&Checkout{Branch: self.Branch}).Run(args)
 }

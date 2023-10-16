@@ -10,10 +10,10 @@ type UpdateInitialBranchLocalSHA struct {
 	undeclaredOpcodeMethods `exhaustruct:"optional"`
 }
 
-func (op *UpdateInitialBranchLocalSHA) Run(args shared.RunArgs) error {
-	newSHA, err := args.Runner.Backend.SHAForBranch(op.Branch.BranchName())
+func (self *UpdateInitialBranchLocalSHA) Run(args shared.RunArgs) error {
+	newSHA, err := args.Runner.Backend.SHAForBranch(self.Branch.BranchName())
 	if err != nil {
 		return err
 	}
-	return args.UpdateInitialBranchLocalSHA(op.Branch, newSHA)
+	return args.UpdateInitialBranchLocalSHA(self.Branch, newSHA)
 }

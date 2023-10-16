@@ -18,20 +18,20 @@ type Commit struct {
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.
-func (c *Commit) Set(name, value string) {
+func (self *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
-		c.Branch = domain.NewLocalBranchName(value)
+		self.Branch = domain.NewLocalBranchName(value)
 	case "LOCATION":
-		c.Locations = []string{value}
+		self.Locations = []string{value}
 	case "MESSAGE":
-		c.Message = value
+		self.Message = value
 	case "FILE NAME":
-		c.FileName = value
+		self.FileName = value
 	case "FILE CONTENT":
-		c.FileContent = value
+		self.FileContent = value
 	case "AUTHOR":
-		c.Author = value
+		self.Author = value
 	default:
 		log.Fatalf("unknown Commit property: %s", name)
 	}

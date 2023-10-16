@@ -15,21 +15,21 @@ type EnsureHasShippableChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *EnsureHasShippableChanges) CreateAutomaticAbortError() error {
-	return fmt.Errorf(messages.ShipBranchNothingToDo, op.Branch)
+func (self *EnsureHasShippableChanges) CreateAutomaticAbortError() error {
+	return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 }
 
-func (op *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
-	hasShippableChanges, err := args.Runner.Backend.HasShippableChanges(op.Branch, op.Parent)
+func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
+	hasShippableChanges, err := args.Runner.Backend.HasShippableChanges(self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
 	if !hasShippableChanges {
-		return fmt.Errorf(messages.ShipBranchNothingToDo, op.Branch)
+		return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 	}
 	return nil
 }
 
-func (op *EnsureHasShippableChanges) ShouldAutomaticallyAbortOnError() bool {
+func (self *EnsureHasShippableChanges) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

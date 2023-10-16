@@ -41,37 +41,37 @@ type NewBitbucketConnectorArgs struct {
 	GetSHAForBranch SHAForBranchFunc
 }
 
-func (bc *BitbucketConnector) FindProposal(_, _ domain.LocalBranchName) (*Proposal, error) {
+func (self *BitbucketConnector) FindProposal(_, _ domain.LocalBranchName) (*Proposal, error) {
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
-func (bc *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
+func (self *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (bc *BitbucketConnector) HostingServiceName() string {
+func (self *BitbucketConnector) HostingServiceName() string {
 	return "Bitbucket"
 }
 
-func (bc *BitbucketConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *BitbucketConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	branchSHA, err := bc.getSHAForBranch(branch.BranchName())
+	branchSHA, err := self.getSHAForBranch(branch.BranchName())
 	if err != nil {
 		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{bc.Organization + "/" + bc.Repository, branchSHA.TruncateTo(12).String(), branch.String()}, ":"))
-	query.Add("dest", strings.Join([]string{bc.Organization + "/" + bc.Repository, "", parentBranch.String()}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", bc.RepositoryURL(), query.Encode()), nil
+	query.Add("source", strings.Join([]string{self.Organization + "/" + self.Repository, branchSHA.TruncateTo(12).String(), branch.String()}, ":"))
+	query.Add("dest", strings.Join([]string{self.Organization + "/" + self.Repository, "", parentBranch.String()}, ":"))
+	return fmt.Sprintf("%s/pull-request/new?%s", self.RepositoryURL(), query.Encode()), nil
 }
 
-func (bc *BitbucketConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", bc.Hostname, bc.Organization, bc.Repository)
+func (self *BitbucketConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", self.Hostname, self.Organization, self.Repository)
 }
 
-func (bc *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA domain.SHA, err error) {
+func (self *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA domain.SHA, err error) {
 	return domain.EmptySHA(), errors.New(messages.HostingBitBucketNotImplemented)
 }
 
-func (bc *BitbucketConnector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
+func (self *BitbucketConnector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
 	return errors.New(messages.HostingBitBucketNotImplemented)
 }

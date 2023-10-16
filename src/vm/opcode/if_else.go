@@ -14,15 +14,15 @@ type IfElse struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *IfElse) Run(args shared.RunArgs) error {
-	condition, err := op.Condition(&args.Runner.Backend, args.Lineage)
+func (self *IfElse) Run(args shared.RunArgs) error {
+	condition, err := self.Condition(&args.Runner.Backend, args.Lineage)
 	if err != nil {
 		return err
 	}
 	if condition {
-		args.PrependOpcodes(op.WhenTrue...)
+		args.PrependOpcodes(self.WhenTrue...)
 	} else {
-		args.PrependOpcodes(op.WhenFalse...)
+		args.PrependOpcodes(self.WhenFalse...)
 	}
 	return nil
 }

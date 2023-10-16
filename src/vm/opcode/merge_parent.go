@@ -11,20 +11,20 @@ type MergeParent struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *MergeParent) CreateAbortProgram() []shared.Opcode {
+func (self *MergeParent) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&AbortMerge{},
 	}
 }
 
-func (op *MergeParent) CreateContinueProgram() []shared.Opcode {
+func (self *MergeParent) CreateContinueProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&ContinueMerge{},
 	}
 }
 
-func (op *MergeParent) Run(args shared.RunArgs) error {
-	parent := args.Lineage.Parent(op.CurrentBranch)
+func (self *MergeParent) Run(args shared.RunArgs) error {
+	parent := args.Lineage.Parent(self.CurrentBranch)
 	if parent.IsEmpty() {
 		return nil
 	}

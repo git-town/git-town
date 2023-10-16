@@ -17,26 +17,26 @@ type SquashMerge struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *SquashMerge) CreateAbortProgram() []shared.Opcode {
+func (self *SquashMerge) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{
 		&DiscardOpenChanges{},
 	}
 }
 
-func (op *SquashMerge) CreateAutomaticAbortError() error {
+func (self *SquashMerge) CreateAutomaticAbortError() error {
 	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
-func (op *SquashMerge) Run(args shared.RunArgs) error {
-	err := args.Runner.Frontend.SquashMerge(op.Branch)
+func (self *SquashMerge) Run(args shared.RunArgs) error {
+	err := args.Runner.Frontend.SquashMerge(self.Branch)
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := args.Runner.Backend.BranchAuthors(op.Branch, op.Parent)
+	branchAuthors, err := args.Runner.Backend.BranchAuthors(self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}
-	author, err := dialog.SelectSquashCommitAuthor(op.Branch, branchAuthors)
+	author, err := dialog.SelectSquashCommitAuthor(self.Branch, branchAuthors)
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
@@ -50,11 +50,11 @@ func (op *SquashMerge) Run(args shared.RunArgs) error {
 	if repoAuthor == author {
 		author = ""
 	}
-	err = args.Runner.Frontend.Commit(op.CommitMessage, author)
+	err = args.Runner.Frontend.Commit(self.CommitMessage, author)
 	if err != nil {
 		return err
 	}
-	squashedCommitSHA, err := args.Runner.Backend.SHAForBranch(op.Parent.BranchName())
+	squashedCommitSHA, err := args.Runner.Backend.SHAForBranch(self.Parent.BranchName())
 	if err != nil {
 		return err
 	}
@@ -62,6 +62,6 @@ func (op *SquashMerge) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (op *SquashMerge) ShouldAutomaticallyAbortOnError() bool {
+func (self *SquashMerge) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

@@ -12,6 +12,6 @@ type CreateBranch struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *CreateBranch) Run(args shared.RunArgs) error {
-	return args.Runner.Frontend.CreateBranch(op.Branch, op.StartingPoint)
+func (self *CreateBranch) Run(args shared.RunArgs) error {
+	return args.Runner.Frontend.CreateBranch(self.Branch, self.StartingPoint)
 }

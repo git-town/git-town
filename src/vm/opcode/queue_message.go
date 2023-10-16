@@ -7,7 +7,7 @@ type QueueMessage struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *QueueMessage) Run(args shared.RunArgs) error {
-	args.Runner.FinalMessages.Add(op.Message)
+func (self *QueueMessage) Run(args shared.RunArgs) error {
+	args.Runner.FinalMessages.Add(self.Message)
 	return nil
 }

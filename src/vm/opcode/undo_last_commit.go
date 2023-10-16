@@ -6,6 +6,6 @@ type UndoLastCommit struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *UndoLastCommit) Run(args shared.RunArgs) error {
+func (self *UndoLastCommit) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.UndoLastCommit()
 }

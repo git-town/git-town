@@ -18,33 +18,33 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	}
 }
 
-func (cds ConfigDiffs) UndoProgram() program.Program {
+func (self ConfigDiffs) UndoProgram() program.Program {
 	result := program.Program{}
-	for _, key := range cds.Global.Added {
+	for _, key := range self.Global.Added {
 		result.Add(&opcode.RemoveGlobalConfig{Key: key})
 	}
-	for key, value := range cds.Global.Removed {
+	for key, value := range self.Global.Removed {
 		result.Add(&opcode.SetGlobalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
-	for key, change := range cds.Global.Changed {
+	for key, change := range self.Global.Changed {
 		result.Add(&opcode.SetGlobalConfig{
 			Key:   key,
 			Value: change.Before,
 		})
 	}
-	for _, key := range cds.Local.Added {
+	for _, key := range self.Local.Added {
 		result.Add(&opcode.RemoveLocalConfig{Key: key})
 	}
-	for key, value := range cds.Local.Removed {
+	for key, value := range self.Local.Removed {
 		result.Add(&opcode.SetLocalConfig{
 			Key:   key,
 			Value: value,
 		})
 	}
-	for key, change := range cds.Local.Changed {
+	for key, change := range self.Local.Changed {
 		result.Add(&opcode.SetLocalConfig{
 			Key:   key,
 			Value: change.Before,

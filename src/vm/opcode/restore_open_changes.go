@@ -12,7 +12,7 @@ type RestoreOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (op *RestoreOpenChanges) Run(args shared.RunArgs) error {
+func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
 	err := args.Runner.Frontend.PopStash()
 	if err != nil {
 		return errors.New(messages.DiffConflictWithMain)

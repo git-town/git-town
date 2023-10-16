@@ -13,7 +13,7 @@ type AtomicCounter struct {
 }
 
 // ToString provides a globally unique text each time it is called.
-func (c *AtomicCounter) ToString() string {
-	atomic.AddUint32(&c.value, 1)
-	return strconv.FormatUint(uint64(c.value), 10)
+func (self *AtomicCounter) ToString() string {
+	atomic.AddUint32(&self.value, 1)
+	return strconv.FormatUint(uint64(self.value), 10)
 }

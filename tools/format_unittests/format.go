@@ -12,7 +12,7 @@ func main() {
 	switch {
 	case len(os.Args) == 1 || len(os.Args) > 2:
 		displayUsage()
-	case len(os.Args) == 2 && os.Args[1] == "format":
+	case len(os.Args) == 2 && os.Args[1] == "run":
 		formatFiles()
 	case len(os.Args) == 2 && os.Args[1] == "test":
 		runTests()
@@ -29,11 +29,12 @@ This tool formats Go unit tests to have an empty line before top-level subtests.
 Usage: format <command>
 
 Available commands:
-   format  Formats the test files
-   test    Runs the internal tests for this tool
+   run   Formats the test files
+   test  Verifies that this tool works
 `[1:])
 }
 
+// shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
 func shouldIgnorePath(path string) bool {
 	return path == "main_test.go"
 }

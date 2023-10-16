@@ -27,39 +27,39 @@ func isValidLocalBranchName(value string) bool {
 }
 
 // AtRemote provides the RemoteBranchName of this branch at the given remote.
-func (lbn LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
-	return NewRemoteBranchName(remote.String() + "/" + lbn.id)
+func (self LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
+	return NewRemoteBranchName(remote.String() + "/" + self.id)
 }
 
 // BranchName widens the type of this LocalBranchName to a more generic BranchName.
-func (lbn LocalBranchName) BranchName() BranchName {
-	return NewBranchName(lbn.id)
+func (self LocalBranchName) BranchName() BranchName {
+	return NewBranchName(self.id)
 }
 
 // IsEmpty indicates whether this branch name is not set.
-func (lbn LocalBranchName) IsEmpty() bool {
-	return lbn.id == ""
+func (self LocalBranchName) IsEmpty() bool {
+	return self.id == ""
 }
 
 // Location widens the type of this LocalBranchName to a more generic Location.
-func (lbn LocalBranchName) Location() Location {
-	return Location(lbn)
+func (self LocalBranchName) Location() Location {
+	return Location(self)
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
-func (lbn LocalBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(lbn.id)
+func (self LocalBranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(self.id)
 }
 
 // TrackingBranch provides the name of the tracking branch for this local branch.
-func (lbn LocalBranchName) TrackingBranch() RemoteBranchName {
-	return lbn.AtRemote(OriginRemote)
+func (self LocalBranchName) TrackingBranch() RemoteBranchName {
+	return self.AtRemote(OriginRemote)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (lbn LocalBranchName) String() string { return lbn.id }
+func (self LocalBranchName) String() string { return self.id }
 
 // UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
-func (lbn *LocalBranchName) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &lbn.id)
+func (self *LocalBranchName) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, &self.id)
 }
