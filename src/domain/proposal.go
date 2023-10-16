@@ -3,6 +3,9 @@ package domain
 // Proposal contains information about a change request on a code hosting platform.
 // Alternative names are "pull request" or "merge request".
 type Proposal struct {
+	// whether this proposal can be merged via the API
+	MergeWithAPI bool
+
 	// the number used to identify the proposal on the hosting platform
 	Number int
 
@@ -11,7 +14,4 @@ type Proposal struct {
 
 	// textual title of the proposal
 	Title string
-
-	// whether this proposal can be merged via the API
-	MergeWithAPI bool
 }
