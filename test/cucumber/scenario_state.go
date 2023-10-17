@@ -60,23 +60,6 @@ type ScenarioState struct {
 	uncommittedFileName string
 }
 
-// Reset restores the null value of this ScenarioState.
-func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	self.fixture = gitEnv
-	self.initialLocalBranches = domain.NewLocalBranchNames("main")
-	self.initialRemoteBranches = domain.NewLocalBranchNames("main")
-	self.initialDevSHAs = map[string]domain.SHA{}
-	self.initialOriginSHAs = map[string]domain.SHA{}
-	self.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
-	self.initialCurrentBranch = domain.EmptyLocalBranchName()
-	self.insideGitRepo = true
-	self.runOutput = ""
-	self.runExitCode = 0
-	self.runExitCodeChecked = false
-	self.uncommittedFileName = ""
-	self.uncommittedContent = ""
-}
-
 // InitialBranches provides the branches in this Scenario before the WHEN steps ran.
 func (self *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
@@ -96,6 +79,23 @@ func (self *ScenarioState) InitialBranches() datatable.DataTable {
 		}
 	}
 	return result
+}
+
+// Reset restores the null value of this ScenarioState.
+func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
+	self.fixture = gitEnv
+	self.initialLocalBranches = domain.NewLocalBranchNames("main")
+	self.initialRemoteBranches = domain.NewLocalBranchNames("main")
+	self.initialDevSHAs = map[string]domain.SHA{}
+	self.initialOriginSHAs = map[string]domain.SHA{}
+	self.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	self.initialCurrentBranch = domain.EmptyLocalBranchName()
+	self.insideGitRepo = true
+	self.runOutput = ""
+	self.runExitCode = 0
+	self.runExitCodeChecked = false
+	self.uncommittedFileName = ""
+	self.uncommittedContent = ""
 }
 
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState

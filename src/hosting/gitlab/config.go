@@ -16,14 +16,6 @@ func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Config) projectPath() string {
-	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
-}
-
-func (self *Config) baseURL() string {
-	return fmt.Sprintf("https://%s", self.Hostname)
-}
-
 func (self *Config) HostingServiceName() string {
 	return "GitLab"
 }
@@ -37,4 +29,12 @@ func (self *Config) NewProposalURL(branch, parentBranch domain.LocalBranchName) 
 
 func (self *Config) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", self.baseURL(), self.projectPath())
+}
+
+func (self *Config) baseURL() string {
+	return fmt.Sprintf("https://%s", self.Hostname)
+}
+
+func (self *Config) projectPath() string {
+	return fmt.Sprintf("%s/%s", self.Organization, self.Repository)
 }

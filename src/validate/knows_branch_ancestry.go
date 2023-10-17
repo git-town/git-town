@@ -7,37 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 )
 
-// KnowsBranchesAncestors asserts that the entire lineage for all given branches
-// is known to Git Town.
-// Prompts missing lineage information from the user.
-// Indicates if the user made any changes to the ancestry.
-func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
-	updated := false
-	for _, branch := range args.AllBranches {
-		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			DefaultBranch: args.MainBranch,
-			Backend:       args.Backend,
-			AllBranches:   args.AllBranches,
-			BranchTypes:   args.BranchTypes,
-			MainBranch:    args.MainBranch,
-		})
-		if err != nil {
-			return updated, err
-		}
-		if branchUpdated {
-			updated = true
-		}
-	}
-	return updated, nil
-}
-
-type KnowsBranchesAncestorsArgs struct {
-	AllBranches domain.BranchInfos
-	Backend     *git.BackendCommands
-	BranchTypes domain.BranchTypes
-	MainBranch  domain.LocalBranchName
-}
-
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
@@ -87,6 +56,37 @@ type KnowsBranchAncestorsArgs struct {
 	BranchTypes   domain.BranchTypes
 	DefaultBranch domain.LocalBranchName
 	MainBranch    domain.LocalBranchName
+}
+
+// KnowsBranchesAncestors asserts that the entire lineage for all given branches
+// is known to Git Town.
+// Prompts missing lineage information from the user.
+// Indicates if the user made any changes to the ancestry.
+func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
+	updated := false
+	for _, branch := range args.AllBranches {
+		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
+			DefaultBranch: args.MainBranch,
+			Backend:       args.Backend,
+			AllBranches:   args.AllBranches,
+			BranchTypes:   args.BranchTypes,
+			MainBranch:    args.MainBranch,
+		})
+		if err != nil {
+			return updated, err
+		}
+		if branchUpdated {
+			updated = true
+		}
+	}
+	return updated, nil
+}
+
+type KnowsBranchesAncestorsArgs struct {
+	AllBranches domain.BranchInfos
+	Backend     *git.BackendCommands
+	BranchTypes domain.BranchTypes
+	MainBranch  domain.LocalBranchName
 }
 
 func printParentBranchHeader(mainBranch domain.LocalBranchName) {

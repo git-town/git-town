@@ -21,13 +21,6 @@ type GitTown struct {
 	originURLCache OriginURLCache
 }
 
-func NewGitTown(gitConfig GitConfig, runner runner) *GitTown {
-	return &GitTown{
-		Git:            NewGit(gitConfig, runner),
-		originURLCache: OriginURLCache{},
-	}
-}
-
 type OriginURLCache map[string]*giturl.Parts
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -57,6 +50,26 @@ func (self *GitTown) DeprecatedPushVerifyFlagGlobal() string {
 
 func (self *GitTown) DeprecatedPushVerifyFlagLocal() string {
 	return self.config.Local[KeyDeprecatedPushVerify]
+}
+
+func DetermineOriginURL(originURL, originOverride string, originURLCache OriginURLCache) *giturl.Parts {
+	cached, has := originURLCache[originURL]
+	if has {
+		return cached
+	}
+	url := giturl.Parse(originURL)
+	if originOverride != "" {
+		url.Host = originOverride
+	}
+	originURLCache[originURL] = url
+	return url
+}
+
+func NewGitTown(gitConfig GitConfig, runner runner) *GitTown {
+	return &GitTown{
+		Git:            NewGit(gitConfig, runner),
+		originURLCache: OriginURLCache{},
+	}
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -89,15 +102,15 @@ func (self *GitTown) HasBranchInformation() bool {
 	return false
 }
 
-// HostingServiceName provides the name of the code hosting connector to use.
-func (self *GitTown) HostingServiceName() string {
-	return self.LocalOrGlobalConfigValue(KeyCodeHostingDriver)
-}
-
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *GitTown) HostingService() (Hosting, error) {
 	return NewHosting(self.HostingServiceName())
+}
+
+// HostingServiceName provides the name of the code hosting connector to use.
+func (self *GitTown) HostingServiceName() string {
+	return self.LocalOrGlobalConfigValue(KeyCodeHostingDriver)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -144,17 +157,6 @@ func (self *GitTown) OriginOverride() string {
 	return self.LocalConfigValue(KeyCodeHostingOriginHostname)
 }
 
-// OriginURLString provides the URL for the "origin" remote.
-// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
-func (self *GitTown) OriginURLString() string {
-	remote := os.Getenv("GIT_TOWN_REMOTE")
-	if remote != "" {
-		return remote
-	}
-	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
-	return strings.TrimSpace(output)
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -166,17 +168,15 @@ func (self *GitTown) OriginURL() *giturl.Parts {
 	return DetermineOriginURL(text, self.OriginOverride(), self.originURLCache)
 }
 
-func DetermineOriginURL(originURL, originOverride string, originURLCache OriginURLCache) *giturl.Parts {
-	cached, has := originURLCache[originURL]
-	if has {
-		return cached
+// OriginURLString provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+func (self *GitTown) OriginURLString() string {
+	remote := os.Getenv("GIT_TOWN_REMOTE")
+	if remote != "" {
+		return remote
 	}
-	url := giturl.Parse(originURL)
-	if originOverride != "" {
-		url.Host = originOverride
-	}
-	originURLCache[originURL] = url
-	return url
+	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
+	return strings.TrimSpace(output)
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
@@ -331,15 +331,15 @@ func (self *GitTown) SetPullBranchStrategy(strategy PullBranchStrategy) error {
 	return err
 }
 
-// SetPushHookLocally updates the configured pull branch strategy.
-func (self *GitTown) SetPushHookLocally(value bool) error {
-	err := self.SetLocalConfigValue(KeyPushHook, strconv.FormatBool(value))
-	return err
-}
-
 // SetPushHook updates the configured pull branch strategy.
 func (self *GitTown) SetPushHookGlobally(value bool) error {
 	err := self.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
+	return err
+}
+
+// SetPushHookLocally updates the configured pull branch strategy.
+func (self *GitTown) SetPushHookLocally(value bool) error {
+	err := self.SetLocalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
@@ -435,14 +435,6 @@ func (self *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
 	return ToSyncStrategy(setting)
 }
 
-func (self *GitTown) updateDeprecatedSetting(deprecatedKey, newKey Key) error {
-	err := self.updateDeprecatedLocalSetting(deprecatedKey, newKey)
-	if err != nil {
-		return err
-	}
-	return self.updateDeprecatedGlobalSetting(deprecatedKey, newKey)
-}
-
 func (self *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) error {
 	deprecatedSetting := self.GlobalConfigValue(deprecatedKey)
 	if deprecatedSetting != "" {
@@ -471,4 +463,12 @@ func (self *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey Key) err
 		return err
 	}
 	return nil
+}
+
+func (self *GitTown) updateDeprecatedSetting(deprecatedKey, newKey Key) error {
+	err := self.updateDeprecatedLocalSetting(deprecatedKey, newKey)
+	if err != nil {
+		return err
+	}
+	return self.updateDeprecatedGlobalSetting(deprecatedKey, newKey)
 }

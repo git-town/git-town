@@ -75,6 +75,38 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
+func NewAliasKey(aliasType Alias) Key {
+	switch aliasType {
+	case AliasAppend:
+		return KeyAliasAppend
+	case AliasDiffParent:
+		return KeyAliasDiffParent
+	case AliasHack:
+		return KeyAliasHack
+	case AliasKill:
+		return KeyAliasKill
+	case AliasNewPullRequest:
+		return KeyAliasNewPullRequest
+	case AliasPrepend:
+		return KeyAliasPrepend
+	case AliasRenameBranch:
+		return KeyAliasRenameBranch
+	case AliasRepo:
+		return KeyAliasRepo
+	case AliasShip:
+		return KeyAliasShip
+	case AliasSync:
+		return KeyAliasSync
+	}
+	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
+}
+
+func NewParentKey(branch domain.LocalBranchName) Key {
+	return Key{
+		Name: fmt.Sprintf("git-town-branch.%s.parent", branch),
+	}
+}
+
 func ParseKey(name string) *Key {
 	for _, configKey := range keys {
 		if configKey.Name == name {
@@ -107,37 +139,5 @@ func parseLineageKey(key string) *Key {
 	}
 	return &Key{
 		Name: key,
-	}
-}
-
-func NewAliasKey(aliasType Alias) Key {
-	switch aliasType {
-	case AliasAppend:
-		return KeyAliasAppend
-	case AliasDiffParent:
-		return KeyAliasDiffParent
-	case AliasHack:
-		return KeyAliasHack
-	case AliasKill:
-		return KeyAliasKill
-	case AliasNewPullRequest:
-		return KeyAliasNewPullRequest
-	case AliasPrepend:
-		return KeyAliasPrepend
-	case AliasRenameBranch:
-		return KeyAliasRenameBranch
-	case AliasRepo:
-		return KeyAliasRepo
-	case AliasShip:
-		return KeyAliasShip
-	case AliasSync:
-		return KeyAliasSync
-	}
-	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
-}
-
-func NewParentKey(branch domain.LocalBranchName) Key {
-	return Key{
-		Name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}
 }

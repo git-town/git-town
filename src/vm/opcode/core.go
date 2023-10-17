@@ -15,12 +15,12 @@ func (self *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (self *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{}
-}
-
 func (self *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
 	return errors.New("")
+}
+
+func (self *undeclaredOpcodeMethods) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{}
 }
 
 func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {

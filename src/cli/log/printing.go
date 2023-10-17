@@ -10,6 +10,13 @@ import (
 // TODO: move this to the print package?
 type Printing struct{}
 
+func (self Printing) Failed(failure error) {
+	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
+	if err != nil {
+		fmt.Printf("FAILED: %v\n", err)
+	}
+}
+
 func (self Printing) Start(template string, messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Printf(template, messages...)
@@ -22,12 +29,5 @@ func (self Printing) Success() {
 	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
 	if err != nil {
 		fmt.Println("ok")
-	}
-}
-
-func (self Printing) Failed(failure error) {
-	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
-	if err != nil {
-		fmt.Printf("FAILED: %v\n", err)
 	}
 }

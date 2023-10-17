@@ -1,4 +1,5 @@
 # dev tooling and versions
+ALPHAVET_VERSION = 0.1.0
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.4.0
 GOLANGCILINT_VERSION = 1.54.2
@@ -33,7 +34,7 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
@@ -45,6 +46,7 @@ fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
+	go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v9/tools/)
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -88,6 +90,7 @@ test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VER
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
+	@go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v9/tools/) &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items
@@ -113,6 +116,11 @@ update:  # updates all dependencies
 	echo Please update the third-party tooling in the Makefile manually.
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+tools/alphavet_${ALPHAVET_VERSION}:
+	@echo "Installing alphavet ${ALPHAVET_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install github.com/skx/alphavet/cmd/alphavet@latest
+	@mv tools/alphavet tools/alphavet_${ALPHAVET_VERSION}
 
 tools/depth_${DEPTH_VERSION}:
 	@echo "Installing depth ${DEPTH_VERSION} ..."

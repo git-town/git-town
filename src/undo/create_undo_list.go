@@ -38,19 +38,6 @@ type CreateUndoProgramArgs struct {
 	UndoablePerennialCommits []domain.SHA
 }
 
-func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return program.Program{}, errors.New(messages.DirCurrentProblem)
-	}
-	finalConfigSnapshot := ConfigSnapshot{
-		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(backend),
-	}
-	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
-	return configDiff.UndoProgram(), nil
-}
-
 func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
@@ -66,6 +53,19 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 		UndoablePerennialCommits: undoablePerennialCommits,
 		NoPushHook:               noPushHook,
 	}), nil
+}
+
+func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return program.Program{}, errors.New(messages.DirCurrentProblem)
+	}
+	finalConfigSnapshot := ConfigSnapshot{
+		Cwd:       currentDirectory,
+		GitConfig: config.LoadGitConfig(backend),
+	}
+	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
+	return configDiff.UndoProgram(), nil
 }
 
 func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (program.Program, error) {

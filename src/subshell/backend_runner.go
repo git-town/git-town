@@ -38,6 +38,19 @@ func (self BackendRunner) Run(executable string, args ...string) error {
 	return err
 }
 
+// RunMany runs all given commands in current directory.
+// Commands are provided as a list of argv-style strings.
+// Failed commands abort immediately with the encountered error.
+func (self BackendRunner) RunMany(commands [][]string) error {
+	for _, argv := range commands {
+		err := self.Run(argv[0], argv[1:]...)
+		if err != nil {
+			return fmt.Errorf(messages.RunCommandProblem, argv, err)
+		}
+	}
+	return nil
+}
+
 func (self BackendRunner) execute(executable string, args ...string) ([]byte, error) {
 	self.CommandsCounter.Register()
 	if self.Verbose {
@@ -56,19 +69,6 @@ func (self BackendRunner) execute(executable string, args ...string) ([]byte, er
 		os.Stdout.Write(outputBytes)
 	}
 	return outputBytes, err
-}
-
-// RunMany runs all given commands in current directory.
-// Commands are provided as a list of argv-style strings.
-// Failed commands abort immediately with the encountered error.
-func (self BackendRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		err := self.Run(argv[0], argv[1:]...)
-		if err != nil {
-			return fmt.Errorf(messages.RunCommandProblem, argv, err)
-		}
-	}
-	return nil
 }
 
 func ErrorDetails(executable string, args []string, err error, output []byte) error {

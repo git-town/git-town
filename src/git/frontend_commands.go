@@ -50,14 +50,16 @@ func (self *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error 
 	return nil
 }
 
-// CreateRemoteBranch creates a remote branch from the given local SHA.
-func (self *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
+// Commit performs a commit of the staged changes with an optional custom message and author.
+func (self *FrontendCommands) Commit(message, author string) error {
+	gitArgs := []string{"commit"}
+	if message != "" {
+		gitArgs = append(gitArgs, "-m", message)
 	}
-	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
-	return self.Run("git", args...)
+	if author != "" {
+		gitArgs = append(gitArgs, "--author", author)
+	}
+	return self.Run("git", gitArgs...)
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
@@ -73,18 +75,6 @@ func (self *FrontendCommands) CommitStagedChanges(message string) error {
 	return self.Run("git", "commit", "--no-edit")
 }
 
-// Commit performs a commit of the staged changes with an optional custom message and author.
-func (self *FrontendCommands) Commit(message, author string) error {
-	gitArgs := []string{"commit"}
-	if message != "" {
-		gitArgs = append(gitArgs, "-m", message)
-	}
-	if author != "" {
-		gitArgs = append(gitArgs, "--author", author)
-	}
-	return self.Run("git", gitArgs...)
-}
-
 // ContinueRebase continues the currently ongoing rebase.
 func (self *FrontendCommands) ContinueRebase() error {
 	return self.Run("git", "rebase", "--continue")
@@ -97,9 +87,14 @@ func (self *FrontendCommands) CreateBranch(name domain.LocalBranchName, parent d
 	return self.Run("git", "branch", name.String(), parent.String())
 }
 
-// DeleteLastCommit resets HEAD to the previous commit.
-func (self *FrontendCommands) DeleteLastCommit() error {
-	return self.Run("git", "reset", "--hard", "HEAD~1")
+// CreateRemoteBranch creates a remote branch from the given local SHA.
+func (self *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, domain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
+	return self.Run("git", args...)
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -111,6 +106,11 @@ func (self *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName
 	args = append(args, "-u", remote.String())
 	args = append(args, branch.String())
 	return self.Run("git", args...)
+}
+
+// DeleteLastCommit resets HEAD to the previous commit.
+func (self *FrontendCommands) DeleteLastCommit() error {
+	return self.Run("git", "reset", "--hard", "HEAD~1")
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
@@ -148,6 +148,15 @@ func (self *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error
 	return self.Run("git", "fetch", domain.UpstreamRemote.String(), branch.String())
 }
 
+// PushBranch pushes the branch with the given name to origin.
+func (self *FrontendCommands) ForcePushBranch(noPushHook bool) error {
+	args := []string{"push", "--force-with-lease"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return self.Run("git", args...)
+}
+
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
 func (self *FrontendCommands) MergeBranchNoEdit(branch domain.BranchName) error {
@@ -173,15 +182,6 @@ func (self *FrontendCommands) Pull() error {
 // PushCurrentBranch pushes the current branch to its tracking branch.
 func (self *FrontendCommands) PushCurrentBranch(noPushHook bool) error {
 	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	return self.Run("git", args...)
-}
-
-// PushBranch pushes the branch with the given name to origin.
-func (self *FrontendCommands) ForcePushBranch(noPushHook bool) error {
-	args := []string{"push", "--force-with-lease"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
@@ -228,14 +228,6 @@ func (self *FrontendCommands) SquashMerge(branch domain.LocalBranchName) error {
 	return self.Run("git", "merge", "--squash", branch.String())
 }
 
-// Stash adds the current files to the Git stash.
-func (self *FrontendCommands) Stash() error {
-	return self.RunMany([][]string{
-		{"git", "add", "-A"},
-		{"git", "stash"},
-	})
-}
-
 // StageFiles adds the file with the given name to the Git index.
 func (self *FrontendCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
@@ -245,6 +237,14 @@ func (self *FrontendCommands) StageFiles(names ...string) error {
 // StartCommit starts a commit and stops at asking the user for the commit message.
 func (self *FrontendCommands) StartCommit() error {
 	return self.Run("git", "commit")
+}
+
+// Stash adds the current files to the Git stash.
+func (self *FrontendCommands) Stash() error {
+	return self.RunMany([][]string{
+		{"git", "add", "-A"},
+		{"git", "stash"},
+	})
 }
 
 func (self *FrontendCommands) UndoLastCommit() error {

@@ -99,6 +99,14 @@ func NewStandardFixture(dir string) Fixture {
 	return gitEnv
 }
 
+// AddCoworkerRepo adds a coworker repository.
+func (self *Fixture) AddCoworkerRepo() {
+	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
+	self.CoworkerRepo = &coworkerRepo
+	self.initializeWorkspace(self.CoworkerRepo)
+	self.CoworkerRepo.Debug = self.DevRepo.Debug
+}
+
 // AddSubmodule adds a submodule repository.
 func (self *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
@@ -118,19 +126,6 @@ func (self *Fixture) AddUpstream() {
 	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, domain.UpstreamRemote.String()))
 	self.UpstreamRepo = &repo
 	self.DevRepo.AddRemote(domain.UpstreamRemote, self.UpstreamRepo.WorkingDir)
-}
-
-// AddCoworkerRepo adds a coworker repository.
-func (self *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
-	self.CoworkerRepo = &coworkerRepo
-	self.initializeWorkspace(self.CoworkerRepo)
-	self.CoworkerRepo.Debug = self.DevRepo.Debug
-}
-
-// binPath provides the full path of the folder containing the test tools for this Fixture.
-func (self *Fixture) binPath() string {
-	return filepath.Join(self.Dir, "bin")
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
@@ -158,6 +153,26 @@ func (self *Fixture) Branches() datatable.DataTable {
 		result.AddRow("origin", originBranchesJoined)
 	}
 	return result
+}
+
+// CommitTable provides a table for all commits in this Git environment containing only the given fields.
+func (self Fixture) CommitTable(fields []string) datatable.DataTable {
+	builder := datatable.NewCommitTableBuilder()
+	localCommits := self.DevRepo.Commits(fields, domain.NewLocalBranchName("main"))
+	builder.AddMany(localCommits, "local")
+	if self.CoworkerRepo != nil {
+		coworkerCommits := self.CoworkerRepo.Commits(fields, domain.NewLocalBranchName("main"))
+		builder.AddMany(coworkerCommits, "coworker")
+	}
+	if self.OriginRepo != nil {
+		originCommits := self.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
+		builder.AddMany(originCommits, domain.OriginRemote.String())
+	}
+	if self.UpstreamRepo != nil {
+		upstreamCommits := self.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
+		builder.AddMany(upstreamCommits, "upstream")
+	}
+	return builder.Table(fields)
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
@@ -212,24 +227,9 @@ func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	}
 }
 
-// CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (self Fixture) CommitTable(fields []string) datatable.DataTable {
-	builder := datatable.NewCommitTableBuilder()
-	localCommits := self.DevRepo.Commits(fields, domain.NewLocalBranchName("main"))
-	builder.AddMany(localCommits, "local")
-	if self.CoworkerRepo != nil {
-		coworkerCommits := self.CoworkerRepo.Commits(fields, domain.NewLocalBranchName("main"))
-		builder.AddMany(coworkerCommits, "coworker")
-	}
-	if self.OriginRepo != nil {
-		originCommits := self.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
-		builder.AddMany(originCommits, domain.OriginRemote.String())
-	}
-	if self.UpstreamRepo != nil {
-		upstreamCommits := self.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
-		builder.AddMany(upstreamCommits, "upstream")
-	}
-	return builder.Table(fields)
+// Remove deletes all files used by this Fixture from disk.
+func (self Fixture) Remove() {
+	asserts.NoError(os.RemoveAll(self.Dir))
 }
 
 // TagTable provides a table for all tags in this Git environment.
@@ -244,15 +244,9 @@ func (self Fixture) TagTable() datatable.DataTable {
 	return builder.Table()
 }
 
-func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
-	asserts.NoError(repo.Config.SetMainBranch(domain.NewLocalBranchName("main")))
-	asserts.NoError(repo.Config.SetPerennialBranches(domain.LocalBranchNames{}))
-	repo.MustRunMany([][]string{
-		{"git", "checkout", "main"},
-		// NOTE: the developer repos receives the initial branch from origin
-		//       but we don't want it here because it isn't used in tests.
-		{"git", "branch", "-d", "initial"},
-	})
+// binPath provides the full path of the folder containing the test tools for this Fixture.
+func (self *Fixture) binPath() string {
+	return filepath.Join(self.Dir, "bin")
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
@@ -265,6 +259,17 @@ func (self Fixture) developerRepoPath() string {
 	return filepath.Join(self.Dir, "developer")
 }
 
+func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
+	asserts.NoError(repo.Config.SetMainBranch(domain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetPerennialBranches(domain.LocalBranchNames{}))
+	repo.MustRunMany([][]string{
+		{"git", "checkout", "main"},
+		// NOTE: the developer repos receives the initial branch from origin
+		//       but we don't want it here because it isn't used in tests.
+		{"git", "branch", "-d", "initial"},
+	})
+}
+
 // originRepoPath provides the full path to the Git repository with the given name.
 func (self Fixture) originRepoPath() string {
 	return filepath.Join(self.Dir, domain.OriginRemote.String())
@@ -273,9 +278,4 @@ func (self Fixture) originRepoPath() string {
 // submoduleRepoPath provides the full path to the Git repository with the given name.
 func (self Fixture) submoduleRepoPath() string {
 	return filepath.Join(self.Dir, "submodule")
-}
-
-// Remove deletes all files used by this Fixture from disk.
-func (self Fixture) Remove() {
-	asserts.NoError(os.RemoveAll(self.Dir))
 }

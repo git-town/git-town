@@ -1,6 +1,7 @@
 dist/
 git-town_*
 node_modules/
+tools/alphavet*
 tools/depth*
 tools/gofumpt*
 tools/golangci_lint*

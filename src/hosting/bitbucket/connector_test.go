@@ -11,11 +11,6 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-// emptySHAForBranch is a dummy implementation for hosting.SHAForBranchfunc to be used in tests.
-func emptySHAForBranch(domain.BranchName) (domain.SHA, error) {
-	return domain.EmptySHA(), nil
-}
-
 func TestNewBitbucketConnector(t *testing.T) {
 	t.Parallel()
 
@@ -75,4 +70,9 @@ func TestNewBitbucketConnector(t *testing.T) {
 		must.Nil(t, have)
 		must.NoError(t, err)
 	})
+}
+
+// emptySHAForBranch is a dummy implementation for hosting.SHAForBranchfunc to be used in tests.
+func emptySHAForBranch(domain.BranchName) (domain.SHA, error) {
+	return domain.EmptySHA(), nil
 }

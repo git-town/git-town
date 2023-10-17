@@ -8,6 +8,10 @@ type BranchSpan struct {
 	After  domain.BranchInfo // the status of the branch after Git Town ran
 }
 
+func (self BranchSpan) IsInconsistentChange() bool {
+	return self.Before.HasAllBranches() && self.After.HasAllBranches() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
+}
+
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
 // from one SHA both locally and remotely to another SHA both locally and remotely.
 func (self BranchSpan) IsOmniChange() bool {
@@ -16,10 +20,6 @@ func (self BranchSpan) IsOmniChange() bool {
 
 func (self BranchSpan) IsOmniRemove() bool {
 	return self.Before.IsOmniBranch() && self.After.IsEmpty()
-}
-
-func (self BranchSpan) IsInconsistentChange() bool {
-	return self.Before.HasAllBranches() && self.After.HasAllBranches() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
 }
 
 func (self BranchSpan) LocalAdded() bool {

@@ -66,25 +66,6 @@ func (self *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
 	}
 }
 
-// branches provides the names of the all branches known to this CommitTableBuilder,
-// sorted alphabetically, with the main branch first.
-func (self *CommitTableBuilder) branches() domain.LocalBranchNames {
-	result := make(domain.LocalBranchNames, 0, len(self.commitsInBranch))
-	hasMain := false
-	for branch := range self.commitsInBranch {
-		if branch == domain.NewLocalBranchName("main") {
-			hasMain = true
-		} else {
-			result = append(result, branch)
-		}
-	}
-	result.Sort()
-	if hasMain {
-		return append(domain.NewLocalBranchNames("main"), result...)
-	}
-	return result
-}
-
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
 func (self *CommitTableBuilder) Table(fields []string) DataTable {
 	result := DataTable{}
@@ -127,6 +108,25 @@ func (self *CommitTableBuilder) Table(fields []string) DataTable {
 			result.AddRow(row...)
 			lastBranch = branch
 		}
+	}
+	return result
+}
+
+// branches provides the names of the all branches known to this CommitTableBuilder,
+// sorted alphabetically, with the main branch first.
+func (self *CommitTableBuilder) branches() domain.LocalBranchNames {
+	result := make(domain.LocalBranchNames, 0, len(self.commitsInBranch))
+	hasMain := false
+	for branch := range self.commitsInBranch {
+		if branch == domain.NewLocalBranchName("main") {
+			hasMain = true
+		} else {
+			result = append(result, branch)
+		}
+	}
+	result.Sort()
+	if hasMain {
+		return append(domain.NewLocalBranchNames("main"), result...)
 	}
 	return result
 }

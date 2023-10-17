@@ -46,24 +46,6 @@ type TestRunner struct {
 	WorkingDir string
 }
 
-// createBinDir creates the directory that contains mock executables.
-// This method is idempotent.
-func (self *TestRunner) createBinDir() {
-	if self.usesBinDir {
-		// binDir already created --> nothing to do here
-		return
-	}
-	asserts.NoError(os.Mkdir(self.BinDir, 0o700))
-	self.usesBinDir = true
-}
-
-// createMockBinary creates an executable with the given name and content in ms.binDir.
-func (self *TestRunner) createMockBinary(name string, content string) {
-	self.createBinDir()
-	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(filepath.Join(self.BinDir, name), []byte(content), 0o744))
-}
-
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (self *TestRunner) MockBrokenCommand(name string) {
 	// write custom "which" command
@@ -164,13 +146,6 @@ func (self *TestRunner) Query(name string, arguments ...string) (string, error) 
 	return self.QueryWith(&Options{}, name, arguments...)
 }
 
-// Query provides the output of the given command.
-// Overrides will be used and removed when done.
-func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := self.QueryWith(&Options{}, name, arguments...)
-	return strings.TrimSpace(output), err
-}
-
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
 func (self *TestRunner) QueryString(fullCmd string) (string, error) {
@@ -185,6 +160,13 @@ func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, 
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
 	return self.QueryWith(opts, cmd, args...)
+}
+
+// Query provides the output of the given command.
+// Overrides will be used and removed when done.
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
+	output, err := self.QueryWith(&Options{}, name, arguments...)
+	return strings.TrimSpace(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
@@ -298,6 +280,24 @@ func (self *TestRunner) RunMany(commands [][]string) error {
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
 func (self *TestRunner) SetTestOrigin(content string) {
 	self.testOrigin = content
+}
+
+// createBinDir creates the directory that contains mock executables.
+// This method is idempotent.
+func (self *TestRunner) createBinDir() {
+	if self.usesBinDir {
+		// binDir already created --> nothing to do here
+		return
+	}
+	asserts.NoError(os.Mkdir(self.BinDir, 0o700))
+	self.usesBinDir = true
+}
+
+// createMockBinary creates an executable with the given name and content in ms.binDir.
+func (self *TestRunner) createMockBinary(name string, content string) {
+	self.createBinDir()
+	//nolint:gosec // intentionally creating an executable here
+	asserts.NoError(os.WriteFile(filepath.Join(self.BinDir, name), []byte(content), 0o744))
 }
 
 // Options defines optional arguments for ShellRunner.RunWith().
