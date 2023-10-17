@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 )
 
-// BranchLineage provides a CLI printable formatting of the given branch lineage.
+// BranchLineage provides printable formatting of the given branch lineage.
 func BranchLineage(lineage config.Lineage) string {
 	roots := lineage.Roots()
 	trees := make([]string, len(roots))
