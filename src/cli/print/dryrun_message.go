@@ -4,19 +4,13 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // DryRunMessage prints the dry-run message.
 func DryRunMessage() {
-	_, err := color.New(color.FgBlue).Print(dryRunMessage)
+	_, err := color.New(color.FgBlue).Print(messages.DryRun)
 	if err != nil {
-		fmt.Print(dryRunMessage)
+		fmt.Print(messages.DryRun)
 	}
 }
-
-const dryRunMessage = `
-In dry run mode. No commands will be run. When run in normal mode, the command
-output will appear beneath the command. Some commands will only be run if
-necessary. For example: 'git push' will run if and only if there are local
-commits not on origin.
-`
