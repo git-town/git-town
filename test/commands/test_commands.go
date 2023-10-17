@@ -65,6 +65,52 @@ func (self *TestCommands) CommitSHAs() map[string]domain.SHA {
 	return result
 }
 
+// CommitStagedChanges commits the currently staged changes.
+func (self *TestCommands) CommitStagedChanges(message string) {
+	self.MustRun("git", "commit", "-m", message)
+}
+
+// Commits provides a list of the commits in this Git repository with the given fields.
+func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
+	branches, err := self.LocalBranchesMainFirst(mainBranch)
+	asserts.NoError(err)
+	result := []git.Commit{}
+	for _, branch := range branches {
+		commits := self.CommitsInBranch(branch, fields)
+		result = append(result, commits...)
+	}
+	return result
+}
+
+// CommitsInBranch provides all commits in the given Git branch.
+func (self *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
+	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+	result := []git.Commit{}
+	for _, line := range strings.Split(output, "\n") {
+		parts := strings.Split(line, "|")
+		commit := git.Commit{Branch: branch, SHA: domain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
+		if strings.EqualFold(commit.Message, "initial commit") {
+			continue
+		}
+		if slice.Contains(fields, "FILE NAME") {
+			filenames := self.FilesInCommit(commit.SHA)
+			commit.FileName = strings.Join(filenames, ", ")
+		}
+		if slice.Contains(fields, "FILE CONTENT") {
+			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
+			commit.FileContent = filecontent
+		}
+		result = append(result, commit)
+	}
+	return result
+}
+
+// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
+// The branch must exist.
+func (self *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
+	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
+}
+
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
@@ -124,52 +170,6 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-// Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
-	branches, err := self.LocalBranchesMainFirst(mainBranch)
-	asserts.NoError(err)
-	result := []git.Commit{}
-	for _, branch := range branches {
-		commits := self.CommitsInBranch(branch, fields)
-		result = append(result, commits...)
-	}
-	return result
-}
-
-// CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
-	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
-	result := []git.Commit{}
-	for _, line := range strings.Split(output, "\n") {
-		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: domain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") {
-			continue
-		}
-		if slice.Contains(fields, "FILE NAME") {
-			filenames := self.FilesInCommit(commit.SHA)
-			commit.FileName = strings.Join(filenames, ", ")
-		}
-		if slice.Contains(fields, "FILE CONTENT") {
-			filecontent := self.FileContentInCommit(commit.SHA.Location(), commit.FileName)
-			commit.FileContent = filecontent
-		}
-		result = append(result, commit)
-	}
-	return result
-}
-
-// CommitStagedChanges commits the currently staged changes.
-func (self *TestCommands) CommitStagedChanges(message string) {
-	self.MustRun("git", "commit", "-m", message)
-}
-
-// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
-// The branch must exist.
-func (self *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
-	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
-}
-
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (self *TestCommands) DeleteMainBranchConfiguration() {
 	self.MustRun("git", "config", "--unset", config.KeyMainBranch.String())
@@ -195,12 +195,6 @@ func (self *TestCommands) FileContentInCommit(location domain.Location, filename
 		return ""
 	}
 	return output
-}
-
-// FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (self *TestCommands) FilesInCommit(sha domain.SHA) []string {
-	output := self.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
-	return strings.Split(output, "\n")
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -236,6 +230,12 @@ func (self *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) dat
 		}
 	}
 	return result
+}
+
+// FilesInCommit provides the names of the files that the commit with the given SHA changes.
+func (self *TestCommands) FilesInCommit(sha domain.SHA) []string {
+	output := self.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
+	return strings.Split(output, "\n")
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.

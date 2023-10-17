@@ -20,6 +20,13 @@ type TestRuntime struct {
 	Backend git.BackendCommands
 }
 
+// Clone creates a clone of the repository managed by this test.Runner into the given directory.
+// The cloned repo uses the same homeDir and binDir as its origin.
+func Clone(original *testshell.TestRunner, targetDir string) TestRuntime {
+	original.MustRun("git", "clone", original.WorkingDir, targetDir)
+	return New(targetDir, original.HomeDir, original.BinDir)
+}
+
 // Create creates test.Runner instances.
 func Create(t *testing.T) TestRuntime {
 	t.Helper()
@@ -34,6 +41,19 @@ func Create(t *testing.T) TestRuntime {
 	err = runtime.Run("git", "commit", "--allow-empty", "-m", "Initial commit")
 	must.NoError(t, err)
 	return runtime
+}
+
+// CreateGitTown creates a test.Runtime for use in tests,
+// with a main branch and initial git town configuration.
+func CreateGitTown(t *testing.T) TestRuntime {
+	t.Helper()
+	repo := Create(t)
+	repo.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
+	err := repo.Config.SetMainBranch(domain.NewLocalBranchName("main"))
+	must.NoError(t, err)
+	err = repo.Config.SetPerennialBranches(domain.LocalBranchNames{})
+	must.NoError(t, err)
+	return repo
 }
 
 // initialize creates a fully functioning test.Runner in the given working directory,
@@ -75,24 +95,4 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		TestCommands: testCommands,
 		Backend:      backendCommands,
 	}
-}
-
-// CreateGitTown creates a test.Runtime for use in tests,
-// with a main branch and initial git town configuration.
-func CreateGitTown(t *testing.T) TestRuntime {
-	t.Helper()
-	repo := Create(t)
-	repo.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
-	err := repo.Config.SetMainBranch(domain.NewLocalBranchName("main"))
-	must.NoError(t, err)
-	err = repo.Config.SetPerennialBranches(domain.LocalBranchNames{})
-	must.NoError(t, err)
-	return repo
-}
-
-// Clone creates a clone of the repository managed by this test.Runner into the given directory.
-// The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original *testshell.TestRunner, targetDir string) TestRuntime {
-	original.MustRun("git", "clone", original.WorkingDir, targetDir)
-	return New(targetDir, original.HomeDir, original.BinDir)
 }

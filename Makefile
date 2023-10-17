@@ -35,7 +35,6 @@ docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
-	tools/run_alphavet ${ALPHAVET_VERSION}
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
@@ -47,6 +46,7 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/g
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
+	go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v9/tools/)
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

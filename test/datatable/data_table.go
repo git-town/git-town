@@ -40,19 +40,6 @@ func (self *DataTable) AddRow(elements ...string) {
 	self.Cells = append(self.Cells, elements)
 }
 
-// columns provides the self data organized into columns.
-func (self *DataTable) columns() [][]string {
-	result := [][]string{}
-	for column := range self.Cells[0] {
-		colData := []string{}
-		for row := range self.Cells {
-			colData = append(colData, self.Cells[row][column])
-		}
-		result = append(result, colData)
-	}
-	return result
-}
-
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
 func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
@@ -158,6 +145,19 @@ func (self *DataTable) String() string {
 			result += fmt.Sprintf(formatStrings[col], self.Cells[row][col])
 		}
 		result += "|\n"
+	}
+	return result
+}
+
+// columns provides the self data organized into columns.
+func (self *DataTable) columns() [][]string {
+	result := [][]string{}
+	for column := range self.Cells[0] {
+		colData := []string{}
+		for row := range self.Cells {
+			colData = append(colData, self.Cells[row][column])
+		}
+		result = append(result, colData)
 	}
 	return result
 }
