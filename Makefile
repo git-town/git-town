@@ -34,7 +34,7 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/alphavet_${ALPHAVET_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	tools/run_alphavet ${ALPHAVET_VERSION}
 	git diff --check
 	go run tools/format_unittests/format.go run
