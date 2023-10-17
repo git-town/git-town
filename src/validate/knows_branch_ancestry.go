@@ -1,7 +1,7 @@
 package validate
 
 import (
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
@@ -90,7 +90,7 @@ type KnowsBranchAncestorsArgs struct {
 }
 
 func printParentBranchHeader(mainBranch domain.LocalBranchName) {
-	cli.Printf(parentBranchHeaderTemplate, mainBranch)
+	io.Printf(parentBranchHeaderTemplate, mainBranch)
 }
 
 const parentBranchHeaderTemplate string = `

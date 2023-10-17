@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
@@ -14,7 +14,8 @@ func SelectSquashCommitAuthor(branch domain.LocalBranchName, authors []string) (
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
-	cli.Printf("Multiple people authored the %q branch.", branch)
+	// TODO: extract into en.go.
+	io.Printf("Multiple people authored the %q branch.", branch)
 	fmt.Println()
 	result := ""
 	prompt := &survey.Select{

@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/format"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -54,7 +55,7 @@ func displayOfflineStatus(run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(isOffline))
+	io.Println(format.Bool(isOffline))
 	return nil
 }
 

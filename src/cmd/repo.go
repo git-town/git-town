@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/browser"
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/log"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -59,7 +60,7 @@ func executeRepo(debug bool) error {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	cli.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), cli.NoFinalMessages)
+	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
@@ -92,7 +93,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintingLog{},
+		Log:             log.Printing{},
 	})
 	if err != nil {
 		return nil, err

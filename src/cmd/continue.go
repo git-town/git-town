@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/log"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -108,7 +108,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, debug bool) (*continu
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintingLog{},
+		Log:             log.Printing{},
 	})
 	return &continueConfig{
 		connector: connector,

@@ -1,4 +1,4 @@
-package cli
+package print
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"github.com/fatih/color"
 )
 
-// PrintDryRunMessage prints the dry-run message.
-func PrintDryRunMessage() {
+// DryRunMessage prints the dry-run message.
+func DryRunMessage() {
 	_, err := color.New(color.FgBlue).Print(dryRunMessage)
 	if err != nil {
 		fmt.Print(dryRunMessage)

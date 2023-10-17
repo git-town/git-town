@@ -1,4 +1,4 @@
-package cli
+package print
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-func PrintFooter(debug bool, commandsCount int, finalMessages []string) {
+func Footer(debug bool, commandsCount int, finalMessages []string) {
 	fmt.Println()
 	if debug {
 		fmt.Printf(messages.CommandsRun, commandsCount)

@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/format"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -109,26 +110,26 @@ type ConfigConfig struct {
 
 func printConfig(config ConfigConfig) {
 	fmt.Println()
-	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(config.branchTypes.MainBranch.String()))
-	cli.PrintEntry("perennial branches", cli.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
+	print.Header("Branches")
+	print.Entry("main branch", format.StringSetting(config.branchTypes.MainBranch.String()))
+	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
-	cli.PrintHeader("Configuration")
-	cli.PrintEntry("offline", cli.BoolSetting(config.isOffline))
-	cli.PrintEntry("pull branch strategy", config.pullBranchStrategy.String())
-	cli.PrintEntry("run pre-push hook", cli.BoolSetting(config.pushHook))
-	cli.PrintEntry("push new branches", cli.BoolSetting(config.pushNewBranches))
-	cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(config.deleteOrigin))
-	cli.PrintEntry("sync strategy", config.syncStrategy.String())
-	cli.PrintEntry("sync with upstream", cli.BoolSetting(config.shouldSyncUpstream))
+	print.Header("Configuration")
+	print.Entry("offline", format.Bool(config.isOffline))
+	print.Entry("pull branch strategy", config.pullBranchStrategy.String())
+	print.Entry("run pre-push hook", format.Bool(config.pushHook))
+	print.Entry("push new branches", format.Bool(config.pushNewBranches))
+	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
+	print.Entry("sync strategy", config.syncStrategy.String())
+	print.Entry("sync with upstream", format.Bool(config.shouldSyncUpstream))
 	fmt.Println()
-	cli.PrintHeader("Hosting")
-	cli.PrintEntry("hosting service override", cli.StringSetting(config.hosting.String()))
-	cli.PrintEntry("GitHub token", cli.StringSetting(config.githubToken))
-	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
-	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
+	print.Header("Hosting")
+	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
+	print.Entry("GitHub token", format.StringSetting(config.githubToken))
+	print.Entry("GitLab token", format.StringSetting(config.gitlabToken))
+	print.Entry("Gitea token", format.StringSetting(config.giteaToken))
 	fmt.Println()
 	if !config.branchTypes.MainBranch.IsEmpty() {
-		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(config.lineage))
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.lineage))
 	}
 }

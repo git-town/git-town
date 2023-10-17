@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/format"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -52,7 +53,7 @@ func executeConfigMainBranch(args []string, debug bool) error {
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	cli.Println(cli.StringSetting(run.Config.MainBranch().String()))
+	io.Println(format.StringSetting(run.Config.MainBranch().String()))
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
