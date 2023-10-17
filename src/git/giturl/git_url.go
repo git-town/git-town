@@ -1,5 +1,4 @@
 // Package giturl provides facilities to work with the special URL formats used in Git remotes.
-// TODO: rename this package to "git/url".
 package giturl
 
 import (
