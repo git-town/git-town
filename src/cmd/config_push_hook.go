@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/flags"
+	"github.com/git-town/git-town/v9/src/cli/format"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/spf13/cobra"
@@ -62,7 +63,7 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(setting))
+	io.Println(format.Bool(setting))
 	return nil
 }
 

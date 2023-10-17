@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/cli/dialog"
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/spf13/cobra"
 )
 

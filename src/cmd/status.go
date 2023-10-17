@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/flags"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -48,7 +48,7 @@ func executeStatus(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
-	cli.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), cli.NoFinalMessages)
+	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 

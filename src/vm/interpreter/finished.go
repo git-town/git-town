@@ -3,7 +3,7 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
@@ -36,6 +36,6 @@ func finished(args ExecuteArgs) error {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}
 	}
-	cli.PrintFooter(args.Debug, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Debug, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	return nil
 }

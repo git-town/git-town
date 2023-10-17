@@ -10,9 +10,9 @@ import (
 	"runtime/debug"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/dialog"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/cmd"
-	"github.com/git-town/git-town/v9/src/dialog"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	color.NoColor = false // Prevent color from auto disable
 	err := cmd.Execute()
 	if err != nil {
-		cli.PrintError(err)
+		print.Error(err)
 		os.Exit(1)
 	}
 }

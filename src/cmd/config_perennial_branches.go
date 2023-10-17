@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/cli/dialog"
+	"github.com/git-town/git-town/v9/src/cli/flags"
+	"github.com/git-town/git-town/v9/src/cli/format"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/spf13/cobra"
 )
 
@@ -55,7 +56,7 @@ func executeConfigPerennialBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
+	io.Println(format.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
 	return nil
 }
 

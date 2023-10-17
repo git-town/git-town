@@ -3,20 +3,20 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/shoenig/test/must"
 	"github.com/spf13/cobra"
 )
 
-func TestDebug(t *testing.T) {
+func TestBool(t *testing.T) {
 	t.Parallel()
 
 	t.Run("long version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.Debug()
+		addFlag, readFlag := flags.Bool("myflag", "m", "desc")
 		addFlag(&cmd)
-		err := cmd.ParseFlags([]string{"--debug"})
+		err := cmd.ParseFlags([]string{"--myflag"})
 		must.NoError(t, err)
 		must.EqOp(t, true, readFlag(&cmd))
 	})
@@ -24,9 +24,9 @@ func TestDebug(t *testing.T) {
 	t.Run("short version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.Debug()
+		addFlag, readFlag := flags.Bool("myflag", "m", "desc")
 		addFlag(&cmd)
-		err := cmd.ParseFlags([]string{"-d"})
+		err := cmd.ParseFlags([]string{"-m"})
 		must.NoError(t, err)
 		must.EqOp(t, true, readFlag(&cmd))
 	})

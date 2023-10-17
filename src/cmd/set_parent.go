@@ -3,9 +3,9 @@ package cmd
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/flags"
+	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
@@ -79,6 +79,6 @@ func executeSetParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	cli.PrintFooter(debug, repo.Runner.CommandsCounter.Count(), cli.NoFinalMessages)
+	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }

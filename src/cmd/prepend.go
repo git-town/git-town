@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"

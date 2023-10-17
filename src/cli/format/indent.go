@@ -1,4 +1,4 @@
-package cli
+package format
 
 import (
 	"regexp"
