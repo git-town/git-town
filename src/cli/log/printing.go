@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// Printing logs activities of a particular component on the CLI.
+// The Printing logger logs activities of a particular component on the CLI.
 // TODO: move this to the print package?
 type Printing struct{}
 
