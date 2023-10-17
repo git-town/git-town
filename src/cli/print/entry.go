@@ -1,4 +1,4 @@
-package print
+package print //nolint:predeclared
 
 import "github.com/git-town/git-town/v9/src/cli/io"
 

@@ -1,4 +1,4 @@
-package print
+package print //nolint:predeclared
 
 import (
 	"github.com/fatih/color"
