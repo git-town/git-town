@@ -1,4 +1,3 @@
-@this
 Feature: shipped changes conflict with an existing feature branch
 
   Background:
