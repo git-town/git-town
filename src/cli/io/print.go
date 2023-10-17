@@ -8,7 +8,6 @@ import (
 
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
-// TODO: move this to the print package. The format package really isn't the place for this.
 func Printf(format string, a ...interface{}) {
 	_, err := fmt.Fprintf(color.Output, format, a...)
 	if err != nil {
