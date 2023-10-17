@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/cli/log"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/hosting"

@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/spf13/cobra"
 )

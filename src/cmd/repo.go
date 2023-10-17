@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/browser"
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/cli/log"
 	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/git-town/git-town/v9/src/validate"

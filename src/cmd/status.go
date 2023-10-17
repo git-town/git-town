@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/git-town/git-town/v9/src/cli/flags"
 	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
