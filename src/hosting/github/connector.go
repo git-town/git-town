@@ -24,6 +24,10 @@ type Connector struct {
 	log        common.Log
 }
 
+func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+}
+
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
@@ -41,10 +45,6 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 	}
 	proposal := parsePullRequest(pullRequests[0])
 	return &proposal, nil
-}
-
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (self *Connector) HostingServiceName() string {
@@ -98,6 +98,21 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 	return nil
 }
 
+// getGitHubApiToken returns the GitHub API token to use.
+// It first checks the GITHUB_TOKEN environment variable.
+// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
+// If that is not set, it checks the git config.
+func GetAPIToken(gitConfig gitTownConfig) string {
+	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
+	if apiToken == "" {
+		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
+	}
+	if apiToken == "" {
+		apiToken = gitConfig.GitHubToken()
+	}
+	return apiToken
+}
+
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
@@ -125,21 +140,6 @@ type NewConnectorArgs struct {
 	APIToken       string
 	MainBranch     domain.LocalBranchName
 	Log            common.Log
-}
-
-// getGitHubApiToken returns the GitHub API token to use.
-// It first checks the GITHUB_TOKEN environment variable.
-// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
-// If that is not set, it checks the git config.
-func GetAPIToken(gitConfig gitTownConfig) string {
-	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
-	if apiToken == "" {
-		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
-	}
-	if apiToken == "" {
-		apiToken = gitConfig.GitHubToken()
-	}
-	return apiToken
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

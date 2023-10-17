@@ -7,4 +7,5 @@ for d in ./src/*/ ; do
   if [ "$d" != "./src/cmd/" ]; then
     go vet -vettool=tools/alphavet_${ALPHAVET_VERSION} "$d"...
   fi
+  echo -n "."
 done

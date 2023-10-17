@@ -20,6 +20,10 @@ type Connector struct {
 	log common.Log
 }
 
+func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+}
+
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -44,10 +48,6 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
 	}, nil
-}
-
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
-	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (self *Connector) HostingServiceName() string {
@@ -95,6 +95,18 @@ func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) err
 	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
+func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
+	result := []*gitea.PullRequest{}
+	headName := organization + "/" + branch.String()
+	for p := range pullRequests {
+		pullRequest := pullRequests[p]
+		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
+}
+
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
@@ -121,16 +133,4 @@ type NewConnectorArgs struct {
 	HostingService config.Hosting
 	APIToken       string
 	Log            common.Log
-}
-
-func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
-	result := []*gitea.PullRequest{}
-	headName := organization + "/" + branch.String()
-	for p := range pullRequests {
-		pullRequest := pullRequests[p]
-		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
-			result = append(result, pullRequest)
-		}
-	}
-	return result
 }
