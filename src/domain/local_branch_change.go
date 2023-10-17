@@ -7,6 +7,15 @@ type Change[T any] struct {
 
 type LocalBranchChange map[LocalBranchName]Change[SHA]
 
+func (self LocalBranchChange) BranchNames() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self))
+	for branch := range self {
+		result = append(result, branch)
+	}
+	result.Sort()
+	return result
+}
+
 func (self LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerennials, changedFeatures LocalBranchChange) {
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
@@ -18,13 +27,4 @@ func (self LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerenn
 		}
 	}
 	return
-}
-
-func (self LocalBranchChange) BranchNames() LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(self))
-	for branch := range self {
-		result = append(result, branch)
-	}
-	result.Sort()
-	return result
 }

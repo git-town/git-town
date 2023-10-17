@@ -28,10 +28,6 @@ func Connect(list []string) string {
 	return result + ", and " + quote(list[count-1])
 }
 
-func quote(text string) string {
-	return "\"" + text + "\""
-}
-
 func Lines(text string) []string {
 	if text == "" {
 		return []string{}
@@ -61,4 +57,8 @@ func SurroundEmptyWith(strings []string, surround string) []string {
 		}
 	}
 	return result
+}
+
+func quote(text string) string {
+	return "\"" + text + "\""
 }

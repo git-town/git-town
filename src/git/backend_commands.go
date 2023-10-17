@@ -103,6 +103,22 @@ func (self *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error)
 	}, nil
 }
 
+// CheckoutBranch checks out the Git branch with the given name.
+func (self *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
+	if !self.Config.DryRun {
+		err := self.CheckoutBranchUncached(name)
+		if err != nil {
+			return err
+		}
+	}
+	if name.String() != "-" {
+		self.CurrentBranchCache.Set(name)
+	} else {
+		self.CurrentBranchCache.Invalidate()
+	}
+	return nil
+}
+
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
 func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.LocalBranchName) {
 	result := domain.BranchInfos{}
@@ -201,22 +217,6 @@ func (self *BackendCommands) CheckoutBranchUncached(name domain.LocalBranchName)
 	return nil
 }
 
-// CheckoutBranch checks out the Git branch with the given name.
-func (self *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
-	if !self.Config.DryRun {
-		err := self.CheckoutBranchUncached(name)
-		if err != nil {
-			return err
-		}
-	}
-	if name.String() != "-" {
-		self.CurrentBranchCache.Set(name)
-	} else {
-		self.CurrentBranchCache.Invalidate()
-	}
-	return nil
-}
-
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
 func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
@@ -280,6 +280,21 @@ func (self *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) er
 	return nil
 }
 
+// CurrentBranch provides the name of the currently checked out branch.
+func (self *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
+	if self.Config.DryRun {
+		return self.CurrentBranchCache.Value(), nil
+	}
+	if !self.CurrentBranchCache.Initialized() {
+		currentBranch, err := self.CurrentBranchUncached()
+		if err != nil {
+			return currentBranch, err
+		}
+		self.CurrentBranchCache.Set(currentBranch)
+	}
+	return self.CurrentBranchCache.Value(), nil
+}
+
 // CurrentBranch provides the currently checked out branch.
 func (self *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, error) {
 	repoStatus, err := self.RepoStatus()
@@ -298,35 +313,6 @@ func (self *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, er
 		return domain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	return domain.NewLocalBranchName(output), nil
-}
-
-// CurrentBranch provides the name of the currently checked out branch.
-func (self *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
-	if self.Config.DryRun {
-		return self.CurrentBranchCache.Value(), nil
-	}
-	if !self.CurrentBranchCache.Initialized() {
-		currentBranch, err := self.CurrentBranchUncached()
-		if err != nil {
-			return currentBranch, err
-		}
-		self.CurrentBranchCache.Set(currentBranch)
-	}
-	return self.CurrentBranchCache.Value(), nil
-}
-
-func (self *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, error) {
-	rootDir := self.RootDirectory()
-	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
-	if err != nil {
-		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
-		rawContent, err = os.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
-		if err != nil {
-			return domain.EmptyLocalBranchName(), err
-		}
-	}
-	content := strings.TrimSpace(string(rawContent))
-	return domain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
 }
 
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
@@ -409,18 +395,6 @@ func (self *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (self *BackendCommands) RemotesUncached() (domain.Remotes, error) {
-	out, err := self.QueryTrim("git", "remote")
-	if err != nil {
-		return domain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
-	}
-	if out == "" {
-		return domain.Remotes{}, nil
-	}
-	return domain.NewRemotes(stringslice.Lines(out)...), nil
-}
-
-// Remotes provides the names of all Git remotes in this repository.
 func (self *BackendCommands) Remotes() (domain.Remotes, error) {
 	if !self.RemotesCache.Initialized() {
 		remotes, err := self.RemotesUncached()
@@ -430,6 +404,18 @@ func (self *BackendCommands) Remotes() (domain.Remotes, error) {
 		self.RemotesCache.Set(remotes)
 	}
 	return self.RemotesCache.Value(), nil
+}
+
+// Remotes provides the names of all Git remotes in this repository.
+func (self *BackendCommands) RemotesUncached() (domain.Remotes, error) {
+	out, err := self.QueryTrim("git", "remote")
+	if err != nil {
+		return domain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
+	}
+	if out == "" {
+		return domain.Remotes{}, nil
+	}
+	return domain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
@@ -519,6 +505,24 @@ func (self *BackendCommands) Version() (major int, minor int, err error) {
 	return majorVersion, minorVersion, nil
 }
 
+func (self *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, error) {
+	rootDir := self.RootDirectory()
+	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
+	if err != nil {
+		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
+		rawContent, err = os.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
+		if err != nil {
+			return domain.EmptyLocalBranchName(), err
+		}
+	}
+	content := strings.TrimSpace(string(rawContent))
+	return domain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
+}
+
+func outputIndicatesMergeInProgress(output string) bool {
+	return strings.Contains(output, "You have unmerged paths")
+}
+
 // HasOpenChanges indicates whether this repo has open changes.
 func outputIndicatesOpenChanges(output string) bool {
 	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
@@ -533,10 +537,6 @@ func outputIndicatesOpenChanges(output string) bool {
 		}
 	}
 	return true
-}
-
-func outputIndicatesMergeInProgress(output string) bool {
-	return strings.Contains(output, "You have unmerged paths")
 }
 
 func outputIndicatesRebaseInProgress(output string) bool {

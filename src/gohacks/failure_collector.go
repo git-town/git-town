@@ -19,20 +19,6 @@ type FailureCollector struct {
 	Err error `exhaustruct:"optional"`
 }
 
-// Check registers the given error and indicates
-// whether this ErrorChecker contains an error now.
-func (self *FailureCollector) Check(err error) bool {
-	if self.Err == nil {
-		self.Err = err
-	}
-	return self.Err != nil
-}
-
-// Fail registers the error constructed using the given format arguments.
-func (self *FailureCollector) Fail(format string, a ...any) {
-	self.Check(fmt.Errorf(format, a...))
-}
-
 // Bool provides the bool part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Bool(value bool, err error) bool {
@@ -48,6 +34,20 @@ func (self *FailureCollector) Branches(value domain.Branches, err error) domain.
 func (self *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
 	self.Check(err)
 	return value
+}
+
+// Check registers the given error and indicates
+// whether this ErrorChecker contains an error now.
+func (self *FailureCollector) Check(err error) bool {
+	if self.Err == nil {
+		self.Err = err
+	}
+	return self.Err != nil
+}
+
+// Fail registers the error constructed using the given format arguments.
+func (self *FailureCollector) Fail(format string, a ...any) {
+	self.Check(fmt.Errorf(format, a...))
 }
 
 // Hosting provides the config.Hosting part of the given fallible function result

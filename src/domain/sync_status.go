@@ -10,6 +10,17 @@ type SyncStatus struct {
 	name string
 }
 
+// IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
+func (self SyncStatus) IsLocal() bool {
+	switch self {
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusDeletedAtRemote:
+		return true
+	case SyncStatusRemoteOnly:
+		return false
+	}
+	panic(fmt.Sprintf("uncaptured sync status: %v", self))
+}
+
 func (self SyncStatus) String() string { return self.name }
 
 var (
@@ -21,14 +32,3 @@ var (
 	SyncStatusRemoteOnly      = SyncStatus{"remote only"}       //nolint:gochecknoglobals // the branch exists only at the remote
 	SyncStatusDeletedAtRemote = SyncStatus{"deleted at remote"} //nolint:gochecknoglobals // the branch was deleted on the remote
 )
-
-// IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
-func (self SyncStatus) IsLocal() bool {
-	switch self {
-	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusDeletedAtRemote:
-		return true
-	case SyncStatusRemoteOnly:
-		return false
-	}
-	panic(fmt.Sprintf("uncaptured sync status: %v", self))
-}

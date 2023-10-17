@@ -68,25 +68,18 @@ func (self *modalSelect) Display() (*string, error) {
 	return &selectedValue, nil
 }
 
-// print renders the dialog in its current status to the CLI.
-func (self *modalSelect) print() {
-	if self.status == modalSelectStatusNew {
-		self.status = modalSelectStatusSelecting
-	} else {
-		cursor.Up(len(self.entries))
-	}
-	for e, entry := range self.entries {
-		if e == self.initialPos && e == self.activePos { //nolint:gocritic
-			self.activeColor.Println(self.initialCursor + entry.Text)
-		} else if e == self.initialPos {
-			self.initialColor.Println(self.initialCursor + entry.Text)
-		} else if e == self.activePos {
-			self.activeColor.Println(self.activeCursor + entry.Text)
-		} else {
-			fmt.Println(strings.Repeat(" ", len(self.activeCursor)) + entry.Text)
+// IndexOfValue provides the index of the entry with the given value,
+// or nil if the given value is not in the list.
+func (self ModalEntries) IndexOfValue(value string) *int {
+	for e, entry := range self {
+		if entry.Value == value {
+			return &e
 		}
 	}
+	return nil
 }
+
+func (self modalSelectStatus) String() string { return self.name }
 
 // handleInput waits for keyboard input and updates the dialog state.
 func (self *modalSelect) handleInput() error {
@@ -115,6 +108,26 @@ func (self *modalSelect) handleInput() error {
 	return nil
 }
 
+// print renders the dialog in its current status to the CLI.
+func (self *modalSelect) print() {
+	if self.status == modalSelectStatusNew {
+		self.status = modalSelectStatusSelecting
+	} else {
+		cursor.Up(len(self.entries))
+	}
+	for e, entry := range self.entries {
+		if e == self.initialPos && e == self.activePos { //nolint:gocritic
+			self.activeColor.Println(self.initialCursor + entry.Text)
+		} else if e == self.initialPos {
+			self.initialColor.Println(self.initialCursor + entry.Text)
+		} else if e == self.activePos {
+			self.activeColor.Println(self.activeCursor + entry.Text)
+		} else {
+			fmt.Println(strings.Repeat(" ", len(self.activeCursor)) + entry.Text)
+		}
+	}
+}
+
 // selectedValue provides the value selected by the user.
 func (self *modalSelect) selectedValue() string {
 	return self.entries[self.activePos].Value
@@ -129,24 +142,11 @@ type ModalEntry struct {
 // ModalEntries is a collection of ModalEntry.
 type ModalEntries []ModalEntry
 
-// IndexOfValue provides the index of the entry with the given value,
-// or nil if the given value is not in the list.
-func (self ModalEntries) IndexOfValue(value string) *int {
-	for e, entry := range self {
-		if entry.Value == value {
-			return &e
-		}
-	}
-	return nil
-}
-
 // modalSelectStatus represents the different states that a modalSelect instance can be in.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type modalSelectStatus struct {
 	name string
 }
-
-func (self modalSelectStatus) String() string { return self.name }
 
 var (
 	modalSelectStatusNew       = modalSelectStatus{"new"}       //nolint:gochecknoglobals

@@ -12,24 +12,6 @@ import (
 // branch --> its parent.
 type Lineage map[domain.LocalBranchName]domain.LocalBranchName
 
-// BranchAndAncestors provides the full lineage for the branch with the given name,
-// including the branch.
-func (self Lineage) BranchAndAncestors(branchName domain.LocalBranchName) domain.LocalBranchNames {
-	return append(self.Ancestors(branchName), branchName)
-}
-
-// BranchesAndAncestors provides the full lineage for the branches with the given names,
-// including the branches themselves.
-func (self Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) domain.LocalBranchNames {
-	result := branchNames
-	for _, branchName := range branchNames {
-		ancestors := self.Ancestors(branchName)
-		result = slice.AppendAllMissing(result, ancestors)
-	}
-	self.OrderHierarchically(result)
-	return result
-}
-
 // Ancestors provides the names of all parent branches of the branch with the given name.
 func (self Lineage) Ancestors(branch domain.LocalBranchName) domain.LocalBranchNames {
 	current := branch
@@ -44,10 +26,28 @@ func (self Lineage) Ancestors(branch domain.LocalBranchName) domain.LocalBranchN
 	}
 }
 
+// BranchAndAncestors provides the full lineage for the branch with the given name,
+// including the branch.
+func (self Lineage) BranchAndAncestors(branchName domain.LocalBranchName) domain.LocalBranchNames {
+	return append(self.Ancestors(branchName), branchName)
+}
+
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
 func (self Lineage) BranchNames() domain.LocalBranchNames {
 	result := domain.LocalBranchNames(maps.Keys(self))
 	result.Sort()
+	return result
+}
+
+// BranchesAndAncestors provides the full lineage for the branches with the given names,
+// including the branches themselves.
+func (self Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) domain.LocalBranchNames {
+	result := branchNames
+	for _, branchName := range branchNames {
+		ancestors := self.Ancestors(branchName)
+		result = slice.AppendAllMissing(result, ancestors)
+	}
+	self.OrderHierarchically(result)
 	return result
 }
 

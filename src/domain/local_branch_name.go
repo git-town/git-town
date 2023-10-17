@@ -51,13 +51,13 @@ func (self LocalBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.id)
 }
 
+// Implementation of the fmt.Stringer interface.
+func (self LocalBranchName) String() string { return self.id }
+
 // TrackingBranch provides the name of the tracking branch for this local branch.
 func (self LocalBranchName) TrackingBranch() RemoteBranchName {
 	return self.AtRemote(OriginRemote)
 }
-
-// Implementation of the fmt.Stringer interface.
-func (self LocalBranchName) String() string { return self.id }
 
 // UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
 func (self *LocalBranchName) UnmarshalJSON(b []byte) error {
