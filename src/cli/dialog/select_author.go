@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/io"
 	"github.com/git-town/git-town/v9/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
@@ -13,7 +13,7 @@ func SelectAuthor(branch string, authors []string) (string, error) {
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
-	cli.Printf("Multiple people authored the %q branch.", branch)
+	io.Printf("Multiple people authored the %q branch.", branch)
 	fmt.Println()
 	result := ""
 	prompt := &survey.Select{

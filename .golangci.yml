@@ -109,3 +109,6 @@ issues:
     - linters:
         - exhaustruct
       text: domain.LocalBranchName is missing field id
+    - linters:
+        - predeclared
+      text: package name print has same name as predeclared identifier

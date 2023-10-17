@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	giteasdk "code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cli/log"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
@@ -22,7 +22,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            cli.SilentLog{},
+			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
 		wantConfig := common.Config{
@@ -40,7 +40,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
-			Log:            cli.SilentLog{},
+			Log:            log.Silent{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
@@ -53,7 +53,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
-			Log:            cli.SilentLog{},
+			Log:            log.Silent{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
@@ -78,7 +78,7 @@ func TestGitea(t *testing.T) {
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
-			Log:            cli.SilentLog{},
+			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
 		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
@@ -91,7 +91,7 @@ func TestGitea(t *testing.T) {
 			HostingService: config.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
-			Log:            cli.SilentLog{},
+			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
 		have := connector.RepositoryURL()
