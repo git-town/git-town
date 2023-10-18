@@ -12,7 +12,6 @@ Feature: shipped changes conflict with an existing feature branch
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @debug  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -33,10 +32,11 @@ Feature: shipped changes conflict with an existing feature branch
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And the current branch is now "beta"
+    And the current branch is now "alpha"
     And the uncommitted file is stashed
     And a merge is now in progress
 
+  @debug  @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands

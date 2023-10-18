@@ -9,8 +9,8 @@ import (
 // IfElse allows running different opcodes based on a condition evaluated at runtime.
 type IfElse struct {
 	Condition func(*git.BackendCommands, config.Lineage) (bool, error) `json:"-"`
-	WhenTrue  []shared.Opcode                                          // the opcodes to execute if the given branch is empty
-	WhenFalse []shared.Opcode                                          // the opcodes to execute if the given branch is not empty
+	WhenTrue  shared.Opcodes                                           // the opcodes to execute if the given branch is empty
+	WhenFalse shared.Opcodes                                           // the opcodes to execute if the given branch is not empty
 	undeclaredOpcodeMethods
 }
 

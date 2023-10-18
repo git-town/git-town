@@ -8,6 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
@@ -95,6 +96,17 @@ func TestLoadSave(t *testing.T) {
 					},
 					&opcode.ForcePushCurrentBranch{
 						NoPushHook: true,
+					},
+					&opcode.IfElse{
+						Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+						WhenTrue: []shared.Opcode{
+							&opcode.Checkout{Branch: domain.NewLocalBranchName("false-branch")},
+							&opcode.AbortMerge{},
+						},
+						WhenFalse: []shared.Opcode{
+							&opcode.CheckoutParent{CurrentBranch: domain.NewLocalBranchName("true-branch")},
+							&opcode.AbortRebase{},
+						},
 					},
 					&opcode.Merge{Branch: domain.NewBranchName("branch")},
 					&opcode.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
@@ -294,6 +306,35 @@ func TestLoadSave(t *testing.T) {
         "NoPushHook": true
       },
       "type": "ForcePushCurrentBranch"
+    },
+    {
+      "data": {
+        "WhenTrue": [
+          {
+            "data": {
+              "Branch": "true-branch"
+            },
+            "type": "Checkout"
+          },
+          {
+            "data": {},
+            "type": "AbortMerge"
+          }
+        ],
+        "WhenFalse: [
+          {
+            "data": {
+              "CurrentBranch": "false-branch"
+            },
+            "type": "CheckoutParent"
+          },
+          {
+            "data": {},
+            "type": "AbortRebase"
+          }
+        ]
+      },
+      "type": "IfElse",
     },
     {
       "data": {
