@@ -77,7 +77,7 @@ type undoConfig struct {
 	pushHook                bool
 }
 
-
+func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
