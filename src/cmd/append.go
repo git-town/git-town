@@ -30,7 +30,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",

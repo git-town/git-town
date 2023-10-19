@@ -50,7 +50,7 @@ run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`
 
 func shipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
 	cmd := cobra.Command{
 		Use:     "ship",

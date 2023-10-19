@@ -19,7 +19,7 @@ const pushHookHelp = `
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
 
 func pushHookCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the push hook flag for all repos on this machine")
 	cmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",

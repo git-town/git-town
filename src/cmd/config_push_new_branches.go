@@ -20,7 +20,7 @@ If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`
 
 func pushNewBranchesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",

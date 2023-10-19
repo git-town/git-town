@@ -14,7 +14,7 @@ import (
 const skipDesc = "Restarts the last run git-town command by skipping the current branch"
 
 func skipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",

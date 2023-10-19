@@ -11,7 +11,7 @@ import (
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
 		Args:  cobra.NoArgs,

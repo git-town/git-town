@@ -17,7 +17,7 @@ import (
 const configDesc = "Displays your Git Town configuration"
 
 func configCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",

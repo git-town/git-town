@@ -14,7 +14,7 @@ import (
 const setParentDesc = "Prompts to set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",

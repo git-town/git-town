@@ -16,7 +16,7 @@ import (
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
 func statusCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",

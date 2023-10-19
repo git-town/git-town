@@ -21,7 +21,7 @@ import (
 const undoDesc = "Undoes the last run git-town command"
 
 func undoCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",

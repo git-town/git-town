@@ -20,7 +20,7 @@ import (
 const continueDesc = "Restarts the last run git-town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",

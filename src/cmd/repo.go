@@ -30,7 +30,7 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,

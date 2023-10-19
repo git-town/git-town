@@ -18,7 +18,7 @@ They cannot be shipped.`
 const updatePerennialSummary = "Prompts to update your perennial branches"
 
 func perennialBranchesCmd() *cobra.Command {
-	addDisplayDebugFlag, readDisplayDebugFlag := flags.Debug()
+	addDisplayDebugFlag, readDisplayDebugFlag := flags.Verbose()
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
@@ -30,7 +30,7 @@ func perennialBranchesCmd() *cobra.Command {
 	}
 	addDisplayDebugFlag(&displayCmd)
 
-	addUpdateDebugFlag, readUpdateDebugFlag := flags.Debug()
+	addUpdateDebugFlag, readUpdateDebugFlag := flags.Verbose()
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,

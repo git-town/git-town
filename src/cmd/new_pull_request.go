@@ -37,7 +37,7 @@ When using SSH identities, this command needs to be configured with
 where hostname matches what is in your ssh config file.`
 
 func newPullRequestCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",

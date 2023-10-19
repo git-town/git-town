@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the current branch is a feature branch "feature"
@@ -7,7 +7,7 @@ Feature: display debug statistics
       | feature | local, origin | feature commit |
 
   Scenario: result
-    When I run "git-town ship -m done --debug"
+    When I run "git-town ship -m done --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |
@@ -60,7 +60,7 @@ Feature: display debug statistics
 
   Scenario: undo
     Given I ran "git-town ship -m done"
-    When I run "git-town undo --debug"
+    When I run "git-town undo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                        |
       |        | backend  | git version                                    |

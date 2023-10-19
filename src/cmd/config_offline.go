@@ -19,7 +19,7 @@ const offlineHelp = `
 Git Town avoids network operations in offline mode.`
 
 func offlineCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),

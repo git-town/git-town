@@ -21,7 +21,7 @@ import (
 const abortDesc = "Aborts the last run git-town command"
 
 func abortCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",

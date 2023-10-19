@@ -9,7 +9,7 @@ import (
 const resetConfigDesc = "Resets your Git Town configuration"
 
 func resetConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,

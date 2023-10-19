@@ -17,7 +17,7 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`
 
 func pullBranchStrategyCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
 		Args:  cobra.MaximumNArgs(1),

@@ -19,7 +19,7 @@ const mainbranchHelp = `
 The main branch is the Git branch from which new feature branches are cut.`
 
 func mainbranchConfigCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Args:  cobra.MaximumNArgs(1),

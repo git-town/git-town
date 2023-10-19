@@ -38,7 +38,7 @@ syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches")
 	cmd := cobra.Command{

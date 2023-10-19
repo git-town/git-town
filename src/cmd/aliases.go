@@ -23,7 +23,7 @@ Does not overwrite existing aliases.
 This can conflict with other tools that also define Git aliases.`
 
 func aliasesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addDebugFlag, readDebugFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",

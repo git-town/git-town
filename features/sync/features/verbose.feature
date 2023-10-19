@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the current branch is a feature branch "feature"
@@ -10,7 +10,7 @@ Feature: display debug statistics
       |         | origin   | origin feature commit |
 
   Scenario: result
-    When I run "git-town sync --debug"
+    When I run "git-town sync --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                            |
       |         | backend  | git version                                        |
