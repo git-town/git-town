@@ -48,7 +48,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
-	print.Footer(args.Debug, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	message := runErr.Error()
 	if !args.RunState.IsAbort && !args.RunState.IsUndo {
 		message += messages.AbortContinueGuidance

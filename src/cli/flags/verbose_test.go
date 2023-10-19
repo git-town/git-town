@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func TestDebug(t *testing.T) {
+func TestVerbose(t *testing.T) {
 	t.Parallel()
 
 	t.Run("long version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.Debug()
+		addFlag, readFlag := flags.Verbose()
 		addFlag(&cmd)
-		err := cmd.ParseFlags([]string{"--debug"})
+		err := cmd.ParseFlags([]string{"--verbose"})
 		must.NoError(t, err)
 		must.EqOp(t, true, readFlag(&cmd))
 	})
@@ -24,9 +24,9 @@ func TestDebug(t *testing.T) {
 	t.Run("short version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.Debug()
+		addFlag, readFlag := flags.Verbose()
 		addFlag(&cmd)
-		err := cmd.ParseFlags([]string{"-d"})
+		err := cmd.ParseFlags([]string{"-v"})
 		must.NoError(t, err)
 		must.EqOp(t, true, readFlag(&cmd))
 	})

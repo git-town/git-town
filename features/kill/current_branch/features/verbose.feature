@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the current branch is a feature branch "current"
@@ -9,7 +9,7 @@ Feature: display debug statistics
       | other   | local, origin | other commit   |
 
   Scenario: result
-    When I run "git-town kill --debug"
+    When I run "git-town kill --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
       |         | backend  | git version                                       |

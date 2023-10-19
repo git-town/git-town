@@ -104,7 +104,7 @@ func (self *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
 	self.CoworkerRepo = &coworkerRepo
 	self.initializeWorkspace(self.CoworkerRepo)
-	self.CoworkerRepo.Debug = self.DevRepo.Debug
+	self.CoworkerRepo.Verbose = self.DevRepo.Verbose
 }
 
 // AddSubmodule adds a submodule repository.

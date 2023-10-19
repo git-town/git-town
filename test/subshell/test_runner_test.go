@@ -102,7 +102,7 @@ func TestMockingRunner(t *testing.T) {
 		t.Run("exit code 0", func(t *testing.T) {
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Debug:      false,
+				Verbose:    false,
 				HomeDir:    "",
 				WorkingDir: "",
 			}
@@ -114,7 +114,7 @@ func TestMockingRunner(t *testing.T) {
 		t.Run("exit code 1", func(t *testing.T) {
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Debug:      false,
+				Verbose:    false,
 				HomeDir:    "",
 				WorkingDir: "",
 			}

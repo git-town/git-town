@@ -38,7 +38,7 @@ syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches")
 	cmd := cobra.Command{
@@ -48,18 +48,18 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
+			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	return &cmd
 }
 
-func executeSync(all, dryRun, debug bool) error {
+func executeSync(all, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -68,7 +68,7 @@ func executeSync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -102,7 +102,7 @@ func executeSync(all, dryRun, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -128,7 +128,7 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -136,7 +136,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, debug bool)
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

@@ -24,23 +24,23 @@ Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`
 
 func killCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: killDesc,
 		Long:  long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeKill(args, readDebugFlag(cmd))
+			return executeKill(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeKill(args []string, debug bool) error {
+func executeKill(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -49,7 +49,7 @@ func executeKill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -67,7 +67,7 @@ func executeKill(args []string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -88,7 +88,7 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -96,7 +96,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

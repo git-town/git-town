@@ -14,7 +14,7 @@ import (
 const setParentDesc = "Prompts to set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",
@@ -22,16 +22,16 @@ func setParentCommand() *cobra.Command {
 		Short:   setParentDesc,
 		Long:    long(setParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeSetParent(readDebugFlag(cmd))
+			return executeSetParent(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSetParent(debug bool) error {
+func executeSetParent(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeSetParent(debug bool) error {
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
@@ -79,6 +79,6 @@ func executeSetParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }

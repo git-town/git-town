@@ -21,7 +21,7 @@ import (
 const abortDesc = "Aborts the last run git-town command"
 
 func abortCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
@@ -29,16 +29,16 @@ func abortCmd() *cobra.Command {
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAbort(readDebugFlag(cmd))
+			return executeAbort(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAbort(debug bool) error {
+func executeAbort(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeAbort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnapshot, err := determineAbortConfig(repo, debug)
+	config, initialStashSnapshot, err := determineAbortConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func executeAbort(debug bool) error {
 		RunState:                &abortRunState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
@@ -69,7 +69,7 @@ func executeAbort(debug bool) error {
 	})
 }
 
-func determineAbortConfig(repo *execute.OpenRepoResult, debug bool) (*abortConfig, domain.StashSnapshot, error) {
+func determineAbortConfig(repo *execute.OpenRepoResult, verbose bool) (*abortConfig, domain.StashSnapshot, error) {
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
@@ -97,7 +97,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult, debug bool) (*abortConfi
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
-		Debug:                 debug,
+		Verbose:               verbose,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
 		PushHook:              pushHook,

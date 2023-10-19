@@ -36,6 +36,6 @@ func finished(args ExecuteArgs) error {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}
 	}
-	print.Footer(args.Debug, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	return nil
 }

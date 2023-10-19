@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the feature branches "active" and "old"
@@ -9,7 +9,7 @@ Feature: display debug statistics
     And the current branch is "old"
 
   Scenario: result
-    When I run "git-town sync --debug"
+    When I run "git-town sync --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -57,7 +57,7 @@ Feature: display debug statistics
 
   Scenario: undo
     Given I ran "git-town sync"
-    When I run "git-town undo --debug"
+    When I run "git-town undo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                    |
       |        | backend  | git version                                |

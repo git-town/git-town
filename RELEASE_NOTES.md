@@ -292,7 +292,7 @@ experience. Ruby is no longer a development dependency.
 
 - `git town new-branch-push-flag`: add `--global` flag to set your default
   value. Any locally configured value will override.
-- add `--debug` flag to see all the git commands runs under the hood
+- add `--verbose` flag to see all the git commands runs under the hood
 - speed improvement from reducing the number of git commands run under the hood
 
 ## 5.1.0 (2017-12-05)
