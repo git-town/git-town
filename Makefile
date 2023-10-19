@@ -84,7 +84,7 @@ stats: tools/scc_${SCC_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
+test-go: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
 	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
