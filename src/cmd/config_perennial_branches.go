@@ -18,36 +18,36 @@ They cannot be shipped.`
 const updatePerennialSummary = "Prompts to update your perennial branches"
 
 func perennialBranchesCmd() *cobra.Command {
-	addDisplayDebugFlag, readDisplayDebugFlag := flags.Verbose()
+	addDisplayVerboseFlag, readDisplayVerboseFlag := flags.Verbose()
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
 		Short: perennialDesc,
 		Long:  long(perennialDesc, perennialHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigPerennialBranches(readDisplayDebugFlag(cmd))
+			return executeConfigPerennialBranches(readDisplayVerboseFlag(cmd))
 		},
 	}
-	addDisplayDebugFlag(&displayCmd)
+	addDisplayVerboseFlag(&displayCmd)
 
-	addUpdateDebugFlag, readUpdateDebugFlag := flags.Verbose()
+	addUpdateVerboseFlag, readUpdateVerboseFlag := flags.Verbose()
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,
 		Short: updatePerennialSummary,
 		Long:  long(updatePerennialSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return updatePerennialBranches(readUpdateDebugFlag(cmd))
+			return updatePerennialBranches(readUpdateVerboseFlag(cmd))
 		},
 	}
-	addUpdateDebugFlag(&updateCmd)
+	addUpdateVerboseFlag(&updateCmd)
 	displayCmd.AddCommand(&updateCmd)
 	return &displayCmd
 }
 
-func executeConfigPerennialBranches(debug bool) error {
+func executeConfigPerennialBranches(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,
@@ -60,9 +60,9 @@ func executeConfigPerennialBranches(debug bool) error {
 	return nil
 }
 
-func updatePerennialBranches(debug bool) error {
+func updatePerennialBranches(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,
@@ -79,7 +79,7 @@ func updatePerennialBranches(debug bool) error {
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
-		Debug:                 debug,
+		Verbose:               verbose,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
 		PushHook:              pushHook,

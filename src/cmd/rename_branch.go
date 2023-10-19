@@ -36,7 +36,7 @@ When run on a perennial branch
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
@@ -44,17 +44,17 @@ func renameBranchCommand() *cobra.Command {
 		Short: renameBranchDesc,
 		Long:  long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRenameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
+			return executeRenameBranch(args, readForceFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addForceFlag(&cmd)
 	return &cmd
 }
 
-func executeRenameBranch(args []string, force, debug bool) error {
+func executeRenameBranch(args []string, force, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -63,7 +63,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -76,7 +76,7 @@ func executeRenameBranch(args []string, force, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		NoPushHook:              config.noPushHook,
 		RootDir:                 repo.RootDir,
@@ -97,7 +97,7 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, debug bool) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -105,7 +105,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

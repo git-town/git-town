@@ -21,7 +21,7 @@ Works on either the current branch or the branch name provided.
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`
 
 func diffParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
@@ -29,16 +29,16 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeDiffParent(args, readDebugFlag(cmd))
+			return executeDiffParent(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeDiffParent(args []string, debug bool) error {
+func executeDiffParent(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeDiffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentConfig(args, repo, debug)
+	config, exit, err := determineDiffParentConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -55,7 +55,7 @@ func executeDiffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
@@ -65,7 +65,7 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*diffParentConfig, bool, error) {
+func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -73,7 +73,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, debu
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

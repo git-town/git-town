@@ -30,7 +30,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
@@ -38,16 +38,16 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAppend(args[0], readDebugFlag(cmd))
+			return executeAppend(args[0], readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAppend(arg string, debug bool) error {
+func executeAppend(arg string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -56,7 +56,7 @@ func executeAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -69,7 +69,7 @@ func executeAppend(arg string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -98,13 +98,13 @@ type appendConfig struct {
 	targetBranch              domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, debug bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		Lineage:               lineage,
 		HandleUnfinishedState: true,

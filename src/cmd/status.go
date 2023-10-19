@@ -16,7 +16,7 @@ import (
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
 func statusCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
@@ -24,17 +24,17 @@ func statusCommand() *cobra.Command {
 		Short:   statusDesc,
 		Long:    long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeStatus(readDebugFlag(cmd))
+			return executeStatus(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
 	return &cmd
 }
 
-func executeStatus(debug bool) error {
+func executeStatus(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -48,7 +48,7 @@ func executeStatus(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
-	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 

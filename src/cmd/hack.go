@@ -25,7 +25,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
@@ -33,16 +33,16 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readDebugFlag(cmd))
+			return executeHack(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeHack(args []string, debug bool) error {
+func executeHack(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -51,7 +51,7 @@ func executeHack(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -64,7 +64,7 @@ func executeHack(args []string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -74,13 +74,13 @@ func executeHack(args []string, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

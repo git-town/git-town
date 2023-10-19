@@ -30,23 +30,23 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
 		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRepo(readDebugFlag(cmd))
+			return executeRepo(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeRepo(debug bool) error {
+func executeRepo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: true,
@@ -60,7 +60,7 @@ func executeRepo(debug bool) error {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	print.Footer(debug, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 

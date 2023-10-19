@@ -19,7 +19,7 @@ func autoAbort(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		RunState:                &abortRunState,
 		Run:                     args.Run,
 		Connector:               args.Connector,
-		Debug:                   args.Debug,
+		Verbose:                 args.Verbose,
 		RootDir:                 args.RootDir,
 		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,

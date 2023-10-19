@@ -23,7 +23,7 @@ type BackendRunner interface {
 
 // BackendCommands are Git commands that Git Town executes to determine which frontend commands to run.
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
-// They are invisible to the end user unless the "debug" option is set.
+// They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
 	BackendRunner                         // executes shell commands in the directory of the Git repo
 	Config             *RepoConfig        // the known state of the Git repository

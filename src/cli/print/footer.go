@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-func Footer(debug bool, commandsCount int, finalMessages []string) {
+func Footer(verbose bool, commandsCount int, finalMessages []string) {
 	fmt.Println()
-	if debug {
+	if verbose {
 		fmt.Printf(messages.CommandsRun, commandsCount)
 	}
 	for _, message := range finalMessages {

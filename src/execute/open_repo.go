@@ -21,7 +21,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	backendRunner := subshell.BackendRunner{
 		Dir:             nil,
 		CommandsCounter: &commandsCounter,
-		Verbose:         args.Debug,
+		Verbose:         args.Verbose,
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
@@ -104,7 +104,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	Debug            bool
+	Verbose          bool
 	DryRun           bool
 	OmitBranchNames  bool
 	ValidateGitRepo  bool

@@ -37,7 +37,7 @@ When using SSH identities, this command needs to be configured with
 where hostname matches what is in your ssh config file.`
 
 func newPullRequestCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -45,16 +45,16 @@ func newPullRequestCommand() *cobra.Command {
 		Short:   newPullRequestDesc,
 		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeNewPullRequest(readDebugFlag(cmd))
+			return executeNewPullRequest(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeNewPullRequest(debug bool) error {
+func executeNewPullRequest(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: true,
@@ -63,7 +63,7 @@ func executeNewPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -79,7 +79,7 @@ func executeNewPullRequest(debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -105,7 +105,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -113,7 +113,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, debug bool) (*n
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

@@ -9,23 +9,23 @@ import (
 const resetConfigDesc = "Resets your Git Town configuration"
 
 func resetConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: resetConfigDesc,
 		Long:  long(resetConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigResetStatus(readDebugFlag(cmd))
+			return executeConfigResetStatus(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeConfigResetStatus(debug bool) error {
+func executeConfigResetStatus(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,

@@ -45,7 +45,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// See main_test.go for additional details.
 		state.Reset(fixture)
 		if helpers.HasTag(scenario, "@debug") {
-			state.fixture.DevRepo.Debug = true
+			state.fixture.DevRepo.Verbose = true
 		}
 	})
 

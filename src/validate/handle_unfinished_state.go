@@ -51,7 +51,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Connector               hosting.Connector
-	Debug                   bool
+	Verboe                  bool
 	Lineage                 config.Lineage
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
@@ -65,7 +65,7 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               args.Connector,
-		Debug:                   args.Debug,
+		Verbose:                 args.Verboe,
 		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
@@ -87,7 +87,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               args.Connector,
-		Debug:                   args.Debug,
+		Verbose:                 args.Verboe,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
@@ -108,7 +108,7 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 	skipRunState := runState.CreateSkipRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               args.Connector,
-		Debug:                   args.Debug,
+		Verbose:                 args.Verboe,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,

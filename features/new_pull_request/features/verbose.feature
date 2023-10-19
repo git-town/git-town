@@ -1,7 +1,7 @@
 @skipWindows
 Feature: display all executed Git commands
 
-  Scenario: debug mode enabled
+  Scenario: verbose mode enabled
     Given tool "open" is installed
     And the current branch is a feature branch "feature"
     And the origin is "git@github.com:git-town/git-town.git"

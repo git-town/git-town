@@ -50,7 +50,7 @@ run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`
 
 func shipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
 	cmd := cobra.Command{
 		Use:     "ship",
@@ -59,17 +59,17 @@ func shipCmd() *cobra.Command {
 		Short:   shipDesc,
 		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.KeyGithubToken, config.KeyShipDeleteRemoteBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeShip(args, readMessageFlag(cmd), readDebugFlag(cmd))
+			return executeShip(args, readMessageFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	return &cmd
 }
 
-func executeShip(args []string, message string, debug bool) error {
+func executeShip(args []string, message string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -78,7 +78,7 @@ func executeShip(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -101,7 +101,7 @@ func executeShip(args []string, message string, debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -135,7 +135,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -143,7 +143,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, debug bool
 	}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

@@ -43,7 +43,7 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	return result
 }
 
-const backendCommandLineBeginning = "(debug) " // "\e[1m"
+const backendCommandLineBeginning = "(verbose) " // "\e[1m"
 
 func lineContainsBackendCommand(line string) bool {
 	return strings.HasPrefix(line, backendCommandLineBeginning)
