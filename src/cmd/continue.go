@@ -20,7 +20,7 @@ import (
 const continueDesc = "Restarts the last run git-town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",
@@ -28,16 +28,16 @@ func continueCmd() *cobra.Command {
 		Short:   continueDesc,
 		Long:    long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeContinue(readDebugFlag(cmd))
+			return executeContinue(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeContinue(debug bool) error {
+func executeContinue(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -46,7 +46,7 @@ func executeContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo, debug)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -58,7 +58,7 @@ func executeContinue(debug bool) error {
 		RunState:                &runState,
 		Run:                     &repo.Runner,
 		Connector:               config.connector,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -68,7 +68,7 @@ func executeContinue(debug bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult, debug bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -76,7 +76,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, debug bool) (*continu
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

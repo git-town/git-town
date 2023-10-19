@@ -16,7 +16,7 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
 func syncStrategyCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine")
 	cmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
@@ -24,17 +24,17 @@ func syncStrategyCommand() *cobra.Command {
 		Short: syncStrategyDesc,
 		Long:  long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigSyncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return executeConfigSyncStrategy(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addGlobalFlag(&cmd)
 	return &cmd
 }
 
-func executeConfigSyncStrategy(args []string, global, debug bool) error {
+func executeConfigSyncStrategy(args []string, global, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,

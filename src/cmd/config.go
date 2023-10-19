@@ -17,7 +17,7 @@ import (
 const configDesc = "Displays your Git Town configuration"
 
 func configCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",
@@ -25,10 +25,10 @@ func configCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfig(readDebugFlag(cmd))
+			return executeConfig(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&configCmd)
+	addVerboseFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
@@ -41,9 +41,9 @@ func configCmd() *cobra.Command {
 	return &configCmd
 }
 
-func executeConfig(debug bool) error {
+func executeConfig(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,

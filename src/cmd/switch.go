@@ -14,7 +14,7 @@ import (
 const switchDesc = "Displays the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -22,16 +22,16 @@ func switchCmd() *cobra.Command {
 		Short:   switchDesc,
 		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeSwitch(readDebugFlag(cmd))
+			return executeSwitch(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSwitch(debug bool) error {
+func executeSwitch(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeSwitch(debug bool) error {
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,

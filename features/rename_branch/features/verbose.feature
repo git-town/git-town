@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the current branch is a feature branch "old"
@@ -8,7 +8,7 @@ Feature: display debug statistics
       | old    | local, origin | old commit  |
 
   Scenario: result
-    When I run "git-town rename-branch new --debug"
+    When I run "git-town rename-branch new --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -46,7 +46,7 @@ Feature: display debug statistics
 
   Scenario: undo
     Given I ran "git-town rename-branch new"
-    When I run "git-town undo --debug"
+    When I run "git-town undo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |

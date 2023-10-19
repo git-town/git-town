@@ -1,8 +1,8 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Scenario: feature branch
     And the current branch is a feature branch "feature"
-    When I run "git-town diff-parent --debug"
+    When I run "git-town diff-parent --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                       |
       |         | backend  | git version                   |

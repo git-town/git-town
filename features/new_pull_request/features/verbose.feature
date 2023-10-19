@@ -1,11 +1,11 @@
 @skipWindows
-Feature: display debug statistics
+Feature: display all executed Git commands
 
-  Scenario: debug mode enabled
+  Scenario: verbose mode enabled
     Given tool "open" is installed
     And the current branch is a feature branch "feature"
     And the origin is "git@github.com:git-town/git-town.git"
-    When I run "git-town new-pull-request --debug"
+    When I run "git-town new-pull-request --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       |         | backend  | git version                                                        |

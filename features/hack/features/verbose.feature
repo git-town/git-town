@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the commits
@@ -7,7 +7,7 @@ Feature: display debug statistics
     And the current branch is "main"
 
   Scenario: result
-    When I run "git-town hack new --debug"
+    When I run "git-town hack new --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |
@@ -42,7 +42,7 @@ Feature: display debug statistics
 
   Scenario: undo
     Given I ran "git-town hack new"
-    When I run "git town undo --debug"
+    When I run "git town undo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                       |
       |        | backend  | git version                                   |

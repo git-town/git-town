@@ -136,9 +136,9 @@ path of the workspace and wait until you hit ENTER. This gives you time to
 inspect that folder using the tool of your choice.
 
 If this level of debug information isn't enough, you can run the Git Town
-command under test with the `--debug` option. As an example, if the step
+command under test with the `--verbose` option. As an example, if the step
 `When I run "git-town append new"` mysteriously fails, you could change it to
-`When I run "git-town append new -d"`. This will print the Git commands that Git
+`When I run "git-town append new -v"`. This will print the Git commands that Git
 Town runs under the hood.
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):

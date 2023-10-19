@@ -28,7 +28,7 @@ type TestRunner struct {
 	BinDir string
 
 	// whether to log the output of subshell commands
-	Debug bool `exhaustruct:"optional"`
+	Verbose bool `exhaustruct:"optional"`
 
 	// name of the binary to use as the custom editor during "git commit"
 	gitEditor string `exhaustruct:"optional"`
@@ -181,7 +181,7 @@ func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (st
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
 func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
 	currentBranchText := ""
-	if self.Debug {
+	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
 		getBranchCmd.Dir = self.WorkingDir
 		currentBranch, _ := getBranchCmd.Output()
@@ -247,7 +247,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 			err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
 		}
 	}
-	if self.Debug {
+	if self.Verbose {
 		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
 		if err != nil {

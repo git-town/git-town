@@ -1,9 +1,9 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Scenario:
     Given the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed
-    When I run "git-town repo --debug"
+    When I run "git-town repo --verbose"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                   |
       |        | backend  | git version                               |

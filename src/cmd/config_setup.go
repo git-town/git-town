@@ -11,23 +11,23 @@ import (
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
 		Args:  cobra.NoArgs,
 		Short: setupConfigDesc,
 		Long:  long(setupConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigSetup(readDebugFlag(cmd))
+			return executeConfigSetup(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeConfigSetup(debug bool) error {
+func executeConfigSetup(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		ValidateIsOnline: false,
@@ -43,7 +43,7 @@ func executeConfigSetup(debug bool) error {
 	}
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

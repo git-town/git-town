@@ -1,4 +1,4 @@
-Feature: display debug statistics
+Feature: display all executed Git commands
 
   Background:
     Given the current branch is a feature branch "existing"
@@ -7,7 +7,7 @@ Feature: display debug statistics
       | existing | local, origin | existing commit |
 
   Scenario: result
-    When I run "git-town append new --debug"
+    When I run "git-town append new --verbose"
     Then it runs the commands
       | BRANCH   | TYPE     | COMMAND                                              |
       |          | backend  | git version                                          |
@@ -47,7 +47,7 @@ Feature: display debug statistics
 
   Scenario: undo
     Given I ran "git-town append new"
-    When I run "git-town undo --debug"
+    When I run "git-town undo --verbose"
     Then it prints:
       """
       Ran 20 shell commands.

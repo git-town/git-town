@@ -21,7 +21,7 @@ import (
 const undoDesc = "Undoes the last run git-town command"
 
 func undoCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",
@@ -29,16 +29,16 @@ func undoCmd() *cobra.Command {
 		Short:   undoDesc,
 		Long:    long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeUndo(readDebugFlag(cmd))
+			return executeUndo(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeUndo(debug bool) error {
+func executeUndo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeUndo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo, debug)
+	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func executeUndo(debug bool) error {
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 lineage,
 		NoPushHook:              !config.pushHook,
 		RootDir:                 repo.RootDir,
@@ -77,7 +77,7 @@ type undoConfig struct {
 	pushHook                bool
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, debug bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage()
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -85,7 +85,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, debug bool) (*undoConfig,
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,

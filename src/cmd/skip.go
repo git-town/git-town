@@ -14,7 +14,7 @@ import (
 const skipDesc = "Restarts the last run git-town command by skipping the current branch"
 
 func skipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",
@@ -22,16 +22,16 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeSkip(readDebugFlag(cmd))
+			return executeSkip(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeSkip(debug bool) error {
+func executeSkip(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		ValidateIsOnline: false,
@@ -47,7 +47,7 @@ func executeSkip(debug bool) error {
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Debug:                 debug,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
@@ -73,7 +73,7 @@ func executeSkip(debug bool) error {
 		RunState:                &skipRunState,
 		Run:                     &repo.Runner,
 		Connector:               nil,
-		Debug:                   debug,
+		Verbose:                 verbose,
 		Lineage:                 lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
