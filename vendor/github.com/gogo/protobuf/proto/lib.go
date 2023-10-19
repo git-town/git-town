@@ -39,38 +39,36 @@ for a protocol buffer variable v:
 
   - Names are turned from camel_case to CamelCase for export.
   - There are no methods on v to set fields; just treat
-    them as structure fields.
+	them as structure fields.
   - There are getters that return a field's value if set,
-    and return the field's default value if unset.
-    The getters work even if the receiver is a nil message.
+	and return the field's default value if unset.
+	The getters work even if the receiver is a nil message.
   - The zero value for a struct is its correct initialization state.
-    All desired fields must be set before marshaling.
+	All desired fields must be set before marshaling.
   - A Reset() method will restore a protobuf struct to its zero state.
   - Non-repeated fields are pointers to the values; nil means unset.
-    That is, optional or required field int32 f becomes F *int32.
+	That is, optional or required field int32 f becomes F *int32.
   - Repeated fields are slices.
   - Helper functions are available to aid the setting of fields.
-    msg.Foo = proto.String("hello") // set field
+	msg.Foo = proto.String("hello") // set field
   - Constants are defined to hold the default values of all fields that
-    have them.  They have the form Default_StructName_FieldName.
-    Because the getter methods handle defaulted values,
-    direct use of these constants should be rare.
+	have them.  They have the form Default_StructName_FieldName.
+	Because the getter methods handle defaulted values,
+	direct use of these constants should be rare.
   - Enums are given type names and maps from names to values.
-    Enum values are prefixed by the enclosing message's name, or by the
-
-enum's type name if it is a top-level enum. Enum types have a String
-
-		method, and a Enum method to assist in message construction.
-	  - Nested messages, groups and enums have type names prefixed with the name of
-		the surrounding message type.
-	  - Extensions are given descriptor names that start with E_,
-		followed by an underscore-delimited list of the nested messages
-		that contain it (if any) followed by the CamelCased name of the
-		extension field itself.  HasExtension, ClearExtension, GetExtension
-		and SetExtension are functions for manipulating extensions.
-	  - Oneof field sets are given a single field in their message,
-		with distinguished wrapper types for each possible field value.
-	  - Marshal and Unmarshal are functions to encode and decode the wire format.
+	Enum values are prefixed by the enclosing message's name, or by the
+	enum's type name if it is a top-level enum. Enum types have a String
+	method, and a Enum method to assist in message construction.
+  - Nested messages, groups and enums have type names prefixed with the name of
+	the surrounding message type.
+  - Extensions are given descriptor names that start with E_,
+	followed by an underscore-delimited list of the nested messages
+	that contain it (if any) followed by the CamelCased name of the
+	extension field itself.  HasExtension, ClearExtension, GetExtension
+	and SetExtension are functions for manipulating extensions.
+  - Oneof field sets are given a single field in their message,
+	with distinguished wrapper types for each possible field value.
+  - Marshal and Unmarshal are functions to encode and decode the wire format.
 
 When the .proto file specifies `syntax="proto3"`, there are some differences:
 
@@ -499,8 +497,9 @@ func UnmarshalJSONEnum(m map[string]int32, data []byte, enumName string) (int32,
 	return val, nil
 }
 
+// DebugPrint dumps the encoded data in b in a debugging format with a header
 // including the string s. Used in testing but made available for general debugging.
-func (p *Buffer) VerbosePrint(s string, b []byte) {
+func (p *Buffer) DebugPrint(s string, b []byte) {
 	var u uint64
 
 	obuf := p.buf
