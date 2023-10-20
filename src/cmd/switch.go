@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -65,8 +66,13 @@ func executeSwitch(verbose bool) error {
 		return err
 	}
 	if validChoice && newBranch != branches.Initial {
+		fmt.Println()
 		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
+var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			os.Exit(exitErr.ExitCode())
+		} else {
 			os.Exit(1)
 		}
 	}
