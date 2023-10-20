@@ -237,7 +237,7 @@ func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) 
 func (self *GitTown) RemoveLocalGitConfiguration() error {
 	err := self.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
-		var exitErr *exec.ExitError
+		var exitErr exec.ExitError
 		if errors.As(err, &exitErr) {
 			if exitErr.ExitCode() == 128 {
 				// Git returns exit code 128 when trying to delete a non-existing config section.
