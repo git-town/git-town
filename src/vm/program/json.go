@@ -90,6 +90,8 @@ func DetermineOpcode(opcodeType string) shared.Opcode { //nolint:ireturn
 		return &opcode.FetchUpstream{}
 	case "ForcePushCurrentBranch":
 		return &opcode.ForcePushCurrentBranch{}
+	case "IfElse":
+		return &opcode.IfElse{}
 	case "Merge":
 		return &opcode.Merge{}
 	case "MergeParent":
