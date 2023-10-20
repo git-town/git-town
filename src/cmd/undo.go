@@ -11,10 +11,10 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
@@ -112,7 +112,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 }
 
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
-	runState, err := persistence.Load(repo.RootDir)
+	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}

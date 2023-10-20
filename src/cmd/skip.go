@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
+	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}

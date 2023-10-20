@@ -11,13 +11,13 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
-	runState, err := persistence.Load(args.RootDir)
+	runState, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -100,7 +100,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 }
 
 func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
-	err := persistence.Delete(rootDir)
+	err := statefile.Delete(rootDir)
 	return false, err
 }
 

@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
@@ -58,11 +58,11 @@ type displayStatusConfig struct {
 }
 
 func loadDisplayStatusConfig(rootDir domain.RepoRootDir) (*displayStatusConfig, error) {
-	filepath, err := persistence.FilePath(rootDir)
+	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
 		return nil, err
 	}
-	state, err := persistence.Load(rootDir)
+	state, err := statefile.Load(rootDir)
 	if err != nil {
 		return nil, err
 	}
