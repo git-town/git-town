@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 )
 
 // finished is called when executing all steps has successfully finished.
@@ -26,12 +26,12 @@ func finished(args ExecuteArgs) error {
 	args.RunState.UndoProgram.AddProgram(undoProgram)
 	args.RunState.UndoProgram.AddProgram(args.RunState.FinalUndoProgram)
 	if args.RunState.IsAbort || args.RunState.IsUndo {
-		err := persistence.Delete(args.RootDir)
+		err := statefile.Delete(args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateDeleteProblem, err)
 		}
 	} else {
-		err := persistence.Save(args.RunState, args.RootDir)
+		err := statefile.Save(args.RunState, args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateSaveProblem, err)
 		}

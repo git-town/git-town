@@ -1,10 +1,10 @@
-package persistence_test
+package statefile_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,7 +19,7 @@ func TestSanitizePath(t *testing.T) {
 		}
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
-			have := persistence.SanitizePath(rootDir)
+			have := statefile.SanitizePath(rootDir)
 			must.EqOp(t, want, have)
 		}
 	})

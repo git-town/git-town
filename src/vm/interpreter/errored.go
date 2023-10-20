@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v9/src/cli/print"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 )
 
 // errored is called when the given opcode has resulted in the given error.
@@ -44,7 +44,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Run.Config.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
-	err = persistence.Save(args.RunState, args.RootDir)
+	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
