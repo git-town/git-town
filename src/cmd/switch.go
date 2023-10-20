@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/cli/dialog"
@@ -63,9 +64,9 @@ func executeSwitch(verbose bool) error {
 		return err
 	}
 	if validChoice && newBranch != branches.Initial {
-		err = repo.Runner.Backend.CheckoutBranch(newBranch)
+		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
-			return err
+			os.Exit(1)
 		}
 	}
 	return nil
