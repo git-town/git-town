@@ -35,6 +35,7 @@ func executeSwitch(verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    false,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})

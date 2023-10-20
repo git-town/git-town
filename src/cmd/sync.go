@@ -62,6 +62,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})

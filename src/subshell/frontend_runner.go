@@ -17,6 +17,7 @@ import (
 type FrontendRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
+	PrintCommands    bool
 	CommandsCounter  *gohacks.Counter
 }
 
@@ -63,7 +64,9 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 			return err
 		}
 	}
-	PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
+	if self.PrintCommands {
+		PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
+	}
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command

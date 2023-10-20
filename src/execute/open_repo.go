@@ -107,6 +107,7 @@ type OpenRepoArgs struct {
 	Verbose          bool
 	DryRun           bool
 	OmitBranchNames  bool
+	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
 }
@@ -124,12 +125,14 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
+			PrintCommands:    true,
 			CommandsCounter:  args.counter,
 		}
 	}
 	return &subshell.FrontendRunner{
 		GetCurrentBranch: args.getCurrentBranch,
 		OmitBranchNames:  args.omitBranchNames,
+		PrintCommands:    true,
 		CommandsCounter:  args.counter,
 	}
 }
