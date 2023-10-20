@@ -72,7 +72,7 @@ func executeSwitch(verbose bool) error {
 		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
 			exitCode := 1
-			var exitErr exec.ExitError
+			var exitErr *exec.ExitError
 			if errors.As(err, &exitErr) {
 				exitCode = exitErr.ExitCode()
 			}
