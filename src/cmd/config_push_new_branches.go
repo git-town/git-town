@@ -41,6 +41,7 @@ func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
 	})
