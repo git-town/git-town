@@ -1,4 +1,4 @@
-package persistence_test
+package statefile_test
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/persistence"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/shoenig/test/must"
 )
 
@@ -28,7 +28,7 @@ func TestLoadSave(t *testing.T) {
 		}
 		for give, want := range tests {
 			rootDir := domain.NewRepoRootDir(give)
-			have := persistence.SanitizePath(rootDir)
+			have := statefile.SanitizePath(rootDir)
 			must.EqOp(t, want, have)
 		}
 	})
@@ -476,9 +476,9 @@ func TestLoadSave(t *testing.T) {
 }`[1:]
 
 		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")
-		err := persistence.Save(&runState, repoRoot)
+		err := statefile.Save(&runState, repoRoot)
 		must.NoError(t, err)
-		filepath, err := persistence.FilePath(repoRoot)
+		filepath, err := statefile.FilePath(repoRoot)
 		must.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		must.NoError(t, err)
