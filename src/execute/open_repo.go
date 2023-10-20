@@ -57,6 +57,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
 				omitBranchNames:  args.OmitBranchNames,
+				printCommands:    args.PrintCommands,
 				dryRun:           args.DryRun,
 				getCurrentBranch: backendCommands.CurrentBranch,
 				counter:          &commandsCounter,
@@ -125,20 +126,21 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 		return &subshell.FrontendDryRunner{
 			GetCurrentBranch: args.getCurrentBranch,
 			OmitBranchNames:  args.omitBranchNames,
-			PrintCommands:    true,
+			PrintCommands:    args.printCommands,
 			CommandsCounter:  args.counter,
 		}
 	}
 	return &subshell.FrontendRunner{
 		GetCurrentBranch: args.getCurrentBranch,
 		OmitBranchNames:  args.omitBranchNames,
-		PrintCommands:    true,
+		PrintCommands:    args.printCommands,
 		CommandsCounter:  args.counter,
 	}
 }
 
 type newFrontendRunnerArgs struct {
 	omitBranchNames  bool
+	printCommands    bool
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
 	counter          *gohacks.Counter
