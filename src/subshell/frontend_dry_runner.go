@@ -12,6 +12,7 @@ import (
 type FrontendDryRunner struct {
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
+	PrintCommands    bool
 	CommandsCounter  *gohacks.Counter
 }
 
@@ -21,7 +22,9 @@ func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 	if err != nil {
 		return err
 	}
-	PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)
+	if self.PrintCommands {
+		PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)
+	}
 	return nil
 }
 

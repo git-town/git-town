@@ -49,6 +49,7 @@ func executeRepo(verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: true,
 		ValidateGitRepo:  true,
 	})
