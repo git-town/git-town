@@ -35,4 +35,4 @@ Feature: too few or many parameters
       | set-parent arg1                       | unknown command "arg1" for "git-town set-parent"                       |
       | ship arg1 arg2                        | accepts at most 1 arg(s), received 2                                   |
       | sync arg1                             | unknown command "arg1" for "git-town sync"                             |
-      | version arg1                          | unknown command "arg1" for "git-town version"                          |
+      | --version arg1                        | unknown command "arg1" for "git-town"                                  |
