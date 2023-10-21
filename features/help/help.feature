@@ -31,7 +31,6 @@ Feature: help for commands
       | set-parent                  |
       | ship                        |
       | sync                        |
-      | version                     |
 
   Scenario Outline: outside a Git repository
     Given I am outside a Git repo
@@ -39,6 +38,7 @@ Feature: help for commands
     Then it prints:
       """
       Usage:
+        git-town [flags]
         git-town [command]
       """
     And it does not print "fatal: Not a Git repository"
