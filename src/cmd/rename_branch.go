@@ -37,7 +37,7 @@ When run on a perennial branch
 
 func renameBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
+	addForceFlag, readForceFlag := flags.BoolPersistent("force", "f", "Force rename of perennial branch")
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
