@@ -52,11 +52,9 @@ func rootCmd() cobra.Command {
 }
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
-	var err error
 	if showVersion {
 		fmt.Printf("Git Town %s (%s)\n", version, buildDate)
-	} else {
-		err = cmd.Help()
+		return nil
 	}
-	return err
+	return cmd.Help()
 }
