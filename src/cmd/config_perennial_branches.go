@@ -50,6 +50,7 @@ func executeConfigPerennialBranches(verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
@@ -65,6 +66,7 @@ func updatePerennialBranches(verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})

@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"errors"
+	"fmt"
+	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/cli/dialog"
@@ -34,6 +38,7 @@ func executeSwitch(verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    false,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
@@ -63,9 +68,15 @@ func executeSwitch(verbose bool) error {
 		return err
 	}
 	if validChoice && newBranch != branches.Initial {
-		err = repo.Runner.Backend.CheckoutBranch(newBranch)
+		fmt.Println()
+		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
-			return err
+			exitCode := 1
+			var exitErr *exec.ExitError
+			if errors.As(err, &exitErr) {
+				exitCode = exitErr.ExitCode()
+			}
+			os.Exit(exitCode)
 		}
 	}
 	return nil

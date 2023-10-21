@@ -37,7 +37,7 @@ When run on a perennial branch
 
 func renameBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
+	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
@@ -57,6 +57,7 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})

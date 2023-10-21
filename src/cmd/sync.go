@@ -40,7 +40,7 @@ You can disable this by running "git config %s false".`
 func syncCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches")
+	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",
@@ -62,6 +62,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
