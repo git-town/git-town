@@ -29,8 +29,8 @@ func rootCmd() cobra.Command {
 		SilenceUsage:  true,
 		Short:         rootDesc,
 		Long:          long(rootDesc, rootHelp),
-		Run: func(cmd *cobra.Command, args []string) {
-			executeRoot(cmd, readVersionFlag(cmd))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return executeRoot(cmd, readVersionFlag(cmd))
 		},
 	}
 	rootCmd.AddGroup(&cobra.Group{
@@ -51,10 +51,12 @@ func rootCmd() cobra.Command {
 	return rootCmd
 }
 
-func executeRoot(cmd *cobra.Command, showVersion bool) {
+func executeRoot(cmd *cobra.Command, showVersion bool) error {
+	var err error
 	if showVersion {
 		fmt.Printf("Git Town %s (%s)\n", version, buildDate)
 	} else {
-		cmd.Help()
+		err = cmd.Help()
 	}
+	return err
 }

@@ -7,9 +7,14 @@ import (
 )
 
 // Bool provides mistake-safe access to boolean Cobra command-line flags.
-func Bool(name, short, desc string) (AddFunc, ReadBoolFlagFunc) {
+func Bool(name, short, desc string, persistent FlagType) (AddFunc, ReadBoolFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.Flags().BoolP(name, short, false, desc)
+		switch persistent {
+		case FlagTypePersistent:
+			cmd.PersistentFlags().BoolP(name, short, false, desc)
+		case FlagTypeNonPersistent:
+			cmd.Flags().BoolP(name, short, false, desc)
+		}
 	}
 	readFlag := func(cmd *cobra.Command) bool {
 		value, err := cmd.Flags().GetBool(name)
@@ -20,3 +25,13 @@ func Bool(name, short, desc string) (AddFunc, ReadBoolFlagFunc) {
 	}
 	return addFlag, readFlag
 }
+
+// ReadBoolFlagFunc defines the type signature for helper functions that provide the value a boolean CLI flag associated with a Cobra command.
+type ReadBoolFlagFunc func(*cobra.Command) bool
+
+type FlagType int
+
+const (
+	FlagTypePersistent FlagType = iota
+	FlagTypeNonPersistent
+)

@@ -14,7 +14,7 @@ func TestBool(t *testing.T) {
 	t.Run("long version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.BoolPersistent("myflag", "m", "desc")
+		addFlag, readFlag := flags.Bool("myflag", "m", "desc", flags.FlagTypePersistent)
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"--myflag"})
 		must.NoError(t, err)
@@ -24,7 +24,7 @@ func TestBool(t *testing.T) {
 	t.Run("short version", func(t *testing.T) {
 		t.Parallel()
 		cmd := cobra.Command{}
-		addFlag, readFlag := flags.BoolPersistent("myflag", "m", "desc")
+		addFlag, readFlag := flags.Bool("myflag", "m", "desc", flags.FlagTypePersistent)
 		addFlag(&cmd)
 		err := cmd.ParseFlags([]string{"-m"})
 		must.NoError(t, err)
