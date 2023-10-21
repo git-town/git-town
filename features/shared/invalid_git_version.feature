@@ -39,4 +39,4 @@ Feature: require minimum Git version
       |                  |
       | completions bash |
       | help             |
-      | version          |
+      | --version        |

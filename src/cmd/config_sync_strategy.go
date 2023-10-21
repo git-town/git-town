@@ -17,7 +17,7 @@ when merging remote tracking branches into local feature branches.`
 
 func syncStrategyCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine")
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
 		Args:  cobra.MaximumNArgs(1),
