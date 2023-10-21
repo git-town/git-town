@@ -24,7 +24,6 @@ func Execute() error {
 	rootCmd.AddCommand(switchCmd())
 	rootCmd.AddCommand(syncCmd())
 	rootCmd.AddCommand(undoCmd())
-	rootCmd.AddCommand(versionCmd())
 	return rootCmd.Execute()
 }
 

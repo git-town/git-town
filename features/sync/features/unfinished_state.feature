@@ -119,4 +119,4 @@ Feature: handle previously unfinished Git Town commands
       | kill                        |
       | status reset                |
       | status                      |
-      | version                     |
+      | --version                   |
