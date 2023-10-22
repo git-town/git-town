@@ -97,7 +97,7 @@ func (self *Program) RemoveDuplicateCheckout() Program {
 	// this one is populated only if the last opcode is a checkout
 	var lastOpcode shared.Opcode
 	for _, opcode := range self.Opcodes {
-		if IsCheckoutOpcode(opcode) {
+		if shared.IsCheckoutOpcode(opcode) {
 			lastOpcode = opcode
 			continue
 		}
