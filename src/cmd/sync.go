@@ -238,7 +238,7 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
 		args.program.Add(&opcode.PushTags{})
 	}
-	args.program.Wrap(program.WrapOptions{
+	wrap(args.program, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: args.hasOpenChanges,
 		MainBranch:       args.mainBranch,

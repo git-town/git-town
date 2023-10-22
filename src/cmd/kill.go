@@ -161,7 +161,7 @@ func (self killConfig) targetBranchParent() domain.LocalBranchName {
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
-	prog.Wrap(program.WrapOptions{
+	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

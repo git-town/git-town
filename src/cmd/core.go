@@ -1,6 +1,12 @@
 // Package cmd defines the Git Town commands.
 package cmd
 
+import (
+	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
+	"github.com/git-town/git-town/v9/src/vm/program"
+)
+
 // Execute runs the Cobra stack.
 func Execute() error {
 	rootCmd := rootCmd()
@@ -32,4 +38,29 @@ func long(summary string, desc ...string) string {
 		return summary + ".\n" + desc[0]
 	}
 	return summary + "."
+}
+
+// wrap wraps the given list with opcodes that change the Git root directory or stash away open changes.
+// TODO: only wrap if the list actually contains any opcodes.
+func wrap(program *program.Program, options wrapOptions) {
+	if !options.PreviousBranch.IsEmpty() {
+		program.Add(&opcode.PreserveCheckoutHistory{
+			InitialBranch:                     options.InitialBranch,
+			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
+			MainBranch:                        options.MainBranch,
+		})
+	}
+	if options.StashOpenChanges {
+		program.Prepend(&opcode.StashOpenChanges{})
+		program.Add(&opcode.RestoreOpenChanges{})
+	}
+}
+
+// wrapOptions represents the options given to Wrap.
+type wrapOptions struct {
+	RunInGitRoot     bool
+	StashOpenChanges bool
+	MainBranch       domain.LocalBranchName
+	InitialBranch    domain.LocalBranchName
+	PreviousBranch   domain.LocalBranchName
 }

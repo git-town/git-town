@@ -217,7 +217,7 @@ func newPullRequestProgram(config *newPullRequestConfig) program.Program {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	prog.Wrap(program.WrapOptions{
+	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

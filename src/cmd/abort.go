@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting/github"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -143,7 +142,7 @@ func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (
 		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
-	abortRunState.RunProgram.Wrap(program.WrapOptions{
+	wrap(&abortRunState.RunProgram, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
