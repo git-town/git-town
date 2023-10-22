@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
@@ -49,7 +48,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -97,7 +96,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.SetGlobalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -148,7 +147,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.SetGlobalConfig{
 					Key:   config.KeyOffline,
@@ -193,7 +192,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.RemoveLocalConfig{
 					Key: config.KeyPullBranchStrategy,
@@ -241,7 +240,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.SetLocalConfig{
 					Key:   config.KeyPullBranchStrategy,
@@ -292,7 +291,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.SetLocalConfig{
 					Key:   config.KeyOffline,
@@ -364,7 +363,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := program.Program{
+		wantProgram := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.RemoveGlobalConfig{
 					Key: config.KeyPullBranchStrategy,

@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -171,8 +170,8 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
 
-func prependProgram(config *prependConfig) program.Program {
-	prog := program.Program{}
+func prependProgram(config *prependConfig) opcode.Program {
+	prog := opcode.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchProgram(branchToSync, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,

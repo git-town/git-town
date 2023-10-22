@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -299,8 +298,8 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strin
 	return nil
 }
 
-func shipProgram(config *shipConfig, commitMessage string) program.Program {
-	prog := program.Program{}
+func shipProgram(config *shipConfig, commitMessage string) opcode.Program {
+	prog := opcode.Program{}
 	// sync the parent branch
 	syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
 		branchTypes:        config.branches.Types,

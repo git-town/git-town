@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
@@ -18,13 +17,13 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	Command                  string
-	IsAbort                  bool            `exhaustruct:"optional"`
-	IsUndo                   bool            `exhaustruct:"optional"`
-	AbortProgram             program.Program `exhaustruct:"optional"`
-	RunProgram               program.Program
-	UndoProgram              program.Program `exhaustruct:"optional"`
+	IsAbort                  bool           `exhaustruct:"optional"`
+	IsUndo                   bool           `exhaustruct:"optional"`
+	AbortProgram             opcode.Program `exhaustruct:"optional"`
+	RunProgram               opcode.Program
+	UndoProgram              opcode.Program `exhaustruct:"optional"`
 	InitialActiveBranch      domain.LocalBranchName
-	FinalUndoProgram         program.Program            `exhaustruct:"optional"`
+	FinalUndoProgram         opcode.Program             `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"`
 }
@@ -32,7 +31,7 @@ type RunState struct {
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
 // after all the opcodes for the current branch.
 func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {
-	popped := program.Program{}
+	popped := opcode.Program{}
 	for {
 		nextOpcode := self.RunProgram.Peek()
 		if !shared.IsCheckoutOpcode(nextOpcode) {

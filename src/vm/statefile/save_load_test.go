@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
@@ -39,8 +38,8 @@ func TestLoadSave(t *testing.T) {
 			Command:      "command",
 			IsAbort:      true,
 			IsUndo:       true,
-			AbortProgram: program.Program{},
-			RunProgram: program.Program{
+			AbortProgram: opcode.Program{},
+			RunProgram: opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -166,7 +165,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoProgram: program.Program{},
+			UndoProgram: opcode.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
