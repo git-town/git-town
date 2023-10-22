@@ -35,7 +35,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 	popped := program.Program{}
 	for {
 		nextOpcode := self.RunProgram.Peek()
-		if !program.IsCheckoutOpcode(nextOpcode) {
+		if !shared.IsCheckoutOpcode(nextOpcode) {
 			popped.Add(self.RunProgram.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
@@ -73,14 +73,14 @@ func (self *RunState) CreateSkipRunState() RunState {
 		RunProgram:          self.AbortProgram,
 	}
 	for _, opcode := range self.UndoProgram.Opcodes {
-		if program.IsCheckoutOpcode(opcode) {
+		if shared.IsCheckoutOpcode(opcode) {
 			break
 		}
 		result.RunProgram.Add(opcode)
 	}
 	skipping := true
 	for _, opcode := range self.RunProgram.Opcodes {
-		if program.IsCheckoutOpcode(opcode) {
+		if shared.IsCheckoutOpcode(opcode) {
 			skipping = false
 		}
 		if !skipping {
@@ -154,7 +154,7 @@ func (self *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
 func (self *RunState) SkipCurrentBranchProgram() {
 	for {
 		opcode := self.RunProgram.Peek()
-		if program.IsCheckoutOpcode(opcode) {
+		if shared.IsCheckoutOpcode(opcode) {
 			break
 		}
 		self.RunProgram.Pop()
