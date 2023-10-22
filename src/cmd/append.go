@@ -201,7 +201,7 @@ func appendProgram(config *appendConfig) program.Program {
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	prog.Wrap(program.WrapOptions{
+	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,

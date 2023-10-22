@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
@@ -121,7 +120,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	undoRunState.RunProgram.Wrap(program.WrapOptions{
+	wrap(&undoRunState.RunProgram, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
