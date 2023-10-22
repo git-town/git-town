@@ -6,9 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
@@ -147,30 +145,4 @@ func (self *Program) UnmarshalJSON(b []byte) error {
 		}
 	}
 	return nil
-}
-
-// WrapOptions represents the options given to Wrap.
-type WrapOptions struct {
-	RunInGitRoot     bool
-	StashOpenChanges bool
-	MainBranch       domain.LocalBranchName
-	InitialBranch    domain.LocalBranchName
-	PreviousBranch   domain.LocalBranchName
-}
-
-// Wrap wraps the list with opcodes that
-// change to the Git root directory or stash away open changes.
-// TODO: only wrap if the list actually contains any opcodes.
-func (self *Program) Wrap(options WrapOptions) {
-	if !options.PreviousBranch.IsEmpty() {
-		self.Add(&opcode.PreserveCheckoutHistory{
-			InitialBranch:                     options.InitialBranch,
-			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
-			MainBranch:                        options.MainBranch,
-		})
-	}
-	if options.StashOpenChanges {
-		self.Prepend(&opcode.StashOpenChanges{})
-		self.Add(&opcode.RestoreOpenChanges{})
-	}
 }
