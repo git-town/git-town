@@ -296,22 +296,26 @@ func syncDeletedFeatureBranchProgram(list *opcode.Program, branch domain.BranchI
 			parent := lineage.Parent(branch.LocalName)
 			return backend.BranchHasUnmergedChanges(branch.LocalName, parent)
 		},
-		WhenTrue: []shared.Opcode{
-			&opcode.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),
+		WhenTrue: opcode.Program{
+			Opcodes: []shared.Opcode{
+				&opcode.QueueMessage{
+					Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),
+				},
 			},
 		},
-		WhenFalse: []shared.Opcode{
-			&opcode.CheckoutParent{CurrentBranch: branch.LocalName},
-			&opcode.DeleteLocalBranch{
-				Branch: branch.LocalName,
-				Force:  false,
-			},
-			&opcode.RemoveBranchFromLineage{
-				Branch: branch.LocalName,
-			},
-			&opcode.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName),
+		WhenFalse: opcode.Program{
+			Opcodes: []shared.Opcode{
+				&opcode.CheckoutParent{CurrentBranch: branch.LocalName},
+				&opcode.DeleteLocalBranch{
+					Branch: branch.LocalName,
+					Force:  false,
+				},
+				&opcode.RemoveBranchFromLineage{
+					Branch: branch.LocalName,
+				},
+				&opcode.QueueMessage{
+					Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName),
+				},
 			},
 		},
 	})

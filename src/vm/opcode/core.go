@@ -52,6 +52,8 @@ func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 		return &Checkout{}
 	case "CheckoutIfExists":
 		return &CheckoutIfExists{}
+	case "CheckoutParent":
+		return &CheckoutParent{}
 	case "CommitOpenChanges":
 		return &CommitOpenChanges{}
 	case "ConnectorMergeProposal":

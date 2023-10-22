@@ -98,13 +98,17 @@ func TestLoadSave(t *testing.T) {
 					},
 					&opcode.IfElse{
 						Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
-						WhenTrue: []shared.Opcode{
-							&opcode.Checkout{Branch: domain.NewLocalBranchName("false-branch")},
-							&opcode.AbortMerge{},
+						WhenTrue: opcode.Program{
+							Opcodes: []shared.Opcode{
+								&opcode.Checkout{Branch: domain.NewLocalBranchName("true-branch")},
+								&opcode.AbortMerge{},
+							},
 						},
-						WhenFalse: []shared.Opcode{
-							&opcode.CheckoutParent{CurrentBranch: domain.NewLocalBranchName("true-branch")},
-							&opcode.AbortRebase{},
+						WhenFalse: opcode.Program{
+							Opcodes: []shared.Opcode{
+								&opcode.CheckoutParent{CurrentBranch: domain.NewLocalBranchName("false-branch")},
+								&opcode.AbortRebase{},
+							},
 						},
 					},
 					&opcode.Merge{Branch: domain.NewBranchName("branch")},
@@ -320,7 +324,7 @@ func TestLoadSave(t *testing.T) {
             "type": "AbortMerge"
           }
         ],
-        "WhenFalse: [
+        "WhenFalse": [
           {
             "data": {
               "CurrentBranch": "false-branch"
@@ -333,7 +337,7 @@ func TestLoadSave(t *testing.T) {
           }
         ]
       },
-      "type": "IfElse",
+      "type": "IfElse"
     },
     {
       "data": {
