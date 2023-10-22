@@ -31,7 +31,7 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }
 
-func Determine(opcodeType string) shared.Opcode { //nolint:ireturn
+func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	switch opcodeType {
 	case "AbortMerge":
 		return &AbortMerge{}
