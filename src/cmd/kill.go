@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -158,8 +157,8 @@ func (self killConfig) targetBranchParent() domain.LocalBranchName {
 	return self.lineage.Parent(self.targetBranch.LocalName)
 }
 
-func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
-	prog := program.Program{}
+func killProgram(config *killConfig) (runProgram, finalUndoProgram opcode.Program) {
+	prog := opcode.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
@@ -172,7 +171,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 }
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
-func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
+func killFeatureBranch(prog *opcode.Program, finalUndoProgram *opcode.Program, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
 	}
@@ -207,6 +206,6 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
 	lineage config.Lineage
-	program *program.Program
+	program *opcode.Program
 	parent  domain.LocalBranchName
 }

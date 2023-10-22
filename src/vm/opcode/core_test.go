@@ -1,4 +1,4 @@
-package program_test
+package opcode_test
 
 import (
 	"encoding/json"
@@ -7,10 +7,57 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
+
+func TestJSON(t *testing.T) {
+	t.Parallel()
+
+	t.Run("MarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		jsonstep := opcode.JSON{
+			Opcode: &opcode.Checkout{
+				Branch: domain.NewLocalBranchName("branch-1"),
+			},
+		}
+		have, err := json.MarshalIndent(jsonstep, "", "  ")
+		must.NoError(t, err)
+		// NOTE: It's unclear why this doesn't contain the "data" and "type" fields from JSONStep's MarshalJSON method here.
+		//       Marshaling an entire RunState somehow works correctly.
+		want := `
+{
+  "Opcode": {
+    "Branch": "branch-1"
+  }
+}`[1:]
+		must.EqOp(t, want, string(have))
+	})
+
+	t.Run("UnmarshalJSON", func(t *testing.T) {
+		t.Parallel()
+		give := `
+{
+	"data": {
+    "Branch": "branch-1"
+  },
+	"type": "Checkout"
+}`[1:]
+		have := opcode.JSON{
+			Opcode: &opcode.Checkout{
+				Branch: domain.EmptyLocalBranchName(),
+			},
+		}
+		err := json.Unmarshal([]byte(give), &have)
+		must.NoError(t, err)
+		want := opcode.JSON{
+			Opcode: &opcode.Checkout{
+				Branch: domain.NewLocalBranchName("branch-1"),
+			},
+		}
+		must.Eq(t, want, have)
+	})
+}
 
 func TestProgram(t *testing.T) {
 	t.Parallel()
@@ -19,21 +66,21 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("append a single opcode", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			have := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			have.Add(&opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}
 			must.Eq(t, want, have.Opcodes)
 		})
 		t.Run("append multiple opcodes", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			have := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			have.Add(&opcode.AbortRebase{}, &opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortMerge{}, &opcode.AbortRebase{}, &opcode.StashOpenChanges{}}
 			must.Eq(t, want, have.Opcodes)
 		})
 		t.Run("append no opcodes", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{}}
+			have := opcode.Program{Opcodes: []shared.Opcode{}}
 			have.Add()
 			must.Eq(t, []shared.Opcode{}, have.Opcodes)
 		})
@@ -43,16 +90,16 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("append a populated list", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
-			other := program.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}}}
+			have := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			other := opcode.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}}}
 			have.AddProgram(other)
 			want := []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}
 			must.Eq(t, want, have.Opcodes)
 		})
 		t.Run("append an empty list", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
-			other := program.Program{Opcodes: []shared.Opcode{}}
+			have := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			other := opcode.Program{Opcodes: []shared.Opcode{}}
 			have.AddProgram(other)
 			must.Eq(t, []shared.Opcode{&opcode.AbortMerge{}}, have.Opcodes)
 		})
@@ -62,19 +109,19 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("list is empty", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{}}
+			have := opcode.Program{Opcodes: []shared.Opcode{}}
 			must.True(t, have.IsEmpty())
 		})
 		t.Run("list is not empty", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			have := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			must.False(t, have.IsEmpty())
 		})
 	})
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		give := program.Program{Opcodes: []shared.Opcode{
+		give := opcode.Program{Opcodes: []shared.Opcode{
 			&opcode.AbortMerge{},
 			&opcode.StashOpenChanges{},
 		}}
@@ -97,18 +144,18 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
 			have := give.Peek()
 			must.Eq(t, "*opcode.AbortMerge", reflect.TypeOf(have).String())
-			wantProgram := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
+			wantProgram := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
 			must.Eq(t, wantProgram, give)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{}}
+			give := opcode.Program{Opcodes: []shared.Opcode{}}
 			have := give.Peek()
 			must.EqOp(t, nil, have)
-			wantProgram := program.Program{Opcodes: []shared.Opcode{}}
+			wantProgram := opcode.Program{Opcodes: []shared.Opcode{}}
 			must.Eq(t, wantProgram, give)
 		})
 	})
@@ -117,18 +164,18 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}, &opcode.StashOpenChanges{}}}
 			have := give.Pop()
 			must.EqOp(t, "*opcode.AbortMerge", reflect.TypeOf(have).String())
-			wantProgram := program.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}}}
+			wantProgram := opcode.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}}}
 			must.Eq(t, wantProgram, give)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{}}
+			give := opcode.Program{Opcodes: []shared.Opcode{}}
 			have := give.Pop()
 			must.EqOp(t, nil, have)
-			wantProgram := program.Program{Opcodes: []shared.Opcode{}}
+			wantProgram := opcode.Program{Opcodes: []shared.Opcode{}}
 			must.Eq(t, wantProgram, give)
 		})
 	})
@@ -137,27 +184,27 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("prepend a single opcode", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			give.Prepend(&opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
 		})
 		t.Run("prepend multiple opcodes", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			give.Prepend(&opcode.AbortRebase{}, &opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortRebase{}, &opcode.StashOpenChanges{}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
 		})
 		t.Run("prepend no opcodes", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{}}
+			give := opcode.Program{Opcodes: []shared.Opcode{}}
 			give.Prepend()
 			must.Eq(t, []shared.Opcode{}, give.Opcodes)
 		})
 		t.Run("used as a higher-level function", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
 			prepend := give.Prepend
 			prepend(&opcode.AbortRebase{}, &opcode.StashOpenChanges{})
 			want := []shared.Opcode{&opcode.AbortRebase{}, &opcode.StashOpenChanges{}, &opcode.AbortMerge{}}
@@ -169,16 +216,16 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("prepend a populated list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
-			other := program.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{}}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			other := opcode.Program{Opcodes: []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{}}}
 			give.PrependProgram(other)
 			want := []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
-			other := program.Program{Opcodes: []shared.Opcode{}}
+			give := opcode.Program{Opcodes: []shared.Opcode{&opcode.AbortMerge{}}}
+			other := opcode.Program{Opcodes: []shared.Opcode{}}
 			give.PrependProgram(other)
 			want := []shared.Opcode{&opcode.AbortMerge{}}
 			must.Eq(t, want, give.Opcodes)
@@ -189,14 +236,14 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the given type at the end", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			have := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
 				},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
@@ -206,7 +253,7 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("contains the given type in the middle", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			have := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
@@ -214,7 +261,7 @@ func TestProgram(t *testing.T) {
 				},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
@@ -225,7 +272,7 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("contains the given type multiple times", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			have := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-1")},
@@ -236,7 +283,7 @@ func TestProgram(t *testing.T) {
 				},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -248,7 +295,7 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("does not contain the given type", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			have := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -256,7 +303,7 @@ func TestProgram(t *testing.T) {
 				},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -271,7 +318,7 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("has duplicate checkout opcodes", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{
+			give := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
@@ -279,7 +326,7 @@ func TestProgram(t *testing.T) {
 				},
 			}
 			have := give.RemoveDuplicateCheckout()
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
@@ -289,7 +336,7 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("has a mix of Checkout and CheckoutIfExists opcodes", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{
+			give := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
@@ -297,7 +344,7 @@ func TestProgram(t *testing.T) {
 				},
 			}
 			have := give.RemoveDuplicateCheckout()
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
@@ -307,14 +354,14 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("has no duplicate checkout opcodes", func(t *testing.T) {
 			t.Parallel()
-			give := program.Program{
+			give := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
 				},
 			}
 			have := give.RemoveDuplicateCheckout()
-			want := program.Program{
+			want := opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -326,7 +373,7 @@ func TestProgram(t *testing.T) {
 
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
-		give := program.Program{Opcodes: []shared.Opcode{
+		give := opcode.Program{Opcodes: []shared.Opcode{
 			&opcode.AbortMerge{},
 			&opcode.AddToPerennialBranches{
 				Branch: domain.NewLocalBranchName("branch"),
@@ -343,7 +390,7 @@ Program:
 
 	t.Run("OpcodeTypes", func(t *testing.T) {
 		t.Parallel()
-		prog := program.Program{
+		prog := opcode.Program{
 			Opcodes: []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
@@ -371,10 +418,10 @@ Program:
 		"type": "StashOpenChanges"
 	}
 ]`[1:]
-		have := program.Program{}
+		have := opcode.Program{}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := program.Program{Opcodes: []shared.Opcode{
+		want := opcode.Program{Opcodes: []shared.Opcode{
 			&opcode.ResetCurrentBranchToSHA{
 				Hard:        false,
 				MustHaveSHA: domain.NewSHA("abcdef"),
