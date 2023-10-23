@@ -73,7 +73,7 @@ func TestIfElse(t *testing.T) {
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
 			WhenTrue: []shared.Opcode{
-				&opcode.AbortRebase{},
+				&opcode.AbortMerge{},
 			},
 			WhenFalse: []shared.Opcode{
 				&opcode.ContinueRebase{},
