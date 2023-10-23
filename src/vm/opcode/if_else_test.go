@@ -12,20 +12,6 @@ import (
 
 func TestIfElse(t *testing.T) {
 	t.Parallel()
-	t.Run("empty values", func(t *testing.T) {
-		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue:  []shared.Opcode{},
-			WhenFalse: []shared.Opcode{},
-		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue:  []shared.Opcode{},
-			WhenFalse: []shared.Opcode{},
-		}
-		must.Eq(t, one, two)
-	})
 
 	t.Run("equal values", func(t *testing.T) {
 		t.Parallel()
