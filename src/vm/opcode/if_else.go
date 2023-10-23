@@ -16,6 +16,12 @@ type IfElse struct {
 	undeclaredOpcodeMethods
 }
 
+// Equal implements the XXX interface. This is needed for comparison.
+func (self IfElse) Equal(other IfElse) bool {
+	return reflect.DeepEqual(self.WhenFalse, other.WhenFalse) &&
+		reflect.DeepEqual(self.WhenTrue, other.WhenTrue)
+}
+
 func (self *IfElse) Run(args shared.RunArgs) error {
 	condition, err := self.Condition(&args.Runner.Backend, args.Lineage)
 	if err != nil {
@@ -27,10 +33,4 @@ func (self *IfElse) Run(args shared.RunArgs) error {
 		args.PrependOpcodes(self.WhenFalse...)
 	}
 	return nil
-}
-
-// Equal implements the XXX interface. This is needed for comparison.
-func (self IfElse) Equal(other IfElse) bool {
-	return reflect.DeepEqual(self.WhenFalse, other.WhenFalse) &&
-		reflect.DeepEqual(self.WhenTrue, other.WhenTrue)
 }
