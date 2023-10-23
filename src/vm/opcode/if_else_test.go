@@ -87,19 +87,19 @@ func TestIfElse(t *testing.T) {
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
 			WhenTrue: []shared.Opcode{
-				&opcode.AbortRebase{},
+				&opcode.AbortMerge{},
 			},
 			WhenFalse: []shared.Opcode{
-				&opcode.AbortMerge{},
+				&opcode.AbortRebase{},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
 			WhenTrue: []shared.Opcode{
-				&opcode.AbortRebase{},
+				&opcode.AbortMerge{},
 			},
 			WhenFalse: []shared.Opcode{
-				&opcode.AbortMerge{},
+				&opcode.AbortRebase{},
 			},
 		}
 		must.Eq(t, one, two)
