@@ -1,6 +1,8 @@
 package opcode
 
 import (
+	"reflect"
+
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/shared"
@@ -25,4 +27,10 @@ func (self *IfElse) Run(args shared.RunArgs) error {
 		args.PrependOpcodes(self.WhenFalse...)
 	}
 	return nil
+}
+
+// Equal implements the XXX interface. This is needed for comparison.
+func (self IfElse) Equal(other IfElse) bool {
+	return reflect.DeepEqual(self.WhenFalse, other.WhenFalse) &&
+		reflect.DeepEqual(self.WhenTrue, other.WhenTrue)
 }
