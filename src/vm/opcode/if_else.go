@@ -16,7 +16,7 @@ type IfElse struct {
 	undeclaredOpcodeMethods
 }
 
-// Equal implements the XXX interface. This is needed for comparison.
+// This method makes comparison work in unit tests.
 func (self IfElse) Equal(other IfElse) bool {
 	return reflect.DeepEqual(self.WhenFalse, other.WhenFalse) &&
 		reflect.DeepEqual(self.WhenTrue, other.WhenTrue)
