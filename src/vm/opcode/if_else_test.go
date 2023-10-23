@@ -39,7 +39,7 @@ func TestIfElse(t *testing.T) {
 			},
 		}
 		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortRebase{},
 			},
@@ -62,7 +62,7 @@ func TestIfElse(t *testing.T) {
 			},
 		}
 		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
 			WhenTrue: []shared.Opcode{
 				&opcode.ContinueMerge{},
 			},
@@ -85,7 +85,7 @@ func TestIfElse(t *testing.T) {
 			},
 		}
 		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortRebase{},
 			},
@@ -94,5 +94,28 @@ func TestIfElse(t *testing.T) {
 			},
 		}
 		must.NotEq(t, one, two)
+	})
+
+	t.Run("different condition function", func(t *testing.T) {
+		t.Parallel()
+		one := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+		}
+		two := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+		}
+		must.Eq(t, one, two)
 	})
 }
