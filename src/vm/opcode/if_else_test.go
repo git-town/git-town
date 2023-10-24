@@ -17,20 +17,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		must.Eq(t, one, two)
@@ -40,20 +48,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.ContinueMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.ContinueMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		must.NotEq(t, one, two)
@@ -63,20 +79,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.ContinueRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.ContinueRebase{},
+				},
 			},
 		}
 		must.NotEq(t, one, two)
@@ -86,20 +110,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		must.Eq(t, one, two)
