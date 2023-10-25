@@ -32,6 +32,15 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }
 
+func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
+	for _, opcode := range Types() {
+		if gohacks.TypeName(opcode) == opcodeType {
+			return opcode
+		}
+	}
+	return nil
+}
+
 // Types provides all existing opcodes.
 // This is used to iterate all opcode types.
 func Types() []shared.Opcode {
@@ -87,13 +96,4 @@ func Types() []shared.Opcode {
 		&SquashMerge{},
 		&UpdateProposalTarget{},
 	}
-}
-
-func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
-	for _, opcode := range Types() {
-		if gohacks.TypeName(opcode) == opcodeType {
-			return opcode
-		}
-	}
-	return nil
 }
