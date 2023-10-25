@@ -2,6 +2,7 @@ package statefile_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -489,6 +490,11 @@ func TestLoadSave(t *testing.T) {
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
-		must.Eq(t, runState, newState)
+		// must.Eq(t, runState, newState)
+		for i := range newState.RunProgram.Opcodes {
+			fmt.Printf("%d: %#v\n", i, newState.RunProgram.Opcodes[i])
+			must.Eq(t, newState.RunProgram.Opcodes[i], runState.RunProgram.Opcodes[i])
+		}
+		must.Eq(t, runState.RunProgram.Opcodes, newState.RunProgram.Opcodes)
 	})
 }

@@ -16,7 +16,7 @@ type IfElse struct {
 	undeclaredOpcodeMethods
 }
 
-// This method makes comparison work in unit tests.
+// This method makes comparison via https://github.com/google/go-cmp work in unit tests.
 func (self IfElse) Equal(other IfElse) bool {
 	return reflect.DeepEqual(self.WhenFalse, other.WhenFalse) &&
 		reflect.DeepEqual(self.WhenTrue, other.WhenTrue)
