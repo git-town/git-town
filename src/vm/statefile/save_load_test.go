@@ -499,6 +499,8 @@ func TestLoadSave(t *testing.T) {
 		// if !runState.Equal(newState) {
 		// 	t.Fail()
 		// }
+		// TODO: derive this list from opcode.Types(),
+		// or merge these two lists.
 		allowedTypes := cmp.AllowUnexported(
 			domain.BranchName{},
 			domain.LocalBranchName{},
