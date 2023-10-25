@@ -554,7 +554,6 @@ func TestLoadSave(t *testing.T) {
 			opcode.SquashMerge{},
 			opcode.UpdateProposalTarget{},
 		)
-		newState.Command = "111"
 		if !cmp.Equal(runState, newState, allowedTypes) {
 			fmt.Println(cmp.Diff(runState, newState, allowedTypes))
 			t.Fail()
