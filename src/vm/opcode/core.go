@@ -39,103 +39,10 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 }
 
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
-	switch opcodeType {
-	case "AbortMerge":
-		return &AbortMerge{}
-	case "AbortRebase":
-		return &AbortRebase{}
-	case "AddToPerennialBranches":
-		return &AddToPerennialBranches{}
-	case "ChangeParent":
-		return &ChangeParent{}
-	case "Checkout":
-		return &Checkout{}
-	case "CheckoutIfExists":
-		return &CheckoutIfExists{}
-	case "CommitOpenChanges":
-		return &CommitOpenChanges{}
-	case "ConnectorMergeProposal":
-		return &ConnectorMergeProposal{}
-	case "ContinueMerge":
-		return &ContinueMerge{}
-	case "ContinueRebase":
-		return &ContinueRebase{}
-	case "CreateBranch":
-		return &CreateBranch{}
-	case "CreateBranchExistingParent":
-		return &CreateBranchExistingParent{}
-	case "CreateProposal":
-		return &CreateProposal{}
-	case "CreateRemoteBranch":
-		return &CreateRemoteBranch{}
-	case "CreateTrackingBranch":
-		return &CreateTrackingBranch{}
-	case "DeleteLocalBranch":
-		return &DeleteLocalBranch{}
-	case "DeleteParentBranch":
-		return &DeleteParentBranch{}
-	case "DeleteRemoteBranch":
-		return &DeleteRemoteBranch{}
-	case "DeleteTrackingBranch":
-		return &DeleteTrackingBranch{}
-	case "DiscardOpenChanges":
-		return &DiscardOpenChanges{}
-	case "EnsureHasShippableChanges":
-		return &EnsureHasShippableChanges{}
-	case "FetchUpstream":
-		return &FetchUpstream{}
-	case "ForcePushCurrentBranch":
-		return &ForcePushCurrentBranch{}
-	case "Merge":
-		return &Merge{}
-	case "MergeParent":
-		return &MergeParent{}
-	case "PreserveCheckoutHistory":
-		return &PreserveCheckoutHistory{}
-	case "PullCurrentBranch":
-		return &PullCurrentBranch{}
-	case "PushCurrentBranch":
-		return &PushCurrentBranch{}
-	case "PushTags":
-		return &PushTags{}
-	case "RebaseBranch":
-		return &RebaseBranch{}
-	case "RebaseParent":
-		return &RebaseParent{}
-	case "RemoveFromPerennialBranches":
-		return &RemoveFromPerennialBranches{}
-	case "RemoveGlobalConfig":
-		return &RemoveGlobalConfig{}
-	case "RemoveLocalConfig":
-		return &RemoveLocalConfig{}
-	case "ResetCurrentBranchToSHA":
-		return &ResetCurrentBranchToSHA{}
-	case "ResetRemoteBranchToSHA":
-		return &ResetRemoteBranchToSHA{}
-	case "RestoreOpenChanges":
-		return &RestoreOpenChanges{}
-	case "RevertCommit":
-		return &RevertCommit{}
-	case "SetExistingParent":
-		return &SetExistingParent{}
-	case "SetGlobalConfig":
-		return &SetGlobalConfig{}
-	case "SetLocalConfig":
-		return &SetLocalConfig{}
-	case "SetParent":
-		return &SetParent{}
-	case "SetParentIfBranchExists":
-		return &SetParentIfBranchExists{}
-	case "SquashMerge":
-		return &SquashMerge{}
-	case "SkipCurrentBranch":
-		return &SkipCurrentBranch{}
-	case "StashOpenChanges":
-		return &StashOpenChanges{}
-	case "UndoLastCommit":
-		return &UndoLastCommit{}
-	case "UpdateProposalTarget":
-		return &UpdateProposalTarget{}
+	for _, opcode := range Types() {
+		if gohacks.TypeName(opcode) == opcodeType {
+			return opcode
+		}
 	}
 	return nil
 }
@@ -307,4 +214,62 @@ func (self *JSON) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
 	return json.Unmarshal(mapping["data"], &self.Opcode)
+}
+
+// Types provides all existing opcodes.
+// This is used to iterate all opcode types.
+func Types() []shared.Opcode {
+	return []shared.Opcode{
+		&AbortMerge{},
+		&AbortRebase{},
+		&AddToPerennialBranches{},
+		&ChangeParent{},
+		&Checkout{},
+		&CheckoutIfExists{},
+		&CheckoutParent{},
+		&ChangeParent{},
+		&CommitOpenChanges{},
+		&ConnectorMergeProposal{},
+		&ContinueMerge{},
+		&ContinueRebase{},
+		&CreateBranch{},
+		&CreateBranchExistingParent{},
+		&CreateProposal{},
+		&CreateRemoteBranch{},
+		&CreateTrackingBranch{},
+		&DeleteLocalBranch{},
+		&DeleteParentBranch{},
+		&DeleteRemoteBranch{},
+		&DeleteTrackingBranch{},
+		&DiscardOpenChanges{},
+		&EnsureHasShippableChanges{},
+		&FetchUpstream{},
+		&ForcePushCurrentBranch{},
+		&IfElse{},
+		&Merge{},
+		&MergeParent{},
+		&PreserveCheckoutHistory{},
+		&PullCurrentBranch{},
+		&PushCurrentBranch{},
+		&PushTags{},
+		&RebaseBranch{},
+		&RebaseParent{},
+		&RemoveBranchFromLineage{},
+		&RemoveFromPerennialBranches{},
+		&RemoveGlobalConfig{},
+		&RemoveLocalConfig{},
+		&ResetCurrentBranchToSHA{},
+		&ResetRemoteBranchToSHA{},
+		&RestoreOpenChanges{},
+		&RevertCommit{},
+		&SetExistingParent{},
+		&SetGlobalConfig{},
+		&SetLocalConfig{},
+		&SetParent{},
+		&SkipCurrentBranch{},
+		&StashOpenChanges{},
+		&SquashMerge{},
+		&UndoLastCommit{},
+		&UpdateProposalTarget{},
+	}
 }
