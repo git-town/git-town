@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
@@ -151,8 +150,8 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		prog1 := program.Program{Opcodes: []shared.Opcode{&one}}
-		prog2 := program.Program{Opcodes: []shared.Opcode{&two}}
+		prog1 := opcode.Program{Opcodes: []shared.Opcode{&one}}
+		prog2 := opcode.Program{Opcodes: []shared.Opcode{&two}}
 		must.Eq(t, prog1, prog2)
 	})
 }
