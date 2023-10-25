@@ -73,7 +73,11 @@ issues:
     - text: is missing field undeclaredOpcodeMethods
       linters:
         - exhaustruct
-    - path: src/vm/opcode/core.go # ignore all missing fields in json.go since those are intentional
+    - path: src/vm/opcode/core.go
+      text: is missing field
+      linters:
+        - exhaustruct
+    - path: src/vm/statefile/save_load_test.go
       text: is missing field
       linters:
         - exhaustruct
