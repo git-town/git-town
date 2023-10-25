@@ -59,6 +59,19 @@ func TestJSON(t *testing.T) {
 	})
 }
 
+func TestLookup(t *testing.T) {
+	t.Parallel()
+	tests := map[string]shared.Opcode{
+		"AbortMerge":  &opcode.AbortMerge{},
+		"AbortRebase": &opcode.AbortRebase{},
+		"unknown":     nil,
+	}
+	for give, want := range tests {
+		have := opcode.Lookup(give)
+		must.EqOp(t, want, have)
+	}
+}
+
 func TestProgram(t *testing.T) {
 	t.Parallel()
 
