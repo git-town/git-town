@@ -38,70 +38,6 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }
 
-// Types provides all existing Opcodes as an iterable list.
-func Types() []shared.Opcode {
-	return []shared.Opcode{
-		&AbortMerge{},
-		&AbortRebase{},
-		&AddToPerennialBranches{},
-		&ChangeParent{},
-		&Checkout{},
-		&CheckoutIfExists{},
-		&CheckoutParent{},
-		&ChangeParent{},
-		&CommitOpenChanges{},
-		&ConnectorMergeProposal{},
-		&ContinueMerge{},
-		&ContinueRebase{},
-		&CreateBranch{},
-		&CreateBranchExistingParent{},
-		&CreateProposal{},
-		&CreateRemoteBranch{},
-		&CreateTrackingBranch{},
-		&DeleteLocalBranch{},
-		&DeleteParentBranch{},
-		&DeleteRemoteBranch{},
-		&DeleteTrackingBranch{},
-		&DiscardOpenChanges{},
-		&EnsureHasShippableChanges{},
-		&FetchUpstream{},
-		&ForcePushCurrentBranch{},
-		&IfElse{},
-		&Merge{},
-		&MergeParent{},
-		&PreserveCheckoutHistory{},
-		&PullCurrentBranch{},
-		&PushCurrentBranch{},
-		&PushTags{},
-		&RebaseBranch{},
-		&RebaseParent{},
-		&RemoveBranchFromLineage{},
-		&RemoveFromPerennialBranches{},
-		&RemoveGlobalConfig{},
-		&RemoveLocalConfig{},
-		&ResetCurrentBranchToSHA{},
-		&ResetRemoteBranchToSHA{},
-		&RestoreOpenChanges{},
-		&RevertCommit{},
-		&SetGlobalConfig{},
-		&SetLocalConfig{},
-		&SetParent{},
-		&SkipCurrentBranch{},
-		&StashOpenChanges{},
-		&SquashMerge{},
-		&UpdateProposalTarget{},
-	}
-}
-
-func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
-	for _, opcode := range Types() {
-		if gohacks.TypeName(opcode) == opcodeType {
-			return opcode
-		}
-	}
-	return nil
-}
-
 // Program is a mutable collection of Opcodes.
 // Only use a program if you need the mutability features of this struct.
 // If all you need is an immutable list of opcodes, a []shared.Opcode is sufficient.
@@ -269,6 +205,15 @@ func (self *JSON) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
 	return json.Unmarshal(mapping["data"], &self.Opcode)
+}
+
+func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
+	for _, opcode := range Types() {
+		if gohacks.TypeName(opcode) == opcodeType {
+			return opcode
+		}
+	}
+	return nil
 }
 
 // Types provides all existing opcodes.

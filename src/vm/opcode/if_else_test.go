@@ -141,20 +141,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		list1 := []shared.Opcode{&one}
@@ -166,20 +174,28 @@ func TestIfElse(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		two := opcode.IfElse{
 			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
-			WhenTrue: []shared.Opcode{
-				&opcode.AbortMerge{},
+			WhenTrue: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortMerge{},
+				},
 			},
-			WhenFalse: []shared.Opcode{
-				&opcode.AbortRebase{},
+			WhenFalse: opcode.Program{
+				Opcodes: []shared.Opcode{
+					&opcode.AbortRebase{},
+				},
 			},
 		}
 		prog1 := opcode.Program{Opcodes: []shared.Opcode{&one}}
