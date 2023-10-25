@@ -252,6 +252,7 @@ func Types() []shared.Opcode {
 		&PullCurrentBranch{},
 		&PushCurrentBranch{},
 		&PushTags{},
+		&QueueMessage{},
 		&RebaseBranch{},
 		&RebaseParent{},
 		&RemoveBranchFromLineage{},
