@@ -95,7 +95,7 @@ func Types() []shared.Opcode {
 
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	for _, opcode := range Types() {
-		if opcodeType == gohacks.TypeName(opcode) {
+		if gohacks.TypeName(opcode) == opcodeType {
 			return opcode
 		}
 	}
@@ -269,4 +269,62 @@ func (self *JSON) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
 	return json.Unmarshal(mapping["data"], &self.Opcode)
+}
+
+// Types provides all existing opcodes.
+// This is used to iterate all opcode types.
+func Types() []shared.Opcode {
+	return []shared.Opcode{
+		&AbortMerge{},
+		&AbortRebase{},
+		&AddToPerennialBranches{},
+		&ChangeParent{},
+		&Checkout{},
+		&CheckoutIfExists{},
+		&CheckoutParent{},
+		&ChangeParent{},
+		&CommitOpenChanges{},
+		&ConnectorMergeProposal{},
+		&ContinueMerge{},
+		&ContinueRebase{},
+		&CreateBranch{},
+		&CreateBranchExistingParent{},
+		&CreateProposal{},
+		&CreateRemoteBranch{},
+		&CreateTrackingBranch{},
+		&DeleteLocalBranch{},
+		&DeleteParentBranch{},
+		&DeleteRemoteBranch{},
+		&DeleteTrackingBranch{},
+		&DiscardOpenChanges{},
+		&EnsureHasShippableChanges{},
+		&FetchUpstream{},
+		&ForcePushCurrentBranch{},
+		&IfElse{},
+		&Merge{},
+		&MergeParent{},
+		&PreserveCheckoutHistory{},
+		&PullCurrentBranch{},
+		&PushCurrentBranch{},
+		&PushTags{},
+		&RebaseBranch{},
+		&RebaseParent{},
+		&RemoveBranchFromLineage{},
+		&RemoveFromPerennialBranches{},
+		&RemoveGlobalConfig{},
+		&RemoveLocalConfig{},
+		&ResetCurrentBranchToSHA{},
+		&ResetRemoteBranchToSHA{},
+		&RestoreOpenChanges{},
+		&RevertCommit{},
+		&SetExistingParent{},
+		&SetGlobalConfig{},
+		&SetLocalConfig{},
+		&SetParent{},
+		&SkipCurrentBranch{},
+		&StashOpenChanges{},
+		&SquashMerge{},
+		&UndoLastCommit{},
+		&UpdateProposalTarget{},
+	}
 }
