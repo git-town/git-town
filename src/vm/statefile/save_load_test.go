@@ -2,7 +2,6 @@ package statefile_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -14,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
+	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test/must"
 )
 
@@ -490,11 +490,85 @@ func TestLoadSave(t *testing.T) {
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
-		// must.Eq(t, runState, newState)
-		for i := range newState.RunProgram.Opcodes {
-			fmt.Printf("%d: %#v\n", i, newState.RunProgram.Opcodes[i])
-			must.Eq(t, newState.RunProgram.Opcodes[i], runState.RunProgram.Opcodes[i])
+		// HACK: IfElse step instances in runState.RunProgram.Opcodes contain a function field,
+		// which falsely fails the comparison. We have created an `Equal` method on this type
+		// but that doesn't get picked up by DeepEqual.
+		// We cannot use `go-cmp` because that would force us to list all the step types with unexported fields,
+		// which is a maintenance nightmare.
+		// if !runState.Equal(newState) {
+		// 	t.Fail()
+		// }
+		allowedTypes := cmp.AllowUnexported(
+			domain.BranchName{},
+			domain.LocalBranchName{},
+			domain.Location{},
+			domain.RemoteBranchName{},
+			domain.SHA{},
+			opcode.AbortMerge{},
+			opcode.AbortRebase{},
+			opcode.AddToPerennialBranches{},
+			opcode.ChangeParent{},
+			opcode.Checkout{},
+			opcode.CheckoutIfExists{},
+			opcode.ChangeParent{},
+			opcode.CommitOpenChanges{},
+			opcode.ConnectorMergeProposal{},
+			opcode.ContinueMerge{},
+			opcode.ContinueRebase{},
+			opcode.CreateBranch{},
+			opcode.CreateBranchExistingParent{},
+			opcode.CreateProposal{},
+			opcode.CreateRemoteBranch{},
+			opcode.CreateTrackingBranch{},
+			opcode.DeleteLocalBranch{},
+			opcode.DeleteParentBranch{},
+			opcode.DeleteRemoteBranch{},
+			opcode.DeleteTrackingBranch{},
+			opcode.DiscardOpenChanges{},
+			opcode.EnsureHasShippableChanges{},
+			opcode.FetchUpstream{},
+			opcode.ForcePushCurrentBranch{},
+			opcode.IfElse{},
+			opcode.Merge{},
+			opcode.MergeParent{},
+			opcode.PreserveCheckoutHistory{},
+			opcode.PullCurrentBranch{},
+			opcode.PushCurrentBranch{},
+			opcode.PushTags{},
+			opcode.RebaseBranch{},
+			opcode.RebaseParent{},
+			opcode.RemoveBranchFromLineage{},
+			opcode.RemoveFromPerennialBranches{},
+			opcode.RemoveGlobalConfig{},
+			opcode.RemoveLocalConfig{},
+			opcode.ResetCurrentBranchToSHA{},
+			opcode.ResetRemoteBranchToSHA{},
+			opcode.RestoreOpenChanges{},
+			opcode.RevertCommit{},
+			opcode.SetGlobalConfig{},
+			opcode.SetLocalConfig{},
+			opcode.SetParent{},
+			opcode.SkipCurrentBranch{},
+			opcode.StashOpenChanges{},
+			opcode.SquashMerge{},
+			opcode.UpdateProposalTarget{},
+		)
+		if !cmp.Equal(runState, newState, allowedTypes) {
+			t.Fail()
 		}
-		must.Eq(t, runState.RunProgram.Opcodes, newState.RunProgram.Opcodes)
+		// result := slices.CompareFunc(runState.RunProgram.Opcodes, newState.RunProgram.Opcodes, func(a, b shared.Opcode) int {
+		// 	result := false
+		// 	aIfElse, aOk := a.(*opcode.IfElse)
+		// 	bIfElse, bOk := b.(*opcode.IfElse)
+		// 	if aOk && bOk {
+		// 		result = aIfElse.Equal(*bIfElse)
+		// 	} else {
+		// 		result = reflect.DeepEqual(a, b)
+		// 	}
+		// 	return gohacks.CompareResultBoolToInt(result)
+		// })
+		// if result != 0 {
+		// 	t.Fail()
+		// }
 	})
 }

@@ -106,6 +106,35 @@ func (self *RunState) CreateUndoRunState() RunState {
 	return result
 }
 
+func (self *RunState) Equal(other RunState) bool {
+	// selfType := reflect.TypeOf(*self)
+	// for _, field := range reflect.VisibleFields(selfType) {
+	// 	selfValue := selfType.
+	// 		fmt.Printf("found field %q with type %q\n", field.Name, field.Type.Name())
+	// 	if field.Type.Name() == "Program" {
+	// 		// compare Programs
+	// 	} else {
+	// 		// compare normal fields
+	// 	}
+	// }
+
+	// val := reflect.ValueOf(self).Elem()
+	// otherFields := reflect.Indirect(reflect.ValueOf(other))
+
+	// for i := 0; i < val.NumField(); i++ {
+	// 	typeField := val.Type().Field(i)
+	// 	if typeField.Name == ExceptField {
+	// 		continue
+	// 	}
+	// 	value := val.Field(i)
+	// 	otherValue := otherFields.FieldByName(typeField.Name)
+	// 	if value.Interface() != otherValue.Interface() {
+	// 		return false
+	// 	}
+	// }
+	return false
+}
+
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
