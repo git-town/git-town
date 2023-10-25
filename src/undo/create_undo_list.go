@@ -8,21 +8,21 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/program"
+	"github.com/git-town/git-town/v9/src/vm/opcode"
 )
 
-func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
+func CreateUndoProgram(args CreateUndoProgramArgs) (opcode.Program, error) {
 	undoConfigProgram, err := determineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Backend)
 	if err != nil {
-		return program.Program{}, err
+		return opcode.Program{}, err
 	}
 	undoBranchesProgram, err := determineUndoBranchesProgram(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.NoPushHook, args.Run)
 	if err != nil {
-		return program.Program{}, err
+		return opcode.Program{}, err
 	}
 	undoStashProgram, err := determineUndoStashProgram(args.InitialStashSnapshot, &args.Run.Backend)
 	if err != nil {
-		return program.Program{}, err
+		return opcode.Program{}, err
 	}
 	undoConfigProgram.AddProgram(undoBranchesProgram)
 	undoConfigProgram.AddProgram(undoStashProgram)
@@ -38,10 +38,10 @@ type CreateUndoProgramArgs struct {
 	UndoablePerennialCommits []domain.SHA
 }
 
-func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (program.Program, error) {
+func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook bool, runner *git.ProdRunner) (opcode.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return program.Program{}, err
+		return opcode.Program{}, err
 	}
 	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
@@ -55,10 +55,10 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	}), nil
 }
 
-func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
+func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (opcode.Program, error) {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		return program.Program{}, errors.New(messages.DirCurrentProblem)
+		return opcode.Program{}, errors.New(messages.DirCurrentProblem)
 	}
 	finalConfigSnapshot := ConfigSnapshot{
 		Cwd:       currentDirectory,
@@ -68,10 +68,10 @@ func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *g
 	return configDiff.UndoProgram(), nil
 }
 
-func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (program.Program, error) {
+func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (opcode.Program, error) {
 	finalStashSnapshot, err := backend.StashSnapshot()
 	if err != nil {
-		return program.Program{}, err
+		return opcode.Program{}, err
 	}
 	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
 	return stashDiff.Program(), nil

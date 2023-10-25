@@ -2,6 +2,7 @@ package statefile_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -10,10 +11,10 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
+	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test/must"
 )
 
@@ -39,8 +40,8 @@ func TestLoadSave(t *testing.T) {
 			Command:      "command",
 			IsAbort:      true,
 			IsUndo:       true,
-			AbortProgram: program.Program{},
-			RunProgram: program.Program{
+			AbortProgram: opcode.Program{},
+			RunProgram: opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.AbortMerge{},
 					&opcode.AbortRebase{},
@@ -99,13 +100,17 @@ func TestLoadSave(t *testing.T) {
 					},
 					&opcode.IfElse{
 						Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
-						WhenTrue: []shared.Opcode{
-							&opcode.Checkout{Branch: domain.NewLocalBranchName("false-branch")},
-							&opcode.AbortMerge{},
+						WhenTrue: opcode.Program{
+							Opcodes: []shared.Opcode{
+								&opcode.Checkout{Branch: domain.NewLocalBranchName("true-branch")},
+								&opcode.AbortMerge{},
+							},
 						},
-						WhenFalse: []shared.Opcode{
-							&opcode.CheckoutParent{CurrentBranch: domain.NewLocalBranchName("true-branch")},
-							&opcode.AbortRebase{},
+						WhenFalse: opcode.Program{
+							Opcodes: []shared.Opcode{
+								&opcode.CheckoutParent{CurrentBranch: domain.NewLocalBranchName("false-branch")},
+								&opcode.AbortRebase{},
+							},
 						},
 					},
 					&opcode.Merge{Branch: domain.NewBranchName("branch")},
@@ -166,7 +171,7 @@ func TestLoadSave(t *testing.T) {
 					},
 				},
 			},
-			UndoProgram: program.Program{},
+			UndoProgram: opcode.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: domain.NewLocalBranchName("end-branch"),
@@ -321,7 +326,7 @@ func TestLoadSave(t *testing.T) {
             "type": "AbortMerge"
           }
         ],
-        "WhenFalse: [
+        "WhenFalse": [
           {
             "data": {
               "CurrentBranch": "false-branch"
@@ -334,7 +339,7 @@ func TestLoadSave(t *testing.T) {
           }
         ]
       },
-      "type": "IfElse",
+      "type": "IfElse"
     },
     {
       "data": {
@@ -486,6 +491,72 @@ func TestLoadSave(t *testing.T) {
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
-		must.Eq(t, runState, newState)
+		// HACK: IfElse step instances in runState.RunProgram.Opcodes contain a function field,
+		// which falsely fails the comparison. We have created an `Equal` method on this type
+		// but that doesn't get picked up by DeepEqual.
+		// We cannot use `go-cmp` because that would force us to list all the step types with unexported fields,
+		// which is a maintenance nightmare.
+		// if !runState.Equal(newState) {
+		// 	t.Fail()
+		// }
+		allowedTypes := cmp.AllowUnexported(
+			domain.BranchName{},
+			domain.LocalBranchName{},
+			domain.Location{},
+			domain.RemoteBranchName{},
+			domain.SHA{},
+			opcode.AbortMerge{},
+			opcode.AbortRebase{},
+			opcode.AddToPerennialBranches{},
+			opcode.ChangeParent{},
+			opcode.Checkout{},
+			opcode.CheckoutIfExists{},
+			opcode.ChangeParent{},
+			opcode.CommitOpenChanges{},
+			opcode.ConnectorMergeProposal{},
+			opcode.ContinueMerge{},
+			opcode.ContinueRebase{},
+			opcode.CreateBranch{},
+			opcode.CreateBranchExistingParent{},
+			opcode.CreateProposal{},
+			opcode.CreateRemoteBranch{},
+			opcode.CreateTrackingBranch{},
+			opcode.DeleteLocalBranch{},
+			opcode.DeleteParentBranch{},
+			opcode.DeleteRemoteBranch{},
+			opcode.DeleteTrackingBranch{},
+			opcode.DiscardOpenChanges{},
+			opcode.EnsureHasShippableChanges{},
+			opcode.FetchUpstream{},
+			opcode.ForcePushCurrentBranch{},
+			opcode.IfElse{},
+			opcode.Merge{},
+			opcode.MergeParent{},
+			opcode.PreserveCheckoutHistory{},
+			opcode.PullCurrentBranch{},
+			opcode.PushCurrentBranch{},
+			opcode.PushTags{},
+			opcode.RebaseBranch{},
+			opcode.RebaseParent{},
+			opcode.RemoveBranchFromLineage{},
+			opcode.RemoveFromPerennialBranches{},
+			opcode.RemoveGlobalConfig{},
+			opcode.RemoveLocalConfig{},
+			opcode.ResetCurrentBranchToSHA{},
+			opcode.ResetRemoteBranchToSHA{},
+			opcode.RestoreOpenChanges{},
+			opcode.RevertCommit{},
+			opcode.SetGlobalConfig{},
+			opcode.SetLocalConfig{},
+			opcode.SetParent{},
+			opcode.SkipCurrentBranch{},
+			opcode.StashOpenChanges{},
+			opcode.SquashMerge{},
+			opcode.UpdateProposalTarget{},
+		)
+		if !cmp.Equal(runState, newState, allowedTypes) {
+			fmt.Println(cmp.Diff(runState, newState, allowedTypes))
+			t.Fail()
+		}
 	})
 }

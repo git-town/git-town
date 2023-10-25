@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
@@ -19,7 +18,7 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			Command: "sync",
-			AbortProgram: program.Program{
+			AbortProgram: opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -28,7 +27,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			RunProgram: program.Program{
+			RunProgram: opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),
@@ -37,7 +36,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			UndoProgram: program.Program{
+			UndoProgram: opcode.Program{
 				Opcodes: []shared.Opcode{
 					&opcode.ResetCurrentBranchToSHA{
 						MustHaveSHA: domain.NewSHA("222222"),

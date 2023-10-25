@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
 // BranchChanges describes the changes made to the branches in a Git repo.
@@ -70,8 +69,8 @@ func (self BranchChanges) String() string {
 }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
-func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
-	result := program.Program{}
+func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) opcode.Program {
+	result := opcode.Program{}
 	omniChangedPerennials, omniChangedFeatures := self.OmniChanged.Categorize(args.BranchTypes)
 
 	// revert omni-changed perennial branches

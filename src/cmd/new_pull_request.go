@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
@@ -200,8 +199,8 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestProgram(config *newPullRequestConfig) program.Program {
-	prog := program.Program{}
+func newPullRequestProgram(config *newPullRequestConfig) opcode.Program {
+	prog := opcode.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchTypes:        config.branches.Types,
