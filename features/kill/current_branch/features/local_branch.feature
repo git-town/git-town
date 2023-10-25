@@ -22,6 +22,7 @@ Feature: delete a local branch
       | local, origin | main     |
     And no branch hierarchy exists now
 
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

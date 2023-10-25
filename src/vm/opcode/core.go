@@ -94,6 +94,7 @@ func Types() []shared.Opcode {
 		&SkipCurrentBranch{},
 		&StashOpenChanges{},
 		&SquashMerge{},
+		&UndoLastCommit{},
 		&UpdateProposalTarget{},
 	}
 }
