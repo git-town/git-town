@@ -38,6 +38,58 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }
 
+// Types provides all existing Opcodes as an iterable list.
+var Types = []shared.Opcode{
+	&AbortMerge{},
+	&AbortRebase{},
+	&AddToPerennialBranches{},
+	&ChangeParent{},
+	&Checkout{},
+	&CheckoutIfExists{},
+	&ChangeParent{},
+	&CommitOpenChanges{},
+	&ConnectorMergeProposal{},
+	&ContinueMerge{},
+	&ContinueRebase{},
+	&CreateBranch{},
+	&CreateBranchExistingParent{},
+	&CreateProposal{},
+	&CreateRemoteBranch{},
+	&CreateTrackingBranch{},
+	&DeleteLocalBranch{},
+	&DeleteParentBranch{},
+	&DeleteRemoteBranch{},
+	&DeleteTrackingBranch{},
+	&DiscardOpenChanges{},
+	&EnsureHasShippableChanges{},
+	&FetchUpstream{},
+	&ForcePushCurrentBranch{},
+	&IfElse{},
+	&Merge{},
+	&MergeParent{},
+	&PreserveCheckoutHistory{},
+	&PullCurrentBranch{},
+	&PushCurrentBranch{},
+	&PushTags{},
+	&RebaseBranch{},
+	&RebaseParent{},
+	&RemoveBranchFromLineage{},
+	&RemoveFromPerennialBranches{},
+	&RemoveGlobalConfig{},
+	&RemoveLocalConfig{},
+	&ResetCurrentBranchToSHA{},
+	&ResetRemoteBranchToSHA{},
+	&RestoreOpenChanges{},
+	&RevertCommit{},
+	&SetGlobalConfig{},
+	&SetLocalConfig{},
+	&SetParent{},
+	&SkipCurrentBranch{},
+	&StashOpenChanges{},
+	&SquashMerge{},
+	&UpdateProposalTarget{},
+}
+
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	switch opcodeType {
 	case "AbortMerge":

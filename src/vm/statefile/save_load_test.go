@@ -2,6 +2,7 @@ package statefile_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -553,22 +554,10 @@ func TestLoadSave(t *testing.T) {
 			opcode.SquashMerge{},
 			opcode.UpdateProposalTarget{},
 		)
+		newState.Command = "111"
 		if !cmp.Equal(runState, newState, allowedTypes) {
+			fmt.Println(cmp.Diff(runState, newState, allowedTypes))
 			t.Fail()
 		}
-		// result := slices.CompareFunc(runState.RunProgram.Opcodes, newState.RunProgram.Opcodes, func(a, b shared.Opcode) int {
-		// 	result := false
-		// 	aIfElse, aOk := a.(*opcode.IfElse)
-		// 	bIfElse, bOk := b.(*opcode.IfElse)
-		// 	if aOk && bOk {
-		// 		result = aIfElse.Equal(*bIfElse)
-		// 	} else {
-		// 		result = reflect.DeepEqual(a, b)
-		// 	}
-		// 	return gohacks.CompareResultBoolToInt(result)
-		// })
-		// if result != 0 {
-		// 	t.Fail()
-		// }
 	})
 }
