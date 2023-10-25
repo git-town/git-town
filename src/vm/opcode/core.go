@@ -90,7 +90,7 @@ func Types() []shared.Opcode {
 
 func Lookup(opcodeType string) shared.Opcode { //nolint:ireturn
 	for _, opcode := range Types() {
-		if opcodeType == gohacks.TypeName(opcode) {
+		if gohacks.TypeName(opcode) == opcodeType {
 			return opcode
 		}
 	}
