@@ -57,83 +57,83 @@ type Program struct {
 }
 
 // Append adds the given opcode to the end of this program.
-func (self *Program) Add(opcode ...shared.Opcode) {
-	self.Opcodes = append(self.Opcodes, opcode...)
+func (program *Program) Add(opcode ...shared.Opcode) {
+	program.Opcodes = append(program.Opcodes, opcode...)
 }
 
 // AppendProgram adds all elements of the given Program to the end of this Program.
-func (self *Program) AddProgram(otherProgram Program) {
-	self.Opcodes = append(self.Opcodes, otherProgram.Opcodes...)
+func (program *Program) AddProgram(otherProgram Program) {
+	program.Opcodes = append(program.Opcodes, otherProgram.Opcodes...)
 }
 
 // IsEmpty returns whether or not this Program has any elements.
-func (self *Program) IsEmpty() bool {
-	return len(self.Opcodes) == 0
+func (program *Program) IsEmpty() bool {
+	return len(program.Opcodes) == 0
 }
 
 // MarshalJSON marshals this program to JSON.
-func (self *Program) MarshalJSON() ([]byte, error) {
-	jsonOpcodes := make([]JSON, len(self.Opcodes))
-	for o, opcode := range self.Opcodes {
+func (program *Program) MarshalJSON() ([]byte, error) {
+	jsonOpcodes := make([]JSON, len(program.Opcodes))
+	for o, opcode := range program.Opcodes {
 		jsonOpcodes[o] = JSON{Opcode: opcode}
 	}
 	return json.Marshal(jsonOpcodes)
 }
 
 // OpcodeTypes provides the names of the types of the opcodes in this program.
-func (self *Program) OpcodeTypes() []string {
-	result := make([]string, len(self.Opcodes))
-	for o, opcode := range self.Opcodes {
+func (program *Program) OpcodeTypes() []string {
+	result := make([]string, len(program.Opcodes))
+	for o, opcode := range program.Opcodes {
 		result[o] = reflect.TypeOf(opcode).String()
 	}
 	return result
 }
 
 // Peek provides the first element of this program.
-func (self *Program) Peek() shared.Opcode { //nolint:ireturn
-	if self.IsEmpty() {
+func (program *Program) Peek() shared.Opcode { //nolint:ireturn
+	if program.IsEmpty() {
 		return nil
 	}
-	return self.Opcodes[0]
+	return program.Opcodes[0]
 }
 
 // Pop removes and provides the first element of this program.
-func (self *Program) Pop() shared.Opcode { //nolint:ireturn
-	if self.IsEmpty() {
+func (program *Program) Pop() shared.Opcode { //nolint:ireturn
+	if program.IsEmpty() {
 		return nil
 	}
-	result := self.Opcodes[0]
-	self.Opcodes = self.Opcodes[1:]
+	result := program.Opcodes[0]
+	program.Opcodes = program.Opcodes[1:]
 	return result
 }
 
 // Prepend adds the given opcode to the beginning of this program.
-func (self *Program) Prepend(other ...shared.Opcode) {
+func (program *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
-		self.Opcodes = append(other, self.Opcodes...)
+		program.Opcodes = append(other, program.Opcodes...)
 	}
 }
 
 // PrependProgram adds all elements of the given program to the start of this program.
-func (self *Program) PrependProgram(otherProgram Program) {
-	self.Opcodes = append(otherProgram.Opcodes, self.Opcodes...)
+func (program *Program) PrependProgram(otherProgram Program) {
+	program.Opcodes = append(otherProgram.Opcodes, program.Opcodes...)
 }
 
-func (self *Program) RemoveAllButLast(removeType string) {
-	opcodeTypes := self.OpcodeTypes()
+func (program *Program) RemoveAllButLast(removeType string) {
+	opcodeTypes := program.OpcodeTypes()
 	occurrences := slice.FindAll(opcodeTypes, removeType)
 	occurrencesToRemove := slice.TruncateLast(occurrences)
 	for o := len(occurrencesToRemove) - 1; o >= 0; o-- {
-		self.Opcodes = slice.RemoveAt(self.Opcodes, occurrencesToRemove[o])
+		program.Opcodes = slice.RemoveAt(program.Opcodes, occurrencesToRemove[o])
 	}
 }
 
 // RemoveDuplicateCheckout provides this program with checkout opcodes that immediately follow each other removed.
-func (self *Program) RemoveDuplicateCheckout() Program {
-	result := make([]shared.Opcode, 0, len(self.Opcodes))
+func (program *Program) RemoveDuplicateCheckout() Program {
+	result := make([]shared.Opcode, 0, len(program.Opcodes))
 	// this one is populated only if the last opcode is a checkout
 	var lastOpcode shared.Opcode
-	for _, opcode := range self.Opcodes {
+	for _, opcode := range program.Opcodes {
 		if shared.IsCheckoutOpcode(opcode) {
 			lastOpcode = opcode
 			continue
@@ -151,17 +151,17 @@ func (self *Program) RemoveDuplicateCheckout() Program {
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self *Program) String() string {
-	return self.StringIndented("")
+func (program *Program) String() string {
+	return program.StringIndented("")
 }
 
-func (self *Program) StringIndented(indent string) string {
+func (program *Program) StringIndented(indent string) string {
 	sb := strings.Builder{}
-	if self.IsEmpty() {
+	if program.IsEmpty() {
 		sb.WriteString("(empty program)\n")
 	} else {
 		sb.WriteString("Program:\n")
-		for o, opcode := range self.Opcodes {
+		for o, opcode := range program.Opcodes {
 			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
 		}
 	}
@@ -169,16 +169,16 @@ func (self *Program) StringIndented(indent string) string {
 }
 
 // UnmarshalJSON unmarshals the program from JSON.
-func (self *Program) UnmarshalJSON(b []byte) error {
+func (program *Program) UnmarshalJSON(b []byte) error {
 	var jsonOpcodes []JSON
 	err := json.Unmarshal(b, &jsonOpcodes)
 	if err != nil {
 		return err
 	}
 	if len(jsonOpcodes) > 0 {
-		self.Opcodes = make([]shared.Opcode, len(jsonOpcodes))
+		program.Opcodes = make([]shared.Opcode, len(jsonOpcodes))
 		for j, jsonOpcode := range jsonOpcodes {
-			self.Opcodes[j] = jsonOpcode.Opcode
+			program.Opcodes[j] = jsonOpcode.Opcode
 		}
 	}
 	return nil
@@ -190,15 +190,15 @@ type JSON struct { //nolint:musttag // JSON uses a custom serialization algorith
 }
 
 // MarshalJSON marshals the opcode to JSON.
-func (self *JSON) MarshalJSON() ([]byte, error) {
+func (j *JSON) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"data": self.Opcode,
-		"type": gohacks.TypeName(self.Opcode),
+		"data": j.Opcode,
+		"type": gohacks.TypeName(j.Opcode),
 	})
 }
 
 // UnmarshalJSON unmarshals the opcode from JSON.
-func (self *JSON) UnmarshalJSON(b []byte) error {
+func (j *JSON) UnmarshalJSON(b []byte) error {
 	var mapping map[string]json.RawMessage
 	err := json.Unmarshal(b, &mapping)
 	if err != nil {
@@ -209,11 +209,11 @@ func (self *JSON) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	self.Opcode = Lookup(opcodeType)
-	if self.Opcode == nil {
+	j.Opcode = Lookup(opcodeType)
+	if j.Opcode == nil {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
-	return json.Unmarshal(mapping["data"], &self.Opcode)
+	return json.Unmarshal(mapping["data"], &j.Opcode)
 }
 
 // Types provides all existing opcodes.
