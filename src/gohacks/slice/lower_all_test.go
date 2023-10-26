@@ -44,7 +44,7 @@ func TestLowerAll(t *testing.T) {
 		must.Eq(t, want, list)
 	})
 
-	t.Run("complex example", func(t *testing.T) {
+	t.Run("multiple occurrences of the needle", func(t *testing.T) {
 		t.Parallel()
 		list := []int{1, 2, 1, 3, 1}
 		slice.LowerAll(&list, 1)
