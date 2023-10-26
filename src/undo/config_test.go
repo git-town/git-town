@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/undo"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/shoenig/test/must"
 )
 
@@ -48,11 +48,9 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.RemoveGlobalConfig{
-					Key: config.KeyPullBranchStrategy,
-				},
+		wantProgram := program.Program{
+			&opcode.RemoveGlobalConfig{
+				Key: config.KeyPullBranchStrategy,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -96,12 +94,10 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.SetGlobalConfig{
-					Key:   config.KeyPullBranchStrategy,
-					Value: "1",
-				},
+		wantProgram := program.Program{
+			&opcode.SetGlobalConfig{
+				Key:   config.KeyPullBranchStrategy,
+				Value: "1",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -147,12 +143,10 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.SetGlobalConfig{
-					Key:   config.KeyOffline,
-					Value: "0",
-				},
+		wantProgram := program.Program{
+			&opcode.SetGlobalConfig{
+				Key:   config.KeyOffline,
+				Value: "0",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -192,11 +186,9 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.RemoveLocalConfig{
-					Key: config.KeyPullBranchStrategy,
-				},
+		wantProgram := program.Program{
+			&opcode.RemoveLocalConfig{
+				Key: config.KeyPullBranchStrategy,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -240,12 +232,10 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.SetLocalConfig{
-					Key:   config.KeyPullBranchStrategy,
-					Value: "1",
-				},
+		wantProgram := program.Program{
+			&opcode.SetLocalConfig{
+				Key:   config.KeyPullBranchStrategy,
+				Value: "1",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -291,12 +281,10 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.SetLocalConfig{
-					Key:   config.KeyOffline,
-					Value: "0",
-				},
+		wantProgram := program.Program{
+			&opcode.SetLocalConfig{
+				Key:   config.KeyOffline,
+				Value: "0",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -363,30 +351,28 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
-		wantProgram := opcode.Program{
-			Opcodes: []shared.Opcode{
-				&opcode.RemoveGlobalConfig{
-					Key: config.KeyPullBranchStrategy,
-				},
-				&opcode.SetGlobalConfig{
-					Key:   config.KeyPushHook,
-					Value: "0",
-				},
-				&opcode.SetGlobalConfig{
-					Key:   config.KeyOffline,
-					Value: "0",
-				},
-				&opcode.RemoveLocalConfig{
-					Key: config.KeyPushHook,
-				},
-				&opcode.SetLocalConfig{
-					Key:   config.KeyGithubToken,
-					Value: "token",
-				},
-				&opcode.SetLocalConfig{
-					Key:   config.KeyPerennialBranches,
-					Value: "prod",
-				},
+		wantProgram := program.Program{
+			&opcode.RemoveGlobalConfig{
+				Key: config.KeyPullBranchStrategy,
+			},
+			&opcode.SetGlobalConfig{
+				Key:   config.KeyPushHook,
+				Value: "0",
+			},
+			&opcode.SetGlobalConfig{
+				Key:   config.KeyOffline,
+				Value: "0",
+			},
+			&opcode.RemoveLocalConfig{
+				Key: config.KeyPushHook,
+			},
+			&opcode.SetLocalConfig{
+				Key:   config.KeyGithubToken,
+				Value: "token",
+			},
+			&opcode.SetLocalConfig{
+				Key:   config.KeyPerennialBranches,
+				Value: "prod",
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)

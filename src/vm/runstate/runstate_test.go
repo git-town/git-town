@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,30 +18,24 @@ func TestRunState(t *testing.T) {
 		runState := &runstate.RunState{
 			Command: "sync",
 			AbortProgram: opcode.Program{
-				Opcodes: []shared.Opcode{
-					&opcode.ResetCurrentBranchToSHA{
-						MustHaveSHA: domain.NewSHA("222222"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        false,
-					},
+				&opcode.ResetCurrentBranchToSHA{
+					MustHaveSHA: domain.NewSHA("222222"),
+					SetToSHA:    domain.NewSHA("111111"),
+					Hard:        false,
 				},
 			},
 			RunProgram: opcode.Program{
-				Opcodes: []shared.Opcode{
-					&opcode.ResetCurrentBranchToSHA{
-						MustHaveSHA: domain.NewSHA("222222"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        false,
-					},
+				&opcode.ResetCurrentBranchToSHA{
+					MustHaveSHA: domain.NewSHA("222222"),
+					SetToSHA:    domain.NewSHA("111111"),
+					Hard:        false,
 				},
 			},
 			UndoProgram: opcode.Program{
-				Opcodes: []shared.Opcode{
-					&opcode.ResetCurrentBranchToSHA{
-						MustHaveSHA: domain.NewSHA("222222"),
-						SetToSHA:    domain.NewSHA("111111"),
-						Hard:        false,
-					},
+				&opcode.ResetCurrentBranchToSHA{
+					MustHaveSHA: domain.NewSHA("222222"),
+					SetToSHA:    domain.NewSHA("111111"),
+					Hard:        false,
 				},
 			},
 			UndoablePerennialCommits: []domain.SHA{},
