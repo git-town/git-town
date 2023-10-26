@@ -1,24 +1,24 @@
-package undo
+package config
 
 import (
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
-// ConfigDiffs describes the changes made to the local and global Git configuration.
-type ConfigDiffs struct {
-	Global ConfigDiff
-	Local  ConfigDiff
+// Diffs describes the changes made to the local and global Git configuration.
+type Diffs struct {
+	Global Diff
+	Local  Diff
 }
 
-func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
-	return ConfigDiffs{
-		Global: NewConfigDiff(before.GitConfig.Global, after.GitConfig.Global),
-		Local:  NewConfigDiff(before.GitConfig.Local, after.GitConfig.Local),
+func NewDiffs(before, after Snapshot) Diffs {
+	return Diffs{
+		Global: NewDiff(before.GitConfig.Global, after.GitConfig.Global),
+		Local:  NewDiff(before.GitConfig.Local, after.GitConfig.Local),
 	}
 }
 
-func (self ConfigDiffs) UndoProgram() program.Program {
+func (self Diffs) UndoProgram() program.Program {
 	result := program.Program{}
 	for _, key := range self.Global.Added {
 		result.Add(&opcode.RemoveGlobalConfig{Key: key})

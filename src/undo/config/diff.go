@@ -1,27 +1,27 @@
-package undo
+package config
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 )
 
-// ConfigDiff describes the changes made to the local or global Git configuration.
-type ConfigDiff struct {
+// Diff describes the changes made to the local or global Git configuration.
+type Diff struct {
 	Added   []config.Key
 	Removed map[config.Key]string
 	Changed map[config.Key]domain.Change[string]
 }
 
-func EmptyConfigDiff() ConfigDiff {
-	return ConfigDiff{
+func EmptyDiff() Diff {
+	return Diff{
 		Added:   []config.Key{},
 		Removed: map[config.Key]string{},
 		Changed: map[config.Key]domain.Change[string]{},
 	}
 }
 
-func NewConfigDiff(before, after config.GitConfigCache) ConfigDiff {
-	result := ConfigDiff{
+func NewDiff(before, after config.GitConfigCache) Diff {
+	result := Diff{
 		Added:   []config.Key{},
 		Removed: map[config.Key]string{},
 		Changed: map[config.Key]domain.Change[string]{},

@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/git-town/git-town/v9/src/undo"
+	configundo "github.com/git-town/git-town/v9/src/undo/config"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
@@ -42,7 +42,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		err = errors.New(messages.DirCurrentProblem)
 		return nil, err
 	}
-	configSnapshot := undo.ConfigSnapshot{
+	configSnapshot := configundo.Snapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backendRunner),
 	}
@@ -117,7 +117,7 @@ type OpenRepoResult struct {
 	Runner         git.ProdRunner
 	RootDir        domain.RepoRootDir
 	IsOffline      bool
-	ConfigSnapshot undo.ConfigSnapshot
+	ConfigSnapshot configundo.Snapshot
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

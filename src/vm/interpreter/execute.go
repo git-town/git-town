@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/gohacks"
 	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/undo"
+	configundo "github.com/git-town/git-town/v9/src/undo/config"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
@@ -44,7 +44,7 @@ type ExecuteArgs struct {
 	Verbose                 bool
 	RootDir                 domain.RepoRootDir
 	InitialBranchesSnapshot domain.BranchesSnapshot
-	InitialConfigSnapshot   undo.ConfigSnapshot
+	InitialConfigSnapshot   configundo.Snapshot
 	InitialStashSnapshot    domain.StashSnapshot
 	Lineage                 config.Lineage
 	NoPushHook              bool

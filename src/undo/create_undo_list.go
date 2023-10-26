@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo/branch"
+	configundo "github.com/git-town/git-town/v9/src/undo/config"
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
@@ -33,7 +34,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  domain.BranchesSnapshot
-	InitialConfigSnapshot    ConfigSnapshot
+	InitialConfigSnapshot    configundo.Snapshot
 	InitialStashSnapshot     domain.StashSnapshot
 	NoPushHook               bool
 	UndoablePerennialCommits []domain.SHA
@@ -56,16 +57,16 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	}), nil
 }
 
-func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
+func determineUndoConfigProgram(initialConfigSnapshot configundo.Snapshot, backend *git.BackendCommands) (program.Program, error) {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		return program.Program{}, errors.New(messages.DirCurrentProblem)
 	}
-	finalConfigSnapshot := ConfigSnapshot{
+	finalConfigSnapshot := configundo.Snapshot{
 		Cwd:       currentDirectory,
 		GitConfig: config.LoadGitConfig(backend),
 	}
-	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
+	configDiff := configundo.NewDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil
 }
 

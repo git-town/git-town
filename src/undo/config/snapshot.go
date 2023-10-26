@@ -1,11 +1,11 @@
-package undo
+package config
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
 )
 
-// ConfigSnapshot is a snapshot of the Git configuration at a particular point in time.
-type ConfigSnapshot struct {
+// Snapshot is a snapshot of the Git configuration at a particular point in time.
+type Snapshot struct {
 	Cwd       string // the current working directory
 	GitConfig config.GitConfig
 }
