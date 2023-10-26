@@ -14,41 +14,41 @@ func TestLowerAll(t *testing.T) {
 
 	t.Run("list contains element at the last position", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"one", "two", "last"}
-		have := slice.LowerAll(give, "last")
+		list := []string{"one", "two", "last"}
+		slice.LowerAll(&list, "last")
 		want := []string{"one", "two", "last"}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("list contains element in the middle", func(t *testing.T) {
 		t.Parallel()
-		give := []shared.Opcode{
+		list := []shared.Opcode{
 			&opcode.AbortMerge{},
 			&opcode.RestoreOpenChanges{},
 			&opcode.AbortRebase{},
 		}
-		have := slice.LowerAll[shared.Opcode](give, &opcode.RestoreOpenChanges{})
+		slice.LowerAll[shared.Opcode](&list, &opcode.RestoreOpenChanges{})
 		want := []shared.Opcode{
 			&opcode.AbortMerge{},
 			&opcode.AbortRebase{},
 			&opcode.RestoreOpenChanges{},
 		}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("list does not contain the element", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"one", "two", "three"}
-		have := slice.LowerAll(give, "last")
+		list := []string{"one", "two", "three"}
+		slice.LowerAll(&list, "last")
 		want := []string{"one", "two", "three"}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
-		give := []int{1, 2, 1, 3, 1}
-		have := slice.LowerAll(give, 1)
+		list := []int{1, 2, 1, 3, 1}
+		slice.LowerAll(&list, 1)
 		want := []int{2, 3, 1}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 }
