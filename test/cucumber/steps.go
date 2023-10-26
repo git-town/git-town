@@ -506,7 +506,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
+		slice.Remove(&state.initialRemoteBranches, domain.NewLocalBranchName(branch))
 		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
 		return nil
 	})
@@ -518,7 +518,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
+		slice.Remove(&state.initialRemoteBranches, domain.NewLocalBranchName(branch))
 		return nil
 	})
 

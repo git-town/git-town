@@ -86,7 +86,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(opcode)
 		}
 	}
-	result.RunProgram.Opcodes = slice.LowerAll[shared.Opcode](result.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
+	slice.LowerAll[shared.Opcode](&result.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
 	return result
 }
 

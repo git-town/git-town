@@ -13,33 +13,33 @@ func TestRemoveAt(t *testing.T) {
 
 	t.Run("index is within the list", func(t *testing.T) {
 		t.Parallel()
-		give := []int{1, 2, 3}
-		have := slice.RemoveAt(give, 1)
+		list := []int{1, 2, 3}
+		slice.RemoveAt(&list, 1)
 		want := []int{1, 3}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("index is at end of list", func(t *testing.T) {
 		t.Parallel()
-		give := []int{1, 2, 3}
-		have := slice.RemoveAt(give, 2)
+		list := []int{1, 2, 3}
+		slice.RemoveAt(&list, 2)
 		want := []int{1, 2}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("index is at beginning of list", func(t *testing.T) {
 		t.Parallel()
-		give := []int{1, 2, 3}
-		have := slice.RemoveAt(give, 0)
+		list := []int{1, 2, 3}
+		slice.RemoveAt(&list, 0)
 		want := []int{2, 3}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
-		give := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
-		have := slice.RemoveAt(give, 0)
+		list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
+		slice.RemoveAt(&list, 0)
 		want := domain.SHAs{domain.NewSHA("222222"), domain.NewSHA("333333")}
-		must.Eq(t, want, have)
+		must.Eq(t, want, list)
 	})
 }
