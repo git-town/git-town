@@ -1,4 +1,4 @@
-package config
+package undoconfig
 
 import (
 	"github.com/git-town/git-town/v9/src/config"

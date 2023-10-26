@@ -1,11 +1,11 @@
-package config_test
+package undoconfig_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	configundo "github.com/git-town/git-town/v9/src/undo/config"
+	"github.com/git-town/git-town/v9/src/undo/undoconfig"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/shoenig/test/must"
@@ -16,7 +16,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("global config added", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -25,7 +25,7 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -35,16 +35,16 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added: []config.Key{
 					config.KeyPullBranchStrategy,
 				},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
-			Local: configundo.EmptyDiff(),
+			Local: undoconfig.EmptyDiff(),
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
@@ -58,7 +58,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("global config removed", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -68,7 +68,7 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -77,16 +77,16 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added: []config.Key{},
 				Removed: map[config.Key]string{
 					config.KeyPullBranchStrategy: "1",
 				},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
-			Local: configundo.Diff{
+			Local: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
@@ -105,7 +105,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("global config changed", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -114,7 +114,7 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -123,9 +123,9 @@ func TestConfigUndo(t *testing.T) {
 				Local: config.GitConfigCache{},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{
@@ -135,7 +135,7 @@ func TestConfigUndo(t *testing.T) {
 					},
 				},
 			},
-			Local: configundo.Diff{
+			Local: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
@@ -154,7 +154,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("local config added", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -163,7 +163,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -173,10 +173,10 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.EmptyDiff(),
-			Local: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.EmptyDiff(),
+			Local: undoconfig.Diff{
 				Added: []config.Key{
 					config.KeyPullBranchStrategy,
 				},
@@ -196,7 +196,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("local config removed", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -206,7 +206,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -215,14 +215,14 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
-			Local: configundo.Diff{
+			Local: undoconfig.Diff{
 				Added: []config.Key{},
 				Removed: map[config.Key]string{
 					config.KeyPullBranchStrategy: "1",
@@ -243,7 +243,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("local config changed", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -252,7 +252,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
@@ -261,14 +261,14 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
-			Local: configundo.Diff{
+			Local: undoconfig.Diff{
 				Added:   []config.Key{},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{
@@ -292,7 +292,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
-		before := configundo.Snapshot{
+		before := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -305,7 +305,7 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		after := configundo.Snapshot{
+		after := undoconfig.Snapshot{
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
@@ -318,9 +318,9 @@ func TestConfigUndo(t *testing.T) {
 				},
 			},
 		}
-		haveDiff := configundo.NewDiffs(before, after)
-		wantDiff := configundo.Diffs{
-			Global: configundo.Diff{
+		haveDiff := undoconfig.NewDiffs(before, after)
+		wantDiff := undoconfig.Diffs{
+			Global: undoconfig.Diff{
 				Added: []config.Key{
 					config.KeyPullBranchStrategy,
 				},
@@ -334,7 +334,7 @@ func TestConfigUndo(t *testing.T) {
 					},
 				},
 			},
-			Local: configundo.Diff{
+			Local: undoconfig.Diff{
 				Added: []config.Key{
 					config.KeyPushHook,
 				},
