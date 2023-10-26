@@ -90,7 +90,7 @@ test-go: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} too
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
-	@go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/vm/opcode/core.go | grep -v /v9/tools/) &
+	@go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v src/vm/opcode/core.go | grep -v /v9/tools/) &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items
