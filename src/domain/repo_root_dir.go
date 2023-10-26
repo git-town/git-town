@@ -1,22 +1,20 @@
 package domain
 
 // RepoRootDir represents the root directory of a Git repository.
-type RepoRootDir struct {
-	value string
-}
+type RepoRootDir string
 
 func EmptyRepoRootDir() RepoRootDir {
-	return NewRepoRootDir("")
+	return ""
 }
 
 func NewRepoRootDir(dir string) RepoRootDir {
-	return RepoRootDir{value: dir}
+	return RepoRootDir(dir)
 }
 
 func (self RepoRootDir) IsEmpty() bool {
-	return self.value == ""
+	return self == ""
 }
 
 func (self RepoRootDir) String() string {
-	return self.value
+	return string(self)
 }

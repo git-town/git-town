@@ -451,7 +451,7 @@ func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
 func (self *BackendCommands) RootDirectory() domain.RepoRootDir {
 	output, err := self.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
-		return domain.RepoRootDir{}
+		return domain.EmptyRepoRootDir()
 	}
 	return domain.NewRepoRootDir(filepath.FromSlash(output))
 }
