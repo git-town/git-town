@@ -1,6 +1,6 @@
 package slice
 
-// LowerLast provides the given slice with the last element of the given type moved to the last position in the list.
+// LowerLast moves all occurrences of the given element in the given list to the end of the list.
 func LowerAll[C comparable](haystack *[]C, needle C) {
 	result := make([]C, 0, len(*haystack))
 	hasNeedle := false
