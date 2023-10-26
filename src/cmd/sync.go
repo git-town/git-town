@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/spf13/cobra"
 )
 
@@ -293,24 +292,6 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.Branch
 	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncStrategy)
 	list.Add(&opcode.IfBranchHasUnmergedChanges{
 		Branch: branch.LocalName,
-		WhenTrue: []shared.Opcode{
-			&opcode.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),
-			},
-		},
-		WhenFalse: []shared.Opcode{
-			&opcode.CheckoutParent{CurrentBranch: branch.LocalName},
-			&opcode.DeleteLocalBranch{
-				Branch: branch.LocalName,
-				Force:  false,
-			},
-			&opcode.RemoveBranchFromLineage{
-				Branch: branch.LocalName,
-			},
-			&opcode.QueueMessage{
-				Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName),
-			},
-		},
 	})
 }
 

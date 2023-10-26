@@ -1,15 +1,16 @@
 package opcode
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
 // IfBranchHasUnmergedChanges allows running different opcodes based on a condition evaluated at runtime.
 type IfBranchHasUnmergedChanges struct {
-	Branch    domain.LocalBranchName
-	WhenTrue  []shared.Opcode // the opcodes to execute if the given branch is empty
-	WhenFalse []shared.Opcode // the opcodes to execute if the given branch is not empty
+	Branch domain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
@@ -20,9 +21,22 @@ func (self *IfBranchHasUnmergedChanges) Run(args shared.RunArgs) error {
 		return err
 	}
 	if hasUnmergedChanges {
-		args.PrependOpcodes(self.WhenTrue...)
+		args.PrependOpcodes(&QueueMessage{
+			Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, self.Branch),
+		})
 	} else {
-		args.PrependOpcodes(self.WhenFalse...)
+		args.PrependOpcodes(
+			&CheckoutParent{CurrentBranch: self.Branch},
+			&DeleteLocalBranch{
+				Branch: self.Branch,
+				Force:  false,
+			},
+			&RemoveBranchFromLineage{
+				Branch: self.Branch,
+			},
+			&QueueMessage{
+				Message: fmt.Sprintf(messages.BranchDeleted, self.Branch),
+			})
 	}
 	return nil
 }
