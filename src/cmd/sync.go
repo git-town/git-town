@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/git-town/git-town/v9/src/vm/interpreter"
@@ -292,11 +291,9 @@ func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, a
 func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncStrategy)
-	list.Add(&opcode.IfElse{
-		Condition: func(backend *git.BackendCommands, lineage config.Lineage) (bool, error) {
-			parent := lineage.Parent(branch.LocalName)
-			return backend.BranchHasUnmergedChanges(branch.LocalName, parent)
-		},
+	list.Add(&opcode.IfBranchHasUnmergedChanges{
+		Branch: branch.LocalName,
+		Parent: args.lineage.Parent(branch.LocalName),
 		WhenTrue: []shared.Opcode{
 			&opcode.QueueMessage{
 				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),

@@ -3,8 +3,7 @@ package opcode_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
@@ -16,8 +15,9 @@ func TestIfElse(t *testing.T) {
 
 	t.Run("equal values", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -25,8 +25,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -39,8 +40,9 @@ func TestIfElse(t *testing.T) {
 
 	t.Run("different WhenTrue values", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -48,8 +50,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.ContinueMerge{},
 			},
@@ -62,8 +65,9 @@ func TestIfElse(t *testing.T) {
 
 	t.Run("different WhenFalse values", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -71,8 +75,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -83,10 +88,11 @@ func TestIfElse(t *testing.T) {
 		must.NotEq(t, one, two)
 	})
 
-	t.Run("different condition function", func(t *testing.T) {
+	t.Run("different Branch", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -94,8 +100,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return false, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch-2"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -108,8 +115,9 @@ func TestIfElse(t *testing.T) {
 
 	t.Run("embedded in list", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -117,8 +125,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -133,8 +142,9 @@ func TestIfElse(t *testing.T) {
 
 	t.Run("embedded in program", func(t *testing.T) {
 		t.Parallel()
-		one := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		one := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -142,8 +152,9 @@ func TestIfElse(t *testing.T) {
 				&opcode.AbortRebase{},
 			},
 		}
-		two := opcode.IfElse{
-			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+		two := opcode.IfBranchHasUnmergedChanges{
+			Branch: domain.NewLocalBranchName("branch"),
+			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
