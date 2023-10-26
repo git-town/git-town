@@ -2,6 +2,7 @@ package statefile_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/shared"
 	"github.com/git-town/git-town/v9/src/vm/statefile"
 	"github.com/shoenig/test/must"
 )
@@ -40,118 +40,116 @@ func TestLoadSave(t *testing.T) {
 			IsUndo:       true,
 			AbortProgram: program.Program{},
 			RunProgram: program.Program{
-				Opcodes: []shared.Opcode{
-					&opcode.AbortMerge{},
-					&opcode.AbortRebase{},
-					&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
-					&opcode.ChangeParent{
-						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent"),
-					},
-					&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
-					&opcode.CommitOpenChanges{},
-					&opcode.ConnectorMergeProposal{
-						Branch:          domain.NewLocalBranchName("branch"),
-						CommitMessage:   "commit message",
-						ProposalMessage: "proposal message",
-						ProposalNumber:  123,
-					},
-					&opcode.ContinueMerge{},
-					&opcode.ContinueRebase{},
-					&opcode.CreateBranch{
-						Branch:        domain.NewLocalBranchName("branch"),
-						StartingPoint: domain.NewSHA("123456").Location(),
-					},
-					&opcode.CreateProposal{Branch: domain.NewLocalBranchName("branch")},
-					&opcode.CreateRemoteBranch{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
-						SHA:        domain.NewSHA("123456"),
-					},
-					&opcode.CreateTrackingBranch{
-						Branch:     domain.NewLocalBranchName("branch"),
-						NoPushHook: true,
-					},
-					&opcode.DeleteLocalBranch{
-						Branch: domain.NewLocalBranchName("branch"),
-						Force:  false,
-					},
-					&opcode.DeleteRemoteBranch{
-						Branch: domain.NewRemoteBranchName("origin/branch"),
-					},
-					&opcode.DeleteParentBranch{
-						Branch: domain.NewLocalBranchName("branch"),
-					},
-					&opcode.DeleteTrackingBranch{
-						Branch: domain.NewRemoteBranchName("origin/branch"),
-					},
-					&opcode.DiscardOpenChanges{},
-					&opcode.EnsureHasShippableChanges{
-						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent"),
-					},
-					&opcode.FetchUpstream{
-						Branch: domain.NewLocalBranchName("branch"),
-					},
-					&opcode.ForcePushCurrentBranch{
-						NoPushHook: true,
-					},
-					&opcode.Merge{Branch: domain.NewBranchName("branch")},
-					&opcode.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
-					&opcode.PreserveCheckoutHistory{
-						InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
-						InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
-						MainBranch:                        domain.NewLocalBranchName("main"),
-					},
-					&opcode.PullCurrentBranch{},
-					&opcode.PushCurrentBranch{
-						CurrentBranch: domain.NewLocalBranchName("branch"),
-						NoPushHook:    true,
-					},
-					&opcode.PushTags{},
-					&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
-					&opcode.RebaseParent{CurrentBranch: domain.NewLocalBranchName("branch")},
-					&opcode.RemoveFromPerennialBranches{
-						Branch: domain.NewLocalBranchName("branch"),
-					},
-					&opcode.RemoveGlobalConfig{
-						Key: config.KeyOffline,
-					},
-					&opcode.RemoveLocalConfig{
-						Key: config.KeyOffline,
-					},
-					&opcode.ResetCurrentBranchToSHA{
-						Hard:        true,
-						MustHaveSHA: domain.NewSHA("222222"),
-						SetToSHA:    domain.NewSHA("111111"),
-					},
-					&opcode.RestoreOpenChanges{},
-					&opcode.RevertCommit{
-						SHA: domain.NewSHA("123456"),
-					},
-					&opcode.SetGlobalConfig{
-						Key:   config.KeyOffline,
-						Value: "1",
-					},
-					&opcode.SetLocalConfig{
-						Key:   config.KeyOffline,
-						Value: "1",
-					},
-					&opcode.SetParent{
-						Branch: domain.NewLocalBranchName("branch"),
-						Parent: domain.NewLocalBranchName("parent"),
-					},
-					&opcode.SkipCurrentBranch{},
-					&opcode.SquashMerge{
-						Branch:        domain.NewLocalBranchName("branch"),
-						CommitMessage: "commit message",
-						Parent:        domain.NewLocalBranchName("parent"),
-					},
-					&opcode.StashOpenChanges{},
-					&opcode.UpdateProposalTarget{
-						ProposalNumber: 123,
-						NewTarget:      domain.NewLocalBranchName("new-target"),
-					},
+				&opcode.AbortMerge{},
+				&opcode.AbortRebase{},
+				&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.ChangeParent{
+					Branch: domain.NewLocalBranchName("branch"),
+					Parent: domain.NewLocalBranchName("parent"),
+				},
+				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CommitOpenChanges{},
+				&opcode.ConnectorMergeProposal{
+					Branch:          domain.NewLocalBranchName("branch"),
+					CommitMessage:   "commit message",
+					ProposalMessage: "proposal message",
+					ProposalNumber:  123,
+				},
+				&opcode.ContinueMerge{},
+				&opcode.ContinueRebase{},
+				&opcode.CreateBranch{
+					Branch:        domain.NewLocalBranchName("branch"),
+					StartingPoint: domain.NewSHA("123456").Location(),
+				},
+				&opcode.CreateProposal{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CreateRemoteBranch{
+					Branch:     domain.NewLocalBranchName("branch"),
+					NoPushHook: true,
+					SHA:        domain.NewSHA("123456"),
+				},
+				&opcode.CreateTrackingBranch{
+					Branch:     domain.NewLocalBranchName("branch"),
+					NoPushHook: true,
+				},
+				&opcode.DeleteLocalBranch{
+					Branch: domain.NewLocalBranchName("branch"),
+					Force:  false,
+				},
+				&opcode.DeleteRemoteBranch{
+					Branch: domain.NewRemoteBranchName("origin/branch"),
+				},
+				&opcode.DeleteParentBranch{
+					Branch: domain.NewLocalBranchName("branch"),
+				},
+				&opcode.DeleteTrackingBranch{
+					Branch: domain.NewRemoteBranchName("origin/branch"),
+				},
+				&opcode.DiscardOpenChanges{},
+				&opcode.EnsureHasShippableChanges{
+					Branch: domain.NewLocalBranchName("branch"),
+					Parent: domain.NewLocalBranchName("parent"),
+				},
+				&opcode.FetchUpstream{
+					Branch: domain.NewLocalBranchName("branch"),
+				},
+				&opcode.ForcePushCurrentBranch{
+					NoPushHook: true,
+				},
+				&opcode.Merge{Branch: domain.NewBranchName("branch")},
+				&opcode.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
+				&opcode.PreserveCheckoutHistory{
+					InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
+					InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
+					MainBranch:                        domain.NewLocalBranchName("main"),
+				},
+				&opcode.PullCurrentBranch{},
+				&opcode.PushCurrentBranch{
+					CurrentBranch: domain.NewLocalBranchName("branch"),
+					NoPushHook:    true,
+				},
+				&opcode.PushTags{},
+				&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
+				&opcode.RebaseParent{CurrentBranch: domain.NewLocalBranchName("branch")},
+				&opcode.RemoveFromPerennialBranches{
+					Branch: domain.NewLocalBranchName("branch"),
+				},
+				&opcode.RemoveGlobalConfig{
+					Key: config.KeyOffline,
+				},
+				&opcode.RemoveLocalConfig{
+					Key: config.KeyOffline,
+				},
+				&opcode.ResetCurrentBranchToSHA{
+					Hard:        true,
+					MustHaveSHA: domain.NewSHA("222222"),
+					SetToSHA:    domain.NewSHA("111111"),
+				},
+				&opcode.RestoreOpenChanges{},
+				&opcode.RevertCommit{
+					SHA: domain.NewSHA("123456"),
+				},
+				&opcode.SetGlobalConfig{
+					Key:   config.KeyOffline,
+					Value: "1",
+				},
+				&opcode.SetLocalConfig{
+					Key:   config.KeyOffline,
+					Value: "1",
+				},
+				&opcode.SetParent{
+					Branch: domain.NewLocalBranchName("branch"),
+					Parent: domain.NewLocalBranchName("parent"),
+				},
+				&opcode.SkipCurrentBranch{},
+				&opcode.SquashMerge{
+					Branch:        domain.NewLocalBranchName("branch"),
+					CommitMessage: "commit message",
+					Parent:        domain.NewLocalBranchName("parent"),
+				},
+				&opcode.StashOpenChanges{},
+				&opcode.UpdateProposalTarget{
+					ProposalNumber: 123,
+					NewTarget:      domain.NewLocalBranchName("new-target"),
 				},
 			},
 			UndoProgram: program.Program{},
@@ -445,6 +443,11 @@ func TestLoadSave(t *testing.T) {
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		must.NoError(t, err)
-		must.Eq(t, runState, newState)
+		// NOTE: comparing runState and newState directly leads to incorrect test failures
+		// solely due to different pointer addresses, even when using reflect.DeepEqual.
+		// Comparing the serialization seems to work better here.
+		runStateText := fmt.Sprintf("%+v", runState)
+		newStateText := fmt.Sprintf("%+v", newState)
+		must.EqOp(t, runStateText, newStateText)
 	})
 }

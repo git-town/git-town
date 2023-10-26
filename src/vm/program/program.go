@@ -11,53 +11,64 @@ import (
 )
 
 // Program is a mutable collection of Opcodes.
-// Only use a program if you need the mutability features of this struct.
-// If all you need is an immutable list of opcodes, a []shared.Opcode is sufficient.
-//
-//nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
-type Program struct {
-	Opcodes []shared.Opcode `exhaustruct:"optional"`
-}
+type Program []shared.Opcode
 
 // Append adds the given opcode to the end of this program.
 func (self *Program) Add(opcode ...shared.Opcode) {
-	self.Opcodes = append(self.Opcodes, opcode...)
+	*self = append(*self, opcode...)
 }
 
 // AppendProgram adds all elements of the given Program to the end of this Program.
 func (self *Program) AddProgram(otherProgram Program) {
-	self.Opcodes = append(self.Opcodes, otherProgram.Opcodes...)
+	*self = append(*self, otherProgram...)
 }
 
 // IsEmpty returns whether or not this Program has any elements.
-func (self *Program) IsEmpty() bool {
-	return len(self.Opcodes) == 0
+func (self Program) IsEmpty() bool {
+	return len(self) == 0
 }
 
 // MarshalJSON marshals this program to JSON.
-func (self *Program) MarshalJSON() ([]byte, error) {
-	jsonOpcodes := make([]JSON, len(self.Opcodes))
-	for o, opcode := range self.Opcodes {
+func (self Program) MarshalJSON() ([]byte, error) {
+	jsonOpcodes := make([]JSON, len(self))
+	for o, opcode := range self {
 		jsonOpcodes[o] = JSON{Opcode: opcode}
 	}
 	return json.Marshal(jsonOpcodes)
 }
 
+// MoveToEnd moves all occurrences of the given opcode in this program to the end of this program.
+func (self *Program) MoveToEnd(op shared.Opcode) {
+	result := make(Program, 0, len(*self))
+	hasOp := false
+	for _, element := range *self {
+		if element == op {
+			hasOp = true
+		} else {
+			result = append(result, element)
+		}
+	}
+	if hasOp {
+		result = append(result, op)
+	}
+	*self = result
+}
+
 // OpcodeTypes provides the names of the types of the opcodes in this program.
-func (self *Program) OpcodeTypes() []string {
-	result := make([]string, len(self.Opcodes))
-	for o, opcode := range self.Opcodes {
+func (self Program) OpcodeTypes() []string {
+	result := make([]string, len(self))
+	for o, opcode := range self {
 		result[o] = reflect.TypeOf(opcode).String()
 	}
 	return result
 }
 
 // Peek provides the first element of this program.
-func (self *Program) Peek() shared.Opcode { //nolint:ireturn
+func (self Program) Peek() shared.Opcode { //nolint:ireturn
 	if self.IsEmpty() {
 		return nil
 	}
-	return self.Opcodes[0]
+	return self[0]
 }
 
 // Pop removes and provides the first element of this program.
@@ -65,21 +76,25 @@ func (self *Program) Pop() shared.Opcode { //nolint:ireturn
 	if self.IsEmpty() {
 		return nil
 	}
-	result := self.Opcodes[0]
-	self.Opcodes = self.Opcodes[1:]
+	result := (*self)[0]
+	*self = (*self)[1:]
 	return result
 }
 
 // Prepend adds the given opcode to the beginning of this program.
 func (self *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
-		self.Opcodes = append(other, self.Opcodes...)
+		result := other
+		result = append(result, (*self)...)
+		*self = result
 	}
 }
 
 // PrependProgram adds all elements of the given program to the start of this program.
 func (self *Program) PrependProgram(otherProgram Program) {
-	self.Opcodes = append(otherProgram.Opcodes, self.Opcodes...)
+	result := otherProgram
+	result = append(result, (*self)...)
+	*self = result
 }
 
 func (self *Program) RemoveAllButLast(removeType string) {
@@ -87,16 +102,16 @@ func (self *Program) RemoveAllButLast(removeType string) {
 	occurrences := slice.FindAll(opcodeTypes, removeType)
 	slice.TruncateLast(&occurrences)
 	for o := len(occurrences) - 1; o >= 0; o-- {
-		slice.RemoveAt(&self.Opcodes, occurrences[o])
+		slice.RemoveAt(self, occurrences[o])
 	}
 }
 
-// RemoveDuplicateCheckout provides this program with checkout opcodes that immediately follow each other removed.
-func (self *Program) RemoveDuplicateCheckout() Program {
-	result := make([]shared.Opcode, 0, len(self.Opcodes))
+// RemoveDuplicateCheckout removes checkout opcodes that immediately follow each other from this program.
+func (self *Program) RemoveDuplicateCheckout() {
+	result := make([]shared.Opcode, 0, len(*self))
 	// this one is populated only if the last opcode is a checkout
 	var lastOpcode shared.Opcode
-	for _, opcode := range self.Opcodes {
+	for _, opcode := range *self {
 		if shared.IsCheckoutOpcode(opcode) {
 			lastOpcode = opcode
 			continue
@@ -110,21 +125,21 @@ func (self *Program) RemoveDuplicateCheckout() Program {
 	if lastOpcode != nil {
 		result = append(result, lastOpcode)
 	}
-	return Program{Opcodes: result}
+	*self = result
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self *Program) String() string {
+func (self Program) String() string {
 	return self.StringIndented("")
 }
 
-func (self *Program) StringIndented(indent string) string {
+func (self Program) StringIndented(indent string) string {
 	sb := strings.Builder{}
 	if self.IsEmpty() {
 		sb.WriteString("(empty program)\n")
 	} else {
 		sb.WriteString("Program:\n")
-		for o, opcode := range self.Opcodes {
+		for o, opcode := range self {
 			sb.WriteString(fmt.Sprintf("%s%d: %#v\n", indent, o+1, opcode))
 		}
 	}
@@ -139,9 +154,9 @@ func (self *Program) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonOpcodes) > 0 {
-		self.Opcodes = make([]shared.Opcode, len(jsonOpcodes))
+		*self = make([]shared.Opcode, len(jsonOpcodes))
 		for j, jsonOpcode := range jsonOpcodes {
-			self.Opcodes[j] = jsonOpcode.Opcode
+			(*self)[j] = jsonOpcode.Opcode
 		}
 	}
 	return nil

@@ -7,7 +7,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/gohacks/slice"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/git-town/git-town/v9/src/vm/shared"
@@ -72,14 +71,14 @@ func (self *RunState) CreateSkipRunState() RunState {
 		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          self.AbortProgram,
 	}
-	for _, opcode := range self.UndoProgram.Opcodes {
+	for _, opcode := range self.UndoProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			break
 		}
 		result.RunProgram.Add(opcode)
 	}
 	skipping := true
-	for _, opcode := range self.RunProgram.Opcodes {
+	for _, opcode := range self.RunProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			skipping = false
 		}
@@ -87,7 +86,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(opcode)
 		}
 	}
-	slice.LowerAll[shared.Opcode](&result.RunProgram.Opcodes, &opcode.RestoreOpenChanges{})
+	result.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{})
 	return result
 }
 
@@ -103,7 +102,7 @@ func (self *RunState) CreateUndoRunState() RunState {
 		UndoablePerennialCommits: []domain.SHA{},
 	}
 	result.RunProgram.Add(&opcode.Checkout{Branch: self.InitialActiveBranch})
-	result.RunProgram = result.RunProgram.RemoveDuplicateCheckout()
+	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 
