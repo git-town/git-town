@@ -451,7 +451,7 @@ func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
 func (self *BackendCommands) RootDirectory() domain.RepoRootDir {
 	output, err := self.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
-		return domain.RepoRootDir{}
+		return domain.EmptyRepoRootDir()
 	}
 	return domain.NewRepoRootDir(filepath.FromSlash(output))
 }
@@ -478,9 +478,7 @@ func (self *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, tra
 // StashSnapshot provides the number of stashes in this repository.
 func (self *BackendCommands) StashSnapshot() (domain.StashSnapshot, error) {
 	output, err := self.QueryTrim("git", "stash", "list")
-	return domain.StashSnapshot{
-		Amount: len(stringslice.Lines(output)),
-	}, err
+	return domain.StashSnapshot(len(stringslice.Lines(output))), err
 }
 
 // Version indicates whether the needed Git version is installed.

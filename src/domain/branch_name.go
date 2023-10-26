@@ -1,52 +1,41 @@
 package domain
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
 
 // BranchName is the name of a local or remote Git branch.
-type BranchName struct {
-	id string
-}
+type BranchName string
 
 func NewBranchName(id string) BranchName {
 	if !isValidBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid Git branch name", id))
 	}
-	return BranchName{id}
+	return BranchName(id)
 }
 
 // IsLocal indicates whether the branch with this BranchName exists locally.
 func (self BranchName) IsLocal() bool {
-	return !strings.HasPrefix(self.id, "origin/")
+	return !strings.HasPrefix(string(self), "origin/")
 }
 
 // LocalName provides the local version of this branch name.
 func (self BranchName) LocalName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(self.id, "origin/"))
-}
-
-// MarshalJSON is used when serializing this LocalBranchName to JSON.
-func (self BranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.id)
+	return NewLocalBranchName(strings.TrimPrefix(string(self), "origin/"))
 }
 
 // RemoteName provides the remote version of this branch name.
 func (self BranchName) RemoteName() RemoteBranchName {
-	if strings.HasPrefix(self.id, "origin/") {
-		return NewRemoteBranchName(self.id)
+	if strings.HasPrefix(string(self), "origin/") {
+		return NewRemoteBranchName(string(self))
 	}
-	return NewRemoteBranchName("origin/" + self.id)
+	return NewRemoteBranchName("origin/" + string(self))
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self BranchName) String() string { return self.id }
-
-// UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
-func (self *BranchName) UnmarshalJSON(ba []byte) error {
-	return json.Unmarshal(ba, &self.id)
+func (self BranchName) String() string {
+	return string(self)
 }
 
 // isValidBranchName indicates whether the given text is a valid branch name.

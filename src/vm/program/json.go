@@ -12,7 +12,7 @@ import (
 
 // JSON is used to store an opcode in JSON.
 type JSON struct { //nolint:musttag // JSON uses a custom serialization algorithm
-	Opcode shared.Opcode
+	shared.Opcode
 }
 
 // MarshalJSON marshals the opcode to JSON.

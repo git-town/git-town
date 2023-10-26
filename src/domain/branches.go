@@ -11,6 +11,6 @@ func EmptyBranches() Branches {
 	return Branches{
 		All:     BranchInfos{},
 		Types:   EmptyBranchTypes(),
-		Initial: LocalBranchName{},
+		Initial: EmptyLocalBranchName(),
 	}
 }
