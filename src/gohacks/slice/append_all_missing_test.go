@@ -29,6 +29,15 @@ func TestAppendAllMissing(t *testing.T) {
 		must.Eq(t, want, list)
 	})
 
+	t.Run("zero slice", func(t *testing.T) {
+		t.Parallel()
+		var list []string
+		additional := []string{"one", "two", "three"}
+		slice.AppendAllMissing(&list, additional)
+		want := []string{"one", "two", "three"}
+		must.Eq(t, want, list)
+	})
+
 	t.Run("aliased slice type", func(t *testing.T) {
 		t.Parallel()
 		list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222")}
