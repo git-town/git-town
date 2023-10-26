@@ -1,10 +1,8 @@
 package domain
 
-// StashSnapshot is a snapshot of th state of Git stash at a given point in time.
-type StashSnapshot struct {
-	Amount int // the amount of Git stash entries
-}
+// StashSnapshot is a snapshot of the state of Git stash at a given point in time.
+type StashSnapshot int
 
 func EmptyStashSnapshot() StashSnapshot {
-	return StashSnapshot{Amount: 0}
+	return 0
 }
