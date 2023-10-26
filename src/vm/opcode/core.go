@@ -243,7 +243,7 @@ func Types() []shared.Opcode {
 		&EnsureHasShippableChanges{},
 		&FetchUpstream{},
 		&ForcePushCurrentBranch{},
-		&IfElse{},
+		&IfBranchHasUnmergedChanges{},
 		&Merge{},
 		&MergeParent{},
 		&PreserveCheckoutHistory{},
