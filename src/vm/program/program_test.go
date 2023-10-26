@@ -376,7 +376,7 @@ func TestProgram(t *testing.T) {
 		want := `
 Program:
 1: &opcode.AbortMerge{undeclaredOpcodeMethods:opcode.undeclaredOpcodeMethods{}}
-2: &opcode.AddToPerennialBranches{Branch:domain.LocalBranchName{id:"branch"}, undeclaredOpcodeMethods:opcode.undeclaredOpcodeMethods{}}
+2: &opcode.AddToPerennialBranches{Branch:"branch", undeclaredOpcodeMethods:opcode.undeclaredOpcodeMethods{}}
 `[1:]
 		must.EqOp(t, want, have)
 	})

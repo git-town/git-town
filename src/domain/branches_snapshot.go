@@ -14,7 +14,7 @@ type BranchesSnapshot struct {
 func EmptyBranchesSnapshot() BranchesSnapshot {
 	return BranchesSnapshot{
 		Branches: BranchInfos{},
-		Active:   LocalBranchName{},
+		Active:   EmptyLocalBranchName(),
 	}
 }
 
