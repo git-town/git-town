@@ -664,9 +664,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime.CreateFile("file2", "content")
 			runtime.StashOpenFiles()
 			have, err := runtime.StashSnapshot()
-			want := domain.StashSnapshot{
-				Amount: 2,
-			}
+			want := domain.StashSnapshot(2)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})
@@ -674,9 +672,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have, err := runtime.StashSnapshot()
-			want := domain.StashSnapshot{
-				Amount: 0,
-			}
+			want := domain.StashSnapshot(0)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})

@@ -7,7 +7,7 @@ type RemoteBranchNames []RemoteBranchName
 // Sort orders the branches in this collection alphabetically.
 func (self RemoteBranchNames) Sort() {
 	sort.Slice(self, func(a, b int) bool {
-		return self[a].id < self[b].id
+		return self[a] < self[b]
 	})
 }
 

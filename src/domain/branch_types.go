@@ -22,7 +22,7 @@ func (self BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
 
 func EmptyBranchTypes() BranchTypes {
 	return BranchTypes{
-		MainBranch:        LocalBranchName{},
+		MainBranch:        EmptyLocalBranchName(),
 		PerennialBranches: LocalBranchNames{},
 	}
 }
