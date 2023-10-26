@@ -1,25 +1,22 @@
 package domain
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
-type RemoteBranchName struct {
-	id string
-}
+type RemoteBranchName string
 
 func EmptyRemoteBranchName() RemoteBranchName {
-	return RemoteBranchName{id: ""}
+	return ""
 }
 
 func NewRemoteBranchName(id string) RemoteBranchName {
 	if !isValidRemoteBranchName(id) {
 		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
-	return RemoteBranchName{id}
+	return RemoteBranchName(id)
 }
 
 func isValidRemoteBranchName(value string) bool {
@@ -34,11 +31,11 @@ func isValidRemoteBranchName(value string) bool {
 
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (self RemoteBranchName) BranchName() BranchName {
-	return NewBranchName(self.id)
+	return NewBranchName(string(self))
 }
 
 func (self RemoteBranchName) IsEmpty() bool {
-	return self.id == ""
+	return self == ""
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.
@@ -47,12 +44,8 @@ func (self RemoteBranchName) LocalBranchName() LocalBranchName {
 	return localBranch
 }
 
-func (self RemoteBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.id)
-}
-
 func (self RemoteBranchName) Parts() (Remote, LocalBranchName) {
-	parts := strings.SplitN(self.id, "/", 2)
+	parts := strings.SplitN(string(self), "/", 2)
 	return NewRemote(parts[0]), NewLocalBranchName(parts[1])
 }
 
@@ -62,8 +55,6 @@ func (self RemoteBranchName) Remote() Remote {
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self RemoteBranchName) String() string { return self.id }
-
-func (self *RemoteBranchName) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &self.id)
+func (self RemoteBranchName) String() string {
+	return string(self)
 }

@@ -907,8 +907,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		if stashSnapshot.Amount != 1 {
-			return fmt.Errorf("expected 1 stash but found %d", stashSnapshot.Amount)
+		if stashSnapshot != 1 {
+			return fmt.Errorf("expected 1 stash but found %d", stashSnapshot)
 		}
 		return nil
 	})

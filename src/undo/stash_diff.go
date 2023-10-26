@@ -13,7 +13,7 @@ type StashDiff struct {
 
 func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
 	return StashDiff{
-		EntriesAdded: after.Amount - before.Amount,
+		EntriesAdded: int(after) - int(before),
 	}
 }
 

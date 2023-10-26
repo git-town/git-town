@@ -1,20 +1,15 @@
 package domain
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
-type SHA struct {
-	id string
-}
+type SHA string
 
 func EmptySHA() SHA {
-	return SHA{
-		id: "",
-	}
+	return ""
 }
 
 // NewSHA creates a new SHA instance with the given value.
@@ -23,7 +18,7 @@ func NewSHA(id string) SHA {
 	if !validateSHA(id) {
 		panic(fmt.Sprintf("%q is not a valid Git SHA", id))
 	}
-	return SHA{id}
+	return SHA(id)
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
@@ -44,31 +39,23 @@ func validateSHA(content string) bool {
 }
 
 func (self SHA) IsEmpty() bool {
-	return self.id == ""
+	return self == ""
 }
 
 // Location widens the type of this SHA to a more generic Location.
 func (self SHA) Location() Location {
-	return Location(self)
-}
-
-// MarshalJSON is used when serializing this SHA to JSON.
-func (self SHA) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.id)
+	return Location(string(self))
 }
 
 // Implementation of the fmt.Stringer interface.
-func (self SHA) String() string { return self.id }
+func (self SHA) String() string {
+	return string(self)
+}
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (self SHA) TruncateTo(newLength int) SHA {
-	if len(self.id) < newLength {
+	if len(self) < newLength {
 		return self
 	}
-	return NewSHA(self.id[0:newLength])
-}
-
-// UnmarshalJSON is used when de-serializing JSON into a SHA.
-func (self *SHA) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &self.id)
+	return NewSHA(string(self)[0:newLength])
 }
