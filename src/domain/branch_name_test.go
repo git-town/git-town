@@ -80,7 +80,7 @@ func TestBranchName(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
-		have := domain.BranchName{}
+		have := domain.NewBranchName("placeholder")
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := domain.NewBranchName("branch-1")
