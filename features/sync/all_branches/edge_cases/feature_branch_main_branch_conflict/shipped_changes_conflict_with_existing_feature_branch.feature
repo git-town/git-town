@@ -1,4 +1,4 @@
-Feature: shipped changes conflict with an existing feature branch
+Feature: shipped changes conflict with multiple existing feature branches
 
   Background:
     Given the feature branches "alpha", "beta", and "gamma"
@@ -36,36 +36,32 @@ Feature: shipped changes conflict with an existing feature branch
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  @debug  @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
-      | beta   | git merge --abort                           |
-      |        | git checkout alpha                          |
-      | alpha  | git reset --hard {{ sha 'alpha commit' }}   |
-      |        | git push --force-with-lease                 |
+      | alpha  | git merge --abort                           |
       |        | git checkout main                           |
       | main   | git reset --hard {{ sha 'Initial commit' }} |
       |        | git stash pop                               |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        | FILE CONTENT  |
+      | main   | origin        | beta commit  | conflicting_file | beta content  |
+      | alpha  | local, origin | alpha commit | conflicting_file | alpha content |
+      | beta   | local         | beta commit  | conflicting_file | beta content  |
+      | gamma  | local, origin | gamma commit | conflicting_file | gamma content |
     And the initial branches and hierarchy exist
 
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | beta   | git merge --abort                |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                  |
+      | alpha  | git merge --abort        |
+      |        | git checkout beta        |
+      | beta   | git merge --no-edit main |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
@@ -95,24 +91,33 @@ Feature: shipped changes conflict with an existing feature branch
       """
       you must resolve the conflicts before continuing
       """
-    And the current branch is still "beta"
+    And the current branch is still "alpha"
     And the uncommitted file is stashed
     And a merge is now in progress
 
+  @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND                          |
-      | beta   | git commit --no-edit             |
-      |        | git push                         |
-      |        | git checkout gamma               |
-      | gamma  | git merge --no-edit origin/gamma |
-      |        | git merge --no-edit main         |
-      |        | git push                         |
-      |        | git checkout main                |
-      | main   | git push --tags                  |
-      |        | git stash pop                    |
+      | BRANCH | COMMAND                  |
+      | alpha  | git commit --no-edit     |
+      |        | git push                 |
+      |        | git checkout beta        |
+      | beta   | git merge --no-edit main |
+    And the current branch is now "beta"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | beta   | git commit --no-edit     |
+      |        | git push                 |
+      |        | git checkout beta        |
+      | beta   | git merge --no-edit main |
+    And it prints the error:
+      """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
     And the current branch is now "main"
     And the uncommitted file still exists
     And all branches are now synchronized

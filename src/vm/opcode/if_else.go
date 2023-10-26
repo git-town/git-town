@@ -10,9 +10,11 @@ import (
 
 // IfElse allows running different opcodes based on a condition evaluated at runtime.
 type IfElse struct {
-	Condition func(*git.BackendCommands, config.Lineage) (bool, error) `json:"-"`
-	WhenTrue  Program                                                  // the opcodes to execute if the given branch is empty
-	WhenFalse Program                                                  // the opcodes to execute if the given branch is not empty
+	// PROBLEM: the condition doesn't (and cannot really) properly serialize to JSON and back,
+	// leading to this field being `nil` when continuing a failed Git Town command.
+	Condition func(*git.BackendCommands, config.Lineage) (bool, error)
+	WhenTrue  Program // the opcodes to execute if the given branch is empty
+	WhenFalse Program // the opcodes to execute if the given branch is not empty
 	undeclaredOpcodeMethods
 }
 
