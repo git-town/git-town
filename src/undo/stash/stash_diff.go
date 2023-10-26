@@ -1,4 +1,4 @@
-package undo
+package stash
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
@@ -6,19 +6,19 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
-// StashDiff describes the changes made to the Git stash.
-type StashDiff struct {
+// Diff describes the changes made to the Git stash.
+type Diff struct {
 	// the number of entries added to the Git stash (positive = entries added, negative = entries removed, 0 = nothing added)
 	EntriesAdded int
 }
 
-func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
-	return StashDiff{
+func NewDiff(before, after domain.StashSnapshot) Diff {
+	return Diff{
 		EntriesAdded: int(after) - int(before),
 	}
 }
 
-func (self StashDiff) Program() program.Program {
+func (self Diff) Program() program.Program {
 	result := program.Program{}
 	for ; self.EntriesAdded > 0; self.EntriesAdded-- {
 		result.Add(&opcode.RestoreOpenChanges{})

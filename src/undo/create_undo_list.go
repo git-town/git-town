@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/undo/branch"
 	configundo "github.com/git-town/git-town/v9/src/undo/config"
+	"github.com/git-town/git-town/v9/src/undo/stash"
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
@@ -75,6 +76,6 @@ func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backen
 	if err != nil {
 		return program.Program{}, err
 	}
-	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
+	stashDiff := stash.NewDiff(initialStashSnapshot, finalStashSnapshot)
 	return stashDiff.Program(), nil
 }
