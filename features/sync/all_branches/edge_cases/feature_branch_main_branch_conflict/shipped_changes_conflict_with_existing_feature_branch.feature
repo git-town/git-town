@@ -12,7 +12,6 @@ Feature: shipped changes conflict with multiple existing feature branches
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -37,6 +36,7 @@ Feature: shipped changes conflict with multiple existing feature branches
     And the uncommitted file is stashed
     And a merge is now in progress
 
+  @debug @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
