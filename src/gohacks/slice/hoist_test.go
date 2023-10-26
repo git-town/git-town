@@ -10,6 +10,7 @@ import (
 
 func TestHoist(t *testing.T) {
 	t.Parallel()
+
 	t.Run("already hoisted", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"initial", "one", "two"}
@@ -17,6 +18,7 @@ func TestHoist(t *testing.T) {
 		want := []string{"initial", "one", "two"}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("contains the element to hoist", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"alpha", "initial", "omega"}
@@ -24,6 +26,7 @@ func TestHoist(t *testing.T) {
 		want := []string{"initial", "alpha", "omega"}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("empty list", func(t *testing.T) {
 		t.Parallel()
 		give := []string{}
@@ -31,6 +34,7 @@ func TestHoist(t *testing.T) {
 		want := []string{}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("aliased slice type", func(t *testing.T) {
 		t.Parallel()
 		give := domain.LocalBranchNames{domain.NewLocalBranchName("alpha"), domain.NewLocalBranchName("initial"), domain.NewLocalBranchName("omega")}

@@ -9,6 +9,7 @@ import (
 
 func TestFindAll(t *testing.T) {
 	t.Parallel()
+
 	t.Run("list contains the element", func(t *testing.T) {
 		t.Parallel()
 		list := []int{1, 2, 1, 3, 1}

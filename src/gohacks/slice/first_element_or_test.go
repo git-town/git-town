@@ -9,6 +9,7 @@ import (
 
 func TestFirstElementOr(t *testing.T) {
 	t.Parallel()
+
 	t.Run("list contains an element", func(t *testing.T) {
 		t.Parallel()
 		list := []string{"one"}

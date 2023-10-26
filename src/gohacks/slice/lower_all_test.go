@@ -11,6 +11,7 @@ import (
 
 func TestLowerAll(t *testing.T) {
 	t.Parallel()
+
 	t.Run("list contains element at the last position", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two", "last"}

@@ -10,6 +10,7 @@ import (
 
 func TestRemove(t *testing.T) {
 	t.Parallel()
+
 	t.Run("slice type", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two", "three"}
@@ -17,6 +18,7 @@ func TestRemove(t *testing.T) {
 		want := []string{"one", "three"}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
 		give := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
@@ -24,6 +26,7 @@ func TestRemove(t *testing.T) {
 		want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("333333")}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("empty slice", func(t *testing.T) {
 		t.Parallel()
 		give := []string{}
