@@ -87,13 +87,17 @@ func (self *Program) Pop() shared.Opcode { //nolint:ireturn
 // Prepend adds the given opcode to the beginning of this program.
 func (self *Program) Prepend(other ...shared.Opcode) {
 	if len(other) > 0 {
-		*self = append(other, (*self)...)
+		result := other
+		result = append(result, (*self)...)
+		*self = result
 	}
 }
 
 // PrependProgram adds all elements of the given program to the start of this program.
 func (self *Program) PrependProgram(otherProgram Program) {
-	*self = append(otherProgram, (*self)...)
+	result := otherProgram
+	result = append(result, (*self)...)
+	*self = result
 }
 
 func (self *Program) RemoveAllButLast(removeType string) {
