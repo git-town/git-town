@@ -1,4 +1,4 @@
-package branch_test
+package undobranch_test
 
 import "testing"
 

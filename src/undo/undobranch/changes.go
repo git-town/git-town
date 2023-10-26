@@ -1,4 +1,4 @@
-package branch
+package undobranch
 
 import (
 	"strings"
