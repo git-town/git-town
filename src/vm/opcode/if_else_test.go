@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestIfElse(t *testing.T) {
+func TestIfBranchHasUnmergedChanges(t *testing.T) {
 	t.Parallel()
 
 	t.Run("equal values", func(t *testing.T) {
