@@ -1,11 +1,11 @@
-package undo_test
+package branch_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/undo"
+	"github.com/git-town/git-town/v9/src/undo/branch"
 	"github.com/git-town/git-town/v9/src/vm/opcode"
 	"github.com/git-town/git-town/v9/src/vm/program"
 	"github.com/shoenig/test/must"
@@ -39,9 +39,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("branch-1"),
 		}
-		haveSpan := undo.NewBranchSpans(before, after)
-		wantSpan := undo.BranchSpans{
-			undo.BranchSpan{
+		haveSpan := branch.NewSpans(before, after)
+		wantSpan := branch.Spans{
+			branch.Span{
 				Before: domain.BranchInfo{
 					LocalName:  domain.EmptyLocalBranchName(),
 					LocalSHA:   domain.EmptySHA(),
@@ -60,7 +60,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantSpan, haveSpan)
 		haveChanges := haveSpan.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:            domain.NewLocalBranchNames("branch-1"),
 			LocalRemoved:          domain.LocalBranchesSHAs{},
 			LocalChanged:          domain.LocalBranchChange{},
@@ -72,7 +72,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -114,9 +114,9 @@ func TestChanges(t *testing.T) {
 			Branches: domain.BranchInfos{},
 			Active:   domain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded: domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{
 				domain.NewLocalBranchName("branch-1"): domain.NewSHA("111111"),
@@ -130,7 +130,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -196,9 +196,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{
@@ -219,7 +219,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -292,9 +292,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{},
@@ -309,7 +309,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -376,9 +376,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded: domain.LocalBranchNames{
 				domain.NewLocalBranchName("perennial-branch"),
 				domain.NewLocalBranchName("feature-branch"),
@@ -393,7 +393,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -447,9 +447,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded: domain.LocalBranchNames{
 				domain.NewLocalBranchName("perennial-branch"),
 				domain.NewLocalBranchName("feature-branch"),
@@ -467,7 +467,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -543,9 +543,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{
@@ -566,7 +566,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -639,9 +639,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:    domain.LocalBranchNames{},
 			LocalRemoved:  domain.LocalBranchesSHAs{},
 			LocalChanged:  domain.LocalBranchChange{},
@@ -662,7 +662,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -744,9 +744,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:    domain.LocalBranchNames{},
 			LocalRemoved:  domain.LocalBranchesSHAs{},
 			LocalChanged:  domain.LocalBranchChange{},
@@ -771,7 +771,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:       lineage,
 			BranchTypes:   branchTypes,
 			InitialBranch: before.Active,
@@ -850,9 +850,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:    domain.LocalBranchNames{},
 			LocalRemoved:  domain.LocalBranchesSHAs{},
 			LocalChanged:  domain.LocalBranchChange{},
@@ -871,7 +871,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:       lineage,
 			BranchTypes:   branchTypes,
 			InitialBranch: before.Active,
@@ -942,9 +942,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:    domain.LocalBranchNames{},
 			LocalRemoved:  domain.LocalBranchesSHAs{},
 			LocalChanged:  domain.LocalBranchChange{},
@@ -989,7 +989,7 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1062,9 +1062,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{
@@ -1085,7 +1085,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1158,9 +1158,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:    domain.LocalBranchNames{},
 			LocalRemoved:  domain.LocalBranchesSHAs{},
 			LocalChanged:  domain.LocalBranchChange{},
@@ -1181,7 +1181,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1248,9 +1248,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded: domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{
 				domain.NewLocalBranchName("perennial-branch"): domain.NewSHA("111111"),
@@ -1265,7 +1265,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1334,9 +1334,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{},
@@ -1351,7 +1351,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1412,9 +1412,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: domain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := branch.NewSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := branch.Changes{
 			LocalAdded:   domain.LocalBranchNames{},
 			LocalRemoved: domain.LocalBranchesSHAs{},
 			LocalChanged: domain.LocalBranchChange{},
@@ -1433,7 +1433,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: domain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,

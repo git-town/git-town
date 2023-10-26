@@ -1,4 +1,4 @@
-package undo_test
+package branch_test
 
 import "testing"
 

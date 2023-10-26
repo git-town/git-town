@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/undo/branch"
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
@@ -43,9 +44,9 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	if err != nil {
 		return program.Program{}, err
 	}
-	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
+	branchSpans := branch.NewSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
-	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
+	return branchChanges.UndoProgram(branch.ChangesUndoProgramArgs{
 		Lineage:                  runner.Config.Lineage(),
 		BranchTypes:              runner.Config.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,

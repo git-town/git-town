@@ -1,4 +1,4 @@
-package undo
+package branch
 
 import (
 	"strings"
@@ -10,9 +10,9 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/program"
 )
 
-// BranchChanges describes the changes made to the branches in a Git repo.
+// Changes describes the changes made to the branches in a Git repo.
 // Various types of changes are distinguished.
-type BranchChanges struct {
+type Changes struct {
 	LocalAdded    domain.LocalBranchNames
 	LocalRemoved  domain.LocalBranchesSHAs
 	LocalChanged  domain.LocalBranchChange
@@ -29,9 +29,9 @@ type BranchChanges struct {
 	InconsistentlyChanged domain.InconsistentChanges
 }
 
-// EmptyBranchChanges provides a properly initialized empty Changes instance.
-func EmptyBranchChanges() BranchChanges {
-	return BranchChanges{
+// EmptyChanges provides a properly initialized empty Changes instance.
+func EmptyChanges() Changes {
+	return Changes{
 		LocalAdded:            domain.LocalBranchNames{},
 		LocalRemoved:          domain.LocalBranchesSHAs{},
 		LocalChanged:          domain.LocalBranchChange{},
@@ -44,7 +44,7 @@ func EmptyBranchChanges() BranchChanges {
 	}
 }
 
-func (self BranchChanges) String() string {
+func (self Changes) String() string {
 	s := strings.Builder{}
 	s.WriteString("BranchChanges {")
 	s.WriteString("\n  LocalAdded: ")
@@ -70,7 +70,7 @@ func (self BranchChanges) String() string {
 }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
-func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
+func (self Changes) UndoProgram(args ChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
 	omniChangedPerennials, omniChangedFeatures := self.OmniChanged.Categorize(args.BranchTypes)
 
@@ -194,7 +194,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	return result
 }
 
-type BranchChangesUndoProgramArgs struct {
+type ChangesUndoProgramArgs struct {
 	Lineage                  config.Lineage
 	BranchTypes              domain.BranchTypes
 	InitialBranch            domain.LocalBranchName

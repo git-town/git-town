@@ -1,22 +1,22 @@
-package undo
+package branch
 
 import "github.com/git-town/git-town/v9/src/domain"
 
-// BranchSpans describes how a Git Town command has modified the branches in a Git repository.
-type BranchSpans []BranchSpan
+// Spans describes how a Git Town command has modified the branches in a Git repository.
+type Spans []Span
 
-func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) BranchSpans {
-	result := BranchSpans{}
+func NewSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) Spans {
+	result := Spans{}
 	for _, before := range beforeSnapshot.Branches {
 		after := afterSnapshot.Branches.FindMatchingRecord(before)
-		result = append(result, BranchSpan{
+		result = append(result, Span{
 			Before: before,
 			After:  after,
 		})
 	}
 	for _, after := range afterSnapshot.Branches {
 		if beforeSnapshot.Branches.FindMatchingRecord(after).IsEmpty() {
-			result = append(result, BranchSpan{
+			result = append(result, Span{
 				Before: domain.EmptyBranchInfo(),
 				After:  after,
 			})
@@ -26,8 +26,8 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) Branc
 }
 
 // Changes describes the specific changes made in this BranchSpans.
-func (self BranchSpans) Changes() BranchChanges {
-	result := EmptyBranchChanges()
+func (self Spans) Changes() Changes {
+	result := EmptyChanges()
 	for _, branchSpan := range self {
 		if branchSpan.NoChanges() {
 			continue
