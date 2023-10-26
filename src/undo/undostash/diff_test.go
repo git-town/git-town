@@ -1,10 +1,10 @@
-package stash_test
+package undostash_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/undo/stash"
+	"github.com/git-town/git-town/v9/src/undo/undostash"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,8 +17,8 @@ func TestStashDiff(t *testing.T) {
 			t.Parallel()
 			before := domain.StashSnapshot(1)
 			after := domain.StashSnapshot(3)
-			have := stash.NewDiff(before, after)
-			want := stash.Diff{
+			have := undostash.NewDiff(before, after)
+			want := undostash.Diff{
 				EntriesAdded: 2,
 			}
 			must.EqOp(t, want, have)
@@ -27,8 +27,8 @@ func TestStashDiff(t *testing.T) {
 			t.Parallel()
 			before := domain.StashSnapshot(1)
 			after := domain.StashSnapshot(1)
-			have := stash.NewDiff(before, after)
-			want := stash.Diff{
+			have := undostash.NewDiff(before, after)
+			want := undostash.Diff{
 				EntriesAdded: 0,
 			}
 			must.EqOp(t, want, have)

@@ -1,4 +1,4 @@
-package stash
+package undostash
 
 import (
 	"github.com/git-town/git-town/v9/src/domain"
