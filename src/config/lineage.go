@@ -45,7 +45,7 @@ func (self Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) do
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := self.Ancestors(branchName)
-		result = slice.AppendAllMissing(result, ancestors)
+		slice.AppendAllMissing(&result, ancestors)
 	}
 	self.OrderHierarchically(result)
 	return result
