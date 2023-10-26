@@ -65,9 +65,9 @@ func (self *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	self.initialLocalBranches.Sort()
-	self.initialLocalBranches = slice.Hoist(self.initialLocalBranches, domain.NewLocalBranchName("main"))
+	slice.Hoist(&self.initialLocalBranches, domain.NewLocalBranchName("main"))
 	self.initialRemoteBranches.Sort()
-	self.initialRemoteBranches = slice.Hoist(self.initialRemoteBranches, domain.NewLocalBranchName("main"))
+	slice.Hoist(&self.initialRemoteBranches, domain.NewLocalBranchName("main"))
 	localBranchesJoined := self.initialLocalBranches.Join(", ")
 	remoteBranchesJoined := self.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {

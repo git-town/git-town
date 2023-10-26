@@ -289,7 +289,8 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchNa
 	if err != nil {
 		return domain.LocalBranchNames{}, err
 	}
-	return slice.Hoist(branches, mainBranch), nil
+	slice.Hoist(&branches, mainBranch)
+	return branches, nil
 }
 
 func (self *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
