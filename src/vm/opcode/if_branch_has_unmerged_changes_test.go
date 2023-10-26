@@ -17,7 +17,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -27,7 +26,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -42,7 +40,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -52,7 +49,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.ContinueMerge{},
 			},
@@ -67,7 +63,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -77,7 +72,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -92,7 +86,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -102,7 +95,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch-2"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -117,7 +109,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -127,7 +118,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -144,7 +134,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		t.Parallel()
 		one := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},
@@ -154,7 +143,6 @@ func TestIfBranchHasUnmergedChanges(t *testing.T) {
 		}
 		two := opcode.IfBranchHasUnmergedChanges{
 			Branch: domain.NewLocalBranchName("branch"),
-			Parent: domain.NewLocalBranchName("parent"),
 			WhenTrue: []shared.Opcode{
 				&opcode.AbortMerge{},
 			},

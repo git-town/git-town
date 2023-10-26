@@ -10,7 +10,6 @@ import (
 // IfBranchHasUnmergedChanges allows running different opcodes based on a condition evaluated at runtime.
 type IfBranchHasUnmergedChanges struct {
 	Branch    domain.LocalBranchName
-	Parent    domain.LocalBranchName
 	WhenTrue  []shared.Opcode // the opcodes to execute if the given branch is empty
 	WhenFalse []shared.Opcode // the opcodes to execute if the given branch is not empty
 	undeclaredOpcodeMethods
@@ -23,7 +22,8 @@ func (self IfBranchHasUnmergedChanges) Equal(other IfBranchHasUnmergedChanges) b
 }
 
 func (self *IfBranchHasUnmergedChanges) Run(args shared.RunArgs) error {
-	hasUnmergedChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(self.Branch, self.Parent)
+	parent := args.Lineage.Parent(self.Branch)
+	hasUnmergedChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(self.Branch, parent)
 	if err != nil {
 		return err
 	}

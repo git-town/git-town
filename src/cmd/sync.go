@@ -293,7 +293,6 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.Branch
 	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncStrategy)
 	list.Add(&opcode.IfBranchHasUnmergedChanges{
 		Branch: branch.LocalName,
-		Parent: args.lineage.Parent(branch.LocalName),
 		WhenTrue: []shared.Opcode{
 			&opcode.QueueMessage{
 				Message: fmt.Sprintf(messages.BranchDeletedHasUnmergedChanges, branch.LocalName),
