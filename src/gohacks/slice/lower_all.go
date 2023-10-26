@@ -1,7 +1,7 @@
 package slice
 
 // LowerLast moves all occurrences of the given element in the given list to the end of the list.
-func LowerAll[C comparable](haystack *[]C, needle C) {
+func LowerAll[S ~[]C, C comparable](haystack *S, needle C) {
 	result := make([]C, 0, len(*haystack))
 	hasNeedle := false
 	for _, element := range *haystack {
