@@ -37,6 +37,7 @@ func (self Program) MarshalJSON() ([]byte, error) {
 	return json.Marshal(jsonOpcodes)
 }
 
+// MoveToEnd moves all occurrences of the given opcode in this program to the end of this program.
 func (self *Program) MoveToEnd(op shared.Opcode) {
 	result := make(Program, 0, len(*self))
 	hasOp := false
