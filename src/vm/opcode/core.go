@@ -39,8 +39,6 @@ func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
 }
 
 // Program is a mutable collection of Opcodes.
-// Only use a program if you need the mutability features of this struct.
-// If all you need is an immutable list of opcodes, a []shared.Opcode is sufficient.
 //
 //nolint:musttag // program is manually serialized, see the `MarshalJSON` method below
 type Program struct {

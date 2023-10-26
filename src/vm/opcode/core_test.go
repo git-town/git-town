@@ -21,7 +21,7 @@ func TestJSON(t *testing.T) {
 				Branch: domain.NewLocalBranchName("branch-1"),
 			},
 		}
-		have, err := json.MarshalIndent(jsonstep, "", "  ")
+		have, err := json.MarshalIndent(jsonOpcode, "", "  ")
 		must.NoError(t, err)
 		// NOTE: It's unclear why this doesn't contain the "data" and "type" fields from JSONStep's MarshalJSON method here.
 		//       Marshaling an entire RunState somehow works correctly.

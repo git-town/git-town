@@ -202,4 +202,54 @@ func TestIfElse(t *testing.T) {
 		prog2 := opcode.Program{Opcodes: []shared.Opcode{&two}}
 		must.Eq(t, prog1, prog2)
 	})
+
+	t.Run("embedded in list", func(t *testing.T) {
+		t.Parallel()
+		one := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+		}
+		two := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+		}
+		list1 := []shared.Opcode{&one}
+		list2 := []shared.Opcode{&two}
+		must.Eq(t, list1, list2)
+	})
+
+	t.Run("embedded in program", func(t *testing.T) {
+		t.Parallel()
+		one := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+		}
+		two := opcode.IfElse{
+			Condition: func(bc *git.BackendCommands, l config.Lineage) (bool, error) { return true, nil },
+			WhenTrue: []shared.Opcode{
+				&opcode.AbortMerge{},
+			},
+			WhenFalse: []shared.Opcode{
+				&opcode.AbortRebase{},
+			},
+		}
+		prog1 := opcode.Program{Opcodes: []shared.Opcode{&one}}
+		prog2 := opcode.Program{Opcodes: []shared.Opcode{&two}}
+		must.Eq(t, prog1, prog2)
+	})
 }
