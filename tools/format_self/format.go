@@ -38,7 +38,7 @@ Available commands:
 
 // shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
 func shouldIgnorePath(path string) bool {
-	return strings.HasPrefix(path, "vendor/")
+	return strings.HasPrefix(path, "vendor/") || path == "src/vm/opcode/core.go"
 }
 
 func formatFiles() {
