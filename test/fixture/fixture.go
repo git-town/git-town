@@ -136,7 +136,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	initialBranch := domain.NewLocalBranchName("initial")
-	localBranches = slice.Remove(localBranches, initialBranch)
+	slice.Remove(&localBranches, initialBranch)
 	localBranchesJoined := localBranches.Join(", ")
 	if self.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
@@ -144,7 +144,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 	}
 	originBranches, err := self.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	originBranches = slice.Remove(originBranches, initialBranch)
+	slice.Remove(&originBranches, initialBranch)
 	originBranchesJoined := originBranches.Join(", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)

@@ -230,7 +230,9 @@ func (self *GitTown) PushHookGlobal() (bool, error) {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
-	return self.SetPerennialBranches(slice.Remove(self.PerennialBranches(), branch))
+	perennialBranches := self.PerennialBranches()
+	slice.Remove(&perennialBranches, branch)
+	return self.SetPerennialBranches(perennialBranches)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
