@@ -135,11 +135,11 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		}
 		branchName := parts[0]
 		var sha domain.SHA
-		if parts[1] != "branch," { // TODO: switch arms of this if expression to straighten out the !=.
-			sha = domain.NewSHA(parts[1])
-		} else {
+		if parts[1] == "branch," {
 			// we are rebasing and don't need the SHA
 			sha = domain.EmptySHA()
+		} else {
+			sha = domain.NewSHA(parts[1])
 		}
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
