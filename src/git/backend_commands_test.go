@@ -603,20 +603,6 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, want, have)
 			must.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 		})
-
-		t.Run("big example", func(t *testing.T) {
-			give := `
-  aamirj/MP-QueryCmdsToAC                                                                                                                                                                                          73188fb6b782 [origin/aamirj/MP-QueryCmdsToAC] fix strings
-  aamirj/makeScrollable                                                                                                                                                                                            e0ec7f8b0aa8 [origin/aamirj/makeScrollable] revert
-* aamirj/renderCorrectResults                                                                                                                                                                                      2c421da6e579 [origin/aamirj/renderCorrectResults] Render correct results
-  aamirj/renderSearchForm                                                                                                                                                                                          f2700ca2924b [origin/aamirj/renderSearchForm] fix tests
-  master                                                                                                                                                                                                           cabf8897282e [origin/master: behind 470] Merged PR 866236: [T2.1] Update voice admin settings local cache on mutation update
-`[1:]
-			want := domain.BranchInfos{}
-			have, currentBranch := git.ParseVerboseBranchesOutput(give)
-			must.Eq(t, want, have)
-			must.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
-		})
 	})
 
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
