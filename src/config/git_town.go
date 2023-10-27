@@ -140,7 +140,7 @@ func (self *GitTown) Lineage(deleteEntry func(Key) error) Lineage {
 		parentName := self.LocalConfigValue(key)
 		if parentName == "" {
 			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
-			// _ = deleteEntry(key)
+			_ = deleteEntry(key)
 			fmt.Println("I have deleted this configuration entry.")
 		} else {
 			parent := domain.NewLocalBranchName(parentName)
