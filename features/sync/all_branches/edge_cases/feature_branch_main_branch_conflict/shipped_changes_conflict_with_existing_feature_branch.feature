@@ -1,5 +1,6 @@
 Feature: shipped changes conflict with multiple existing feature branches
 
+  @this
   Scenario:
     Given the feature branches "alpha", "beta", and "gamma"
     And the commits
@@ -46,6 +47,10 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
       |        | git merge --no-edit main         |
+    And it prints something like:
+      """
+      deleted branch "beta"
+      """
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
