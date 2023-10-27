@@ -133,6 +133,13 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		if parts[0] == "remotes/origin/HEAD" {
 			continue
 		}
+		if len(parts) < 2 {
+			fmt.Println("ERROR: Encountered a line with only one part.")
+			fmt.Printf("LINE: %q\n", line)
+			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva':")
+			fmt.Println(output)
+			fmt.Println("END OUTPUT FROM 'git branch -vva':")
+		}
 		branchName := parts[0]
 		var sha domain.SHA
 		if parts[1] == "branch," {
