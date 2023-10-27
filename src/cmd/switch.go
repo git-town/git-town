@@ -85,7 +85,7 @@ func executeSwitch(verbose bool) error {
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
 func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
-	entries, err := createEntries(lineage)
+	entries, err := createEntries(lineage, currentBranch)
 	if err != nil {
 		return domain.EmptyLocalBranchName(), false, err
 	}
@@ -100,7 +100,7 @@ func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(lineage config.Lineage) (dialog.ModalSelectEntries, error) {
+func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName) (dialog.ModalSelectEntries, error) {
 	entries := dialog.ModalSelectEntries{}
 	var err error
 	for _, root := range lineage.Roots() {
@@ -108,6 +108,12 @@ func createEntries(lineage config.Lineage) (dialog.ModalSelectEntries, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+	if len(entries) == 0 {
+		entries = append(entries, dialog.ModalSelectEntry{
+			Text:  string(currentBranch),
+			Value: string(currentBranch),
+		})
 	}
 	return entries, nil
 }

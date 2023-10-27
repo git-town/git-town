@@ -16,7 +16,7 @@ import (
 func ModalSelect(entries ModalSelectEntries, initialValue string) (*string, error) {
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
-		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue)
+		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue, entries)
 	}
 	input := modalSelect{
 		entries:       entries,

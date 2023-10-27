@@ -13,3 +13,11 @@ func (self ModalSelectEntries) IndexOfValue(value string) *int {
 	}
 	return nil
 }
+
+func (self ModalSelectEntries) Strings() []string {
+	result := make([]string, len(self))
+	for e, entry := range self {
+		result[e] = entry.Text
+	}
+	return result
+}
