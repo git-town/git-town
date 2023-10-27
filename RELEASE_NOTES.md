@@ -1,5 +1,13 @@
 # Git Town Release Notes
 
+## 10.0.0 (2023-10-27)
+
+More robustness and reliability thanks to a complete overhaul and modernization
+of the virtual machine that runs Git Town commands. This includes a new engine
+to undo operations that works by diffing the before and after state.
+
+#### BREAKING CHANGES
+
 ## 9.0.1 (2023-07-29)
 
 Git Town should now run a bit faster because it runs fewer Git commands under
