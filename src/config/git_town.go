@@ -133,12 +133,19 @@ func (self *GitTown) IsOffline() (bool, error) {
 }
 
 // Lineage provides the configured ancestry information for this Git repo.
-func (self *GitTown) Lineage() Lineage {
+func (self *GitTown) Lineage(deleteEntry func(Key) error) Lineage {
 	lineage := Lineage{}
 	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.Name, "git-town-branch."), ".parent"))
-		parent := domain.NewLocalBranchName(self.LocalConfigValue(key))
-		lineage[child] = parent
+		parentName := self.LocalConfigValue(key)
+		if parentName == "" {
+			_ = deleteEntry(key)
+			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
+			fmt.Println("I have deleted this configuration entry.")
+		} else {
+			parent := domain.NewLocalBranchName(parentName)
+			lineage[child] = parent
+		}
 	}
 	return lineage
 }

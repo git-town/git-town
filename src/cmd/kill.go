@@ -90,7 +90,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
@@ -130,7 +130,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		}
 		if updated {
 			repo.Runner.Config.Reload()
-			lineage = repo.Runner.Config.Lineage()
+			lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 		}
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()

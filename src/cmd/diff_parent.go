@@ -67,7 +67,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, false, err
@@ -107,7 +107,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		return nil, false, err
 	}
 	if updated {
-		lineage = repo.Runner.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	}
 	return &diffParentConfig{
 		branch:       branch,
