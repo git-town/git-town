@@ -126,7 +126,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 	lines := stringslice.Lines(output)
 	checkedoutBranch := domain.EmptyLocalBranchName()
 	for _, line := range lines {
-		if line == "" {
+		if strings.TrimSpace(line) == "" {
 			continue
 		}
 		parts := spaceRE.Split(line[2:], 3)
