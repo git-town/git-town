@@ -8,6 +8,8 @@ to undo operations that works by diffing the before and after state.
 
 #### BREAKING CHANGES
 
+- Git Town no longer
+
 ## 9.0.1 (2023-07-29)
 
 Git Town should now run a bit faster because it runs fewer Git commands under
