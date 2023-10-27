@@ -68,17 +68,6 @@ func (self *modalSelect) Display() (*string, error) {
 	return &selectedValue, nil
 }
 
-// IndexOfValue provides the index of the entry with the given value,
-// or nil if the given value is not in the list.
-func (self ModalEntries) IndexOfValue(value string) *int {
-	for e, entry := range self {
-		if entry.Value == value {
-			return &e
-		}
-	}
-	return nil
-}
-
 func (self modalSelectStatus) String() string { return self.name }
 
 // handleInput waits for keyboard input and updates the dialog state.
@@ -141,6 +130,17 @@ type ModalEntry struct {
 
 // ModalEntries is a collection of ModalEntry.
 type ModalEntries []ModalEntry
+
+// IndexOfValue provides the index of the entry with the given value,
+// or nil if the given value is not in the list.
+func (modalEntries ModalEntries) IndexOfValue(value string) *int {
+	for e, entry := range modalEntries {
+		if entry.Value == value {
+			return &e
+		}
+	}
+	return nil
+}
 
 // modalSelectStatus represents the different states that a modalSelect instance can be in.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
