@@ -127,11 +127,11 @@ type continueConfig struct {
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, true, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
 		fmt.Println(messages.ContinueNothingToDo)
-		return runstate.RunState{}, true, nil
+		return runstate.EmptyRunState(), true, nil
 	}
 	return *runState, false, nil
 }
