@@ -32,7 +32,7 @@ const (
 	ValueInvalid                      = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
 	ValueGlobalInvalid                = "invalid value for global %s: %q. Please provide either \"true\" or \"false\""
 	ConflictDetectionProblem          = "cannot determine conflicts: %w"
-	ContinueNothingToDo               = "nothing to continue"
+	ContinueNothingToDo               = "Nothing to continue."
 	ContinueUnresolvedConflicts       = "you must resolve the conflicts before continuing"
 	DialogOptionNotFound              = "given initial value %q not in given entries: %s"
 	DialogCannotReadAuthor            = "cannot read author from CLI: %w"
