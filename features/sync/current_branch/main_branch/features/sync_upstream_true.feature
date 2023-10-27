@@ -6,7 +6,7 @@ Feature: on the main branch with an upstream repo
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And the current branch is "main"
-    And setting "sync-upstream" is "true"
+    And Git Town setting "sync-upstream" is "true"
     And I run "git-town sync"
 
   Scenario: result

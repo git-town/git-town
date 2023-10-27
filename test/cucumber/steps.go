@@ -522,22 +522,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(value string) error {
 		return state.fixture.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
+	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := config.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
 	})
 
-	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
+	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := config.ParseKey("git-town." + name)
 		err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
 		return err
 	})
 
-	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
+	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
 		configKey := config.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
 		if newValue == "" {
@@ -546,7 +546,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 	})
 
-	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
+	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
 		configKey := config.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
 		if newValue == "" {
@@ -555,7 +555,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 	})
 
-	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
+	suite.Step(`^Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		configKey := config.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue(*configKey)
 		if have != want {
@@ -564,7 +564,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
+	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		configKey := config.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
 		if have != want {
@@ -573,7 +573,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
+	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		configKey := config.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
 		if have != want {

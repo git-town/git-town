@@ -1,7 +1,7 @@
 Feature: collaborative feature branch syncing
 
   Scenario: I sync via "rebase" and my coworker sync via "merge"
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And a coworker clones the repository
     And the current branch is a feature branch "feature"
     And the coworker fetches updates
@@ -64,7 +64,7 @@ Feature: collaborative feature branch syncing
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
 
   Scenario: I and my coworker sync via "rebase"
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And a coworker clones the repository
     And the current branch is a feature branch "feature"
     And the coworker fetches updates

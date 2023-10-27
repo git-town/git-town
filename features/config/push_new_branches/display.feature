@@ -13,7 +13,7 @@ Feature: display the push-new-branches setting
       | --global |
 
   Scenario Outline: configured locally
-    Given local setting "push-new-branches" is "<VALUE>"
+    Given local Git Town setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches"
     Then it prints:
       """
@@ -33,7 +33,7 @@ Feature: display the push-new-branches setting
       | 0     | no     |
 
   Scenario Outline: configured globally
-    Given global setting "push-new-branches" is "<VALUE>"
+    Given global Git Town setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches --global"
     Then it prints:
       """
@@ -54,7 +54,7 @@ Feature: display the push-new-branches setting
       | 0     | no     |
 
   Scenario: global set, local not set
-    Given global setting "push-new-branches" is "true"
+    Given global Git Town setting "push-new-branches" is "true"
     When I run "git-town config push-new-branches"
     Then it prints:
       """
@@ -62,8 +62,8 @@ Feature: display the push-new-branches setting
       """
 
   Scenario Outline: global and local set to different values
-    Given global setting "push-new-branches" is "true"
-    And local setting "push-new-branches" is "false"
+    Given global Git Town setting "push-new-branches" is "true"
+    And local Git Town setting "push-new-branches" is "false"
     When I run "git-town config push-new-branches <FLAG>"
     Then it prints:
       """
@@ -76,7 +76,7 @@ Feature: display the push-new-branches setting
       |          | no     |
 
   Scenario: invalid value
-    Given setting "push-new-branches" is "zonk"
+    Given Git Town setting "push-new-branches" is "zonk"
     When I run "git-town config push-new-branches"
     Then it prints the error:
       """

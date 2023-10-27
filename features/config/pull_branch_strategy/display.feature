@@ -8,7 +8,7 @@ Feature: display the currently configured pull_branch_strategy
       """
 
   Scenario Outline: configured locally
-    Given local setting "pull-branch-strategy" is "<VALUE>"
+    Given local Git Town setting "pull-branch-strategy" is "<VALUE>"
     When I run "git-town config pull-branch-strategy"
     Then it prints:
       """
@@ -21,7 +21,7 @@ Feature: display the currently configured pull_branch_strategy
       | merge  |
 
   Scenario Outline: configured globally
-    Given global setting "pull-branch-strategy" is "<VALUE>"
+    Given global Git Town setting "pull-branch-strategy" is "<VALUE>"
     When I run "git-town config pull-branch-strategy"
     Then it prints:
       """
