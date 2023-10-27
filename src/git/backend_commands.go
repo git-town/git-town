@@ -133,6 +133,10 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		if parts[0] == "remotes/origin/HEAD" {
 			continue
 		}
+		if len(parts) < 2 {
+			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
+			// TODO: print debug information or append as a comment to https://github.com/git-town/git-town/issues/2562.
+		}
 		branchName := parts[0]
 		var sha domain.SHA
 		if parts[1] == "branch," {
