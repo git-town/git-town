@@ -135,11 +135,15 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		}
 		if len(parts) < 2 {
 			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
-			fmt.Println("ERROR: Encountered a line with only one part.")
-			fmt.Printf("LINE: %q\n", line)
-			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva':")
+			fmt.Println("ERROR: Encountered irregular Git output")
+			fmt.Println()
+			fmt.Println("PLEASE REPORT THIS ISSUE AT https://github.com/git-town/git-town/issues/new")
+			fmt.Println()
+			fmt.Printf("Problematic line: %q\n", line)
+			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva'")
 			fmt.Println(output)
-			fmt.Println("END OUTPUT FROM 'git branch -vva':")
+			fmt.Println("END OUTPUT FROM 'git branch -vva'")
+			os.Exit(1)
 		}
 		branchName := parts[0]
 		var sha domain.SHA
