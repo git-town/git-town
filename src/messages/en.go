@@ -34,7 +34,7 @@ const (
 	ConflictDetectionProblem          = "cannot determine conflicts: %w"
 	ContinueNothingToDo               = "nothing to continue"
 	ContinueUnresolvedConflicts       = "you must resolve the conflicts before continuing"
-	DialogOptionNotFound              = "given initial value %q not in given entries"
+	DialogOptionNotFound              = "given initial value %q not in given entries: %s"
 	DialogCannotReadAuthor            = "cannot read author from CLI: %w"
 	DialogCannotReadBranch            = "cannot read branch from CLI: %w"
 	DialogCannotReadAnswer            = "cannot read user answer from CLI: %w"

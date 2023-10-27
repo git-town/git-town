@@ -16,7 +16,7 @@ import (
 func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
-		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue)
+		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue, entries)
 	}
 	input := modalSelect{
 		entries:       entries,
@@ -141,6 +141,14 @@ type ModalEntry struct {
 
 // ModalEntries is a collection of ModalEntry.
 type ModalEntries []ModalEntry
+
+func (self ModalEntries) Strings() []string {
+	result := make([]string, len(self))
+	for e, entry := range self {
+		result[e] = entry.Text
+	}
+	return result
+}
 
 // modalSelectStatus represents the different states that a modalSelect instance can be in.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
