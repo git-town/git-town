@@ -5,8 +5,9 @@
 Git Town 10 provides improved support for shipping branches via the code hosting
 web UI instead of running `git ship`. After your branches were merged via the
 GitHub/GitLab UI, just run `git sync --all` to sync all your local branches and
-remove those local branches that were shipped at the remote. Git Town only
-removes local branches that don't contain unshipped changes.
+remove local branches that were shipped at the remote. Don't worry, Git Town
+only deletes local branches that don't contain unshipped changes, and bringing
+them back is just a `git undo` away.
 
 Git Town 10 has greatly improved performance, robustness, and reliability thanks
 to a large-scale modernization of the Git Town's runtime and codebase. Git Town
