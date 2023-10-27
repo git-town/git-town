@@ -139,9 +139,9 @@ func (self *GitTown) Lineage(deleteEntry func(Key) error) Lineage {
 		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.Name, "git-town-branch."), ".parent"))
 		parentName := self.LocalConfigValue(key)
 		if parentName == "" {
-			fmt.Printf("\nNOTICE: I have found an empty parent entry for branch %q.\n", child)
+			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
 			// _ = deleteEntry(key)
-			fmt.Println("I have deleted this key.")
+			fmt.Println("I have deleted this configuration entry.")
 		} else {
 			parent := domain.NewLocalBranchName(parentName)
 			lineage[child] = parent
