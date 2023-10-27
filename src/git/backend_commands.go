@@ -137,7 +137,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
 			fmt.Println("ERROR: Encountered irregular Git output")
 			fmt.Println()
-			fmt.Println("PLEASE REPORT THIS ISSUE AT https://github.com/git-town/git-town/issues/new")
+			fmt.Println("PLEASE REPORT THE OUTPUT BELOW AT https://github.com/git-town/git-town/issues/new")
 			fmt.Println()
 			fmt.Printf("Problematic line: %q\n", line)
 			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva'")
