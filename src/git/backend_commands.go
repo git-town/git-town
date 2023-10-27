@@ -134,6 +134,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			continue
 		}
 		if len(parts) < 2 {
+			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
 			fmt.Println("ERROR: Encountered a line with only one part.")
 			fmt.Printf("LINE: %q\n", line)
 			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva':")
