@@ -1,7 +1,7 @@
 Feature: with pull-branch-strategy set to "merge"
 
   Background:
-    Given setting "pull-branch-strategy" is "merge"
+    Given Git Town setting "pull-branch-strategy" is "merge"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |

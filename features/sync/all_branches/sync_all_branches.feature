@@ -41,7 +41,7 @@ Feature: sync all feature branches
     And all branches are now synchronized
 
   Scenario: with "rebase" sync strategy
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     When I run "git-town sync --all"
     Then it runs the commands
       | BRANCH     | COMMAND                      |

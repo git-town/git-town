@@ -1,14 +1,14 @@
 Feature: auto-push new branches
 
   Background:
-    Given setting "push-new-branches" is "true"
+    Given Git Town setting "push-new-branches" is "true"
     And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
 
   Scenario: set to "false"
-    Given setting "push-hook" is "false"
+    Given Git Town setting "push-hook" is "false"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -31,7 +31,7 @@ Feature: auto-push new branches
       | old    | new    |
 
   Scenario: set to "true"
-    Given setting "push-hook" is "true"
+    Given Git Town setting "push-hook" is "true"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                        |

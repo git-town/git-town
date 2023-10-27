@@ -1,7 +1,7 @@
 Feature: display the main branch configuration
 
   Scenario: not configured
-    Given local setting "main-branch-name" is ""
+    Given local Git Town setting "main-branch-name" is ""
     When I run "git-town config main-branch"
     Then it prints:
       """
@@ -9,7 +9,7 @@ Feature: display the main branch configuration
       """
 
   Scenario: configured locally
-    Given local setting "main-branch-name" is "main"
+    Given local Git Town setting "main-branch-name" is "main"
     When I run "git-town config main-branch"
     Then it prints:
       """
@@ -17,7 +17,7 @@ Feature: display the main branch configuration
       """
 
   Scenario: configured globally
-    Given global setting "main-branch-name" is "main"
+    Given global Git Town setting "main-branch-name" is "main"
     When I run "git-town config main-branch"
     Then it prints:
       """

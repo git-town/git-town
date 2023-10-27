@@ -5,7 +5,7 @@ Feature: ship-delete-remote-branch disabled
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And setting "ship-delete-remote-branch" is "false"
+    And Git Town setting "ship-delete-remote-branch" is "false"
     When I run "git-town ship -m 'feature done'"
     And origin deletes the "feature" branch
 
