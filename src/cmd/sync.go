@@ -290,9 +290,7 @@ func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, a
 func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncStrategy)
-	list.Add(&opcode.IfBranchHasUnmergedChanges{
-		Branch: branch.LocalName,
-	})
+	list.Add(&opcode.DeleteBranchIfNoUnmergedChanges{Branch: branch.LocalName})
 }
 
 func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
