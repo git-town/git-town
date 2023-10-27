@@ -51,8 +51,8 @@ func executeAbort(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	abortRunState, err := determineAbortRunstate(config, repo)
-	if err != nil {
+	abortRunState, exit, err := determineAbortRunstate(config, repo)
+	if err != nil || exit {
 		return err
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
@@ -133,13 +133,14 @@ type abortConfig struct {
 	pushHook                bool
 }
 
-func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
+func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return runstate.RunState{}, fmt.Errorf(messages.AbortNothingToDo)
+		fmt.Println(messages.AbortNothingToDo)
+		return runstate.EmptyRunState(), true, nil
 	}
 	abortRunState := runState.CreateAbortRunState()
 	wrap(&abortRunState.RunProgram, wrapOptions{
@@ -149,5 +150,5 @@ func determineAbortRunstate(config *abortConfig, repo *execute.OpenRepoResult) (
 		InitialBranch:    config.initialBranchesSnapshot.Active,
 		PreviousBranch:   config.previousBranch,
 	})
-	return abortRunState, nil
+	return abortRunState, false, nil
 }
