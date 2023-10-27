@@ -8,13 +8,13 @@ import (
 	"github.com/git-town/git-town/v9/src/vm/shared"
 )
 
-// DeleteBranchIfNoUnmergedChanges allows running different opcodes based on a condition evaluated at runtime.
-type DeleteBranchIfNoUnmergedChanges struct {
+// DeleteBranchIfNoUnmergedChangesAtRuntime allows running different opcodes based on a condition evaluated at runtime.
+type DeleteBranchIfNoUnmergedChangesAtRuntime struct {
 	Branch domain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
-func (self *DeleteBranchIfNoUnmergedChanges) Run(args shared.RunArgs) error {
+func (self *DeleteBranchIfNoUnmergedChangesAtRuntime) Run(args shared.RunArgs) error {
 	parent := args.Lineage.Parent(self.Branch)
 	hasUnmergedChanges, err := args.Runner.Backend.BranchHasUnmergedChanges(self.Branch, parent)
 	if err != nil {
