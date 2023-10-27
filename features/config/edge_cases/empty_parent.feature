@@ -5,6 +5,6 @@ Feature: empty parent branch setting
     When I run "git-town sync"
     Then it prints:
       """
-      NOTICE: I have found an empty configuration parent entry for branch "foo".
+      NOTICE: I have found an empty parent configuration entry for branch "foo".
       I have deleted this configuration entry.
       """
