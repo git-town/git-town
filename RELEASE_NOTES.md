@@ -9,11 +9,11 @@ remove local branches that were shipped at the remote. Don't worry, Git Town
 only deletes local branches that don't contain unshipped changes, and bringing
 them back is just a `git undo` away.
 
-Git Town 10 has greatly improved performance, robustness, and reliability thanks
-to a large-scale modernization of the Git Town's runtime and codebase. Git Town
-now runs fewer Git commands under the hood to investigate the state of your Git
-repository. `git undo` now works correctly for all commands thanks to a new undo
-engine that diffs the before and after state of your Git repo.
+Git Town 10 has substantially improved performance, robustness, and reliability
+thanks to a large-scale modernization of the Git Town's runtime and codebase.
+Git Town now runs fewer Git commands under the hood to investigate the state of
+your Git repository. `git undo` now works correctly for all commands thanks to a
+new undo engine that diffs the before and after state of your Git repo.
 
 Git Town 10 also starts a larger effort to make Git Town's configuration options
 more consistent and intuitively named.
