@@ -1,6 +1,5 @@
 Feature: shipped changes conflict with multiple existing feature branches
 
-  @this
   Scenario:
     Given the feature branches "alpha", "beta", and "gamma"
     And the commits
