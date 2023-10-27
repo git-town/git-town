@@ -135,7 +135,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 		}
 		branchName := parts[0]
 		var sha domain.SHA
-		if parts[1] == "branch," { // TODO: switch arms of this if expression to straighten out the !=.
+		if parts[1] == "branch," {
 			// we are rebasing and don't need the SHA
 			sha = domain.EmptySHA()
 		} else {
