@@ -70,7 +70,7 @@ func Types() []shared.Opcode {
 		&EnsureHasShippableChanges{},
 		&FetchUpstream{},
 		&ForcePushCurrentBranch{},
-		&DeleteBranchIfNoUnmergedChangesAtRuntime{},
+		&DeleteBranchIfEmptyAtRuntime{},
 		&Merge{},
 		&MergeParent{},
 		&PreserveCheckoutHistory{},
