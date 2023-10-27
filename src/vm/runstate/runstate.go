@@ -28,6 +28,10 @@ type RunState struct {
 	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"`
 }
 
+func EmptyRunState() RunState {
+	return RunState{} //nolint:exhaustruct
+}
+
 // AddPushBranchAfterCurrentBranchProgram inserts a PushBranch opcode
 // after all the opcodes for the current branch.
 func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.BackendCommands) error {

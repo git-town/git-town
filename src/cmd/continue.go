@@ -51,8 +51,8 @@ func executeContinue(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := determineContinueRunstate(repo)
-	if err != nil {
+	runState, exit, err := determineContinueRunstate(repo)
+	if err != nil || exit {
 		return err
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
@@ -124,13 +124,14 @@ type continueConfig struct {
 	pushHook  bool
 }
 
-func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, error) {
+func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return runstate.RunState{}, fmt.Errorf(messages.ContinueNothingToDo)
+		fmt.Println(messages.ContinueNothingToDo)
+		return runstate.EmptyRunState(), true, nil
 	}
-	return *runState, nil
+	return *runState, false, nil
 }

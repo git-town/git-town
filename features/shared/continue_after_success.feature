@@ -4,7 +4,7 @@ Feature: continue after successful command
     Given a feature branch "feature"
     And I run "git-town <COMMAND>"
     When I run "git-town continue"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to continue
       """
