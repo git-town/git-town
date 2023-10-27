@@ -76,7 +76,7 @@ func determineAbortConfig(repo *execute.OpenRepoResult, verbose bool) (*abortCon
 		return nil, domain.EmptyStashSnapshot(), err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,

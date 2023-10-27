@@ -1,11 +1,10 @@
 Feature: empty parent branch setting
 
-  @debug @this
   Scenario:
-    Given the current branch is a feature branch "feature"
-    And local setting "git-town-branch.branch-name.parent" is ""
+    And Git Town parent setting for branch "foo" is ""
     When I run "git-town sync"
-    Then it prints
+    Then it prints:
       """
-      xxx
+      NOTICE: I have found an empty parent entry for branch "foo".
+      I have deleted this key.
       """

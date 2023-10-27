@@ -201,7 +201,7 @@ func TestBackendCommands(t *testing.T) {
 		must.NoError(t, err)
 		runtime.Config.Reload()
 		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
-		lineageHave := runtime.Config.Lineage()
+		lineageHave := runtime.Config.Lineage(runtime.Config.RemoveLocalConfigValue)
 		lineageWant := config.Lineage{}
 		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")
 		must.Eq(t, lineageWant, lineageHave)

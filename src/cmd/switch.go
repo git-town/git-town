@@ -45,7 +45,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return err

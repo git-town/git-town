@@ -100,7 +100,7 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -142,7 +142,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
-		lineage = repo.Runner.Config.Lineage() // refresh lineage after ancestry changes
+		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue) // refresh lineage after ancestry changes
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))

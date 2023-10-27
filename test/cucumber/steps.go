@@ -230,6 +230,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetColorUI(value)
 	})
 
+	suite.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(branch, value string) error {
+		branchName := domain.NewLocalBranchName(branch)
+		configKey := config.NewParentKey(branchName)
+		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
+	})
+
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := config.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
@@ -505,7 +511,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
-			branchInfo := state.fixture.DevRepo.Config.Lineage()
+			branchInfo := state.fixture.DevRepo.Config.Lineage(state.fixture.DevRepo.Config.RemoveLocalConfigValue)
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil

@@ -76,7 +76,7 @@ type undoConfig struct {
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, domain.EmptyStashSnapshot(), lineage, err

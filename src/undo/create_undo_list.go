@@ -46,7 +46,7 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
-		Lineage:                  runner.Config.Lineage(),
+		Lineage:                  runner.Config.Lineage(runner.Config.RemoveLocalConfigValue),
 		BranchTypes:              runner.Config.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,
 		FinalBranch:              finalBranchesSnapshot.Active,

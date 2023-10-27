@@ -107,7 +107,7 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
@@ -146,7 +146,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if updated {
-		lineage = repo.Runner.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {

@@ -70,7 +70,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	gitlabToken := run.Config.GitLabToken()
 	hosting := fc.Hosting(run.Config.HostingService())
 	isOffline := fc.Bool(run.Config.IsOffline())
-	lineage := run.Config.Lineage()
+	lineage := run.Config.Lineage(run.Backend.Config.RemoveLocalConfigValue)
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	pushHook := fc.Bool(run.Config.PushHook())
 	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
