@@ -8,7 +8,7 @@ Feature: on the main branch with an upstream repo
       |        | origin   | origin commit   |
       |        | upstream | upstream commit |
     And the current branch is "main"
-    And setting "sync-upstream" is "false"
+    And Git Town setting "sync-upstream" is "false"
     And I run "git-town sync"
 
   Scenario: result

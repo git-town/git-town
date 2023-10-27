@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |

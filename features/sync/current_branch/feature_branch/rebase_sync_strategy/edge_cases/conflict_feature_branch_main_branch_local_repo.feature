@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And my repo does not have an origin
     And the current branch is a local feature branch "feature"
     And the commits

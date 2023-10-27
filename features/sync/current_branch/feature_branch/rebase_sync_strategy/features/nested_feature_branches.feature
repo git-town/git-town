@@ -1,7 +1,7 @@
 Feature: nested feature branches
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the commits

@@ -1,7 +1,7 @@
 Feature: with upstream repo
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-strategy" is "rebase"
     And an upstream repo
     And the current branch is a feature branch "feature"
     And the commits

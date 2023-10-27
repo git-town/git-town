@@ -4,7 +4,7 @@ Feature: self-hosted service
   Scenario Outline: self hosted
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
-    And setting "code-hosting-driver" is "<DRIVER>"
+    And Git Town setting "code-hosting-driver" is "<DRIVER>"
     And the current branch is a feature branch "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:

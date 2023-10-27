@@ -1,14 +1,14 @@
 Feature: auto-push the new branch without running Git push hooks
 
   Background:
-    Given setting "push-new-branches" is "true"
+    Given Git Town setting "push-new-branches" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
     And the current branch is "main"
 
   Scenario: set to "false"
-    Given setting "push-hook" is "false"
+    Given Git Town setting "push-hook" is "false"
     When I run "git-town hack new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -27,7 +27,7 @@ Feature: auto-push the new branch without running Git push hooks
       | new    | main   |
 
   Scenario: set to "true"
-    Given setting "push-hook" is "true"
+    Given Git Town setting "push-hook" is "true"
     When I run "git-town hack new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
