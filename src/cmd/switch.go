@@ -100,8 +100,8 @@ func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName) (dialog.ModalEntries, error) {
-	entries := dialog.ModalEntries{}
+func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName) (dialog.ModalSelectEntries, error) {
+	entries := dialog.ModalSelectEntries{}
 	var err error
 	for _, root := range lineage.Roots() {
 		entries, err = addEntryAndChildren(entries, root, 0, lineage)
@@ -110,7 +110,7 @@ func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName)
 		}
 	}
 	if len(entries) == 0 {
-		entries = append(entries, dialog.ModalEntry{
+		entries = append(entries, dialog.ModalSelectEntry{
 			Text:  string(currentBranch),
 			Value: string(currentBranch),
 		})
@@ -119,8 +119,8 @@ func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName)
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (dialog.ModalEntries, error) {
-	entries = append(entries, dialog.ModalEntry{
+func addEntryAndChildren(entries dialog.ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (dialog.ModalSelectEntries, error) {
+	entries = append(entries, dialog.ModalSelectEntry{
 		Text:  strings.Repeat("  ", indent) + branch.String(),
 		Value: branch.String(),
 	})

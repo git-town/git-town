@@ -13,7 +13,7 @@ import (
 // ModalSelect allows the user to select a value from the given entries.
 // Entries can be arbitrarily formatted.
 // The given initial value is preselected.
-func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
+func ModalSelect(entries ModalSelectEntries, initialValue string) (*string, error) {
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
 		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue, entries)
@@ -33,14 +33,14 @@ func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
 
 // modalSelect allows selecting a value from a list using VIM keybindings.
 type modalSelect struct {
-	activeColor   *color.Color      // color with which to print the currently selected line
-	activeCursor  string            // text that gets prepended to the currently selected row
-	activePos     int               // index of the currently selected row
-	entries       ModalEntries      // the entries to display
-	initialColor  *color.Color      // color with which to print the initially selected value
-	initialCursor string            // cursor at the initial entry
-	initialPos    int               // index of the initially selected value
-	status        modalSelectStatus // the current status of this ModalInput instance
+	activeColor   *color.Color       // color with which to print the currently selected line
+	activeCursor  string             // text that gets prepended to the currently selected row
+	activePos     int                // index of the currently selected row
+	entries       ModalSelectEntries // the entries to display
+	initialColor  *color.Color       // color with which to print the initially selected value
+	initialCursor string             // cursor at the initial entry
+	initialPos    int                // index of the initially selected value
+	status        modalSelectStatus  // the current status of this ModalInput instance
 }
 
 // Display shows the dialog and lets the user select an entry.
@@ -121,44 +121,3 @@ func (self *modalSelect) print() {
 func (self *modalSelect) selectedValue() string {
 	return self.entries[self.activePos].Value
 }
-
-// ModalEntry contains one of the many entries that the user can choose from.
-type ModalEntry struct {
-	Text  string // the text to display
-	Value string // the return value
-}
-
-// ModalEntries is a collection of ModalEntry.
-type ModalEntries []ModalEntry
-
-// IndexOfValue provides the index of the entry with the given value,
-// or nil if the given value is not in the list.
-func (modalEntries ModalEntries) IndexOfValue(value string) *int {
-	for e, entry := range modalEntries {
-		if entry.Value == value {
-			return &e
-		}
-	}
-	return nil
-}
-
-func (modalEntries ModalEntries) Strings() []string {
-	result := make([]string, len(modalEntries))
-	for e, entry := range modalEntries {
-		result[e] = entry.Text
-	}
-	return result
-}
-
-// modalSelectStatus represents the different states that a modalSelect instance can be in.
-// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
-type modalSelectStatus struct {
-	name string
-}
-
-var (
-	modalSelectStatusNew       = modalSelectStatus{"new"}       //nolint:gochecknoglobals
-	modalSelectStatusSelecting = modalSelectStatus{"selecting"} //nolint:gochecknoglobals
-	modalSelectStatusSelected  = modalSelectStatus{"selected"}  //nolint:gochecknoglobals
-	modalSelectStatusAborted   = modalSelectStatus{"aborted"}   //nolint:gochecknoglobals
-)
