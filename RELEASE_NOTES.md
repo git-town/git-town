@@ -3,16 +3,19 @@
 ## 10.0.0 (2023-10-27)
 
 Git Town 10 provides improved support for shipping branches via the code hosting
-web UI instead of running `git ship`. Just run `git sync --all` to sync all your
-local branches and remove branches that were shipped at the remote.
+web UI instead of running `git ship`. After your branches were merged via the
+GitHub/GitLab UI, just run `git sync --all` to sync all your local branches and
+remove those local branches that were shipped at the remote. Git Town only
+removes local branches that don't contain unshipped changes.
 
-Git Town 10 has greatly improved robustness and reliability thanks to a
-large-scale modernization of the Git Town's runtime and codebase. `git undo` now
-works correctly for all commands thanks to a new undo engine that diffs the
-before and after state of your Git repo.
+Git Town 10 has greatly improved performance, robustness, and reliability thanks
+to a large-scale modernization of the Git Town's runtime and codebase. Git Town
+now runs fewer Git commands under the hood to investigate the state of your Git
+repository. `git undo` now works correctly for all commands thanks to a new undo
+engine that diffs the before and after state of your Git repo.
 
-Git Town 10 also starts a larger cleanup and modernization of Git Town's
-configuration options.
+Git Town 10 also starts a larger effort to make Git Town's configuration options
+more consistent and intuitively named.
 
 #### BREAKING CHANGES
 
@@ -21,6 +24,17 @@ configuration options.
   changes ([#2038](https://github.com/git-town/git-town/pull/2038))
 - `git town prune-branches` has been merged into the `git sync` command
   ([#2579](https://github.com/git-town/git-town/pull/2579))
+- Git Town's statefile on disk has a new format, you might have to run
+  `git town status reset`
+  ([#2446](https://github.com/git-town/git-town/pull/2446))
+- `git ship` no longer ships remote-only branches. Moving forward you can only
+  ship branches that exist on your local machine. To ship remote-only branches,
+  use the web UI of your code hosting service
+  ([#2367](https://github.com/git-town/git-town/pull/2367),
+  [#2372](https://github.com/git-town/git-town/pull/2372))
+- `git kill` no longer deletes remote-only branches. Delete them by running
+  `git push origin :branchname` or via the web UI of your code hosting service
+  ([#2368](https://github.com/git-town/git-town/pull/2368))
 - `git hack` no longer has the `-p` option, use `git append` and `git prepend`
   instead ([#2577](https://github.com/git-town/git-town/pull/2577))
 - Git Town no longer exits with an error when there is nothing to abort or
@@ -33,20 +47,34 @@ configuration options.
 
 #### New Features
 
+- support for running Git Town on computers that don't use English
+  ([#2478](https://github.com/git-town/git-town/pull/2478))
+- new engine for `git undo` based on diffing the Git repo state before and after
+  a Git Town command ran
+  ([#2484](https://github.com/git-town/git-town/pull/2484))
+- Git Town now prints operations it performs on the API of your code hosting
+  service ([#2340](https://github.com/git-town/git-town/pull/2340))
 - Git Town now informs the user if it changes the ancestry of feature branches
   ([#2558](https://github.com/git-town/git-town/pull/2558))
 - `git town switch` now displays the output of the command to switch branches
   ([#2602](https://github.com/git-town/git-town/pull/2602))
 - applies overrides via environment variables for all GitHub API operations
   ([#2593](https://github.com/git-town/git-town/pull/2593))
-- official installation for BSD via FreshPorts ([#]())
+- official installation for BSD via FreshPorts
+  ([#2553](https://github.com/git-town/git-town/pull/2553))
+- Git Town force-deletes branches less often
+  ([#2539](https://github.com/git-town/git-town/pull/2539))
 
 #### Bug Fixes
 
+- fix broken version number in release binaries
+  ([#2333](https://github.com/git-town/git-town/pull/2333))
 - fix crash when an empty parent is configured
   ([#2626](https://github.com/git-town/git-town/pull/2626))
 - fix crash when running set-parent on large monorepos
   ([#2623](https://github.com/git-town/git-town/pull/2623))
+- remove the ancestry information of children of deleted perennial branches
+  ([#2540](https://github.com/git-town/git-town/pull/2540))
 
 ## 9.0.1 (2023-07-29)
 
