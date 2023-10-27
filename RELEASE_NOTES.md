@@ -2,13 +2,51 @@
 
 ## 10.0.0 (2023-10-27)
 
-More robustness and reliability thanks to a complete overhaul and modernization
-of the virtual machine that runs Git Town commands. This includes a new engine
-to undo operations that works by diffing the before and after state.
+Git Town 10 provides improved support for shipping branches via the code hosting
+web UI instead of running `git ship`. Just run `git sync --all` to sync all your
+local branches and remove branches that were shipped at the remote.
+
+Git Town 10 has greatly improved robustness and reliability thanks to a
+large-scale modernization of the Git Town's runtime and codebase. `git undo` now
+works correctly for all commands thanks to a new undo engine that diffs the
+before and after state of your Git repo.
+
+Git Town 10 also starts a larger cleanup and modernization of Git Town's
+configuration options.
 
 #### BREAKING CHANGES
 
-- Git Town no longer
+- `git sync` now also deletes local branches whose tracking branch was shipped
+  at the remote, but only if the local branches don't contain any unshipped
+  changes ([#2038](https://github.com/git-town/git-town/pull/2038))
+- `git town prune-branches` has been merged into the `git sync` command
+  ([#2579](https://github.com/git-town/git-town/pull/2579))
+- `git hack` no longer has the `-p` option, use `git append` and `git prepend`
+  instead ([#2577](https://github.com/git-town/git-town/pull/2577))
+- Git Town no longer exits with an error when there is nothing to abort or
+  continue ([#2631](https://github.com/git-town/git-town/pull/2631),
+  [#2632](https://github.com/git-town/git-town/pull/2632))
+- querying the version of the installed Git Town binary is now compatible with
+  the way Git does it ([#2603](https://github.com/git-town/git-town/pull/2603))
+- the `debug` parameter is called `verbose` now because all it does is print
+  more information ([#2598](https://github.com/git-town/git-town/pull/2598))
+
+#### New Features
+
+- Git Town now informs the user if it changes the ancestry of feature branches
+  ([#2558](https://github.com/git-town/git-town/pull/2558))
+- `git town switch` now displays the output of the command to switch branches
+  ([#2602](https://github.com/git-town/git-town/pull/2602))
+- applies overrides via environment variables for all GitHub API operations
+  ([#2593](https://github.com/git-town/git-town/pull/2593))
+- official installation for BSD via FreshPorts ([#]())
+
+#### Bug Fixes
+
+- fix crash when an empty parent is configured
+  ([#2626](https://github.com/git-town/git-town/pull/2626))
+- fix crash when running set-parent on large monorepos
+  ([#2623](https://github.com/git-town/git-town/pull/2623))
 
 ## 9.0.1 (2023-07-29)
 
