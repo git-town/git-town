@@ -15,8 +15,8 @@ Git Town now runs fewer Git commands under the hood to investigate the state of
 your Git repository. `git undo` now works correctly for all commands thanks to a
 new undo engine that diffs the before and after state of your Git repo.
 
-Git Town 10 also starts a larger effort to make Git Town's configuration options
-more consistent and intuitively named.
+Git Town 10 also starts a larger effort to remove redundant commands and make
+Git Town's configuration options more consistent and intuitively named.
 
 #### BREAKING CHANGES
 
