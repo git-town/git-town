@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // DeleteParentBranch removes the parent branch entry in the Git Town configuration.

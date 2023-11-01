@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/git-town/git-town/v9/src/gohacks/slice"
+import "github.com/git-town/git-town/v10/src/gohacks/slice"
 
 // BranchTypes answers questions about whether branches are long-lived or not.
 type BranchTypes struct {

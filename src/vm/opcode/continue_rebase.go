@@ -1,6 +1,6 @@
 package opcode
 
-import "github.com/git-town/git-town/v9/src/vm/shared"
+import "github.com/git-town/git-town/v10/src/vm/shared"
 
 // ContinueRebase finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.

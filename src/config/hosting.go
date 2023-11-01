@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v10/src/messages"
 )
 
 // Hosting defines legal values for the "git-town.code-hosting-driver" config setting.

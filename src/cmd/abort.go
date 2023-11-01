@@ -3,17 +3,17 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli/flags"
-	"github.com/git-town/git-town/v9/src/cli/log"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/hosting/github"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/interpreter"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
-	"github.com/git-town/git-town/v9/src/vm/statefile"
+	"github.com/git-town/git-town/v10/src/cli/flags"
+	"github.com/git-town/git-town/v10/src/cli/log"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/execute"
+	"github.com/git-town/git-town/v10/src/hosting"
+	"github.com/git-town/git-town/v10/src/hosting/github"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/vm/interpreter"
+	"github.com/git-town/git-town/v10/src/vm/runstate"
+	"github.com/git-town/git-town/v10/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 

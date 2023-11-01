@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v10/src/gohacks"
+	"github.com/git-town/git-town/v10/src/subshell"
 	"github.com/shoenig/test/must"
 )
 

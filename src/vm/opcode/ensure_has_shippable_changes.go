@@ -3,9 +3,9 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // EnsureHasShippableChanges asserts that the branch has unique changes not on the main branch.

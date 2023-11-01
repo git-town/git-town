@@ -7,11 +7,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/cli/dialog"
-	"github.com/git-town/git-town/v9/src/cli/flags"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v10/src/cli/dialog"
+	"github.com/git-town/git-town/v10/src/cli/flags"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/spf13/cobra"
 )
 

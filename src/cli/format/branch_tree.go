@@ -1,8 +1,8 @@
 package format
 
 import (
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
 )
 
 // BranchTree provids a printable version of the given branch tree.

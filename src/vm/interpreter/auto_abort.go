@@ -3,9 +3,9 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli/print"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/cli/print"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // autoAbort performs an automatic abort of the current Git Town command.

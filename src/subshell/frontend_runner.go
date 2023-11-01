@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/gohacks"
+	"github.com/git-town/git-town/v10/src/messages"
 )
 
 // FrontendRunner executes frontend shell commands.

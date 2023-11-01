@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/vm/opcode"
-	"github.com/git-town/git-town/v9/src/vm/program"
-	"github.com/git-town/git-town/v9/src/vm/runstate"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/vm/opcode"
+	"github.com/git-town/git-town/v10/src/vm/program"
+	"github.com/git-town/git-town/v10/src/vm/runstate"
 	"github.com/shoenig/test/must"
 )
 

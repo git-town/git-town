@@ -3,8 +3,8 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
 	"github.com/shoenig/test/must"
 )
 

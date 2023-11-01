@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/test/fixture"
+	"github.com/git-town/git-town/v10/test/fixture"
 	"github.com/shoenig/test/must"
 )
 
