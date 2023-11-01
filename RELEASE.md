@@ -11,7 +11,7 @@ This guide is for maintainers who make releases of Git Town.
 
 - search-and-replace the old version with the new version
   - triple-digits: `10.0.0`
-  - double-digits: `9.0`
+  - double-digits: `10.0`
   - double-digits with v: `v9.0`
   - don't change existing version numbers in RELEASE_NOTES.md
 - if bumping the major version:
