@@ -56,7 +56,7 @@ func (s *ProjectSnippetsService) ListSnippets(pid interface{}, opt *ListProjectS
 		return nil, resp, err
 	}
 
-	return ps, resp, err
+	return ps, resp, nil
 }
 
 // GetSnippet gets a single project snippet
@@ -81,7 +81,7 @@ func (s *ProjectSnippetsService) GetSnippet(pid interface{}, snippet int, option
 		return nil, resp, err
 	}
 
-	return ps, resp, err
+	return ps, resp, nil
 }
 
 // CreateProjectSnippetOptions represents the available CreateSnippet() options.
@@ -89,12 +89,12 @@ func (s *ProjectSnippetsService) GetSnippet(pid interface{}, snippet int, option
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/project_snippets.html#create-new-snippet
 type CreateProjectSnippetOptions struct {
-	Title       *string          `url:"title,omitempty" json:"title,omitempty"`
-	FileName    *string          `url:"file_name,omitempty" json:"file_name,omitempty"`
-	Description *string          `url:"description,omitempty" json:"description,omitempty"`
-	Content     *string          `url:"content,omitempty" json:"content,omitempty"`
-	Visibility  *VisibilityValue `url:"visibility,omitempty" json:"visibility,omitempty"`
-	Files       *[]*SnippetFile  `url:"files,omitempty" json:"files,omitempty"`
+	Title       *string                      `url:"title,omitempty" json:"title,omitempty"`
+	FileName    *string                      `url:"file_name,omitempty" json:"file_name,omitempty"`
+	Description *string                      `url:"description,omitempty" json:"description,omitempty"`
+	Content     *string                      `url:"content,omitempty" json:"content,omitempty"`
+	Visibility  *VisibilityValue             `url:"visibility,omitempty" json:"visibility,omitempty"`
+	Files       *[]*CreateSnippetFileOptions `url:"files,omitempty" json:"files,omitempty"`
 }
 
 // CreateSnippet creates a new project snippet. The user must have permission
@@ -120,7 +120,7 @@ func (s *ProjectSnippetsService) CreateSnippet(pid interface{}, opt *CreateProje
 		return nil, resp, err
 	}
 
-	return ps, resp, err
+	return ps, resp, nil
 }
 
 // UpdateProjectSnippetOptions represents the available UpdateSnippet() options.
@@ -128,11 +128,12 @@ func (s *ProjectSnippetsService) CreateSnippet(pid interface{}, opt *CreateProje
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/project_snippets.html#update-snippet
 type UpdateProjectSnippetOptions struct {
-	Title       *string          `url:"title,omitempty" json:"title,omitempty"`
-	FileName    *string          `url:"file_name,omitempty" json:"file_name,omitempty"`
-	Description *string          `url:"description,omitempty" json:"description,omitempty"`
-	Content     *string          `url:"content,omitempty" json:"content,omitempty"`
-	Visibility  *VisibilityValue `url:"visibility,omitempty" json:"visibility,omitempty"`
+	Title       *string                      `url:"title,omitempty" json:"title,omitempty"`
+	FileName    *string                      `url:"file_name,omitempty" json:"file_name,omitempty"`
+	Description *string                      `url:"description,omitempty" json:"description,omitempty"`
+	Content     *string                      `url:"content,omitempty" json:"content,omitempty"`
+	Visibility  *VisibilityValue             `url:"visibility,omitempty" json:"visibility,omitempty"`
+	Files       *[]*UpdateSnippetFileOptions `url:"files,omitempty" json:"files,omitempty"`
 }
 
 // UpdateSnippet updates an existing project snippet. The user must have
@@ -158,7 +159,7 @@ func (s *ProjectSnippetsService) UpdateSnippet(pid interface{}, snippet int, opt
 		return nil, resp, err
 	}
 
-	return ps, resp, err
+	return ps, resp, nil
 }
 
 // DeleteSnippet deletes an existing project snippet. This is an idempotent

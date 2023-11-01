@@ -53,9 +53,8 @@ func WithCustomLeveledLogger(leveledLogger retryablehttp.LeveledLogger) ClientOp
 // WithCustomLimiter injects a custom rate limiter to the client.
 func WithCustomLimiter(limiter RateLimiter) ClientOptionFunc {
 	return func(c *Client) error {
-		c.configureLimiterOnce.Do(func() {
-			c.limiter = limiter
-		})
+		c.configureLimiterOnce.Do(func() {})
+		c.limiter = limiter
 		return nil
 	}
 }
@@ -130,6 +129,14 @@ func WithResponseLogHook(hook retryablehttp.ResponseLogHook) ClientOptionFunc {
 func WithoutRetries() ClientOptionFunc {
 	return func(c *Client) error {
 		c.disableRetries = true
+		return nil
+	}
+}
+
+// WithRequestOptions can be used to configure default request options applied to every request.
+func WithRequestOptions(options ...RequestOptionFunc) ClientOptionFunc {
+	return func(c *Client) error {
+		c.defaultRequestOptions = append(c.defaultRequestOptions, options...)
 		return nil
 	}
 }

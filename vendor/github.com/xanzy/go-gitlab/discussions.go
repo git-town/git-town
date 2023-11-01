@@ -73,7 +73,7 @@ func (s *DiscussionsService) ListIssueDiscussions(pid interface{}, issue int, op
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetIssueDiscussion returns a single discussion for a specific project issue.
@@ -102,7 +102,7 @@ func (s *DiscussionsService) GetIssueDiscussion(pid interface{}, issue int, disc
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateIssueDiscussionOptions represents the available CreateIssueDiscussion()
@@ -137,7 +137,7 @@ func (s *DiscussionsService) CreateIssueDiscussion(pid interface{}, issue int, o
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // AddIssueDiscussionNoteOptions represents the available AddIssueDiscussionNote()
@@ -176,7 +176,7 @@ func (s *DiscussionsService) AddIssueDiscussionNote(pid interface{}, issue int, 
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateIssueDiscussionNoteOptions represents the available
@@ -216,7 +216,7 @@ func (s *DiscussionsService) UpdateIssueDiscussionNote(pid interface{}, issue in
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteIssueDiscussionNote deletes an existing discussion of an issue.
@@ -273,7 +273,7 @@ func (s *DiscussionsService) ListSnippetDiscussions(pid interface{}, snippet int
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetSnippetDiscussion returns a single discussion for a given snippet.
@@ -302,7 +302,7 @@ func (s *DiscussionsService) GetSnippetDiscussion(pid interface{}, snippet int, 
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateSnippetDiscussionOptions represents the available
@@ -338,7 +338,7 @@ func (s *DiscussionsService) CreateSnippetDiscussion(pid interface{}, snippet in
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // AddSnippetDiscussionNoteOptions represents the available
@@ -378,7 +378,7 @@ func (s *DiscussionsService) AddSnippetDiscussionNote(pid interface{}, snippet i
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateSnippetDiscussionNoteOptions represents the available
@@ -418,7 +418,7 @@ func (s *DiscussionsService) UpdateSnippetDiscussionNote(pid interface{}, snippe
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteSnippetDiscussionNote deletes an existing discussion of a snippet.
@@ -478,7 +478,7 @@ func (s *DiscussionsService) ListGroupEpicDiscussions(gid interface{}, epic int,
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetEpicDiscussion returns a single discussion for a given epic.
@@ -507,7 +507,7 @@ func (s *DiscussionsService) GetEpicDiscussion(gid interface{}, epic int, discus
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateEpicDiscussionOptions represents the available CreateEpicDiscussion()
@@ -546,7 +546,7 @@ func (s *DiscussionsService) CreateEpicDiscussion(gid interface{}, epic int, opt
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // AddEpicDiscussionNoteOptions represents the available
@@ -585,7 +585,7 @@ func (s *DiscussionsService) AddEpicDiscussionNote(gid interface{}, epic int, di
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateEpicDiscussionNoteOptions represents the available UpdateEpicDiscussion()
@@ -625,7 +625,7 @@ func (s *DiscussionsService) UpdateEpicDiscussionNote(gid interface{}, epic int,
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteEpicDiscussionNote deletes an existing discussion of a epic.
@@ -685,7 +685,7 @@ func (s *DiscussionsService) ListMergeRequestDiscussions(pid interface{}, mergeR
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetMergeRequestDiscussion returns a single discussion for a given merge
@@ -715,7 +715,7 @@ func (s *DiscussionsService) GetMergeRequestDiscussion(pid interface{}, mergeReq
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateMergeRequestDiscussionOptions represents the available
@@ -724,10 +724,39 @@ func (s *DiscussionsService) GetMergeRequestDiscussion(pid interface{}, mergeReq
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/discussions.html#create-new-merge-request-thread
 type CreateMergeRequestDiscussionOptions struct {
-	Body      *string       `url:"body,omitempty" json:"body,omitempty"`
-	CommitID  *string       `url:"commit_id,omitempty" json:"commit_id,omitempty"`
-	CreatedAt *time.Time    `url:"created_at,omitempty" json:"created_at,omitempty"`
-	Position  *NotePosition `url:"position,omitempty" json:"position,omitempty"`
+	Body      *string          `url:"body,omitempty" json:"body,omitempty"`
+	CommitID  *string          `url:"commit_id,omitempty" json:"commit_id,omitempty"`
+	CreatedAt *time.Time       `url:"created_at,omitempty" json:"created_at,omitempty"`
+	Position  *PositionOptions `url:"position,omitempty" json:"position,omitempty"`
+}
+
+// PositionOptions represents the position option of a discussion.
+type PositionOptions struct {
+	BaseSHA      *string           `url:"base_sha,omitempty" json:"base_sha,omitempty"`
+	HeadSHA      *string           `url:"head_sha,omitempty" json:"head_sha,omitempty"`
+	StartSHA     *string           `url:"start_sha,omitempty" json:"start_sha,omitempty"`
+	NewPath      *string           `url:"new_path,omitempty" json:"new_path,omitempty"`
+	OldPath      *string           `url:"old_path,omitempty" json:"old_path,omitempty"`
+	PositionType *string           `url:"position_type,omitempty" json:"position_type"`
+	NewLine      *int              `url:"new_line,omitempty" json:"new_line,omitempty"`
+	OldLine      *int              `url:"old_line,omitempty" json:"old_line,omitempty"`
+	LineRange    *LineRangeOptions `url:"line_range,omitempty" json:"line_range,omitempty"`
+	Width        *int              `url:"width,omitempty" json:"width,omitempty"`
+	Height       *int              `url:"height,omitempty" json:"height,omitempty"`
+	X            *float64          `url:"x,omitempty" json:"x,omitempty"`
+	Y            *float64          `url:"y,omitempty" json:"y,omitempty"`
+}
+
+// LineRangeOptions represents the line range option of a discussion.
+type LineRangeOptions struct {
+	Start *LinePositionOptions `url:"start,omitempty" json:"start,omitempty"`
+	End   *LinePositionOptions `url:"end,omitempty" json:"end,omitempty"`
+}
+
+// LinePositionOptions represents the line position option of a discussion.
+type LinePositionOptions struct {
+	LineCode *string `url:"line_code,omitempty" json:"line_code,omitempty"`
+	Type     *string `url:"type,omitempty" json:"type,omitempty"`
 }
 
 // CreateMergeRequestDiscussion creates a new discussion for a single merge
@@ -756,7 +785,7 @@ func (s *DiscussionsService) CreateMergeRequestDiscussion(pid interface{}, merge
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // ResolveMergeRequestDiscussionOptions represents the available
@@ -795,7 +824,7 @@ func (s *DiscussionsService) ResolveMergeRequestDiscussion(pid interface{}, merg
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // AddMergeRequestDiscussionNoteOptions represents the available
@@ -835,7 +864,7 @@ func (s *DiscussionsService) AddMergeRequestDiscussionNote(pid interface{}, merg
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateMergeRequestDiscussionNoteOptions represents the available
@@ -877,7 +906,7 @@ func (s *DiscussionsService) UpdateMergeRequestDiscussionNote(pid interface{}, m
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteMergeRequestDiscussionNote deletes an existing discussion of a merge
@@ -938,7 +967,7 @@ func (s *DiscussionsService) ListCommitDiscussions(pid interface{}, commit strin
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetCommitDiscussion returns a single discussion for a specific project
@@ -968,7 +997,7 @@ func (s *DiscussionsService) GetCommitDiscussion(pid interface{}, commit string,
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateCommitDiscussionOptions represents the available
@@ -1007,7 +1036,7 @@ func (s *DiscussionsService) CreateCommitDiscussion(pid interface{}, commit stri
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // AddCommitDiscussionNoteOptions represents the available
@@ -1046,7 +1075,7 @@ func (s *DiscussionsService) AddCommitDiscussionNote(pid interface{}, commit str
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateCommitDiscussionNoteOptions represents the available
@@ -1086,7 +1115,7 @@ func (s *DiscussionsService) UpdateCommitDiscussionNote(pid interface{}, commit 
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteCommitDiscussionNote deletes an existing discussion of an commit.

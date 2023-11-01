@@ -37,6 +37,7 @@ type RegistryRepository struct {
 	ID                     int                      `json:"id"`
 	Name                   string                   `json:"name"`
 	Path                   string                   `json:"path"`
+	ProjectID              int                      `json:"project_id"`
 	Location               string                   `json:"location"`
 	CreatedAt              *time.Time               `json:"created_at"`
 	CleanupPolicyStartedAt *time.Time               `json:"cleanup_policy_started_at"`
@@ -73,6 +74,8 @@ func (s RegistryRepositoryTag) String() string {
 // https://docs.gitlab.com/ee/api/container_registry.html#list-registry-repositories
 type ListRegistryRepositoriesOptions struct {
 	ListOptions
+
+	// Deprecated: These options are deprecated for ListGroupRegistryRepositories calls. (Removed in GitLab 15.0)
 	Tags      *bool `url:"tags,omitempty" json:"tags,omitempty"`
 	TagsCount *bool `url:"tags_count,omitempty" json:"tags_count,omitempty"`
 }
@@ -99,7 +102,7 @@ func (s *ContainerRegistryService) ListProjectRegistryRepositories(pid interface
 		return nil, resp, err
 	}
 
-	return repos, resp, err
+	return repos, resp, nil
 }
 
 // ListGroupRegistryRepositories gets a list of registry repositories in a group.
@@ -124,7 +127,7 @@ func (s *ContainerRegistryService) ListGroupRegistryRepositories(gid interface{}
 		return nil, resp, err
 	}
 
-	return repos, resp, err
+	return repos, resp, nil
 }
 
 // GetSingleRegistryRepositoryOptions represents the available
@@ -159,7 +162,7 @@ func (s *ContainerRegistryService) GetSingleRegistryRepository(pid interface{}, 
 		return nil, resp, err
 	}
 
-	return repo, resp, err
+	return repo, resp, nil
 }
 
 // DeleteRegistryRepository deletes a repository in a registry.
@@ -213,7 +216,7 @@ func (s *ContainerRegistryService) ListRegistryRepositoryTags(pid interface{}, r
 		return nil, resp, err
 	}
 
-	return tags, resp, err
+	return tags, resp, nil
 }
 
 // GetRegistryRepositoryTagDetail get details of a registry repository tag
@@ -242,7 +245,7 @@ func (s *ContainerRegistryService) GetRegistryRepositoryTagDetail(pid interface{
 		return nil, resp, err
 	}
 
-	return tag, resp, err
+	return tag, resp, nil
 }
 
 // DeleteRegistryRepositoryTag deletes a registry repository tag.

@@ -67,7 +67,7 @@ func (s *ReleaseLinksService) ListReleaseLinks(pid interface{}, tagName string, 
 		return nil, resp, err
 	}
 
-	return rls, resp, err
+	return rls, resp, nil
 }
 
 // GetReleaseLink returns a link from release assets.
@@ -94,7 +94,7 @@ func (s *ReleaseLinksService) GetReleaseLink(pid interface{}, tagName string, li
 		return nil, resp, err
 	}
 
-	return rl, resp, err
+	return rl, resp, nil
 }
 
 // CreateReleaseLinkOptions represents CreateReleaseLink() options.
@@ -128,7 +128,7 @@ func (s *ReleaseLinksService) CreateReleaseLink(pid interface{}, tagName string,
 		return nil, resp, err
 	}
 
-	return rl, resp, err
+	return rl, resp, nil
 }
 
 // UpdateReleaseLinkOptions represents UpdateReleaseLink() options.
@@ -167,7 +167,7 @@ func (s *ReleaseLinksService) UpdateReleaseLink(pid interface{}, tagName string,
 		return nil, resp, err
 	}
 
-	return rl, resp, err
+	return rl, resp, nil
 }
 
 // DeleteReleaseLink deletes a link from release.
@@ -195,5 +195,5 @@ func (s *ReleaseLinksService) DeleteReleaseLink(pid interface{}, tagName string,
 		return nil, resp, err
 	}
 
-	return rl, resp, err
+	return rl, resp, nil
 }

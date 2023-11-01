@@ -72,7 +72,7 @@ func (s *FreezePeriodsService) ListFreezePeriods(pid interface{}, opt *ListFreez
 		return nil, resp, err
 	}
 
-	return fp, resp, err
+	return fp, resp, nil
 }
 
 // GetFreezePeriod gets a specific freeze period for a project.
@@ -97,7 +97,7 @@ func (s *FreezePeriodsService) GetFreezePeriod(pid interface{}, freezePeriod int
 		return nil, resp, err
 	}
 
-	return fp, resp, err
+	return fp, resp, nil
 }
 
 // CreateFreezePeriodOptions represents the available CreateFreezePeriodOptions()
@@ -133,7 +133,7 @@ func (s *FreezePeriodsService) CreateFreezePeriodOptions(pid interface{}, opt *C
 		return nil, resp, err
 	}
 
-	return fp, resp, err
+	return fp, resp, nil
 }
 
 // UpdateFreezePeriodOptions represents the available UpdateFreezePeriodOptions()
@@ -169,7 +169,7 @@ func (s *FreezePeriodsService) UpdateFreezePeriodOptions(pid interface{}, freeze
 		return nil, resp, err
 	}
 
-	return fp, resp, err
+	return fp, resp, nil
 }
 
 // DeleteFreezePeriod removes a freeze period from a project. This is an

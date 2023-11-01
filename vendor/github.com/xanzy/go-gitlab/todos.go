@@ -59,7 +59,7 @@ type TodoTarget struct {
 	Description          string                 `json:"description"`
 	Downvotes            int                    `json:"downvotes"`
 	ID                   int                    `json:"id"`
-	IID                  int                    `json:"iid"`
+	IID                  interface{}            `json:"iid"`
 	Labels               []string               `json:"labels"`
 	Milestone            *Milestone             `json:"milestone"`
 	ProjectID            int                    `json:"project_id"`
@@ -132,7 +132,7 @@ func (s *TodosService) ListTodos(opt *ListTodosOptions, options ...RequestOption
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // MarkTodoAsDone marks a single pending todo given by its ID for the current user as done.

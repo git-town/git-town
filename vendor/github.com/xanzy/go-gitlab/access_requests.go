@@ -74,7 +74,7 @@ func (s *AccessRequestsService) ListProjectAccessRequests(pid interface{}, opt *
 		return nil, resp, err
 	}
 
-	return ars, resp, err
+	return ars, resp, nil
 }
 
 // ListGroupAccessRequests gets a list of access requests
@@ -100,7 +100,7 @@ func (s *AccessRequestsService) ListGroupAccessRequests(gid interface{}, opt *Li
 		return nil, resp, err
 	}
 
-	return ars, resp, err
+	return ars, resp, nil
 }
 
 // RequestProjectAccess requests access for the authenticated user
@@ -126,7 +126,7 @@ func (s *AccessRequestsService) RequestProjectAccess(pid interface{}, options ..
 		return nil, resp, err
 	}
 
-	return ar, resp, err
+	return ar, resp, nil
 }
 
 // RequestGroupAccess requests access for the authenticated user
@@ -152,7 +152,7 @@ func (s *AccessRequestsService) RequestGroupAccess(gid interface{}, options ...R
 		return nil, resp, err
 	}
 
-	return ar, resp, err
+	return ar, resp, nil
 }
 
 // ApproveAccessRequestOptions represents the available
@@ -186,7 +186,7 @@ func (s *AccessRequestsService) ApproveProjectAccessRequest(pid interface{}, use
 		return nil, resp, err
 	}
 
-	return ar, resp, err
+	return ar, resp, nil
 }
 
 // ApproveGroupAccessRequest approves an access request for the given user.
@@ -211,7 +211,7 @@ func (s *AccessRequestsService) ApproveGroupAccessRequest(gid interface{}, user 
 		return nil, resp, err
 	}
 
-	return ar, resp, err
+	return ar, resp, nil
 }
 
 // DenyProjectAccessRequest denies an access request for the given user.

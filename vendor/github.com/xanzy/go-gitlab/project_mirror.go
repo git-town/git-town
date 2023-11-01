@@ -71,7 +71,7 @@ func (s *ProjectMirrorService) ListProjectMirror(pid interface{}, opt *ListProje
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // GetProjectMirror gets a single mirror configured on the project.
@@ -96,7 +96,7 @@ func (s *ProjectMirrorService) GetProjectMirror(pid interface{}, mirror int, opt
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // AddProjectMirrorOptions contains the properties requires to create
@@ -133,7 +133,7 @@ func (s *ProjectMirrorService) AddProjectMirror(pid interface{}, opt *AddProject
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // EditProjectMirrorOptions contains the properties requires to edit
@@ -169,7 +169,7 @@ func (s *ProjectMirrorService) EditProjectMirror(pid interface{}, mirror int, op
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // DeleteProjectMirror deletes a project mirror.

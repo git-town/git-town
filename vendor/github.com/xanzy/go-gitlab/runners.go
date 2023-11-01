@@ -120,7 +120,7 @@ func (s *RunnersService) ListRunners(opt *ListRunnersOptions, options ...Request
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // ListAllRunners gets a list of all runners in the GitLab instance. Access is
@@ -140,7 +140,7 @@ func (s *RunnersService) ListAllRunners(opt *ListRunnersOptions, options ...Requ
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // GetRunnerDetails returns details for given runner.
@@ -165,7 +165,7 @@ func (s *RunnersService) GetRunnerDetails(rid interface{}, options ...RequestOpt
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // UpdateRunnerDetailsOptions represents the available UpdateRunnerDetails() options.
@@ -207,7 +207,7 @@ func (s *RunnersService) UpdateRunnerDetails(rid interface{}, opt *UpdateRunnerD
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // RemoveRunner removes a runner.
@@ -263,7 +263,7 @@ func (s *RunnersService) ListRunnerJobs(rid interface{}, opt *ListRunnerJobsOpti
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // ListProjectRunnersOptions represents the available ListProjectRunners()
@@ -295,7 +295,7 @@ func (s *RunnersService) ListProjectRunners(pid interface{}, opt *ListProjectRun
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // EnableProjectRunnerOptions represents the available EnableProjectRunner()
@@ -329,7 +329,7 @@ func (s *RunnersService) EnableProjectRunner(pid interface{}, opt *EnableProject
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // DisableProjectRunner disables a specific runner from project.
@@ -386,7 +386,7 @@ func (s *RunnersService) ListGroupsRunners(gid interface{}, opt *ListGroupsRunne
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // RegisterNewRunnerOptions represents the available RegisterNewRunner()
@@ -437,7 +437,7 @@ func (s *RunnersService) RegisterNewRunner(opt *RegisterNewRunnerOptions, option
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // DeleteRegisteredRunnerOptions represents the available
@@ -519,7 +519,7 @@ func (s *RunnersService) ResetInstanceRunnerRegistrationToken(options ...Request
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // ResetGroupRunnerRegistrationToken resets a group's runner registration token.
@@ -544,7 +544,7 @@ func (s *RunnersService) ResetGroupRunnerRegistrationToken(gid interface{}, opti
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // ResetGroupRunnerRegistrationToken resets a projects's runner registration token.
@@ -568,7 +568,7 @@ func (s *RunnersService) ResetProjectRunnerRegistrationToken(pid interface{}, op
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 type RunnerAuthenticationToken struct {
@@ -593,5 +593,5 @@ func (s *RunnersService) ResetRunnerAuthenticationToken(rid int, options ...Requ
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }

@@ -109,7 +109,7 @@ func (s *AwardEmojiService) listAwardEmoji(pid interface{}, resource string, res
 		return nil, resp, err
 	}
 
-	return as, resp, err
+	return as, resp, nil
 }
 
 // GetMergeRequestAwardEmoji get an award emoji from merge request.
@@ -159,7 +159,7 @@ func (s *AwardEmojiService) getAwardEmoji(pid interface{}, resource string, reso
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // CreateAwardEmojiOptions represents the available options for awarding emoji
@@ -217,7 +217,7 @@ func (s *AwardEmojiService) createAwardEmoji(pid interface{}, resource string, r
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // DeleteIssueAwardEmoji delete award emoji on an issue.
@@ -309,7 +309,7 @@ func (s *AwardEmojiService) listAwardEmojiOnNote(pid interface{}, resources stri
 		return nil, resp, err
 	}
 
-	return as, resp, err
+	return as, resp, nil
 }
 
 // GetIssuesAwardEmojiOnNote gets an award emoji on a note from an issue.
@@ -362,7 +362,7 @@ func (s *AwardEmojiService) getSingleNoteAwardEmoji(pid interface{}, ressource s
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // CreateIssuesAwardEmojiOnNote gets an award emoji on a note from an issue.
@@ -417,7 +417,7 @@ func (s *AwardEmojiService) createAwardEmojiOnNote(pid interface{}, resource str
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // DeleteIssuesAwardEmojiOnNote deletes an award emoji on a note from an issue.

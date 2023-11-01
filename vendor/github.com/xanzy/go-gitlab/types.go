@@ -66,6 +66,7 @@ const (
 	DeveloperPermissions     AccessLevelValue = 30
 	MaintainerPermissions    AccessLevelValue = 40
 	OwnerPermissions         AccessLevelValue = 50
+	AdminPermissions         AccessLevelValue = 60
 
 	// Deprecated: Renamed to MaintainerPermissions in GitLab 11.0.
 	MasterPermissions AccessLevelValue = 40
@@ -227,14 +228,17 @@ type BuildStateValue string
 
 // These constants represent all valid build states.
 const (
-	Pending  BuildStateValue = "pending"
-	Created  BuildStateValue = "created"
-	Running  BuildStateValue = "running"
-	Success  BuildStateValue = "success"
-	Failed   BuildStateValue = "failed"
-	Canceled BuildStateValue = "canceled"
-	Skipped  BuildStateValue = "skipped"
-	Manual   BuildStateValue = "manual"
+	Created            BuildStateValue = "created"
+	WaitingForResource BuildStateValue = "waiting_for_resource"
+	Preparing          BuildStateValue = "preparing"
+	Pending            BuildStateValue = "pending"
+	Running            BuildStateValue = "running"
+	Success            BuildStateValue = "success"
+	Failed             BuildStateValue = "failed"
+	Canceled           BuildStateValue = "canceled"
+	Skipped            BuildStateValue = "skipped"
+	Manual             BuildStateValue = "manual"
+	Scheduled          BuildStateValue = "scheduled"
 )
 
 // BuildState is a helper routine that allocates a new BuildStateValue
@@ -356,20 +360,26 @@ func GenericPackageStatus(v GenericPackageStatusValue) *GenericPackageStatusValu
 	return p
 }
 
-// ISOTime represents an ISO 8601 formatted date
+// ISOTime represents an ISO 8601 formatted date.
 type ISOTime time.Time
 
 // ISO 8601 date format
 const iso8601 = "2006-01-02"
 
-// MarshalJSON implements the json.Marshaler interface
+// ParseISOTime parses an ISO 8601 formatted date.
+func ParseISOTime(s string) (ISOTime, error) {
+	t, err := time.Parse(iso8601, s)
+	return ISOTime(t), err
+}
+
+// MarshalJSON implements the json.Marshaler interface.
 func (t ISOTime) MarshalJSON() ([]byte, error) {
 	if reflect.ValueOf(t).IsZero() {
 		return []byte(`null`), nil
 	}
 
 	if y := time.Time(t).Year(); y < 0 || y >= 10000 {
-		// ISO 8901 uses 4 digits for the years
+		// ISO 8901 uses 4 digits for the years.
 		return nil, errors.New("json: ISOTime year outside of range [0,9999]")
 	}
 
@@ -381,9 +391,9 @@ func (t ISOTime) MarshalJSON() ([]byte, error) {
 	return b, nil
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (t *ISOTime) UnmarshalJSON(data []byte) error {
-	// Ignore null, like in the main JSON package
+	// Ignore null, like in the main JSON package.
 	if string(data) == "null" {
 		return nil
 	}
@@ -394,7 +404,7 @@ func (t *ISOTime) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-// EncodeValues implements the query.Encoder interface
+// EncodeValues implements the query.Encoder interface.
 func (t *ISOTime) EncodeValues(key string, v *url.Values) error {
 	if t == nil || (time.Time(*t)).IsZero() {
 		return nil
@@ -403,7 +413,7 @@ func (t *ISOTime) EncodeValues(key string, v *url.Values) error {
 	return nil
 }
 
-// String implements the Stringer interface
+// String implements the Stringer interface.
 func (t ISOTime) String() string {
 	return time.Time(t).Format(iso8601)
 }
@@ -411,7 +421,7 @@ func (t ISOTime) String() string {
 // LinkTypeValue represents a release link type.
 type LinkTypeValue string
 
-// List of available release link types
+// List of available release link types.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/releases/links.html#create-a-release-link
@@ -597,8 +607,11 @@ type SharedRunnersSettingValue string
 // https://docs.gitlab.com/ee/api/groups.html#options-for-shared_runners_setting
 const (
 	EnabledSharedRunnersSettingValue                  SharedRunnersSettingValue = "enabled"
-	DisabledWithOverrideSharedRunnersSettingValue     SharedRunnersSettingValue = "disabled_with_override"
+	DisabledAndOverridableSharedRunnersSettingValue   SharedRunnersSettingValue = "disabled_and_overridable"
 	DisabledAndUnoverridableSharedRunnersSettingValue SharedRunnersSettingValue = "disabled_and_unoverridable"
+
+	// Deprecated: DisabledWithOverrideSharedRunnersSettingValue is deprecated in favor of DisabledAndOverridableSharedRunnersSettingValue
+	DisabledWithOverrideSharedRunnersSettingValue SharedRunnersSettingValue = "disabled_with_override"
 )
 
 // SharedRunnersSetting is a helper routine that allocates a new SharedRunnersSettingValue

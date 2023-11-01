@@ -103,7 +103,7 @@ func (s *ClusterAgentsService) ListAgents(pid interface{}, opt *ListAgentsOption
 		return nil, resp, err
 	}
 
-	return as, resp, err
+	return as, resp, nil
 }
 
 // GetAgent gets a single agent details.
@@ -128,7 +128,7 @@ func (s *ClusterAgentsService) GetAgent(pid interface{}, id int, options ...Requ
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // RegisterAgentOptions represents the available RegisterAgent()
@@ -162,7 +162,7 @@ func (s *ClusterAgentsService) RegisterAgent(pid interface{}, opt *RegisterAgent
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return a, resp, nil
 }
 
 // DeleteAgent deletes an existing agent registration.
@@ -212,7 +212,7 @@ func (s *ClusterAgentsService) ListAgentTokens(pid interface{}, aid int, opt *Li
 		return nil, resp, err
 	}
 
-	return ats, resp, err
+	return ats, resp, nil
 }
 
 // GetAgentToken gets a single agent token.
@@ -237,7 +237,7 @@ func (s *ClusterAgentsService) GetAgentToken(pid interface{}, aid int, id int, o
 		return nil, resp, err
 	}
 
-	return at, resp, err
+	return at, resp, nil
 }
 
 // CreateAgentTokenOptions represents the available CreateAgentToken() options.
@@ -271,7 +271,7 @@ func (s *ClusterAgentsService) CreateAgentToken(pid interface{}, aid int, opt *C
 		return nil, resp, err
 	}
 
-	return at, resp, err
+	return at, resp, nil
 }
 
 // RevokeAgentToken revokes an agent token.

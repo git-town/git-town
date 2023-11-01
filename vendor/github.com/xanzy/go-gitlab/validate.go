@@ -61,9 +61,10 @@ type LintOptions struct {
 }
 
 // Lint validates .gitlab-ci.yml content.
+// Deprecated: This endpoint was removed in GitLab 16.0.
 //
 // Gitlab API docs:
-// https://docs.gitlab.com/ee/api/lint.html#validate-the-ci-yaml-configuration
+// https://docs.gitlab.com/ee/api/lint.html#validate-the-ci-yaml-configuration-deprecated
 func (s *ValidateService) Lint(opts *LintOptions, options ...RequestOptionFunc) (*LintResult, *Response, error) {
 	req, err := s.client.NewRequest(http.MethodPost, "ci/lint", &opts, options)
 	if err != nil {
@@ -84,8 +85,10 @@ func (s *ValidateService) Lint(opts *LintOptions, options ...RequestOptionFunc) 
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/lint.html#validate-a-ci-yaml-configuration-with-a-namespace
 type ProjectNamespaceLintOptions struct {
-	Content *string `url:"content,omitempty" json:"content,omitempty"`
-	DryRun  *bool   `url:"dry_run,omitempty" json:"dry_run,omitempty"`
+	Content     *string `url:"content,omitempty" json:"content,omitempty"`
+	DryRun      *bool   `url:"dry_run,omitempty" json:"dry_run,omitempty"`
+	IncludeJobs *bool   `url:"include_jobs,omitempty" json:"include_jobs,omitempty"`
+	Ref         *string `url:"ref,omitempty" json:"ref,omitempty"`
 }
 
 // ProjectNamespaceLint validates .gitlab-ci.yml content by project.
@@ -118,7 +121,9 @@ func (s *ValidateService) ProjectNamespaceLint(pid interface{}, opt *ProjectName
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/lint.html#validate-a-projects-ci-configuration
 type ProjectLintOptions struct {
-	DryRun *bool `url:"dry_run,omitempty" json:"dry_run,omitempty"`
+	DryRun      *bool   `url:"dry_run,omitempty" json:"dry_run,omitempty"`
+	IncludeJobs *bool   `url:"include_jobs,omitempty" json:"include_jobs,omitempty"`
+	Ref         *string `url:"ref,omitempty" json:"ref,omitempty"`
 }
 
 // ProjectLint validates .gitlab-ci.yml content by project.
