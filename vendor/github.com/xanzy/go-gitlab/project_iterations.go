@@ -86,5 +86,5 @@ func (i *ProjectIterationsService) ListProjectIterations(pid interface{}, opt *L
 		return nil, resp, err
 	}
 
-	return pis, resp, err
+	return pis, resp, nil
 }

@@ -1,16 +1,92 @@
 package cursor
 
-import "io"
+import (
+	"io"
+	"os"
+)
 
-var height int
+//
+// Helpers for global cursor handling on os.Stdout
+//
+
+var autoheight int
+var cursor = &Cursor{writer: os.Stdout}
+
+// Writer is an expanded io.Writer interface with a file descriptor.
+type Writer interface {
+	io.Writer
+	Fd() uintptr
+}
+
+// SetTarget sets to output target of the default curser to the
+// provided cursor.Writer (wrapping io.Writer).
+func SetTarget(w Writer) {
+	cursor = cursor.WithWriter(w)
+}
+
+// Up moves the cursor n lines up relative to the current position.
+func Up(n int) {
+	cursor.Up(n)
+	autoheight += n
+}
+
+// Down moves the cursor n lines down relative to the current position.
+func Down(n int) {
+	cursor.Down(n)
+
+	if autoheight > 0 {
+		autoheight -= n
+	}
+}
+
+// Right moves the cursor n characters to the right relative to the current position.
+func Right(n int) {
+	cursor.Right(n)
+}
+
+// Left moves the cursor n characters to the left relative to the current position.
+func Left(n int) {
+	cursor.Left(n)
+}
+
+// HorizontalAbsolute moves the cursor to n horizontally.
+// The position n is absolute to the start of the line.
+func HorizontalAbsolute(n int) {
+	cursor.HorizontalAbsolute(n)
+}
+
+// Show the cursor if it was hidden previously.
+// Don't forget to show the cursor at least at the end of your application.
+// Otherwise the user might have a terminal with a permanently hidden cursor, until they reopen the terminal.
+func Show() {
+	cursor.Show()
+}
+
+// Hide the cursor.
+// Don't forget to show the cursor at least at the end of your application with Show.
+// Otherwise the user might have a terminal with a permanently hidden cursor, until they reopen the terminal.
+func Hide() {
+	cursor.Hide()
+}
+
+// ClearLine clears the current line and moves the cursor to it's start position.
+func ClearLine() {
+	cursor.ClearLine()
+}
+
+// Clear clears the current position and moves the cursor to the left.
+func Clear() {
+	cursor.Clear()
+}
 
 // Bottom moves the cursor to the bottom of the terminal.
 // This is done by calculating how many lines were moved by Up and Down.
 func Bottom() {
-	if height > 0 {
-		Down(height)
+	if autoheight > 0 {
+		Down(autoheight)
 		StartOfLine()
-		height = 0
+
+		autoheight = 0
 	}
 }
 
@@ -72,10 +148,4 @@ func ClearLinesDown(n int) {
 	for i := 0; i < n; i++ {
 		DownAndClear(1)
 	}
-}
-
-// Writer is an expanded io.Writer interface with a file descriptor.
-type Writer interface {
-	io.Writer
-	Fd() uintptr
 }

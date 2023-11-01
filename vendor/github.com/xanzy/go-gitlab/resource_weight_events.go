@@ -76,5 +76,5 @@ func (s *ResourceWeightEventsService) ListIssueWeightEvents(pid interface{}, iss
 		return nil, resp, err
 	}
 
-	return wes, resp, err
+	return wes, resp, nil
 }

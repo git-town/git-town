@@ -64,7 +64,7 @@ func (s *ProjectMembersService) ListProjectMembers(pid interface{}, opt *ListPro
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // ListAllProjectMembers gets a list of a project's team members viewable by the
@@ -91,7 +91,7 @@ func (s *ProjectMembersService) ListAllProjectMembers(pid interface{}, opt *List
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // GetProjectMember gets a project team member.
@@ -116,7 +116,7 @@ func (s *ProjectMembersService) GetProjectMember(pid interface{}, user int, opti
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // GetInheritedProjectMember gets a project team member, including inherited
@@ -141,7 +141,7 @@ func (s *ProjectMembersService) GetInheritedProjectMember(pid interface{}, user 
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // AddProjectMemberOptions represents the available AddProjectMember() options.
@@ -179,7 +179,7 @@ func (s *ProjectMembersService) AddProjectMember(pid interface{}, opt *AddProjec
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // EditProjectMemberOptions represents the available EditProjectMember() options.
@@ -213,7 +213,7 @@ func (s *ProjectMembersService) EditProjectMember(pid interface{}, user int, opt
 		return nil, resp, err
 	}
 
-	return pm, resp, err
+	return pm, resp, nil
 }
 
 // DeleteProjectMember removes a user from a project team.

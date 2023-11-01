@@ -75,7 +75,7 @@ func (s *ResourceMilestoneEventsService) ListIssueMilestoneEvents(pid interface{
 		return nil, resp, err
 	}
 
-	return mes, resp, err
+	return mes, resp, nil
 }
 
 // GetIssueMilestoneEvent gets a single issue milestone event.
@@ -100,7 +100,7 @@ func (s *ResourceMilestoneEventsService) GetIssueMilestoneEvent(pid interface{},
 		return nil, resp, err
 	}
 
-	return me, resp, err
+	return me, resp, nil
 }
 
 // ListMergeMilestoneEvents retrieves resource milestone events for the specified
@@ -126,7 +126,7 @@ func (s *ResourceMilestoneEventsService) ListMergeMilestoneEvents(pid interface{
 		return nil, resp, err
 	}
 
-	return mes, resp, err
+	return mes, resp, nil
 }
 
 // GetMergeRequestMilestoneEvent gets a single merge request milestone event.
@@ -151,5 +151,5 @@ func (s *ResourceMilestoneEventsService) GetMergeRequestMilestoneEvent(pid inter
 		return nil, resp, err
 	}
 
-	return me, resp, err
+	return me, resp, nil
 }

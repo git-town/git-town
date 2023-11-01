@@ -74,6 +74,7 @@ to add new and/or missing endpoints. Currently, the following services are suppo
 - [x] Project Import/export
 - [x] Project Members
 - [x] Project Milestones
+- [x] Project Repository Storage Moves
 - [x] Project Snippets
 - [x] Project Vulnerabilities
 - [x] Project-Level Variables
@@ -196,6 +197,10 @@ For complete usage of go-gitlab, see the full [package docs](https://godoc.org/g
 ## Author
 
 Sander van Harmelen (<sander@vanharmelen.nl>)
+
+## Contributing
+
+Contributions are always welcome. For more information, check out the [contributing guide](https://github.com/xanzy/go-gitlab/blob/master/CONTRIBUTING.md)
 
 ## License
 

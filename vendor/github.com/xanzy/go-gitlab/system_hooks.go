@@ -64,7 +64,7 @@ func (s *SystemHooksService) ListHooks(options ...RequestOptionFunc) ([]*Hook, *
 		return nil, resp, err
 	}
 
-	return h, resp, err
+	return h, resp, nil
 }
 
 // GetHook get a single system hook.
@@ -85,7 +85,7 @@ func (s *SystemHooksService) GetHook(hook int, options ...RequestOptionFunc) (*H
 		return nil, resp, err
 	}
 
-	return h, resp, err
+	return h, resp, nil
 }
 
 // AddHookOptions represents the available AddHook() options.
@@ -118,7 +118,7 @@ func (s *SystemHooksService) AddHook(opt *AddHookOptions, options ...RequestOpti
 		return nil, resp, err
 	}
 
-	return h, resp, err
+	return h, resp, nil
 }
 
 // HookEvent represents an event trigger by a GitLab system hook.
@@ -155,7 +155,7 @@ func (s *SystemHooksService) TestHook(hook int, options ...RequestOptionFunc) (*
 		return nil, resp, err
 	}
 
-	return h, resp, err
+	return h, resp, nil
 }
 
 // DeleteHook deletes a system hook. This is an idempotent API function and

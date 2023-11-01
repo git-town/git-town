@@ -68,7 +68,7 @@ func (s *GitIgnoreTemplatesService) ListTemplates(opt *ListTemplatesOptions, opt
 		return nil, resp, err
 	}
 
-	return gs, resp, err
+	return gs, resp, nil
 }
 
 // GetTemplate get a git ignore template
@@ -89,5 +89,5 @@ func (s *GitIgnoreTemplatesService) GetTemplate(key string, options ...RequestOp
 		return nil, resp, err
 	}
 
-	return g, resp, err
+	return g, resp, nil
 }

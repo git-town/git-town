@@ -27,12 +27,12 @@ Town's configuration options more consistent and intuitively named.
 - Git Town's statefile on disk has a new format, you might have to run
   `git town status reset` to avoid runtime errors
   ([#2446](https://github.com/git-town/git-town/pull/2446))
-- `git ship` no longer ships branches that exist only at the remote. Moving
-  forward you can branches must exist on your local machine in order to be
-  shipped. Use the web UI of your code hosting service to ship remote branches.
+- `git ship` no longer ships branches that exist solely at the remote. Moving
+  forward branches to ship must exist on your local machine. Use the web UI of
+  your code hosting service to ship remote branches.
   ([#2367](https://github.com/git-town/git-town/pull/2367),
   [#2372](https://github.com/git-town/git-town/pull/2372))
-- `git kill` no longer deletes branches that exist only at the remote. Delete
+- `git kill` no longer deletes branches that exist solely at the remote. Delete
   them by running `git push origin :branchname` or via the web UI of your code
   hosting service ([#2368](https://github.com/git-town/git-town/pull/2368))
 - `git hack` no longer has the `-p` option. Use `git append` and `git prepend`
@@ -45,6 +45,7 @@ Town's configuration options more consistent and intuitively named.
   ([#2603](https://github.com/git-town/git-town/pull/2603))
 - v10 renames the `debug` parameter to `verbose` because all it does is print
   more information ([#2598](https://github.com/git-town/git-town/pull/2598))
+- updated GitLab support, please report regressions
 
 #### New Features
 

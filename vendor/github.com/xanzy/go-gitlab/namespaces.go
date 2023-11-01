@@ -78,7 +78,7 @@ func (s *NamespacesService) ListNamespaces(opt *ListNamespacesOptions, options .
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // SearchNamespace gets all namespaces that match your string in their name
@@ -103,7 +103,7 @@ func (s *NamespacesService) SearchNamespace(query string, options ...RequestOpti
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // GetNamespace gets a namespace by id.
@@ -128,7 +128,7 @@ func (s *NamespacesService) GetNamespace(id interface{}, options ...RequestOptio
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // NamespaceExistance represents a namespace exists result.
@@ -170,5 +170,5 @@ func (s *NamespacesService) NamespaceExists(id interface{}, opt *NamespaceExists
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }

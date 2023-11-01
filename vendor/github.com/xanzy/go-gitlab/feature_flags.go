@@ -66,7 +66,7 @@ func (s *FeaturesService) ListFeatures(options ...RequestOptionFunc) ([]*Feature
 	if err != nil {
 		return nil, resp, err
 	}
-	return f, resp, err
+	return f, resp, nil
 }
 
 // SetFeatureFlag sets or creates a feature flag gate
@@ -92,5 +92,5 @@ func (s *FeaturesService) SetFeatureFlag(name string, value interface{}, options
 	if err != nil {
 		return nil, resp, err
 	}
-	return f, resp, err
+	return f, resp, nil
 }
