@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/git-town/git-town/v9/test/envvars"
+	"github.com/git-town/git-town/v10/src/subshell"
+	"github.com/git-town/git-town/v10/test/asserts"
+	"github.com/git-town/git-town/v10/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 

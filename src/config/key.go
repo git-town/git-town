@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v10/src/domain"
 )
 
 // Key contains all the keys used in Git Town configuration.

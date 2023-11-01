@@ -3,11 +3,11 @@ package bitbucket_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git/giturl"
-	"github.com/git-town/git-town/v9/src/hosting/bitbucket"
-	"github.com/git-town/git-town/v9/src/hosting/common"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/git/giturl"
+	"github.com/git-town/git-town/v10/src/hosting/bitbucket"
+	"github.com/git-town/git-town/v10/src/hosting/common"
 	"github.com/shoenig/test/must"
 )
 

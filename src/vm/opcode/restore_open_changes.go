@@ -3,8 +3,8 @@ package opcode
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // RestoreOpenChanges restores stashed away changes into the workspace.

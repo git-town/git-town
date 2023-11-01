@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks/cache"
-	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/gohacks/cache"
+	"github.com/git-town/git-town/v10/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v10/src/messages"
 )
 
 type BackendRunner interface {

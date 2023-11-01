@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/git-town/git-town/v9/test/fixture"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/gohacks/slice"
+	"github.com/git-town/git-town/v10/test/datatable"
+	"github.com/git-town/git-town/v10/test/fixture"
+	"github.com/git-town/git-town/v10/test/helpers"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.

@@ -3,9 +3,9 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli/dialog"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v10/src/cli/dialog"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/git"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.

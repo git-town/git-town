@@ -1,9 +1,9 @@
 package datatable
 
 import (
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/test/git"
+	"github.com/git-town/git-town/v10/test/helpers"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories

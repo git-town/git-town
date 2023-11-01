@@ -3,8 +3,8 @@ package config
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks/slice"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/gohacks/slice"
 	"golang.org/x/exp/maps"
 )
 

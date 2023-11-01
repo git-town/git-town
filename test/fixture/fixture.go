@@ -6,14 +6,14 @@ import (
 	"path/filepath"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/git-town/git-town/v9/test/filesystem"
-	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/helpers"
-	"github.com/git-town/git-town/v9/test/testruntime"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/gohacks/slice"
+	"github.com/git-town/git-town/v10/test/asserts"
+	"github.com/git-town/git-town/v10/test/datatable"
+	"github.com/git-town/git-town/v10/test/filesystem"
+	"github.com/git-town/git-town/v10/test/git"
+	"github.com/git-town/git-town/v10/test/helpers"
+	"github.com/git-town/git-town/v10/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.

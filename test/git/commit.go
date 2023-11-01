@@ -3,7 +3,7 @@ package git
 import (
 	"log"
 
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v10/src/domain"
 )
 
 // Commit describes a Git commit.

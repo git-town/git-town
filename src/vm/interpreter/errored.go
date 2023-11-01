@@ -3,11 +3,11 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli/print"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/undo"
-	"github.com/git-town/git-town/v9/src/vm/shared"
-	"github.com/git-town/git-town/v9/src/vm/statefile"
+	"github.com/git-town/git-town/v10/src/cli/print"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/undo"
+	"github.com/git-town/git-town/v10/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/vm/statefile"
 )
 
 // errored is called when the given opcode has resulted in the given error.

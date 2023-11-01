@@ -6,11 +6,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git/giturl"
-	"github.com/git-town/git-town/v9/src/hosting/common"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/git/giturl"
+	"github.com/git-town/git-town/v10/src/hosting/common"
+	"github.com/git-town/git-town/v10/src/messages"
 )
 
 // Connector provides access to the API of Bitbucket installations.

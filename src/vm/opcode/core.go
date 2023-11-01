@@ -5,8 +5,8 @@ package opcode
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/gohacks"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // undeclaredOpcodeMethods can be added to structs in this package to satisfy the shared.Opcode interface even if they don't declare all required methods.

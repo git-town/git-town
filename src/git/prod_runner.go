@@ -1,8 +1,8 @@
 package git
 
 import (
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v10/src/gohacks"
+	"github.com/git-town/git-town/v10/src/gohacks/stringslice"
 )
 
 // ProdRunner provides Git functionality for production code.

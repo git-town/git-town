@@ -3,9 +3,9 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/vm/shared"
+	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
 // UpdateProposalTarget updates the target of the proposal with the given number at the code hosting service.

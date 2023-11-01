@@ -7,15 +7,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	prodgit "github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/gohacks/slice"
-	"github.com/git-town/git-town/v9/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/subshell"
+	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v10/src/domain"
+	prodgit "github.com/git-town/git-town/v10/src/git"
+	"github.com/git-town/git-town/v10/src/gohacks/slice"
+	"github.com/git-town/git-town/v10/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v10/test/asserts"
+	"github.com/git-town/git-town/v10/test/datatable"
+	"github.com/git-town/git-town/v10/test/git"
+	"github.com/git-town/git-town/v10/test/subshell"
 )
 
 // TestCommands defines Git commands used only in test code.
