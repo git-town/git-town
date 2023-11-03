@@ -629,6 +629,40 @@ func TestBackendCommands(t *testing.T) {
 			must.Eq(t, want, have)
 			must.EqOp(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 		})
+
+		t.Run("square brackets in the commit message", func(t *testing.T) {
+			t.Parallel()
+			give := `
+  branch-1                 111111 [ci skip]
+  branch-2                 222222 ️[origin/branch-2] [ci skip]
+  remotes/origin/branch-2  222222 [ci skip]
+  remotes/origin/branch-3  333333 [ci skip]`[1:]
+			want := domain.BranchInfos{
+				domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-1"),
+					LocalSHA:   domain.NewSHA("111111"),
+					SyncStatus: domain.SyncStatusLocalOnly,
+					RemoteName: domain.EmptyRemoteBranchName(),
+					RemoteSHA:  domain.EmptySHA(),
+				},
+				domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-2"),
+					LocalSHA:   domain.NewSHA("222222"),
+					SyncStatus: domain.SyncStatusUpToDate,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
+					RemoteSHA:  domain.NewSHA("222222"),
+				},
+				domain.BranchInfo{
+					LocalName:  domain.EmptyLocalBranchName(),
+					LocalSHA:   domain.EmptySHA(),
+					SyncStatus: domain.SyncStatusRemoteOnly,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-3"),
+					RemoteSHA:  domain.NewSHA("333333"),
+				},
+			}
+			have, _ := git.ParseVerboseBranchesOutput(give)
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
