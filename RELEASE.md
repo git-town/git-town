@@ -10,7 +10,7 @@ This guide is for maintainers who make releases of Git Town.
 ### bump the version
 
 - search-and-replace the old version with the new version
-  - triple-digits: `10.0.0`
+  - triple-digits: `10.0.1`
   - double-digits: `10.0`
   - don't change existing version numbers in RELEASE_NOTES.md
 - if bumping the major version:
@@ -23,8 +23,8 @@ On a Linux machine:
 
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
-- create and push a new Git Tag for the release: `git tag v10.0.0`
-- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.0 TODAY=$(date +'%Y-%m-%d') make release-linux`
+- create and push a new Git Tag for the release: `git tag v10.0.1`
+- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.1 TODAY=$(date +'%Y-%m-%d') make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in draft mode the browser
 - delete the empty release that the script has created
@@ -40,7 +40,7 @@ On a Windows machine, in Git Bash:
   [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
 - `make msi` to create the Windows installer
 - test the created Windows installer in the `dist` directory
-- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.0 make release-win`
+- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.1 make release-win`
 - this opens the release in the browser
 - verify that it added the `.msi` file
 - publish the release
