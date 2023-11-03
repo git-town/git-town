@@ -187,9 +187,25 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 }
 
 func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName domain.RemoteBranchName) {
+	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
+	if isInSync {
+		return domain.SyncStatusUpToDate, trackingBranchName
+	}
 	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
 	if isGone {
 		return domain.SyncStatusDeletedAtRemote, trackingBranchName
+	}
+	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
+	if IsAhead {
+		return domain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
+	if IsBehind {
+		return domain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
+	if IsAheadAndBehind {
+		return domain.SyncStatusNotInSync, trackingBranchName
 	}
 	// 	closingBracketPos := strings.IndexRune(remoteText, ']')
 	// 	textInBrackets := remoteText[1:closingBracketPos]
@@ -219,6 +235,36 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 
 func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, branchName)
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsAheadAndBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, branchName)
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, branchName)
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsInSync(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, branchName)
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
