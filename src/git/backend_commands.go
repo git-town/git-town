@@ -214,7 +214,7 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 }
 
 func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, branchName)
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
@@ -224,7 +224,7 @@ func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 }
 
 func IsAheadAndBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, branchName)
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
@@ -234,7 +234,7 @@ func IsAheadAndBehind(branchName, remoteText string) (bool, domain.RemoteBranchN
 }
 
 func IsBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
-	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, branchName)
+	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
@@ -244,7 +244,7 @@ func IsBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 }
 
 func IsInSync(branchName, remoteText string) (bool, domain.RemoteBranchName) {
-	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, branchName)
+	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
@@ -255,7 +255,7 @@ func IsInSync(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 
 // IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
 func IsRemoteGone(branchName, remoteText string) (bool, domain.RemoteBranchName) {
-	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, branchName)
+	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
 	matches := re.FindStringSubmatch(remoteText)
 	if len(matches) == 2 {
