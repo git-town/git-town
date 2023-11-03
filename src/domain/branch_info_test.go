@@ -10,54 +10,6 @@ import (
 func TestBranchInfo(t *testing.T) {
 	t.Parallel()
 
-	t.Run("HasAllBranches", func(t *testing.T) {
-		t.Parallel()
-		t.Run("has both branches", func(t *testing.T) {
-			t.Parallel()
-			give := domain.BranchInfo{
-				LocalName:  domain.NewLocalBranchName("branch-1"),
-				LocalSHA:   domain.NewSHA("111111"),
-				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-				RemoteSHA:  domain.NewSHA("111111"),
-			}
-			must.True(t, give.HasAllBranches())
-		})
-		t.Run("has local branch", func(t *testing.T) {
-			t.Parallel()
-			give := domain.BranchInfo{
-				LocalName:  domain.NewLocalBranchName("branch-1"),
-				LocalSHA:   domain.NewSHA("111111"),
-				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.EmptyRemoteBranchName(),
-				RemoteSHA:  domain.EmptySHA(),
-			}
-			must.False(t, give.HasAllBranches())
-		})
-		t.Run("has remote branch", func(t *testing.T) {
-			t.Parallel()
-			give := domain.BranchInfo{
-				LocalName:  domain.EmptyLocalBranchName(),
-				LocalSHA:   domain.EmptySHA(),
-				SyncStatus: domain.SyncStatusLocalOnly,
-				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-				RemoteSHA:  domain.NewSHA("111111"),
-			}
-			must.False(t, give.HasAllBranches())
-		})
-		t.Run("is empty", func(t *testing.T) {
-			t.Parallel()
-			give := domain.BranchInfo{
-				LocalName:  domain.EmptyLocalBranchName(),
-				LocalSHA:   domain.EmptySHA(),
-				SyncStatus: domain.SyncStatusUpToDate,
-				RemoteName: domain.EmptyRemoteBranchName(),
-				RemoteSHA:  domain.EmptySHA(),
-			}
-			must.False(t, give.HasAllBranches())
-		})
-	})
-
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch", func(t *testing.T) {
@@ -247,6 +199,54 @@ func TestBranchInfo(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			}
 			must.False(t, give.HasRemoteBranch())
+		})
+	})
+
+	t.Run("HasTrackingBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has both branches", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName("branch-1"),
+				LocalSHA:   domain.NewSHA("111111"),
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+				RemoteSHA:  domain.NewSHA("111111"),
+			}
+			must.True(t, give.HasTrackingBranch())
+		})
+		t.Run("has local branch", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName("branch-1"),
+				LocalSHA:   domain.NewSHA("111111"),
+				SyncStatus: domain.SyncStatusLocalOnly,
+				RemoteName: domain.EmptyRemoteBranchName(),
+				RemoteSHA:  domain.EmptySHA(),
+			}
+			must.False(t, give.HasTrackingBranch())
+		})
+		t.Run("has remote branch", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.EmptyLocalBranchName(),
+				LocalSHA:   domain.EmptySHA(),
+				SyncStatus: domain.SyncStatusLocalOnly,
+				RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+				RemoteSHA:  domain.NewSHA("111111"),
+			}
+			must.False(t, give.HasTrackingBranch())
+		})
+		t.Run("is empty", func(t *testing.T) {
+			t.Parallel()
+			give := domain.BranchInfo{
+				LocalName:  domain.EmptyLocalBranchName(),
+				LocalSHA:   domain.EmptySHA(),
+				SyncStatus: domain.SyncStatusUpToDate,
+				RemoteName: domain.EmptyRemoteBranchName(),
+				RemoteSHA:  domain.EmptySHA(),
+			}
+			must.False(t, give.HasTrackingBranch())
 		})
 	})
 

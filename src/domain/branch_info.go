@@ -28,11 +28,6 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
-// HasAllBranches indicates whether this BranchInfo has values for all branches, i.e. both local and remote branches exist.
-func (self BranchInfo) HasAllBranches() bool {
-	return self.HasLocalBranch() && self.HasRemoteBranch()
-}
-
 func (self BranchInfo) HasLocalBranch() bool {
 	return !self.LocalName.IsEmpty() && !self.LocalSHA.IsEmpty()
 }
