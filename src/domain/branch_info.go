@@ -70,7 +70,7 @@ func (self BranchInfo) IsEmpty() bool {
 
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (self BranchInfo) IsLocal() bool {
-	return self.SyncStatus.IsLocal()
+	return !self.LocalName.IsEmpty()
 }
 
 // IsOmniBranch indicates whether the local and remote branch are in sync.

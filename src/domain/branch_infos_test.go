@@ -198,10 +198,10 @@ func TestBranchInfos(t *testing.T) {
 				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
-				LocalName:  domain.NewLocalBranchName("remote-only"),
+				LocalName:  domain.EmptyLocalBranchName(),
 				LocalSHA:   domain.EmptySHA(),
 				SyncStatus: domain.SyncStatusRemoteOnly,
-				RemoteName: domain.EmptyRemoteBranchName(),
+				RemoteName: domain.NewRemoteBranchName("origin/remote-only"),
 				RemoteSHA:  domain.EmptySHA(),
 			},
 			domain.BranchInfo{
