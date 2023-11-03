@@ -1,23 +1,8 @@
 package domain
 
-import (
-	"fmt"
-)
-
 // SyncStatus encodes the places a branch can exist at.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type SyncStatus string
-
-// IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
-func (self SyncStatus) IsLocal() bool {
-	switch self {
-	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusNotInSync, SyncStatusDeletedAtRemote:
-		return true
-	case SyncStatusRemoteOnly:
-		return false
-	}
-	panic(fmt.Sprintf("uncaptured sync status: %v", self))
-}
 
 func (self SyncStatus) String() string {
 	return string(self)
