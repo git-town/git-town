@@ -119,6 +119,57 @@ func (self *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
 	return nil
 }
 
+func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsAheadAndBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+, behind \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsBehind(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s): behind \d+\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+func IsInSync(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`\[(\w+\/%s)\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
+// IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
+func IsRemoteGone(branchName, remoteText string) (bool, domain.RemoteBranchName) {
+	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, regexp.QuoteMeta(branchName))
+	re := regexp.MustCompile(reText)
+	matches := re.FindStringSubmatch(remoteText)
+	if len(matches) == 2 {
+		return true, domain.NewRemoteBranchName(matches[1])
+	}
+	return false, domain.EmptyRemoteBranchName()
+}
+
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
 func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.LocalBranchName) {
 	result := domain.BranchInfos{}
@@ -187,33 +238,30 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 }
 
 func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName domain.RemoteBranchName) {
-	if remoteText[0] == '[' {
-		closingBracketPos := strings.IndexRune(remoteText, ']')
-		textInBrackets := remoteText[1:closingBracketPos]
-		trackingBranchContent, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
-		trackingBranchName := domain.NewRemoteBranchName(trackingBranchContent)
-		if remoteStatus == "" {
-			return domain.SyncStatusUpToDate, trackingBranchName
-		}
-		if remoteStatus == "gone" {
-			return domain.SyncStatusDeletedAtRemote, trackingBranchName
-		}
-		if strings.Contains(remoteStatus, ", behind ") {
-			return domain.SyncStatusNotInSync, trackingBranchName
-		}
-		if strings.HasPrefix(remoteStatus, "ahead ") {
-			return domain.SyncStatusNotInSync, trackingBranchName
-		}
-		if strings.HasPrefix(remoteStatus, "behind ") {
-			return domain.SyncStatusNotInSync, trackingBranchName
-		}
-		panic(fmt.Sprintf(messages.SyncStatusNotRecognized, remoteText, branchName))
-	} else {
-		if strings.HasPrefix(branchName, "remotes/origin/") {
-			return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
-		}
-		return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
+	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
+	if isInSync {
+		return domain.SyncStatusUpToDate, trackingBranchName
 	}
+	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
+	if isGone {
+		return domain.SyncStatusDeletedAtRemote, trackingBranchName
+	}
+	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
+	if IsAhead {
+		return domain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
+	if IsBehind {
+		return domain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
+	if IsAheadAndBehind {
+		return domain.SyncStatusNotInSync, trackingBranchName
+	}
+	if strings.HasPrefix(branchName, "remotes/") {
+		return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
+	}
+	return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
 }
 
 // isLocalBranchName indicates whether the branch with the given Git ref is local or remote.

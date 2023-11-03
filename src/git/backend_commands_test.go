@@ -402,20 +402,38 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				t.Parallel()
-				give := `
+				t.Run("IsAhead", func(t *testing.T) {
+					t.Parallel()
+					t.Run("is actually ahead", func(t *testing.T) {
+						t.Parallel()
+						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: ahead 10] commit message")
+						must.True(t, isAhead)
+						must.EqOp(t, "origin/branch-1", remoteBranchName.String())
+					})
+					t.Run("is not ahead", func(t *testing.T) {
+						t.Parallel()
+						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: behind 10] commit message")
+						must.False(t, isAhead)
+						must.EqOp(t, "", remoteBranchName.String())
+					})
+				})
+				t.Run("determineSyncStatus", func(t *testing.T) {
+					t.Parallel()
+					give := `
   branch-1                     111111 [origin/branch-1: ahead 1] Commit message 1a
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
-						SyncStatus: domain.SyncStatusNotInSync,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("222222"),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("111111"),
+							SyncStatus: domain.SyncStatusNotInSync,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.NewSHA("222222"),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
 			})
 
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
@@ -456,20 +474,31 @@ func TestBackendCommands(t *testing.T) {
 
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
 				t.Parallel()
-				give := `
+				t.Run("IsInSync", func(t *testing.T) {
+					t.Parallel()
+					t.Run("is actually in sync", func(t *testing.T) {
+						t.Parallel()
+						isInSync, remoteBranchName := git.IsInSync("branch-1", "[origin/branch-1] commit message")
+						must.True(t, isInSync)
+						must.EqOp(t, "origin/branch-1", remoteBranchName.String())
+					})
+				})
+				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
+					give := `
   branch-1                     111111 [origin/branch-1] Commit message 1
   remotes/origin/branch-1      111111 Commit message 1`[1:]
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
-						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("111111"),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("111111"),
+							SyncStatus: domain.SyncStatusUpToDate,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.NewSHA("111111"),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
 			})
 
 			t.Run("remote-only branch", func(t *testing.T) {
@@ -507,45 +536,42 @@ func TestBackendCommands(t *testing.T) {
 
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				t.Parallel()
-				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("01a7eded"),
-						SyncStatus: domain.SyncStatusDeletedAtRemote,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.EmptySHA(),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
-			})
-		})
-
-		t.Run("branch with a different tracking branch name", func(t *testing.T) {
-			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
-				give := `
-  branch-1                     111111 [origin/branch-2] Commit message 1
-  remotes/origin/branch-1      222222 Commit message 2
-  remotes/origin/branch-2      111111 Commit message 1`[1:]
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
-						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
-						RemoteSHA:  domain.NewSHA("111111"),
-					},
-					domain.BranchInfo{
-						LocalName:  domain.EmptyLocalBranchName(),
-						LocalSHA:   domain.EmptySHA(),
-						SyncStatus: domain.SyncStatusRemoteOnly,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("222222"),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
+				t.Run("IsRemoteGone", func(t *testing.T) {
+					t.Parallel()
+					t.Run("remote is gone", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: gone] commit message")
+						must.True(t, isGone)
+						must.Eq(t, "origin/branch-1", remoteBranchName)
+					})
+					t.Run("other sync status", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: ahead] commit message")
+						must.False(t, isGone)
+						must.Eq(t, "", remoteBranchName)
+					})
+					t.Run("other text", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[skip ci]")
+						must.False(t, isGone)
+						must.Eq(t, "", remoteBranchName)
+					})
+				})
+				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
+					t.Parallel()
+					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("01a7eded"),
+							SyncStatus: domain.SyncStatusDeletedAtRemote,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.EmptySHA(),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
 			})
 		})
 
