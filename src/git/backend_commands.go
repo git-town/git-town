@@ -211,12 +211,6 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 		return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
 	}
 	return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
-	// 	closingBracketPos := strings.IndexRune(remoteText, ']')
-	// 	textInBrackets := remoteText[1:closingBracketPos]
-	// 	trackingBranchContent, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
-	// 	trackingBranchName := domain.NewRemoteBranchName(trackingBranchContent)
-	// } else {
-	// }
 }
 
 func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {

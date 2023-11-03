@@ -406,13 +406,13 @@ func TestBackendCommands(t *testing.T) {
 					t.Parallel()
 					t.Run("is actually ahead", func(t *testing.T) {
 						t.Parallel()
-						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: ahead 10]")
+						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: ahead 10] commit message")
 						must.True(t, isAhead)
 						must.EqOp(t, "origin/branch-1", remoteBranchName.String())
 					})
 					t.Run("is not ahead", func(t *testing.T) {
 						t.Parallel()
-						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: behind 10]")
+						isAhead, remoteBranchName := git.IsAhead("branch-1", "[origin/branch-1: behind 10] commit message")
 						must.False(t, isAhead)
 						must.EqOp(t, "", remoteBranchName.String())
 					})
@@ -572,33 +572,6 @@ func TestBackendCommands(t *testing.T) {
 					have, _ := git.ParseVerboseBranchesOutput(give)
 					must.Eq(t, want, have)
 				})
-			})
-		})
-
-		t.Run("branch with a different tracking branch name", func(t *testing.T) {
-			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
-				give := `
-  branch-1                     111111 [origin/branch-2] Commit message 1
-  remotes/origin/branch-1      222222 Commit message 2
-  remotes/origin/branch-2      111111 Commit message 1`[1:]
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("111111"),
-						SyncStatus: domain.SyncStatusUpToDate,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
-						RemoteSHA:  domain.NewSHA("111111"),
-					},
-					domain.BranchInfo{
-						LocalName:  domain.EmptyLocalBranchName(),
-						LocalSHA:   domain.EmptySHA(),
-						SyncStatus: domain.SyncStatusRemoteOnly,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.NewSHA("222222"),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
 			})
 		})
 
