@@ -1029,14 +1029,14 @@ func TestChanges(t *testing.T) {
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("perennial-branch"),
 					LocalSHA:   domain.NewSHA("111111"),
-					SyncStatus: domain.SyncStatusBehind,
+					SyncStatus: domain.SyncStatusNotInSync,
 					RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 					RemoteSHA:  domain.NewSHA("222222"),
 				},
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("feature-branch"),
 					LocalSHA:   domain.NewSHA("333333"),
-					SyncStatus: domain.SyncStatusBehind,
+					SyncStatus: domain.SyncStatusNotInSync,
 					RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
 					RemoteSHA:  domain.NewSHA("444444"),
 				},
@@ -1125,14 +1125,14 @@ func TestChanges(t *testing.T) {
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("perennial-branch"),
 					LocalSHA:   domain.NewSHA("222222"),
-					SyncStatus: domain.SyncStatusAhead,
+					SyncStatus: domain.SyncStatusNotInSync,
 					RemoteName: domain.NewRemoteBranchName("origin/perennial-branch"),
 					RemoteSHA:  domain.NewSHA("111111"),
 				},
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("feature-branch"),
 					LocalSHA:   domain.NewSHA("444444"),
-					SyncStatus: domain.SyncStatusAhead,
+					SyncStatus: domain.SyncStatusNotInSync,
 					RemoteName: domain.NewRemoteBranchName("origin/feature-branch"),
 					RemoteSHA:  domain.NewSHA("333333"),
 				},

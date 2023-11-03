@@ -55,7 +55,7 @@ func (self BranchInfo) HasRemoteBranch() bool {
 
 func (self BranchInfo) HasTrackingBranch() bool {
 	switch self.SyncStatus {
-	case SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:
+	case SyncStatusNotInSync, SyncStatusUpToDate, SyncStatusRemoteOnly:
 		return true
 	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote:
 		return false
