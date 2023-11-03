@@ -1,5 +1,12 @@
 # Git Town Release Notes
 
+## 10.0.1 (2023-11-2)
+
+#### Bug Fixes
+
+- Fix crash if commits contain "["
+  ([#2645](https://github.com/git-town/git-town/pull/2645))
+
 ## 10.0.0 (2023-10-27)
 
 Git Town 10 improves support for shipping branches via the code hosting web UI
