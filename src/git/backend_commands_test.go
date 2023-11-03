@@ -507,18 +507,42 @@ func TestBackendCommands(t *testing.T) {
 
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				t.Parallel()
-				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
-				want := domain.BranchInfos{
-					domain.BranchInfo{
-						LocalName:  domain.NewLocalBranchName("branch-1"),
-						LocalSHA:   domain.NewSHA("01a7eded"),
-						SyncStatus: domain.SyncStatusDeletedAtRemote,
-						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
-						RemoteSHA:  domain.EmptySHA(),
-					},
-				}
-				have, _ := git.ParseVerboseBranchesOutput(give)
-				must.Eq(t, want, have)
+				t.Run("IsRemoteGone", func(t *testing.T) {
+					t.Parallel()
+					t.Run("remote is gone", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: gone] commit message")
+						must.True(t, isGone)
+						must.Eq(t, "origin/branch-1", remoteBranchName)
+					})
+					t.Run("other sync status", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[origin/branch-1: ahead] commit message")
+						must.False(t, isGone)
+						must.Eq(t, "", remoteBranchName)
+					})
+					t.Run("other text", func(t *testing.T) {
+						t.Parallel()
+						isGone, remoteBranchName := git.IsRemoteGone("branch-1", "[skip ci]")
+						must.False(t, isGone)
+						must.Eq(t, "", remoteBranchName)
+					})
+				})
+				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
+					t.Parallel()
+					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("01a7eded"),
+							SyncStatus: domain.SyncStatusDeletedAtRemote,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.EmptySHA(),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
 			})
 		})
 
