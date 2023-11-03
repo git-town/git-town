@@ -635,7 +635,8 @@ func TestBackendCommands(t *testing.T) {
 			give := `
   branch-1                 111111 [ci skip]
   branch-2                 222222 ️[origin/branch-2] [ci skip]
-  remotes/origin/branch-2  222222 [ci skip]`[1:]
+  remotes/origin/branch-2  222222 [ci skip]
+  remotes/origin/branch-3  333333 [ci skip]`[1:]
 			want := domain.BranchInfos{
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-1"),
@@ -650,6 +651,13 @@ func TestBackendCommands(t *testing.T) {
 					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
 					RemoteSHA:  domain.NewSHA("222222"),
+				},
+				domain.BranchInfo{
+					LocalName:  domain.EmptyLocalBranchName(),
+					LocalSHA:   domain.EmptySHA(),
+					SyncStatus: domain.SyncStatusRemoteOnly,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-3"),
+					RemoteSHA:  domain.NewSHA("333333"),
 				},
 			}
 			have, _ := git.ParseVerboseBranchesOutput(give)
