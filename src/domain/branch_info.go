@@ -1,9 +1,5 @@
 package domain
 
-import (
-	"fmt"
-)
-
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
 	// LocalName contains the local name of the branch.
@@ -32,11 +28,6 @@ func EmptyBranchInfo() BranchInfo {
 	}
 }
 
-// HasAllBranches indicates whether this BranchInfo has values for all branches, i.e. both local and remote branches exist.
-func (self BranchInfo) HasAllBranches() bool {
-	return self.HasLocalBranch() && self.HasRemoteBranch()
-}
-
 func (self BranchInfo) HasLocalBranch() bool {
 	return !self.LocalName.IsEmpty() && !self.LocalSHA.IsEmpty()
 }
@@ -54,13 +45,7 @@ func (self BranchInfo) HasRemoteBranch() bool {
 }
 
 func (self BranchInfo) HasTrackingBranch() bool {
-	switch self.SyncStatus {
-	case SyncStatusNotInSync, SyncStatusUpToDate, SyncStatusRemoteOnly:
-		return true
-	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote:
-		return false
-	}
-	panic(fmt.Sprintf("unknown sync status: %v", self.SyncStatus))
+	return self.HasLocalBranch() && self.HasRemoteBranch()
 }
 
 // IsEmpty indicates whether this BranchInfo is completely empty, i.e. not a single branch contains something.

@@ -9,7 +9,7 @@ type BranchSpan struct {
 }
 
 func (self BranchSpan) IsInconsistentChange() bool {
-	return self.Before.HasAllBranches() && self.After.HasAllBranches() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
+	return self.Before.HasTrackingBranch() && self.After.HasTrackingBranch() && self.LocalChanged() && self.RemoteChanged() && !self.IsOmniChange()
 }
 
 // IsOmniChange indicates whether this BranchBeforeAfter changes a synced branch
