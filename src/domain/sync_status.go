@@ -11,7 +11,7 @@ type SyncStatus string
 // IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
 func (self SyncStatus) IsLocal() bool {
 	switch self {
-	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusDeletedAtRemote:
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusNotInSync, SyncStatusDeletedAtRemote:
 		return true
 	case SyncStatusRemoteOnly:
 		return false
@@ -25,9 +25,7 @@ func (self SyncStatus) String() string {
 
 const (
 	SyncStatusUpToDate        SyncStatus = "up to date"        // the branch exists locally and remotely, the local branch is up to date
-	SyncStatusBehind          SyncStatus = "behind"            // the branch exists locally and remotely, the local branch is behind the remote tracking branch
-	SyncStatusAhead           SyncStatus = "ahead"             // the branch exists locally and remotely, the local branch is ahead of its remote branch
-	SyncStatusAheadAndBehind  SyncStatus = "ahead and behind"  // the branch exists locally and remotely, both ends have different commits
+	SyncStatusNotInSync       SyncStatus = "not in sync"       // the branch exists locally and remotely, the local branch is behind the remote tracking branch
 	SyncStatusLocalOnly       SyncStatus = "local only"        // the branch was created locally and hasn't been pushed to the remote yet
 	SyncStatusRemoteOnly      SyncStatus = "remote only"       // the branch exists only at the remote
 	SyncStatusDeletedAtRemote SyncStatus = "deleted at remote" // the branch was deleted on the remote

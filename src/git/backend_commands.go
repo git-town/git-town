@@ -199,13 +199,13 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 			return domain.SyncStatusDeletedAtRemote, trackingBranchName
 		}
 		if strings.Contains(remoteStatus, ", behind ") {
-			return domain.SyncStatusAheadAndBehind, trackingBranchName
+			return domain.SyncStatusNotInSync, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "ahead ") {
-			return domain.SyncStatusAhead, trackingBranchName
+			return domain.SyncStatusNotInSync, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "behind ") {
-			return domain.SyncStatusBehind, trackingBranchName
+			return domain.SyncStatusNotInSync, trackingBranchName
 		}
 		panic(fmt.Sprintf(messages.SyncStatusNotRecognized, remoteText, branchName))
 	} else {
