@@ -253,7 +253,7 @@ func IsInSync(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 	return false, domain.EmptyRemoteBranchName()
 }
 
-// IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch
+// IsRemoteGone indicates whether the given remoteText indicates a deleted tracking branch.
 func IsRemoteGone(branchName, remoteText string) (bool, domain.RemoteBranchName) {
 	reText := fmt.Sprintf(`^\[(\w+\/%s): gone\] `, branchName)
 	re := regexp.MustCompile(reText)
