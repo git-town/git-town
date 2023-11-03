@@ -207,30 +207,16 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncS
 	if IsAheadAndBehind {
 		return domain.SyncStatusNotInSync, trackingBranchName
 	}
+	if strings.HasPrefix(branchName, "remotes/") {
+		return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
+	}
+	return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
 	// 	closingBracketPos := strings.IndexRune(remoteText, ']')
 	// 	textInBrackets := remoteText[1:closingBracketPos]
 	// 	trackingBranchContent, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
 	// 	trackingBranchName := domain.NewRemoteBranchName(trackingBranchContent)
-	// 	if remoteStatus == "" {
-	// 		return domain.SyncStatusUpToDate, trackingBranchName
-	// 	}
-	// 	if strings.Contains(remoteStatus, ", behind ") {
-	// 		return domain.SyncStatusNotInSync, trackingBranchName
-	// 	}
-	// 	if strings.HasPrefix(remoteStatus, "ahead ") {
-	// 		return domain.SyncStatusNotInSync, trackingBranchName
-	// 	}
-	// 	if strings.HasPrefix(remoteStatus, "behind ") {
-	// 		return domain.SyncStatusNotInSync, trackingBranchName
-	// 	}
-	// 	panic(fmt.Sprintf(messages.SyncStatusNotRecognized, remoteText, branchName))
 	// } else {
-	// 	if strings.HasPrefix(branchName, "remotes/origin/") {
-	// 		return domain.SyncStatusRemoteOnly, domain.EmptyRemoteBranchName()
-	// 	}
-	// 	return domain.SyncStatusLocalOnly, domain.EmptyRemoteBranchName()
 	// }
-	return domain.SyncStatusNotInSync, domain.EmptyRemoteBranchName()
 }
 
 func IsAhead(branchName, remoteText string) (bool, domain.RemoteBranchName) {
