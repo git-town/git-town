@@ -596,7 +596,6 @@ func outputIndicatesOpenChanges(output string) bool {
 				return false
 			}
 		}
-		return true
 	}
 	return true
 }
