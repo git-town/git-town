@@ -369,9 +369,30 @@ func TestBackendCommands(t *testing.T) {
 				t.Run("open changes", func(t *testing.T) {
 					t.Parallel()
 					runtime := testruntime.Create(t)
-					runtime.Run("git", "config", "status.short", "true")
 					runtime.CreateFile("file", "stashed content")
 					runtime.Run("git", "config", "status.short", "true")
+					have, err := runtime.Backend.RepoStatus()
+					must.NoError(t, err)
+					must.True(t, have.OpenChanges)
+				})
+			})
+
+			t.Run("status.branch enabled", func(t *testing.T) {
+				t.Parallel()
+				t.Run("no open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.Run("git", "config", "status.branch", "true")
+					have, err := runtime.Backend.RepoStatus()
+					must.NoError(t, err)
+					must.False(t, have.OpenChanges)
+				})
+
+				t.Run("open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.CreateFile("file", "stashed content")
+					runtime.Run("git", "config", "status.branch", "true")
 					have, err := runtime.Backend.RepoStatus()
 					must.NoError(t, err)
 					must.True(t, have.OpenChanges)
