@@ -579,7 +579,15 @@ func (self *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName
 }
 
 func outputIndicatesMergeInProgress(output string) bool {
-	return strings.Contains(output, "You have unmerged paths")
+	if strings.Contains(output, "You have unmerged paths") {
+		return true
+	}
+	for _, line := range strings.Split(output, "\n") {
+		if strings.HasPrefix(line, "AA ") {
+			return true
+		}
+	}
+	return false
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
@@ -589,11 +597,6 @@ func outputIndicatesOpenChanges(output string) bool {
 	}
 	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
 		return false
-	}
-	for _, line := range strings.Split(output, "\n") {
-		if strings.HasPrefix(line, "AA ") {
-			return false
-		}
 	}
 	return true
 }
