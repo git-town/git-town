@@ -285,7 +285,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("has open changes", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
-				runtime.CreateFile("foo", "bar")
+				runtime.CreateFile("name", "content")
 				have, err := runtime.Backend.RepoStatus()
 				must.NoError(t, err)
 				must.True(t, have.OpenChanges)
@@ -362,6 +362,29 @@ func TestBackendCommands(t *testing.T) {
 			have, err := runtime.Backend.RepoStatus()
 			must.NoError(t, err)
 			must.False(t, have.RebaseInProgress)
+		})
+
+		t.Run("status.short enabled", func(t *testing.T) {
+			t.Parallel()
+			t.Run("no changes", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.Run("git", "config", "status.short", "true")
+				have, err := runtime.Backend.RepoStatus()
+				must.NoError(t, err)
+				must.False(t, have.RebaseInProgress)
+			})
+
+			t.Run("open changes", func(t *testing.T) {
+				t.Parallel()
+				runtime := testruntime.Create(t)
+				runtime.Run("git", "config", "status.short", "true")
+				runtime.CreateFile("file", "stashed content")
+				runtime.Run("git", "config", "status.short", "true")
+				have, err := runtime.Backend.RepoStatus()
+				must.NoError(t, err)
+				must.False(t, have.RebaseInProgress)
+			})
 		})
 	})
 
