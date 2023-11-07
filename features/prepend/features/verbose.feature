@@ -21,7 +21,7 @@ Feature: display all executed Git commands
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --ignore-submodules                |
+      |        | backend  | git status --long --ignore-submodules                |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
@@ -60,7 +60,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                   |
       |        | backend  | git branch -vva                                  |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
-      |        | backend  | git status --ignore-submodules                   |
+      |        | backend  | git status --long --ignore-submodules                   |
       |        | backend  | git config --unset git-town-branch.parent.parent |
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |

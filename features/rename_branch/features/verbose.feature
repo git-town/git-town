@@ -56,7 +56,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --ignore-submodules                |
+      |        | backend  | git status --long --ignore-submodules                |
       |        | backend  | git config --unset git-town-branch.new.parent |
       |        | backend  | git config git-town-branch.old.parent main    |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
