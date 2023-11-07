@@ -709,19 +709,6 @@ func TestBackendCommands(t *testing.T) {
 		must.Eq(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
-	t.Run("RepoStatus", func(t *testing.T) {
-		t.Parallel()
-		t.Run("OutputIndicatesOpenChanges", func(t *testing.T) {
-			t.Parallel()
-			t.Run("empty output", func(t *testing.T) {
-				give := ""
-				have := git.OutputIndicatesOpenChanges(give)
-				must.False(t, have)
-			})
-			t.Run("--branch option enabled via config", func(t *testing.T) {})
-		})
-	})
-
 	t.Run("RootDirectory", func(t *testing.T) {
 		t.Parallel()
 		t.Run("inside a Git repo", func(t *testing.T) {

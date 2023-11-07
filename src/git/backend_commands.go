@@ -498,7 +498,7 @@ func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
 		return domain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
 	hasConflicts := strings.Contains(output, "Unmerged paths")
-	hasOpenChanges := OutputIndicatesOpenChanges(output)
+	hasOpenChanges := outputIndicatesOpenChanges(output)
 	rebaseInProgress := outputIndicatesRebaseInProgress(output)
 	return domain.RepoStatus{
 		Conflicts:        hasConflicts,
@@ -593,7 +593,7 @@ func outputIndicatesMergeInProgress(output string) bool {
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
-func OutputIndicatesOpenChanges(output string) bool {
+func outputIndicatesOpenChanges(output string) bool {
 	if strings.Contains(output, "working tree clean") || strings.Contains(output, "nothing to commit") {
 		return false
 	}
