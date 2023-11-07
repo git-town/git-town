@@ -354,6 +354,29 @@ func TestBackendCommands(t *testing.T) {
 				must.NoError(t, err)
 				must.True(t, have.OpenChanges)
 			})
+
+			t.Run("status.short enabled", func(t *testing.T) {
+				t.Parallel()
+				t.Run("no open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.Run("git", "config", "status.short", "true")
+					have, err := runtime.Backend.RepoStatus()
+					must.NoError(t, err)
+					must.False(t, have.OpenChanges)
+				})
+
+				t.Run("open changes", func(t *testing.T) {
+					t.Parallel()
+					runtime := testruntime.Create(t)
+					runtime.Run("git", "config", "status.short", "true")
+					runtime.CreateFile("file", "stashed content")
+					runtime.Run("git", "config", "status.short", "true")
+					have, err := runtime.Backend.RepoStatus()
+					must.NoError(t, err)
+					must.True(t, have.OpenChanges)
+				})
+			})
 		})
 
 		t.Run("RebaseInProgress", func(t *testing.T) {
@@ -362,29 +385,6 @@ func TestBackendCommands(t *testing.T) {
 			have, err := runtime.Backend.RepoStatus()
 			must.NoError(t, err)
 			must.False(t, have.RebaseInProgress)
-		})
-
-		t.Run("status.short enabled", func(t *testing.T) {
-			t.Parallel()
-			t.Run("no changes", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				runtime.Run("git", "config", "status.short", "true")
-				have, err := runtime.Backend.RepoStatus()
-				must.NoError(t, err)
-				must.False(t, have.RebaseInProgress)
-			})
-
-			t.Run("open changes", func(t *testing.T) {
-				t.Parallel()
-				runtime := testruntime.Create(t)
-				runtime.Run("git", "config", "status.short", "true")
-				runtime.CreateFile("file", "stashed content")
-				runtime.Run("git", "config", "status.short", "true")
-				have, err := runtime.Backend.RepoStatus()
-				must.NoError(t, err)
-				must.False(t, have.RebaseInProgress)
-			})
 		})
 	})
 

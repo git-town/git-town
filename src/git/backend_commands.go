@@ -493,7 +493,7 @@ func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Bran
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
 func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
-	output, err := self.QueryTrim("git", "status", "--ignore-submodules")
+	output, err := self.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
 		return domain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
