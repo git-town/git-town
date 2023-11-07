@@ -601,17 +601,6 @@ func outputIndicatesOpenChanges(output string) bool {
 	return true
 }
 
-func outputIndicatesMergeConflict(output string) bool {
-	for _, line := range strings.Split(output, "\n") {
-		for _, prefix := range []string{"AA ", "AU ", "DD ", "DU ", "UA ", "UD ", "UU "} {
-			if strings.HasPrefix(line, prefix) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 func outputIndicatesRebaseInProgress(output string) bool {
 	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
 }
