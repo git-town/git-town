@@ -590,14 +590,21 @@ func outputIndicatesOpenChanges(output string) bool {
 	if outputIndicatesRebaseInProgress(output) || outputIndicatesMergeInProgress(output) {
 		return false
 	}
+	if outputIndicatesMergeConflict(output) {
+		return false
+	}
+	return true
+}
+
+func outputIndicatesMergeConflict(output string) bool {
 	for _, line := range strings.Split(output, "\n") {
 		for _, prefix := range []string{"AA ", "AU ", "DD ", "DU ", "UA ", "UD ", "UU "} {
 			if strings.HasPrefix(line, prefix) {
-				return false
+				return true
 			}
 		}
 	}
-	return true
+	return false
 }
 
 func outputIndicatesRebaseInProgress(output string) bool {
