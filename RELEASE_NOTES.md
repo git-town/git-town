@@ -1,5 +1,12 @@
 # Git Town Release Notes
 
+## 10.0.2 (2023-11-7)
+
+#### Bug Fixes
+
+- Fix wrong error message when `status.short` is enabled in Git config
+  ([#2650](https://github.com/git-town/git-town/pull/2650))
+
 ## 10.0.1 (2023-11-2)
 
 #### Bug Fixes
