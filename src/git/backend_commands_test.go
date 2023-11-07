@@ -285,7 +285,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("has open changes", func(t *testing.T) {
 				t.Parallel()
 				runtime := testruntime.Create(t)
-				runtime.CreateFile("name", "content")
+				runtime.CreateFile("foo", "bar")
 				have, err := runtime.Backend.RepoStatus()
 				must.NoError(t, err)
 				must.True(t, have.OpenChanges)

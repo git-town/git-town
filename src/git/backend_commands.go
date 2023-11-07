@@ -578,16 +578,6 @@ func (self *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName
 	return domain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
 }
 
-// see https://git-scm.com/docs/git-status
-func lineIndicatesMergeInProgress(line string) bool {
-	for _, prefix := range []string{"AA ", "AU ", "DD ", "DU ", "UA ", "UD ", "UU "} {
-		if strings.HasPrefix(line, prefix) {
-			return false
-		}
-	}
-	return true
-}
-
 func outputIndicatesMergeInProgress(output string) bool {
 	return strings.Contains(output, "You have unmerged paths")
 }
@@ -601,9 +591,12 @@ func outputIndicatesOpenChanges(output string) bool {
 		return false
 	}
 	for _, line := range strings.Split(output, "\n") {
-		if lineIndicatesMergeInProgress(line) {
-			return false
+		for _, prefix := range []string{"AA " /*, "AU ", "DD ", "DU ", "UA ", "UD ", "UU "*/} {
+			if strings.HasPrefix(line, prefix) {
+				return false
+			}
 		}
+		return true
 	}
 	return true
 }
