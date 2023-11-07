@@ -591,7 +591,7 @@ func outputIndicatesOpenChanges(output string) bool {
 		return false
 	}
 	for _, line := range strings.Split(output, "\n") {
-		for _, prefix := range []string{"AA " /*, "AU ", "DD ", "DU ", "UA ", "UD ", "UU "*/} {
+		for _, prefix := range []string{"AA ", "AU ", "DD ", "DU ", "UA ", "UD ", "UU "} {
 			if strings.HasPrefix(line, prefix) {
 				return false
 			}
