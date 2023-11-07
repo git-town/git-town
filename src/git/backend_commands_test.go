@@ -366,7 +366,6 @@ func TestBackendCommands(t *testing.T) {
 					must.NoError(t, err)
 					must.False(t, have.OpenChanges)
 				})
-
 				t.Run("open changes", func(t *testing.T) {
 					t.Parallel()
 					runtime := testruntime.Create(t)
@@ -390,7 +389,6 @@ func TestBackendCommands(t *testing.T) {
 					must.NoError(t, err)
 					must.False(t, have.OpenChanges)
 				})
-
 				t.Run("open changes", func(t *testing.T) {
 					t.Parallel()
 					runtime := testruntime.Create(t)
