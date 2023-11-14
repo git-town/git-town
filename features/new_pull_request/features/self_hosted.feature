@@ -18,3 +18,13 @@ Feature: self-hosted service
       | github    | https://self-hosted/git-town/git-town/compare/feature?expand=1                                                                            |
       | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
       | gitlab    | https://self-hosted/git-town/git-town/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
+
+  Scenario: GitLab with custom port
+    Given the origin is "ssh://git@git.example.com:4022/a/b.git"
+    And Git Town setting "code-hosting-driver" is "gitlab"
+    And tool "open" is installed
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://git.example.com:4022/a/b
+      """
