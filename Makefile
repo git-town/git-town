@@ -85,8 +85,8 @@ stats: tools/scc_${SCC_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/alphavet_${ALPHAVET_VERSION} tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
-	tools/gofumpt_${GOFUMPT_VERSION} -l -w . &
+test-go: tools/alphavet_${ALPHAVET_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
+	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
 	go run tools/format_unittests/format.go test &
@@ -132,11 +132,6 @@ tools/depth_${DEPTH_VERSION}:
 	@echo "Installing depth ${DEPTH_VERSION} ..."
 	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
 	@mv tools/depth tools/depth_${DEPTH_VERSION}
-
-tools/gofumpt_${GOFUMPT_VERSION}:
-	@echo "Installing gofumpt ${GOFUMPT_VERSION} ..."
-	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
-	@mv tools/gofumpt tools/gofumpt_${GOFUMPT_VERSION}
 
 tools/golangci_lint_${GOLANGCILINT_VERSION}:
 	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
