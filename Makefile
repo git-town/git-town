@@ -44,7 +44,6 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} --write
 	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
-
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
@@ -89,7 +88,7 @@ test: fix docs unit cuke  # runs all the tests
 test-go: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION}  # smoke tests for Go refactorings
 	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
+	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
 	@go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/) &
