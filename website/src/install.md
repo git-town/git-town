@@ -25,10 +25,11 @@ sudo port install git-town
 
 The easiest way to install Git Town on Windows is to
 [download the Windows installer](https://github.com/git-town/git-town/releases/download/v10.0.2/git-town_10.0.2_windows_intel_64.msi)
-and run it. You can also install Git Town via [scoop](https://scoop.sh):
+and run it.
+
+You can also install Git Town via [scoop](https://scoop.sh):
 
 ```
-scoop bucket add org https://github.com/git-town/scoop.git
 scoop install git-town
 ```
 
