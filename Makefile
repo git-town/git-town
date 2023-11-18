@@ -35,7 +35,7 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
@@ -45,7 +45,7 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
 	tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/golangci_lint_${GOLANGCILINT_VERSION} run
+	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
 	go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/)
 
@@ -85,7 +85,7 @@ stats: tools/scc_${SCC_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/alphavet_${ALPHAVET_VERSION} tools/golangci_lint_${GOLANGCILINT_VERSION}  # smoke tests for Go refactorings
+test-go: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION}  # smoke tests for Go refactorings
 	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run &
@@ -132,11 +132,6 @@ tools/depth_${DEPTH_VERSION}:
 	@echo "Installing depth ${DEPTH_VERSION} ..."
 	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
 	@mv tools/depth tools/depth_${DEPTH_VERSION}
-
-tools/golangci_lint_${GOLANGCILINT_VERSION}:
-	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
-	@mv tools/golangci-lint tools/golangci_lint_${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
 	@echo "Installing Node based tools"
