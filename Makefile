@@ -3,7 +3,7 @@ ALPHAVET_VERSION = 0.1.0
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.4.0
 GOLANGCILINT_VERSION = 1.54.2
-RUN_THAT_APP_VERSION = 0.0.1
+RUN_THAT_APP_VERSION = 0.0.2
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.9.0
 SHFMT_VERSION = 3.6.0
@@ -35,7 +35,7 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules tools/shellcheck_${SHELLCHECK_VERSION} tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
@@ -43,7 +43,8 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/run_shellcheck ${SHFMT_VERSION} ${SHELLCHECK_VERSION}
+	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
+
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
@@ -142,12 +143,6 @@ tools/scc_${SCC_VERSION}:
 	@echo "Installing scc ${SCC_VERSION} ..."
 	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
 	@mv tools/scc tools/scc_${SCC_VERSION}
-
-tools/shellcheck_${SHELLCHECK_VERSION}:
-	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.$(shell go env GOOS).x86_64.tar.xz | tar xJ
-	@mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck tools/shellcheck_${SHELLCHECK_VERSION}
-	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
 
 tools/shfmt_${SHFMT_VERSION}:
 	@echo installing Shellfmt ${SHFMT_VERSION} ...
