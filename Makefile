@@ -128,17 +128,7 @@ tools/run-that-app@${RUN_THAT_APP_VERSION}:
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv tools/run-that-app tools/run-that-app@${RUN_THAT_APP_VERSION}
 
-tools/depth_${DEPTH_VERSION}:
-	@echo "Installing depth ${DEPTH_VERSION} ..."
-	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
-	@mv tools/depth tools/depth_${DEPTH_VERSION}
-
 tools/node_modules: tools/yarn.lock
 	@echo "Installing Node based tools"
 	@cd tools && yarn install
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
-
-tools/scc_${SCC_VERSION}:
-	@echo "Installing scc ${SCC_VERSION} ..."
-	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
-	@mv tools/scc tools/scc_${SCC_VERSION}
