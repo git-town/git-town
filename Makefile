@@ -35,15 +35,15 @@ dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between th
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules tools/shfmt_${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
 	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/shfmt_${SHFMT_VERSION} --write
-	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
+	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} --write
+	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
 
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run
@@ -143,8 +143,3 @@ tools/scc_${SCC_VERSION}:
 	@echo "Installing scc ${SCC_VERSION} ..."
 	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
 	@mv tools/scc tools/scc_${SCC_VERSION}
-
-tools/shfmt_${SHFMT_VERSION}:
-	@echo installing Shellfmt ${SHFMT_VERSION} ...
-	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
-	@mv tools/shfmt tools/shfmt_${SHFMT_VERSION}
