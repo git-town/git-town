@@ -79,8 +79,8 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi \
 		v${RELEASE_VERSION}
 
-stats: tools/scc_${SCC_VERSION}  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc_${SCC_VERSION}
+stats: tools/run-that-app@${RUN_THAT_APP_VERSION}  # shows code statistics
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} scc@${SCC_VERSION}
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
