@@ -29,8 +29,8 @@ cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between the internal Go packages as a tree
-	@tools/depth_${DEPTH_VERSION} . | grep git-town
+dependencies: tools/run-that-app@${RUN_THAT_APP_VERSION}  # prints the dependencies between the internal Go packages as a tree
+	@tools/run-that-app@${RUN_THAT_APP_VERSION} depth@${DEPTH_VERSION} . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
