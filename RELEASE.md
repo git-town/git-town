@@ -2,13 +2,13 @@
 
 This guide is for maintainers who make releases of Git Town.
 
-### update release notes
+### update changelog.md
 
-- file `RELEASE_NOTES.md`
+- file `CHANGELOG.md`
 - search-and-replace the old version with the new version
   - triple-digits: `10.0.2`
   - double-digits: `10.0`
-  - don't change existing version numbers in RELEASE_NOTES.md
+  - don't change existing version numbers in CHANGELOG.md
 - if bumping the major version:
   - update `github.com/git-town/git-town/v10/` everywhere in this repo
   - update `github.com/git-town/git-town/v10` (without trailing slash)
@@ -24,7 +24,7 @@ On a Linux machine:
   - or omit the Github token and enter your credentials when asked
 - this opens a release in draft mode the browser
 - delete the empty release that the script has created
-- copy the release notes into the good release
+- copy the changelog into the good release
 - leave the release as a draft for now
 
 On a Windows machine, in Git Bash:

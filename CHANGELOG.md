@@ -1,4 +1,4 @@
-# Git Town Release Notes
+# Git Town Changelog
 
 ## 10.0.2 (2023-11-7)
 
