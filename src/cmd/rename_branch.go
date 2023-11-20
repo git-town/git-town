@@ -32,7 +32,7 @@ When there is a tracking branch
 - deletes the old branch from the origin repository
 
 When run on a perennial branch
-- confirm with the "-f" option
+- confirm with the "--force" aka "-f" option
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
