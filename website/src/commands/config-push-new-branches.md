@@ -5,6 +5,7 @@ push-new-branches configuration setting. If set to `yes`, [hack](hack.md),
 [append](append.md), and [prepend](prepend.md) push newly created feature
 branches to the `origin` remote. Defaults to `no`.
 
-### Variations
+### Arguments
 
-- the `--global` flag displays or sets the "push-new-branches" globally
+By default, each Git repository has its own setting. The `--global` flag
+displays or sets the "push-new-branches" for all Git repos on your machine.

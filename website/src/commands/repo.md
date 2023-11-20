@@ -5,10 +5,10 @@ repository in your default browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
 [Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
 
-### Variations
+### Configuration
 
-Git Town identifies the hosting service type by looking at the `origin` remote.
-You can override this detection with the
+Git Town automatically identifies the hosting service type through the `origin`
+remote. You can override the type of hosting server with the
 [code-hosting-driver](../preferences/code-hosting-driver.md) setting.
 
 Set the
