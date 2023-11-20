@@ -9,4 +9,5 @@ tracking branch is out of sync.
 Provide the additional `old_name` argument to rename the branch with the given
 name instead of the currently checked out branch.
 
-Renaming perennial branches requires confirmation with the `-f` option.
+Renaming perennial branches requires confirmation with the `--force`/`-f`
+option.
