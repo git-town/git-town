@@ -27,7 +27,7 @@ main
     feature-2
 ```
 
-### Variations
+### Configuration
 
 If [push-new-branches](config-push-new-branches.md) is set, `git append` creates
 a remote tracking branch for the new feature branch. This behavior is disabled

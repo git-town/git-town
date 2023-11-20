@@ -5,7 +5,7 @@ branch strategy. The pull branch strategy specifies which strategy to use when
 merging remote tracking branches into local branches for the main branch and
 perennial branches.
 
-### Variations
+### Arguments
 
 - without an argument, displays the current branch strategy
 - with `rebase`, set the pull branch strategy to rebase

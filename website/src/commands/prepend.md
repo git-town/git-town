@@ -27,7 +27,7 @@ main
     feature-2
 ```
 
-### Variations
+### Configuration
 
 If the [push-new-branches](config-push-new-branches.md) is set, `git hack`
 creates a remote tracking branch for the new feature branch. This behavior is

@@ -3,7 +3,7 @@
 The _sync-strategy_ configuration command displays or sets your sync strategy.
 The sync strategy specifies which strategy to use when syncing feature branches.
 
-### Variations
+### Arguments
 
 - without an argument, displays the current sync strategy
 - with `merge`, set the sync strategy to merge changes into your feature

@@ -1,12 +1,10 @@
 # git new-pull-request
 
 The _new-pull-request_ command helps create a new pull request for the current
-feature branch. It opens your code hosting service's page to create a new pull
-request in your browser and pre-populates the current and target repository and
-branch. It also [syncs](sync.md) the branch to merge before opening the pull
-request.
-
-### Variations
+feature branch. It opens your code hosting service's website to create a new
+pull request in your browser and pre-populates information like branch and
+source/target repository. It also [syncs](sync.md) the branch to merge before
+opening the pull request.
 
 You can create new pull requests for repositories hosted on:
 
@@ -15,8 +13,9 @@ You can create new pull requests for repositories hosted on:
 - [GitHub](https://github.com)
 - [GitLab](https://gitlab.com)
 
-When using self-hosted versions of these services, you can configure the hosting
-service type with the
+### Configuration
+
+You can configure the hosting service type with the
 [code-hosting-driver](../preferences/code-hosting-driver.md) setting.
 
 When using SSH identities, this command uses the hostname in the
