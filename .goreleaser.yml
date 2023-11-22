@@ -1,12 +1,15 @@
 archives:
-  - builds:
-    replacements:
-      darwin: macos
-      amd64: intel_64
-      arm64: arm_64
+  - files:
     format_overrides:
       - goos: windows
         format: zip
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- if eq .Os "darwin" }}macos
+      {{- else }}{{ .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
 
 builds:
   - env:
@@ -33,10 +36,12 @@ checksum:
 nfpms:
   - id: git-town
     package_name: git-town
-    replacements:
-      amd64: intel_64
-      darwin: macos
-      arm64: arm_64
+    file_name_template: >-
+      {{- .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
     vendor: the Git Town authors
     maintainer: the Git Town authors
     homepage: https://www.git-town.com
@@ -49,9 +54,4 @@ nfpms:
       - git
 
 release:
-  draft: true
-  ids:
-    - nothing
-
-snapshot:
-  name_template: "{{ .Tag }}"
+  disable: true
