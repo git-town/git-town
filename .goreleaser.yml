@@ -52,9 +52,4 @@ nfpms:
       - git
 
 release:
-  draft: true
-  ids:
-    - nothing
-
-snapshot:
-  name_template: "{{ .Tag }}"
+  disable: true
