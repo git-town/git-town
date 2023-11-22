@@ -72,6 +72,9 @@ release-linux:  # creates a new release
 		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
+		-a dist/git-town_${RELEASE_VERSION}_freebsd_intel_64.zip \
+		-a dist/git-town_${RELEASE_VERSION}_freebsd_arm_64.zip \
+		-a dist/git-town_${RELEASE_VERSION}_netbsd_intel_64.zip \
 		"v${RELEASE_VERSION}"
 
 release-win: msi  # adds the Windows installer to the release
