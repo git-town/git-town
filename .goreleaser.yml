@@ -1,12 +1,9 @@
 archives:
-  - builds:
-    replacements:
-      darwin: macos
-      amd64: intel_64
-      arm64: arm_64
+  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
         format: zip
+    files: []
 
 builds:
   - env:
@@ -30,26 +27,28 @@ checksum:
 
 nfpms:
   - id: git-town
-    package_name: git-town
-    replacements:
-      amd64: intel_64
-      darwin: macos
-      arm64: arm_64
+    # package_name: git-town
+    # replacements:
+    #   amd64: intel_64
+    #   darwin: macos
+    #   arm64: arm_64
     vendor: the Git Town authors
-    maintainer: the Git Town authors
+    maintainer: Kevin Goslar <kevin.goslar@gmail.com>
     homepage: https://www.git-town.com
     description: High-level command-line interface for Git
     license: MIT
     formats:
       - deb
       - rpm
+      - archlinux
     dependencies:
       - git
 
 release:
-  draft: true
-  ids:
-    - nothing
+  disable: true
+  # draft: true
+  # replace_existing_draft: true
+  # skip_upload: true
 
 scoop:
   bucket:
