@@ -51,16 +51,5 @@ release:
   ids:
     - nothing
 
-scoop:
-  bucket:
-    owner: git-town
-    name: scoop
-  commit_author:
-    name: kevgo
-    email: kevin.goslar@gmail.com
-  description: "High-level CLI for Git"
-  homepage: https://www.git-town.com
-  license: MIT
-
 snapshot:
   name_template: "{{ .Tag }}"
