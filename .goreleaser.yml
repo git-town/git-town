@@ -1,9 +1,15 @@
 archives:
-  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - files:
     format_overrides:
       - goos: windows
         format: zip
-    files: []
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- if eq .Os "darwin" }}macos
+      {{- else }}{{ .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
 
 builds:
   - env:
@@ -27,39 +33,22 @@ checksum:
 
 nfpms:
   - id: git-town
-    # package_name: git-town
-    # replacements:
-    #   amd64: intel_64
-    #   darwin: macos
-    #   arm64: arm_64
+    package_name: git-town
     vendor: the Git Town authors
-    maintainer: Kevin Goslar <kevin.goslar@gmail.com>
+    maintainer: the Git Town authors
     homepage: https://www.git-town.com
     description: High-level command-line interface for Git
     license: MIT
     formats:
       - deb
       - rpm
-      - archlinux
     dependencies:
       - git
 
 release:
-  disable: true
-  # draft: true
-  # replace_existing_draft: true
-  # skip_upload: true
-
-scoop:
-  bucket:
-    owner: git-town
-    name: scoop
-  commit_author:
-    name: kevgo
-    email: kevin.goslar@gmail.com
-  description: "High-level CLI for Git"
-  homepage: https://www.git-town.com
-  license: MIT
+  draft: true
+  ids:
+    - nothing
 
 snapshot:
   name_template: "{{ .Tag }}"
