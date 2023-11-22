@@ -50,6 +50,7 @@ nfpms:
     formats:
       - deb
       - rpm
+      - archlinux
     dependencies:
       - git
 
