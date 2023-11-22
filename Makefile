@@ -67,9 +67,11 @@ release-linux: tools/run-that-app@${RUN_THAT_APP_VERSION}  # creates a new relea
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.pkg.tar.zst \
 		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.pkg.tar.zst \
 		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
