@@ -23,7 +23,6 @@ On a Linux machine:
 - `env GITHUB_TOKEN=<your Github token> VERSION=10.0.2 TODAY=$(date +'%Y-%m-%d') make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in draft mode the browser
-- delete the empty release that the script has created
 - copy the changelog into the good release
 - leave the release as a draft for now
 
