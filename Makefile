@@ -63,17 +63,17 @@ release-linux: tools/run-that-app@${RUN_THAT_APP_VERSION}  # creates a new relea
 	# cross-compile the binaries
 	tools/run-that-app@${RUN_THAT_APP_VERSION} goreleaser@${GORELEASER_VERSION} --clean
 	# create GitHub release with files in alphabetical order
-	# hub release create --draft --browse --message "v${RELEASE_VERSION}" \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
-	# 	-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
-	# 	-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
-	# 	-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
-	# 	-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
-	# 	"v${RELEASE_VERSION}"
+	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
+		"v${RELEASE_VERSION}"
 
 release-win: msi  # adds the Windows installer to the release
 	hub release edit \
