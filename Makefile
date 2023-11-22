@@ -3,6 +3,7 @@ ALPHAVET_VERSION = 0.1.0
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.4.0
 GOLANGCILINT_VERSION = 1.54.2
+GORELEASER_VERSION = 1.22.1
 RUN_THAT_APP_VERSION = 0.0.2
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.9.0
@@ -58,9 +59,9 @@ msi:  # compiles the MSI installer for Windows
 	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-release-linux:  # creates a new release
+release-linux: tools/run-that-app@${RUN_THAT_APP_VERSION}  # creates a new release
 	# cross-compile the binaries
-	goreleaser --rm-dist
+	tools/run-that-app@${RUN_THAT_APP_VERSION} goreleaser@${GORELEASER_VERSION} --clean
 	# create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
