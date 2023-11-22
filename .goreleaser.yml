@@ -24,6 +24,7 @@ builds:
       - darwin
       - linux
       - windows
+      - freebsd
 
 changelog:
   skip: true

@@ -80,8 +80,9 @@ You can also [install Git Town manually](#manual-installation) or
 
 ## BSD
 
-You can install Git Town on BSD is via
-[freshports](https://www.freshports.org/devel/git-town).
+You can install Git Town on BSD via
+[freshports](https://www.freshports.org/devel/git-town) or by downloading the
+matching binaries from the GitHub release.
 
 ## manual installation
 

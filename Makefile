@@ -64,6 +64,8 @@ release-linux: tools/run-that-app@${RUN_THAT_APP_VERSION}  # creates a new relea
 	tools/run-that-app@${RUN_THAT_APP_VERSION} goreleaser@${GORELEASER_VERSION} --clean
 	# create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
+		-a dist/git-town_${RELEASE_VERSION}_freebsd_intel_64.zip \
+		-a dist/git-town_${RELEASE_VERSION}_freebsd_arm_64.zip \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
