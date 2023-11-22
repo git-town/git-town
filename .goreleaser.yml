@@ -25,7 +25,6 @@ builds:
       - linux
       - windows
       - freebsd
-      - netbsd
 
 changelog:
   skip: true
