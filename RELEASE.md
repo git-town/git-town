@@ -55,10 +55,9 @@ $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\
 
 ### release platforms
 
-- HomeBrew: Git Town is in the
-  [core formulae](https://formulae.brew.sh/formula/git-town) and auto-updates
-- Scoop: Git Town is in the
+- HomeBrew: Git Town is in the auto-updating
+  [core formulae](https://formulae.brew.sh/formula/git-town)
+- Scoop: Git Town is in the auto-updating
   [core manifests](https://github.com/ScoopInstaller/Main/blob/master/bucket/git-town.json)
-  and auto-updates
-- Arch Linux: there is an auto-updating package in the
-  [AUR](https://aur.archlinux.org/packages/git-town)
+- Arch Linux: the [AUR package](https://aur.archlinux.org/packages/git-town)
+  auto-updates
