@@ -74,5 +74,5 @@ git push
 To test the goreleaser setup:
 
 ```
-goreleaser --snapshot --skip-publish --rm-dist
+goreleaser --snapshot --skip-publish --clean
 ```
