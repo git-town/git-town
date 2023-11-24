@@ -24,6 +24,7 @@ function Main() {
   .\run-that-app goreleaser@$GoReleaserVersion --clean
 }
 
+# generates the .msi file
 function Add-MSI() {
   # build the executable that will be inside the .msi file
   go build
@@ -50,6 +51,7 @@ function Add-MSI() {
   Remove-Item -Path $tempDir -Recurse -Force
 }
 
+# installs the third-party tools needed for the release
 function Install-Tools() {
   # install go-msi
   choco install go-msi --version=$GoMsiVersion --no-progress
