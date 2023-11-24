@@ -36,8 +36,7 @@ accidental releases to the official location, which then trigger other
 automation at Homebrew, Scoop, Arch Linux, etc.
 
 The release script is written in PowerShell because creating the .msi file
-requires Windows, so the release CI runs Windows. It's best to debug it on a
-Windows machine.
+requires Windows. It's best to debug it on a Windows machine.
 
 Test the compile step:
 
