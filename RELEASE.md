@@ -71,8 +71,23 @@ git push
 
 ### debugging
 
-To test the goreleaser setup:
+Debugging is best done on a separate copy of this codebase. This avoids
+accidental releases, which then trigger other automation at the Homebrew servers
+etc.
+
+The release script is all done in PowerShell, so it's best to debug it on a
+Windows machine.
+
+Test the compile step:
 
 ```
-goreleaser --snapshot --skip-publish --clean
+.\run-that-app goreleaser@1.22.1 --snapshot --skip-publish --clean
+```
+
+Test the entire release pipeline:
+
+- this MUST happen in a separate repo
+
+```
+.\tools\release.ps1
 ```
