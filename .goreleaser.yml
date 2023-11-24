@@ -25,6 +25,7 @@ builds:
       - linux
       - windows
       - freebsd
+      - netbsd
 
 changelog:
   skip: true
@@ -54,4 +55,7 @@ nfpms:
       - git
 
 release:
-  disable: true
+  draft: true
+  replace_existing_draft: true
+  extra_files:
+    - glob: ./git-town_windows_intel_64.msi
