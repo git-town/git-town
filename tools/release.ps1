@@ -4,7 +4,7 @@ param (
   [switch]$ci
 )
 
-# step the script on errors
+# stop the script on errors
 $ErrorActionPreference = "Stop"
 
 # the Git Town version to release
