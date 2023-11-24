@@ -33,6 +33,52 @@ changelog:
 checksum:
   name_template: "checksums.txt"
 
+chocolateys:
+  - name: git-town
+    owners: Kevin Goslar
+    title: Git Town
+    authors: the Git Town authors
+    project_url: https://github.com/git-town/git-town
+    license_url: https://github.com/git-town/git-town/blob/main/LICENSE
+    require_license_acceptance: false
+    project_source_url: https://github.com/git-town/git-town
+    docs_url: https://www.git-town.com
+    bug_tracker_url: https://github.com/git-town/git-town/issues
+    tags: "git command-line productivity workflow"
+    summary: Git workflow automation to keep branches in sync and reduce merge conflicts.
+    description: |
+      Git Town reduces merge conflicts by keeping Git branches better in sync.
+      Compatible with all major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and trunk-based development.
+    release_notes: "https://github.com/git-town/git-town/releases/tag/v{{ .Version }}"
+    # dependencies:
+    #   - id: git.install
+    # the api key that should be used to push to the chocolatey repository
+    api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+
+    # the source repository that we will push the package to
+    source_repo: "https://push.chocolatey.org/"
+    skip_publish: false
+
+nfpms:
+  - id: git-town
+    package_name: git-town
+    file_name_template: >-
+      {{- .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
+    vendor: the Git Town authors
+    maintainer: the Git Town authors
+    homepage: https://www.git-town.com
+    description: High-level command-line interface for Git
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - archlinux
+    dependencies:
+      - git
 nfpms:
   - id: git-town
     package_name: git-town
