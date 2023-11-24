@@ -31,12 +31,13 @@ git push
 
 ### debugging the release script
 
-Debugging is best done on a separate copy of this codebase. This avoids
-accidental releases, which then trigger other automation at the Homebrew servers
-etc.
+Debugging is best done on a separate fork of this codebase. This avoids
+accidental releases to the official location, which then trigger other
+automation at Homebrew, Scoop, Arch Linux, etc.
 
-The release script is in PowerShell because creating the .msi file requires
-Windows. So it's best to debug it on a Windows machine.
+The release script is written in PowerShell because creating the .msi file
+requires Windows, so the release CI runs Windows. It's best to debug it on a
+Windows machine.
 
 Test the compile step:
 
