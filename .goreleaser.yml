@@ -74,26 +74,6 @@ nfpms:
       - archlinux
     dependencies:
       - git
-nfpms:
-  - id: git-town
-    package_name: git-town
-    file_name_template: >-
-      {{- .ProjectName }}_
-      {{- .Os }}_
-      {{- if eq .Arch "amd64" }}intel_64
-      {{- else if eq .Arch "arm64" }}arm_64
-      {{- else }}{{ .Arch }}{{ end }}
-    vendor: the Git Town authors
-    maintainer: the Git Town authors
-    homepage: https://www.git-town.com
-    description: High-level command-line interface for Git
-    license: MIT
-    formats:
-      - deb
-      - rpm
-      - archlinux
-    dependencies:
-      - git
 
 release:
   draft: true
