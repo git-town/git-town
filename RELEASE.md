@@ -15,48 +15,17 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create a GitHub release
 
-On a Linux machine:
+```
+git tag v10.0.2 && git push --tags
+```
 
-- install [hub](https://github.com/github/hub#installation)
-- install [goreleaser](https://goreleaser.com/install)
-- create and push a new Git Tag for the release: `git tag v10.0.2`
-- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.2 TODAY=$(date +'%Y-%m-%d') make release-linux`
-  - or omit the Github token and enter your credentials when asked
-- this opens a release in draft mode the browser
-- copy the changelog into the good release
-- leave the release as a draft for now
-
-On a Windows machine, in Git Bash:
-
-- install [hub](https://github.com/github/hub#installation)
-- install [go-msi](https://github.com/mh-cbon/go-msi#install)
-- install [wix](https://wixtoolset.org/releases)
-- optionally install
-  [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
-- `make msi` to create the Windows installer
-- test the created Windows installer in the `dist` directory
-- `env GITHUB_TOKEN=<your Github token> VERSION=10.0.2 make release-win`
-- this opens the release in the browser
-- verify that it added the `.msi` file
+- this runs the [release.yml](.github/workflows/release.yml) workflow
+  - this workflow runs on a Windows machine because it need to create a Windows
+    installer file
+- open the new release in the browser
+- copy the changelog into the release notes
 - publish the release
 - merge the `main` branch into the `public` branch
-
-### create a Homebrew release
-
-TODO: try the new `brew bump-formula-pr` command next time.
-
-- fork [Homebrew](https://github.com/Homebrew/homebrew-core)
-- update `Library/Formula/git-town.rb`
-  - get the sha256 by downloading the release (`.tar.gz`) and using
-    `shasum -a 256 /path/to/file`
-  - ignore the `bottle` block, the homebrew maintainers update it
-- create a pull request and get it merged
-
-### Arch Linux
-
-Flag the package out of date on the right hand side menu of
-[Git Town's AUR page](https://aur.archlinux.org/packages/git-town/).
-[allonsy](https://github.com/allonsy) will update the package.
 
 ### update the website
 
@@ -80,7 +49,7 @@ Windows machine.
 
 Test the compile step:
 
-```
+```powershell
 .\run-that-app goreleaser@1.22.1 --snapshot --skip-publish --clean
 ```
 
@@ -88,6 +57,16 @@ Test the entire release pipeline:
 
 - this MUST happen in a separate repo
 
+```powershell
+$env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\tools\release.ps1
 ```
-.\tools\release.ps1
-```
+
+### release platforms
+
+- HomeBrew: Git Town is in the
+  [core formulae](https://formulae.brew.sh/formula/git-town), auto-updates
+- Scoop: Git Town is in the
+  [core manifests](https://github.com/ScoopInstaller/Main/blob/master/bucket/git-town.json),
+  auto-updates
+- Arch Linux: there is an auto-updating package in the
+  [AUR](https://aur.archlinux.org/packages/git-town)
