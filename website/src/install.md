@@ -24,7 +24,7 @@ sudo port install git-town
 ## Windows
 
 The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v10.0.2/git-town_10.0.2_windows_intel_64.msi)
+[download the Windows installer](https://github.com/git-town/git-town/releases/download/v10.0.3/git-town_10.0.3_windows_intel_64.msi)
 and run it.
 
 You can also install Git Town via [scoop](https://scoop.sh):
@@ -49,7 +49,7 @@ On Debian-based systems,
 matching your CPU architecture and run:
 
 ```
-sudo apt-get install git-town_10.0.2_linux_intel_64.deb
+sudo apt-get install git-town_10.0.3_linux_intel_64.deb
 ```
 
 On RedHat-based systems
@@ -57,7 +57,7 @@ On RedHat-based systems
 matching your CPU architecture and run
 
 ```
-rpm -i git-town_10.0.2_linux_intel_64.rpm
+rpm -i git-town_10.0.3_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the
