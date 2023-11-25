@@ -63,7 +63,8 @@ on a Windows machine using PowerShell.
   ORIGIN
 
   ```
-  git tag -d <tag> ; git tag <tag>
+  git tag -d <tag>
+  git tag <tag>
   ```
 
 - run the release script
@@ -76,7 +77,8 @@ on a Windows machine using PowerShell.
 - delete the local Git tag and download the real one from origin
 
   ```
-  git tag -d <tag> ; git fetch --tags
+  git tag -d <tag>
+  git fetch --tags
   ```
 
 ### release platforms
