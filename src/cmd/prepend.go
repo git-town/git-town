@@ -137,6 +137,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	}
 	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,

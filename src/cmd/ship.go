@@ -194,6 +194,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branchNameToShip, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,
