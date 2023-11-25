@@ -132,7 +132,6 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
-		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,

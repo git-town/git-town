@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v10/src/cli/print"
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -69,14 +70,11 @@ func executeSetParent(verbose bool) error {
 		existingParent = repo.Runner.Config.MainBranch()
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	branches.Types, _, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
+	_, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		AllBranches:   branches.All,
-		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
 		DefaultBranch: existingParent,
-		Lineage:       lineage,
 		MainBranch:    mainBranch,
-		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return err

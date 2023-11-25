@@ -97,7 +97,6 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	mainBranch := repo.Runner.Config.MainBranch()
 	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branch, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
-		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branchTypes,
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,
