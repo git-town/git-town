@@ -136,10 +136,10 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {

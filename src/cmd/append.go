@@ -132,10 +132,10 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {

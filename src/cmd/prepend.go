@@ -137,10 +137,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
 		MainBranch:    mainBranch,
 	}))
 	if updated {
