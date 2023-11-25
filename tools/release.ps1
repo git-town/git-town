@@ -8,7 +8,7 @@ param (
 $ErrorActionPreference = "Stop"
 
 # the Git Town version to release
-Set-Variable -Name "GitTownVersion" -Value "v10.0.3" -Option Constant
+$env:VERSION = "v10.0.3"
 
 # dependencies
 Set-Variable -Name "GoMsiVersion" -Value "1.0.2" -Option Constant
@@ -20,6 +20,7 @@ function Main() {
   if ($ci) {
     Install-Tools
   }
+  $env:TODAY = (Get-Date).ToString("yyyy-MM-dd")
   Add-MSI
   .\run-that-app goreleaser@$GoReleaserVersion --clean
 }
@@ -41,7 +42,7 @@ function Add-MSI() {
   $currentDir = Get-Location
   Set-Location -Path $tempDir
   # build the .msi file in the temp dir
-  go-msi make --msi $MsiFileName --version $GitTownVersion --src 'installer/templates/' --path 'installer/wix.json'
+  go-msi make --msi $MsiFileName --version $env:VERSION --src 'installer/templates/' --path 'installer/wix.json'
   # go back to the Git workspace
   Set-Location $currentDir
   # copy the .msi file into the Git workspace
@@ -59,7 +60,10 @@ function Install-Tools() {
   Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
   refreshenv
   # add the WiX installation that already exists on CI to the PATH
-  $env:PATH = $env:PATH + ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
+  $env:PATH = "$env:PATH;C:\Program Files (x86)\WiX Toolset v3.11\bin"
+  # add the Go installation from the actions/setup-go step to the PATH
+  $latestGoDir = Get-ChildItem -Path "C:\hostedtoolcache\windows\go" -Directory | Sort-Object Name | Select-Object -Last 1
+  $env:PATH = "$latestGoDir\x64\bin; $env:PATH"
   # install run-that-app
   Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kevgo/run-that-app/main/download.ps1" -UseBasicParsing).Content
 }
