@@ -12,7 +12,7 @@ import (
 // It returns the updated version of all information that is derived from the lineage.
 //
 // The purpose of this function is to implement proper cache invalidation.
-// It ensures that all Git Town commands use the updated information when the lineage is updated.
+// It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (domain.BranchTypes, config.Lineage, error) {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 		AllBranches: args.AllBranches,
