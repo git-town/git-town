@@ -110,9 +110,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	if !branches.Types.IsFeatureBranch(targetBranchName) {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
-	}
 	targetBranch := branches.All.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
@@ -132,6 +129,9 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 			repo.Runner.Config.Reload()
 			lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 		}
+	}
+	if !branches.Types.IsFeatureBranch(targetBranchName) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
