@@ -192,19 +192,16 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if !branches.Types.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
+	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branchNameToShip, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
+		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	if updated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
-		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Types, lineage)
 	if err != nil {

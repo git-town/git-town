@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/gohacks"
 	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
 	"github.com/git-town/git-town/v10/src/vm/program"
@@ -136,16 +135,16 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
-	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
+	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
-	}))
-	if updated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
-		branches.Types = repo.Runner.Config.BranchTypes()
+		Runner:        &repo.Runner,
+	})
+	if err != nil {
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))

@@ -173,12 +173,13 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
 			AllBranches:   branches.All,
-			Backend:       &repo.Runner.Backend,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
+			Lineage:       lineage,
 			MainBranch:    mainBranch,
+			Runner:        &repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err

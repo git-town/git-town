@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/hosting"
 	"github.com/git-town/git-town/v10/src/hosting/github"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
 	"github.com/git-town/git-town/v10/src/vm/program"
@@ -135,19 +134,16 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
+	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
+		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
+		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	if updated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
-		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {

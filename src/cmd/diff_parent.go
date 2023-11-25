@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/gohacks/slice"
 	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -96,19 +95,16 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
+	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branch, execute.EnsureKnowsBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branchTypes,
+		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
+		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return nil, false, err
-	}
-	if updated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
-		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	return &diffParentConfig{
 		branch:       branch,
