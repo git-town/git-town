@@ -128,6 +128,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		if updated {
 			repo.Runner.Config.Reload()
 			lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+			branches.Types = repo.Runner.Config.BranchTypes()
 		}
 	}
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
