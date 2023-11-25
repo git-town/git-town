@@ -59,9 +59,6 @@ function Install-Tools() {
   # refresh the PATH in this shell instance
   Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
   refreshenv
-  $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-  Write-Output "PATH RELOADED FROM SYSTEM"
-  Write-Output $env:PATH
   # add the WiX installation that already exists on CI to the PATH
   $env:PATH = $env:PATH + ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
   # add the Go installation added in the actions/setup-go step to the PATH
