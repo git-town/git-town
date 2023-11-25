@@ -71,10 +71,10 @@ func executeSetParent(verbose bool) error {
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	_, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: existingParent,
-		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
+		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
+		DefaultBranch: existingParent,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
