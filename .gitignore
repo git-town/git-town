@@ -2,6 +2,7 @@ dist/
 git-town.exe
 git-town_*
 node_modules/
+run-that-app.exe
 tools/alphavet*
 tools/depth*
 tools/gofumpt*
