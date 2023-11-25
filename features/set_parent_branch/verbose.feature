@@ -17,9 +17,11 @@ Feature: display all executed Git commands
       |        | backend | git branch -vva                                 |
       |        | backend | git config --unset git-town-branch.child.parent |
       |        | backend | git config git-town-branch.child.parent main    |
+      |        | backend | git config -lz --global                         |
+      |        | backend | git config -lz --local                          |
     And it prints:
       """
-      Ran 8 shell commands.
+      Ran 10 shell commands.
       """
     And this branch lineage exists now
       | BRANCH | PARENT |

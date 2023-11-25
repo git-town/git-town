@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/gohacks"
 	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
 	"github.com/git-town/git-town/v10/src/vm/program"
@@ -131,18 +130,16 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
-		Backend:       &repo.Runner.Backend,
 		BranchTypes:   branches.Types,
 		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
+		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	if updated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue) // refresh lineage after ancestry changes
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))

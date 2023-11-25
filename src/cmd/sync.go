@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v10/src/domain"
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
 	"github.com/git-town/git-town/v10/src/vm/program"
@@ -158,14 +157,14 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
-	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			AllBranches: localBranches,
-			Backend:     &repo.Runner.Backend,
 			BranchTypes: branches.Types,
+			Lineage:     lineage,
 			MainBranch:  mainBranch,
+			Runner:      &repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
@@ -173,27 +172,20 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
-			Backend:       &repo.Runner.Backend,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
+			Lineage:       lineage,
 			MainBranch:    mainBranch,
+			Runner:        &repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	if configUpdated {
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue) // reload after ancestry change
-		branches.Types = repo.Runner.Config.BranchTypes()
-	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
-		if configUpdated {
-			repo.Runner.Config.Reload()
-			branches.Types = repo.Runner.Config.BranchTypes()
-		}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
