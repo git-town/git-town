@@ -157,7 +157,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
-	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		branches.Types, lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
@@ -184,11 +183,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
-	}
-	if configUpdated {
-		repo.Runner.Config.Reload()
-		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue) // reload after ancestry change
-		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
