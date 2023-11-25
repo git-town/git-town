@@ -55,8 +55,9 @@ $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\
 
 ### performing a manual release
 
-If the release script fails in production and doesn't create the release, you
-can perform the release manually on a local Windows machine using PowerShell.
+If the release script fails in production and doesn't create the release, and/or
+you want to investigate some release code, you can perform the release manually
+on a Windows machine using PowerShell.
 
 - move the affected Git tag to HEAD but only locally, DON'T PUSH THE TAG TO
   ORIGIN
