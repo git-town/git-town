@@ -143,6 +143,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue) // refresh lineage after ancestry changes
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))

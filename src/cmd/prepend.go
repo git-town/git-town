@@ -145,6 +145,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	}))
 	if updated {
 		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))

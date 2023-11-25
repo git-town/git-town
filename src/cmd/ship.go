@@ -204,6 +204,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Types, lineage)
 	if err != nil {

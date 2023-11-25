@@ -108,6 +108,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	return &diffParentConfig{
 		branch:       branch,

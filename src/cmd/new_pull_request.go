@@ -147,6 +147,7 @@ func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (
 	}
 	if updated {
 		lineage = repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
