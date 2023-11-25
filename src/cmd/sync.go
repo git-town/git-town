@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v10/src/domain"
 	"github.com/git-town/git-town/v10/src/execute"
 	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/validate"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
 	"github.com/git-town/git-town/v10/src/vm/program"
@@ -161,11 +160,12 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			AllBranches: localBranches,
-			Backend:     &repo.Runner.Backend,
 			BranchTypes: branches.Types,
+			Lineage:     lineage,
 			MainBranch:  mainBranch,
+			Runner:      &repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
@@ -173,7 +173,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branches.Initial, execute.EnsureKnowsBranchAncestryArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,

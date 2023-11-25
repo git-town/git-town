@@ -192,7 +192,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if !branches.Types.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	branches.Types, lineage, err = execute.EnsureKnowsBranchAncestry(branchNameToShip, execute.EnsureKnowsBranchAncestryArgs{
+	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: mainBranch,
