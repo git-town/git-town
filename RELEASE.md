@@ -55,9 +55,11 @@ $env:GITHUB_TOKEN="<github token>"; $env:VERSION="0.0.1"; $env:TODAY="today"; .\
 
 ### performing a manual release
 
-If the release script fails in production and doesn't create the release, you can perform the release manually on a local Windows machine using PowerShell.
+If the release script fails in production and doesn't create the release, you
+can perform the release manually on a local Windows machine using PowerShell.
 
-- move the affected Git tag to HEAD but only locally, DON'T PUSH THE TAG TO ORIGIN
+- move the affected Git tag to HEAD but only locally, DON'T PUSH THE TAG TO
+  ORIGIN
 
   ```
   git tag -d <tag> ; git tag <tag>
@@ -65,8 +67,8 @@ If the release script fails in production and doesn't create the release, you ca
 
 - run the release script
   ```powershell
-  $env:CHOCOLATEY_API_KEY=<key>
   $env:GITHUB_TOKEN=<token>
+  $env:CHOCOLATEY_API_KEY=<key>
   .\tools\release.ps1
   ```
 

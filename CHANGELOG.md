@@ -2,6 +2,8 @@
 
 ## 10.0.3 (2023-11-25)
 
+#### Bug Fixes
+
 - Fix killing perennial branches
   ([#2679](https://github.com/git-town/git-town/pull/2679))
 
