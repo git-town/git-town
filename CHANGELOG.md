@@ -1,5 +1,10 @@
 # Git Town Changelog
 
+## 10.0.3 (2023-11-25)
+
+- Fix killing perennial branches
+  ([#2679](https://github.com/git-town/git-town/pull/2679))
+
 ## 10.0.2 (2023-11-7)
 
 #### Bug Fixes
