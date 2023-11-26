@@ -53,37 +53,6 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi:  # compiles the MSI installer for Windows
-	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/v10/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/v10/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
-	@rm git-town.exe
-
-release-linux: tools/run-that-app@${RUN_THAT_APP_VERSION}  # creates a new release
-	# cross-compile the binaries
-	tools/run-that-app@${RUN_THAT_APP_VERSION} goreleaser@${GORELEASER_VERSION} --clean
-	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
-		-a dist/git-town_${RELEASE_VERSION}_freebsd_intel_64.zip \
-		-a dist/git-town_${RELEASE_VERSION}_freebsd_arm_64.zip \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.pkg.tar.zst \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.pkg.tar.zst \
-		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
-		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
-		"v${RELEASE_VERSION}"
-
-release-win: msi  # adds the Windows installer to the release
-	hub release edit \
-		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi \
-		v${RELEASE_VERSION}
-
 stats: tools/run-that-app@${RUN_THAT_APP_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} scc@${SCC_VERSION}
 
