@@ -38,7 +38,7 @@ chocolateys:
     owners: Kevin Goslar
     title: Git Town
     authors: the Git Town authors
-    project_url: https://github.com/git-town/git-town
+    project_url: https://www.git-town.com
     license_url: https://github.com/git-town/git-town/blob/main/LICENSE
     require_license_acceptance: false
     project_source_url: https://github.com/git-town/git-town
