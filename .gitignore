@@ -7,6 +7,7 @@ tools/alphavet*
 tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
+tools/rta
 tools/run-that-app*
 tools/scc*
 tools/shellcheck*
