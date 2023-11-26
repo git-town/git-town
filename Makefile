@@ -130,10 +130,10 @@ tools/alphavet_${ALPHAVET_VERSION}:
 
 tools/run-that-app@${RUN_THAT_APP_VERSION}:
 	@echo "Installing run-that-app ${RUN_THAT_APP_VERSION} ..."
-	@rm tools/run-that-app*
+	@rm -f tools/run-that-app* tools/rta
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv tools/run-that-app tools/run-that-app@${RUN_THAT_APP_VERSION}
-	@ln -s tools/run-that-app@${RUN_THAT_APP_VERSION} tools/rta
+	@ln -s run-that-app@${RUN_THAT_APP_VERSION} tools/rta
 
 tools/node_modules: tools/yarn.lock
 	@echo "Installing Node based tools"
