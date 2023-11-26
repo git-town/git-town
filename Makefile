@@ -31,7 +31,7 @@ cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
 dependencies: tools/run-that-app@${RUN_THAT_APP_VERSION}  # prints the dependencies between the internal Go packages as a tree
-	@tools/run-that-app@${RUN_THAT_APP_VERSION} depth@${DEPTH_VERSION} . | grep git-town
+	@tools/rta depth@${DEPTH_VERSION} . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
@@ -40,13 +40,13 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
-	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w .
+	tools/rta gofumpt@${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} --write
-	tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
+	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} --write
+	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run
+	tools/rta golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
 	go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/)
 
@@ -85,15 +85,15 @@ release-win: msi  # adds the Windows installer to the release
 		v${RELEASE_VERSION}
 
 stats: tools/run-that-app@${RUN_THAT_APP_VERSION}  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} scc@${SCC_VERSION}
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc@${SCC_VERSION}
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
 test-go: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSION}  # smoke tests for Go refactorings
-	tools/run-that-app@${RUN_THAT_APP_VERSION} gofumpt@${GOFUMPT_VERSION} -l -w . &
+	tools/rta gofumpt@${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory build &
-	tools/run-that-app@${RUN_THAT_APP_VERSION} golangci-lint@${GOLANGCILINT_VERSION} run &
+	tools/rta golangci-lint@${GOLANGCILINT_VERSION} run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
 	@go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/) &
@@ -130,8 +130,10 @@ tools/alphavet_${ALPHAVET_VERSION}:
 
 tools/run-that-app@${RUN_THAT_APP_VERSION}:
 	@echo "Installing run-that-app ${RUN_THAT_APP_VERSION} ..."
+	@rm tools/run-that-app*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv tools/run-that-app tools/run-that-app@${RUN_THAT_APP_VERSION}
+	@ln -s tools/run-that-app@${RUN_THAT_APP_VERSION} tools/rta
 
 tools/node_modules: tools/yarn.lock
 	@echo "Installing Node based tools"
