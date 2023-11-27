@@ -69,6 +69,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyMainBranch,
 	KeyOffline,
 	KeyPerennialBranches,
+	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeyPushHook,
 	KeyPushNewBranches,
