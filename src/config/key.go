@@ -38,6 +38,7 @@ var (
 	KeyAliasSync                      = Key{"alias." + AliasSync.name}               //nolint:gochecknoglobals
 	KeyCodeHostingDriver              = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
 	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
+	KeyDeprecatedMainBranchName       = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
 	KeyDeprecatedNewBranchPushFlag    = Key{"git-town.new-branch-push-flag"}         //nolint:gochecknoglobals
 	KeyDeprecatedPerennialBranchNames = Key{"git-town.perennial-branch-names"}       //nolint:gochecknoglobals
 	KeyDeprecatedPullBranchStrategy   = Key{"git-town.pull-branch-strategy"}         //nolint:gochecknoglobals
@@ -46,7 +47,7 @@ var (
 	KeyGiteaToken                     = Key{"git-town.gitea-token"}                  //nolint:gochecknoglobals
 	KeyGithubToken                    = Key{"git-town.github-token"}                 //nolint:gochecknoglobals
 	KeyGitlabToken                    = Key{"git-town.gitlab-token"}                 //nolint:gochecknoglobals
-	KeyMainBranch                     = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
+	KeyMainBranch                     = Key{"git-town.main-branch"}                  //nolint:gochecknoglobals
 	KeyOffline                        = Key{"git-town.offline"}                      //nolint:gochecknoglobals
 	KeyPerennialBranches              = Key{"git-town.perennial-branches"}           //nolint:gochecknoglobals
 	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
@@ -62,6 +63,7 @@ var (
 var keys = []Key{ //nolint:gochecknoglobals
 	KeyCodeHostingDriver,
 	KeyCodeHostingOriginHostname,
+	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
 	KeyDeprecatedPullBranchStrategy,
