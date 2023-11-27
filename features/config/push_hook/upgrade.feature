@@ -2,9 +2,6 @@ Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
     Given <LOCATION> Git Town setting "push-verify" is "true"
-    And the current branch is a feature branch "feature"
-    And tool "open" is installed
-    And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town <COMMAND>"
     Then it prints:
       """
