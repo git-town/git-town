@@ -94,6 +94,7 @@ func (self *GitTown) HostingService() (Hosting, error) {
 
 // HostingServiceName provides the name of the code hosting connector to use.
 func (self *GitTown) HostingServiceName() string {
+	_ = self.updateDeprecatedSetting(KeyDeprecatedCodeHostingDriver, KeyCodeHostingPlatform)
 	return self.LocalOrGlobalConfigValue(KeyCodeHostingPlatform)
 }
 
