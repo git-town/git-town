@@ -178,21 +178,21 @@ func TestCollector(t *testing.T) {
 		})
 	})
 
-	t.Run("SyncStrategy", func(t *testing.T) {
+	t.Run("SyncFeatureStrategy", func(t *testing.T) {
 		t.Parallel()
-		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
+		t.Run("returns the given SyncFeatureStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			must.EqOp(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
-			must.EqOp(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
+			must.EqOp(t, config.SyncFeatureStrategyMerge, fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, nil))
+			must.EqOp(t, config.SyncFeatureStrategyRebase, fc.SyncFeatureStrategy(config.SyncFeatureStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			fc.SyncStrategy(config.SyncStrategyMerge, nil)
+			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, nil)
 			must.Nil(t, fc.Err)
-			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
-			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("second"))
+			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, errors.New("first"))
+			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})

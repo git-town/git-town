@@ -6,25 +6,25 @@ import (
 	"github.com/git-town/git-town/v10/src/messages"
 )
 
-// SyncStrategy defines legal values for the "sync-strategy" configuration setting.
-type SyncStrategy struct {
+// SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.
+type SyncFeatureStrategy struct {
 	name string
 }
 
-func (self SyncStrategy) String() string { return self.name }
+func (self SyncFeatureStrategy) String() string { return self.name }
 
 var (
-	SyncStrategyMerge  = SyncStrategy{"merge"}  //nolint:gochecknoglobals
-	SyncStrategyRebase = SyncStrategy{"rebase"} //nolint:gochecknoglobals
+	SyncFeatureStrategyMerge  = SyncFeatureStrategy{"merge"}  //nolint:gochecknoglobals
+	SyncFeatureStrategyRebase = SyncFeatureStrategy{"rebase"} //nolint:gochecknoglobals
 )
 
-func ToSyncStrategy(text string) (SyncStrategy, error) {
+func ToSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 	switch text {
 	case "merge", "":
-		return SyncStrategyMerge, nil
+		return SyncFeatureStrategyMerge, nil
 	case "rebase":
-		return SyncStrategyRebase, nil
+		return SyncFeatureStrategyRebase, nil
 	default:
-		return SyncStrategyMerge, fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
+		return SyncFeatureStrategyMerge, fmt.Errorf(messages.ConfigSyncFeatureStrategyUnknown, text)
 	}
 }

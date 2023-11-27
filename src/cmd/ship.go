@@ -133,7 +133,7 @@ type shipConfig struct {
 	syncPerennialStrategy    config.SyncPerennialStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
-	syncStrategy             config.SyncStrategy
+	syncStrategy             config.SyncFeatureStrategy
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -172,7 +172,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
-	syncStrategy, err := repo.Runner.Config.SyncStrategy()
+	syncStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -311,7 +311,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		pushBranch:            true,
 		pushHook:              config.pushHook,
 		shouldSyncUpstream:    config.shouldSyncUpstream,
-		syncStrategy:          config.syncStrategy,
+		syncFeatureStrategy:   config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
 	syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
@@ -325,7 +325,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		pushBranch:            false,
 		pushHook:              config.pushHook,
 		shouldSyncUpstream:    config.shouldSyncUpstream,
-		syncStrategy:          config.syncStrategy,
+		syncFeatureStrategy:   config.syncStrategy,
 	})
 	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})

@@ -1,7 +1,7 @@
 Feature: offline mode
 
   Background:
-    Given Git Town setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And offline mode is enabled
     And the current branch is a feature branch "feature"
     And the commits

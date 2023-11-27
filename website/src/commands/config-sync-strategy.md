@@ -1,12 +1,13 @@
-# git town config sync-strategy <merge|rebase>
+# git town config sync-feature-strategy <merge|rebase>
 
-The _sync-strategy_ configuration command displays or sets your sync strategy.
-The sync strategy specifies which strategy to use when syncing feature branches.
+The _sync-feature-strategy_ configuration command displays or sets your sync
+strategy. The sync-feature strategy specifies which strategy to use when syncing
+feature branches.
 
 ### Arguments
 
-- without an argument, displays the current sync strategy
-- with `merge`, set the sync strategy to merge changes into your feature
+- without an argument, displays the current sync-feature strategy
+- with `merge`, set the sync-feature strategy to merge changes into your feature
   branches
-- with `rebase`, set the sync strategy to rebase your feature branches against
-  their parents and remote counterparts
+- with `rebase`, set the sync-feature strategy to rebase your feature branches
+  against their parents and remote counterparts

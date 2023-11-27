@@ -115,7 +115,7 @@ Feature: handle previously unfinished Git Town commands
       | config push-hook               |
       | config push-new-branches       |
       | config reset                   |
-      | config sync-strategy           |
+      | config sync-feature-strategy   |
       | kill                           |
       | status reset                   |
       | status                         |

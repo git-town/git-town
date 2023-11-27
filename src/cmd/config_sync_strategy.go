@@ -9,22 +9,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const syncStrategyDesc = "Displays or sets your sync strategy"
+const syncFeatureStrategyDesc = "Displays or sets your sync-feature strategy"
 
-const syncStrategyHelp = `
-The sync strategy specifies what strategy to use
+const syncFeatureStrategyHelp = `
+The sync-feature strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
-func syncStrategyCommand() *cobra.Command {
+func syncFeatureStrategyCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine", flags.FlagTypeNonPersistent)
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync-feature strategy for all repos on this machine", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
-		Use:   "sync-strategy [(merge | rebase)]",
+		Use:   "sync-feature-strategy [(merge | rebase)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: syncStrategyDesc,
-		Long:  long(syncStrategyDesc, syncStrategyHelp),
+		Short: syncFeatureStrategyDesc,
+		Long:  long(syncFeatureStrategyDesc, syncFeatureStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigSyncStrategy(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
+			return executeConfigSyncFeatureStrategy(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
@@ -32,7 +32,7 @@ func syncStrategyCommand() *cobra.Command {
 	return &cmd
 }
 
-func executeConfigSyncStrategy(args []string, global, verbose bool) error {
+func executeConfigSyncFeatureStrategy(args []string, global, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -45,18 +45,18 @@ func executeConfigSyncStrategy(args []string, global, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncStrategy(global, &repo.Runner, args[0])
+		return setSyncFeatureStrategy(global, &repo.Runner, args[0])
 	}
-	return printSyncStrategy(global, &repo.Runner)
+	return printSyncFeatureStrategy(global, &repo.Runner)
 }
 
-func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {
-	var strategy config.SyncStrategy
+func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
+	var strategy config.SyncFeatureStrategy
 	var err error
 	if globalFlag {
-		strategy, err = run.Config.SyncStrategyGlobal()
+		strategy, err = run.Config.SyncFeatureStrategyGlobal()
 	} else {
-		strategy, err = run.Config.SyncStrategy()
+		strategy, err = run.Config.SyncFeatureStrategy()
 	}
 	if err != nil {
 		return err
@@ -65,13 +65,13 @@ func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {
 	return nil
 }
 
-func setSyncStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
-	syncStrategy, err := config.ToSyncStrategy(value)
+func setSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
+	syncFeatureStrategy, err := config.ToSyncFeatureStrategy(value)
 	if err != nil {
 		return err
 	}
 	if globalFlag {
-		return run.Config.SetSyncStrategyGlobal(syncStrategy)
+		return run.Config.SetSyncFeatureStrategyGlobal(syncFeatureStrategy)
 	}
-	return run.Config.SetSyncStrategy(syncStrategy)
+	return run.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 }

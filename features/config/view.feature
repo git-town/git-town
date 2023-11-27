@@ -16,7 +16,7 @@ Feature: show the configuration
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
         sync with upstream: yes
 
       Hosting:

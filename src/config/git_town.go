@@ -352,19 +352,19 @@ func (self *GitTown) SetShouldSyncUpstream(value bool) error {
 	return err
 }
 
+func (self *GitTown) SetSyncFeatureStrategy(value SyncFeatureStrategy) error {
+	err := self.SetLocalConfigValue(KeySyncFeatureStrategy, value.name)
+	return err
+}
+
+func (self *GitTown) SetSyncFeatureStrategyGlobal(value SyncFeatureStrategy) error {
+	err := self.SetGlobalConfigValue(KeySyncFeatureStrategy, value.name)
+	return err
+}
+
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *GitTown) SetSyncPerennialStrategy(strategy SyncPerennialStrategy) error {
 	err := self.SetLocalConfigValue(KeySyncPerennialStrategy, strategy.String())
-	return err
-}
-
-func (self *GitTown) SetSyncStrategy(value SyncStrategy) error {
-	err := self.SetLocalConfigValue(KeySyncStrategy, value.name)
-	return err
-}
-
-func (self *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
-	err := self.SetGlobalConfigValue(KeySyncStrategy, value.name)
 	return err
 }
 
@@ -428,20 +428,20 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 	return ParseBool(text)
 }
 
+func (self *GitTown) SyncFeatureStrategy() (SyncFeatureStrategy, error) {
+	text := self.LocalOrGlobalConfigValue(KeySyncFeatureStrategy)
+	return ToSyncFeatureStrategy(text)
+}
+
+func (self *GitTown) SyncFeatureStrategyGlobal() (SyncFeatureStrategy, error) {
+	setting := self.GlobalConfigValue(KeySyncFeatureStrategy)
+	return ToSyncFeatureStrategy(setting)
+}
+
 // SyncPerennialStrategy provides the currently configured sync-perennial strategy.
 func (self *GitTown) SyncPerennialStrategy() (SyncPerennialStrategy, error) {
 	text := self.LocalOrGlobalConfigValue(KeySyncPerennialStrategy)
 	return NewSyncPerennialStrategy(text)
-}
-
-func (self *GitTown) SyncStrategy() (SyncStrategy, error) {
-	text := self.LocalOrGlobalConfigValue(KeySyncStrategy)
-	return ToSyncStrategy(text)
-}
-
-func (self *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
-	setting := self.GlobalConfigValue(KeySyncStrategy)
-	return ToSyncStrategy(setting)
 }
 
 func (self *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) error {

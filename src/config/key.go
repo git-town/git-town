@@ -51,7 +51,7 @@ var (
 	KeyPushNewBranches             = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
 	KeyShipDeleteRemoteBranch      = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
 	KeySyncUpstream                = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
-	KeySyncStrategy                = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
+	KeySyncFeatureStrategy         = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
 	KeyTestingRemoteURL            = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
 )
 
@@ -71,7 +71,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyPushNewBranches,
 	KeyShipDeleteRemoteBranch,
 	KeySyncUpstream,
-	KeySyncStrategy,
+	KeySyncFeatureStrategy,
 	KeyTestingRemoteURL,
 }
 
