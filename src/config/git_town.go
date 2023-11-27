@@ -328,12 +328,6 @@ func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) erro
 	return err
 }
 
-// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
-func (self *GitTown) SetSyncPerennialStrategy(strategy SyncPerennialStrategy) error {
-	err := self.SetLocalConfigValue(KeySyncPerennialStrategy, strategy.String())
-	return err
-}
-
 // SetPushHook updates the configured push-hook strategy.
 func (self *GitTown) SetPushHookGlobally(value bool) error {
 	err := self.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
@@ -355,6 +349,12 @@ func (self *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
 // SetShouldSyncUpstream updates the configured sync-upstream strategy.
 func (self *GitTown) SetShouldSyncUpstream(value bool) error {
 	err := self.SetLocalConfigValue(KeySyncUpstream, strconv.FormatBool(value))
+	return err
+}
+
+// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
+func (self *GitTown) SetSyncPerennialStrategy(strategy SyncPerennialStrategy) error {
+	err := self.SetLocalConfigValue(KeySyncPerennialStrategy, strategy.String())
 	return err
 }
 

@@ -57,13 +57,6 @@ func (self *FailureCollector) Hosting(value config.Hosting, err error) config.Ho
 	return value
 }
 
-// SyncPerennialStrategy provides the string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
-	self.Check(err)
-	return value
-}
-
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
@@ -86,6 +79,13 @@ func (self *FailureCollector) String(value string, err error) string {
 // Strings provides the []string part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Strings(value []string, err error) []string {
+	self.Check(err)
+	return value
+}
+
+// SyncPerennialStrategy provides the string part of the given fallible function result
+// while registering the given error.
+func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
 	self.Check(err)
 	return value
 }
