@@ -41,6 +41,7 @@ var (
 	KeyDeprecatedNewBranchPushFlag  = Key{"git-town.new-branch-push-flag"}         //nolint:gochecknoglobals
 	KeyDeprecatedPullBranchStrategy = Key{"git-town.pull-branch-strategy"}         //nolint:gochecknoglobals
 	KeyDeprecatedPushVerify         = Key{"git-town.push-verify"}                  //nolint:gochecknoglobals
+	KeyDeprecatedSyncStrategy       = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
 	KeyGiteaToken                   = Key{"git-town.gitea-token"}                  //nolint:gochecknoglobals
 	KeyGithubToken                  = Key{"git-town.github-token"}                 //nolint:gochecknoglobals
 	KeyGitlabToken                  = Key{"git-town.gitlab-token"}                 //nolint:gochecknoglobals
@@ -63,6 +64,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPullBranchStrategy,
 	KeyDeprecatedPushVerify,
+	KeyDeprecatedSyncStrategy,
 	KeyGiteaToken,
 	KeyGithubToken,
 	KeyGitlabToken,
