@@ -10,25 +10,25 @@ Feature: continue after successful command
       """
 
     Examples:
-      | COMMAND              |
-      |                      |
-      | aliases true         |
-      | append new           |
-      | completions fish     |
-      | config               |
-      | diff-parent          |
-      | hack new             |
-      | help                 |
-      | kill feature         |
-      | main_branch          |
-      | offline              |
-      | perennial-branches   |
-      | prepend new          |
-      | propose              |
-      | pull-branch-strategy |
-      | push-new-branches    |
-      | rename-branch        |
-      | repo                 |
-      | ship feature -m done |
-      | sync                 |
-      | version              |
+      | COMMAND                 |
+      |                         |
+      | aliases true            |
+      | append new              |
+      | completions fish        |
+      | config                  |
+      | diff-parent             |
+      | hack new                |
+      | help                    |
+      | kill feature            |
+      | main_branch             |
+      | offline                 |
+      | perennial-branches      |
+      | prepend new             |
+      | propose                 |
+      | sync-perennial-strategy |
+      | push-new-branches       |
+      | rename-branch           |
+      | repo                    |
+      | ship feature -m done    |
+      | sync                    |
+      | version                 |

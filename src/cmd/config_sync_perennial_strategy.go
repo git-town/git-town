@@ -9,17 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const pullBranchDesc = "Displays or sets your pull branch strategy"
+const pullBranchDesc = "Displays or sets your sync-perennial strategy"
 
 const pullBranchHelp = `
-The pull branch strategy specifies what strategy to use
+The sync-perennial strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`
 
-func pullBranchStrategyCommand() *cobra.Command {
+func syncPerennialStrategyCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "pull-branch-strategy [(rebase | merge)]",
+		Use:   "sync-perennial-strategy [(rebase | merge)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: pullBranchDesc,
 		Long:  long(pullBranchDesc, pullBranchHelp),
@@ -44,24 +44,24 @@ func executeConfigPullBranch(args []string, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPullBranchStrategy(args[0], &repo.Runner)
+		return setSyncPerennialStrategy(args[0], &repo.Runner)
 	}
-	return displayPullBranchStrategy(&repo.Runner)
+	return displaySyncPerennialStrategy(&repo.Runner)
 }
 
-func displayPullBranchStrategy(run *git.ProdRunner) error {
-	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+func displaySyncPerennialStrategy(run *git.ProdRunner) error {
+	syncPerennialStrategy, err := run.Config.SyncPerennialStrategy()
 	if err != nil {
 		return err
 	}
-	io.Println(pullBranchStrategy)
+	io.Println(syncPerennialStrategy)
 	return nil
 }
 
-func setPullBranchStrategy(value string, run *git.ProdRunner) error {
-	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
+func setSyncPerennialStrategy(value string, run *git.ProdRunner) error {
+	syncPerennialStrategy, err := config.NewSyncPerennialStrategy(value)
 	if err != nil {
 		return err
 	}
-	return run.Config.SetPullBranchStrategy(pullBranchStrategy)
+	return run.Config.SetSyncPerennialStrategy(syncPerennialStrategy)
 }

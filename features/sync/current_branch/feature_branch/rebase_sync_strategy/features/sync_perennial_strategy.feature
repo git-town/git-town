@@ -1,8 +1,8 @@
-Feature: with pull-branch-strategy set to "merge"
+Feature: with sync-perennial-strategy set to "merge"
 
   Background:
     Given Git Town setting "sync-strategy" is "rebase"
-    And Git Town setting "pull-branch-strategy" is "merge"
+    And Git Town setting "sync-perennial-strategy" is "merge"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |

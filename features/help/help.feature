@@ -9,28 +9,28 @@ Feature: help for commands
       """
 
     Examples:
-      | COMMAND                     |
-      | aliases                     |
-      | append                      |
-      | completions                 |
-      | config                      |
-      | config main-branch          |
-      | config push-new-branches    |
-      | config offline              |
-      | config perennial-branches   |
-      | config pull-branch-strategy |
-      | config sync-strategy        |
-      | diff-parent                 |
-      | hack                        |
-      | help                        |
-      | kill                        |
-      | prepend                     |
-      | propose                     |
-      | rename-branch               |
-      | repo                        |
-      | set-parent                  |
-      | ship                        |
-      | sync                        |
+      | COMMAND                        |
+      | aliases                        |
+      | append                         |
+      | completions                    |
+      | config                         |
+      | config main-branch             |
+      | config push-new-branches       |
+      | config offline                 |
+      | config perennial-branches      |
+      | config sync-perennial-strategy |
+      | config sync-strategy           |
+      | diff-parent                    |
+      | hack                           |
+      | help                           |
+      | kill                           |
+      | prepend                        |
+      | propose                        |
+      | rename-branch                  |
+      | repo                           |
+      | set-parent                     |
+      | ship                           |
+      | sync                           |
 
   Scenario Outline: outside a Git repository
     Given I am outside a Git repo

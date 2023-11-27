@@ -130,7 +130,7 @@ type shipConfig struct {
 	previousBranch           domain.LocalBranchName
 	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
-	pullBranchStrategy       config.PullBranchStrategy
+	syncPerennialStrategy    config.SyncPerennialStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
 	syncStrategy             config.SyncStrategy
@@ -176,7 +176,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
+	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -278,7 +278,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		previousBranch:           previousBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
-		pullBranchStrategy:       pullBranchStrategy,
+		syncPerennialStrategy:    syncPerennialStrategy,
 		pushHook:                 pushHook,
 		shouldSyncUpstream:       shouldSyncUpstream,
 		syncStrategy:             syncStrategy,
@@ -301,31 +301,31 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	prog := program.Program{}
 	// sync the parent branch
 	syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
-		branchTypes:        config.branches.Types,
-		remotes:            config.remotes,
-		isOffline:          config.isOffline,
-		lineage:            config.lineage,
-		program:            &prog,
-		mainBranch:         config.mainBranch,
-		pullBranchStrategy: config.pullBranchStrategy,
-		pushBranch:         true,
-		pushHook:           config.pushHook,
-		shouldSyncUpstream: config.shouldSyncUpstream,
-		syncStrategy:       config.syncStrategy,
+		branchTypes:           config.branches.Types,
+		remotes:               config.remotes,
+		isOffline:             config.isOffline,
+		lineage:               config.lineage,
+		program:               &prog,
+		mainBranch:            config.mainBranch,
+		syncPerennialStrategy: config.syncPerennialStrategy,
+		pushBranch:            true,
+		pushHook:              config.pushHook,
+		shouldSyncUpstream:    config.shouldSyncUpstream,
+		syncStrategy:          config.syncStrategy,
 	})
 	// sync the branch to ship (local sync only)
 	syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
-		branchTypes:        config.branches.Types,
-		remotes:            config.remotes,
-		isOffline:          config.isOffline,
-		lineage:            config.lineage,
-		program:            &prog,
-		mainBranch:         config.mainBranch,
-		pullBranchStrategy: config.pullBranchStrategy,
-		pushBranch:         false,
-		pushHook:           config.pushHook,
-		shouldSyncUpstream: config.shouldSyncUpstream,
-		syncStrategy:       config.syncStrategy,
+		branchTypes:           config.branches.Types,
+		remotes:               config.remotes,
+		isOffline:             config.isOffline,
+		lineage:               config.lineage,
+		program:               &prog,
+		mainBranch:            config.mainBranch,
+		syncPerennialStrategy: config.syncPerennialStrategy,
+		pushBranch:            false,
+		pushHook:              config.pushHook,
+		shouldSyncUpstream:    config.shouldSyncUpstream,
+		syncStrategy:          config.syncStrategy,
 	})
 	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
