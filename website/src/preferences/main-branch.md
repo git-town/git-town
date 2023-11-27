@@ -1,7 +1,7 @@
-# main-branch-name
+# main-branch
 
 ```
-git-town.main-branch-name=<branch>
+git-town.main-branch=<branch>
 ```
 
 This setting stores the name of the main branch. The main branch is the default
