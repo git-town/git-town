@@ -13,8 +13,8 @@ var (
 	AliasDiffParent   = Alias{"diff-parent"}   //nolint:gochecknoglobals
 	AliasHack         = Alias{"hack"}          //nolint:gochecknoglobals
 	AliasKill         = Alias{"kill"}          //nolint:gochecknoglobals
-	AliasPropose      = Alias{"propose"}       //nolint:gochecknoglobals
 	AliasPrepend      = Alias{"prepend"}       //nolint:gochecknoglobals
+	AliasPropose      = Alias{"propose"}       //nolint:gochecknoglobals
 	AliasRenameBranch = Alias{"rename-branch"} //nolint:gochecknoglobals
 	AliasRepo         = Alias{"repo"}          //nolint:gochecknoglobals
 	AliasShip         = Alias{"ship"}          //nolint:gochecknoglobals
@@ -28,8 +28,8 @@ func Aliases() []Alias {
 		AliasDiffParent,
 		AliasHack,
 		AliasKill,
-		AliasPropose,
 		AliasPrepend,
+		AliasPropose,
 		AliasRenameBranch,
 		AliasRepo,
 		AliasShip,
