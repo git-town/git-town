@@ -36,7 +36,7 @@
     - [main-branch](commands/config-main-branch.md)
     - [offline](commands/config-offline.md)
     - [perennial-branches](commands/config-perennial-branches.md)
-    - [sync-perennial-strategy](commands/config-sync-perennial-strategy.md.md)
+    - [sync-perennial-strategy](commands/config-sync-perennial-strategy.md)
     - [sync-strategy](commands/config-sync-strategy.md)
 - [Preferences](preferences.md)
   - [code-hosting-driver](preferences/code-hosting-driver.md)

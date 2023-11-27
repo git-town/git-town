@@ -20,7 +20,7 @@ to run Git configuration commands manually:
   mode
 - [git town config perennial-branches](commands/config-perennial-branches.md) -
   display or update the perennial branches for the current repo
-- [git town config sync-perennial-strategy](commands/config-sync-perennial-strategy.md.md) -
+- [git town config sync-perennial-strategy](commands/config-sync-perennial-strategy.md) -
   display or set the strategy to update perennial branches
 - [git town config sync-strategy](commands/config-sync-strategy.md) - display or
   set the strategy to sync via merges or rebases
