@@ -14,7 +14,7 @@ Feature: sync all feature branches
       |            | origin        | qa origin commit         |
     And the current branch is "alpha"
 
-  Scenario: with "merge" sync strategy
+  Scenario: with "merge" sync-feature strategy
     When I run "git-town sync --all"
     Then it runs the commands
       | BRANCH     | COMMAND                          |
@@ -40,8 +40,8 @@ Feature: sync all feature branches
     And the current branch is still "alpha"
     And all branches are now synchronized
 
-  Scenario: with "rebase" sync strategy
-    Given Git Town setting "sync-strategy" is "rebase"
+  Scenario: with "rebase" sync-feature strategy
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town sync --all"
     Then it runs the commands
       | BRANCH     | COMMAND                      |

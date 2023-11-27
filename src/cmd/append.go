@@ -94,7 +94,7 @@ type appendConfig struct {
 	syncPerennialStrategy     config.SyncPerennialStrategy
 	shouldNewBranchPush       bool
 	shouldSyncUpstream        bool
-	syncStrategy              config.SyncStrategy
+	syncFeatureStrategy       config.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
 }
 
@@ -143,7 +143,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
@@ -162,7 +162,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		syncPerennialStrategy:     syncPerennialStrategy,
 		shouldNewBranchPush:       shouldNewBranchPush,
 		shouldSyncUpstream:        shouldSyncUpstream,
-		syncStrategy:              syncStrategy,
+		syncFeatureStrategy:       syncFeatureStrategy,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
@@ -181,7 +181,7 @@ func appendProgram(config *appendConfig) program.Program {
 			pushBranch:            true,
 			pushHook:              config.pushHook,
 			shouldSyncUpstream:    config.shouldSyncUpstream,
-			syncStrategy:          config.syncStrategy,
+			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{

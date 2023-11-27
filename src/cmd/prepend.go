@@ -96,7 +96,7 @@ type prependConfig struct {
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
 	shouldNewBranchPush       bool
-	syncStrategy              config.SyncStrategy
+	syncFeatureStrategy       config.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
 }
 
@@ -122,7 +122,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	mainBranch := repo.Runner.Config.MainBranch()
-	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
@@ -166,7 +166,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 		parentBranch:              parent,
 		shouldNewBranchPush:       shouldNewBranchPush,
 		shouldSyncUpstream:        shouldSyncUpstream,
-		syncStrategy:              syncStrategy,
+		syncFeatureStrategy:       syncFeatureStrategy,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
@@ -185,7 +185,7 @@ func prependProgram(config *prependConfig) program.Program {
 			pushHook:              config.pushHook,
 			remotes:               config.remotes,
 			shouldSyncUpstream:    config.shouldSyncUpstream,
-			syncStrategy:          config.syncStrategy,
+			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{

@@ -18,8 +18,8 @@ Feature: help for commands
       | config push-new-branches       |
       | config offline                 |
       | config perennial-branches      |
+      | config sync-feature-strategy   |
       | config sync-perennial-strategy |
-      | config sync-strategy           |
       | diff-parent                    |
       | hack                           |
       | help                           |

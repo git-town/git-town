@@ -83,16 +83,16 @@ func (self *FailureCollector) Strings(value []string, err error) []string {
 	return value
 }
 
-// SyncPerennialStrategy provides the string part of the given fallible function result
+// SyncFeatureStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
+func (self *FailureCollector) SyncFeatureStrategy(value config.SyncFeatureStrategy, err error) config.SyncFeatureStrategy {
 	self.Check(err)
 	return value
 }
 
-// SyncStrategy provides the string part of the given fallible function result
+// SyncPerennialStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncStrategy(value config.SyncStrategy, err error) config.SyncStrategy {
+func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
 	self.Check(err)
 	return value
 }
