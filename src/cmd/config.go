@@ -32,7 +32,7 @@ func configCmd() *cobra.Command {
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
-	configCmd.AddCommand(pullBranchStrategyCommand())
+	configCmd.AddCommand(syncPerennialStrategyCommand())
 	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(pushHookCommand())
 	configCmd.AddCommand(resetConfigCommand())
@@ -71,42 +71,42 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	hosting := fc.Hosting(run.Config.HostingService())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	lineage := run.Config.Lineage(run.Backend.Config.RemoveLocalConfigValue)
-	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
 	pushHook := fc.Bool(run.Config.PushHook())
 	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return ConfigConfig{
-		branchTypes:        branchTypes,
-		deleteOrigin:       deleteOrigin,
-		hosting:            hosting,
-		giteaToken:         giteaToken,
-		githubToken:        githubToken,
-		gitlabToken:        gitlabToken,
-		isOffline:          isOffline,
-		lineage:            lineage,
-		pullBranchStrategy: pullBranchStrategy,
-		pushHook:           pushHook,
-		pushNewBranches:    pushNewBranches,
-		shouldSyncUpstream: shouldSyncUpstream,
-		syncStrategy:       syncStrategy,
+		branchTypes:           branchTypes,
+		deleteOrigin:          deleteOrigin,
+		hosting:               hosting,
+		giteaToken:            giteaToken,
+		githubToken:           githubToken,
+		gitlabToken:           gitlabToken,
+		isOffline:             isOffline,
+		lineage:               lineage,
+		syncPerennialStrategy: syncPerennialStrategy,
+		pushHook:              pushHook,
+		pushNewBranches:       pushNewBranches,
+		shouldSyncUpstream:    shouldSyncUpstream,
+		syncStrategy:          syncStrategy,
 	}, fc.Err
 }
 
 type ConfigConfig struct {
-	branchTypes        domain.BranchTypes
-	deleteOrigin       bool
-	giteaToken         string
-	githubToken        string
-	gitlabToken        string
-	hosting            config.Hosting
-	isOffline          bool
-	lineage            config.Lineage
-	pullBranchStrategy config.PullBranchStrategy
-	pushHook           bool
-	pushNewBranches    bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branchTypes           domain.BranchTypes
+	deleteOrigin          bool
+	giteaToken            string
+	githubToken           string
+	gitlabToken           string
+	hosting               config.Hosting
+	isOffline             bool
+	lineage               config.Lineage
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushHook              bool
+	pushNewBranches       bool
+	shouldSyncUpstream    bool
+	syncStrategy          config.SyncStrategy
 }
 
 func printConfig(config ConfigConfig) {
@@ -117,7 +117,7 @@ func printConfig(config ConfigConfig) {
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.isOffline))
-	print.Entry("pull branch strategy", config.pullBranchStrategy.String())
+	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
 	print.Entry("run pre-push hook", format.Bool(config.pushHook))
 	print.Entry("push new branches", format.Bool(config.pushNewBranches))
 	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))

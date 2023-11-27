@@ -121,21 +121,21 @@ func TestCollector(t *testing.T) {
 		})
 	})
 
-	t.Run("PullBranchStrategy", func(t *testing.T) {
+	t.Run("SyncPerennialStrategy", func(t *testing.T) {
 		t.Parallel()
-		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
+		t.Run("returns the given SyncPerennialStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			must.EqOp(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
-			must.EqOp(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
+			must.EqOp(t, config.SyncPerennialStrategyMerge, fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, nil))
+			must.EqOp(t, config.SyncPerennialStrategyRebase, fc.SyncPerennialStrategy(config.SyncPerennialStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil)
+			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, nil)
 			must.Nil(t, fc.Err)
-			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
-			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("second"))
+			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, errors.New("first"))
+			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})

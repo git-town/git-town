@@ -73,17 +73,17 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	syncBranchesProgram(syncBranchesProgramArgs{
 		syncBranchProgramArgs: syncBranchProgramArgs{
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			program:            &runProgram,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			remotes:               config.remotes,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &runProgram,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		},
 		branchesToSync: config.branchesToSync,
 		hasOpenChanges: config.hasOpenChanges,
@@ -111,19 +111,19 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	branches           domain.Branches
-	branchesToSync     domain.BranchInfos
-	hasOpenChanges     bool
-	isOffline          bool
-	lineage            config.Lineage
-	mainBranch         domain.LocalBranchName
-	previousBranch     domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	pushHook           bool
-	remotes            domain.Remotes
-	shouldPushTags     bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branches              domain.Branches
+	branchesToSync        domain.BranchInfos
+	hasOpenChanges        bool
+	isOffline             bool
+	lineage               config.Lineage
+	mainBranch            domain.LocalBranchName
+	previousBranch        domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushHook              bool
+	remotes               domain.Remotes
+	shouldPushTags        bool
+	shouldSyncUpstream    bool
+	syncStrategy          config.SyncStrategy
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -193,7 +193,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
+	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -203,19 +203,19 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branches:           branches,
-		branchesToSync:     branchesToSync,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		remotes:            remotes,
-		isOffline:          repo.IsOffline,
-		lineage:            lineage,
-		mainBranch:         mainBranch,
-		previousBranch:     previousBranch,
-		pullBranchStrategy: pullBranchStrategy,
-		pushHook:           pushHook,
-		shouldPushTags:     shouldPushTags,
-		shouldSyncUpstream: shouldSyncUpstream,
-		syncStrategy:       syncStrategy,
+		branches:              branches,
+		branchesToSync:        branchesToSync,
+		hasOpenChanges:        repoStatus.OpenChanges,
+		remotes:               remotes,
+		isOffline:             repo.IsOffline,
+		lineage:               lineage,
+		mainBranch:            mainBranch,
+		previousBranch:        previousBranch,
+		syncPerennialStrategy: syncPerennialStrategy,
+		pushHook:              pushHook,
+		shouldPushTags:        shouldPushTags,
+		shouldSyncUpstream:    shouldSyncUpstream,
+		syncStrategy:          syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
@@ -255,17 +255,17 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 }
 
 type syncBranchProgramArgs struct {
-	branchTypes        domain.BranchTypes
-	isOffline          bool
-	lineage            config.Lineage
-	program            *program.Program
-	mainBranch         domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	pushBranch         bool
-	pushHook           bool
-	remotes            domain.Remotes
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branchTypes           domain.BranchTypes
+	isOffline             bool
+	lineage               config.Lineage
+	program               *program.Program
+	mainBranch            domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushBranch            bool
+	pushHook              bool
+	remotes               domain.Remotes
+	shouldSyncUpstream    bool
+	syncStrategy          config.SyncStrategy
 }
 
 // syncDeletedBranchProgram provides a program that syncs a branch that was deleted at origin.
@@ -337,7 +337,7 @@ func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, s
 // syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
 func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.pullBranchStrategy)
+		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialStrategy)
 	}
 	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
 		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
@@ -366,11 +366,11 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, current
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
+func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.SyncPerennialStrategy) {
 	switch strategy {
-	case config.PullBranchStrategyMerge:
+	case config.SyncPerennialStrategyMerge:
 		list.Add(&opcode.Merge{Branch: otherBranch.BranchName()})
-	case config.PullBranchStrategyRebase:
+	case config.SyncPerennialStrategyRebase:
 		list.Add(&opcode.RebaseBranch{Branch: otherBranch.BranchName()})
 	}
 }
