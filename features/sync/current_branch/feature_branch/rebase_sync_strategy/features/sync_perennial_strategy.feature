@@ -1,7 +1,7 @@
 Feature: with sync-perennial-strategy set to "merge"
 
   Background:
-    Given Git Town setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And the current branch is a feature branch "feature"
     And the commits

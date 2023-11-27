@@ -12,11 +12,11 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        sync-perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
 
       Hosting:
@@ -40,11 +40,11 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        sync-perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
 
       Hosting:
@@ -74,11 +74,11 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        sync-perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
 
       Hosting:

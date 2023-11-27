@@ -1,7 +1,7 @@
-Feature: sync the current feature branch using the "rebase" sync strategy
+Feature: sync the current feature branch using the "rebase" sync-feature strategy
 
   Background:
-    Given Git Town setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
