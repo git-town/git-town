@@ -27,7 +27,7 @@ Feature: too few or many parameters
       | hack                                  | accepts 1 arg(s), received 0                                           |
       | hack arg1 arg2                        | accepts 1 arg(s), received 2                                           |
       | kill arg1 arg2                        | accepts at most 1 arg(s), received 2                                   |
-      | new-pull-request arg1                 | unknown command "arg1" for "git-town new-pull-request"                 |
+      | propose arg1                          | unknown command "arg1" for "git-town propose"                          |
       | prepend                               | accepts 1 arg(s), received 0                                           |
       | rename-branch                         | accepts between 1 and 2 arg(s), received 0                             |
       | rename-branch arg1 arg2 arg3          | accepts between 1 and 2 arg(s), received 3                             |

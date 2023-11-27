@@ -5,8 +5,8 @@ Feature: Bitbucket support
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
     And tool "open" is installed
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
       """
@@ -30,8 +30,8 @@ Feature: Bitbucket support
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
     And tool "open" is installed
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://bitbucket.org/git-town/git-town.github.com/pull-request/new?dest=git-town%2Fgit-town.github.com%3A%3Amain&source=git-town%2Fgit-town.github.com%.*%3Afeature
       """

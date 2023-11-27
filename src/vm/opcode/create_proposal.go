@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
-// CreateProposal creates a new pull request for the current branch.
+// CreateProposal creates a new proposal for the current branch.
 type CreateProposal struct {
 	Branch domain.LocalBranchName
 	undeclaredOpcodeMethods

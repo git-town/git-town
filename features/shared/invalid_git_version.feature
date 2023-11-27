@@ -21,7 +21,7 @@ Feature: require minimum Git version
       | diff-parent                 |
       | hack foo                    |
       | kill                        |
-      | new-pull-request            |
+      | propose                     |
       | prepend foo                 |
       | rename-branch foo           |
       | repo                        |

@@ -1,8 +1,8 @@
-# git new-pull-request
+# git propose
 
-The _new-pull-request_ command helps create a new pull request for the current
+The _propose_ command helps create a new pull/merge request for the current
 feature branch. It opens your code hosting service's website to create a new
-pull request in your browser and pre-populates information like branch and
+proposal in your browser and pre-populates information like branch and
 source/target repository. It also [syncs](sync.md) the branch to merge before
 opening the pull request.
 

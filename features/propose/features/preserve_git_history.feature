@@ -5,6 +5,6 @@ Feature: preserve the previous Git branch
     And tool "open" is installed
     And the origin is "https://github.com/git-town/git-town.git"
     And the current branch is "current" and the previous branch is "previous"
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
     Then the current branch is still "current"
     And the previous Git branch is still "previous"

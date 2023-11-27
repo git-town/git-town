@@ -5,7 +5,7 @@ Feature: display all executed Git commands
     Given tool "open" is installed
     And the current branch is a feature branch "feature"
     And the origin is "git@github.com:git-town/git-town.git"
-    When I run "git-town new-pull-request --verbose"
+    When I run "git-town propose --verbose"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                                            |
       |         | backend  | git version                                                        |
@@ -18,7 +18,7 @@ Feature: display all executed Git commands
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git branch -vva                                                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
-      |         | backend  | git status --long --ignore-submodules                                     |
+      |         | backend  | git status --long --ignore-submodules                              |
       | feature | frontend | git checkout main                                                  |
       | main    | frontend | git rebase origin/main                                             |
       |         | backend  | git rev-list --left-right main...origin/main                       |
@@ -41,7 +41,7 @@ Feature: display all executed Git commands
       """
       Ran 29 shell commands.
       """
-    And "open" launches a new pull request with this url in my browser:
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """

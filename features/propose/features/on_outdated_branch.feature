@@ -1,5 +1,5 @@
 @skipWindows
-Feature: sync before creating the pull request
+Feature: sync before proposing
 
   Background:
     Given a feature branch "parent"
@@ -16,7 +16,7 @@ Feature: sync before creating the pull request
     And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     And an uncommitted file
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
 
   Scenario: result
     Then it runs the commands
@@ -37,7 +37,7 @@ Feature: sync before creating the pull request
       |        | git push                                                                  |
       |        | git stash pop                                                             |
       | <none> | open https://github.com/git-town/git-town/compare/parent...child?expand=1 |
-    And "open" launches a new pull request with this url in my browser:
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """

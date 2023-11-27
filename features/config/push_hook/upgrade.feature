@@ -30,7 +30,7 @@ Feature: automatically upgrade outdated configuration
       | sync              | global   |
       | kill              | local    |
       | kill              | global   |
-      | new-pull-request  | local    |
-      | new-pull-request  | global   |
+      | propose           | local    |
+      | propose           | global   |
       | rename-branch bar | local    |
       | rename-branch bar | global   |

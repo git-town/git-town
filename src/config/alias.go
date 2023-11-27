@@ -9,16 +9,16 @@ type Alias struct {
 func (self Alias) String() string { return self.name }
 
 var (
-	AliasAppend         = Alias{"append"}           //nolint:gochecknoglobals
-	AliasDiffParent     = Alias{"diff-parent"}      //nolint:gochecknoglobals
-	AliasHack           = Alias{"hack"}             //nolint:gochecknoglobals
-	AliasKill           = Alias{"kill"}             //nolint:gochecknoglobals
-	AliasNewPullRequest = Alias{"new-pull-request"} //nolint:gochecknoglobals
-	AliasPrepend        = Alias{"prepend"}          //nolint:gochecknoglobals
-	AliasRenameBranch   = Alias{"rename-branch"}    //nolint:gochecknoglobals
-	AliasRepo           = Alias{"repo"}             //nolint:gochecknoglobals
-	AliasShip           = Alias{"ship"}             //nolint:gochecknoglobals
-	AliasSync           = Alias{"sync"}             //nolint:gochecknoglobals
+	AliasAppend       = Alias{"append"}        //nolint:gochecknoglobals
+	AliasDiffParent   = Alias{"diff-parent"}   //nolint:gochecknoglobals
+	AliasHack         = Alias{"hack"}          //nolint:gochecknoglobals
+	AliasKill         = Alias{"kill"}          //nolint:gochecknoglobals
+	AliasPrepend      = Alias{"prepend"}       //nolint:gochecknoglobals
+	AliasPropose      = Alias{"propose"}       //nolint:gochecknoglobals
+	AliasRenameBranch = Alias{"rename-branch"} //nolint:gochecknoglobals
+	AliasRepo         = Alias{"repo"}          //nolint:gochecknoglobals
+	AliasShip         = Alias{"ship"}          //nolint:gochecknoglobals
+	AliasSync         = Alias{"sync"}          //nolint:gochecknoglobals
 )
 
 // Aliases provides all AliasType values.
@@ -28,8 +28,8 @@ func Aliases() []Alias {
 		AliasDiffParent,
 		AliasHack,
 		AliasKill,
-		AliasNewPullRequest,
 		AliasPrepend,
+		AliasPropose,
 		AliasRenameBranch,
 		AliasRepo,
 		AliasShip,

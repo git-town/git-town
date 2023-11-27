@@ -2,7 +2,7 @@ Feature: unsupported hosting service
 
   Background:
     Given the current branch is a feature branch "feature"
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
 
   Scenario: result
     Then it prints the error:

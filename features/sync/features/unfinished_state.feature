@@ -89,7 +89,7 @@ Feature: handle previously unfinished Git Town commands
       | append foo        |
       | diff-parent       |
       | hack foo          |
-      | new-pull-request  |
+      | propose           |
       | prepend foo       |
       | rename-branch foo |
       # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument

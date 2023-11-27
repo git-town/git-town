@@ -68,7 +68,7 @@ const (
 	OpcodeUnknown                     = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                = "cannot determine open changes: %w"
 	ProposalMultipleFound             = "found %d proposals from branch %q to branch %q"
-	ProposalNoNumberGiven             = "no pull request number given"
+	ProposalNoNumberGiven             = "no proposal number given"
 	ProposalNotFoundForBranch         = "cannot determine proposal for branch %q: %w"
 	ProposalTargetBranchUpdateProblem = "cannot update the target branch of proposal %d via the API"
 	ProposalURLProblem                = "cannot determine proposal URL from %q to %q: %w"

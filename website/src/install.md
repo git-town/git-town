@@ -39,8 +39,8 @@ You can also [install Git Town manually](#manual-installation) or
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
 [git town repo](https://git-town.com/commands/repo.md) and
-[git town new-pull-request](https://git-town.com/commands/new-pull-request.md)
-to open a browser window for you.
+[git town propose](https://git-town.com/commands/propose.md) to open a browser
+window for you.
 
 ## Linux
 
