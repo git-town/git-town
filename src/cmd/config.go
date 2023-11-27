@@ -37,7 +37,7 @@ func configCmd() *cobra.Command {
 	configCmd.AddCommand(pushHookCommand())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
-	configCmd.AddCommand(syncStrategyCommand())
+	configCmd.AddCommand(syncFeatureStrategyCommand())
 	return &configCmd
 }
 
@@ -75,7 +75,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	pushHook := fc.Bool(run.Config.PushHook())
 	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
 		deleteOrigin:          deleteOrigin,
@@ -89,7 +89,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 		pushHook:              pushHook,
 		pushNewBranches:       pushNewBranches,
 		shouldSyncUpstream:    shouldSyncUpstream,
-		syncStrategy:          syncStrategy,
+		syncFeatureStrategy:   syncFeatureStrategy,
 	}, fc.Err
 }
 
@@ -106,7 +106,7 @@ type ConfigConfig struct {
 	pushHook              bool
 	pushNewBranches       bool
 	shouldSyncUpstream    bool
-	syncStrategy          config.SyncStrategy
+	syncFeatureStrategy   config.SyncFeatureStrategy
 }
 
 func printConfig(config ConfigConfig) {
@@ -117,11 +117,11 @@ func printConfig(config ConfigConfig) {
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.isOffline))
-	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
 	print.Entry("run pre-push hook", format.Bool(config.pushHook))
 	print.Entry("push new branches", format.Bool(config.pushNewBranches))
 	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
-	print.Entry("sync strategy", config.syncStrategy.String())
+	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
+	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
 	print.Entry("sync with upstream", format.Bool(config.shouldSyncUpstream))
 	fmt.Println()
 	print.Header("Hosting")

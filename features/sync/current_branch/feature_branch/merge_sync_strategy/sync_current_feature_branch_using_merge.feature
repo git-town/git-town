@@ -1,4 +1,4 @@
-Feature: sync the current feature branch with a tracking branch using the "merge" sync strategy
+Feature: sync the current feature branch with a tracking branch using the "merge" sync-feature strategy
 
   Background:
     Given the current branch is a feature branch "feature"
