@@ -136,6 +136,7 @@ func (self *GitTown) Lineage(deleteEntry func(Key) error) Lineage {
 
 // MainBranch provides the name of the main branch.
 func (self *GitTown) MainBranch() domain.LocalBranchName {
+	_ = self.updateDeprecatedSetting(KeyDeprecatedMainBranchName, KeyMainBranch)
 	mainBranch := self.LocalOrGlobalConfigValue(KeyMainBranch)
 	if mainBranch == "" {
 		return domain.EmptyLocalBranchName()
