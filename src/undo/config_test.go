@@ -29,8 +29,8 @@ func TestConfigUndo(t *testing.T) {
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
-					config.KeyOffline:            "0",
-					config.KeyPullBranchStrategy: "1",
+					config.KeyOffline:               "0",
+					config.KeySyncPerennialStrategy: "1",
 				},
 				Local: config.GitConfigCache{},
 			},
@@ -39,7 +39,7 @@ func TestConfigUndo(t *testing.T) {
 		wantDiff := undo.ConfigDiffs{
 			Global: undo.ConfigDiff{
 				Added: []config.Key{
-					config.KeyPullBranchStrategy,
+					config.KeySyncPerennialStrategy,
 				},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
@@ -50,7 +50,7 @@ func TestConfigUndo(t *testing.T) {
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.RemoveGlobalConfig{
-				Key: config.KeyPullBranchStrategy,
+				Key: config.KeySyncPerennialStrategy,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -62,8 +62,8 @@ func TestConfigUndo(t *testing.T) {
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
-					config.KeyOffline:            "0",
-					config.KeyPullBranchStrategy: "1",
+					config.KeyOffline:               "0",
+					config.KeySyncPerennialStrategy: "1",
 				},
 				Local: config.GitConfigCache{},
 			},
@@ -82,7 +82,7 @@ func TestConfigUndo(t *testing.T) {
 			Global: undo.ConfigDiff{
 				Added: []config.Key{},
 				Removed: map[config.Key]string{
-					config.KeyPullBranchStrategy: "1",
+					config.KeySyncPerennialStrategy: "1",
 				},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
@@ -96,7 +96,7 @@ func TestConfigUndo(t *testing.T) {
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.SetGlobalConfig{
-				Key:   config.KeyPullBranchStrategy,
+				Key:   config.KeySyncPerennialStrategy,
 				Value: "1",
 			},
 		}
@@ -168,8 +168,8 @@ func TestConfigUndo(t *testing.T) {
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
 				Local: config.GitConfigCache{
-					config.KeyOffline:            "0",
-					config.KeyPullBranchStrategy: "1",
+					config.KeyOffline:               "0",
+					config.KeySyncPerennialStrategy: "1",
 				},
 			},
 		}
@@ -178,7 +178,7 @@ func TestConfigUndo(t *testing.T) {
 			Global: undo.EmptyConfigDiff(),
 			Local: undo.ConfigDiff{
 				Added: []config.Key{
-					config.KeyPullBranchStrategy,
+					config.KeySyncPerennialStrategy,
 				},
 				Removed: map[config.Key]string{},
 				Changed: map[config.Key]domain.Change[string]{},
@@ -188,7 +188,7 @@ func TestConfigUndo(t *testing.T) {
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.RemoveLocalConfig{
-				Key: config.KeyPullBranchStrategy,
+				Key: config.KeySyncPerennialStrategy,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -201,8 +201,8 @@ func TestConfigUndo(t *testing.T) {
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{},
 				Local: config.GitConfigCache{
-					config.KeyOffline:            "0",
-					config.KeyPullBranchStrategy: "1",
+					config.KeyOffline:               "0",
+					config.KeySyncPerennialStrategy: "1",
 				},
 			},
 		}
@@ -225,7 +225,7 @@ func TestConfigUndo(t *testing.T) {
 			Local: undo.ConfigDiff{
 				Added: []config.Key{},
 				Removed: map[config.Key]string{
-					config.KeyPullBranchStrategy: "1",
+					config.KeySyncPerennialStrategy: "1",
 				},
 				Changed: map[config.Key]domain.Change[string]{},
 			},
@@ -234,7 +234,7 @@ func TestConfigUndo(t *testing.T) {
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.SetLocalConfig{
-				Key:   config.KeyPullBranchStrategy,
+				Key:   config.KeySyncPerennialStrategy,
 				Value: "1",
 			},
 		}
@@ -309,8 +309,8 @@ func TestConfigUndo(t *testing.T) {
 			Cwd: "/foo",
 			GitConfig: config.GitConfig{
 				Global: config.GitConfigCache{
-					config.KeyOffline:            "1",
-					config.KeyPullBranchStrategy: "1",
+					config.KeyOffline:               "1",
+					config.KeySyncPerennialStrategy: "1",
 				},
 				Local: config.GitConfigCache{
 					config.KeyPerennialBranches: "prod qa",
@@ -322,7 +322,7 @@ func TestConfigUndo(t *testing.T) {
 		wantDiff := undo.ConfigDiffs{
 			Global: undo.ConfigDiff{
 				Added: []config.Key{
-					config.KeyPullBranchStrategy,
+					config.KeySyncPerennialStrategy,
 				},
 				Removed: map[config.Key]string{
 					config.KeyPushHook: "0",
@@ -353,7 +353,7 @@ func TestConfigUndo(t *testing.T) {
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.RemoveGlobalConfig{
-				Key: config.KeyPullBranchStrategy,
+				Key: config.KeySyncPerennialStrategy,
 			},
 			&opcode.SetGlobalConfig{
 				Key:   config.KeyPushHook,

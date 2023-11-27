@@ -20,7 +20,7 @@ commands that would be run but doesn't execute them.
 
 ### Configuration
 
-[pull-branch-strategy](../preferences/pull-branch-strategy.md) configures
+[sync-perennial-strategy](../preferences/sync-perennial-strategy.md) configures
 whether perennial branches merge their tracking branch or rebase against it.
 
 [sync-strategy](../preferences/sync-strategy.md) configures whether feature

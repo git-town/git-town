@@ -1,15 +1,15 @@
-Feature: display the currently configured pull_branch_strategy
+Feature: display the currently configured sync_perennial_strategy
 
   Scenario: default
-    When I run "git-town config pull-branch-strategy"
+    When I run "git-town config sync-perennial-strategy"
     Then it prints:
       """
       rebase
       """
 
   Scenario Outline: configured locally
-    Given local Git Town setting "pull-branch-strategy" is "<VALUE>"
-    When I run "git-town config pull-branch-strategy"
+    Given local Git Town setting "sync-perennial-strategy" is "<VALUE>"
+    When I run "git-town config sync-perennial-strategy"
     Then it prints:
       """
       <VALUE>
@@ -21,8 +21,8 @@ Feature: display the currently configured pull_branch_strategy
       | merge  |
 
   Scenario Outline: configured globally
-    Given global Git Town setting "pull-branch-strategy" is "<VALUE>"
-    When I run "git-town config pull-branch-strategy"
+    Given global Git Town setting "sync-perennial-strategy" is "<VALUE>"
+    When I run "git-town config sync-perennial-strategy"
     Then it prints:
       """
       <VALUE>

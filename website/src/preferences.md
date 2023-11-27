@@ -11,7 +11,7 @@ Git Town uses these configuration settings:
 - [offline](preferences/offline.md)
 - [parent](preferences/parent.md)
 - [pererennial-branch-names](preferences/perennial-branch-names.md)
-- [pull-branch-strategy](preferences/pull-branch-strategy.md)
+- [sync-perennial-strategy](preferences/sync-perennial-strategy.md)
 - [ship-delete-remote-branch](preferences/ship-delete-remote-branch.md)
 - [sync-strategy](preferences/sync-strategy.md)
 - [sync-upstream](preferences/sync-upstream.md)
