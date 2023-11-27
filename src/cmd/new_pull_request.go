@@ -34,5 +34,4 @@ func printDeprecationNotice() {
 	fmt.Println("This command has been renamed to \"git town propose\"")
 	fmt.Println("and will be removed in future versions of Git Town.")
 	time.Sleep(2000 * time.Millisecond)
-
 }

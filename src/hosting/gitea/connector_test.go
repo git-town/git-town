@@ -13,7 +13,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestFilterGiteaPullRequests(t *testing.T) {
+func TestFilterGiteaProposals(t *testing.T) {
 	t.Parallel()
 	give := []*giteasdk.PullRequest{
 		// matching branch
@@ -63,7 +63,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 			},
 		},
 	}
-	have := gitea.FilterPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
+	have := gitea.FilterProposals(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
 	must.Eq(t, want, have)
 }
 

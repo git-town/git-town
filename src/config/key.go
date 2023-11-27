@@ -30,8 +30,8 @@ var (
 	KeyAliasDiffParent             = Key{"alias." + AliasDiffParent.name}         //nolint:gochecknoglobals
 	KeyAliasHack                   = Key{"alias." + AliasHack.name}               //nolint:gochecknoglobals
 	KeyAliasKill                   = Key{"alias." + AliasKill.name}               //nolint:gochecknoglobals
-	KeyAliasNewPullRequest         = Key{"alias." + AliasPropose.name}            //nolint:gochecknoglobals
 	KeyAliasPrepend                = Key{"alias." + AliasPrepend.name}            //nolint:gochecknoglobals
+	KeyAliasPropose                = Key{"alias." + AliasPropose.name}            //nolint:gochecknoglobals
 	KeyAliasRenameBranch           = Key{"alias." + AliasRenameBranch.name}       //nolint:gochecknoglobals
 	KeyAliasRepo                   = Key{"alias." + AliasRepo.name}               //nolint:gochecknoglobals
 	KeyAliasShip                   = Key{"alias." + AliasShip.name}               //nolint:gochecknoglobals
@@ -86,7 +86,7 @@ func NewAliasKey(aliasType Alias) Key {
 	case AliasKill:
 		return KeyAliasKill
 	case AliasPropose:
-		return KeyAliasNewPullRequest
+		return KeyAliasPropose
 	case AliasPrepend:
 		return KeyAliasPrepend
 	case AliasRenameBranch:

@@ -73,7 +73,7 @@ func executePropose(verbose bool) error {
 	runState := runstate.RunState{
 		Command:             "propose",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          newPullRequestProgram(config),
+		RunProgram:          proposeProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
@@ -89,7 +89,7 @@ func executePropose(verbose bool) error {
 	})
 }
 
-type newPullRequestConfig struct {
+type proposeConfig struct {
 	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	connector          hosting.Connector
@@ -105,7 +105,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
@@ -180,7 +180,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*newPul
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
-	return &newPullRequestConfig{
+	return &proposeConfig{
 		branches:           branches,
 		branchesToSync:     branchesToSync,
 		connector:          connector,
@@ -197,7 +197,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*newPul
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func newPullRequestProgram(config *newPullRequestConfig) program.Program {
+func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{

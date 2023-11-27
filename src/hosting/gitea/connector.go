@@ -25,7 +25,7 @@ func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 }
 
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
-	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	openProposals, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -34,19 +34,19 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 	if err != nil {
 		return nil, err
 	}
-	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
-	if len(pullRequests) == 0 {
+	proposals := FilterProposals(openProposals, self.Organization, branch, target)
+	if len(proposals) == 0 {
 		return nil, nil //nolint:nilnil
 	}
-	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
+	if len(proposals) > 1 {
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(proposals), branch, target)
 	}
-	pullRequest := pullRequests[0]
+	proposal := proposals[0]
 	return &domain.Proposal{
-		MergeWithAPI: pullRequest.Mergeable,
-		Number:       int(pullRequest.Index),
-		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
-		Title:        pullRequest.Title,
+		MergeWithAPI: proposal.Mergeable,
+		Number:       int(proposal.Index),
+		Target:       domain.NewLocalBranchName(proposal.Base.Ref),
+		Title:        proposal.Title,
 	}, nil
 }
 
@@ -95,13 +95,13 @@ func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) err
 	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
-func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
+func FilterProposals(proposals []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest{}
 	headName := organization + "/" + branch.String()
-	for p := range pullRequests {
-		pullRequest := pullRequests[p]
-		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
-			result = append(result, pullRequest)
+	for p := range proposals {
+		proposal := proposals[p]
+		if proposal.Head.Name == headName && proposal.Base.Name == target.String() {
+			result = append(result, proposal)
 		}
 	}
 	return result
