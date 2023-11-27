@@ -195,12 +195,6 @@ func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
 	return domain.NewLocalBranchNames(strings.Split(result, " ")...)
 }
 
-// SyncPerennialStrategy provides the currently configured sync-perennial strategy.
-func (self *GitTown) SyncPerennialStrategy() (SyncPerennialStrategy, error) {
-	text := self.LocalOrGlobalConfigValue(KeySyncPerennialStrategy)
-	return NewSyncPerennialStrategy(text)
-}
-
 // PushHook provides the currently configured push-hook setting.
 func (self *GitTown) PushHook() (bool, error) {
 	err := self.updateDeprecatedSetting(KeyDeprecatedPushVerify, KeyPushHook)
@@ -432,6 +426,12 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 		return true, nil
 	}
 	return ParseBool(text)
+}
+
+// SyncPerennialStrategy provides the currently configured sync-perennial strategy.
+func (self *GitTown) SyncPerennialStrategy() (SyncPerennialStrategy, error) {
+	text := self.LocalOrGlobalConfigValue(KeySyncPerennialStrategy)
+	return NewSyncPerennialStrategy(text)
 }
 
 func (self *GitTown) SyncStrategy() (SyncStrategy, error) {
