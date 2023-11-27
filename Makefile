@@ -43,8 +43,8 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	tools/rta gofumpt@${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shfmt@${SHFMT_VERSION} --write
-	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/run-that-app@${RUN_THAT_APP_VERSION} shellcheck@${SHELLCHECK_VERSION}
+	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt@${SHFMT_VERSION} --write
+	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --include-global shellcheck@${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
