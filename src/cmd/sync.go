@@ -73,17 +73,17 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	syncBranchesProgram(syncBranchesProgramArgs{
 		syncBranchProgramArgs: syncBranchProgramArgs{
-			branchTypes:            config.branches.Types,
-			remotes:                config.remotes,
-			isOffline:              config.isOffline,
-			lineage:                config.lineage,
-			program:                &runProgram,
-			mainBranch:             config.mainBranch,
-			syncPerennialhStrategy: config.syncPerennialStrategy,
-			pushBranch:             true,
-			pushHook:               config.pushHook,
-			shouldSyncUpstream:     config.shouldSyncUpstream,
-			syncStrategy:           config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			remotes:               config.remotes,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &runProgram,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		},
 		branchesToSync: config.branchesToSync,
 		hasOpenChanges: config.hasOpenChanges,
@@ -255,17 +255,17 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 }
 
 type syncBranchProgramArgs struct {
-	branchTypes            domain.BranchTypes
-	isOffline              bool
-	lineage                config.Lineage
-	program                *program.Program
-	mainBranch             domain.LocalBranchName
-	syncPerennialhStrategy config.SyncPerennialStrategy
-	pushBranch             bool
-	pushHook               bool
-	remotes                domain.Remotes
-	shouldSyncUpstream     bool
-	syncStrategy           config.SyncStrategy
+	branchTypes           domain.BranchTypes
+	isOffline             bool
+	lineage               config.Lineage
+	program               *program.Program
+	mainBranch            domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushBranch            bool
+	pushHook              bool
+	remotes               domain.Remotes
+	shouldSyncUpstream    bool
+	syncStrategy          config.SyncStrategy
 }
 
 // syncDeletedBranchProgram provides a program that syncs a branch that was deleted at origin.
@@ -337,7 +337,7 @@ func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, s
 // syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
 func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialhStrategy)
+		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialStrategy)
 	}
 	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
 		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})

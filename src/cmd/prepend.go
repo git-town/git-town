@@ -175,17 +175,17 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchProgram(branchToSync, syncBranchProgramArgs{
-			branchTypes:            config.branches.Types,
-			isOffline:              config.isOffline,
-			lineage:                config.lineage,
-			program:                &prog,
-			mainBranch:             config.mainBranch,
-			syncPerennialhStrategy: config.syncPerennialStrategy,
-			pushBranch:             true,
-			pushHook:               config.pushHook,
-			remotes:                config.remotes,
-			shouldSyncUpstream:     config.shouldSyncUpstream,
-			syncStrategy:           config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &prog,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			remotes:               config.remotes,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{

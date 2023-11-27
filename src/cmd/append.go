@@ -171,17 +171,17 @@ func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchTypes:            config.branches.Types,
-			isOffline:              config.isOffline,
-			lineage:                config.lineage,
-			program:                &prog,
-			remotes:                config.remotes,
-			mainBranch:             config.mainBranch,
-			syncPerennialhStrategy: config.syncPerennialStrategy,
-			pushBranch:             true,
-			pushHook:               config.pushHook,
-			shouldSyncUpstream:     config.shouldSyncUpstream,
-			syncStrategy:           config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &prog,
+			remotes:               config.remotes,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{

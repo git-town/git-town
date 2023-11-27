@@ -201,17 +201,17 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchTypes:            config.branches.Types,
-			remotes:                config.remotes,
-			isOffline:              config.isOffline,
-			lineage:                config.lineage,
-			program:                &prog,
-			mainBranch:             config.mainBranch,
-			syncPerennialhStrategy: config.syncPerennialStrategy,
-			pushBranch:             true,
-			pushHook:               config.pushHook,
-			shouldSyncUpstream:     config.shouldSyncUpstream,
-			syncStrategy:           config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			remotes:               config.remotes,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &prog,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		})
 	}
 	wrap(&prog, wrapOptions{
