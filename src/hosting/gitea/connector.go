@@ -34,7 +34,7 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 	if err != nil {
 		return nil, err
 	}
-	pullRequests := FilterProposals(openPullRequests, self.Organization, branch, target)
+	pullRequests := FilterPullRequests(openPullRequests, self.Organization, branch, target)
 	if len(pullRequests) == 0 {
 		return nil, nil //nolint:nilnil
 	}
@@ -95,7 +95,7 @@ func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) err
 	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
-func FilterProposals(proposals []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests(proposals []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest{}
 	headName := organization + "/" + branch.String()
 	for p := range proposals {
