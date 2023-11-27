@@ -25,7 +25,7 @@ func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 }
 
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
-	openProposals, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -34,19 +34,19 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 	if err != nil {
 		return nil, err
 	}
-	proposals := FilterProposals(openProposals, self.Organization, branch, target)
-	if len(proposals) == 0 {
+	pullRequests := FilterProposals(openPullRequests, self.Organization, branch, target)
+	if len(pullRequests) == 0 {
 		return nil, nil //nolint:nilnil
 	}
-	if len(proposals) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(proposals), branch, target)
+	if len(pullRequests) > 1 {
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
-	proposal := proposals[0]
+	pullRequest := pullRequests[0]
 	return &domain.Proposal{
-		MergeWithAPI: proposal.Mergeable,
-		Number:       int(proposal.Index),
-		Target:       domain.NewLocalBranchName(proposal.Base.Ref),
-		Title:        proposal.Title,
+		MergeWithAPI: pullRequest.Mergeable,
+		Number:       int(pullRequest.Index),
+		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
+		Title:        pullRequest.Title,
 	}, nil
 }
 
