@@ -102,7 +102,7 @@ type proposeConfig struct {
 	syncPerennialStrategy config.SyncPerennialStrategy
 	pushHook              bool
 	shouldSyncUpstream    bool
-	syncStrategy          config.SyncFeatureStrategy
+	syncFeatureStrategy   config.SyncFeatureStrategy
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -145,7 +145,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
+	syncFeatureStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -193,7 +193,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		syncPerennialStrategy: syncPerennialStrategy,
 		pushHook:              pushHook,
 		shouldSyncUpstream:    shouldSyncUpstream,
-		syncStrategy:          syncStrategy,
+		syncFeatureStrategy:   syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
@@ -211,7 +211,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 			pushBranch:            true,
 			pushHook:              config.pushHook,
 			shouldSyncUpstream:    config.shouldSyncUpstream,
-			syncFeatureStrategy:   config.syncStrategy,
+			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	wrap(&prog, wrapOptions{

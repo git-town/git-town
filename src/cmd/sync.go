@@ -375,8 +375,8 @@ func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domai
 	}
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncStrategy config.SyncFeatureStrategy, pushHook bool) {
-	switch syncStrategy {
+func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy config.SyncFeatureStrategy, pushHook bool) {
+	switch syncFeatureStrategy {
 	case config.SyncFeatureStrategyMerge:
 		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
 	case config.SyncFeatureStrategyRebase:
