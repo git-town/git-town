@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
   Scenario Outline:
     Given <LOCATION> Git Town setting "pull-branch-strategy" is "rebase"
     And the current branch is a feature branch "feature"
