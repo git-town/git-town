@@ -75,10 +75,10 @@ main
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
 Because we used `git append` to create the new branch, Git Town knows about the
-branch hierarchy and creates the proposal for branch `2-rename-foo` against
-branch `1-refactor`. This way, that the proposal for branch `2-rename-foo` shows
-only the changes made in that branch (renaming the variable) and not the
-refactor made in branch 1.
+branch hierarchy and creates the proposal (aka pull request) for branch
+`2-rename-foo` against branch `1-refactor`. This way, the proposal for branch
+`2-rename-foo` shows only the changes made in that branch (renaming the
+variable) and not the refactor made in branch 1.
 
 ## Branch 3: rename bar
 
