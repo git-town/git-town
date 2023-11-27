@@ -95,13 +95,13 @@ func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) err
 	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
-func FilterPullRequests(proposals []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest{}
 	headName := organization + "/" + branch.String()
-	for p := range proposals {
-		proposal := proposals[p]
-		if proposal.Head.Name == headName && proposal.Base.Name == target.String() {
-			result = append(result, proposal)
+	for p := range pullRequests {
+		pullRequest := pullRequests[p]
+		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target.String() {
+			result = append(result, pullRequest)
 		}
 	}
 	return result
