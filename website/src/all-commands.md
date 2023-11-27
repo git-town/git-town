@@ -14,8 +14,7 @@ _Commands to create, work on, and ship features._
 - [git sync](commands/sync.md) - update the current branch with all ongoing
   changes
 - [git switch](commands/switch.md) - switch between branches visually
-- [git new-pull-request](commands/new-pull-request.md) - create a new pull
-  request
+- [git propose](commands/propose.md) - propose to ship a branch
 - [git ship](commands/ship.md) - deliver a completed feature branch
 
 ### Additional workflow commands

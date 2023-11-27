@@ -8,7 +8,7 @@ Feature: merge conflict
       | feature | local         | feature commit | conflicting_file | feature content |
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
 
   Scenario: result
     Then it runs the commands
@@ -58,7 +58,7 @@ Feature: merge conflict
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And "open" launches a new pull request with this url in my browser:
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
@@ -83,7 +83,7 @@ Feature: merge conflict
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And "open" launches a new pull request with this url in my browser:
+    And "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """

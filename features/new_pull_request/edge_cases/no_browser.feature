@@ -5,7 +5,7 @@ Feature: print the URL when no browser installed
     Given the origin is "git@github.com:git-town/git-town"
     And no tool to open browsers is installed
     And the current branch is a feature branch "feature"
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
 
   Scenario: result
     Then it runs the commands

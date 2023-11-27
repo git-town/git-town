@@ -5,7 +5,7 @@ Feature: print the URL when the browser crashes
     Given the current branch is a feature branch "feature"
     And the origin is "git@github.com:git-town/git-town"
     And tool "open" is broken
-    When I run "git-town new-pull-request"
+    When I run "git-town propose"
 
   Scenario: result
     Then it runs the commands

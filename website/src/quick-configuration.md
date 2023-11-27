@@ -18,9 +18,9 @@ To remove these aliases, run `git town aliases remove`.
 
 ## API access to your hosting provider
 
-Git Town can ship branches that have an open pull request by merging this pull
-request via your code hosting service's API. To enable it, create an API token
-for your account at your code hosting provider.
+Git Town can ship branches that have an open proposal by merging this proposal
+via your code hosting service's API. To enable it, create an API token for your
+account at your code hosting provider.
 
 - [instructions for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - [instructions for GitLab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)

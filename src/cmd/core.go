@@ -19,7 +19,7 @@ func Execute() error {
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(killCommand())
-	rootCmd.AddCommand(newPullRequestCommand())
+	rootCmd.AddCommand(proposeCommand())
 	rootCmd.AddCommand(prependCommand())
 	rootCmd.AddCommand(renameBranchCommand())
 	rootCmd.AddCommand(repoCommand())

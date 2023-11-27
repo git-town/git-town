@@ -9,7 +9,7 @@
     - [hack](commands/hack.md)
     - [sync](commands/sync.md)
     - [switch](commands/switch.md)
-    - [new-pull-request](commands/new-pull-request.md)
+    - [propose](commands/propose.md)
     - [ship](commands/ship.md)
   - [Additional commands](additional-commands.md)
     - [kill](commands/kill.md)

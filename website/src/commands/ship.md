@@ -22,9 +22,9 @@ via the CLI.
 
 If you use GitHub, GitLab or Gitea, have enabled
 [API access to your hosting provider](../quick-configuration.md#api-access-to-your-hosting-provider),
-and the branch to be shipped has an open pull request, this command merges the
-pull request for the current branch on your origin server rather than on the
-local Git workspace.
+and the branch to be shipped has an open proposal, this command merges the
+proposal for the current branch on your origin server rather than on the local
+Git workspace.
 
 If your origin server deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),

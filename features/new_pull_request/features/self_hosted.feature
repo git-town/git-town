@@ -6,14 +6,14 @@ Feature: self-hosted service
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git Town setting "code-hosting-driver" is "<DRIVER>"
     And the current branch is a feature branch "feature"
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
-      <PULL_REQUEST_URL>
+      <PROPOSAL_URL>
       """
 
     Examples:
-      | DRIVER    | PULL_REQUEST_URL                                                                                                                          |
+      | DRIVER    | PROPOSAL_URL                                                                                                                              |
       | bitbucket | https://self-hosted/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature         |
       | github    | https://self-hosted/git-town/git-town/compare/feature?expand=1                                                                            |
       | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
@@ -23,8 +23,8 @@ Feature: self-hosted service
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
     And Git Town setting "code-hosting-driver" is "gitlab"
     And tool "open" is installed
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://git.example.com:4022/a/b
       """

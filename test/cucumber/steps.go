@@ -485,7 +485,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^"([^"]*)" launches a new pull request with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
+	suite.Step(`^"([^"]*)" launches a new proposal with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)

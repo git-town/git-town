@@ -7,8 +7,8 @@ Feature: GitHub support
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
@@ -27,8 +27,8 @@ Feature: GitHub support
   Scenario Outline: origin contains path that looks like a URL
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
       """
@@ -45,8 +45,8 @@ Feature: GitHub support
   Scenario Outline: proper URL encoding
     Given the current branch is a feature branch "<BRANCH_NAME>"
     And the origin is "https://github.com/git-town/git-town"
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       <URL>
       """
@@ -63,8 +63,8 @@ Feature: GitHub support
     And a feature branch "child" as a child of "parent"
     And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
+    When I run "git-town propose"
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """

@@ -21,12 +21,12 @@ Feature: continue after successful command
       | help                 |
       | kill feature         |
       | main_branch          |
-      | push-new-branches    |
-      | new-pull-request     |
       | offline              |
       | perennial-branches   |
       | prepend new          |
+      | propose              |
       | pull-branch-strategy |
+      | push-new-branches    |
       | rename-branch        |
       | repo                 |
       | ship feature -m done |

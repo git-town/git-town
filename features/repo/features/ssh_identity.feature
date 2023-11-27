@@ -6,7 +6,7 @@ Feature: use an SSH identity
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
     And Git Town setting "code-hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
     When I run "git-town repo"
-    Then "open" launches a new pull request with this url in my browser:
+    Then "open" launches a new proposal with this url in my browser:
       """
       <REPO_URL>
       """

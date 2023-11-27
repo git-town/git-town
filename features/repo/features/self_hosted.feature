@@ -6,7 +6,7 @@ Feature: self hosted servie
     And the origin is "git@self-hosted:git-town/git-town.git"
     And Git Town setting "code-hosting-driver" is "<DRIVER>"
     When I run "git-town repo"
-    Then "open" launches a new pull request with this url in my browser:
+    Then "open" launches a new proposal with this url in my browser:
       """
       <REPO_URL>
       """
@@ -23,7 +23,7 @@ Feature: self hosted servie
     And Git Town setting "code-hosting-driver" is "gitlab"
     And tool "open" is installed
     When I run "git-town repo"
-    Then "open" launches a new pull request with this url in my browser:
+    Then "open" launches a new proposal with this url in my browser:
       """
       https://git.example.com:4022/a/b
       """

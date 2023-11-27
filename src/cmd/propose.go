@@ -17,14 +17,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const newPullRequestDesc = "Creates a new pull request"
+const proposeDesc = "Creates a proposal to merge a Git branch"
 
-const newPullRequestHelp = `
+const proposeHelp = `
 Syncs the current branch
-and opens a browser window to the new pull request page of your repository.
+and opens a browser window to the new proposal page of your repository.
 
 The form is pre-populated for the current branch
-so that the pull request only shows the changes made
+so that the proposal only shows the changes made
 against the immediate parent branch.
 
 Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket.
@@ -35,23 +35,23 @@ When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`
 
-func newPullRequestCommand() *cobra.Command {
+func proposeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "new-pull-request",
+		Use:     "propose",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		Short:   newPullRequestDesc,
-		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
+		Short:   proposeDesc,
+		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeNewPullRequest(readVerboseFlag(cmd))
+			return executePropose(readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeNewPullRequest(verbose bool) error {
+func executePropose(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -63,7 +63,7 @@ func executeNewPullRequest(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineNewPullRequestConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineProposeConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -71,7 +71,7 @@ func executeNewPullRequest(verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "new-pull-request",
+		Command:             "propose",
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          newPullRequestProgram(config),
 	}
@@ -105,7 +105,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(repo *execute.OpenRepoResult, verbose bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*newPullRequestConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {

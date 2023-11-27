@@ -24,8 +24,8 @@ Feature: help for commands
       | hack                        |
       | help                        |
       | kill                        |
-      | new-pull-request            |
       | prepend                     |
+      | propose                     |
       | rename-branch               |
       | repo                        |
       | set-parent                  |
