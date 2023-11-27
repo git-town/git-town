@@ -2,7 +2,6 @@ Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
     Given <LOCATION> Git Town setting "pull-branch-strategy" is "rebase"
-    And the current branch is a feature branch "feature"
     When I run "git-town <COMMAND>"
     Then it prints:
       """
