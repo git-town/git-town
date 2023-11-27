@@ -10,7 +10,7 @@ Git Town uses these configuration settings:
 - [push-new-branches](preferences/push-new-branches.md)
 - [offline](preferences/offline.md)
 - [parent](preferences/parent.md)
-- [pererennial-branch-names](preferences/perennial-branch-names.md)
+- [pererennial-branches](preferences/perennial-branches.md)
 - [sync-perennial-strategy](preferences/sync-perennial-strategy.md)
 - [ship-delete-remote-branch](preferences/ship-delete-remote-branch.md)
 - [sync-feature-strategy](preferences/sync-feature-strategy.md)

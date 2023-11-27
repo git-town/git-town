@@ -172,6 +172,10 @@ func (self *GitTown) OriginURLString() string {
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
+	err := self.updateDeprecatedSetting(KeyDeprecatedPerennialBranchNames, KeyPerennialBranches)
+	if err != nil {
+		return domain.NewLocalBranchNames()
+	}
 	result := self.LocalOrGlobalConfigValue(KeyPerennialBranches)
 	if result == "" {
 		return domain.LocalBranchNames{}
