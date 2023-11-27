@@ -90,19 +90,19 @@ func executePropose(verbose bool) error {
 }
 
 type proposeConfig struct {
-	branches           domain.Branches
-	branchesToSync     domain.BranchInfos
-	connector          hosting.Connector
-	hasOpenChanges     bool
-	remotes            domain.Remotes
-	isOffline          bool
-	lineage            config.Lineage
-	mainBranch         domain.LocalBranchName
-	previousBranch     domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	pushHook           bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branches              domain.Branches
+	branchesToSync        domain.BranchInfos
+	connector             hosting.Connector
+	hasOpenChanges        bool
+	remotes               domain.Remotes
+	isOffline             bool
+	lineage               config.Lineage
+	mainBranch            domain.LocalBranchName
+	previousBranch        domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushHook              bool
+	shouldSyncUpstream    bool
+	syncStrategy          config.SyncStrategy
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -149,7 +149,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
+	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -181,19 +181,19 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &proposeConfig{
-		branches:           branches,
-		branchesToSync:     branchesToSync,
-		connector:          connector,
-		hasOpenChanges:     repoStatus.OpenChanges,
-		remotes:            remotes,
-		isOffline:          repo.IsOffline,
-		lineage:            lineage,
-		mainBranch:         mainBranch,
-		previousBranch:     previousBranch,
-		pullBranchStrategy: pullBranchStrategy,
-		pushHook:           pushHook,
-		shouldSyncUpstream: shouldSyncUpstream,
-		syncStrategy:       syncStrategy,
+		branches:              branches,
+		branchesToSync:        branchesToSync,
+		connector:             connector,
+		hasOpenChanges:        repoStatus.OpenChanges,
+		remotes:               remotes,
+		isOffline:             repo.IsOffline,
+		lineage:               lineage,
+		mainBranch:            mainBranch,
+		previousBranch:        previousBranch,
+		syncPerennialStrategy: syncPerennialStrategy,
+		pushHook:              pushHook,
+		shouldSyncUpstream:    shouldSyncUpstream,
+		syncStrategy:          syncStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
@@ -201,17 +201,17 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			program:            &prog,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			remotes:               config.remotes,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &prog,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		})
 	}
 	wrap(&prog, wrapOptions{

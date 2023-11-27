@@ -105,18 +105,18 @@ Feature: handle previously unfinished Git Town commands
     Then it runs without error
 
     Examples:
-      | COMMAND                     |
-      | aliases add                 |
-      | config                      |
-      | config main-branch          |
-      | config offline              |
-      | config perennial-branches   |
-      | config pull-branch-strategy |
-      | config push-hook            |
-      | config push-new-branches    |
-      | config reset                |
-      | config sync-strategy        |
-      | kill                        |
-      | status reset                |
-      | status                      |
-      | --version                   |
+      | COMMAND                        |
+      | aliases add                    |
+      | config                         |
+      | config main-branch             |
+      | config offline                 |
+      | config perennial-branches      |
+      | config sync-perennial-strategy |
+      | config push-hook               |
+      | config push-new-branches       |
+      | config reset                   |
+      | config sync-strategy           |
+      | kill                           |
+      | status reset                   |
+      | status                         |
+      | --version                      |

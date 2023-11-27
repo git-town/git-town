@@ -195,12 +195,6 @@ func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
 	return domain.NewLocalBranchNames(strings.Split(result, " ")...)
 }
 
-// PullBranchStrategy provides the currently configured pull branch strategy.
-func (self *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
-	text := self.LocalOrGlobalConfigValue(KeyPullBranchStrategy)
-	return NewPullBranchStrategy(text)
-}
-
 // PushHook provides the currently configured push-hook setting.
 func (self *GitTown) PushHook() (bool, error) {
 	err := self.updateDeprecatedSetting(KeyDeprecatedPushVerify, KeyPushHook)
@@ -334,33 +328,33 @@ func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) erro
 	return err
 }
 
-// SetPullBranchStrategy updates the configured pull branch strategy.
-func (self *GitTown) SetPullBranchStrategy(strategy PullBranchStrategy) error {
-	err := self.SetLocalConfigValue(KeyPullBranchStrategy, strategy.String())
-	return err
-}
-
-// SetPushHook updates the configured pull branch strategy.
+// SetPushHook updates the configured push-hook strategy.
 func (self *GitTown) SetPushHookGlobally(value bool) error {
 	err := self.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
-// SetPushHookLocally updates the configured pull branch strategy.
+// SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *GitTown) SetPushHookLocally(value bool) error {
 	err := self.SetLocalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
-// SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
+// SetShouldShipDeleteRemoteBranch updates the configured delete-remote-branch strategy.
 func (self *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
 	err := self.SetLocalConfigValue(KeyShipDeleteRemoteBranch, strconv.FormatBool(value))
 	return err
 }
 
-// SetShouldSyncUpstream updates the configured pull branch strategy.
+// SetShouldSyncUpstream updates the configured sync-upstream strategy.
 func (self *GitTown) SetShouldSyncUpstream(value bool) error {
 	err := self.SetLocalConfigValue(KeySyncUpstream, strconv.FormatBool(value))
+	return err
+}
+
+// SetSyncPerennialStrategy updates the configured sync-perennial strategy.
+func (self *GitTown) SetSyncPerennialStrategy(strategy SyncPerennialStrategy) error {
+	err := self.SetLocalConfigValue(KeySyncPerennialStrategy, strategy.String())
 	return err
 }
 
@@ -432,6 +426,12 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 		return true, nil
 	}
 	return ParseBool(text)
+}
+
+// SyncPerennialStrategy provides the currently configured sync-perennial strategy.
+func (self *GitTown) SyncPerennialStrategy() (SyncPerennialStrategy, error) {
+	text := self.LocalOrGlobalConfigValue(KeySyncPerennialStrategy)
+	return NewSyncPerennialStrategy(text)
 }
 
 func (self *GitTown) SyncStrategy() (SyncStrategy, error) {

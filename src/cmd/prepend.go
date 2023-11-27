@@ -91,7 +91,7 @@ type prependConfig struct {
 	mainBranch                domain.LocalBranchName
 	newBranchParentCandidates domain.LocalBranchNames
 	previousBranch            domain.LocalBranchName
-	pullBranchStrategy        config.PullBranchStrategy
+	syncPerennialStrategy     config.SyncPerennialStrategy
 	pushHook                  bool
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
@@ -123,7 +123,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	mainBranch := repo.Runner.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
-	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
@@ -161,7 +161,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 		mainBranch:                mainBranch,
 		newBranchParentCandidates: parentAndAncestors,
 		previousBranch:            previousBranch,
-		pullBranchStrategy:        pullBranchStrategy,
+		syncPerennialStrategy:     syncPerennialStrategy,
 		pushHook:                  pushHook,
 		parentBranch:              parent,
 		shouldNewBranchPush:       shouldNewBranchPush,
@@ -175,17 +175,17 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchProgram(branchToSync, syncBranchProgramArgs{
-			branchTypes:        config.branches.Types,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			program:            &prog,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			remotes:            config.remotes,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
+			branchTypes:           config.branches.Types,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &prog,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			remotes:               config.remotes,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncStrategy:          config.syncStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{
