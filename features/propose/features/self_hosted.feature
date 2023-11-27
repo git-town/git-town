@@ -4,7 +4,7 @@ Feature: self-hosted service
   Scenario Outline: self hosted
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
-    And Git Town setting "code-hosting-driver" is "<DRIVER>"
+    And Git Town setting "code-hosting-platform" is "<PLATFORM>"
     And the current branch is a feature branch "feature"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -13,7 +13,7 @@ Feature: self-hosted service
       """
 
     Examples:
-      | DRIVER    | PROPOSAL_URL                                                                                                                              |
+      | PLATFORM  | PROPOSAL_URL                                                                                                                              |
       | bitbucket | https://self-hosted/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature         |
       | github    | https://self-hosted/git-town/git-town/compare/feature?expand=1                                                                            |
       | gitea     | https://self-hosted/git-town/git-town/compare/main...feature                                                                              |
@@ -21,7 +21,7 @@ Feature: self-hosted service
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
-    And Git Town setting "code-hosting-driver" is "gitlab"
+    And Git Town setting "code-hosting-platform" is "gitlab"
     And tool "open" is installed
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
