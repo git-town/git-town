@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/git-town/git-town/v10/src/cli/flags"
 	"github.com/git-town/git-town/v10/src/config"
@@ -29,6 +30,9 @@ func newPullRequestCommand() *cobra.Command {
 
 func printDeprecationNotice() {
 	fmt.Println("DEPRECATION NOTICE")
+	fmt.Println("")
 	fmt.Println("This command has been renamed to \"git town propose\"")
 	fmt.Println("and will be removed in future versions of Git Town.")
+	time.Sleep(2000 * time.Millisecond)
+
 }
