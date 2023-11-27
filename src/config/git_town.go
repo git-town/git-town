@@ -94,7 +94,7 @@ func (self *GitTown) HostingService() (Hosting, error) {
 
 // HostingServiceName provides the name of the code hosting connector to use.
 func (self *GitTown) HostingServiceName() string {
-	return self.LocalOrGlobalConfigValue(KeyCodeHostingDriver)
+	return self.LocalOrGlobalConfigValue(KeyCodeHostingPlatform)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -261,8 +261,8 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (self *GitTown) SetCodeHostingDriver(value string) error {
-	self.config.Local[KeyCodeHostingDriver] = value
-	err := self.Run("git", "config", KeyCodeHostingDriver.String(), value)
+	self.config.Local[KeyCodeHostingPlatform] = value
+	err := self.Run("git", "config", KeyCodeHostingPlatform.String(), value)
 	return err
 }
 
