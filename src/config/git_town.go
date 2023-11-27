@@ -36,22 +36,6 @@ func (self *GitTown) BranchTypes() domain.BranchTypes {
 	}
 }
 
-func (self *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return self.config.Global[KeyDeprecatedNewBranchPushFlag]
-}
-
-func (self *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return self.config.Local[KeyDeprecatedNewBranchPushFlag]
-}
-
-func (self *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return self.config.Global[KeyDeprecatedPushVerify]
-}
-
-func (self *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return self.config.Local[KeyDeprecatedPushVerify]
-}
-
 func DetermineOriginURL(originURL, originOverride string, originURLCache OriginURLCache) *giturl.Parts {
 	cached, has := originURLCache[originURL]
 	if has {
