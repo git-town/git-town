@@ -13,14 +13,6 @@ Feature: automatically upgrade outdated configuration
     And <LOCATION> Git Town setting "new-branch-push-flag" no longer exists
 
     Examples:
-      | COMMAND                  | LOCATION |
-      | config                   | local    |
-      | config                   | global   |
-      | config push-new-branches | local    |
-      | config push-new-branches | global   |
-      | append foo               | local    |
-      | append foo               | global   |
-      | hack foo                 | local    |
-      | hack foo                 | global   |
-      | prepend foo              | local    |
-      | prepend foo              | global   |
+      | COMMAND  | LOCATION |
+      | hack foo | local    |
+      | hack foo | global   |

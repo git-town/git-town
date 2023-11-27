@@ -424,6 +424,10 @@ func (self *GitTown) SyncFeatureStrategyGlobal() (SyncFeatureStrategy, error) {
 
 // SyncPerennialStrategy provides the currently configured sync-perennial strategy.
 func (self *GitTown) SyncPerennialStrategy() (SyncPerennialStrategy, error) {
+	err := self.updateDeprecatedSetting(KeyDeprecatedPullBranchStrategy, KeySyncPerennialStrategy)
+	if err != nil {
+		return SyncPerennialStrategyRebase, err
+	}
 	text := self.LocalOrGlobalConfigValue(KeySyncPerennialStrategy)
 	return NewSyncPerennialStrategy(text)
 }

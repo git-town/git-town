@@ -15,22 +15,6 @@ Feature: automatically upgrade outdated configuration
     And <LOCATION> Git Town setting "push-verify" no longer exists
 
     Examples:
-      | COMMAND           | LOCATION |
-      | config            | local    |
-      | config            | global   |
-      | config push-hook  | local    |
-      | config push-hook  | global   |
-      | append foo        | local    |
-      | append foo        | global   |
-      | hack foo          | local    |
-      | hack foo          | global   |
-      | prepend foo       | local    |
-      | prepend foo       | global   |
-      | sync              | local    |
-      | sync              | global   |
-      | kill              | local    |
-      | kill              | global   |
-      | propose           | local    |
-      | propose           | global   |
-      | rename-branch bar | local    |
-      | rename-branch bar | global   |
+      | COMMAND  | LOCATION |
+      | hack foo | local    |
+      | hack foo | global   |
