@@ -13,7 +13,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestFilterGiteaProposals(t *testing.T) {
+func TestFilterGiteaPullRequests(t *testing.T) {
 	t.Parallel()
 	give := []*giteasdk.PullRequest{
 		// matching branch
