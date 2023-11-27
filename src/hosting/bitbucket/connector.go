@@ -56,11 +56,7 @@ func (self *Connector) HostingServiceName() string {
 
 func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	branchSHA, err := self.getSHAForBranch(branch.BranchName())
-	if err != nil {
-		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
-	}
-	query.Add("source", strings.Join([]string{self.Organization + "/" + self.Repository, branchSHA.TruncateTo(12).String(), branch.String()}, ":"))
+	query.Add("source", branch.String())
 	query.Add("dest", strings.Join([]string{self.Organization + "/" + self.Repository, "", parentBranch.String()}, ":"))
 	return fmt.Sprintf("%s/pull-request/new?%s", self.RepositoryURL(), query.Encode()), nil
 }
