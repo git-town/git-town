@@ -12,7 +12,7 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
+        sync perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
@@ -40,7 +40,7 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
+        sync perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
@@ -74,7 +74,7 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
+        sync perennial strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes

@@ -57,9 +57,9 @@ func (self *FailureCollector) Hosting(value config.Hosting, err error) config.Ho
 	return value
 }
 
-// PullBranchStrategy provides the string part of the given fallible function result
+// SyncPerennialStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
+func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
 	self.Check(err)
 	return value
 }
