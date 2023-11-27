@@ -646,12 +646,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the coworker sets the "sync-strategy" to "(merge|rebase)"$`, func(value string) error {
-		syncStrategy, err := config.ToSyncStrategy(value)
+	suite.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(value string) error {
+		syncFeatureStrategy, err := config.ToSyncFeatureStrategy(value)
 		if err != nil {
 			return err
 		}
-		_ = state.fixture.CoworkerRepo.Config.SetSyncStrategy(syncStrategy)
+		_ = state.fixture.CoworkerRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 		return nil
 	})
 

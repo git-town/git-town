@@ -23,8 +23,9 @@ commands that would be run but doesn't execute them.
 [sync-perennial-strategy](../preferences/sync-perennial-strategy.md) configures
 whether perennial branches merge their tracking branch or rebase against it.
 
-[sync-strategy](../preferences/sync-strategy.md) configures whether feature
-branches merge their parent and tracking branches or rebase against them.
+[sync-feature-strategy](../preferences/sync-feature-strategy.md) configures
+whether feature branches merge their parent and tracking branches or rebase
+against them.
 
 If the repository contains a Git remote called `upstream` and the
 [sync-upstream](../preferences/sync-upstream.md) setting is enabled, Git Town

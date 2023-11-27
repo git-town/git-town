@@ -77,5 +77,5 @@ _Commands that help adapt Git Town's behavior to your preferences._
   or update the perennial branches for the current repo
 - [git town sync-perennial-strategy](commands/config-sync-perennial-strategy.md) -
   display or set the strategy to update perennial branches
-- [git town sync-strategy](commands/config-sync-strategy.md) - display or update
-  whether feature branches get rebased or merged
+- [git town sync-feature-strategy](commands/config-sync-feature-strategy.md) -
+  display or update whether feature branches get rebased or merged

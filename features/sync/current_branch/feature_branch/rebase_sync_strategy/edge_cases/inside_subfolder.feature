@@ -1,7 +1,7 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given Git Town setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And the feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME        |

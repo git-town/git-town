@@ -47,6 +47,7 @@ var (
 	KeyMainBranch                   = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
 	KeyOffline                      = Key{"git-town.offline"}                      //nolint:gochecknoglobals
 	KeyPerennialBranches            = Key{"git-town.perennial-branch-names"}       //nolint:gochecknoglobals
+	KeySyncFeatureStrategy          = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
 	KeySyncPerennialStrategy        = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
 	KeyPushHook                     = Key{"git-town.push-hook"}                    //nolint:gochecknoglobals
 	KeyPushNewBranches              = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
@@ -68,6 +69,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyMainBranch,
 	KeyOffline,
 	KeyPerennialBranches,
+	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
 	KeyPushHook,
 	KeyPushNewBranches,
