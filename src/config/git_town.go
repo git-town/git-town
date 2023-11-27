@@ -413,11 +413,19 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 }
 
 func (self *GitTown) SyncFeatureStrategy() (SyncFeatureStrategy, error) {
+	err := self.updateDeprecatedSetting(KeyDeprecatedSyncStrategy, KeySyncFeatureStrategy)
+	if err != nil {
+		return SyncFeatureStrategyMerge, err
+	}
 	text := self.LocalOrGlobalConfigValue(KeySyncFeatureStrategy)
 	return ToSyncFeatureStrategy(text)
 }
 
 func (self *GitTown) SyncFeatureStrategyGlobal() (SyncFeatureStrategy, error) {
+	err := self.updateDeprecatedSetting(KeyDeprecatedSyncStrategy, KeySyncFeatureStrategy)
+	if err != nil {
+		return SyncFeatureStrategyMerge, err
+	}
 	setting := self.GlobalConfigValue(KeySyncFeatureStrategy)
 	return ToSyncFeatureStrategy(setting)
 }
