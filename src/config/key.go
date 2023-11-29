@@ -36,8 +36,9 @@ var (
 	KeyAliasRepo                      = Key{"alias." + AliasRepo.name}               //nolint:gochecknoglobals
 	KeyAliasShip                      = Key{"alias." + AliasShip.name}               //nolint:gochecknoglobals
 	KeyAliasSync                      = Key{"alias." + AliasSync.name}               //nolint:gochecknoglobals
-	KeyCodeHostingDriver              = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
+	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}        //nolint:gochecknoglobals
 	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
+	KeyDeprecatedCodeHostingDriver    = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
 	KeyDeprecatedMainBranchName       = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
 	KeyDeprecatedNewBranchPushFlag    = Key{"git-town.new-branch-push-flag"}         //nolint:gochecknoglobals
 	KeyDeprecatedPerennialBranchNames = Key{"git-town.perennial-branch-names"}       //nolint:gochecknoglobals
@@ -61,8 +62,9 @@ var (
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
-	KeyCodeHostingDriver,
+	KeyCodeHostingPlatform,
 	KeyCodeHostingOriginHostname,
+	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
