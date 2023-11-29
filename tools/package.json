@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "dprint": "0.42.5",
     "gherkin-lint": "4.2.2",
     "prettier": "3.0.3",
     "text-runner": "5.0.2",
