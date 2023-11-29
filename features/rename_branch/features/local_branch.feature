@@ -1,4 +1,4 @@
-Feature: rename the current branch
+Feature: rename a local-only branch
 
   Background:
     Given the current branch is a local feature branch "old"
@@ -26,8 +26,6 @@ Feature: rename the current branch
     Then it runs the commands
       | BRANCH | COMMAND                               |
       | new    | git branch old {{ sha 'old commit' }} |
-      |        | git push -u origin old                |
-      |        | git push origin :new                  |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
     And the current branch is now "old"
