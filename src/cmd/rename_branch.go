@@ -143,7 +143,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if oldBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	if oldBranch.SyncStatus != domain.SyncStatusUpToDate {
+	if oldBranch.SyncStatus != domain.SyncStatusUpToDate && oldBranch.SyncStatus != domain.SyncStatusLocalOnly {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {
