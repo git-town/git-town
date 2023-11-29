@@ -23,41 +23,6 @@
     chalk "^2.4.2"
     js-tokens "^4.0.0"
 
-"@dprint/darwin-arm64@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/darwin-arm64/-/darwin-arm64-0.42.5.tgz#eb5b2ad156128ad3da1e4e83707df9e2e995947c"
-  integrity sha512-3bBBlaAXQ9WTC+jvd2/iyj7cVp0G58/v5R7+YADUl5K9xF+Ah+xLFm6xw4Iwq+zsYaWDimRmLnM5iRSJC9qv1Q==
-
-"@dprint/darwin-x64@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/darwin-x64/-/darwin-x64-0.42.5.tgz#4087ed4d69c7afabd61e19ee9e9aa8cda9c951c4"
-  integrity sha512-gwx6lODOckU3xGv0zVFad/SMMtwBleiBAzm3UVw/WkGiCVo3XrIZ6EdLr4zCmB4A2R+SOxODU70WtONCF0dGnQ==
-
-"@dprint/linux-arm64-glibc@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/linux-arm64-glibc/-/linux-arm64-glibc-0.42.5.tgz#034edec6ca63597fa604718824cf9e4c3acab1ac"
-  integrity sha512-ijJm+zOxHK3Chnis3y5kVzvBr21Ugyodqpz1chClNWkaR+0/BYDik+lxZVrbxZw8gxqPu8iisOceCQQC42Bkzg==
-
-"@dprint/linux-arm64-musl@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/linux-arm64-musl/-/linux-arm64-musl-0.42.5.tgz#1c07a4a434f4544f5d2d9abb19a8264e8e4f9d85"
-  integrity sha512-OLbJgv14AvJRVBi+ZCXBH0rsMSIdCZi/z1hCTRUb901VB2OVf81k5vvBn7HS5S9wMQ2HIG8GFOyckBg0qhEgAQ==
-
-"@dprint/linux-x64-glibc@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/linux-x64-glibc/-/linux-x64-glibc-0.42.5.tgz#45655993e9ad769e52118cbea3d080528b165501"
-  integrity sha512-tWh1kMbTi/lxS6hQJCDnriZonzGYN6FcN2AqF1C/TdRNjacFVvQnxZTdHPLJbgw0mSujHPinl3NtvllZ9CwVqA==
-
-"@dprint/linux-x64-musl@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/linux-x64-musl/-/linux-x64-musl-0.42.5.tgz#e05b030c1d0d6ff9e4d432f344f90cd83e1fda5c"
-  integrity sha512-GObJlhUqQpaXKRMTUUEkdYgWgS1aVyMUQZFn3dBmLycl4F2gXWxKgYB6R47ESVeejsEvE9fTTuxlpK6fOHjaKQ==
-
-"@dprint/win32-x64@0.42.5":
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/@dprint/win32-x64/-/win32-x64-0.42.5.tgz#1e640f64c1171d1d226e00f4dd2f2821afb04333"
-  integrity sha512-N2N1FlmbEFbH/WqoKGdsZplBpfq9qdhfkJHQH1poVG3KxqT0dq01oqAfnC3ZQaSBoBrBfp5GyRtj7KwCxdqxXA==
-
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
@@ -371,19 +336,6 @@ defer-to-connect@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/defer-to-connect/-/defer-to-connect-2.0.1.tgz#8016bdb4143e4632b77a3449c6236277de520587"
   integrity sha512-4tvttepXG1VaYGrRibk5EwJd1t4udunSOVMdLSAL6mId1ix438oPwPZMALY41FCijukO1L0twNcGsdzS7dHgDg==
-
-dprint@0.42.5:
-  version "0.42.5"
-  resolved "https://registry.yarnpkg.com/dprint/-/dprint-0.42.5.tgz#c5acba0ae558d6a834a50d97f7619b0dfc6a14c4"
-  integrity sha512-GvC3Hpsm/GKBZe6UjOZVKLb3u86puWc2lm+F+Bqgkk4fjQ9tpvZhENFra9al1rz01qfxsc3+6JZN/E9eJIME5Q==
-  optionalDependencies:
-    "@dprint/darwin-arm64" "0.42.5"
-    "@dprint/darwin-x64" "0.42.5"
-    "@dprint/linux-arm64-glibc" "0.42.5"
-    "@dprint/linux-arm64-musl" "0.42.5"
-    "@dprint/linux-x64-glibc" "0.42.5"
-    "@dprint/linux-x64-musl" "0.42.5"
-    "@dprint/win32-x64" "0.42.5"
 
 duplexer@~0.1.1:
   version "0.1.2"
