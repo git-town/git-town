@@ -42,7 +42,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
+		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePropose(readVerboseFlag(cmd))
 		},

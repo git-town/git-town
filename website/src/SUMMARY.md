@@ -39,7 +39,7 @@
     - [sync-perennial-strategy](commands/config-sync-perennial-strategy.md)
     - [sync-feature-strategy](commands/config-sync-feature-strategy.md)
 - [Preferences](preferences.md)
-  - [code-hosting-driver](preferences/code-hosting-driver.md)
+  - [code-hosting-platform](preferences/code-hosting-platform.md)
   - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
   - [github-token](preferences/github-token.md)
   - [gitlab-token](preferences/gitlab-token.md)

@@ -2,7 +2,7 @@
 
 Git Town uses these configuration settings:
 
-- [code-hosting-driver](preferences/code-hosting-driver.md)
+- [code-hosting-platform](preferences/code-hosting-platform.md)
 - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
 - [github-token](preferences/github-token.md)
 - [gitlab-token](preferences/gitlab-token.md)

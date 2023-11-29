@@ -1,10 +1,12 @@
 # dev tooling and versions
+ACTIONLINT_VERSION = 1.6.26
 ALPHAVET_VERSION = 0.1.0
 DEPTH_VERSION = 1.2.1
+DPRINT_VERSION = 0.43.1
 GOFUMPT_VERSION = 0.4.0
 GOLANGCILINT_VERSION = 1.54.2
 GORELEASER_VERSION = 1.22.1
-RUN_THAT_APP_VERSION = 0.0.2
+RUN_THAT_APP_VERSION = 0.0.5
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.9.0
 SHFMT_VERSION = 3.6.0
@@ -41,11 +43,12 @@ fix: tools/alphavet_${ALPHAVET_VERSION} tools/run-that-app@${RUN_THAT_APP_VERSIO
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
 	tools/rta gofumpt@${GOFUMPT_VERSION} -l -w .
-	${CURDIR}/tools/node_modules/.bin/dprint fmt
+	tools/rta dprint@${DPRINT_VERSION} fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt@${SHFMT_VERSION} --write
 	tools/rta shfmt@${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --allow-unavailable shellcheck@${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
+	tools/rta actionlint@${ACTIONLINT_VERSION}
 	tools/rta golangci-lint@${GOLANGCILINT_VERSION} run
 	tools/ensure_no_files_with_dashes.sh
 	go vet "-vettool=tools/alphavet_${ALPHAVET_VERSION}" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/)
@@ -98,7 +101,6 @@ tools/alphavet_${ALPHAVET_VERSION}:
 	@mv tools/alphavet tools/alphavet_${ALPHAVET_VERSION}
 
 tools/run-that-app@${RUN_THAT_APP_VERSION}:
-	@echo "Installing run-that-app ${RUN_THAT_APP_VERSION} ..."
 	@rm -f tools/run-that-app* tools/rta
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
 	@mv tools/run-that-app tools/run-that-app@${RUN_THAT_APP_VERSION}
