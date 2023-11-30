@@ -18,6 +18,7 @@ Feature: self hosted servie
       | gitea     | https://self-hosted/git-town/git-town |
       | gitlab    | https://self-hosted/git-town/git-town |
 
+  @this
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
     And Git Town setting "code-hosting-platform" is "gitlab"
@@ -25,5 +26,5 @@ Feature: self hosted servie
     When I run "git-town repo"
     Then "open" launches a new proposal with this url in my browser:
       """
-      https://git.example.com:4022/a/b
+      https://git.example.com/a/b
       """
