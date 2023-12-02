@@ -26,7 +26,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And file "conflicting_file" still contains unresolved conflicts
 
   Scenario: abort with unresolved conflict fails due to unresolved merge conflicts
-    When I run "git-town abort"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
@@ -42,7 +42,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Scenario: resolve and abort
     Given I resolve the conflict in "conflicting_file"
-    When I run "git-town abort"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
@@ -54,7 +54,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       conflicts between your uncommmitted changes and the main branch
       """
-    And it does not print "to abort, run \"git-town abort\""
+    And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And now the initial commits exist
     And file "conflicting_file" still has content "resolved content"

@@ -26,15 +26,15 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To abort, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the current branch is now "feature"
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |

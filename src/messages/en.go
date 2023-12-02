@@ -2,7 +2,6 @@ package messages
 
 const (
 	AbortContinueGuidance              = "\n\nTo abort, run \"git-town abort\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
-	AbortNothingToDo                   = "nothing to abort"
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"

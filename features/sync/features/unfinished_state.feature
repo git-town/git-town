@@ -11,7 +11,7 @@ Feature: handle previously unfinished Git Town commands
     And I run "git-town sync"
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To abort, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       """
 
@@ -66,7 +66,7 @@ Feature: handle previously unfinished Git Town commands
     And now the initial commits exist
 
   Scenario: run a command, abort the previously finished one, and run another command
-    When I run "git-town abort"
+    When I run "git-town undo"
     And I run "git-town diff-parent"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
 

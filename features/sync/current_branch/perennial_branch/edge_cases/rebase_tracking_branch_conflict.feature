@@ -23,15 +23,15 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To abort, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
     And a rebase is now in progress
     And the uncommitted file is stashed
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |

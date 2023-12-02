@@ -33,7 +33,7 @@ Feature: handle merge conflicts between feature branch and main branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To abort, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
@@ -42,7 +42,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And a merge is now in progress
 
   Scenario: abort
-    When I run "git-town abort"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
