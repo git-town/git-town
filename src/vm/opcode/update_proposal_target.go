@@ -23,6 +23,6 @@ func (self *UpdateProposalTarget) Run(args shared.RunArgs) error {
 	return args.Connector.UpdateProposalTarget(self.ProposalNumber, self.NewTarget)
 }
 
-func (self *UpdateProposalTarget) ShouldAutomaticallyAbortOnError() bool {
+func (self *UpdateProposalTarget) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }

@@ -28,7 +28,7 @@ func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
 	return nil
 }
 
-func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
+func (self *undeclaredOpcodeMethods) ShouldAutomaticallyUndoOnError() bool {
 	return false
 }
 

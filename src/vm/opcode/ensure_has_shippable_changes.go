@@ -30,6 +30,6 @@ func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *EnsureHasShippableChanges) ShouldAutomaticallyAbortOnError() bool {
+func (self *EnsureHasShippableChanges) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }

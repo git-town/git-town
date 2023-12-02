@@ -8,12 +8,12 @@ import (
 	"github.com/git-town/git-town/v10/src/vm/shared"
 )
 
-// autoAbort performs an automatic abort of the current Git Town command.
+// autoUndo performs an automatic undo of the current Git Town command.
 //
-// Some Git Town opcodes can indicate that they auto-abort the entire Git Town command that they are a part of
+// Some Git Town opcodes can indicate that they auto-undo the entire Git Town command that they are a part of
 // should they fail.
-func autoAbort(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
-	print.Error(fmt.Errorf(messages.RunAutoAborting, runErr.Error()))
+func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
+	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
 		RunState:                &abortRunState,

@@ -62,6 +62,6 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SquashMerge) ShouldAutomaticallyAbortOnError() bool {
+func (self *SquashMerge) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }

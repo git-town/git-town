@@ -18,9 +18,9 @@ type Opcode interface {
 	// Run executes this opcode.
 	Run(args RunArgs) error
 
-	// ShouldAutomaticallyAbortOnError indicates whether this opcode should
+	// ShouldAutomaticallyUndoOnError indicates whether this opcode should
 	// cause the command to automatically abort if it errors.
 	// When true, automatically runs the abort logic and leaves the user where they started.
 	// When false, stops execution to let the user fix the issue and continue or manually abort.
-	ShouldAutomaticallyAbortOnError() bool
+	ShouldAutomaticallyUndoOnError() bool
 }

@@ -79,7 +79,7 @@ const (
 	RenamePerennialBranchWarning       = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName                   = "cannot rename branch to current name"
 	RepoOutside                        = "this is not a Git repository"
-	RunAutoAborting                    = "%s\nAuto-aborting... "
+	RunAutoUndo                        = "%s\nAuto-undo... "
 	RunCommandProblem                  = "error running command %q: %w"
 	RunstateAbortOpcodeProblem         = "cannot run the abort opcode: %w"
 	RunstateDeleteProblem              = "cannot delete previous run state: %w"
