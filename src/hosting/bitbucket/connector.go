@@ -54,7 +54,7 @@ func (self *Connector) HostingServiceName() string {
 }
 
 func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
-	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s/%s:%s",
+	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 			self.RepositoryURL(),
 			url.QueryEscape(branch.String()),
 			url.QueryEscape(self.Organization),
