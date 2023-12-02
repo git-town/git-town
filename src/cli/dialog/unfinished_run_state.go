@@ -17,8 +17,6 @@ type Response struct {
 func (self Response) String() string { return self.name }
 
 var (
-	// ResponseUndo stands for the user choosing to abort the unfinished run state.
-	ResponseUndo = Response{"undo"} //nolint:gochecknoglobals
 	// ResponseContinue stands for the user choosing to continue the unfinished run state.
 	ResponseContinue = Response{"continue"} //nolint:gochecknoglobals
 	// ResponseDiscard stands for the user choosing to discard the unfinished run state.
@@ -27,6 +25,8 @@ var (
 	ResponseQuit = Response{"quit"} //nolint:gochecknoglobals
 	// ResponseSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
 	ResponseSkip = Response{"skip"} //nolint:gochecknoglobals
+	// ResponseUndo stands for the user choosing to undo the unfinished run state.
+	ResponseUndo = Response{"undo"} //nolint:gochecknoglobals
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
