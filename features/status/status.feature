@@ -24,7 +24,6 @@ Feature: describe the status of the current/last Git Town command
       You can run "git town continue" to finish it.
       You can run "git town skip" to skip the currently failing operation.
       """
-    And it does not print "git town undo"
 
   Scenario: no runstate exists
     When I run "git-town status"

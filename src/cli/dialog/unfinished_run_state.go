@@ -17,8 +17,8 @@ type Response struct {
 func (self Response) String() string { return self.name }
 
 var (
-	// ResponseAbort stands for the user choosing to abort the unfinished run state.
-	ResponseAbort = Response{"abort"} //nolint:gochecknoglobals
+	// ResponseUndo stands for the user choosing to abort the unfinished run state.
+	ResponseUndo = Response{"undo"} //nolint:gochecknoglobals
 	// ResponseContinue stands for the user choosing to continue the unfinished run state.
 	ResponseContinue = Response{"continue"} //nolint:gochecknoglobals
 	// ResponseDiscard stands for the user choosing to discard the unfinished run state.
@@ -32,7 +32,7 @@ var (
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command string, endBranch domain.LocalBranchName, endTime time.Time, canSkip bool) (Response, error) {
 	formattedOptions := map[Response]string{
-		ResponseAbort:    fmt.Sprintf("Abort the `%s` command", command), // TODO: extract these strings to en.go.
+		ResponseUndo:     fmt.Sprintf("Undo the `%s` command", command), // TODO: extract these strings to en.go.
 		ResponseContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
 		ResponseDiscard:  "Discard the unfinished state and run the new command",
 		ResponseQuit:     "Quit without running anything",
@@ -45,7 +45,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch domain.LocalBran
 	if canSkip {
 		options = append(options, formattedOptions[ResponseSkip])
 	}
-	options = append(options, formattedOptions[ResponseAbort], formattedOptions[ResponseDiscard])
+	options = append(options, formattedOptions[ResponseUndo], formattedOptions[ResponseDiscard])
 	prompt := &survey.Select{
 		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s. Please choose how to proceed", command, endBranch, humanize.Time(endTime)),
 		Options: options,
@@ -54,12 +54,12 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch domain.LocalBran
 	result := ""
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return ResponseAbort, fmt.Errorf(messages.DialogCannotReadAnswer, err)
+		return ResponseUndo, fmt.Errorf(messages.DialogCannotReadAnswer, err)
 	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {
 			return responseType, nil
 		}
 	}
-	return ResponseAbort, fmt.Errorf(messages.DialogUnexpectedResponse, result)
+	return ResponseUndo, fmt.Errorf(messages.DialogUnexpectedResponse, result)
 }
