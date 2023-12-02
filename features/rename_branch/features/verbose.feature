@@ -56,7 +56,8 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --long --ignore-submodules                |
+      |        | backend  | git status --long --ignore-submodules         |
+      |        | backend  | git remote get-url origin                     |
       |        | backend  | git config --unset git-town-branch.new.parent |
       |        | backend  | git config git-town-branch.old.parent main    |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
@@ -75,6 +76,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 24 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "old"
