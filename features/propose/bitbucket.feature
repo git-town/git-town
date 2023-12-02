@@ -8,7 +8,7 @@ Feature: Bitbucket support
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """
-      https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
+      https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain
       """
 
     Examples:
@@ -33,7 +33,7 @@ Feature: Bitbucket support
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """
-      https://bitbucket.org/git-town/git-town.github.com/pull-request/new?dest=git-town%2Fgit-town.github.com%3A%3Amain&source=git-town%2Fgit-town.github.com%.*%3Afeature
+      https://bitbucket.org/git-town/git-town.github.com/pull-requests/new?source=feature&dest=git-town%2Fgit-town.github.com%3Amain
       """
 
     Examples:

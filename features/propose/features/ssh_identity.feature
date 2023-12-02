@@ -14,6 +14,6 @@ Feature: use a SSH identity
 
     Examples:
       | ORIGIN_HOSTNAME | PROPOSAL_URL                                                                                                                             |
-      | bitbucket.org   | https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature      |
+      | bitbucket.org   | https://bitbucket.org/git-town/git-town/pull-requests/new?source=feature&dest=git-town%2Fgit-town%3Amain                                 |
       | github.com      | https://github.com/git-town/git-town/compare/feature?expand=1                                                                            |
       | gitlab.com      | https://gitlab.com/git-town/git-town/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
