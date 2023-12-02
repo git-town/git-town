@@ -32,11 +32,11 @@ var (
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command string, endBranch domain.LocalBranchName, endTime time.Time, canSkip bool) (Response, error) {
 	formattedOptions := map[Response]string{
-		ResponseUndo:     fmt.Sprintf("Undo the `%s` command", command), // TODO: extract these strings to en.go.
 		ResponseContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
 		ResponseDiscard:  "Discard the unfinished state and run the new command",
 		ResponseQuit:     "Quit without running anything",
 		ResponseSkip:     fmt.Sprintf("Restart the `%s` command by skipping the current branch", command),
+		ResponseUndo:     fmt.Sprintf("Undo the `%s` command", command), // TODO: extract these strings to en.go.
 	}
 	options := []string{
 		formattedOptions[ResponseQuit],
