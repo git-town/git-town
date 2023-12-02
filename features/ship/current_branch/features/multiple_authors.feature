@@ -27,7 +27,7 @@ Feature: ship a coworker's feature branch
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no branch hierarchy exists now
 
-  Scenario:  undo
+  Scenario: undo
     Given I ran "git-town ship -m 'feature done'" and answered the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
