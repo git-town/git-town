@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/git-town/git-town/v10/src/config"
 	"github.com/git-town/git-town/v10/src/domain"
@@ -55,14 +54,13 @@ func (self *Connector) HostingServiceName() string {
 }
 
 func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
-	query := url.Values{}
-	branchSHA, err := self.getSHAForBranch(branch.BranchName())
-	if err != nil {
-		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
-	}
-	query.Add("source", strings.Join([]string{self.Organization + "/" + self.Repository, branchSHA.TruncateTo(12).String(), branch.String()}, ":"))
-	query.Add("dest", strings.Join([]string{self.Organization + "/" + self.Repository, "", parentBranch.String()}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", self.RepositoryURL(), query.Encode()), nil
+	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
+			self.RepositoryURL(),
+			url.QueryEscape(branch.String()),
+			url.QueryEscape(self.Organization),
+			url.QueryEscape(self.Repository),
+			url.QueryEscape(parentBranch.String())),
+		nil
 }
 
 func (self *Connector) RepositoryURL() string {

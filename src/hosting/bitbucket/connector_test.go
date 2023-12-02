@@ -74,6 +74,20 @@ func TestBitbucketConnector(t *testing.T) {
 			must.NoError(t, err)
 		})
 	})
+
+	t.Run("NewProposalURL", func(t *testing.T) {
+		t.Parallel()
+		connector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
+			HostingService:  config.HostingNone,
+			OriginURL:       giturl.Parse("username@bitbucket.org:org/repo.git"),
+			GetSHAForBranch: emptySHAForBranch,
+		})
+		must.NoError(t, err)
+		have, err := connector.NewProposalURL("branch", domain.NewLocalBranchName("parent-branch"))
+		must.NoError(t, err)
+		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
+		must.EqOp(t, want, have)
+	})
 }
 
 // emptySHAForBranch is a dummy implementation for hosting.SHAForBranchfunc to be used in tests.
