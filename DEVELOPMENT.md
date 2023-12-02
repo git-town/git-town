@@ -13,8 +13,9 @@ works.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run the tests: <code type="make/command">make test</code>
-4. compile the tool: <code type="make/command">make build</code>
+3. run all tests: <code type="make/command">make test</code>
+4. install the tool locally: <code type="make/command">make build</code>
+5. run a quick test suite during development: `make test-go`
 
 ## dependencies
 
