@@ -23,7 +23,7 @@ func (self *SquashMerge) CreateAbortProgram() []shared.Opcode {
 	}
 }
 
-func (self *SquashMerge) CreateAutomaticAbortError() error {
+func (self *SquashMerge) CreateAutomaticUndoError() error {
 	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
@@ -62,6 +62,6 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *SquashMerge) ShouldAutomaticallyAbortOnError() bool {
+func (self *SquashMerge) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }

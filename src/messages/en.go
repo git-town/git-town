@@ -1,8 +1,7 @@
 package messages
 
 const (
-	AbortContinueGuidance              = "\n\nTo abort, run \"git-town abort\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
-	AbortNothingToDo                   = "nothing to abort"
+	UndoContinueGuidance               = "\n\nTo go back to where you started, run \"git-town undo\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
@@ -80,7 +79,7 @@ const (
 	RenamePerennialBranchWarning       = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 	RenameToSameName                   = "cannot rename branch to current name"
 	RepoOutside                        = "this is not a Git repository"
-	RunAutoAborting                    = "%s\nAuto-aborting... "
+	RunAutoUndo                        = "%s\nAuto-undo... "
 	RunCommandProblem                  = "error running command %q: %w"
 	RunstateAbortOpcodeProblem         = "cannot run the abort opcode: %w"
 	RunstateDeleteProblem              = "cannot delete previous run state: %w"

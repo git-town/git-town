@@ -68,6 +68,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva                            |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
       |        | backend  | git status --long --ignore-submodules      |
+      |        | backend  | git remote get-url origin                  |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'Initial commit' }}  |
       |        | frontend | git checkout old                           |
@@ -79,7 +80,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                             |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 18 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist

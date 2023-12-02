@@ -45,7 +45,6 @@ _Commands to deal with merge conflicts._
 
 - [git continue](commands/continue.md) - continue after you resolved the merge
   conflict
-- [git abort](commands/abort.md) - abort and undo the currently failing command
 - [git skip](commands/skip.md) - when syncing all branches, ignore the current
   branch and continue with the next one
 - [git town status](commands/status.md) - display available commands

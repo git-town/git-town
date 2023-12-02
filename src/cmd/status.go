@@ -89,7 +89,7 @@ func displayUnfinishedStatus(config displayStatusConfig) {
 	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
 	fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
 	if config.state.HasAbortProgram() {
-		fmt.Println("You can run \"git town abort\" to abort it.")
+		fmt.Println("You can run \"git town undo\" to go back to where you started.")
 	}
 	if config.state.HasRunProgram() {
 		fmt.Println("You can run \"git town continue\" to finish it.")

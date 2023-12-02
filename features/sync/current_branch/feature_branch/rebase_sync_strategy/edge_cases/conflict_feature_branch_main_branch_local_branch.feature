@@ -28,7 +28,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
@@ -36,8 +36,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git rebase --abort |

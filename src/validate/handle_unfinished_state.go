@@ -38,7 +38,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
-	case dialog.ResponseAbort:
+	case dialog.ResponseUndo:
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
 		return skipRunstate(runState, args)

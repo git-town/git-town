@@ -25,8 +25,8 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.UndoProgram.AddProgram(undoProgram)
-	if failedOpcode.ShouldAutomaticallyAbortOnError() {
-		return autoAbort(failedOpcode, runErr, args)
+	if failedOpcode.ShouldAutomaticallyUndoOnError() {
+		return autoUndo(failedOpcode, runErr, args)
 	}
 	args.RunState.RunProgram.Prepend(failedOpcode.CreateContinueProgram()...)
 	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)
@@ -50,8 +50,8 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	message := runErr.Error()
-	if !args.RunState.IsAbort && !args.RunState.IsUndo {
-		message += messages.AbortContinueGuidance
+	if !args.RunState.IsUndo {
+		message += messages.UndoContinueGuidance
 	}
 	if args.RunState.UnfinishedDetails.CanSkip {
 		message += messages.ContinueSkipGuidance

@@ -25,7 +25,7 @@ func finished(args ExecuteArgs) error {
 	}
 	args.RunState.UndoProgram.AddProgram(undoProgram)
 	args.RunState.UndoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	if args.RunState.IsAbort || args.RunState.IsUndo {
+	if args.RunState.IsUndo {
 		err := statefile.Delete(args.RootDir)
 		if err != nil {
 			return fmt.Errorf(messages.RunstateDeleteProblem, err)

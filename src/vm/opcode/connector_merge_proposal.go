@@ -26,7 +26,7 @@ func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (self *ConnectorMergeProposal) CreateAutomaticAbortError() error {
+func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
 		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}
@@ -66,8 +66,8 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 	return self.mergeError
 }
 
-// ShouldAutomaticallyAbortOnError returns whether this opcode should cause the command to
-// automatically abort if it errors.
-func (self *ConnectorMergeProposal) ShouldAutomaticallyAbortOnError() bool {
+// ShouldAutomaticallyUndoOnError returns whether this opcode should cause the command to
+// automatically undo if it errors.
+func (self *ConnectorMergeProposal) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }

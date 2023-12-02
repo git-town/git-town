@@ -24,14 +24,14 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
