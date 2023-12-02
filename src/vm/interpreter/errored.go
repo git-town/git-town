@@ -50,7 +50,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	message := runErr.Error()
-	if !args.RunState.IsAbort && !args.RunState.IsUndo {
+	if !args.RunState.IsUndo {
 		message += messages.UndoContinueGuidance
 	}
 	if args.RunState.UnfinishedDetails.CanSkip {

@@ -36,7 +36,6 @@ func TestLoadSave(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
 			Command:      "command",
-			IsAbort:      true,
 			IsUndo:       true,
 			AbortProgram: program.Program{},
 			RunProgram: program.Program{
@@ -165,7 +164,6 @@ func TestLoadSave(t *testing.T) {
 		wantJSON := `
 {
   "Command": "command",
-  "IsAbort": true,
   "IsUndo": true,
   "AbortProgram": [],
   "RunProgram": [

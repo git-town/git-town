@@ -47,7 +47,6 @@ func TestRunState(t *testing.T) {
 		want := `
 {
   "Command": "sync",
-  "IsAbort": false,
   "IsUndo": false,
   "AbortProgram": [
     {

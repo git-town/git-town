@@ -67,7 +67,7 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 }
 
 // ShouldAutomaticallyUndoOnError returns whether this opcode should cause the command to
-// automatically abort if it errors.
+// automatically undo if it errors.
 func (self *ConnectorMergeProposal) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }
