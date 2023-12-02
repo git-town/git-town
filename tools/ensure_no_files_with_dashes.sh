@@ -3,7 +3,7 @@
 # This script verifies that there are no files or folders that contain dashes.
 # Git Town uses underscores in file paths.
 
-files_with_dashes=$(find . -name '*-*' | grep -v node_modules | grep -v vendor | grep -v '.git' | grep -v './website' | grep -v 'text-run.yml' | grep -v './.gherkin-*' | grep -v 'tools/run-that-app')
+files_with_dashes=$(find . -name '*-*' | grep -v node_modules | grep -v vendor | grep -v '.git' | grep -v './website' | grep -v '.tool-versions' | grep -v 'text-run.yml' | grep -v './.gherkin-*' | grep -v 'tools/run-that-app')
 if [ -n "$files_with_dashes" ]; then
 	count=$(echo "$files_with_dashes" | wc -l)
 	tput setaf 1
