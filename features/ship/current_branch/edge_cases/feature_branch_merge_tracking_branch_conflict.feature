@@ -22,7 +22,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       """
     And it prints the error:
       """
-      To abort, run "git-town undo".
+      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the current branch is still "feature"
