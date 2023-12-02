@@ -418,7 +418,7 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 	return ParseBool(text)
 }
 
-// SyncBeforeShip indicates whether a sync should be performed before a ship
+// SyncBeforeShip indicates whether a sync should be performed before a ship.
 func (self *GitTown) SyncBeforeShip() (bool, error) {
 	text := self.LocalOrGlobalConfigValue(KeySyncBeforeShip)
 	if text == "" {
