@@ -5,15 +5,16 @@ package shared
 // and provide opcodes to continue and abort them.
 // Undoing an opcode is done via the undo package.
 type Opcode interface {
-	// CreateAbortProgram provides the abort opcodes for this opcode.
+	// CreateAbortProgram provides the opcodes to abort this Opcode when it encounters an error.
 	CreateAbortProgram() []Opcode
 
-	// CreateContinueProgram provides the continue opcodes for this opcode.
+	// CreateContinueProgram provides the opcodes continue this opcode
+	// after it encountered an error and the user has resolved the error.
 	CreateContinueProgram() []Opcode
 
-	// CreateAutomaticAbortError provides the error message to display when this opcode
+	// CreateAutomaticUndoError provides the error message to display when this opcode
 	// cause the command to automatically abort.
-	CreateAutomaticAbortError() error
+	CreateAutomaticUndoError() error
 
 	// Run executes this opcode.
 	Run(args RunArgs) error

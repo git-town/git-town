@@ -26,7 +26,7 @@ func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (self *ConnectorMergeProposal) CreateAutomaticAbortError() error {
+func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
 		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}

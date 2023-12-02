@@ -15,7 +15,7 @@ type UpdateProposalTarget struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *UpdateProposalTarget) CreateAutomaticAbortError() error {
+func (self *UpdateProposalTarget) CreateAutomaticUndoError() error {
 	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, self.ProposalNumber)
 }
 

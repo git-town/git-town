@@ -30,5 +30,5 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)
 	}
-	return opcode.CreateAutomaticAbortError()
+	return opcode.CreateAutomaticUndoError()
 }
