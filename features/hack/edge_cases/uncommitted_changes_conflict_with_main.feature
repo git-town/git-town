@@ -25,7 +25,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And file "conflicting_file" still contains unresolved conflicts
 
-  Scenario: abort with unresolved conflict fails due to unresolved merge conflicts
+  Scenario: undo with unresolved conflict fails due to unresolved merge conflicts
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH   | COMMAND               |
@@ -40,7 +40,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the current branch is now "existing"
 
-  Scenario: resolve and abort
+  Scenario: resolve and undo
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town undo"
     Then it runs the commands
