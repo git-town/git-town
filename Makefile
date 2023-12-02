@@ -41,7 +41,7 @@ fix: tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes
 	tools/rta actionlint
 	tools/rta golangci-lint run
 	tools/ensure_no_files_with_dashes.sh
-	tools/rta ghokin fmt replace features/
+	tools/rta -l ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/)
 
 help:  # prints all available targets
