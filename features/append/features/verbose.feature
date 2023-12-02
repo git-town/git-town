@@ -20,7 +20,7 @@ Feature: display all executed Git commands
       | existing | frontend | git fetch --prune --tags                             |
       |          | backend  | git branch -vva                                      |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
-      |          | backend  | git status --long --ignore-submodules                       |
+      |          | backend  | git status --long --ignore-submodules                |
       | existing | frontend | git checkout main                                    |
       | main     | frontend | git rebase origin/main                               |
       |          | backend  | git rev-list --left-right main...origin/main         |
@@ -50,6 +50,6 @@ Feature: display all executed Git commands
     When I run "git-town undo --verbose"
     Then it prints:
       """
-      Ran 20 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "existing"
