@@ -13,15 +13,15 @@ type Opcode interface {
 	CreateContinueProgram() []Opcode
 
 	// CreateAutomaticUndoError provides the error message to display when this opcode
-	// cause the command to automatically abort.
+	// cause the command to automatically undo.
 	CreateAutomaticUndoError() error
 
 	// Run executes this opcode.
 	Run(args RunArgs) error
 
 	// ShouldAutomaticallyUndoOnError indicates whether this opcode should
-	// cause the command to automatically abort if it errors.
-	// When true, automatically runs the abort logic and leaves the user where they started.
-	// When false, stops execution to let the user fix the issue and continue or manually abort.
+	// cause the command to automatically undo if it errors.
+	// When true, automatically runs the abort and undo logic and leaves the user where they started.
+	// When false, stops execution to let the user fix the issue and continue or manually undo.
 	ShouldAutomaticallyUndoOnError() bool
 }
