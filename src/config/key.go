@@ -59,7 +59,7 @@ var (
 	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
 	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
 	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
-	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoblavals
+	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
