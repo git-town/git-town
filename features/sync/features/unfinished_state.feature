@@ -52,7 +52,7 @@ Feature: handle previously unfinished Git Town commands
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
-  # notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
+# notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
 
   Scenario: run a command and abort the previously unfinished one
     When I run "git-town sync" and answer the prompts:
@@ -93,9 +93,9 @@ Feature: handle previously unfinished Git Town commands
       | prepend foo       |
       | rename-branch foo |
       # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument
-      | ship              |
-      | switch            |
-      | sync              |
+      | ship   |
+      | switch |
+      | sync   |
 
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
