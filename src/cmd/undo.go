@@ -112,10 +112,10 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
-		return runstate.RunState{}, fmt.Errorf(messages.RunstateLoadProblem, err)
+		return runstate.EmptyRunState(), fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || runState.IsUnfinished() {
-		return runstate.RunState{}, fmt.Errorf(messages.UndoNothingToDo)
+		return runstate.EmptyRunState(), fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
 	wrap(&undoRunState.RunProgram, wrapOptions{
