@@ -85,9 +85,9 @@ func TestRunState(t *testing.T) {
   "UndoablePerennialCommits": []
 }`[1:]
 		must.EqOp(t, want, string(encoded))
-		newRunState := &runstate.RunState{} //nolint:exhaustruct
+		newRunState := runstate.EmptyRunState()
 		err = json.Unmarshal(encoded, &newRunState)
 		must.NoError(t, err)
-		must.Eq(t, runState, newRunState)
+		must.Eq(t, runState, &newRunState)
 	})
 }
