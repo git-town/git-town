@@ -21,7 +21,6 @@
     - [set-parent](commands/set-parent.md)
     - [diff-parent](commands/diff-parent.md)
   - [Dealing with errors](error-commands.md)
-    - [abort](commands/abort.md)
     - [continue](commands/continue.md)
     - [skip](commands/skip.md)
     - [status](commands/status.md)

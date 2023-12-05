@@ -53,6 +53,7 @@ Feature: display all executed Git commands
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
+      |        | backend  | git remote get-url origin                     |
       |        | backend  | git config --unset git-town-branch.new.parent |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
@@ -69,6 +70,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "main"

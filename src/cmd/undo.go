@@ -4,9 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v10/src/cli/flags"
+	"github.com/git-town/git-town/v10/src/cli/log"
 	"github.com/git-town/git-town/v10/src/config"
 	"github.com/git-town/git-town/v10/src/domain"
 	"github.com/git-town/git-town/v10/src/execute"
+	"github.com/git-town/git-town/v10/src/hosting"
+	"github.com/git-town/git-town/v10/src/hosting/github"
 	"github.com/git-town/git-town/v10/src/messages"
 	"github.com/git-town/git-town/v10/src/vm/interpreter"
 	"github.com/git-town/git-town/v10/src/vm/opcode"
@@ -15,7 +18,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const undoDesc = "Undoes the last run git-town command"
+const undoDesc = "Undoes the most recent Git Town command"
 
 func undoCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -56,7 +59,7 @@ func executeUndo(verbose bool) error {
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &undoRunState,
 		Run:                     &repo.Runner,
-		Connector:               nil,
+		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 lineage,
 		NoPushHook:              !config.pushHook,
@@ -68,9 +71,11 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
+	connector               hosting.Connector
 	hasOpenChanges          bool
-	mainBranch              domain.LocalBranchName
 	initialBranchesSnapshot domain.BranchesSnapshot
+	mainBranch              domain.LocalBranchName
+	lineage                 config.Lineage
 	previousBranch          domain.LocalBranchName
 	pushHook                bool
 }
@@ -100,9 +105,29 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
+	hostingService, err := repo.Runner.Config.HostingService()
+	if err != nil {
+		return nil, initialStashSnapshot, lineage, err
+	}
+	originURL := repo.Runner.Config.OriginURL()
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		HostingService:  hostingService,
+		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
+		OriginURL:       originURL,
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
+		MainBranch:      mainBranch,
+		Log:             log.Printing{},
+	})
+	if err != nil {
+		return nil, initialStashSnapshot, lineage, err
+	}
 	return &undoConfig{
+		connector:               connector,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
+		lineage:                 lineage,
 		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
 		pushHook:                pushHook,
@@ -114,10 +139,15 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	if err != nil {
 		return runstate.EmptyRunState(), fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || runState.IsUnfinished() {
+	if runState == nil {
 		return runstate.EmptyRunState(), fmt.Errorf(messages.UndoNothingToDo)
 	}
-	undoRunState := runState.CreateUndoRunState()
+	var undoRunState runstate.RunState
+	if runState.IsUnfinished() {
+		undoRunState = runState.CreateAbortRunState()
+	} else {
+		undoRunState = runState.CreateUndoRunState()
+	}
 	wrap(&undoRunState.RunProgram, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,

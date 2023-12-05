@@ -11,7 +11,7 @@ Feature: handle previously unfinished Git Town commands
     And I run "git-town sync"
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       """
 
@@ -54,7 +54,7 @@ Feature: handle previously unfinished Git Town commands
     And all branches are now synchronized
 # notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
 
-  Scenario: run a command and abort the previously unfinished one
+  Scenario: run a command and undo the previously unfinished one
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
@@ -65,8 +65,8 @@ Feature: handle previously unfinished Git Town commands
       | feature | git stash pop        |
     And now the initial commits exist
 
-  Scenario: run a command, abort the previously finished one, and run another command
-    When I run "git-town abort"
+  Scenario: run a command, undo the previously finished one, and run another command
+    When I run "git-town undo"
     And I run "git-town diff-parent"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
 

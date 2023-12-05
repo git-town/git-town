@@ -16,7 +16,7 @@ func (self *undeclaredOpcodeMethods) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (self *undeclaredOpcodeMethods) CreateAutomaticAbortError() error {
+func (self *undeclaredOpcodeMethods) CreateAutomaticUndoError() error {
 	return errors.New("")
 }
 
@@ -28,7 +28,7 @@ func (self *undeclaredOpcodeMethods) Run(_ shared.RunArgs) error {
 	return nil
 }
 
-func (self *undeclaredOpcodeMethods) ShouldAutomaticallyAbortOnError() bool {
+func (self *undeclaredOpcodeMethods) ShouldAutomaticallyUndoOnError() bool {
 	return false
 }
 

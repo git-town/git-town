@@ -15,7 +15,7 @@ type EnsureHasShippableChanges struct {
 	undeclaredOpcodeMethods
 }
 
-func (self *EnsureHasShippableChanges) CreateAutomaticAbortError() error {
+func (self *EnsureHasShippableChanges) CreateAutomaticUndoError() error {
 	return fmt.Errorf(messages.ShipBranchNothingToDo, self.Branch)
 }
 
@@ -30,6 +30,6 @@ func (self *EnsureHasShippableChanges) Run(args shared.RunArgs) error {
 	return nil
 }
 
-func (self *EnsureHasShippableChanges) ShouldAutomaticallyAbortOnError() bool {
+func (self *EnsureHasShippableChanges) ShouldAutomaticallyUndoOnError() bool {
 	return true
 }
