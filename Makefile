@@ -1,5 +1,5 @@
 # dev tooling and versions
-RUN_THAT_APP_VERSION = 0.1.1
+RUN_THAT_APP_VERSION = 0.2.0
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -76,13 +76,12 @@ unit-all:  # runs all the unit tests
 unit-race:  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
-update:  # updates all dependencies
+update: tools/run-that-app@${RUN_THAT_APP_VERSION}  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
 	(cd tools && yarn upgrade --latest)
-	echo
-	echo Please update the third-party tooling in the Makefile manually.
+	tools/rta --update
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
