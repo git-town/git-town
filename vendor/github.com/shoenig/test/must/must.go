@@ -1,5 +1,8 @@
 // Code generated via scripts/generate.sh. DO NOT EDIT.
 
+// Copyright (c) The Test Authors
+// SPDX-License-Identifier: MPL-2.0
+
 package must
 
 import (

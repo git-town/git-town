@@ -1,3 +1,6 @@
+// Copyright (c) The Test Authors
+// SPDX-License-Identifier: MPL-2.0
+
 package util
 
 // CloneSliceFunc creates a copy of A by first applying convert to each element.
