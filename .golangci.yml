@@ -80,7 +80,7 @@ issues:
       text: is missing field
       linters:
         - exhaustruct
-    - text: (cobra.Command|subshell.Options|gitea.*Options|github.*Options|gitlab.*Options|godog.Options) is missing fields?
+    - text: (cobra.Command|subshell.Options|gitea.*Options|gitea.MergePullRequestOption|github.*Options|gitlab.*Options|godog.Options) is missing fields?
       linters:
         - exhaustruct
     - path: src/hosting/gitea

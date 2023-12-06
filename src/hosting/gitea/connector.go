@@ -25,7 +25,7 @@ func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 }
 
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
-	openPullRequests, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
+	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -68,7 +68,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	title, body := common.CommitMessageParts(message)
-	_, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,
 		Message: body,
@@ -76,7 +76,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	if err != nil {
 		return domain.EmptySHA(), err
 	}
-	pullRequest, err := self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	pullRequest, _, err := self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
 	if err != nil {
 		return domain.EmptySHA(), err
 	}
