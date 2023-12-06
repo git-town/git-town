@@ -22,9 +22,9 @@ type Connector struct {
 
 func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
-		State:        gitlab.String("opened"),
-		SourceBranch: gitlab.String(branch.String()),
-		TargetBranch: gitlab.String(target.String()),
+		State:        gitlab.Ptr("opened"),
+		SourceBranch: gitlab.Ptr(branch.String()),
+		TargetBranch: gitlab.Ptr(target.String()),
 	}
 	mergeRequests, _, err := self.client.MergeRequests.ListProjectMergeRequests(self.projectPath(), opts)
 	if err != nil {
@@ -47,10 +47,10 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	self.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	result, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
-		SquashCommitMessage: gitlab.String(message),
-		Squash:              gitlab.Bool(true),
+		SquashCommitMessage: gitlab.Ptr(message),
+		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
-		ShouldRemoveSourceBranch: gitlab.Bool(false),
+		ShouldRemoveSourceBranch: gitlab.Ptr(false),
 	})
 	if err != nil {
 		self.log.Failed(err)
@@ -63,7 +63,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	self.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := self.client.MergeRequests.UpdateMergeRequest(self.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.String(target.String()),
+		TargetBranch: gitlab.Ptr(target.String()),
 	})
 	if err != nil {
 		self.log.Failed(err)

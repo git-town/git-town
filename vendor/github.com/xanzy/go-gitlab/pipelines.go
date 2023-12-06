@@ -49,6 +49,7 @@ type Pipeline struct {
 	Status         string          `json:"status"`
 	Source         string          `json:"source"`
 	Ref            string          `json:"ref"`
+	Name           string          `json:"name"`
 	SHA            string          `json:"sha"`
 	BeforeSHA      string          `json:"before_sha"`
 	Tag            bool            `json:"tag"`

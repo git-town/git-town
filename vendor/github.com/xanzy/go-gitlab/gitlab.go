@@ -164,6 +164,7 @@ type Client struct {
 	LicenseTemplates             *LicenseTemplatesService
 	ManagedLicenses              *ManagedLicensesService
 	Markdown                     *MarkdownService
+	MemberRolesService           *MemberRolesService
 	MergeRequestApprovals        *MergeRequestApprovalsService
 	MergeRequests                *MergeRequestsService
 	MergeTrains                  *MergeTrainsService
@@ -227,11 +228,17 @@ type Client struct {
 // ListOptions specifies the optional parameters to various List methods that
 // support pagination.
 type ListOptions struct {
-	// For paginated result sets, page of results to retrieve.
+	// For offset-based paginated result sets, page of results to retrieve.
 	Page int `url:"page,omitempty" json:"page,omitempty"`
-
-	// For paginated result sets, the number of results to include per page.
+	// For offset-based and keyset-based paginated result sets, the number of results to include per page.
 	PerPage int `url:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// For keyset-based paginated result sets, name of the column by which to order
+	OrderBy string `url:"order_by,omitempty" json:"order_by,omitempty"`
+	// For keyset-based paginated result sets, the value must be `"keyset"`
+	Pagination string `url:"pagination,omitempty" json:"pagination,omitempty"`
+	// For keyset-based paginated result sets, sort order (`"asc"`` or `"desc"`)
+	Sort string `url:"sort,omitempty" json:"sort,omitempty"`
 }
 
 // RateLimiter describes the interface that all (custom) rate limiters must implement.
@@ -389,6 +396,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.LicenseTemplates = &LicenseTemplatesService{client: c}
 	c.ManagedLicenses = &ManagedLicensesService{client: c}
 	c.Markdown = &MarkdownService{client: c}
+	c.MemberRolesService = &MemberRolesService{client: c}
 	c.MergeRequestApprovals = &MergeRequestApprovalsService{client: c}
 	c.MergeRequests = &MergeRequestsService{client: c, timeStats: timeStats}
 	c.MergeTrains = &MergeTrainsService{client: c}
@@ -710,32 +718,43 @@ func (c *Client) UploadRequest(method, path string, content io.Reader, filename 
 type Response struct {
 	*http.Response
 
-	// These fields provide the page values for paginating through a set of
-	// results. Any or all of these may be set to the zero value for
-	// responses that are not part of a paginated set, or for which there
-	// are no additional pages.
+	// Fields used for offset-based pagination.
 	TotalItems   int
 	TotalPages   int
 	ItemsPerPage int
 	CurrentPage  int
 	NextPage     int
 	PreviousPage int
+
+	// Fields used for keyset-based pagination.
+	PreviousLink string
+	NextLink     string
+	FirstLink    string
+	LastLink     string
 }
 
 // newResponse creates a new Response for the provided http.Response.
 func newResponse(r *http.Response) *Response {
 	response := &Response{Response: r}
 	response.populatePageValues()
+	response.populateLinkValues()
 	return response
 }
 
 const (
+	// Headers used for offset-based pagination.
 	xTotal      = "X-Total"
 	xTotalPages = "X-Total-Pages"
 	xPerPage    = "X-Per-Page"
 	xPage       = "X-Page"
 	xNextPage   = "X-Next-Page"
 	xPrevPage   = "X-Prev-Page"
+
+	// Headers used for keyset-based pagination.
+	linkPrev  = "prev"
+	linkNext  = "next"
+	linkFirst = "first"
+	linkLast  = "last"
 )
 
 // populatePageValues parses the HTTP Link response headers and populates the
@@ -758,6 +777,31 @@ func (r *Response) populatePageValues() {
 	}
 	if previousPage := r.Header.Get(xPrevPage); previousPage != "" {
 		r.PreviousPage, _ = strconv.Atoi(previousPage)
+	}
+}
+
+func (r *Response) populateLinkValues() {
+	if link := r.Header.Get("Link"); link != "" {
+		for _, link := range strings.Split(link, ",") {
+			parts := strings.Split(link, ";")
+			if len(parts) < 2 {
+				continue
+			}
+
+			linkType := strings.Trim(strings.Split(parts[1], "=")[1], "\"")
+			linkValue := strings.Trim(parts[0], "< >")
+
+			switch linkType {
+			case linkPrev:
+				r.PreviousLink = linkValue
+			case linkNext:
+				r.NextLink = linkValue
+			case linkFirst:
+				r.FirstLink = linkValue
+			case linkLast:
+				r.LastLink = linkValue
+			}
+		}
 	}
 }
 
