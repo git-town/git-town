@@ -1,5 +1,5 @@
 # dev tooling and versions
-RUN_THAT_APP_VERSION = 0.2.0
+RUN_THAT_APP_VERSION = 0.2.1
 
 # internal data and state
 .DEFAULT_GOAL := help
