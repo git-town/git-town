@@ -13,7 +13,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 		t.Parallel()
 		config := common.Config{
 			APIToken:     "123456",
-			Hostname:     "git.example.com:4022",
+			Hostname:     "git.example.com",
 			Organization: "org",
 			Repository:   "repo",
 		}
@@ -25,7 +25,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 		t.Parallel()
 		config := common.Config{
 			APIToken:     "123456",
-			Hostname:     "git.example.com",
+			Hostname:     "git.example.com:4022",
 			Organization: "org",
 			Repository:   "repo",
 		}
