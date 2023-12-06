@@ -1,10 +1,11 @@
 Feature: reset the configuration
 
+  @debug @this
   Scenario: with configuration
     Given the main branch is "main"
     And the current branch is a feature branch "feature"
     And the perennial branches are "qa" and "staging"
-    When I run "git-town config reset"
+    When I run "git-town config reset -v"
     Then Git Town is no longer configured
 
   Scenario: no configuration
