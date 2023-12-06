@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestHostnameWithStardardPort(t *testing.T) {
+func TestHostnameWithStandardPort(t *testing.T) {
 	t.Parallel()
 	t.Run("no port in hostname", func(t *testing.T) {
 		t.Parallel()
