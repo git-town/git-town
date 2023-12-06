@@ -261,14 +261,20 @@ func (self *TestCommands) HasFile(name, content string) string {
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) HasGitTownConfigNow() bool {
 	output, err := self.Query("git", "config", "--local", "--get-regex", "git-town")
-	if err != nil || output == "" {
+	if err != nil {
 		return false
+	}
+	if output != "" {
+		return true
 	}
 	output, err = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
-	if err != nil || output == "" {
+	if err != nil {
 		return false
 	}
-	return true
+	if output != "" {
+		return true
+	}
+	return false
 }
 
 // LocalBranches provides the names of all branches in the local repository,
