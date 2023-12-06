@@ -18,7 +18,7 @@ type BackendRunner interface {
 	Query(executable string, args ...string) (string, error)
 	QueryTrim(executable string, args ...string) (string, error)
 	Run(executable string, args ...string) error
-	RunMany([][]string) error
+	RunMany(commands [][]string) error
 }
 
 // BackendCommands are Git commands that Git Town executes to determine which frontend commands to run.

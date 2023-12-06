@@ -11,7 +11,7 @@ import (
 
 type FrontendRunner interface {
 	Run(executable string, args ...string) error
-	RunMany([][]string) error
+	RunMany(commands [][]string) error
 }
 
 // FrontendCommands are Git commands that Git Town executes for the user to change the user's repository.
