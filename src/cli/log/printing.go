@@ -17,11 +17,11 @@ func (self Printing) Failed(failure error) {
 	}
 }
 
-func (self Printing) Start(template string, messages ...interface{}) {
+func (self Printing) Start(template string, data ...interface{}) {
 	fmt.Println()
-	_, err := color.New(color.Bold).Printf(template, messages...)
+	_, err := color.New(color.Bold).Printf(template, data...)
 	if err != nil {
-		fmt.Printf(template, messages...)
+		fmt.Printf(template, data...)
 	}
 }
 

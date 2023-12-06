@@ -1,7 +1,7 @@
 package runstate
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -169,7 +169,7 @@ func (self *RunState) String() string {
 	result.WriteString("  Command: ")
 	result.WriteString(self.Command)
 	result.WriteString("\n  IsUndo: ")
-	result.WriteString(fmt.Sprintf("%t", self.IsUndo))
+	result.WriteString(strconv.FormatBool(self.IsUndo))
 	result.WriteString("\n  AbortProgram: ")
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
