@@ -243,14 +243,6 @@ func (self *GitTown) RemoveLocalGitConfiguration() error {
 	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		err = self.Run("git", "config", "--unset", key.String())
 		if err != nil {
-			var exitErr *exec.ExitError
-			if errors.As(err, &exitErr) {
-				if exitErr.ExitCode() == 128 {
-					// Git returns exit code 128 when trying to delete a non-existing config section.
-					// This is not an error condition in this workflow so we can ignore it here.
-					return nil
-				}
-			}
 			return fmt.Errorf(messages.ConfigRemoveError, err)
 		}
 	}
