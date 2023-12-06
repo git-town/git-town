@@ -301,9 +301,14 @@ func TestTestCommands(t *testing.T) {
 			must.NoError(t, runtime.CreateFeatureBranch(domain.NewLocalBranchName("foo")))
 			must.True(t, runtime.HasGitTownConfigNow())
 		})
-		t.Run("main branch set", func(t *testing.T) {
+		t.Run("main branch is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.Config.SetMainBranch(domain.NewLocalBranchName("main"))
+			must.True(t, runtime.HasGitTownConfigNow())
+		})
+		t.Run("perennial branches are configured", func(t *testing.T) {
+			runtime := testruntime.Create(t)
+			runtime.Config.SetPerennialBranches(domain.NewLocalBranchNames("qa"))
 			must.True(t, runtime.HasGitTownConfigNow())
 		})
 	})
