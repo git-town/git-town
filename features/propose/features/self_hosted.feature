@@ -26,5 +26,5 @@ Feature: self-hosted service
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
       """
-      https://git.example.com:4022/a/b
+      https://git.example.com/a/b
       """
