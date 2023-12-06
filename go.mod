@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	atomicgo.dev/cursor v0.2.0
-	code.gitea.io/sdk/gitea v0.12.0
+	code.gitea.io/sdk/gitea v0.17.0
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/cucumber/godog v0.9.0
 	github.com/cucumber/messages-go/v10 v10.0.3
@@ -27,6 +27,8 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect
+	github.com/davidmz/go-pageant v1.0.2 // indirect
+	github.com/go-fed/httpsig v1.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
