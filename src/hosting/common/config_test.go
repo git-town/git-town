@@ -9,6 +9,7 @@ import (
 
 func TestHostnameWithStandardPort(t *testing.T) {
 	t.Parallel()
+
 	t.Run("no port in hostname", func(t *testing.T) {
 		t.Parallel()
 		config := common.Config{
@@ -21,6 +22,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 		want := "git.example.com"
 		must.EqOp(t, want, have)
 	})
+
 	t.Run("port in hostname", func(t *testing.T) {
 		t.Parallel()
 		config := common.Config{

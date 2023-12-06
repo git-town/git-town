@@ -17,10 +17,10 @@ type Config struct {
 	Repository string
 }
 
-func (c Config) HostnameWithStandardPort() string {
-	index := strings.IndexRune(c.Hostname, ':')
+func (self Config) HostnameWithStandardPort() string {
+	index := strings.IndexRune(self.Hostname, ':')
 	if index == -1 {
-		return c.Hostname
+		return self.Hostname
 	}
-	return c.Hostname[:index]
+	return self.Hostname[:index]
 }
