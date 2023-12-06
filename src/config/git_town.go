@@ -241,7 +241,7 @@ func (self *GitTown) RemoveLocalGitConfiguration() error {
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
 	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		err = self.Run("git", "config", "--remove-section", key.String())
+		err = self.Run("git", "config", "--unset", key.String())
 		if err != nil {
 			var exitErr *exec.ExitError
 			if errors.As(err, &exitErr) {
