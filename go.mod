@@ -16,7 +16,7 @@ require (
 	github.com/sergi/go-diff v1.3.1
 	github.com/shoenig/test v1.7.0
 	github.com/spf13/cobra v1.8.0
-	github.com/xanzy/go-gitlab v0.93.2
+	github.com/xanzy/go-gitlab v0.94.0
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 	golang.org/x/oauth2 v0.15.0
 	// NOTE: updating to v2 makes the integration tests slow
