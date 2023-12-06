@@ -1,6 +1,5 @@
 Feature: reset the configuration
 
-  @debug @this
   Scenario: with configuration
     Given the main branch is "main"
     And the current branch is a feature branch "feature"
