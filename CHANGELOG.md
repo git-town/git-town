@@ -43,8 +43,8 @@ user experience more consistent and intuitive.
   shipping branches locally, but is conflicting with the requirements for tests
   to pass on CI before shipping via the hosting platform
   ([#2714](https://github.com/git-town/git-town/pull/2714)).
-- installation via Chocolatey on Windows (pending review and approval from the
-  Chocolatey team)
+- Git Town can now be installed via Chocolatey on Windows (pending review and
+  approval from the Chocolatey team).
 
 #### Bug Fixes
 
