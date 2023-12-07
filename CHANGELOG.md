@@ -7,12 +7,12 @@ user experience more consistent and intuitive.
 
 #### BREAKING CHANGES
 
-- `git town new-pull-request` is now `git town propose`. Not all platforms that
-  Git Town supports use the name "pull request", so Git Town uses the word
-  "proposal" for pull requests, merge requests, etc from now on.
+- `git new-pull-request` is now `git propose`. Not all platforms that Git Town
+  supports use the name "pull request", so Git Town uses the word "proposal" for
+  pull requests, merge requests, etc from now on.
   ([#2691](https://github.com/git-town/git-town/pull/2691)).
-- `git town abort` has been merged with `git town undo`. From now on you just
-  run `git town undo` after a Git Town command fails or finishes to get back to
+- `git abort` has been merged with `git undo`. From now on you just run
+  `git town undo` after a Git Town command fails or finishes to get back to
   where you started ([#2719](https://github.com/git-town/git-town/pull/2719)).
 - Many configuration options now have more intuitive names. No action needed on
   your end, Git Town automatically updates the affected settings on your
@@ -32,8 +32,8 @@ user experience more consistent and intuitive.
 - `git town config reset` now also deletes the branch lineage. This helps get
   you out of a configuration snafu
   ([#2733](https://github.com/git-town/git-town/pull/2733)).
-- `git town repo` and `git town propose` always open the browser page at the
-  default port, even if the `origin` remote points to a custom port
+- `git repo` and `git propose` always open the browser page at the default port,
+  even if the `origin` remote points to a custom port
   ([#2730](https://github.com/git-town/git-town/pull/2730)).
 
 #### New Features
