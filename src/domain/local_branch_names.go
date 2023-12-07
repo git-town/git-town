@@ -26,6 +26,17 @@ func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, fe
 	return
 }
 
+// FirstNonEmpty provides the first LocalBranchName from this list that isn't empty.
+// If all branches are empty, then it returns an empty branch.
+func (self LocalBranchNames) FirstNonEmpty() LocalBranchName {
+	for _, branch := range self {
+		if !branch.IsEmpty() {
+			return branch
+		}
+	}
+	return EmptyLocalBranchName()
+}
+
 // Join provides the names of all branches in this collection connected by the given separator.
 func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
