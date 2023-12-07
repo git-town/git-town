@@ -35,11 +35,11 @@ Feature: handle conflicts between the supplied feature branch and the main branc
 
   Scenario: undo
     When I run "git-town undo"
+    Then it runs no commands
     And it prints the error:
       """
       nothing to undo
       """
-    Then it runs no commands
     And the current branch is now "other"
     And the uncommitted file still exists
     And no merge is in progress
