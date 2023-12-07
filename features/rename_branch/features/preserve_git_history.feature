@@ -12,4 +12,4 @@ Feature: preserve the previous Git branch
   Scenario: previous branch renamed
     When I run "git-town rename-branch previous new"
     Then the current branch is now "current"
-    And the previous Git branch is now "main"
+    And the previous Git branch is now "new"

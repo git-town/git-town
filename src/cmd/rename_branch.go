@@ -189,7 +189,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	wrap(&result, wrapOptions{
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch, config.newBranch},
 	})
 	return result
 }
