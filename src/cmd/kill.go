@@ -78,6 +78,7 @@ func executeKill(args []string, verbose bool) error {
 }
 
 type killConfig struct {
+	branchToKill   domain.BranchInfo
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
 	isOffline      bool
@@ -85,7 +86,6 @@ type killConfig struct {
 	mainBranch     domain.LocalBranchName
 	noPushHook     bool
 	previousBranch domain.LocalBranchName
-	targetBranch   domain.BranchInfo
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -142,7 +142,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		mainBranch:     mainBranch,
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
-		targetBranch:   *targetBranch,
+		branchToKill:   *targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
@@ -151,7 +151,7 @@ func (self killConfig) isOnline() bool {
 }
 
 func (self killConfig) targetBranchParent() domain.LocalBranchName {
-	return self.lineage.Parent(self.targetBranch.LocalName)
+	return self.lineage.Parent(self.branchToKill.LocalName)
 }
 
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
@@ -159,7 +159,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch.LocalName && config.targetBranch.LocalName == config.previousBranch && config.hasOpenChanges,
+		StashOpenChanges: config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
@@ -169,23 +169,23 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
-	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.targetBranch.RemoteName})
+	if config.branchToKill.HasTrackingBranch() && config.isOnline() {
+		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
 	}
-	if config.initialBranch == config.targetBranch.LocalName {
+	if config.initialBranch == config.branchToKill.LocalName {
 		if config.hasOpenChanges {
 			prog.Add(&opcode.CommitOpenChanges{})
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
 			prog.Add(&opcode.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoProgram.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
+			finalUndoProgram.Add(&opcode.Checkout{Branch: config.branchToKill.LocalName})
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
 		prog.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
 	}
-	prog.Add(&opcode.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Force: false})
+	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
-		branch:  config.targetBranch.LocalName,
+		branch:  config.branchToKill.LocalName,
 		lineage: config.lineage,
 		program: prog,
 		parent:  config.targetBranchParent(),
