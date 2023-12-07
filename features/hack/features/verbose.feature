@@ -28,15 +28,13 @@ Feature: display all executed Git commands
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git config git-town-branch.new.parent main    |
       | main   | frontend | git checkout new                              |
-      |        | backend  | git show-ref --quiet refs/heads/main          |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git branch -vva                               |
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 24 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "new"
 
