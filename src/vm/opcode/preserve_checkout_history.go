@@ -2,7 +2,6 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v11/src/domain"
-	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
@@ -20,7 +19,7 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
 	previousBranchCandidates := self.PreviousBranchCandidates.Remove(currentBranch)
 	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
-	expectedPreviousBranch := firstExistingBranch(previousBranchCandidates, args.Runner.Backend)
+	expectedPreviousBranch := args.Runner.Backend.FirstExistingBranch(previousBranchCandidates, domain.EmptyLocalBranchName())
 	if expectedPreviousBranch.IsEmpty() || actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}
@@ -29,14 +28,4 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 		return err
 	}
 	return args.Runner.Backend.CheckoutBranchUncached(currentBranch)
-}
-
-// firstExistingBranch provides the first branch in the given list that actually exists.
-func firstExistingBranch(candidates domain.LocalBranchNames, cmd git.BackendCommands) domain.LocalBranchName {
-	for _, candidate := range candidates {
-		if cmd.BranchExists(candidate) {
-			return candidate
-		}
-	}
-	return domain.EmptyLocalBranchName()
 }
