@@ -15,7 +15,10 @@ Feature: local repository
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |
-      | good   | git branch -D other |
+      | good   | git add -A          |
+      |        | git stash           |
+      |        | git branch -D other |
+      |        | git stash pop       |
     And the current branch is still "good"
     And the uncommitted file still exists
     And the branches are now

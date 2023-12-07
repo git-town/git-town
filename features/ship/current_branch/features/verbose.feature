@@ -45,17 +45,14 @@ Feature: display all executed Git commands
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
-      |         | backend  | git show-ref --quiet refs/heads/feature           |
-      |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git checkout main                                 |
-      |         | backend  | git checkout main                                 |
+      |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 42 shell commands.
+      Ran 39 shell commands.
       """
     And the current branch is now "main"
 
@@ -81,14 +78,13 @@ Feature: display all executed Git commands
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
       |        | frontend | git checkout feature                           |
-      |        | backend  | git show-ref --quiet refs/heads/main           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
+      |        | backend  | git show-ref --verify --quiet refs/heads/      |
       |        | backend  | git config -lz --global                        |
       |        | backend  | git config -lz --local                         |
       |        | backend  | git branch -vva                                |
       |        | backend  | git stash list                                 |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "feature"

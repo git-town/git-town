@@ -8,7 +8,7 @@ Feature: preserve the previous Git branch
     Given origin deletes the "current" branch
     When I run "git-town sync --all"
     Then the current branch is now "previous"
-    And the previous Git branch is still "previous"
+    And the previous Git branch is now "main"
 
   Scenario: current branch exists, previous branch gone
     Given origin deletes the "previous" branch
@@ -21,7 +21,7 @@ Feature: preserve the previous Git branch
     And origin deletes the "current" branch
     When I run "git-town sync --all"
     Then the current branch is now "main"
-    And the previous Git branch is now "main"
+    And the previous Git branch is now ""
 
   Scenario: both branches exist
     When I run "git-town sync --all"

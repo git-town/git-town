@@ -13,7 +13,7 @@ Feature: preserve the previous Git branch
   Scenario: previous branch was killed
     When I run "git-town kill previous -v"
     Then the current branch is still "current"
-    And the previous Git branch is now "main"
+    And the previous Git branch is now ""
 
   Scenario: supplied branch - current and previous branch remain
     Given a feature branch "victim"
