@@ -15,14 +15,6 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-func FromLocalBranchNames(names ...LocalBranchName) LocalBranchNames {
-	result := make(LocalBranchNames, len(names))
-	for n, name := range names {
-		result[n] = name
-	}
-	return result
-}
-
 func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
 	for _, branch := range self {
 		if branchTypes.IsFeatureBranch(branch) {

@@ -31,7 +31,7 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	return args.Runner.Backend.CheckoutBranchUncached(currentBranch)
 }
 
-// firstExistingBranch provides the first branch in the given list that actually exists
+// firstExistingBranch provides the first branch in the given list that actually exists.
 func firstExistingBranch(candidates domain.LocalBranchNames, cmd git.BackendCommands) domain.LocalBranchName {
 	for _, candidate := range candidates {
 		if cmd.BranchExists(candidate) {
