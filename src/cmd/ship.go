@@ -376,6 +376,8 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	}
 	if !config.isShippingInitialBranch {
 		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
+	} else {
+		prog.Add(&opcode.Checkout{Branch: config.previousBranch})
 	}
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
