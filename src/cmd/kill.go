@@ -78,15 +78,16 @@ func executeKill(args []string, verbose bool) error {
 }
 
 type killConfig struct {
-	branchToKill   domain.BranchInfo
-	branchWhenDone domain.LocalBranchName
-	hasOpenChanges bool
-	initialBranch  domain.LocalBranchName
-	isOffline      bool
-	lineage        config.Lineage
-	mainBranch     domain.LocalBranchName
-	noPushHook     bool
-	previousBranch domain.LocalBranchName
+	branchToKill      domain.BranchInfo
+	branchWhenDone    domain.LocalBranchName
+	hasOpenChanges    bool
+	initialBranch     domain.LocalBranchName
+	isOffline         bool
+	lineage           config.Lineage
+	mainBranch        domain.LocalBranchName
+	noPushHook        bool
+	previousBranch    domain.LocalBranchName
+	newPreviousBranch domain.LocalBranchName
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -135,17 +136,25 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchWhenDone := domain.LocalBranchNames{previousBranch, lineage.Parent(branchToKill.LocalName)}.FirstNonEmpty()
+	var branchWhenDone domain.LocalBranchName
+	var newPreviousBranch domain.LocalBranchName
+	if branchNameToKill == branches.Initial {
+		branchWhenDone = previousBranch
+		newPreviousBranch = mainBranch
+	} else {
+		branchWhenDone = previousBranch
+	}
 	return &killConfig{
-		branchToKill:   *branchToKill,
-		branchWhenDone: branchWhenDone,
-		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  branches.Initial,
-		isOffline:      repo.IsOffline,
-		lineage:        lineage,
-		mainBranch:     mainBranch,
-		noPushHook:     !pushHook,
-		previousBranch: previousBranch,
+		branchToKill:      *branchToKill,
+		branchWhenDone:    branchWhenDone,
+		hasOpenChanges:    repoStatus.OpenChanges,
+		initialBranch:     branches.Initial,
+		isOffline:         repo.IsOffline,
+		lineage:           lineage,
+		mainBranch:        mainBranch,
+		newPreviousBranch: newPreviousBranch,
+		noPushHook:        !pushHook,
+		previousBranch:    previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
@@ -157,6 +166,13 @@ func (self killConfig) branchToKillParent() domain.LocalBranchName {
 	return self.lineage.Parent(self.branchToKill.LocalName)
 }
 
+func determineBranchWhenDone(branchToKill, previousBranch, parentBranch domain.LocalBranchName) domain.LocalBranchName {
+	if previousBranch != branchToKill {
+		return previousBranch
+	}
+	return parentBranch
+}
+
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
@@ -165,7 +181,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 		StashOpenChanges: config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
-		PreviousBranch:   config.previousBranch,
+		PreviousBranch:   config.newPreviousBranch,
 	})
 	return prog, finalUndoProgram
 }

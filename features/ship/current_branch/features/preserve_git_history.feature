@@ -9,7 +9,7 @@ Feature: preserve the previous Git branch
       | current | local    |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship -m 'feature done'"
-    Then the current branch is now "main"
+    Then the current branch is now "previous"
     And the previous Git branch is still "previous"
 
   Scenario: previous branch gone
