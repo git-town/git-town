@@ -381,29 +381,6 @@ func (self *BackendCommands) CurrentSHA() (domain.SHA, error) {
 	return self.SHAForBranch(domain.NewBranchName("HEAD"))
 }
 
-// ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
-// given the inputs.
-func (self *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
-	// TODO: try to avoid repeated lookups to self.HasLocalBranch
-	if self.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
-		currentBranch, err := self.CurrentBranch()
-		if err != nil {
-			return domain.EmptyLocalBranchName(), err
-		}
-		if currentBranch == initialBranch {
-			return initialPreviouslyCheckedOutBranch, nil
-		}
-		if initialBranch == initialPreviouslyCheckedOutBranch {
-			return initialBranch, nil
-		}
-		if self.HasLocalBranch(initialBranch) {
-			return initialBranch, nil
-		}
-		return initialPreviouslyCheckedOutBranch, nil
-	}
-	return mainBranch, nil
-}
-
 func (self *BackendCommands) FirstExistingBranch(branches domain.LocalBranchNames, mainBranch domain.LocalBranchName) domain.LocalBranchName {
 	for _, branch := range branches {
 		if self.BranchExists(branch) {
