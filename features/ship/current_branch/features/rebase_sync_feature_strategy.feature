@@ -13,11 +13,6 @@ Feature: "rebase" sync-feature strategy
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune --tags   |
       |         | git checkout main          |
-      | main    | git rebase origin/main     |
-      |         | git checkout feature       |
-      | feature | git rebase origin/feature  |
-      |         | git rebase main            |
-      |         | git checkout main          |
       | main    | git merge --squash feature |
       |         | git commit                 |
       |         | git push                   |

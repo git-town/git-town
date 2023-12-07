@@ -18,7 +18,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
@@ -47,7 +47,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
@@ -82,7 +82,7 @@ Feature: show the configuration
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
-        sync before shipping: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)

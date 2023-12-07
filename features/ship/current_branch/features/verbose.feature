@@ -5,6 +5,7 @@ Feature: display all executed Git commands
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
+    And Git Town setting "sync-before-ship" is "true"
 
   Scenario: result
     When I run "git-town ship -m done --verbose"

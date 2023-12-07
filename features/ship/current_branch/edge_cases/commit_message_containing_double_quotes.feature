@@ -12,11 +12,6 @@ Feature: commit message with double-quotes
       | BRANCH  | COMMAND                              |
       | feature | git fetch --prune --tags             |
       |         | git checkout main                    |
-      | main    | git rebase origin/main               |
-      |         | git checkout feature                 |
-      | feature | git merge --no-edit origin/feature   |
-      |         | git merge --no-edit main             |
-      |         | git checkout main                    |
       | main    | git merge --squash feature           |
       |         | git commit -m "with "double quotes"" |
       |         | git push                             |
