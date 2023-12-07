@@ -199,7 +199,6 @@ func appendProgram(config *appendConfig) program.Program {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	previousBranchCandidates := domain.LocalBranchNames{config.branches.Initial, config.previousBranch}
-	previousBranchCandidates = append(previousBranchCandidates, config.lineage.Ancestors(config.branches.Initial)...)
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
