@@ -231,8 +231,6 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 	wrap(args.program, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: args.hasOpenChanges,
-		MainBranch:       args.mainBranch,
-		InitialBranch:    args.initialBranch,
 		PreviousBranch:   args.previousBranch,
 	})
 }

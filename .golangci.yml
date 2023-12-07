@@ -64,6 +64,9 @@ issues:
     - path: src/gohacks/cache/cache.go
       linters:
         - ireturn
+    - path: src/gohacks/cache/with_previous.go
+      linters:
+        - ireturn
     - path: src/gohacks/slice/first_element_or.go
       linters:
         - ireturn

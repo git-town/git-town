@@ -189,8 +189,6 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	wrap(&result, wrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return result

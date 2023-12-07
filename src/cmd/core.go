@@ -45,9 +45,7 @@ func long(summary string, desc ...string) string {
 func wrap(program *program.Program, options wrapOptions) {
 	if !options.PreviousBranch.IsEmpty() {
 		program.Add(&opcode.PreserveCheckoutHistory{
-			InitialBranch:                     options.InitialBranch,
-			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
-			MainBranch:                        options.MainBranch,
+			PreviousBranch: options.PreviousBranch,
 		})
 	}
 	if options.StashOpenChanges {
@@ -60,7 +58,5 @@ func wrap(program *program.Program, options wrapOptions) {
 type wrapOptions struct {
 	RunInGitRoot     bool
 	StashOpenChanges bool
-	MainBranch       domain.LocalBranchName
-	InitialBranch    domain.LocalBranchName
 	PreviousBranch   domain.LocalBranchName
 }

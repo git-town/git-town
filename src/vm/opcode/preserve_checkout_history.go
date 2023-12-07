@@ -7,25 +7,25 @@ import (
 
 // PreserveCheckoutHistory does stuff.
 type PreserveCheckoutHistory struct {
-	InitialBranch                     domain.LocalBranchName
-	InitialPreviouslyCheckedOutBranch domain.LocalBranchName
-	MainBranch                        domain.LocalBranchName
+	PreviousBranch domain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
 func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
-	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(self.InitialPreviouslyCheckedOutBranch, self.InitialBranch, self.MainBranch)
-	if err != nil {
-		return err
+	if !args.Runner.Backend.CurrentBranchCache.Initialized() {
+		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
+		return nil
 	}
-	if expectedPreviouslyCheckedOutBranch == args.Runner.Backend.PreviouslyCheckedOutBranch() {
+	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
+	if actualPreviousBranch == self.PreviousBranch {
+		// the actually set previous branch is already the expected value --> nothing to do here
 		return nil
 	}
 	currentBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	err = args.Runner.Backend.CheckoutBranchUncached(expectedPreviouslyCheckedOutBranch)
+	err = args.Runner.Backend.CheckoutBranchUncached(self.PreviousBranch)
 	if err != nil {
 		return err
 	}

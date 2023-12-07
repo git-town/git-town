@@ -201,8 +201,6 @@ func appendProgram(config *appendConfig) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return prog

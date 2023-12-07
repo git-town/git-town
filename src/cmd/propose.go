@@ -217,8 +217,6 @@ func proposeProgram(config *proposeConfig) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	prog.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
