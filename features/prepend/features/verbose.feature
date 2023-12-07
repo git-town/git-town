@@ -36,15 +36,14 @@ Feature: display all executed Git commands
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
-      |        | backend  | git show-ref --quiet refs/heads/old           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old  |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git branch -vva                               |
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 31 shell commands.
+      Ran 30 shell commands.
       """
     And the current branch is now "parent"
 
@@ -66,9 +65,7 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
-      |        | backend  | git show-ref --quiet refs/heads/old              |
-      |        | backend  | git show-ref --quiet refs/heads/parent           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
+      |        | backend  | git show-ref --verify --quiet refs/heads/old     |
       |        | backend  | git checkout old                                 |
       |        | backend  | git checkout old                                 |
       |        | backend  | git config -lz --global                          |
@@ -77,6 +74,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                   |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 20 shell commands.
       """
     And the current branch is now "old"
