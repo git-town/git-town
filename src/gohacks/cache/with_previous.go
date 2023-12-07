@@ -2,7 +2,7 @@ package cache
 
 import "github.com/git-town/git-town/v11/src/messages"
 
-// Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
+// WithPrevious is a cache implementation for arbitrary data structures that keeps track of the current and previous values.
 // The zero value is an empty cache.
 type WithPrevious[T any] struct {
 	initialized bool
