@@ -8,7 +8,6 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I run "git-town ship -m 'feature done'"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |
