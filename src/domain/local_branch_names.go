@@ -26,10 +26,6 @@ func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, fe
 	return
 }
 
-func (self LocalBranchNames) IsEmpty() bool {
-	return len(self) == 0
-}
-
 // Join provides the names of all branches in this collection connected by the given separator.
 func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
