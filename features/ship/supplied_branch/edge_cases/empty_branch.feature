@@ -10,7 +10,6 @@ Feature: does not ship empty feature branches
     And an uncommitted file
     When I run "git-town ship empty"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
