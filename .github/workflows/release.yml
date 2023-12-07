@@ -19,3 +19,4 @@ jobs:
       - run: ./tools/release.ps1 -ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
