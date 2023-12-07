@@ -9,7 +9,7 @@ Feature: preserve the previous Git branch
     Then the current branch is now "previous"
     And the previous Git branch is now "main"
 
-  Scenario: previous branch was killed
+  Scenario: previous branch is gone
     When I run "git-town kill previous"
     Then the current branch is still "current"
     And the previous Git branch is now ""
