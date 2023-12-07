@@ -29,6 +29,7 @@ Feature: display all executed Git commands
       |         | backend  | git log main..current                             |
       | main    | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
+      |         | backend  | git show-ref --verify --quiet refs/heads/current  |
       |         | backend  | git show-ref --verify --quiet refs/heads/other    |
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |
@@ -38,6 +39,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 24 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"
