@@ -2,7 +2,7 @@ package print
 
 import (
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v10/src/cli/io"
+	"github.com/git-town/git-town/v11/src/cli/io"
 )
 
 func Header(text string) {

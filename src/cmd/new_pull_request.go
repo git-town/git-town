@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/git-town/git-town/v10/src/cli/flags"
-	"github.com/git-town/git-town/v10/src/config"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/config"
 	"github.com/spf13/cobra"
 )
 

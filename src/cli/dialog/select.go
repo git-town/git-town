@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 

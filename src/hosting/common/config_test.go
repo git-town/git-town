@@ -3,7 +3,7 @@ package common_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v10/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/shoenig/test/must"
 )
 

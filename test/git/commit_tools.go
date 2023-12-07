@@ -2,8 +2,8 @@ package git
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/test/helpers"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.

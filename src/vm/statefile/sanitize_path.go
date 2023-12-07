@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v11/src/domain"
 )
 
 func SanitizePath(dir domain.RepoRootDir) string {

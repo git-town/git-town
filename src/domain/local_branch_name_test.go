@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v10/src/domain"
+	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/shoenig/test/must"
 )
 

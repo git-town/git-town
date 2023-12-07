@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 

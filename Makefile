@@ -5,11 +5,11 @@ RUN_THAT_APP_VERSION = 0.2.1
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y-%m-%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
-RELEASE_VERSION := "10.0.3"
+RELEASE_VERSION := "11.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v10/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v10/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
@@ -42,7 +42,7 @@ fix: tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes
 	tools/rta golangci-lint run
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
-	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/)
+	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -59,7 +59,7 @@ test-go: tools/run-that-app@${RUN_THAT_APP_VERSION}  # smoke tests for Go refact
 	tools/rta golangci-lint run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/) &
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items

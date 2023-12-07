@@ -1,6 +1,6 @@
 package print
 
-import "github.com/git-town/git-town/v10/src/cli/io"
+import "github.com/git-town/git-town/v11/src/cli/io"
 
 func Entry(label, value string) {
 	print()

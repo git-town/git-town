@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/src/git/giturl"
-	"github.com/git-town/git-town/v10/src/gohacks/slice"
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/giturl"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings

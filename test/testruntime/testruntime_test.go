@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v10/test/asserts"
-	"github.com/git-town/git-town/v10/test/testruntime"
+	"github.com/git-town/git-town/v11/test/asserts"
+	"github.com/git-town/git-town/v11/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

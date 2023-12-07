@@ -3,16 +3,16 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v10/src/cli/dialog"
-	"github.com/git-town/git-town/v10/src/config"
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/src/git"
-	"github.com/git-town/git-town/v10/src/hosting"
-	"github.com/git-town/git-town/v10/src/messages"
-	"github.com/git-town/git-town/v10/src/undo"
-	"github.com/git-town/git-town/v10/src/vm/interpreter"
-	"github.com/git-town/git-town/v10/src/vm/runstate"
-	"github.com/git-town/git-town/v10/src/vm/statefile"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.

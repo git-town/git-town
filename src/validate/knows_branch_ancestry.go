@@ -1,10 +1,10 @@
 package validate
 
 import (
-	"github.com/git-town/git-town/v10/src/cli/dialog"
-	"github.com/git-town/git-town/v10/src/cli/io"
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/src/git"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git"
 )
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.

@@ -3,7 +3,7 @@ package output_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v10/test/output"
+	"github.com/git-town/git-town/v11/test/output"
 	"github.com/shoenig/test/must"
 )
 

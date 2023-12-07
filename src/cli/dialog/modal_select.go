@@ -7,7 +7,7 @@ import (
 	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // ModalSelect allows the user to select a value from the given entries.

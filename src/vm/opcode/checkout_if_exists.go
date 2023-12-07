@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/src/vm/shared"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CheckoutIfExists does the same as Checkout

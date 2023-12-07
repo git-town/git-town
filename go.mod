@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/v10
+module github.com/git-town/git-town/v11
 
 go 1.21
 
