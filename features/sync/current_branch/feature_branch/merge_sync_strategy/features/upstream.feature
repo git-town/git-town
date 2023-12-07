@@ -36,7 +36,7 @@ Feature: with upstream repo
     Then it runs the commands
       | BRANCH  | COMMAND                                                               |
       | feature | git reset --hard {{ sha 'local commit' }}                             |
-      |         | git push --force-with-lease origin {{ sha 'Initial commit' }}:feature |
+      |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE         |

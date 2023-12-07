@@ -57,7 +57,7 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.new.parent |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
-      | main   | frontend | git reset --hard {{ sha 'Initial commit' }}   |
+      | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
       |        | backend  | git show-ref --quiet refs/heads/main          |
       |        | backend  | git show-ref --quiet refs/heads/new           |

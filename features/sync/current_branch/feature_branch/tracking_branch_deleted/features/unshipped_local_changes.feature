@@ -37,7 +37,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | shipped | git add -A                                  |
       |         | git stash                                   |
       |         | git checkout main                           |
-      | main    | git reset --hard {{ sha 'Initial commit' }} |
+      | main    | git reset --hard {{ sha 'initial commit' }} |
       |         | git checkout shipped                        |
       | shipped | git stash pop                               |
     And the current branch is now "shipped"

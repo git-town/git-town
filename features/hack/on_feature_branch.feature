@@ -39,7 +39,7 @@ Feature: on the main branch
       | new      | git add -A                                  |
       |          | git stash                                   |
       |          | git checkout main                           |
-      | main     | git reset --hard {{ sha 'Initial commit' }} |
+      | main     | git reset --hard {{ sha 'initial commit' }} |
       |          | git checkout existing                       |
       | existing | git branch -D new                           |
       |          | git stash pop                               |

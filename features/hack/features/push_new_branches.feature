@@ -31,7 +31,7 @@ Feature: auto-push the new branch
       | BRANCH | COMMAND                                     |
       | new    | git push origin :new                        |
       |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
     And the current branch is now "main"
     And now the initial commits exist

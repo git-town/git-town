@@ -35,7 +35,7 @@ Feature: sync perennial branch that was deleted at the remote
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                         |
-      | main   | git branch feature-1 {{ sha 'Initial commit' }} |
+      | main   | git branch feature-1 {{ sha 'initial commit' }} |
       |        | git checkout feature-1                          |
     And the current branch is now "feature-1"
     And the initial branches and hierarchy exist
