@@ -58,9 +58,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
-      |        | backend  | git show-ref --quiet refs/heads/main          |
-      |        | backend  | git show-ref --quiet refs/heads/new           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout main                             |
       |        | backend  | git config -lz --global                       |
@@ -69,6 +67,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "main"
