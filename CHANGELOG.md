@@ -49,7 +49,7 @@ intuitive.
   ([#2710](https://github.com/git-town/git-town/pull/2710))
 - `git repo` and `git propose` always open the browser page at the default port,
   even if the `origin` remote points to a custom port
-  ([#2730](https://github.com/git-town/git-town/pull/2730)).
+  ([#2730](https://github.com/git-town/git-town/pull/2730))
 
 ## 10.0.3 (2023-11-25)
 
