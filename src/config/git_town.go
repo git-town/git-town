@@ -428,7 +428,7 @@ func (self *GitTown) ShouldSyncUpstream() (bool, error) {
 func (self *GitTown) SyncBeforeShip() (bool, error) {
 	text := self.LocalOrGlobalConfigValue(KeySyncBeforeShip)
 	if text == "" {
-		return true, nil
+		return false, nil
 	}
 	return ParseBool(text)
 }

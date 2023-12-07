@@ -13,23 +13,16 @@ Feature: abort the ship via empty commit message
   @skipWindows
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                     |
-      | other   | git fetch --prune --tags                    |
-      |         | git add -A                                  |
-      |         | git stash                                   |
-      |         | git checkout main                           |
-      | main    | git rebase origin/main                      |
-      |         | git checkout feature                        |
-      | feature | git merge --no-edit origin/feature          |
-      |         | git merge --no-edit main                    |
-      |         | git checkout main                           |
-      | main    | git merge --squash feature                  |
-      |         | git commit                                  |
-      |         | git reset --hard                            |
-      |         | git checkout feature                        |
-      | feature | git reset --hard {{ sha 'feature commit' }} |
-      |         | git checkout other                          |
-      | other   | git stash pop                               |
+      | BRANCH | COMMAND                    |
+      | other  | git fetch --prune --tags   |
+      |        | git add -A                 |
+      |        | git stash                  |
+      |        | git checkout main          |
+      | main   | git merge --squash feature |
+      |        | git commit                 |
+      |        | git reset --hard           |
+      |        | git checkout other         |
+      | other  | git stash pop              |
     And it prints the error:
       """
       aborted because commit exited with error

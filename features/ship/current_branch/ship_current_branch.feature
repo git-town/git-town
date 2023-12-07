@@ -9,19 +9,14 @@ Feature: enter the commit message interactively via the editor
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash feature         |
-      |         | git commit                         |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
+      | BRANCH  | COMMAND                    |
+      | feature | git fetch --prune --tags   |
+      |         | git checkout main          |
+      | main    | git merge --squash feature |
+      |         | git commit                 |
+      |         | git push                   |
+      |         | git push origin :feature   |
+      |         | git branch -D feature      |
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
