@@ -135,7 +135,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchWhenDone := lineage.Parent(BranchNameToKill)
+	branchWhenDone := lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
