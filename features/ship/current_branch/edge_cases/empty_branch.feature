@@ -8,7 +8,6 @@ Feature: does not ship an empty branch
       | empty  | local    | empty commit | common_file | common content |
     When I run "git-town ship"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
