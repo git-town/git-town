@@ -18,8 +18,8 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 		return nil
 	}
 	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
-	previousBranchCandidates := self.PreviousBranchCandidates.Remove(currentBranch)
 	actualPreviousBranch := args.Runner.Backend.PreviouslyCheckedOutBranch()
+	previousBranchCandidates := self.PreviousBranchCandidates.Remove(currentBranch)
 	expectedPreviousBranch := firstExistingBranch(previousBranchCandidates, args.Runner.Backend)
 	if expectedPreviousBranch.IsEmpty() {
 		return nil
