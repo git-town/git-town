@@ -56,10 +56,10 @@ var (
 	KeyPushHook                       = Key{"git-town.push-hook"}                    //nolint:gochecknoglobals
 	KeyPushNewBranches                = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
 	KeyShipDeleteRemoteBranch         = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
+	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
 	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
 	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
 	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
-	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
@@ -83,10 +83,10 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyPushHook,
 	KeyPushNewBranches,
 	KeyShipDeleteRemoteBranch,
+	KeySyncBeforeShip,
 	KeySyncUpstream,
 	KeySyncStrategy,
 	KeyTestingRemoteURL,
-	KeySyncBeforeShip,
 }
 
 func NewAliasKey(aliasType Alias) Key {
