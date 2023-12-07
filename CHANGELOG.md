@@ -2,7 +2,8 @@
 
 ## 11.0.0 (2023-12-06)
 
-Git Town 11 continues the effort to make the Git Town user experience more consistent and intuitive.
+Git Town 11 continues the effort to make the Git Town user experience more
+consistent and intuitive.
 
 #### BREAKING CHANGES
 
@@ -20,7 +21,11 @@ Git Town 11 continues the effort to make the Git Town user experience more consi
 
 #### New Features
 
-- The new `sync-before-ship` config option prevents `git ship` from updating the branch it is about to ship. The old behavior makes sense when shipping branches locally but is conflicting with the requirements for tests to pass on CI before shipping via the hosting platform ([#2714](https://github.com/git-town/git-town/pull/2714)).
+- The new `sync-before-ship` config option prevents `git ship` from updating the
+  branch it is about to ship. The old behavior makes sense when shipping
+  branches locally but is conflicting with the requirements for tests to pass on
+  CI before shipping via the hosting platform
+  ([#2714](https://github.com/git-town/git-town/pull/2714)).
 
 #### Bug Fixes
 
