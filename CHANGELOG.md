@@ -2,8 +2,8 @@
 
 ## 11.0.0 (2023-12-06)
 
-Git Town 11 continues the effort to remove redundant commands and make the Git
-Town user experience more consistent and intuitive.
+Git Town 11 performs most of the breaking changes necessary to make the Git Town
+user experience more consistent and intuitive.
 
 #### BREAKING CHANGES
 
