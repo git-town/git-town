@@ -1,3 +1,4 @@
+@this
 Feature: preserve the previous Git branch
 
   Background:
@@ -6,20 +7,13 @@ Feature: preserve the previous Git branch
 
   Scenario: previous branch exists
     When I run "git-town kill"
-    Then the current branch is now "main"
+    Then the current branch is now "previous"
     And the previous Git branch is still "previous"
 
   Scenario: previous branch gone
     When I run "git-town kill previous"
     Then the current branch is still "current"
     And the previous Git branch is now "main"
-
-  @this
-  Scenario: on current branch, previous branch exists
-    Given the current branch is "current" and the previous branch is "previous"
-    When I run "git-town kill"
-    Then the current branch is now "previous"
-    And the previous Git branch is still "previous"
 
   Scenario: supplied branch - current and previous branch exist
     Given a feature branch "victim"
