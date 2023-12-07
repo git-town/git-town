@@ -136,6 +136,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	return &killConfig{
+		branchToKill:   *branchToKill,
 		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
 		isOffline:      repo.IsOffline,
@@ -143,7 +144,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		mainBranch:     mainBranch,
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
-		branchToKill:   *branchToKill,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
@@ -151,7 +151,7 @@ func (self killConfig) isOnline() bool {
 	return !self.isOffline
 }
 
-func (self killConfig) targetBranchParent() domain.LocalBranchName {
+func (self killConfig) branchToKillParent() domain.LocalBranchName {
 	return self.lineage.Parent(self.branchToKill.LocalName)
 }
 
@@ -182,14 +182,14 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 			finalUndoProgram.Add(&opcode.Checkout{Branch: config.branchToKill.LocalName})
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
-		prog.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
+		prog.Add(&opcode.Checkout{Branch: config.branchToKillParent()})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		branch:  config.branchToKill.LocalName,
 		lineage: config.lineage,
 		program: prog,
-		parent:  config.targetBranchParent(),
+		parent:  config.branchToKillParent(),
 	})
 }
 
