@@ -79,6 +79,7 @@ func executeKill(args []string, verbose bool) error {
 
 type killConfig struct {
 	branchToKill   domain.BranchInfo
+	branchWhenDone domain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
 	isOffline      bool
@@ -108,13 +109,13 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	targetBranch := branches.All.FindByLocalName(targetBranchName)
-	if targetBranch == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+	branchNameToKill := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branchToKill := branches.All.FindByLocalName(branchNameToKill)
+	if branchToKill == nil {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
-	if targetBranch.IsLocal() {
-		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(targetBranchName, execute.EnsureKnownBranchAncestryArgs{
+	if branchToKill.IsLocal() {
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
@@ -126,7 +127,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	if !branches.Types.IsFeatureBranch(targetBranchName) {
+	if !branches.Types.IsFeatureBranch(branchToKill.LocalName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
@@ -134,7 +135,10 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
+	branchWhenDone := lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
+		branchToKill:   *branchToKill,
+		branchWhenDone: branchWhenDone,
 		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
 		isOffline:      repo.IsOffline,
@@ -142,7 +146,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		mainBranch:     mainBranch,
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
-		branchToKill:   *targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
@@ -150,7 +153,7 @@ func (self killConfig) isOnline() bool {
 	return !self.isOffline
 }
 
-func (self killConfig) targetBranchParent() domain.LocalBranchName {
+func (self killConfig) branchToKillParent() domain.LocalBranchName {
 	return self.lineage.Parent(self.branchToKill.LocalName)
 }
 
@@ -182,14 +185,14 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
 		// TODO: check out the previous branch here
-		prog.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
+		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		branch:  config.branchToKill.LocalName,
 		lineage: config.lineage,
 		program: prog,
-		parent:  config.targetBranchParent(),
+		parent:  config.branchToKillParent(),
 	})
 }
 
