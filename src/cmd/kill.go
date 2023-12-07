@@ -163,7 +163,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch, config.initialBranch},
+		PreviousBranchCandidates: domain.LocalBranchNames{config.initialBranch, config.previousBranch},
 	})
 	return prog, finalUndoProgram
 }
