@@ -17,8 +17,11 @@ Feature: delete a parent branch
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | gamma  | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
       |        | git push origin :beta    |
       |        | git branch -D beta       |
+      |        | git stash pop            |
     And the current branch is now "gamma"
     And the uncommitted file still exists
     And the branches are now
