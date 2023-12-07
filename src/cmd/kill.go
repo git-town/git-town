@@ -162,7 +162,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
+		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.hasOpenChanges,
 		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch, config.initialBranch},
 	})
 	return prog, finalUndoProgram
