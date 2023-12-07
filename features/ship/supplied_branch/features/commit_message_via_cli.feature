@@ -9,7 +9,6 @@ Feature: provide the commit message via a CLI argument
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                      |
