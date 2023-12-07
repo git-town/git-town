@@ -28,10 +28,8 @@ intuitive.
   - `pull-branch-strategy` is now `sync-perennial-strategy`
     ([#2693](https://github.com/git-town/git-town/pull/2693))
 - `git ship` by default no longer syncs the branch to ship. Set the
-  `sync-before-ship` flag to restore the old behavior. Syncing before shipping
-  made sense when shipping locally. Nowadays most branches get shipped via the
-  code hosting UI, and Git Town supports this use case out of the box
-  ([#2735](https://github.com/git-town/git-town/pull/2735)).
+  `sync-before-ship` flag to restore the old behavior. This allows shipping only
+  when the tests pass ([#2735](https://github.com/git-town/git-town/pull/2735)).
 - Creating proposals on BitBucket uses an updated URL
   ([#2692](https://github.com/git-town/git-town/pull/2692)).
 - `git town config reset` now also deletes the branch lineage. This helps get
