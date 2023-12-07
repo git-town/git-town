@@ -136,6 +136,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
+	branchWhenDone := lineage.Parent(branchToKill.LocalName)
 	return &killConfig{
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
@@ -184,7 +185,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 			finalUndoProgram.Add(&opcode.Checkout{Branch: config.branchToKill.LocalName})
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
-		// TODO: check out the previous branch here
+		// TODO
 		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
