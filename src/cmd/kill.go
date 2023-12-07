@@ -109,10 +109,10 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	BranchNameToKill := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToKill := branches.All.FindByLocalName(BranchNameToKill)
+	branchNameToKill := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branchToKill := branches.All.FindByLocalName(branchNameToKill)
 	if branchToKill == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, BranchNameToKill)
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
 	if branchToKill.IsLocal() {
 		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
@@ -127,7 +127,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	if !branches.Types.IsFeatureBranch(BranchNameToKill) {
+	if !branches.Types.IsFeatureBranch(branchToKill.LocalName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
