@@ -36,8 +36,8 @@ intuitive.
 #### New Features
 
 - The new `sync-before-ship` config option prevents `git town ship` from
-  updating the branch it is about to ship. The old behavior made sense when
-  shipping branches locally, but is conflicting with the requirements for tests
+  updating the branch it is about to ship. The old behavior makes sense when
+  shipping branches locally but is conflicting with the requirements for tests
   to pass on CI before shipping via the hosting platform
   ([#2714](https://github.com/git-town/git-town/pull/2714)).
 - Git Town can now be installed via Chocolatey on Windows (pending review and
