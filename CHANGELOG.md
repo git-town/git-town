@@ -30,7 +30,7 @@ user experience more consistent and intuitive.
 - Creating proposals on BitBucket now uses an updated URL
   ([#2692](https://github.com/git-town/git-town/pull/2692)).
 - `git town config reset` now also deletes the branch lineage. This helps get
-  you out of a configuration snafu
+  you out of more configuration snafus
   ([#2733](https://github.com/git-town/git-town/pull/2733)).
 - `git repo` and `git propose` always open the browser page at the default port,
   even if the `origin` remote points to a custom port
