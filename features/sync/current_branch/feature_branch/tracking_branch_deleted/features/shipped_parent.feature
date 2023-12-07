@@ -44,7 +44,7 @@ Feature: syncing a branch whose parent was shipped
       | child  | git reset --hard {{ sha 'child commit' }}   |
       |        | git push --force-with-lease                 |
       |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git checkout child                          |
     And the current branch is still "child"

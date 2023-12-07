@@ -35,7 +35,7 @@ Feature: on a feature branch
       | new    | git add -A                                  |
       |        | git stash                                   |
       |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
       |        | git stash pop                               |
     And the current branch is now "main"

@@ -28,7 +28,7 @@ Feature: ship a feature branch in a local repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git reset --hard {{ sha 'Initial commit' }}   |
+      | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"

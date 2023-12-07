@@ -49,7 +49,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | parent | git reset --hard {{ sha 'parent commit' }}  |
       |        | git push --force-with-lease --no-verify     |
       |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch child {{ sha 'child commit' }}   |
       |        | git checkout child                          |
       | child  | git branch -D new                           |

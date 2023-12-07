@@ -70,7 +70,7 @@ Feature: display all executed Git commands
       |        | backend  | git status --long --ignore-submodules      |
       |        | backend  | git remote get-url origin                  |
       |        | backend  | git config git-town-branch.old.parent main |
-      | main   | frontend | git branch old {{ sha 'Initial commit' }}  |
+      | main   | frontend | git branch old {{ sha 'initial commit' }}  |
       |        | frontend | git checkout old                           |
       |        | backend  | git show-ref --quiet refs/heads/main       |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
