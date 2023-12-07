@@ -1,5 +1,55 @@
 # Git Town Changelog
 
+## 11.0.0 (2023-12-06)
+
+Git Town v11 continues the effort to remove redundant commands and make the Git
+Town user experience more consistent and intuitive.
+
+#### BREAKING CHANGES
+
+- `git town new-pull-request` is now `git town propose`
+  ([#2691](https://github.com/git-town/git-town/pull/2691)). Not all platforms
+  that Git Town supports use the name "pull request", so Git Town goes with the
+  name "proposal" for pull requests, merge requests, etc.
+- `git town abort` has been merged with `git town undo`
+  ([#2719](https://github.com/git-town/git-town/pull/2719)). From now on you
+  just run `git town undo` after a Git Town command fails or finishes to get
+  back to where you started.
+- Many configuration options have more appropriate and intuitive names. No
+  action item on your end, Git Town automatically updates the affected settings
+  on your machine. This means you can't go back to v10 after updating to v11.
+  - `code-hosting-driver` is now `code-hosting-platform`
+    ([#2704](https://github.com/git-town/git-town/pull/2704))
+  - `main-branch-name` is now `main-branch`
+    ([#2703](https://github.com/git-town/git-town/pull/2703))
+  - `perennial-branch-names` is now `perennial-branches`
+    ([#2702](https://github.com/git-town/git-town/pull/2702))
+  - `sync-strategy` is now `sync-feature-strategy`
+    ([#2697](https://github.com/git-town/git-town/pull/2697))
+  - `pull-branch-strategy` is now `sync-perennial-strategy`
+    ([#2693](https://github.com/git-town/git-town/pull/2693))
+- new proposal URL for BitBucket
+  ([#2692](https://github.com/git-town/git-town/pull/2692))
+- `git town config reset` now also deletes the branch lineage
+  ([#2733](https://github.com/git-town/git-town/pull/2733)) - this helps get you
+  back on track in case of a configuration snafu
+- `git town repo` and `git town propose` always open the default port, even if
+  the `origin` remote points to a custom port
+  ([#2730](https://github.com/git-town/git-town/pull/2730))
+
+#### New Features
+
+- add `sync-before-ship` config option to prevent `git town ship` from updating
+  the branch it is about to ship
+  ([#2714](https://github.com/git-town/git-town/pull/2714))
+- installation via Chocolatey on Windows (pending review and approval from the
+  Chocolatey team)
+
+#### Bug Fixes
+
+- allow renaming local-only branches
+  ([#2710](https://github.com/git-town/git-town/pull/2710))
+
 ## 10.0.3 (2023-11-25)
 
 #### Bug Fixes
