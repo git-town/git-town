@@ -14,7 +14,7 @@ Feature: preserve the previous Git branch
     Then the current branch is still "current"
     And the previous Git branch is now ""
 
-  Scenario: supplied branch - current and previous branch remain
+  Scenario: current and previous branch remain
     Given a feature branch "victim"
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town kill victim"
