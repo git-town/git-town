@@ -79,6 +79,7 @@ func executeKill(args []string, verbose bool) error {
 
 type killConfig struct {
 	branchToKill   domain.BranchInfo
+	finalBranch    domain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
 	isOffline      bool
@@ -108,13 +109,13 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	targetBranch := branches.All.FindByLocalName(targetBranchName)
-	if targetBranch == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+	BranchNameToKill := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branchToKill := branches.All.FindByLocalName(BranchNameToKill)
+	if branchToKill == nil {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, BranchNameToKill)
 	}
-	if targetBranch.IsLocal() {
-		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(targetBranchName, execute.EnsureKnownBranchAncestryArgs{
+	if branchToKill.IsLocal() {
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(BranchNameToKill, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
@@ -126,7 +127,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	if !branches.Types.IsFeatureBranch(targetBranchName) {
+	if !branches.Types.IsFeatureBranch(BranchNameToKill) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
@@ -142,7 +143,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		mainBranch:     mainBranch,
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
-		branchToKill:   *targetBranch,
+		branchToKill:   *branchToKill,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
