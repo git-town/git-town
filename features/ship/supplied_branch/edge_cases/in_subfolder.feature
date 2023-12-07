@@ -44,7 +44,7 @@ Feature: ship the supplied feature branch from a subfolder
       |        | git checkout main                                             |
       | main   | git revert {{ sha 'feature done' }}                           |
       |        | git push                                                      |
-      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
       |        | git branch feature {{ sha 'feature commit' }}                 |
       |        | git checkout other                                            |
       | other  | git stash pop                                                 |

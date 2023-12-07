@@ -49,7 +49,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | alpha  | git reset --hard {{ sha 'alpha commit' }}   |
       |        | git push --force-with-lease                 |
       |        | git checkout main                           |
-      | main   | git reset --hard {{ sha 'Initial commit' }} |
+      | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git stash pop                               |
     And the current branch is now "main"
     And the uncommitted file still exists

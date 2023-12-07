@@ -40,7 +40,7 @@ Feature: ship the supplied feature branch in a local repo
       | other  | git add -A                                    |
       |        | git stash                                     |
       |        | git checkout main                             |
-      | main   | git reset --hard {{ sha 'Initial commit' }}   |
+      | main   | git reset --hard {{ sha 'initial commit' }}   |
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
       | other  | git stash pop                                 |
