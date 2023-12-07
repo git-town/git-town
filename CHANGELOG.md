@@ -27,7 +27,7 @@ user experience more consistent and intuitive.
     ([#2697](https://github.com/git-town/git-town/pull/2697))
   - `pull-branch-strategy` is now `sync-perennial-strategy`
     ([#2693](https://github.com/git-town/git-town/pull/2693))
-- New URL to create proposals on BitBucket
+- Creating proposals on BitBucket now uses an updated URL
   ([#2692](https://github.com/git-town/git-town/pull/2692)).
 - `git town config reset` now also deletes the branch lineage. This helps get
   you out of a configuration snafu
