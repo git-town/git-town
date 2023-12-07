@@ -131,11 +131,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	branchWhenDone := domain.LocalBranchNames{previousBranch, lineage.Parent(branchToKill.LocalName)}.FirstNonEmpty()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
+	branchWhenDone := domain.LocalBranchNames{previousBranch, lineage.Parent(branchToKill.LocalName)}.FirstNonEmpty()
 	return &killConfig{
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
