@@ -1,0 +1,7 @@
+{
+  "extends": "dprint.json",
+  "includes": ["CHANGELOG.md"],
+  "markdown": {
+    "textWrap": "never"
+  }
+}

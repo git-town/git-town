@@ -34,6 +34,7 @@ fix: tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes
 	go run tools/format_self/format.go run
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
+	tools/rta dprint fmt --config print-changelog.json
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta shfmt --write
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --include-global --optional shellcheck
