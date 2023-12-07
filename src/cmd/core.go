@@ -43,11 +43,9 @@ func long(summary string, desc ...string) string {
 // wrap wraps the given list with opcodes that change the Git root directory or stash away open changes.
 // TODO: only wrap if the list actually contains any opcodes.
 func wrap(program *program.Program, options wrapOptions) {
-	if !options.PreviousBranchCandidates.IsEmpty() {
-		program.Add(&opcode.PreserveCheckoutHistory{
-			PreviousBranchCandidates: options.PreviousBranchCandidates,
-		})
-	}
+	program.Add(&opcode.PreserveCheckoutHistory{
+		PreviousBranchCandidates: options.PreviousBranchCandidates,
+	})
 	if options.StashOpenChanges {
 		program.Prepend(&opcode.StashOpenChanges{})
 		program.Add(&opcode.RestoreOpenChanges{})

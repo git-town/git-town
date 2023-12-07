@@ -1,6 +1,8 @@
 package opcode
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/vm/shared"
@@ -18,8 +20,13 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 		return nil
 	}
 	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
-	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
+	fmt.Println("0000000000000000000", currentBranch)
+	self.PreviousBranchCandidates.Remove(currentBranch)
+
+	actualPreviousBranch := args.Runner.Backend.PreviouslyCheckedOutBranch()
 	expectedPreviousBranch := firstExistingBranch(self.PreviousBranchCandidates, args.Runner.Backend)
+	fmt.Println("1111111111111111111", actualPreviousBranch)
+	fmt.Println("2222222222222222222", expectedPreviousBranch)
 	if expectedPreviousBranch.IsEmpty() {
 		return nil
 	}
