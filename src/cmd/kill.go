@@ -115,7 +115,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, BranchNameToKill)
 	}
 	if branchToKill.IsLocal() {
-		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(BranchNameToKill, execute.EnsureKnownBranchAncestryArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
