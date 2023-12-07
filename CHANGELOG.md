@@ -11,7 +11,7 @@ user experience more consistent and intuitive.
   supports use the name "pull request", so Git Town uses the word "proposal" for
   pull requests, merge requests, etc from now on
   ([#2691](https://github.com/git-town/git-town/pull/2691)).
-- `git abort` has been merged with `git undo`. From now on you just run
+- `git abort` is merged with `git undo`. From now on you just run
   `git town undo` after a Git Town command fails or finishes to get back to
   where you started ([#2719](https://github.com/git-town/git-town/pull/2719)).
 - Many configuration options now have more intuitive names. No action needed on
