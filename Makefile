@@ -59,7 +59,7 @@ test-go: tools/run-that-app@${RUN_THAT_APP_VERSION}  # smoke tests for Go refact
 	tools/rta golangci-lint run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v10/tools/) &
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items
