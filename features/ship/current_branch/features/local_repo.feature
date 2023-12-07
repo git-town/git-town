@@ -11,8 +11,7 @@ Feature: ship a feature branch in a local repo
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                      |
-      | feature | git merge --no-edit main     |
-      |         | git checkout main            |
+      | feature | git checkout main            |
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
