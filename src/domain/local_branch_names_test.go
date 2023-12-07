@@ -28,12 +28,14 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("the element to remove exist in the list", func(t *testing.T) {
+			t.Parallel()
 			branches := domain.NewLocalBranchNames("one", "two", "three")
 			have := branches.Remove("two")
 			want := domain.NewLocalBranchNames("one", "three")
 			must.Eq(t, want, have)
 		})
 		t.Run("the element to remove does not exist in the list", func(t *testing.T) {
+			t.Parallel()
 			branches := domain.NewLocalBranchNames("one", "two")
 			have := branches.Remove("zonk")
 			want := domain.NewLocalBranchNames("one", "two")
