@@ -7,11 +7,11 @@ import (
 	"testing"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/test/filesystem"
-	"github.com/git-town/git-town/v10/test/fixture"
-	"github.com/git-town/git-town/v10/test/git"
-	"github.com/git-town/git-town/v10/test/testruntime"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/test/filesystem"
+	"github.com/git-town/git-town/v11/test/fixture"
+	"github.com/git-town/git-town/v11/test/git"
+	"github.com/git-town/git-town/v11/test/testruntime"
 	"github.com/shoenig/test/must"
 )
 

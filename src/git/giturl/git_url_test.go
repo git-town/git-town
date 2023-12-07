@@ -3,7 +3,7 @@ package giturl_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v10/src/git/giturl"
+	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/shoenig/test/must"
 )
 

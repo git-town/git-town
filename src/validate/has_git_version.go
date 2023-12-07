@@ -3,7 +3,7 @@ package validate
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // HasGitVersion verifies that the system has Git of version 2.7 or newer installed.

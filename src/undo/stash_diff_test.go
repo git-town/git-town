@@ -3,8 +3,8 @@ package undo_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v10/src/domain"
-	"github.com/git-town/git-town/v10/src/undo"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/undo"
 	"github.com/shoenig/test/must"
 )
 

@@ -10,9 +10,9 @@ import (
 	"runtime/debug"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v10/src/cli/dialog"
-	"github.com/git-town/git-town/v10/src/cli/print"
-	"github.com/git-town/git-town/v10/src/cmd"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd"
 )
 
 func main() {

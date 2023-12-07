@@ -9,7 +9,7 @@ RELEASE_VERSION := "11.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v10/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v10/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
