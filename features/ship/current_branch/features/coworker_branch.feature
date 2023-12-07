@@ -12,11 +12,6 @@ Feature: ship a coworker's feature branch
       | BRANCH  | COMMAND                                                                 |
       | feature | git fetch --prune --tags                                                |
       |         | git checkout main                                                       |
-      | main    | git rebase origin/main                                                  |
-      |         | git checkout feature                                                    |
-      | feature | git merge --no-edit origin/feature                                      |
-      |         | git merge --no-edit main                                                |
-      |         | git checkout main                                                       |
       | main    | git merge --squash feature                                              |
       |         | git commit -m "feature done" --author "coworker <coworker@example.com>" |
       |         | git push                                                                |
@@ -32,11 +27,6 @@ Feature: ship a coworker's feature branch
     Then it runs the commands
       | BRANCH  | COMMAND                                               |
       | feature | git fetch --prune --tags                              |
-      |         | git checkout main                                     |
-      | main    | git rebase origin/main                                |
-      |         | git checkout feature                                  |
-      | feature | git merge --no-edit origin/feature                    |
-      |         | git merge --no-edit main                              |
       |         | git checkout main                                     |
       | main    | git merge --squash feature                            |
       |         | git commit --author "coworker <coworker@example.com>" |
