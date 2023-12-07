@@ -198,10 +198,12 @@ func appendProgram(config *appendConfig) program.Program {
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
+	previousBranchCandidates := domain.FromLocalBranchNames(config.branches.Initial, config.previousBranch)
+	previousBranchCandidates = append(previousBranchCandidates, config.lineage.Ancestors(config.branches.Initial)...)
 	wrap(&prog, wrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: config.hasOpenChanges,
-		PreviousBranch:   config.branches.Initial,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.hasOpenChanges,
+		PreviousBranchCandidates: previousBranchCandidates,
 	})
 	return prog
 }

@@ -97,7 +97,7 @@ func TestLoadSave(t *testing.T) {
 				&opcode.Merge{Branch: domain.NewBranchName("branch")},
 				&opcode.MergeParent{CurrentBranch: domain.NewLocalBranchName("branch")},
 				&opcode.PreserveCheckoutHistory{
-					PreviousBranch: domain.NewLocalBranchName("previous"),
+					PreviousBranchCandidates: domain.NewLocalBranchNames("previous"),
 				},
 				&opcode.PullCurrentBranch{},
 				&opcode.PushCurrentBranch{
@@ -303,7 +303,9 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "PreviousBranch": "previous"
+        "PreviousBranchCandidates": [
+          "previous"
+        ]
       },
       "type": "PreserveCheckoutHistory"
     },

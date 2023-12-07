@@ -161,9 +161,9 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
 	wrap(&prog, wrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
-		PreviousBranch:   config.previousBranch,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.branchToKill.LocalName == config.previousBranch && config.hasOpenChanges,
+		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch, config.initialBranch},
 	})
 	return prog, finalUndoProgram
 }

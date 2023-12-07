@@ -187,9 +187,9 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	}
 	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
 	wrap(&result, wrapOptions{
-		RunInGitRoot:     false,
-		StashOpenChanges: false,
-		PreviousBranch:   config.previousBranch,
+		RunInGitRoot:             false,
+		StashOpenChanges:         false,
+		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
 	})
 	return result
 }
