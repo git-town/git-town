@@ -9,7 +9,7 @@ intuitive.
 
 - `git new-pull-request` is now `git propose`. Not all platforms that Git Town
   supports use the name "pull request", so Git Town uses the word "proposal" for
-  pull requests, merge requests, etc from now on
+  pull requests, merge requests, etc from now on. Nine fewer characters to type!
   ([#2691](https://github.com/git-town/git-town/pull/2691)).
 - `git abort` is merged into `git undo`. From now on you just run
   `git town undo` after a Git Town command fails or finishes to get back to
