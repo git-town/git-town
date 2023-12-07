@@ -26,8 +26,7 @@ Feature: display all executed Git commands
       | feature | frontend | git merge --no-edit origin/feature                                 |
       |         | frontend | git merge --no-edit main                                           |
       |         | backend  | git rev-list --left-right feature...origin/feature                 |
-      |         | backend  | git show-ref --quiet refs/heads/main                               |
-      |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
+      |         | backend  | git show-ref --verify --quiet refs/heads/main                      |
       |         | backend  | which wsl-open                                                     |
       |         | backend  | which garcon-url-handler                                           |
       |         | backend  | which xdg-open                                                     |
@@ -39,7 +38,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """

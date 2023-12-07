@@ -7,7 +7,7 @@ import "github.com/git-town/git-town/v11/src/domain"
 type Bool = Cache[bool]
 
 // LocalBranch is a cache for domain.LocalBranchName variables.
-type LocalBranch = Cache[domain.LocalBranchName]
+type LocalBranchWithPrevious = WithPrevious[domain.LocalBranchName]
 
 // RemoteBranch is a cache for domain.RemoteBranchName variables.
 type RemoteBranch = Cache[domain.RemoteBranchName]

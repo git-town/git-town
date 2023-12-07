@@ -84,7 +84,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
 		Config:             &config,
-		CurrentBranchCache: &cache.LocalBranch{},
+		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
 	testCommands := commands.TestCommands{

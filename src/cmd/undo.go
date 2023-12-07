@@ -149,11 +149,9 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		undoRunState = runState.CreateUndoRunState()
 	}
 	wrap(&undoRunState.RunProgram, wrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranchesSnapshot.Active,
-		PreviousBranch:   config.previousBranch,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.hasOpenChanges,
+		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
 	})
 	// If the command to undo failed and was continued,
 	// there might be opcodes in the undo stack that became obsolete

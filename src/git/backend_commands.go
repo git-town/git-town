@@ -25,10 +25,10 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	BackendRunner                         // executes shell commands in the directory of the Git repo
-	Config             *RepoConfig        // the known state of the Git repository
-	CurrentBranchCache *cache.LocalBranch // caches the currently checked out Git branch
-	RemotesCache       *cache.Remotes     // caches Git remotes
+	BackendRunner                                     // executes shell commands in the directory of the Git repo
+	Config             *RepoConfig                    // the known state of the Git repository
+	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
+	RemotesCache       *cache.Remotes                 // caches Git remotes
 }
 
 // Author provides the locally Git configured user.
@@ -379,29 +379,6 @@ func (self *BackendCommands) CurrentBranchUncached() (domain.LocalBranchName, er
 // CurrentSHA provides the SHA of the currently checked out branch/commit.
 func (self *BackendCommands) CurrentSHA() (domain.SHA, error) {
 	return self.SHAForBranch(domain.NewBranchName("HEAD"))
-}
-
-// ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
-// given the inputs.
-func (self *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
-	// TODO: try to avoid repeated lookups to self.HasLocalBranch
-	if self.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
-		currentBranch, err := self.CurrentBranch()
-		if err != nil {
-			return domain.EmptyLocalBranchName(), err
-		}
-		if currentBranch == initialBranch {
-			return initialPreviouslyCheckedOutBranch, nil
-		}
-		if initialBranch == initialPreviouslyCheckedOutBranch {
-			return initialBranch, nil
-		}
-		if self.HasLocalBranch(initialBranch) {
-			return initialBranch, nil
-		}
-		return initialPreviouslyCheckedOutBranch, nil
-	}
-	return mainBranch, nil
 }
 
 func (self *BackendCommands) FirstExistingBranch(branches domain.LocalBranchNames, mainBranch domain.LocalBranchName) domain.LocalBranchName {
