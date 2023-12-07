@@ -10,7 +10,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is still "previous"
 
   Scenario: previous branch gone
-    When I run "git-town kill previous -v"
+    When I run "git-town kill previous"
     Then the current branch is still "current"
     And the previous Git branch is now ""
 
