@@ -36,8 +36,8 @@ var (
 	KeyAliasRepo                      = Key{"alias." + AliasRepo.name}               //nolint:gochecknoglobals
 	KeyAliasShip                      = Key{"alias." + AliasShip.name}               //nolint:gochecknoglobals
 	KeyAliasSync                      = Key{"alias." + AliasSync.name}               //nolint:gochecknoglobals
-	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}        //nolint:gochecknoglobals
 	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
+	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}        //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver    = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
 	KeyDeprecatedMainBranchName       = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
 	KeyDeprecatedNewBranchPushFlag    = Key{"git-town.new-branch-push-flag"}         //nolint:gochecknoglobals
@@ -51,20 +51,20 @@ var (
 	KeyMainBranch                     = Key{"git-town.main-branch"}                  //nolint:gochecknoglobals
 	KeyOffline                        = Key{"git-town.offline"}                      //nolint:gochecknoglobals
 	KeyPerennialBranches              = Key{"git-town.perennial-branches"}           //nolint:gochecknoglobals
-	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
-	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
 	KeyPushHook                       = Key{"git-town.push-hook"}                    //nolint:gochecknoglobals
 	KeyPushNewBranches                = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
 	KeyShipDeleteRemoteBranch         = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
-	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
-	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
-	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
 	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
+	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
+	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
+	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
+	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
+	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
-	KeyCodeHostingPlatform,
 	KeyCodeHostingOriginHostname,
+	KeyCodeHostingPlatform,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
@@ -78,15 +78,15 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyMainBranch,
 	KeyOffline,
 	KeyPerennialBranches,
-	KeySyncFeatureStrategy,
-	KeySyncPerennialStrategy,
 	KeyPushHook,
 	KeyPushNewBranches,
 	KeyShipDeleteRemoteBranch,
-	KeySyncUpstream,
-	KeySyncStrategy,
-	KeyTestingRemoteURL,
 	KeySyncBeforeShip,
+	KeySyncFeatureStrategy,
+	KeySyncPerennialStrategy,
+	KeySyncStrategy,
+	KeySyncUpstream,
+	KeyTestingRemoteURL,
 }
 
 func NewAliasKey(aliasType Alias) Key {
@@ -99,10 +99,10 @@ func NewAliasKey(aliasType Alias) Key {
 		return KeyAliasHack
 	case AliasKill:
 		return KeyAliasKill
-	case AliasPropose:
-		return KeyAliasPropose
 	case AliasPrepend:
 		return KeyAliasPrepend
+	case AliasPropose:
+		return KeyAliasPropose
 	case AliasRenameBranch:
 		return KeyAliasRenameBranch
 	case AliasRepo:
