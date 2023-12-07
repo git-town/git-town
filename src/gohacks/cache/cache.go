@@ -21,8 +21,8 @@ func (c *Cache[T]) Invalidate() {
 
 // Set allows collaborators to signal when the current branch has changed.
 func (c *Cache[T]) Set(newValue T) {
-	c.initialized = true
 	c.value = newValue
+	c.initialized = true
 }
 
 // Value provides the current value.

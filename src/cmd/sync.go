@@ -229,11 +229,9 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 		args.program.Add(&opcode.PushTags{})
 	}
 	wrap(args.program, wrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: args.hasOpenChanges,
-		MainBranch:       args.mainBranch,
-		InitialBranch:    args.initialBranch,
-		PreviousBranch:   args.previousBranch,
+		RunInGitRoot:             true,
+		StashOpenChanges:         args.hasOpenChanges,
+		PreviousBranchCandidates: domain.LocalBranchNames{args.previousBranch},
 	})
 }
 

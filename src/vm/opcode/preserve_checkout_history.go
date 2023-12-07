@@ -7,25 +7,24 @@ import (
 
 // PreserveCheckoutHistory does stuff.
 type PreserveCheckoutHistory struct {
-	InitialBranch                     domain.LocalBranchName
-	InitialPreviouslyCheckedOutBranch domain.LocalBranchName
-	MainBranch                        domain.LocalBranchName
+	PreviousBranchCandidates domain.LocalBranchNames
 	undeclaredOpcodeMethods
 }
 
 func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
-	expectedPreviouslyCheckedOutBranch, err := args.Runner.Backend.ExpectedPreviouslyCheckedOutBranch(self.InitialPreviouslyCheckedOutBranch, self.InitialBranch, self.MainBranch)
-	if err != nil {
-		return err
-	}
-	if expectedPreviouslyCheckedOutBranch == args.Runner.Backend.PreviouslyCheckedOutBranch() {
+	if !args.Runner.Backend.CurrentBranchCache.Initialized() {
+		// the branch cache is not initialized --> there were no branch changes --> no need to restore the branch history
 		return nil
 	}
-	currentBranch, err := args.Runner.Backend.CurrentBranch()
-	if err != nil {
-		return err
+	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
+	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
+	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
+	candidatesWithoutCurrent := self.PreviousBranchCandidates.Remove(currentBranch)
+	expectedPreviousBranch := args.Runner.Backend.FirstExistingBranch(candidatesWithoutCurrent, domain.EmptyLocalBranchName())
+	if expectedPreviousBranch.IsEmpty() || actualPreviousBranch == expectedPreviousBranch {
+		return nil
 	}
-	err = args.Runner.Backend.CheckoutBranchUncached(expectedPreviouslyCheckedOutBranch)
+	err := args.Runner.Backend.CheckoutBranchUncached(expectedPreviousBranch)
 	if err != nil {
 		return err
 	}

@@ -31,6 +31,17 @@ func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
 }
 
+// Remove removes the given branch name from this collection.
+func (self LocalBranchNames) Remove(toRemove LocalBranchName) LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self)-1)
+	for _, branch := range self {
+		if branch != toRemove {
+			result = append(result, branch)
+		}
+	}
+	return result
+}
+
 // Sort orders the branches in this collection alphabetically.
 func (self LocalBranchNames) Sort() {
 	sort.Slice(self, func(a, b int) bool {

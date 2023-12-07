@@ -29,9 +29,7 @@ Feature: display all executed Git commands
       |        | frontend | git push origin :old                          |
       |        | backend  | git log main..old                             |
       | new    | frontend | git branch -D old                             |
-      |        | backend  | git show-ref --quiet refs/heads/main          |
-      |        | backend  | git show-ref --quiet refs/heads/old           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout new                              |
       |        | backend  | git config -lz --global                       |
@@ -40,7 +38,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "new"
 
@@ -65,9 +63,7 @@ Feature: display all executed Git commands
       |        | frontend | git push origin :new                          |
       |        | frontend | git checkout old                              |
       | old    | frontend | git branch -D new                             |
-      |        | backend  | git show-ref --quiet refs/heads/main          |
-      |        | backend  | git show-ref --quiet refs/heads/new           |
-      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout old                              |
       |        | backend  | git config -lz --global                       |
@@ -76,6 +72,6 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "old"
