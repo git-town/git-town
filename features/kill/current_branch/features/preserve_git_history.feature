@@ -1,4 +1,3 @@
-@this
 Feature: preserve the previous Git branch
 
   Background:
