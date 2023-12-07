@@ -78,16 +78,15 @@ func executeKill(args []string, verbose bool) error {
 }
 
 type killConfig struct {
-	branchToKill      domain.BranchInfo
-	branchWhenDone    domain.LocalBranchName
-	hasOpenChanges    bool
-	initialBranch     domain.LocalBranchName
-	isOffline         bool
-	lineage           config.Lineage
-	mainBranch        domain.LocalBranchName
-	noPushHook        bool
-	previousBranch    domain.LocalBranchName
-	newPreviousBranch domain.LocalBranchName
+	branchToKill   domain.BranchInfo
+	branchWhenDone domain.LocalBranchName
+	hasOpenChanges bool
+	initialBranch  domain.LocalBranchName
+	isOffline      bool
+	lineage        config.Lineage
+	mainBranch     domain.LocalBranchName
+	noPushHook     bool
+	previousBranch domain.LocalBranchName
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -137,24 +136,21 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	var branchWhenDone domain.LocalBranchName
-	var newPreviousBranch domain.LocalBranchName
 	if branchNameToKill == branches.Initial {
 		branchWhenDone = previousBranch
-		newPreviousBranch = mainBranch
 	} else {
-		branchWhenDone = previousBranch
+		branchWhenDone = branches.Initial
 	}
 	return &killConfig{
-		branchToKill:      *branchToKill,
-		branchWhenDone:    branchWhenDone,
-		hasOpenChanges:    repoStatus.OpenChanges,
-		initialBranch:     branches.Initial,
-		isOffline:         repo.IsOffline,
-		lineage:           lineage,
-		mainBranch:        mainBranch,
-		newPreviousBranch: newPreviousBranch,
-		noPushHook:        !pushHook,
-		previousBranch:    previousBranch,
+		branchToKill:   *branchToKill,
+		branchWhenDone: branchWhenDone,
+		hasOpenChanges: repoStatus.OpenChanges,
+		initialBranch:  branches.Initial,
+		isOffline:      repo.IsOffline,
+		lineage:        lineage,
+		mainBranch:     mainBranch,
+		noPushHook:     !pushHook,
+		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
