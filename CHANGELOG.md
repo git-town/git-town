@@ -2,8 +2,8 @@
 
 ## 11.0.0 (2023-12-06)
 
-Git Town 11 focuses on making the Git Town user experience more consistent and
-intuitive.
+Git Town 11 continues the effort to make the Git Town user experience more
+consistent and intuitive.
 
 #### BREAKING CHANGES
 
@@ -43,8 +43,6 @@ intuitive.
   branches locally but is conflicting with the requirements for tests to pass on
   CI before shipping via the hosting platform
   ([#2714](https://github.com/git-town/git-town/pull/2714)).
-- Git Town can now be installed via Chocolatey on Windows (pending review and
-  approval from the Chocolatey team).
 
 #### Bug Fixes
 
