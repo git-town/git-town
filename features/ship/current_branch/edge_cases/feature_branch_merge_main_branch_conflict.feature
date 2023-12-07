@@ -29,49 +29,12 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND           |
-      | feature | git merge --abort |
+    Then it prints the error:
+      """
+      nothing to undo
+      """
+    And it runs no commands
     And the current branch is still "feature"
     And no merge is in progress
-    And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
-      | feature | local         | conflicting feature commit | conflicting_file | feature content |
-    And the initial branch hierarchy exists
-
-  Scenario: resolve and continue
-    When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue"
-    Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | feature | git commit --no-edit         |
-      |         | git checkout main            |
-      | main    | git merge --squash feature   |
-      |         | git commit -m "feature done" |
-      |         | git push                     |
-      |         | git push origin :feature     |
-      |         | git branch -D feature        |
-    And the current branch is now "main"
-    And the branches are now
-      | REPOSITORY    | BRANCHES |
-      | local, origin | main     |
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
-      | main   | local, origin | conflicting main commit | conflicting_file | main content     |
-      |        |               | feature done            | conflicting_file | resolved content |
-    And no branch hierarchy exists now
-
-  Scenario: resolve, commit, and continue
-    When I resolve the conflict in "conflicting_file"
-    And I run "git commit --no-edit"
-    And I run "git-town continue"
-    Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | feature | git checkout main            |
-      | main    | git merge --squash feature   |
-      |         | git commit -m "feature done" |
-      |         | git push                     |
-      |         | git push origin :feature     |
-      |         | git branch -D feature        |
-    And the current branch is now "main"
+    And now the initial commits exist
+    And the initial branches and hierarchy exist
