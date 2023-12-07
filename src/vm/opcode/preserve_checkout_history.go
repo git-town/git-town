@@ -20,6 +20,9 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	currentBranch := args.Runner.Backend.CurrentBranchCache.Value()
 	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
 	expectedPreviousBranch := firstExistingBranch(self.PreviousBranchCandidates, args.Runner.Backend)
+	if expectedPreviousBranch.IsEmpty() {
+		return nil
+	}
 	if actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}

@@ -10,7 +10,6 @@ Feature: append a branch to a branch whose tracking branch was deleted
     And an uncommitted file
     When I run "git-town append new"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
