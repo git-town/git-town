@@ -9,9 +9,8 @@ Feature: preserve the previous Git branch
     Then the current branch is now "previous"
     And the previous Git branch is now "main"
 
-  @debug @this
   Scenario: previous branch was killed
-    When I run "git-town kill previous -v"
+    When I run "git-town kill previous"
     Then the current branch is still "current"
     And the previous Git branch is now ""
 
