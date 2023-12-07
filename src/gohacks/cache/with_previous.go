@@ -30,9 +30,9 @@ func (c *WithPrevious[T]) Previous() T {
 
 // Set allows collaborators to signal when the current branch has changed.
 func (c *WithPrevious[T]) Set(newValue T) {
-	c.initialized = true
 	c.previous = c.value
 	c.value = newValue
+	c.initialized = true
 }
 
 // Value provides the current value.
