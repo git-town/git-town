@@ -1,4 +1,3 @@
-@this
 Feature: skip deleting the remote branch when shipping another branch
 
   Background:
