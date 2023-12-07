@@ -2,7 +2,7 @@
 
 ## 11.0.0 (2023-12-06)
 
-Git Town v11 continues the effort to remove redundant commands and make the Git
+Git Town 11 continues the effort to remove redundant commands and make the Git
 Town user experience more consistent and intuitive.
 
 #### BREAKING CHANGES
@@ -15,9 +15,9 @@ Town user experience more consistent and intuitive.
   ([#2719](https://github.com/git-town/git-town/pull/2719)). From now on you
   just run `git town undo` after a Git Town command fails or finishes to get
   back to where you started.
-- Many configuration options have more appropriate and intuitive names. No
-  action item on your end, Git Town automatically updates the affected settings
-  on your machine. This means you can't go back to v10 after updating to v11.
+- Many configuration options now have more intuitive names. No action needed on
+  your end, Git Town automatically updates the affected settings on your
+  machine. This means you can't go back to v10 after updating to v11.
   - `code-hosting-driver` is now `code-hosting-platform`
     ([#2704](https://github.com/git-town/git-town/pull/2704))
   - `main-branch-name` is now `main-branch`
@@ -28,13 +28,13 @@ Town user experience more consistent and intuitive.
     ([#2697](https://github.com/git-town/git-town/pull/2697))
   - `pull-branch-strategy` is now `sync-perennial-strategy`
     ([#2693](https://github.com/git-town/git-town/pull/2693))
-- new proposal URL for BitBucket
-  ([#2692](https://github.com/git-town/git-town/pull/2692))
+- New URL to create proposals on BitBucket
+  ([#2692](https://github.com/git-town/git-town/pull/2692)).
 - `git town config reset` now also deletes the branch lineage
-  ([#2733](https://github.com/git-town/git-town/pull/2733)) - this helps get you
-  back on track in case of a configuration snafu
-- `git town repo` and `git town propose` always open the default port, even if
-  the `origin` remote points to a custom port
+  ([#2733](https://github.com/git-town/git-town/pull/2733)). This helps get you
+  out of a configuration snafu.
+- `git town repo` and `git town propose` always open the browser page at the
+  default port, even if the `origin` remote points to a custom port
   ([#2730](https://github.com/git-town/git-town/pull/2730))
 
 #### New Features
@@ -76,8 +76,8 @@ Town user experience more consistent and intuitive.
 Git Town 10 improves support for shipping branches via the code hosting web UI
 instead of running `git ship`. After merging your branches remotely, run
 `git sync --all` to sync all local branches and remove the ones shipped at the
-remote. Don't worry, Git Town ensures deleted branches don't contain unshipped
-changes. To bring them back run `git undo`.
+remote. Don't worry, Git Town ensures that branches which contain unshipped
+changes won't get deleted. `git undo` brings deleted branches back.
 
 Git Town 10 has improved performance, robustness, and reliability thanks to a
 large-scale modernization of the Git Town's architecture. Git Town now runs
