@@ -181,6 +181,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 			finalUndoProgram.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
 			finalUndoProgram.Add(&opcode.UndoLastCommit{})
 		}
+		// TODO: check out the previous branch here
 		prog.Add(&opcode.Checkout{Branch: config.targetBranchParent()})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.targetBranch.LocalName, Force: false})
