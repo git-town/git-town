@@ -7,14 +7,13 @@ user experience more consistent and intuitive.
 
 #### BREAKING CHANGES
 
-- `git town new-pull-request` is now `git town propose`
-  ([#2691](https://github.com/git-town/git-town/pull/2691)). Not all platforms
-  that Git Town supports use the name "pull request", so Git Town goes with the
-  name "proposal" for pull requests, merge requests, etc.
-- `git town abort` has been merged with `git town undo`
-  ([#2719](https://github.com/git-town/git-town/pull/2719)). From now on you
-  just run `git town undo` after a Git Town command fails or finishes to get
-  back to where you started.
+- `git town new-pull-request` is now `git town propose`. Not all platforms that
+  Git Town supports use the name "pull request", so Git Town goes with the name
+  "proposal" for pull requests, merge requests, etc
+  ([#2691](https://github.com/git-town/git-town/pull/2691)).
+- `git town abort` has been merged with `git town undo`. From now on you just
+  run `git town undo` after a Git Town command fails or finishes to get back to
+  where you started ([#2719](https://github.com/git-town/git-town/pull/2719)).
 - Many configuration options now have more intuitive names. No action needed on
   your end, Git Town automatically updates the affected settings on your
   machine. This means you can't go back to v10 after updating to v11.
@@ -30,12 +29,12 @@ user experience more consistent and intuitive.
     ([#2693](https://github.com/git-town/git-town/pull/2693))
 - New URL to create proposals on BitBucket
   ([#2692](https://github.com/git-town/git-town/pull/2692)).
-- `git town config reset` now also deletes the branch lineage
-  ([#2733](https://github.com/git-town/git-town/pull/2733)). This helps get you
-  out of a configuration snafu.
+- `git town config reset` now also deletes the branch lineage. This helps get
+  you out of a configuration snafu
+  ([#2733](https://github.com/git-town/git-town/pull/2733)).
 - `git town repo` and `git town propose` always open the browser page at the
   default port, even if the `origin` remote points to a custom port
-  ([#2730](https://github.com/git-town/git-town/pull/2730))
+  ([#2730](https://github.com/git-town/git-town/pull/2730)).
 
 #### New Features
 
