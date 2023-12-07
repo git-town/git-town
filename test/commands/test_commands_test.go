@@ -295,20 +295,20 @@ func TestTestCommands(t *testing.T) {
 			res := runtime.HasGitTownConfigNow()
 			must.False(t, res)
 		})
-		t.Run("a lineage entry exists", func(t *testing.T) {
-			runtime := testruntime.Create(t)
-			runtime.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
-			must.NoError(t, runtime.CreateFeatureBranch(domain.NewLocalBranchName("foo")))
-			must.True(t, runtime.HasGitTownConfigNow())
-		})
-		t.Run("main branch is configured", func(t *testing.T) {
+		t.Run("the main branch is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.Config.SetMainBranch(domain.NewLocalBranchName("main"))
 			must.True(t, runtime.HasGitTownConfigNow())
 		})
-		t.Run("perennial branches are configured", func(t *testing.T) {
+		t.Run("the perennial branches are configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.Config.SetPerennialBranches(domain.NewLocalBranchNames("qa"))
+			must.True(t, runtime.HasGitTownConfigNow())
+		})
+		t.Run("branch lineage is configured", func(t *testing.T) {
+			runtime := testruntime.Create(t)
+			runtime.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
+			must.NoError(t, runtime.CreateFeatureBranch(domain.NewLocalBranchName("foo")))
 			must.True(t, runtime.HasGitTownConfigNow())
 		})
 	})
