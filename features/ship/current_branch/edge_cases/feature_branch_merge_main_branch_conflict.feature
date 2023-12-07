@@ -8,27 +8,25 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I run "git-town ship -m 'feature done'"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      | BRANCH  | COMMAND                    |
+      | feature | git fetch --prune --tags   |
+      |         | git checkout main          |
+      | main    | git merge --squash feature |
+      |         | git reset --hard           |
+      |         | git checkout feature       |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
       """
     And it prints the error:
       """
-      To go back to where you started, run "git-town undo".
-      To continue after having resolved conflicts, run "git-town continue".
+      aborted because commit exited with error
       """
     And the current branch is still "feature"
-    And a merge is now in progress
+    And no merge is in progress
 
   Scenario: undo
     When I run "git-town undo"
