@@ -9,25 +9,21 @@ Feature: provide the commit message via a CLI argument
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
+  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | other   | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
-      |         | git checkout other                 |
-      | other   | git stash pop                      |
+      | BRANCH | COMMAND                      |
+      | other  | git fetch --prune --tags     |
+      |        | git add -A                   |
+      |        | git stash                    |
+      |        | git checkout main            |
+      | main   | git merge --squash feature   |
+      |        | git commit -m "feature done" |
+      |        | git push                     |
+      |        | git push origin :feature     |
+      |        | git branch -D feature        |
+      |        | git checkout other           |
+      | other  | git stash pop                |
     And the current branch is now "other"
     And the uncommitted file still exists
     And the branches are now
