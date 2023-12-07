@@ -2,7 +2,7 @@ package output
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v10/test/datatable"
+	"github.com/git-town/git-town/v11/test/datatable"
 )
 
 // RenderTable provides the textual Gherkin representation of the given Gherkin table.

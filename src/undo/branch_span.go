@@ -1,6 +1,6 @@
 package undo
 
-import "github.com/git-town/git-town/v10/src/domain"
+import "github.com/git-town/git-town/v11/src/domain"
 
 // BranchSpan represents changes of a branch over time.
 type BranchSpan struct {

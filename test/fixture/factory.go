@@ -3,8 +3,8 @@ package fixture
 import (
 	"path/filepath"
 
-	"github.com/git-town/git-town/v10/test/filesystem"
-	"github.com/git-town/git-town/v10/test/helpers"
+	"github.com/git-town/git-town/v11/test/filesystem"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // Factory manages the Git setup for the entire test suite.

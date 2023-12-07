@@ -1,5 +1,59 @@
 # Git Town Changelog
 
+## 11.0.0 (2023-12-06)
+
+Git Town 11 focuses on making the Git Town user experience more consistent and
+intuitive.
+
+#### BREAKING CHANGES
+
+- `git new-pull-request` is now `git propose`. Not all platforms that Git Town
+  supports use the name "pull request", so Git Town uses the word "proposal" for
+  pull requests, merge requests, etc from now on. Nine fewer characters to type!
+  ([#2691](https://github.com/git-town/git-town/pull/2691))
+- `git abort` is merged into `git undo`. From now on you just run `git undo`
+  after a Git Town command fails or finishes to get back to where you started
+  ([#2719](https://github.com/git-town/git-town/pull/2719)).
+- Many configuration options now have more intuitive names. No action needed on
+  your end, Git Town automatically updates the affected settings on your
+  machine. This means you can't go back to v10 after updating to v11.
+  - `code-hosting-driver` is now `code-hosting-platform`
+    ([#2704](https://github.com/git-town/git-town/pull/2704))
+  - `main-branch-name` is now `main-branch`
+    ([#2703](https://github.com/git-town/git-town/pull/2703))
+  - `perennial-branch-names` is now `perennial-branches`
+    ([#2702](https://github.com/git-town/git-town/pull/2702))
+  - `sync-strategy` is now `sync-feature-strategy`
+    ([#2697](https://github.com/git-town/git-town/pull/2697))
+  - `pull-branch-strategy` is now `sync-perennial-strategy`
+    ([#2693](https://github.com/git-town/git-town/pull/2693))
+- `git ship` by default no longer syncs the branch to ship. Set the
+  `sync-before-ship` flag to restore the old behavior. This allows shipping only
+  when the tests pass ([#2735](https://github.com/git-town/git-town/pull/2735)).
+- Creating proposals on BitBucket uses an updated URL
+  ([#2692](https://github.com/git-town/git-town/pull/2692)).
+- `git town config reset` now also deletes the branch lineage. This helps get
+  you out of more configuration snafus
+  ([#2733](https://github.com/git-town/git-town/pull/2733)).
+
+#### New Features
+
+- The new `sync-before-ship` config option prevents `git ship` from updating the
+  branch it is about to ship. The old behavior makes sense when shipping
+  branches locally but is conflicting with the requirements for tests to pass on
+  CI before shipping via the hosting platform
+  ([#2714](https://github.com/git-town/git-town/pull/2714)).
+- Git Town can now be installed via Chocolatey on Windows (pending review and
+  approval from the Chocolatey team).
+
+#### Bug Fixes
+
+- allow renaming local-only branches
+  ([#2710](https://github.com/git-town/git-town/pull/2710))
+- `git repo` and `git propose` always open the browser page at the default port,
+  even if the `origin` remote points to a custom port
+  ([#2730](https://github.com/git-town/git-town/pull/2730))
+
 ## 10.0.3 (2023-11-25)
 
 #### Bug Fixes
@@ -26,8 +80,8 @@
 Git Town 10 improves support for shipping branches via the code hosting web UI
 instead of running `git ship`. After merging your branches remotely, run
 `git sync --all` to sync all local branches and remove the ones shipped at the
-remote. Don't worry, Git Town ensures deleted branches don't contain unshipped
-changes. To bring them back run `git undo`.
+remote. Don't worry, Git Town ensures that branches which contain unshipped
+changes won't get deleted. `git undo` brings deleted branches back.
 
 Git Town 10 has improved performance, robustness, and reliability thanks to a
 large-scale modernization of the Git Town's architecture. Git Town now runs

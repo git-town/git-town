@@ -8,9 +8,9 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v10/src/gohacks"
-	"github.com/git-town/git-town/v10/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v10/src/messages"
+	"github.com/git-town/git-town/v11/src/gohacks"
+	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
