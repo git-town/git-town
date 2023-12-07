@@ -15,7 +15,7 @@ Feature: ignore files
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                                               |
-      | feature | git push --force-with-lease origin {{ sha 'Initial commit' }}:feature |
+      | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"
     And now the initial commits exist
     And the initial branches and hierarchy exist

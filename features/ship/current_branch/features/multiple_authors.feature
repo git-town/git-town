@@ -36,7 +36,7 @@ Feature: ship a coworker's feature branch
       | BRANCH | COMMAND                                                       |
       | main   | git revert {{ sha 'feature done' }}                           |
       |        | git push                                                      |
-      |        | git push origin {{ sha 'Initial commit' }}:refs/heads/feature |
+      |        | git push origin {{ sha 'initial commit' }}:refs/heads/feature |
       |        | git branch feature {{ sha 'coworker commit' }}                |
       |        | git checkout feature                                          |
     And the current branch is now "feature"

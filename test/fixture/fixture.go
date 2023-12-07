@@ -84,7 +84,7 @@ func NewStandardFixture(dir string) Fixture {
 	// initialize the repo in the folder
 	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	err = originRepo.RunMany([][]string{
-		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 		{"git", "branch", "main", "initial"},
 	})
 	if err != nil {
@@ -116,7 +116,7 @@ func (self *Fixture) AddSubmoduleRepo() {
 	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRunMany([][]string{
 		{"git", "config", "--global", "protocol.file.allow", "always"},
-		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
 	self.SubmoduleRepo = &submoduleRepo
 }

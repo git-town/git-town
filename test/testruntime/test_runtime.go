@@ -38,7 +38,7 @@ func Create(t *testing.T) TestRuntime {
 	err = os.Mkdir(homeDir, 0o744)
 	must.NoError(t, err)
 	runtime := Initialize(workingDir, homeDir, homeDir)
-	err = runtime.Run("git", "commit", "--allow-empty", "-m", "Initial commit")
+	err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	must.NoError(t, err)
 	return runtime
 }

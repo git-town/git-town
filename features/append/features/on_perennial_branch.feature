@@ -29,7 +29,7 @@ Feature: append to a perennial branch
     Then it runs the commands
       | BRANCH     | COMMAND                                     |
       | new        | git checkout production                     |
-      | production | git reset --hard {{ sha 'Initial commit' }} |
+      | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
     And the current branch is now "production"
     And now the initial commits exist
