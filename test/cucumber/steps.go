@@ -884,16 +884,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		previousBranch := domain.NewLocalBranchName("-")
-		state.fixture.DevRepo.CheckoutBranch(previousBranch)
-		have, err := state.fixture.DevRepo.CurrentBranch()
-		if err != nil {
-			return err
-		}
+		have := state.fixture.DevRepo.BackendCommands.PreviouslyCheckedOutBranch()
 		if have.String() != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
-		state.fixture.DevRepo.CheckoutBranch(previousBranch)
 		return nil
 	})
 
