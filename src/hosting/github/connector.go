@@ -60,7 +60,7 @@ func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchNam
 }
 
 func (self *Connector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", self.Hostname, self.Organization, self.Repository)
+	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {

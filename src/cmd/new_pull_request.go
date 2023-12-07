@@ -14,6 +14,7 @@ func newPullRequestCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
+		Hidden:  true,
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
 		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),

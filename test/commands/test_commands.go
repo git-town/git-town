@@ -264,7 +264,17 @@ func (self *TestCommands) HasGitTownConfigNow() bool {
 	if err != nil {
 		return false
 	}
-	return output != ""
+	if output != "" {
+		return true
+	}
+	output, err = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
+	if err != nil {
+		return false
+	}
+	if output != "" {
+		return true
+	}
+	return false
 }
 
 // LocalBranches provides the names of all branches in the local repository,
