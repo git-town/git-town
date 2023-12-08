@@ -13,6 +13,12 @@ type CreateTrackingBranch struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *CreateTrackingBranch) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
+}
+
 func (self *CreateTrackingBranch) Run(args shared.RunArgs) error {
 	return args.Runner.Frontend.CreateTrackingBranch(self.Branch, domain.OriginRemote, self.NoPushHook)
 }
