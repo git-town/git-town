@@ -7,14 +7,22 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
+func NewBuilder(lineage config.Lineage) Builder {
+	return Builder{
+		Entries: ModalSelectEntries{},
+		Lineage: lineage,
+	}
+}
+
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
 func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
-	entries, err := createEntries(lineage, currentBranch)
+	builder := NewBuilder(lineage)
+	err = builder.CreateEntries(currentBranch)
 	if err != nil {
 		return domain.EmptyLocalBranchName(), false, err
 	}
-	choice, err := ModalSelect(entries, currentBranch.String())
+	choice, err := ModalSelect(builder.Entries, currentBranch.String())
 	if err != nil {
 		return domain.EmptyLocalBranchName(), false, err
 	}
@@ -24,37 +32,42 @@ func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 	return domain.NewLocalBranchName(*choice), true, nil
 }
 
+// Builder builds up the switch-branch dialog entries.
+type Builder struct {
+	Entries ModalSelectEntries
+	Lineage config.Lineage
+}
+
 // AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (ModalSelectEntries, error) {
-	entries = append(entries, ModalSelectEntry{
+func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent int) error {
+	self.Entries = append(self.Entries, ModalSelectEntry{
 		Text:  strings.Repeat("  ", indent) + branch.String(),
 		Value: branch.String(),
 	})
 	var err error
-	for _, child := range lineage.Children(branch) {
-		entries, err = addEntryAndChildren(entries, child, indent+1, lineage)
+	for _, child := range self.Lineage.Children(branch) {
+		err = self.AddEntryAndChildren(child, indent+1)
 		if err != nil {
-			return entries, err
+			return err
 		}
 	}
-	return entries, nil
+	return nil
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName) (ModalSelectEntries, error) {
-	entries := ModalSelectEntries{}
+func (self *Builder) CreateEntries(currentBranch domain.LocalBranchName) error {
 	var err error
-	for _, root := range lineage.Roots() {
-		entries, err = addEntryAndChildren(entries, root, 0, lineage)
+	for _, root := range self.Lineage.Roots() {
+		err = self.AddEntryAndChildren(root, 0)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
-	if len(entries) == 0 {
-		entries = append(entries, ModalSelectEntry{
+	if len(self.Entries) == 0 {
+		self.Entries = append(self.Entries, ModalSelectEntry{
 			Text:  string(currentBranch),
 			Value: string(currentBranch),
 		})
 	}
-	return entries, nil
+	return nil
 }

@@ -1,68 +1,59 @@
-package dialog
+package dialog_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/shoenig/test/must"
 )
 
-func TestSwitchBranch(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	t.Parallel()
-	t.Run("addEntryAndChildren", func(t *testing.T) {
+
+	t.Run("AddEntryAndChildren", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add an entry with children to an empty list", func(t *testing.T) {
-			entries := ModalSelectEntries{}
-			mainBranch := domain.NewLocalBranchName("main")
+			main := domain.NewLocalBranchName("main")
 			feature1 := domain.NewLocalBranchName("feature-1")
 			feature2 := domain.NewLocalBranchName("feature-2")
+			featureA := domain.NewLocalBranchName("feature-A")
 			lineage := config.Lineage{
-				feature1: mainBranch,
+				feature1: main,
 				feature2: feature1,
+				featureA: main,
 			}
-			have, err := addEntryAndChildren(entries, feature1, 0, lineage)
+			builder := dialog.NewBuilder(lineage)
+			// add entries to the empty builder
+			err := builder.AddEntryAndChildren(feature1, 0)
 			must.NoError(t, err)
-			want := ModalSelectEntries{ModalSelectEntry{
+			want := dialog.ModalSelectEntries{dialog.ModalSelectEntry{
 				Text:  "feature-1",
 				Value: "feature-1",
-			}, ModalSelectEntry{
+			}, dialog.ModalSelectEntry{
 				Text:  "  feature-2",
 				Value: "feature-2",
 			}}
-			must.Eq(t, want, have)
-		})
-		t.Run("add an entry to an existing list", func(t *testing.T) {
-			t.Parallel()
-			entries := ModalSelectEntries{ModalSelectEntry{
-				Text:  "existing",
-				Value: "existing",
-			}}
-			mainBranch := domain.NewLocalBranchName("main")
-			feature1 := domain.NewLocalBranchName("feature-1")
-			feature2 := domain.NewLocalBranchName("feature-2")
-			lineage := config.Lineage{
-				feature1: mainBranch,
-				feature2: feature1,
-			}
-			have, err := addEntryAndChildren(entries, feature1, 1, lineage)
+			must.Eq(t, want, builder.Entries)
+			// add more entries to the already populated builder
+			err = builder.AddEntryAndChildren(featureA, 0)
 			must.NoError(t, err)
-			want := ModalSelectEntries{
-				ModalSelectEntry{
-					Text:  "existing",
-					Value: "existing",
-				},
-				ModalSelectEntry{
-					Text:  "  feature-1",
-					Value: "feature-1",
-				}, ModalSelectEntry{
-					Text:  "    feature-2",
-					Value: "feature-2",
-				}}
-			must.Eq(t, want, have)
+			want = dialog.ModalSelectEntries{dialog.ModalSelectEntry{
+				Text:  "feature-1",
+				Value: "feature-1",
+			}, dialog.ModalSelectEntry{
+				Text:  "  feature-2",
+				Value: "feature-2",
+			}, dialog.ModalSelectEntry{
+				Text:  "feature-A",
+				Value: "feature-A",
+			}}
+			must.Eq(t, want, builder.Entries)
 		})
 	})
-	t.Run("createEntries", func(t *testing.T) {
+
+	t.Run("CreateEntries", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := domain.NewLocalBranchName("main")
 		feature1 := domain.NewLocalBranchName("feature-1")
@@ -71,20 +62,23 @@ func TestSwitchBranch(t *testing.T) {
 			feature1: mainBranch,
 			feature2: feature1,
 		}
-		have, err := createEntries(lineage, feature2)
+		builder := dialog.NewBuilder(lineage)
+		err := builder.CreateEntries(feature2)
 		must.NoError(t, err)
-		want := ModalSelectEntries{
-			ModalSelectEntry{
+		want := dialog.ModalSelectEntries{
+			dialog.ModalSelectEntry{
 				Text:  "main",
 				Value: "main",
 			},
-			ModalSelectEntry{
+			dialog.ModalSelectEntry{
 				Text:  "  feature-1",
 				Value: "feature-1",
-			}, ModalSelectEntry{
+			},
+			dialog.ModalSelectEntry{
 				Text:  "    feature-2",
 				Value: "feature-2",
-			}}
-		must.Eq(t, want, have)
+			},
+		}
+		must.Eq(t, want, builder.Entries)
 	})
 }
