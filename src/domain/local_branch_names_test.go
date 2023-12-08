@@ -18,14 +18,6 @@ func TestLocalBranchNames(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("FirstNonEmpty", func(t *testing.T) {
-		t.Parallel()
-		branch := domain.NewLocalBranchName("branch")
-		branches := domain.LocalBranchNames{domain.EmptyLocalBranchName(), branch}
-		have := branches.FirstNonEmpty()
-		must.EqOp(t, branch, have)
-	})
-
 	t.Run("NewLocalBranchNames and Strings", func(t *testing.T) {
 		t.Parallel()
 		branches := domain.NewLocalBranchNames("one", "two", "three")
