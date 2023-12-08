@@ -20,6 +20,10 @@ func (self BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
 	return slice.Contains(self.PerennialBranches, branch)
 }
 
+func (self BranchTypes) MainAndPerennials() LocalBranchNames {
+	return append(LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
+}
+
 func EmptyBranchTypes() BranchTypes {
 	return BranchTypes{
 		MainBranch:        EmptyLocalBranchName(),

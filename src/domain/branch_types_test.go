@@ -45,4 +45,15 @@ func TestBranchTypes(t *testing.T) {
 		must.True(t, bt.IsPerennialBranch(domain.NewLocalBranchName("peren1")))
 		must.True(t, bt.IsPerennialBranch(domain.NewLocalBranchName("peren2")))
 	})
+
+	t.Run("MainAndPerennials", func(t *testing.T) {
+		t.Parallel()
+		branchTypes := domain.BranchTypes{
+			MainBranch:        domain.NewLocalBranchName("main"),
+			PerennialBranches: domain.NewLocalBranchNames("perennial-1", "perennial-2"),
+		}
+		have := branchTypes.MainAndPerennials()
+		want := domain.NewLocalBranchNames("main", "perennial-1", "perennial-2")
+		must.Eq(t, want, have)
+	})
 }
