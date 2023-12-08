@@ -1,4 +1,4 @@
-name: unit tests and linters
+name: linters and documentation tests
 
 on:
   push:
@@ -18,4 +18,3 @@ jobs:
       - name: Indicate formatting issues
         run: git diff HEAD --exit-code --color
       - run: make docs
-      - run: make unit-race
