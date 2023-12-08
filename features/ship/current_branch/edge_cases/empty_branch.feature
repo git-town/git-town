@@ -17,7 +17,7 @@ Feature: does not ship an empty branch
       the branch "empty" has no shippable changes
       """
     And the current branch is still "empty"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist
 
   Scenario: undo
@@ -28,5 +28,5 @@ Feature: does not ship an empty branch
       nothing to undo
       """
     And the current branch is still "empty"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

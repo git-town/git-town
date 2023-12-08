@@ -35,7 +35,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        | git checkout feature |
     And the current branch is still "feature"
     And no rebase is in progress
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial lineage exists
 
   Scenario: resolve and continue

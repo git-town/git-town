@@ -41,5 +41,5 @@ Feature: delete the current branch
       | current | git reset --soft HEAD^                                        |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

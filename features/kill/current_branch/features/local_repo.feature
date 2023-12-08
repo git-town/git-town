@@ -38,5 +38,5 @@ Feature: in a local repo
       | feature | git reset --soft HEAD^                        |
     And the current branch is now "feature"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

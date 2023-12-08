@@ -44,7 +44,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the current branch is now "other"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial lineage exists
 
   Scenario: resolve and continue

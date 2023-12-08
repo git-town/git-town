@@ -22,7 +22,7 @@ Feature: dry run
       |         | git merge --no-edit main           |
       |         | git push                           |
     And the current branch is still "feature"
-    And now the initial commits exist
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

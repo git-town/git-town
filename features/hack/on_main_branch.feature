@@ -39,5 +39,5 @@ Feature: on a feature branch
       |        | git branch -D new                           |
       |        | git stash pop                               |
     And the current branch is now "main"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

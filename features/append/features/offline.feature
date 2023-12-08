@@ -32,5 +32,5 @@ Feature: append in offline mode
       | new      | git checkout existing |
       | existing | git branch -D new     |
     And the current branch is now "existing"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial lineage exists

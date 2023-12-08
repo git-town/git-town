@@ -20,7 +20,7 @@ Feature: sync the current perennial branch (local repo)
     And all branches are now synchronized
     And the current branch is still "qa"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist now
 
   Scenario: undo
     When I run "git-town undo"

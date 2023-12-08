@@ -44,5 +44,5 @@ Feature: append a new feature branch to an existing feature branch
       |          | git stash pop         |
     And the current branch is now "existing"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial lineage exists

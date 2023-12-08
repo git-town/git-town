@@ -35,5 +35,5 @@ Feature: offline mode
       | BRANCH  | COMMAND                                           |
       | feature | git reset --hard {{ sha 'local feature commit' }} |
     And the current branch is still "feature"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

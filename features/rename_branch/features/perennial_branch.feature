@@ -50,5 +50,5 @@ Feature: rename a perennial branch
       | production | git branch -D new                                   |
     And the current branch is now "production"
     And the perennial branches are now "production"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist

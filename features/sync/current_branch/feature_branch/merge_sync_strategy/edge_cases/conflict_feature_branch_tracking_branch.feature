@@ -42,7 +42,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict

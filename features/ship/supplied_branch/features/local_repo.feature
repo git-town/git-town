@@ -45,5 +45,5 @@ Feature: ship the supplied feature branch in a local repo
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
-    And now the initial commits exist
+    And the initial commits exist now
     And the initial branches and lineage exist
