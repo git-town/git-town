@@ -19,7 +19,7 @@ Feature: offline mode
       | new    | git stash pop          |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local         | main commit |

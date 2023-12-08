@@ -26,7 +26,7 @@ Feature: ship the supplied feature branch in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And this branch lineage exists now

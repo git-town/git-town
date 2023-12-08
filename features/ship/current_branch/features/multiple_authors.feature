@@ -13,7 +13,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, origin | feature done | developer <developer@example.com> |
     And no lineage exists now
@@ -22,7 +22,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER        |
       | Please choose an author for the squash commit | [DOWN][ENTER] |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no lineage exists now
@@ -40,7 +40,7 @@ Feature: ship a coworker's feature branch
       |        | git branch feature {{ sha 'coworker commit' }}                |
       |        | git checkout feature                                          |
     And the current branch is now "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |

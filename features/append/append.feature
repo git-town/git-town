@@ -24,7 +24,7 @@ Feature: append a new feature branch to an existing feature branch
       | new      | git stash pop                       |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
       | new      | local         | existing commit |

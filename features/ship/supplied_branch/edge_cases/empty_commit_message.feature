@@ -40,7 +40,7 @@ Feature: abort the ship via empty commit message
       nothing to undo
       """
     And the current branch is still "other"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | main commit    |
       | feature | local         | feature commit |

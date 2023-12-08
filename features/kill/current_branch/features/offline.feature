@@ -24,7 +24,7 @@ Feature: offline mode
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
       | origin     | main, feature, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | origin        | feature commit |
       | other   | local, origin | other commit   |

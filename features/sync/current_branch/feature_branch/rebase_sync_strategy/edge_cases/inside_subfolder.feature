@@ -34,7 +34,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And the current branch is still "alpha"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | alpha  | local, origin | main commit   |

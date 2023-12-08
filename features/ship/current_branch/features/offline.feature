@@ -16,7 +16,7 @@ Feature: offline mode
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
     And the current branch is now "main"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | origin   | feature commit |

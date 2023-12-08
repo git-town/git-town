@@ -25,7 +25,7 @@ Feature: delete another than the current branch
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |

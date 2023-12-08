@@ -62,7 +62,7 @@ Feature: conflicts between the main branch and its tracking branch
       | new    | git stash pop         |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |

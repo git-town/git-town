@@ -62,7 +62,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop           |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
       | alpha  | local, origin | alpha commit       |

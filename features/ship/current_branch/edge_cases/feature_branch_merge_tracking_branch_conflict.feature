@@ -56,7 +56,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, origin | feature done | conflicting_file |
     And no lineage exists now

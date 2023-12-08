@@ -72,7 +72,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
       | alpha  | local, origin | alpha commit                   |

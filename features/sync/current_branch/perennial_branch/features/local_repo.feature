@@ -30,7 +30,7 @@ Feature: sync the current perennial branch (local repo)
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "qa"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |
       | qa     | local    | local commit |

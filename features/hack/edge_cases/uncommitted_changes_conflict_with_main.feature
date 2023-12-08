@@ -71,7 +71,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And I run "git-town continue" and close the editor
     Then it runs no commands
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
       | new    | local         | conflicting commit | conflicting_file | main content |

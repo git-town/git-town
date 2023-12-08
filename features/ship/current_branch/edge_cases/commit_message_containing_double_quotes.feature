@@ -22,7 +22,7 @@ Feature: commit message with double-quotes
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And no uncommitted files exist
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
     And no lineage exists now
@@ -37,7 +37,7 @@ Feature: commit message with double-quotes
       |        | git branch feature {{ sha 'feature commit' }}                 |
       |        | git checkout feature                                          |
     And the current branch is now "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                       |
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |

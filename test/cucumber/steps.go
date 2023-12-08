@@ -552,7 +552,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.compareTable(state.initialCommits)
 	})
 
-	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^these commits exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return state.compareTable(table)
 	})
 

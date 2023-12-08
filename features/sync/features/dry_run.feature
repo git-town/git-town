@@ -28,7 +28,7 @@ Feature: dry run
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |

@@ -24,7 +24,7 @@ Feature: local repository
     And the branches are now
       | REPOSITORY | BRANCHES   |
       | local      | main, good |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | good   | local    | good commit |

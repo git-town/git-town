@@ -24,7 +24,7 @@ Feature: prepend a branch to a feature branch
       | parent | git stash pop                  |
     And the current branch is now "parent"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And this branch lineage exists now

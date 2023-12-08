@@ -31,7 +31,7 @@ Feature: delete a branch within a branch chain
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | gamma  | local, origin | gamma commit |

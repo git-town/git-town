@@ -63,7 +63,7 @@ Feature: merge conflict
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | main commit                      |
       | feature | local, origin | feature commit                   |

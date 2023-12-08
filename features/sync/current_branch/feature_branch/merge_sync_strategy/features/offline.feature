@@ -20,7 +20,7 @@ Feature: offline mode
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | local main commit                |
       |         | origin   | origin main commit               |

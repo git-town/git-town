@@ -30,7 +30,7 @@ Feature: rename a perennial branch
       |            | git branch -d production    |
     And the current branch is now "new"
     And the perennial branches are now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE           |
       | hotfix | local, origin | hotfix commit     |
       | new    | local, origin | production commit |

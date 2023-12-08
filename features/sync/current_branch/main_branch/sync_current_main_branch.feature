@@ -22,7 +22,7 @@ Feature: sync the main branch
     And the current branch is still "main"
     And the uncommitted file still exists
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       |        |               | local commit  |
@@ -35,7 +35,7 @@ Feature: sync the main branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "main"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       |        |               | local commit  |
