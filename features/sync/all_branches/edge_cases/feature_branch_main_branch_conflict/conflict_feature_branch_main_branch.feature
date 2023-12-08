@@ -1,4 +1,3 @@
-@this
 Feature: handle merge conflicts between feature branch and main branch
 
   Background:
