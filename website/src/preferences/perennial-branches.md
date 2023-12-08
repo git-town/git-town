@@ -1,4 +1,4 @@
-# pererennial-branch-names
+# pererennial-branches
 
 ```
 git-town.perennial-branches=<branch 1> <branch 2>
