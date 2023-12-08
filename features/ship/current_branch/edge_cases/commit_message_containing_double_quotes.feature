@@ -7,7 +7,6 @@ Feature: commit message with double-quotes
       | feature | local    | feature commit |
     When I run "git-town ship -m 'with "double quotes"'"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                              |
