@@ -59,7 +59,7 @@ func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent i
 func (self *Builder) CreateEntries(roots domain.LocalBranchNames, selected domain.LocalBranchName) error {
 	var err error
 	for _, root := range roots {
-		fmt.Println("LINEAGE ROOT", root)
+		fmt.Println("ROOT:", root)
 		err = self.AddEntryAndChildren(root, 0)
 		if err != nil {
 			return err
