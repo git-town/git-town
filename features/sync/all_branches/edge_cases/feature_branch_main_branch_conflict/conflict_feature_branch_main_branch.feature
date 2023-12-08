@@ -1,3 +1,4 @@
+@this
 Feature: handle merge conflicts between feature branch and main branch
 
   Background:
@@ -106,7 +107,6 @@ Feature: handle merge conflicts between feature branch and main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And an uncommitted file
-    # And inspect the repo
     And I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -117,12 +117,10 @@ Feature: handle merge conflicts between feature branch and main branch
     And the uncommitted file is stashed
     And no merge is in progress
 
-  @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And display "git status"
     And I run "git-town continue"
-    Then it runs the command
+    Then it runs the commands
       | BRANCH | COMMAND                          |
       | beta   | git commit --no-edit             |
       |        | git push                         |
