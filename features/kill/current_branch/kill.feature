@@ -8,6 +8,7 @@ Feature: delete the current feature branch
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And an uncommitted file
+    And the current branch is "current" and the previous branch is "other"
     When I run "git-town kill"
 
   Scenario: result
@@ -17,9 +18,9 @@ Feature: delete the current feature branch
       |         | git push origin :current       |
       |         | git add -A                     |
       |         | git commit -m "WIP on current" |
-      |         | git checkout main              |
-      | main    | git branch -D current          |
-    And the current branch is now "main"
+      |         | git checkout other             |
+      | other   | git branch -D current          |
+    And the current branch is now "other"
     And no uncommitted files exist
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -35,7 +36,7 @@ Feature: delete the current feature branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                                       |
-      | main    | git push origin {{ sha 'current commit' }}:refs/heads/current |
+      | other   | git push origin {{ sha 'current commit' }}:refs/heads/current |
       |         | git branch current {{ sha 'WIP on current' }}                 |
       |         | git checkout current                                          |
       | current | git reset --soft HEAD^                                        |
