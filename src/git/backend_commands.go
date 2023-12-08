@@ -585,5 +585,5 @@ func outputIndicatesRebaseInProgress(output string) bool {
 }
 
 func outputIndicatesUntrackedChanges(output string) bool {
-	return strings.Contains(output, "Changes not staged for commit")
+	return strings.Contains(output, "Untracked files:")
 }
