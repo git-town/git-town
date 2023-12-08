@@ -13,9 +13,7 @@ type CreateProposal struct {
 }
 
 func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		&CreateProposal{Branch: self.Branch},
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *CreateProposal) Run(args shared.RunArgs) error {

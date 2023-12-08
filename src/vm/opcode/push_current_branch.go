@@ -13,9 +13,7 @@ type PushCurrentBranch struct {
 }
 
 func (self *PushCurrentBranch) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
