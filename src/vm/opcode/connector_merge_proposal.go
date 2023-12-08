@@ -25,17 +25,17 @@ func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 	return []shared.Opcode{}
 }
 
-func (self *ConnectorMergeProposal) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
-}
-
 func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
 		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}
 	return self.mergeError
+}
+
+func (self *ConnectorMergeProposal) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
 }
 
 func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
