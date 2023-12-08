@@ -60,7 +60,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.QueryBranch(branches.Initial, lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(branches.Initial, lineage)
 	if err != nil {
 		return err
 	}

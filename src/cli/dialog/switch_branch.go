@@ -16,7 +16,7 @@ func NewBuilder(lineage config.Lineage) Builder {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
-func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
+func SwitchBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	builder := NewBuilder(lineage)
 	err = builder.CreateEntries(currentBranch)
 	if err != nil {
