@@ -20,7 +20,7 @@ Feature: offline mode
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | origin   | feature commit |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

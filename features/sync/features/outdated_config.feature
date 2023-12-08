@@ -5,4 +5,4 @@ Feature: automatically remove outdated git-town configuration
     And I ran "git checkout main"
     And I ran "git branch -D feature"
     When I run "git-town sync"
-    Then no branch hierarchy exists now
+    Then no lineage exists now

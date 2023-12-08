@@ -59,7 +59,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, origin | feature done | conflicting_file |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

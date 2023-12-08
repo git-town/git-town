@@ -509,10 +509,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^no branch hierarchy exists now$`, func() error {
+	suite.Step(`^no lineage exists now$`, func() error {
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
 			branchInfo := state.fixture.DevRepo.Config.Lineage(state.fixture.DevRepo.Config.RemoveLocalConfigValue)
-			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
+			return fmt.Errorf("unexpected Git Town lineage information: %+v", branchInfo)
 		}
 		return nil
 	})

@@ -26,7 +26,7 @@ Feature: ship hotfixes
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, origin | hotfix done |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"

@@ -39,4 +39,4 @@ Feature: offline mode
     And the current branch is now "main"
     And the uncommitted file still exists
     And now the initial commits exist
-    And no branch hierarchy exists now
+    And no lineage exists now
