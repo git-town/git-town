@@ -115,7 +115,6 @@ func executeShip(args []string, message string, verbose bool) error {
 type shipConfig struct {
 	branches                 domain.Branches
 	branchToShip             domain.BranchInfo
-	branchWhenDone           domain.LocalBranchName
 	connector                hosting.Connector
 	targetBranch             domain.BranchInfo
 	canShipViaAPI            bool
@@ -266,15 +265,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 			}
 		}
 	}
-	var branchWhenDone domain.LocalBranchName
-	if isShippingInitialBranch {
-		branchWhenDone = previousBranch
-	} else {
-		branchWhenDone = branches.Initial
-	}
 	return &shipConfig{
 		branches:                 branches,
-		branchWhenDone:           branchWhenDone,
 		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
@@ -382,7 +374,9 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	for _, child := range config.childBranches {
 		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
-	prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
+	if !config.isShippingInitialBranch {
+		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
+	}
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         !config.isShippingInitialBranch && config.hasOpenChanges,
