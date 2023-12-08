@@ -56,6 +56,16 @@ func NewGitTown(gitConfig GitConfig, runner runner) *GitTown {
 	}
 }
 
+// ContainsLineage indicates whether this configuration contains any lineage entries.
+func (self *GitTown) ContainsLineage() bool {
+	for key := range self.config.Local {
+		if strings.HasPrefix(key.Name, "git-town-branch.") {
+			return true
+		}
+	}
+	return false
+}
+
 // GitAlias provides the currently set alias for the given Git Town command.
 func (self *GitTown) GitAlias(alias Alias) string {
 	return self.GlobalConfigValue(NewAliasKey(alias))
@@ -74,16 +84,6 @@ func (self *GitTown) GitLabToken() string {
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (self *GitTown) GiteaToken() string {
 	return self.LocalOrGlobalConfigValue(KeyGiteaToken)
-}
-
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *GitTown) ContainsLineage() bool {
-	for key := range self.config.Local {
-		if strings.HasPrefix(key.Name, "git-town-branch.") {
-			return true
-		}
-	}
-	return false
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
