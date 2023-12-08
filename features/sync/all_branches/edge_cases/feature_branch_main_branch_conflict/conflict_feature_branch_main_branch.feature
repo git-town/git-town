@@ -120,8 +120,9 @@ Feature: handle merge conflicts between feature branch and main branch
   @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
+    And display "git status"
     And I run "git-town continue"
-    Then it runs the commands
+    Then it runs the command
       | BRANCH | COMMAND                          |
       | beta   | git commit --no-edit             |
       |        | git push                         |
