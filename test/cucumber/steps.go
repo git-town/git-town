@@ -510,7 +510,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
-		if state.fixture.DevRepo.Config.HasBranchInformation() {
+		if state.fixture.DevRepo.Config.ContainsLineage() {
 			branchInfo := state.fixture.DevRepo.Config.Lineage(state.fixture.DevRepo.Config.RemoveLocalConfigValue)
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", branchInfo)
 		}
@@ -723,16 +723,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLineage.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
-			fmt.Printf("INITIAL BRANCH HIERARCHY:\n%s\n", state.initialLineage.String())
-			fmt.Printf("CURRENT BRANCH HIERARCHY:\n%s\n", have.String())
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
+			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
+			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
 
-	suite.Step(`^the initial branches and hierarchy exist$`, func() error {
+	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		have := state.fixture.Branches()
 		want := state.InitialBranches()
@@ -742,14 +742,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see diff above")
 		}
-		// verify initial branch hierarchy
+		// verify initial lineage
 		state.initialLineage.Sort()
 		have = state.fixture.DevRepo.LineageTable()
 		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branch hierarchy found, see the diff above")
+			return fmt.Errorf("mismatching lineage found, see the diff above")
 		}
 		return nil
 	})
@@ -958,7 +958,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table := state.fixture.DevRepo.LineageTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}

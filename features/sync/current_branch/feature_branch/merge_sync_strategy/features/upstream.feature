@@ -42,4 +42,4 @@ Feature: with upstream repo
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local                   | local commit    |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

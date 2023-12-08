@@ -43,4 +43,4 @@ Feature: ship hotfixes
       | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

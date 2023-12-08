@@ -41,4 +41,4 @@ Feature: ship-delete-remote-branch disabled
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

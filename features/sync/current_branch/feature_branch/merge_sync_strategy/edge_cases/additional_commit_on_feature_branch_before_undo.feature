@@ -24,4 +24,4 @@ Feature: undo offline sync after additional commits to the feature branch
       """
     And it runs no commands
     And the current branch is still "feature"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

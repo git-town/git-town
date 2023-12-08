@@ -43,4 +43,4 @@ Feature: local repository
     And the current branch is still "good"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

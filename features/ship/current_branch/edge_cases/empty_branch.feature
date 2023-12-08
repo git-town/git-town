@@ -18,7 +18,7 @@ Feature: does not ship an empty branch
       """
     And the current branch is still "empty"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -29,4 +29,4 @@ Feature: does not ship an empty branch
       """
     And the current branch is still "empty"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

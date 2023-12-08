@@ -41,7 +41,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder

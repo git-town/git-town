@@ -34,4 +34,4 @@ Feature: sync the current perennial branch
       | main   | local, origin | main commit   |
       | qa     | local, origin | origin commit |
       |        |               | local commit  |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

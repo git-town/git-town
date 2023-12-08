@@ -77,4 +77,4 @@ Feature: display all executed Git commands
       Ran 17 shell commands.
       """
     And the current branch is now "old"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

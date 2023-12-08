@@ -51,4 +51,4 @@ Feature: rename a perennial branch
     And the current branch is now "production"
     And the perennial branches are now "production"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

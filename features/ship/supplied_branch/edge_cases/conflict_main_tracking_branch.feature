@@ -120,4 +120,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         |               | feature done              |
       |         |               | Revert "feature done"     |
       | feature | local         | feature commit            |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

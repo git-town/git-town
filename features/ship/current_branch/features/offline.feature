@@ -31,4 +31,4 @@ Feature: offline mode
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

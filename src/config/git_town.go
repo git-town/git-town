@@ -76,8 +76,8 @@ func (self *GitTown) GiteaToken() string {
 	return self.LocalOrGlobalConfigValue(KeyGiteaToken)
 }
 
-// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
-func (self *GitTown) HasBranchInformation() bool {
+// ContainsLineage indicates whether this configuration contains any lineage entries.
+func (self *GitTown) ContainsLineage() bool {
 	for key := range self.config.Local {
 		if strings.HasPrefix(key.Name, "git-town-branch.") {
 			return true

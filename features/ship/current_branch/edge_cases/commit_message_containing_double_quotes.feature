@@ -42,4 +42,4 @@ Feature: commit message with double-quotes
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local         | feature commit                |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

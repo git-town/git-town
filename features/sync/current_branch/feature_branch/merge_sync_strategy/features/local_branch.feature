@@ -45,4 +45,4 @@ Feature: sync the current feature branch without a tracking branch
       | main    | local, origin | origin main commit   |
       |         |               | local main commit    |
       | feature | local         | local feature commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

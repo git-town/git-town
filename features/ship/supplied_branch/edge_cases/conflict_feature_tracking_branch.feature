@@ -114,4 +114,4 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |         |               | Revert "feature done"     |
       | feature | local         | conflicting local commit  |
       |         | origin        | conflicting origin commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

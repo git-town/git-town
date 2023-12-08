@@ -47,4 +47,4 @@ Feature: ship a coworker's feature branch
       | feature | local         | developer commit 1    |
       |         |               | developer commit 2    |
       |         |               | coworker commit       |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

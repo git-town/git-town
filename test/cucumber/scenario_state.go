@@ -35,7 +35,7 @@ type ScenarioState struct {
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
-	// initialLineage describes the branch hierarchy before the WHEN steps ran.
+	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran

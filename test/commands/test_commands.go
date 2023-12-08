@@ -36,7 +36,7 @@ func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
-// LineageTable provides the currently configured branch hierarchy information as a DataTable.
+// LineageTable provides the currently configured lineage information as a DataTable.
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	self.Config.Reload()

@@ -34,4 +34,4 @@ Feature: dry run
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

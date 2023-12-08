@@ -39,4 +39,4 @@ Feature: in a local repo
     And the current branch is now "feature"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

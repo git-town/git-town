@@ -41,4 +41,4 @@ Feature: enter the commit message interactively via the editor
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
