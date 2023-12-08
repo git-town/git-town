@@ -24,15 +24,15 @@ func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 	return domain.NewLocalBranchName(*choice), true, nil
 }
 
-// addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (ModalSelectEntries, error) {
+// AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
+func AddEntryAndChildren(entries ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (ModalSelectEntries, error) {
 	entries = append(entries, ModalSelectEntry{
 		Text:  strings.Repeat("  ", indent) + branch.String(),
 		Value: branch.String(),
 	})
 	var err error
 	for _, child := range lineage.Children(branch) {
-		entries, err = addEntryAndChildren(entries, child, indent+1, lineage)
+		entries, err = AddEntryAndChildren(entries, child, indent+1, lineage)
 		if err != nil {
 			return entries, err
 		}
@@ -45,7 +45,7 @@ func createEntries(lineage config.Lineage, currentBranch domain.LocalBranchName)
 	entries := ModalSelectEntries{}
 	var err error
 	for _, root := range lineage.Roots() {
-		entries, err = addEntryAndChildren(entries, root, 0, lineage)
+		entries, err = AddEntryAndChildren(entries, root, 0, lineage)
 		if err != nil {
 			return nil, err
 		}
