@@ -63,7 +63,8 @@ func TestBuilder(t *testing.T) {
 			feature2: feature1,
 		}
 		builder := dialog.NewBuilder(lineage)
-		err := builder.CreateEntries(feature2)
+		roots := domain.LocalBranchNames{mainBranch}
+		err := builder.CreateEntries(roots, feature1)
 		must.NoError(t, err)
 		want := dialog.ModalSelectEntries{
 			dialog.ModalSelectEntry{

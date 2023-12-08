@@ -16,13 +16,13 @@ func NewBuilder(lineage config.Lineage) Builder {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
-func SwitchBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
+func SwitchBranch(roots domain.LocalBranchNames, selected domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	builder := NewBuilder(lineage)
-	err = builder.CreateEntries(currentBranch)
+	err = builder.CreateEntries(roots, selected)
 	if err != nil {
 		return domain.EmptyLocalBranchName(), false, err
 	}
-	choice, err := ModalSelect(builder.Entries, currentBranch.String())
+	choice, err := ModalSelect(builder.Entries, selected.String())
 	if err != nil {
 		return domain.EmptyLocalBranchName(), false, err
 	}
@@ -55,9 +55,9 @@ func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent i
 }
 
 // createEntries provides all the entries for the branch dialog.
-func (self *Builder) CreateEntries(currentBranch domain.LocalBranchName) error {
+func (self *Builder) CreateEntries(roots domain.LocalBranchNames, selected domain.LocalBranchName) error {
 	var err error
-	for _, root := range self.Lineage.Roots() {
+	for _, root := range roots {
 		err = self.AddEntryAndChildren(root, 0)
 		if err != nil {
 			return err
@@ -65,8 +65,8 @@ func (self *Builder) CreateEntries(currentBranch domain.LocalBranchName) error {
 	}
 	if len(self.Entries) == 0 {
 		self.Entries = append(self.Entries, ModalSelectEntry{
-			Text:  string(currentBranch),
-			Value: string(currentBranch),
+			Text:  string(selected),
+			Value: string(selected),
 		})
 	}
 	return nil
