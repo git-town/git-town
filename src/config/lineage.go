@@ -10,7 +10,7 @@ import (
 
 // Lineage encapsulates all data and functionality around parent branches.
 // branch --> its parent
-// Lineage does not contain all branches. It does not contain perennial branches since they have no ancestor.
+// Lineage only contains branches that have ancestors.
 type Lineage map[domain.LocalBranchName]domain.LocalBranchName
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
