@@ -20,7 +20,7 @@ Feature: on a feature branch
       | new    | git stash pop            |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local         | main commit |
@@ -39,5 +39,5 @@ Feature: on a feature branch
       |        | git branch -D new                           |
       |        | git stash pop                               |
     And the current branch is now "main"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

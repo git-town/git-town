@@ -19,7 +19,7 @@ Feature: rename the current branch without pre-push hook
       |        | git push origin :old               |
       |        | git branch -D old                  |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | old commit  |
@@ -36,7 +36,7 @@ Feature: rename the current branch without pre-push hook
       |        | git push origin :old     |
       |        | git branch -D old        |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | old commit  |

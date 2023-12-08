@@ -43,5 +43,5 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the current branch is now "other"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

@@ -63,7 +63,7 @@ Feature: handle previously unfinished Git Town commands
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: run a command, undo the previously finished one, and run another command
     When I run "git-town undo"

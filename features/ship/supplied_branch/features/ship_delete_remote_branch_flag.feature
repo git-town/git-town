@@ -25,7 +25,7 @@ Feature: skip deleting the remote branch when shipping another branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
       | other  | local         | other commit |
@@ -43,7 +43,7 @@ Feature: skip deleting the remote branch when shipping another branch
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout other                            |
     And the current branch is now "other"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |

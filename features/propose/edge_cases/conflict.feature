@@ -37,7 +37,7 @@ Feature: merge conflict
       | feature | git merge --abort |
     And the current branch is still "feature"
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -63,7 +63,7 @@ Feature: merge conflict
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | main commit                      |
       | feature | local, origin | feature commit                   |

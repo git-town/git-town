@@ -22,7 +22,7 @@ Feature: auto-push new branches
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
     And this branch lineage exists now
@@ -45,7 +45,7 @@ Feature: auto-push new branches
       |        | git checkout new               |
       | new    | git push -u origin new         |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
     And this branch lineage exists now

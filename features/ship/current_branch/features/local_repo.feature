@@ -19,7 +19,7 @@ Feature: ship a feature branch in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And no lineage exists now
@@ -32,5 +32,5 @@ Feature: ship a feature branch in a local repo
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

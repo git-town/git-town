@@ -27,7 +27,7 @@ Feature: delete a parent branch
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | gamma  | local, origin | gamma commit |
@@ -47,5 +47,5 @@ Feature: delete a parent branch
       |        | git stash pop                           |
     And the current branch is now "gamma"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

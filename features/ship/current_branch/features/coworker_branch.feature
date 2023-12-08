@@ -17,7 +17,7 @@ Feature: ship a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no lineage exists now
@@ -33,7 +33,7 @@ Feature: ship a coworker's feature branch
       |         | git push                                              |
       |         | git push origin :feature                              |
       |         | git branch -D feature                                 |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no lineage exists now
@@ -49,7 +49,7 @@ Feature: ship a coworker's feature branch
       |        | git push -u origin feature                     |
       |        | git checkout feature                           |
     And the current branch is now "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |

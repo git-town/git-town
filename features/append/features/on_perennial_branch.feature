@@ -16,7 +16,7 @@ Feature: append to a perennial branch
       |            | git branch new production    |
       |            | git checkout new             |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
       | production | local, origin | production commit |
@@ -32,5 +32,5 @@ Feature: append to a perennial branch
       | production | git reset --hard {{ sha 'initial commit' }} |
       |            | git branch -D new                           |
     And the current branch is now "production"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial lineage exists

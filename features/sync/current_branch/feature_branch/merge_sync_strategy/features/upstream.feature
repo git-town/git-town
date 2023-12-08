@@ -24,7 +24,7 @@ Feature: with upstream repo
       |         | git push                           |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |
       | feature | local, origin           | local commit                     |
@@ -38,7 +38,7 @@ Feature: with upstream repo
       | feature | git reset --hard {{ sha 'local commit' }}                             |
       |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local                   | local commit    |

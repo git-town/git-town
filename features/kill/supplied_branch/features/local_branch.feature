@@ -23,7 +23,7 @@ Feature: local branch
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
     And this branch lineage exists now
@@ -39,5 +39,5 @@ Feature: local branch
       | dead   | git reset --soft HEAD^                  |
     And the current branch is now "dead"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

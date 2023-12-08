@@ -20,7 +20,7 @@ Feature: collaborative feature branch syncing
       | feature | git rebase origin/feature   |
       |         | git rebase main             |
       |         | git push --force-with-lease |
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
@@ -38,7 +38,7 @@ Feature: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, origin | my commit                                                  |
       |         | coworker, origin        | coworker commit                                            |
@@ -56,7 +56,7 @@ Feature: collaborative feature branch syncing
       |         | git rebase main             |
       |         | git push --force-with-lease |
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, origin | coworker commit                                            |
       |         | local, origin           | my commit                                                  |
@@ -84,7 +84,7 @@ Feature: collaborative feature branch syncing
       | feature | git rebase origin/feature   |
       |         | git rebase main             |
       |         | git push --force-with-lease |
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
@@ -102,7 +102,7 @@ Feature: collaborative feature branch syncing
       |         | git rebase main             |
       |         | git push --force-with-lease |
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | feature | local, coworker, origin | my commit       |
       |         | coworker, origin        | coworker commit |
@@ -118,7 +118,7 @@ Feature: collaborative feature branch syncing
       | feature | git rebase origin/feature |
       |         | git rebase main           |
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | feature | local, coworker, origin | my commit       |
       |         |                         | coworker commit |

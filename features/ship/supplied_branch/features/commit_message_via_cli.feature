@@ -28,7 +28,7 @@ Feature: provide the commit message via a CLI argument
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
     And this branch lineage exists now
@@ -49,7 +49,7 @@ Feature: provide the commit message via a CLI argument
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |

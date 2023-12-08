@@ -25,7 +25,7 @@ Feature: delete another than the current branch
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |
@@ -44,5 +44,5 @@ Feature: delete another than the current branch
       |        | git stash pop                               |
     And the current branch is still "good"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

@@ -42,7 +42,7 @@ Feature: sync a branch with unshipped local changes whose tracking branch was de
       | shipped | git stash pop                               |
     And the current branch is now "shipped"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE          |
       | main    | origin   | shipped commit   |
       | shipped | local    | shipped commit   |

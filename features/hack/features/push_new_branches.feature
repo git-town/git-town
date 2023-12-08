@@ -17,7 +17,7 @@ Feature: auto-push the new branch
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       | new    | local, origin | origin commit |
@@ -34,5 +34,5 @@ Feature: auto-push the new branch
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch -D new                           |
     And the current branch is now "main"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

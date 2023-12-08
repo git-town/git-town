@@ -24,7 +24,7 @@ Feature: does not sync branches that exist only on remotes
       | main   | git push --tags                 |
     And the current branch is still "main"
     And all branches are now synchronized
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                       |
       | main   | local, origin | main commit                   |
       | mine   | local, origin | my commit                     |

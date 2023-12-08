@@ -24,7 +24,7 @@ Feature: push-hook setting set to "false"
       |         | git push --no-verify               |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |

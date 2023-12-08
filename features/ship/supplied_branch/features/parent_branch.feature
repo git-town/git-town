@@ -21,7 +21,7 @@ Feature: ship a parent branch
       |        | git branch -D parent        |
       |        | git checkout child          |
     And the current branch is now "child"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parent done   |
       | child  | local, origin | child commit  |
@@ -40,7 +40,7 @@ Feature: ship a parent branch
       |        | git branch parent {{ sha 'parent commit' }} |
       |        | git checkout child                          |
     And the current branch is now "child"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parent done          |
       |        |               | Revert "parent done" |

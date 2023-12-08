@@ -42,7 +42,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the current branch is still "other"
     And the uncommitted file still exists
     And no rebase is in progress
-    And now the initial commits exist
+    And the initial commits exist
     And the initial lineage exists
 
   Scenario: resolve and continue
@@ -65,7 +65,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other   | git stash pop                      |
     And the current branch is now "other"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting origin commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
@@ -113,7 +113,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        | git checkout other                                            |
       | other  | git stash pop                                                 |
     And the current branch is now "other"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                   |
       | main    | local, origin | conflicting origin commit |
       |         |               | conflicting local commit  |

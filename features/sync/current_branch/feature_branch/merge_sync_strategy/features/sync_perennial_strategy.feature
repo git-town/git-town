@@ -24,7 +24,7 @@ Feature: with sync-perennial-strategy set to "merge"
       |         | git push                           |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | local main commit                                          |
       |         |               | origin main commit                                         |
@@ -44,7 +44,7 @@ Feature: with sync-perennial-strategy set to "merge"
       | feature | git reset --hard {{ sha 'local feature commit' }}                            |
       |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                    |
       | main    | local, origin | local main commit                          |
       |         |               | origin main commit                         |

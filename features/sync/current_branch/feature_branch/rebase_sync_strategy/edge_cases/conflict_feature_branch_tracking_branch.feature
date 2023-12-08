@@ -43,7 +43,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

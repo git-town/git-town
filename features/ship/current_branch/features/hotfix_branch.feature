@@ -23,7 +23,7 @@ Feature: ship hotfixes
     And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
-    And now these commits exist
+    And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, origin | hotfix done |
     And no lineage exists now
@@ -38,7 +38,7 @@ Feature: ship hotfixes
       |            | git push -u origin hotfix                   |
       |            | git checkout hotfix                         |
     And the current branch is now "hotfix"
-    And now these commits exist
+    And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE              |
       | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
