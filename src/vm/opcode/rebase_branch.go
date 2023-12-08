@@ -17,7 +17,9 @@ func (self *RebaseBranch) CreateAbortProgram() []shared.Opcode {
 }
 
 func (self *RebaseBranch) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{&ContinueRebase{}}
+	return []shared.Opcode{
+		&ContinueRebase{},
+	}
 }
 
 func (self *RebaseBranch) Run(args shared.RunArgs) error {
