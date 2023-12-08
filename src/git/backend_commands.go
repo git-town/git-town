@@ -476,11 +476,13 @@ func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
 	}
 	hasConflicts := strings.Contains(output, "Unmerged paths")
 	hasOpenChanges := outputIndicatesOpenChanges(output)
+	hasUntrackedChanges := outputIndicatesUntrackedChanges(output)
 	rebaseInProgress := outputIndicatesRebaseInProgress(output)
 	return domain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges,
 		RebaseInProgress: rebaseInProgress,
+		UntrackedChanges: hasUntrackedChanges,
 	}, nil
 }
 
@@ -580,4 +582,8 @@ func outputIndicatesOpenChanges(output string) bool {
 
 func outputIndicatesRebaseInProgress(output string) bool {
 	return strings.Contains(output, "rebase in progress") || strings.Contains(output, "You are currently rebasing")
+}
+
+func outputIndicatesUntrackedChanges(output string) bool {
+	return strings.Contains(output, "Changes not staged for commit")
 }

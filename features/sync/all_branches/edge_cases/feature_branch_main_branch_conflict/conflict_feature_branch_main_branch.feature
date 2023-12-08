@@ -102,19 +102,21 @@ Feature: handle merge conflicts between feature branch and main branch
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  @this
+  @debug @this
   Scenario: continue with resolved conflict but other open files
     When I resolve the conflict in "conflicting_file"
+    And I run "git commit --no-edit"
     And an uncommitted file
+    # And inspect the repo
     And I run "git-town continue"
     Then it runs no commands
     And it prints the error:
       """
-      please commit all open files before continuing
+      please stage or commit the untracked changes first
       """
     And the current branch is still "beta"
     And the uncommitted file is stashed
-    And a merge is now in progress
+    And no merge is in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
