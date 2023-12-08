@@ -7,6 +7,22 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
+// AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
+func AddEntryAndChildren(entries ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (ModalSelectEntries, error) {
+	entries = append(entries, ModalSelectEntry{
+		Text:  strings.Repeat("  ", indent) + branch.String(),
+		Value: branch.String(),
+	})
+	var err error
+	for _, child := range lineage.Children(branch) {
+		entries, err = AddEntryAndChildren(entries, child, indent+1, lineage)
+		if err != nil {
+			return entries, err
+		}
+	}
+	return entries, nil
+}
+
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
 func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
@@ -22,22 +38,6 @@ func QueryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 		return domain.EmptyLocalBranchName(), false, nil
 	}
 	return domain.NewLocalBranchName(*choice), true, nil
-}
-
-// AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func AddEntryAndChildren(entries ModalSelectEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (ModalSelectEntries, error) {
-	entries = append(entries, ModalSelectEntry{
-		Text:  strings.Repeat("  ", indent) + branch.String(),
-		Value: branch.String(),
-	})
-	var err error
-	for _, child := range lineage.Children(branch) {
-		entries, err = AddEntryAndChildren(entries, child, indent+1, lineage)
-		if err != nil {
-			return entries, err
-		}
-	}
-	return entries, nil
 }
 
 // createEntries provides all the entries for the branch dialog.
