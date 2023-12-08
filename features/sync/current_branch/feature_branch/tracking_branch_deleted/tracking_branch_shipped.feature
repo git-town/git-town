@@ -49,4 +49,4 @@ Feature: sync a branch whose tracking branch was shipped
       | feature-1 | git stash pop                                     |
     And the current branch is now "feature-1"
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

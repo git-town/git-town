@@ -45,4 +45,4 @@ Feature: the branch to kill has a deleted tracking branch
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

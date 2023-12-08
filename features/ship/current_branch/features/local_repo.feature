@@ -22,7 +22,7 @@ Feature: ship a feature branch in a local repo
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,4 +33,4 @@ Feature: ship a feature branch in a local repo
       |        | git checkout feature                          |
     And the current branch is now "feature"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

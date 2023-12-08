@@ -54,4 +54,4 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git checkout child                          |
       | child  | git branch -D new                           |
     And the current branch is now "child"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -41,4 +41,4 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |          | git stash pop         |
     And the current branch is now "existing"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists

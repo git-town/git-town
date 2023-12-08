@@ -61,8 +61,7 @@ git append 2-rename-foo
 ```
 
 [git append](commands/append.md) creates a new feature branch on top of the
-currently checked out branch (which is `1-refactor`). We now have this branch
-hierarchy:
+currently checked out branch (which is `1-refactor`). We now have this lineage:
 
 ```
 main
@@ -75,10 +74,10 @@ main
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
 Because we used `git append` to create the new branch, Git Town knows about the
-branch hierarchy and creates the proposal (aka pull request) for branch
-`2-rename-foo` against branch `1-refactor`. This way, the proposal for branch
-`2-rename-foo` shows only the changes made in that branch (renaming the
-variable) and not the refactor made in branch 1.
+lineage and creates the proposal (aka pull request) for branch `2-rename-foo`
+against branch `1-refactor`. This way, the proposal for branch `2-rename-foo`
+shows only the changes made in that branch (renaming the variable) and not the
+refactor made in branch 1.
 
 ## Branch 3: rename bar
 
@@ -92,7 +91,7 @@ change we made in step 2:
 git append 3-rename-bar
 ```
 
-The branch hierarchy is now:
+The lineage is now:
 
 ```
 main
@@ -138,8 +137,8 @@ git ship 1-refactor
 ```
 
 You have to use the [git ship](commands/ship.md) command here because it updates
-the branch hierarchy that Git Town keeps track of. With branch `1-refactor`
-shipped, our branch hierarchy now looks like this:
+the lineage that Git Town keeps track of. With branch `1-refactor` shipped, our
+lineage now looks like this:
 
 ```
 main

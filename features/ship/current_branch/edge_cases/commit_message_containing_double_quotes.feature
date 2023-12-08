@@ -25,7 +25,7 @@ Feature: commit message with double-quotes
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,4 +42,4 @@ Feature: commit message with double-quotes
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local         | feature commit                |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

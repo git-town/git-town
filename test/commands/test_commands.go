@@ -36,18 +36,6 @@ func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
-// BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (self *TestCommands) BranchHierarchyTable() datatable.DataTable {
-	result := datatable.DataTable{}
-	self.Config.Reload()
-	lineage := self.Config.Lineage(self.Config.RemoveLocalConfigValue)
-	result.AddRow("BRANCH", "PARENT")
-	for _, branchName := range lineage.BranchNames() {
-		result.AddRow(branchName.String(), lineage[branchName].String())
-	}
-	return result
-}
-
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
 	asserts.NoError(self.BackendCommands.CheckoutBranch(branch))
@@ -275,6 +263,18 @@ func (self *TestCommands) HasGitTownConfigNow() bool {
 		return true
 	}
 	return false
+}
+
+// LineageTable provides the currently configured lineage information as a DataTable.
+func (self *TestCommands) LineageTable() datatable.DataTable {
+	result := datatable.DataTable{}
+	self.Config.Reload()
+	lineage := self.Config.Lineage(self.Config.RemoveLocalConfigValue)
+	result.AddRow("BRANCH", "PARENT")
+	for _, branchName := range lineage.BranchNames() {
+		result.AddRow(branchName.String(), lineage[branchName].String())
+	}
+	return result
 }
 
 // LocalBranches provides the names of all branches in the local repository,

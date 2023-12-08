@@ -54,4 +54,4 @@ Feature: ship the supplied feature branch without a tracking branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

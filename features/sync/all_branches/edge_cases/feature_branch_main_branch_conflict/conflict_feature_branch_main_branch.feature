@@ -55,7 +55,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: skip
     When I run "git-town skip"

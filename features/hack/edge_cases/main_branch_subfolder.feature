@@ -42,4 +42,4 @@ Feature: in a subfolder on the main branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
-    And no branch hierarchy exists now
+    And no lineage exists now

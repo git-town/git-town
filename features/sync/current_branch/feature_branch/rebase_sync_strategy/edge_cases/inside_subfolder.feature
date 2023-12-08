@@ -57,4 +57,4 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | alpha  | git stash pop                                         |
     And the current branch is still "alpha"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -45,4 +45,4 @@ Feature: append a new feature branch to an existing feature branch
     And the current branch is now "existing"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists

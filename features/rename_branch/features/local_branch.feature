@@ -29,4 +29,4 @@ Feature: rename a local-only branch
       |        | git checkout old                      |
       | old    | git branch -D new                     |
     And the current branch is now "old"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -18,4 +18,4 @@ Feature: ignore files
       | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

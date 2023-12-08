@@ -45,7 +45,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -114,4 +114,4 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |         |               | Revert "feature done"     |
       | feature | local         | conflicting local commit  |
       |         | origin        | conflicting origin commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

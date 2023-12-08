@@ -20,7 +20,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
@@ -36,7 +36,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     Given I ran "git-town ship -m 'feature done'"
@@ -54,4 +54,4 @@ Feature: ship a coworker's feature branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | coworker commit       |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

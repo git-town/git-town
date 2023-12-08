@@ -94,5 +94,5 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the current branch is now "existing"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
     And file "conflicting_file" still has content "resolved content"

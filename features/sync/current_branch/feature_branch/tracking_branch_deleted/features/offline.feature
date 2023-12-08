@@ -25,7 +25,7 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
       |           | git stash pop                        |
     And the current branch is still "feature-1"
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,4 +36,4 @@ Feature: sync a branch whose tracking branch was shipped in offline mode
       |           | git stash pop |
     And the current branch is now "feature-1"
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

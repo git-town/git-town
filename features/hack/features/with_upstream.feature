@@ -42,4 +42,4 @@ Feature: on a forked repo
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And no branch hierarchy exists now
+    And no lineage exists now

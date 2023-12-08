@@ -10,4 +10,4 @@ Feature: ask for missing parent branch information
       | feature | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -d feature    |
-    And no branch hierarchy exists now
+    And no lineage exists now

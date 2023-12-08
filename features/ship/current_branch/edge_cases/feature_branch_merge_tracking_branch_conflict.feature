@@ -37,7 +37,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And the current branch is still "feature"
     And no merge is in progress
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -59,7 +59,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, origin | feature done | conflicting_file |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

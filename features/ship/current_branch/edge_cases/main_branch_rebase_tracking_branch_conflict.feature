@@ -36,7 +36,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the current branch is still "feature"
     And no rebase is in progress
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -63,7 +63,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

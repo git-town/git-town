@@ -22,7 +22,7 @@ Feature: must provide a commit message
       """
     And the current branch is still "feature"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,4 +32,4 @@ Feature: must provide a commit message
       """
     And the current branch is still "feature"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists

@@ -43,7 +43,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the uncommitted file still exists
     And no rebase is in progress
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -120,4 +120,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         |               | feature done              |
       |         |               | Revert "feature done"     |
       | feature | local         | feature commit            |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

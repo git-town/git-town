@@ -37,4 +37,4 @@ Feature: handle conflicts between the shipped branch and the main branch
     And the current branch is still "feature"
     And no merge is in progress
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

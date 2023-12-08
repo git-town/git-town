@@ -94,7 +94,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreateChildFeatureBranch(branch, domain.NewLocalBranchName(parentBranch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.initialBranchHierarchy.AddRow(branchText, parentBranch)
+		state.initialLineage.AddRow(branchText, parentBranch)
 		state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 		return nil
 	})
@@ -111,7 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		isLocal := localStr != ""
 		asserts.NoError(state.fixture.DevRepo.CreateFeatureBranch(branch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialBranchHierarchy.AddRow(branchText, "main")
+		state.initialLineage.AddRow(branchText, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
@@ -509,10 +509,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^no branch hierarchy exists now$`, func() error {
-		if state.fixture.DevRepo.Config.HasBranchInformation() {
+	suite.Step(`^no lineage exists now$`, func() error {
+		if state.fixture.DevRepo.Config.ContainsLineage() {
 			branchInfo := state.fixture.DevRepo.Config.Lineage(state.fixture.DevRepo.Config.RemoveLocalConfigValue)
-			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
+			return fmt.Errorf("unexpected Git Town lineage information: %+v", branchInfo)
 		}
 		return nil
 	})
@@ -683,7 +683,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if branchType == "feature" {
-			state.initialBranchHierarchy.AddRow(branchName, "main")
+			state.initialLineage.AddRow(branchName, "main")
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
@@ -718,21 +718,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the initial branch hierarchy exists$`, func() error {
-		have := state.fixture.DevRepo.BranchHierarchyTable()
-		state.initialBranchHierarchy.Sort()
-		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
+	suite.Step(`^the initial lineage exists$`, func() error {
+		have := state.fixture.DevRepo.LineageTable()
+		state.initialLineage.Sort()
+		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
-			fmt.Printf("INITIAL BRANCH HIERARCHY:\n%s\n", state.initialBranchHierarchy.String())
-			fmt.Printf("CURRENT BRANCH HIERARCHY:\n%s\n", have.String())
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
+			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
+			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
 
-	suite.Step(`^the initial branches and hierarchy exist$`, func() error {
+	suite.Step(`^the initial branches and lineage exist$`, func() error {
 		// verify initial branches
 		have := state.fixture.Branches()
 		want := state.InitialBranches()
@@ -742,14 +742,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see diff above")
 		}
-		// verify initial branch hierarchy
-		state.initialBranchHierarchy.Sort()
-		have = state.fixture.DevRepo.BranchHierarchyTable()
-		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
+		// verify initial lineage
+		state.initialLineage.Sort()
+		have = state.fixture.DevRepo.LineageTable()
+		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branch hierarchy found, see the diff above")
+			return fmt.Errorf("mismatching lineage found, see the diff above")
 		}
 		return nil
 	})
@@ -777,7 +777,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return err
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.initialBranchHierarchy.AddRow(branchText, "main")
+			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
@@ -795,7 +795,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return err
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
-			state.initialBranchHierarchy.AddRow(branchText, "main")
+			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
 				state.fixture.DevRepo.PushBranchToRemote(branch, domain.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
@@ -955,10 +955,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^this branch lineage exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		table := state.fixture.DevRepo.BranchHierarchyTable()
+		table := state.fixture.DevRepo.LineageTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
+			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
