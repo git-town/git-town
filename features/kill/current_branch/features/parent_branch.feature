@@ -9,7 +9,7 @@ Feature: delete a branch within a branch chain
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And the current branch is "beta"
+    And the current branch is "beta" and the previous branch is "alpha"
     And an uncommitted file
     When I run "git-town kill"
 
