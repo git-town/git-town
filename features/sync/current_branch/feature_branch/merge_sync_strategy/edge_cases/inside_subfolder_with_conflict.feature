@@ -40,7 +40,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the current branch is still "current"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
@@ -72,7 +72,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And the current branch is still "current"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
       | current | local, origin | conflicting current commit       |

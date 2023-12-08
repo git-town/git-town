@@ -22,7 +22,7 @@ Feature: ship-delete-remote-branch disabled
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
     And no lineage exists now
@@ -36,7 +36,7 @@ Feature: ship-delete-remote-branch disabled
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |

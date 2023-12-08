@@ -22,7 +22,7 @@ Feature: the branch to kill has a deleted tracking branch
       | other  | git branch -D old          |
     And the current branch is now "other"
     And no uncommitted files exist
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
     And the branches are now
@@ -40,7 +40,7 @@ Feature: the branch to kill has a deleted tracking branch
       |        | git checkout old                      |
       | old    | git reset --soft HEAD^                |
     And the current branch is now "old"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |

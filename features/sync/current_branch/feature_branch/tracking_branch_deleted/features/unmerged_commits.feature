@@ -28,7 +28,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       """
     And the current branch is now "old"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
       | old    | local         | old commit    |

@@ -22,7 +22,7 @@ Feature: in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
     And this branch lineage exists now
@@ -38,5 +38,5 @@ Feature: in a local repo
       | feature | git reset --soft HEAD^                        |
     And the current branch is now "feature"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

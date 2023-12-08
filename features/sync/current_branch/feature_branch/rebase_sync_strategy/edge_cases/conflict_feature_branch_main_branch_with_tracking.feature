@@ -47,7 +47,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local, origin | conflicting feature commit | conflicting_file | feature content |

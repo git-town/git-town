@@ -43,7 +43,7 @@ Feature: sync before proposing
       """
     And the current branch is still "child"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |

@@ -39,7 +39,7 @@ Feature: conflicts between the main branch and its tracking branch
     And the current branch is now "existing"
     And the uncommitted file still exists
     And no rebase is in progress
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -62,7 +62,7 @@ Feature: conflicts between the main branch and its tracking branch
       | new    | git stash pop         |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |

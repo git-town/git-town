@@ -25,7 +25,7 @@ Feature: delete the current feature branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
     And this branch lineage exists now
@@ -42,5 +42,5 @@ Feature: delete the current feature branch
       | current | git reset --soft HEAD^                                        |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

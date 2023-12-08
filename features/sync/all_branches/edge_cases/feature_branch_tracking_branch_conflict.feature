@@ -53,7 +53,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                               |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist
 
   Scenario: skip
@@ -70,7 +70,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                    |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
       | alpha  | local, origin | alpha commit                   |

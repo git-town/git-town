@@ -26,7 +26,7 @@ Feature: ship the supplied feature branch in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And this branch lineage exists now
@@ -45,5 +45,5 @@ Feature: ship the supplied feature branch in a local repo
       |        | git checkout other                            |
       | other  | git stash pop                                 |
     And the current branch is now "other"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

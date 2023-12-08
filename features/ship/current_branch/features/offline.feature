@@ -16,7 +16,7 @@ Feature: offline mode
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
     And the current branch is now "main"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | origin   | feature commit |
@@ -30,5 +30,5 @@ Feature: offline mode
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist

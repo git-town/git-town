@@ -21,7 +21,7 @@ Feature: offline mode
       | feature | git rebase origin/feature |
       |         | git rebase main           |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
@@ -35,5 +35,5 @@ Feature: offline mode
       | BRANCH  | COMMAND                                                      |
       | feature | git reset --hard {{ sha-before-run 'local feature commit' }} |
     And the current branch is still "feature"
-    And now the initial commits exist
+    And the initial commits exist
     And the initial branches and lineage exist
