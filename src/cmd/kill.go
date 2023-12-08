@@ -162,13 +162,6 @@ func (self killConfig) branchToKillParent() domain.LocalBranchName {
 	return self.lineage.Parent(self.branchToKill.LocalName)
 }
 
-func determineBranchWhenDone(branchToKill, previousBranch, parentBranch domain.LocalBranchName) domain.LocalBranchName {
-	if previousBranch != branchToKill {
-		return previousBranch
-	}
-	return parentBranch
-}
-
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
