@@ -719,7 +719,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial lineage exists$`, func() error {
-		have := state.fixture.DevRepo.BranchHierarchyTable()
+		have := state.fixture.DevRepo.LineageTable()
 		state.initialLineage.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
@@ -744,7 +744,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial branch hierarchy
 		state.initialLineage.Sort()
-		have = state.fixture.DevRepo.BranchHierarchyTable()
+		have = state.fixture.DevRepo.LineageTable()
 		diff, errCnt := have.EqualDataTable(state.initialLineage)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
@@ -955,7 +955,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^this branch lineage exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		table := state.fixture.DevRepo.BranchHierarchyTable()
+		table := state.fixture.DevRepo.LineageTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
