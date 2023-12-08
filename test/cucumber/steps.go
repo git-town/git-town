@@ -189,6 +189,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^display "([^"]+)"$`, func(command string) error {
+		parts := strings.Split(command, " ")
+		output, err := state.fixture.DevRepo.BackendRunner.Query(parts[0], parts[1:]...)
+		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		fmt.Println(output)
+		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " END XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		return err
+	})
+
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
 		content := state.fixture.DevRepo.FileContent(name)
 		if !strings.Contains(content, "<<<<<<<") {
