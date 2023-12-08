@@ -96,7 +96,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf("please stage or commit the untracked changes first")
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUntrackedChanges)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()

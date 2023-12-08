@@ -33,6 +33,7 @@ const (
 	ConflictDetectionProblem           = "cannot determine conflicts: %w"
 	ContinueNothingToDo                = "nothing to continue"
 	ContinueUnresolvedConflicts        = "you must resolve the conflicts before continuing"
+	ContinueUntrackedChanges           = "please stage or commit the untracked changes first"
 	DialogOptionNotFound               = "given initial value %q not in given entries: %s"
 	DialogCannotReadAuthor             = "cannot read author from CLI: %w"
 	DialogCannotReadBranch             = "cannot read branch from CLI: %w"
