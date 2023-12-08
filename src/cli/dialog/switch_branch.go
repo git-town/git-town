@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config"
@@ -59,7 +58,6 @@ func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent i
 func (self *Builder) CreateEntries(roots domain.LocalBranchNames, selected domain.LocalBranchName) error {
 	var err error
 	for _, root := range roots {
-		fmt.Println("ROOT:", root)
 		err = self.AddEntryAndChildren(root, 0)
 		if err != nil {
 			return err
