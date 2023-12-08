@@ -1,4 +1,4 @@
-name: unit tests and linters
+name: unit tests
 
 on:
   push:

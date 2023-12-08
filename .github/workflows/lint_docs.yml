@@ -1,4 +1,4 @@
-name: linters and documentation tests
+name: linters
 
 on:
   push:
