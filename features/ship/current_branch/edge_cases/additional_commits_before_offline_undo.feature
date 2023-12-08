@@ -30,4 +30,4 @@ Feature: undoing an offline ship with additional commits to main
       | REPOSITORY | BRANCHES      |
       | local      | main          |
       | origin     | main, feature |
-    And the initial branch hierarchy exists
+    And the initial lineage exists

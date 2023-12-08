@@ -35,8 +35,8 @@ type ScenarioState struct {
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
-	// initialBranchHierarchy describes the branch hierarchy before the WHEN steps ran.
-	initialBranchHierarchy datatable.DataTable
+	// initialLineage describes the branch hierarchy before the WHEN steps ran.
+	initialLineage datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch domain.LocalBranchName
@@ -88,7 +88,7 @@ func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	self.initialRemoteBranches = domain.NewLocalBranchNames("main")
 	self.initialDevSHAs = map[string]domain.SHA{}
 	self.initialOriginSHAs = map[string]domain.SHA{}
-	self.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	self.initialLineage = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	self.initialCurrentBranch = domain.EmptyLocalBranchName()
 	self.insideGitRepo = true
 	self.runOutput = ""

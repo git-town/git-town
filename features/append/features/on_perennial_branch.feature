@@ -33,4 +33,4 @@ Feature: append to a perennial branch
       |            | git branch -D new                           |
     And the current branch is now "production"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
