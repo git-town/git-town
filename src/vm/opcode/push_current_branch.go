@@ -12,6 +12,12 @@ type PushCurrentBranch struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *PushCurrentBranch) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
+}
+
 func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
 	shouldPush, err := args.Runner.Backend.ShouldPushBranch(self.CurrentBranch, self.CurrentBranch.TrackingBranch())
 	if err != nil {
