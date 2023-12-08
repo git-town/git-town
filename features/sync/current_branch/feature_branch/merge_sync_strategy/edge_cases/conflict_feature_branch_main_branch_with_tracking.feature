@@ -51,7 +51,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

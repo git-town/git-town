@@ -32,7 +32,7 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
       | old    | local         | old commit    |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,4 +43,4 @@ Feature: sync a branch with unmerged commits whose tracking branch was deleted
       |        | git stash pop |
     And the current branch is now "old"
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -22,7 +22,7 @@ Feature: does not ship a child branch
       """
     And the current branch is now "alpha"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -33,4 +33,4 @@ Feature: does not ship a child branch
       """
     And the current branch is still "alpha"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists

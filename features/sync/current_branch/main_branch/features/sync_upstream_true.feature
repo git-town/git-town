@@ -31,4 +31,4 @@ Feature: on the main branch with an upstream repo
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -66,4 +66,4 @@ Feature: nested feature branches
       |        | origin        | origin child commit  |
       | parent | local         | local parent commit  |
       |        | origin        | origin parent commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

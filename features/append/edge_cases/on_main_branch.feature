@@ -41,4 +41,4 @@ Feature: on the main branch
     And the current branch is now "main"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

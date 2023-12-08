@@ -40,4 +40,4 @@ Feature: on a feature branch
       |        | git stash pop                               |
     And the current branch is now "main"
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

@@ -30,7 +30,7 @@ Feature: abort the ship via empty commit message
     And the current branch is still "other"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -44,4 +44,4 @@ Feature: abort the ship via empty commit message
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, origin | main commit    |
       | feature | local         | feature commit |
-    And the initial branch hierarchy exists
+    And the initial lineage exists

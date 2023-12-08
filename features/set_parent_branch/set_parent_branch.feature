@@ -10,7 +10,7 @@ Feature: update the parent of a feature branch
     When I run "git-town set-parent" and answer the prompts:
       | PROMPT                                      | ANSWER  |
       | Please specify the parent branch of 'child' | [ENTER] |
-    And the initial branch hierarchy exists
+    And the initial lineage exists
 
   Scenario: select another branch
     When I run "git-town set-parent" and answer the prompts:

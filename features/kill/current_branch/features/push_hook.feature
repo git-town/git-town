@@ -22,7 +22,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
     And the current branch is now "current"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: set to "true"
     Given Git Town setting "push-hook" is "true"
@@ -37,4 +37,4 @@ Feature: undo deleting the current feature branch with disabled push-hook
     And the current branch is now "current"
     And the uncommitted file still exists
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

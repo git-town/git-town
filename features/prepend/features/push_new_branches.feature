@@ -38,4 +38,4 @@ Feature: auto-push new branches
       | old    | git branch -D new    |
     And the current branch is now "old"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists

@@ -43,7 +43,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

@@ -49,4 +49,4 @@ Feature: skip deleting the remote branch when shipping another branch
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
       | other   | local         | other commit          |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

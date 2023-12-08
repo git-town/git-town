@@ -30,4 +30,4 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | existing | git branch -D new     |
     And the current branch is now "existing"
     And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial lineage exists
