@@ -15,9 +15,7 @@ func (self *ContinueRebase) CreateAbortProgram() []shared.Opcode {
 }
 
 func (self *ContinueRebase) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *ContinueRebase) Run(args shared.RunArgs) error {

@@ -9,9 +9,7 @@ type ContinueMerge struct {
 }
 
 func (self *ContinueMerge) CreateContinueProgram() []shared.Opcode {
-	return []shared.Opcode{
-		self,
-	}
+	return []shared.Opcode{self}
 }
 
 func (self *ContinueMerge) Run(args shared.RunArgs) error {
