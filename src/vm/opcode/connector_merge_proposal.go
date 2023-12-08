@@ -16,7 +16,6 @@ type ConnectorMergeProposal struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	ProposalNumber            int
-	undeclaredOpcodeMethods
 }
 
 func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
@@ -31,6 +30,12 @@ func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}
 	return self.mergeError
+}
+
+func (self *ConnectorMergeProposal) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
 }
 
 func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {

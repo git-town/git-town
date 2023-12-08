@@ -12,6 +12,12 @@ type CreateProposal struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
+}
+
 func (self *CreateProposal) Run(args shared.RunArgs) error {
 	parentBranch := args.Runner.Config.Lineage(args.Runner.Config.RemoveLocalConfigValue)[self.Branch]
 	prURL, err := args.Connector.NewProposalURL(self.Branch, parentBranch)

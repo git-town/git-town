@@ -13,6 +13,12 @@ type CreateBranchExistingParent struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *CreateBranchExistingParent) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
+}
+
 func (self *CreateBranchExistingParent) Run(args shared.RunArgs) error {
 	nearestAncestor := args.Runner.Backend.FirstExistingBranch(self.Ancestors, self.MainBranch)
 	return args.Runner.Frontend.CreateBranch(self.Branch, nearestAncestor.Location())

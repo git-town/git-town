@@ -12,6 +12,12 @@ type CommitOpenChanges struct {
 	undeclaredOpcodeMethods
 }
 
+func (self *CommitOpenChanges) CreateContinueProgram() []shared.Opcode {
+	return []shared.Opcode{
+		self,
+	}
+}
+
 func (self *CommitOpenChanges) Run(args shared.RunArgs) error {
 	err := args.Runner.Frontend.StageFiles("-A")
 	if err != nil {
