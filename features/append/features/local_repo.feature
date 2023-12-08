@@ -37,6 +37,6 @@ Feature: in a local repo
       | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
-    And the initial commits exist now
+    And the initial commits exist
     And the uncommitted file still exists
     And the initial branches and lineage exist

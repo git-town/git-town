@@ -32,5 +32,5 @@ Feature: ship a feature branch in a local repo
       |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist

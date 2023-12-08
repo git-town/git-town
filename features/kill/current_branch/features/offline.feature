@@ -41,5 +41,5 @@ Feature: offline mode
       | feature | git reset --soft HEAD^                        |
     And the current branch is now "feature"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist

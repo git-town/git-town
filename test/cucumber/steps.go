@@ -548,7 +548,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the initial commits exist now$`, func() error {
+	suite.Step(`^the initial commits exist$`, func() error {
 		return state.compareTable(state.initialCommits)
 	})
 

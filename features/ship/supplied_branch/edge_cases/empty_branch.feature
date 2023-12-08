@@ -23,7 +23,7 @@ Feature: does not ship empty feature branches
       """
     And the current branch is still "other"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist
 
   Scenario: undo
@@ -34,5 +34,5 @@ Feature: does not ship empty feature branches
       nothing to undo
       """
     And the current branch is still "other"
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist

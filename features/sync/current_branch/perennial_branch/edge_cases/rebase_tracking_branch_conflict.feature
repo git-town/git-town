@@ -39,7 +39,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And the current branch is still "qa"
     And the uncommitted file still exists
     And no rebase is in progress
-    And the initial commits exist now
+    And the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

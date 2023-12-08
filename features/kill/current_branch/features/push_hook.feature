@@ -21,7 +21,7 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | current | git reset --soft HEAD^                                                    |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist
 
   Scenario: set to "true"
@@ -36,5 +36,5 @@ Feature: undo deleting the current feature branch with disabled push-hook
       | current | git reset --soft HEAD^                                        |
     And the current branch is now "current"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And the initial commits exist
     And the initial branches and lineage exist

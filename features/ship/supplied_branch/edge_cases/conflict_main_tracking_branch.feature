@@ -42,7 +42,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the current branch is still "other"
     And the uncommitted file still exists
     And no rebase is in progress
-    And the initial commits exist now
+    And the initial commits exist
     And the initial lineage exists
 
   Scenario: resolve and continue

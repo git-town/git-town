@@ -29,7 +29,7 @@ Feature: abort the ship via empty commit message
       """
     And the current branch is still "other"
     And the uncommitted file still exists
-    And the initial commits exist now
+    And the initial commits exist
     And the initial lineage exists
 
   Scenario: undo

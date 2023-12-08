@@ -21,7 +21,7 @@ Feature: must provide a commit message
       aborted because commit exited with error
       """
     And the current branch is still "feature"
-    And the initial commits exist now
+    And the initial commits exist
     And the initial lineage exists
 
   Scenario: undo
@@ -31,5 +31,5 @@ Feature: must provide a commit message
       nothing to undo
       """
     And the current branch is still "feature"
-    And the initial commits exist now
+    And the initial commits exist
     And the initial lineage exists
