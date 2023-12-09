@@ -1,6 +1,6 @@
 Feature: sync a branch whose parent is checked out in another worktree
 
-  @this
+  @debug @this
   Scenario:
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
