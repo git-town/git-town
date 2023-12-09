@@ -597,6 +597,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the "([^"]+)" branch is checked out in another worktree`, func(branch string) error {
+		return nil
+	})
+
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branchName := range []string{branch1, branch2} {
 			branch := domain.NewLocalBranchName(branchName)
