@@ -598,7 +598,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the "([^"]+)" branch is checked out in another worktree`, func(branch string) error {
-		return nil
+		return state.fixture.DevRepo.AddWorktree("../dev2", branch)
 	})
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
