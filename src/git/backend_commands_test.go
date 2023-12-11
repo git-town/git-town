@@ -603,6 +603,23 @@ func TestBackendCommands(t *testing.T) {
 						must.Eq(t, "", remoteBranchName)
 					})
 				})
+
+				t.Run("branch is checked out at another workspace", func(t *testing.T) {
+					t.Parallel()
+					give := `+ branch-1                     01a7eded [origin/branch-1] Commit message 1`
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("01a7eded"),
+							SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.EmptySHA(),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
+
 				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 					t.Parallel()
 					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
