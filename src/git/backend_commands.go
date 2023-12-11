@@ -246,7 +246,6 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 }
 
 func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName domain.RemoteBranchName) {
-	fmt.Println("3333333333333", branchName)
 	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
 	if isInSync {
 		return domain.SyncStatusUpToDate, trackingBranchName

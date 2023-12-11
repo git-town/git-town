@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config"
@@ -617,9 +616,7 @@ func TestBackendCommands(t *testing.T) {
 							RemoteSHA:  domain.EmptySHA(),
 						},
 					}
-					fmt.Println("22222222222222222222")
 					have, _ := git.ParseVerboseBranchesOutput(give)
-					fmt.Println("22222222222222222222")
 					must.Eq(t, want, have)
 				})
 
