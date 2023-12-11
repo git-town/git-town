@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -190,12 +191,14 @@ func (self *Fixture) Branches() datatable.DataTable {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
+	fmt.Println("LOCAL")
 	localCommits := self.DevRepo.Commits(fields, domain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
 	if self.CoworkerRepo != nil {
 		coworkerCommits := self.CoworkerRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
+	fmt.Println("ORIGIN")
 	if self.OriginRepo != nil {
 		originCommits := self.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(originCommits, domain.OriginRemote.String())
@@ -206,6 +209,7 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 	}
 	if self.SecondWorkspace != nil {
 		secondWorkspaceCommits := self.SecondWorkspace.Commits(fields, domain.NewLocalBranchName("main"))
+		fmt.Println("WORKTREE", secondWorkspaceCommits)
 		builder.AddMany(secondWorkspaceCommits, "worktree")
 	}
 	return builder.Table(fields)

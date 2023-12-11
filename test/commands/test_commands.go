@@ -66,12 +66,14 @@ func (self *TestCommands) CommitStagedChanges(message string) {
 func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
+	fmt.Println("22222222222222222", branches)
 	result := []git.Commit{}
 	for _, branch := range branches {
-		if !strings.HasPrefix(branch.String(), "+ ") {
-			commits := self.CommitsInBranch(branch, fields)
-			result = append(result, commits...)
+		if strings.HasPrefix(branch.String(), "+ ") {
+			continue
 		}
+		commits := self.CommitsInBranch(branch, fields)
+		result = append(result, commits...)
 	}
 	return result
 }
