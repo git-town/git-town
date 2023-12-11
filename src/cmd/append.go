@@ -171,6 +171,7 @@ func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			isOffline:             config.isOffline,
 			lineage:               config.lineage,

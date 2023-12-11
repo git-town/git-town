@@ -175,6 +175,7 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchProgram(branchToSync, syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			isOffline:             config.isOffline,
 			lineage:               config.lineage,

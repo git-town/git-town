@@ -201,6 +201,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		syncBranchProgram(branch, syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
 			isOffline:             config.isOffline,

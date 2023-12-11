@@ -73,6 +73,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	syncBranchesProgram(syncBranchesProgramArgs{
 		syncBranchProgramArgs: syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
 			isOffline:             config.isOffline,
@@ -245,16 +246,20 @@ type syncBranchesProgramArgs struct {
 }
 
 func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
-	if branch.SyncStatus == domain.SyncStatusDeletedAtRemote {
-		syncDeletedBranchProgram(args.program, branch, args)
-	} else if branch.SyncStatus == domain.SyncStatusCheckedOutInAnotherWorkspace {
+	parentBranchInfo := args.branchInfos.FindByLocalName(args.lineage.Parent(branch.LocalName))
+	parentIsCheckedOutInAnotherWorkspace := parentBranchInfo != nil && parentBranchInfo.SyncStatus == domain.SyncStatusCheckedOutInAnotherWorkspace
+	switch {
+	case branch.SyncStatus == domain.SyncStatusDeletedAtRemote:
+		syncDeletedBranchProgram(args.program, branch, parentIsCheckedOutInAnotherWorkspace, args)
+	case branch.SyncStatus == domain.SyncStatusCheckedOutInAnotherWorkspace:
 		// Git Town doesn't sync branches that are checked out at another workspace
-	} else {
-		syncNonDeletedBranchProgram(args.program, branch, args)
+	default:
+		syncNonDeletedBranchProgram(args.program, branch, parentIsCheckedOutInAnotherWorkspace, args)
 	}
 }
 
 type syncBranchProgramArgs struct {
+	branchInfos           domain.BranchInfos
 	branchTypes           domain.BranchTypes
 	isOffline             bool
 	lineage               config.Lineage
@@ -269,9 +274,9 @@ type syncBranchProgramArgs struct {
 }
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentIsCheckedOutInAnotherWorkspace bool, args syncBranchProgramArgs) {
 	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
-		syncDeletedFeatureBranchProgram(list, branch, args)
+		syncDeletedFeatureBranchProgram(list, branch, parentIsCheckedOutInAnotherWorkspace, args)
 	} else {
 		syncDeletedPerennialBranchProgram(list, branch, args)
 	}
@@ -279,9 +284,9 @@ func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, a
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentIsCheckedOutInAnotherWorkspace bool, args syncBranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, args.syncFeatureStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentIsCheckedOutInAnotherWorkspace, args.syncFeatureStrategy)
 	list.Add(&opcode.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
 }
 
@@ -302,7 +307,7 @@ func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.Bran
 }
 
 // syncNonDeletedBranchProgram provides the opcode to sync a particular branch.
-func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentIsCheckedOutInAnotherWorkspace bool, args syncBranchProgramArgs) {
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -310,7 +315,7 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 	}
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	if isFeatureBranch {
-		syncFeatureBranchProgram(list, branch, args.syncFeatureStrategy)
+		syncFeatureBranchProgram(list, branch, parentIsCheckedOutInAnotherWorkspace, args.syncFeatureStrategy)
 	} else {
 		syncPerennialBranchProgram(branch, args)
 	}
@@ -327,11 +332,11 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 }
 
 // syncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
-func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, syncFeatureStrategy config.SyncFeatureStrategy) {
+func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentIsCheckedOutInAnotherWorkspace bool, syncFeatureStrategy config.SyncFeatureStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, syncFeatureStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentIsCheckedOutInAnotherWorkspace, syncFeatureStrategy)
 }
 
 // syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
@@ -356,12 +361,12 @@ func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, track
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, strategy config.SyncFeatureStrategy) {
+func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentIsCheckedOutInAnotherWorkspace bool, strategy config.SyncFeatureStrategy) {
 	switch strategy {
 	case config.SyncFeatureStrategyMerge:
-		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch})
+		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentIsCheckedOutAtAnotherWorkspace: parentIsCheckedOutInAnotherWorkspace})
 	case config.SyncFeatureStrategyRebase:
-		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch})
+		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch, ParentIsCheckedOutAtAnotherWorkspace: parentIsCheckedOutInAnotherWorkspace})
 	}
 }
 

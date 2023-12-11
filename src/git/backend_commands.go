@@ -210,7 +210,8 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			checkedoutBranch = domain.NewLocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		if line[0] == '+' {
+		switch {
+		case line[0] == '+':
 			result = append(result, domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
@@ -218,7 +219,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 				RemoteName: trackingBranchName,
 				RemoteSHA:  domain.EmptySHA(),
 			})
-		} else if isLocalBranchName(branchName) {
+		case isLocalBranchName(branchName):
 			result = append(result, domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
@@ -226,7 +227,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 				RemoteName: trackingBranchName,
 				RemoteSHA:  domain.EmptySHA(), // will be added later
 			})
-		} else {
+		default:
 			remoteBranchName := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
 			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
 			if existingBranchWithTracking != nil {

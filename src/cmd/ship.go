@@ -308,6 +308,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.syncBeforeShip {
 		// sync the parent branch
 		syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
 			isOffline:             config.isOffline,
@@ -322,6 +323,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		})
 		// sync the branch to ship (local sync only)
 		syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
 			isOffline:             config.isOffline,
