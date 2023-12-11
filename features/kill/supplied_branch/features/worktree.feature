@@ -13,13 +13,13 @@ Feature: delete a branch that is checked out in another worktree
     When I run "git-town kill dead"
 
   Scenario: result
-    Then it prints the error:
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | good   | git fetch --prune --tags |
+    And it prints the error:
       """
       I cannot kill this branch because it is checked out in another workspace
       """
-    And it runs the commands
-      | BRANCH | COMMAND                  |
-      | good   | git fetch --prune --tags |
     And the uncommitted file still exists
 
   Scenario: undo
