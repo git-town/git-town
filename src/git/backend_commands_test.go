@@ -606,11 +606,11 @@ func TestBackendCommands(t *testing.T) {
 
 				t.Run("branch is checked out at another workspace", func(t *testing.T) {
 					t.Parallel()
-					give := `+ branch-1                     01a7eded [origin/branch-1] Commit message 1`
+					give := `+ branch-1                      3d0c4c13 (/path/to/other/workspace) [origin/branch-1] commit message`
 					want := domain.BranchInfos{
 						domain.BranchInfo{
 							LocalName:  domain.NewLocalBranchName("branch-1"),
-							LocalSHA:   domain.NewSHA("01a7eded"),
+							LocalSHA:   domain.NewSHA("3d0c4c13"),
 							SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
 							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 							RemoteSHA:  domain.EmptySHA(),
