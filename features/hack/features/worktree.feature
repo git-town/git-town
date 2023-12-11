@@ -10,7 +10,6 @@ Feature: hacking while the main branch is checked out in another Git worktree
     And an uncommitted file
     When I run "git-town hack new"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
