@@ -36,9 +36,8 @@ func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
-func (self *TestCommands) AddWorktree(path string, branch domain.LocalBranchName) error {
+func (self *TestCommands) AddWorktree(path string, branch domain.LocalBranchName) {
 	self.MustRun("git", "worktree", "add", path, branch.String())
-	return nil
 }
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
