@@ -683,6 +683,7 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
+  remotes/origin/branch-5      55555555 Commit message 5
   remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
@@ -727,7 +728,7 @@ func TestBackendCommands(t *testing.T) {
 					LocalSHA:   domain.NewSHA("55555555"),
 					SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-5"),
-					RemoteSHA:  domain.EmptySHA(),
+					RemoteSHA:  domain.NewSHA("55555555"),
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
