@@ -69,8 +69,10 @@ func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranch
 	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
-		commits := self.CommitsInBranch(branch, fields)
-		result = append(result, commits...)
+		if !strings.HasPrefix(branch.String(), "+ ") {
+			commits := self.CommitsInBranch(branch, fields)
+			result = append(result, commits...)
+		}
 	}
 	return result
 }

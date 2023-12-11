@@ -7,12 +7,16 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/test/asserts"
+	"github.com/git-town/git-town/v11/test/commands"
 	"github.com/git-town/git-town/v11/test/datatable"
 	"github.com/git-town/git-town/v11/test/filesystem"
-	"github.com/git-town/git-town/v11/test/git"
+	testgit "github.com/git-town/git-town/v11/test/git"
 	"github.com/git-town/git-town/v11/test/helpers"
+	"github.com/git-town/git-town/v11/test/subshell"
 	"github.com/git-town/git-town/v11/test/testruntime"
 )
 
@@ -32,6 +36,10 @@ type Fixture struct {
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
 	OriginRepo *testruntime.TestRuntime `exhaustruct:"optional"`
+
+	// SecondWorkspace is the directory that contains an additional workspace.
+	// If this value is nil, the current test setup has no additional workspace.
+	SecondWorkspace *testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
@@ -128,6 +136,30 @@ func (self *Fixture) AddUpstream() {
 	self.DevRepo.AddRemote(domain.UpstreamRemote, self.UpstreamRepo.WorkingDir)
 }
 
+func (self *Fixture) AddSecondWorktree(branch domain.LocalBranchName) {
+	workTreePath := filepath.Join(self.Dir, "dev2")
+	self.DevRepo.AddWorktree(workTreePath, branch)
+	runner := subshell.TestRunner{
+		BinDir:     self.DevRepo.BinDir,
+		Verbose:    self.DevRepo.Verbose,
+		HomeDir:    self.DevRepo.HomeDir,
+		WorkingDir: workTreePath,
+	}
+	backendCommands := git.BackendCommands{
+		BackendRunner:      &runner,
+		Config:             self.DevRepo.Config,
+		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
+		RemotesCache:       &cache.Remotes{},
+	}
+	self.SecondWorkspace = &testruntime.TestRuntime{
+		TestCommands: commands.TestCommands{
+			TestRunner:      &runner,
+			BackendCommands: &backendCommands,
+		},
+		Backend: backendCommands,
+	}
+}
+
 // Branches provides a tabular list of all branches in this Fixture.
 func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
@@ -172,11 +204,15 @@ func (self Fixture) CommitTable(fields []string) datatable.DataTable {
 		upstreamCommits := self.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(upstreamCommits, "upstream")
 	}
+	if self.SecondWorkspace != nil {
+		secondWorkspaceCommits := self.SecondWorkspace.Commits(fields, domain.NewLocalBranchName("main"))
+		builder.AddMany(secondWorkspaceCommits, "worktree")
+	}
 	return builder.Table(fields)
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (self *Fixture) CreateCommits(commits []git.Commit) {
+func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
 		for _, location := range commit.Locations {
 			switch location {
