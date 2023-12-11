@@ -210,7 +210,15 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			checkedoutBranch = domain.NewLocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		if isLocalBranchName(branchName) {
+		if line[0] == '+' {
+			result = append(result, domain.BranchInfo{
+				LocalName:  domain.NewLocalBranchName(branchName),
+				LocalSHA:   sha,
+				SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
+				RemoteName: trackingBranchName,
+				RemoteSHA:  domain.EmptySHA(),
+			})
+		} else if isLocalBranchName(branchName) {
 			result = append(result, domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
@@ -238,6 +246,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 }
 
 func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName domain.RemoteBranchName) {
+	fmt.Println("3333333333333", branchName)
 	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
 	if isInSync {
 		return domain.SyncStatusUpToDate, trackingBranchName
