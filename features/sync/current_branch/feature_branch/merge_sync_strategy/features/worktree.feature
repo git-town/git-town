@@ -12,7 +12,7 @@ Feature: sync a branch whose parent is checked out in another worktree
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And the "parent" branch is checked out in another worktree
+    And branch "parent" is checked out in another worktree
     And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
