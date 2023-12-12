@@ -6,7 +6,7 @@ This guide is for maintainers who make releases of Git Town.
   - update CHANGELOG.md
   - search-and-replace the old version with the new version
     - triple-digits: `11.1.0`
-    - double-digits: `11.0`
+    - double-digits: `11.1`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
     - update `github.com/git-town/git-town/v11/` everywhere in this repo
