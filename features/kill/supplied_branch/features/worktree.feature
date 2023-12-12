@@ -18,7 +18,7 @@ Feature: delete a branch that is checked out in another worktree
       | good   | git fetch --prune --tags |
     And it prints the error:
       """
-      branch "dead" is checked out in another workspace
+      branch "dead" is checked out in another worktree
       """
     And the uncommitted file still exists
 
