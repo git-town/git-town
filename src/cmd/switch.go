@@ -22,9 +22,8 @@ func switchCmd() *cobra.Command {
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		// TODO: make sure we know the ancestry of all branches
-		Short: switchDesc,
-		Long:  long(switchDesc),
+		Short:   switchDesc,
+		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeSwitch(readVerboseFlag(cmd))
 		},
