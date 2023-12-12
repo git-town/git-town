@@ -33,7 +33,6 @@ Feature: hack a new branch while the main branch is checked out in another Git w
       | existing | main   |
       | new      | main   |
 
-  @this
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
