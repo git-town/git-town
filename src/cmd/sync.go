@@ -247,14 +247,14 @@ type syncBranchesProgramArgs struct {
 
 func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	parentBranchInfo := args.branchInfos.FindByLocalName(args.lineage.Parent(branch.LocalName))
-	parentOtherWorkspace := parentBranchInfo != nil && parentBranchInfo.SyncStatus == domain.SyncStatusOtherWorktree
+	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == domain.SyncStatusOtherWorktree
 	switch {
 	case branch.SyncStatus == domain.SyncStatusDeletedAtRemote:
-		syncDeletedBranchProgram(args.program, branch, parentOtherWorkspace, args)
+		syncDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
 	case branch.SyncStatus == domain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		syncNonDeletedBranchProgram(args.program, branch, parentOtherWorkspace, args)
+		syncNonDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
 	}
 }
 
