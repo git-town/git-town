@@ -63,7 +63,7 @@ const (
 	HostingServiceUnknown               = "unknown hosting service: %q"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
-	KillBranchCheckedOutInOtherWorktree = `I cannot kill this branch because it is checked out in another workspace`
+	KillBranchCheckedOutInOtherWorktree = `this branch is checked out in another workspace`
 	KillOnlyFeatureBranches             = "you can only kill feature branches"
 	OfflineNotAllowed                   = "this command requires an active internet connection"
 	OpcodeUnknown                       = "unknown opcode: %q, run \"git town status reset\" to reset it"
