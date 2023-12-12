@@ -1,4 +1,3 @@
-@this
 Feature: delete a branch that is checked out in another worktree
 
   Background:

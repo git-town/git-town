@@ -1,3 +1,4 @@
+@this
 Feature: ship a feature branch that is checked out in another worktree
 
   Background:
@@ -7,7 +8,7 @@ Feature: ship a feature branch that is checked out in another worktree
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
     And branch "feature" is checked out in another worktree
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file
     When I run "git-town ship feature" and enter "feature done" for the commit message
 
   Scenario: result
