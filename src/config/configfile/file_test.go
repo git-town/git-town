@@ -3,7 +3,6 @@ package configfile_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/shoenig/test/must"
 )
@@ -21,16 +20,15 @@ syncUpstream = true
 
 [branches]
 main = "main"
-perennial = [ "public", "release" ]
+perennials = [ "public", "release" ]
 
 [code-hosting]
 platform = "github"
-origin-hostname = "github.com"
+originHostname = "github.com"
 
 [sync-strategy]
 feature-branches = "merge"
 perennial-branches = "rebase"
-
 `[1:]
 			have, err := configfile.Parse(give)
 			must.NoError(t, err)
@@ -44,8 +42,8 @@ perennial-branches = "rebase"
 					OriginHostname: "github.com",
 				},
 				SyncStrategy: configfile.SyncStrategy{
-					FeatureBranches:   configdomain.SyncFeatureStrategyMerge,
-					PerennialBranches: configdomain.SyncPerennialStrategyRebase,
+					FeatureBranches:   "merge",
+					PerennialBranches: "rebase",
 				},
 				PushNewbranches:        true,
 				ShipDeleteRemoteBranch: false,

@@ -6,14 +6,13 @@ import (
 	"os"
 
 	"github.com/BurntSushi/toml"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
 type Config struct {
-	Branches
-	CodeHosting
-	SyncStrategy
+	Branches               Branches
+	CodeHosting            CodeHosting  `toml:"code-hosting"`
+	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
 	PushNewbranches        bool
 	ShipDeleteRemoteBranch bool
 	SyncUpstream           bool
@@ -30,8 +29,8 @@ type CodeHosting struct {
 }
 
 type SyncStrategy struct {
-	FeatureBranches   configdomain.SyncFeatureStrategy
-	PerennialBranches configdomain.SyncPerennialStrategy
+	FeatureBranches   string `toml:"feature-branches"`
+	PerennialBranches string `toml:"perennial-branches"`
 }
 
 func load() (*Config, error) {
