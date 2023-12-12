@@ -557,11 +557,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the configuration$`, func() error {
+	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(
-			state.uncommittedFileName,
-			state.uncommittedContent,
+			".git-branches.toml",
+			content.Content,
 		)
+		return nil
 	})
 
 	suite.Step(`^the initial commits exist$`, func() error {
