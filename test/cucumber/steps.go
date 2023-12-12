@@ -669,7 +669,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker sets the "sync-feature-strategy" to "(merge|rebase)"$`, func(value string) error {
-		syncFeatureStrategy, err := configdomain.ToSyncFeatureStrategy(value)
+		syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
 		if err != nil {
 			return err
 		}
