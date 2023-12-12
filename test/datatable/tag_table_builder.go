@@ -3,7 +3,7 @@ package datatable
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // TagTableBuilder collects data about tags in Git repositories
@@ -25,35 +25,35 @@ func NewTagTableBuilder() TagTableBuilder {
 }
 
 // Add registers the given tag from the given location into this table.
-func (builder *TagTableBuilder) Add(tag, location string) {
-	locations, exists := builder.tagToLocations[tag]
+func (self *TagTableBuilder) Add(tag, location string) {
+	locations, exists := self.tagToLocations[tag]
 	if exists {
-		builder.tagToLocations[tag] = locations.Add(location)
+		self.tagToLocations[tag] = locations.Add(location)
 	} else {
-		builder.tagToLocations[tag] = helpers.NewOrderedSet(location)
+		self.tagToLocations[tag] = helpers.NewOrderedSet(location)
 	}
 }
 
 // AddMany registers the given tags from the given location into this table.
-func (builder *TagTableBuilder) AddMany(tags []string, location string) {
+func (self *TagTableBuilder) AddMany(tags []string, location string) {
 	for _, tag := range tags {
-		builder.Add(tag, location)
+		self.Add(tag, location)
 	}
 }
 
 // Table provides the data accumulated by this TagTableBuilder as a DataTable.
-func (builder *TagTableBuilder) Table() DataTable {
+func (self *TagTableBuilder) Table() DataTable {
 	result := DataTable{}
 	result.AddRow("NAME", "LOCATION")
-	tags := make([]string, len(builder.tagToLocations))
+	tags := make([]string, len(self.tagToLocations))
 	index := 0
-	for tag := range builder.tagToLocations {
+	for tag := range self.tagToLocations {
 		tags[index] = tag
 		index++
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {
-		result.AddRow(tag, builder.tagToLocations[tag].Join(", "))
+		result.AddRow(tag, self.tagToLocations[tag].Join(", "))
 	}
 	return result
 }

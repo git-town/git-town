@@ -24,7 +24,7 @@ Feature: offline mode
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
       | origin     | main, feature, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | origin        | feature commit |
       | other   | local, origin | other commit   |
@@ -38,8 +38,8 @@ Feature: offline mode
       | BRANCH  | COMMAND                                       |
       | main    | git branch feature {{ sha 'WIP on feature' }} |
       |         | git checkout feature                          |
-      | feature | git reset {{ sha 'feature commit' }}          |
+      | feature | git reset --soft HEAD^                        |
     And the current branch is now "feature"
     And the uncommitted file still exists
-    And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

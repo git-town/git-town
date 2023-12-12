@@ -107,7 +107,7 @@ func (s *DeploymentsService) ListProjectDeployments(pid interface{}, opts *ListP
 		return nil, resp, err
 	}
 
-	return ds, resp, err
+	return ds, resp, nil
 }
 
 // GetProjectDeployment get a deployment for a project.
@@ -131,7 +131,7 @@ func (s *DeploymentsService) GetProjectDeployment(pid interface{}, deployment in
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // CreateProjectDeploymentOptions represents the available
@@ -167,7 +167,7 @@ func (s *DeploymentsService) CreateProjectDeployment(pid interface{}, opt *Creat
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
 }
 
 // UpdateProjectDeploymentOptions represents the available
@@ -199,5 +199,23 @@ func (s *DeploymentsService) UpdateProjectDeployment(pid interface{}, deployment
 		return nil, resp, err
 	}
 
-	return d, resp, err
+	return d, resp, nil
+}
+
+// DeleteProjectDeployment delete a project deployment.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/deployments.html#delete-a-specific-deployment
+func (s *DeploymentsService) DeleteProjectDeployment(pid interface{}, deployment int, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/deployments/%d", PathEscape(project), deployment)
+
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
 }

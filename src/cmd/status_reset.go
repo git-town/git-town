@@ -3,41 +3,42 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/persistence"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
 const statusResetDesc = "Resets the current suspended Git Town command"
 
 func resetRunstateCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
 		Long:  long(statusResetDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return statusReset(readDebugFlag(cmd))
+			return executeStatusReset(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func statusReset(debug bool) error {
+func executeStatusReset(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	err = persistence.Delete(repo.RootDir)
+	err = statefile.Delete(repo.RootDir)
 	if err != nil {
 		return err
 	}

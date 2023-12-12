@@ -1,20 +1,21 @@
 package cmd
 
 import (
-	"strings"
+	"errors"
+	"fmt"
+	"os"
+	"os/exec"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/dialog"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
 )
 
 const switchDesc = "Displays the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -23,91 +24,58 @@ func switchCmd() *cobra.Command {
 		Short: switchDesc,
 		Long:  long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSwitch(readDebugFlag(cmd))
+			return executeSwitch(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func runSwitch(debug bool) error {
+func executeSwitch(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    false,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
+	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := queryBranch(branches.Initial, lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(branches.Types.MainAndPerennials(), branches.Initial, lineage)
 	if err != nil {
 		return err
 	}
 	if validChoice && newBranch != branches.Initial {
-		err = repo.Runner.Backend.CheckoutBranch(newBranch)
+		fmt.Println()
+		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
-			return err
+			exitCode := 1
+			var exitErr *exec.ExitError
+			if errors.As(err, &exitErr) {
+				exitCode = exitErr.ExitCode()
+			}
+			os.Exit(exitCode)
 		}
 	}
 	return nil
-}
-
-// queryBranch lets the user select a new branch via a visual dialog.
-// Indicates via `validSelection` whether the user made a valid selection.
-func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
-	entries, err := createEntries(lineage)
-	if err != nil {
-		return domain.LocalBranchName{}, false, err
-	}
-	choice, err := dialog.ModalSelect(entries, currentBranch.String())
-	if err != nil {
-		return domain.LocalBranchName{}, false, err
-	}
-	if choice == nil {
-		return domain.LocalBranchName{}, false, nil
-	}
-	return domain.NewLocalBranchName(*choice), true, nil
-}
-
-// createEntries provides all the entries for the branch dialog.
-func createEntries(lineage config.Lineage) (dialog.ModalEntries, error) {
-	entries := dialog.ModalEntries{}
-	var err error
-	for _, root := range lineage.Roots() {
-		entries, err = addEntryAndChildren(entries, root, 0, lineage)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return entries, nil
-}
-
-// addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch domain.LocalBranchName, indent int, lineage config.Lineage) (dialog.ModalEntries, error) {
-	entries = append(entries, dialog.ModalEntry{
-		Text:  strings.Repeat("  ", indent) + branch.String(),
-		Value: branch.String(),
-	})
-	var err error
-	for _, child := range lineage.Children(branch) {
-		entries, err = addEntryAndChildren(entries, child, indent+1, lineage)
-		if err != nil {
-			return entries, err
-		}
-	}
-	return entries, nil
 }

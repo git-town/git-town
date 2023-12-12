@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
-// Hosting defines legal values for the "git-town.code-hosting-driver" config setting.
+// Hosting defines legal values for the "git-town.code-hosting-platform" config setting.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type Hosting struct {
 	name string
 }
 
-func (h Hosting) String() string { return h.name }
+func (self Hosting) String() string { return self.name }
 
 var (
 	HostingBitbucket = Hosting{"bitbucket"} //nolint:gochecknoglobals

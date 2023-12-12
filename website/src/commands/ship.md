@@ -13,15 +13,18 @@ This command ships only direct children of the main branch. To ship a nested
 feature branch, you need to first ship or [kill](kill.md) all its ancestor
 branches.
 
-### Variations
+### Arguments
 
 Similar to `git commit`, the `-m` parameter allows specifying the commit message
 via the CLI.
 
+### Configuration
+
 If you use GitHub, GitLab or Gitea, have enabled
 [API access to your hosting provider](../quick-configuration.md#api-access-to-your-hosting-provider),
-and the branch to be shipped has an open pull request, this command merges pull
-requests via the API of the hosting service.
+and the branch to be shipped has an open proposal, this command merges the
+proposal for the current branch on your origin server rather than on the local
+Git workspace.
 
 If your origin server deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),

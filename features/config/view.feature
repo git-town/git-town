@@ -12,12 +12,13 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
@@ -40,12 +41,13 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
@@ -74,12 +76,13 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
-        sync strategy: merge
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)

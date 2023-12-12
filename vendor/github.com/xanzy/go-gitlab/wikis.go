@@ -75,7 +75,7 @@ func (s *WikisService) ListWikis(pid interface{}, opt *ListWikisOptions, options
 		return nil, resp, err
 	}
 
-	return ws, resp, err
+	return ws, resp, nil
 }
 
 // GetWikiPageOptions represents options to GetWikiPage
@@ -109,7 +109,7 @@ func (s *WikisService) GetWikiPage(pid interface{}, slug string, opt *GetWikiPag
 		return nil, resp, err
 	}
 
-	return w, resp, err
+	return w, resp, nil
 }
 
 // CreateWikiPageOptions represents options to CreateWikiPage.
@@ -145,7 +145,7 @@ func (s *WikisService) CreateWikiPage(pid interface{}, opt *CreateWikiPageOption
 		return nil, resp, err
 	}
 
-	return w, resp, err
+	return w, resp, nil
 }
 
 // EditWikiPageOptions represents options to EditWikiPage.
@@ -181,7 +181,7 @@ func (s *WikisService) EditWikiPage(pid interface{}, slug string, opt *EditWikiP
 		return nil, resp, err
 	}
 
-	return w, resp, err
+	return w, resp, nil
 }
 
 // DeleteWikiPage deletes a wiki page with a given slug.

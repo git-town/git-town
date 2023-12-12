@@ -14,11 +14,8 @@ Feature: ignore files
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND                                                               |
+      | feature | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
     And the current branch is still "feature"
-    And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE   |
-      | feature | local, origin | my commit |
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

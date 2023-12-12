@@ -31,6 +31,7 @@ const (
 	EventConfidentialNote  EventType = "Confidential Note Hook"
 	EventTypeBuild         EventType = "Build Hook"
 	EventTypeDeployment    EventType = "Deployment Hook"
+	EventTypeFeatureFlag   EventType = "Feature Flag Hook"
 	EventTypeIssue         EventType = "Issue Hook"
 	EventTypeJob           EventType = "Job Hook"
 	EventTypeMember        EventType = "Member Hook"
@@ -148,14 +149,13 @@ func ParseSystemhook(payload []byte) (event interface{}, err error) {
 		"group_destroy",
 		"group_rename":
 		event = &GroupSystemEvent{}
-	case
-		"key_create",
-		"key_destroy":
+	case "key_create", "key_destroy":
 		event = &KeySystemEvent{}
 	case
 		"user_create",
 		"user_destroy",
-		"user_rename":
+		"user_rename",
+		"user_failed_login":
 		event = &UserSystemEvent{}
 	case
 		"user_add_to_group",
@@ -213,6 +213,8 @@ func ParseWebhook(eventType EventType, payload []byte) (event interface{}, err e
 		event = &BuildEvent{}
 	case EventTypeDeployment:
 		event = &DeploymentEvent{}
+	case EventTypeFeatureFlag:
+		event = &FeatureFlagEvent{}
 	case EventTypeIssue, EventConfidentialIssue:
 		event = &IssueEvent{}
 	case EventTypeJob:

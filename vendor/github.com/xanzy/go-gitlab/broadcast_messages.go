@@ -73,7 +73,7 @@ func (s *BroadcastMessagesService) ListBroadcastMessages(opt *ListBroadcastMessa
 		return nil, resp, err
 	}
 
-	return bs, resp, err
+	return bs, resp, nil
 }
 
 // GetBroadcastMessage gets a single broadcast message.
@@ -94,7 +94,7 @@ func (s *BroadcastMessagesService) GetBroadcastMessage(broadcast int, options ..
 		return nil, resp, err
 	}
 
-	return b, resp, err
+	return b, resp, nil
 }
 
 // CreateBroadcastMessageOptions represents the available CreateBroadcastMessage()
@@ -132,7 +132,7 @@ func (s *BroadcastMessagesService) CreateBroadcastMessage(opt *CreateBroadcastMe
 		return nil, resp, err
 	}
 
-	return b, resp, err
+	return b, resp, nil
 }
 
 // UpdateBroadcastMessageOptions represents the available CreateBroadcastMessage()
@@ -172,7 +172,7 @@ func (s *BroadcastMessagesService) UpdateBroadcastMessage(broadcast int, opt *Up
 		return nil, resp, err
 	}
 
-	return b, resp, err
+	return b, resp, nil
 }
 
 // DeleteBroadcastMessage deletes a broadcasted message.

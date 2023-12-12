@@ -11,8 +11,7 @@ Feature: ship a feature branch in a local repo
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                      |
-      | feature | git merge --no-edit main     |
-      |         | git checkout main            |
+      | feature | git checkout main            |
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
@@ -20,22 +19,18 @@ Feature: ship a feature branch in a local repo
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                       |
-      | main   | git branch feature {{ sha 'feature commit' }} |
-      |        | git revert {{ sha 'feature done' }}           |
+      | main   | git reset --hard {{ sha 'initial commit' }}   |
+      |        | git branch feature {{ sha 'feature commit' }} |
       |        | git checkout feature                          |
     And the current branch is now "feature"
-    And now these commits exist
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | feature done          |
-      |         |          | Revert "feature done" |
-      | feature | local    | feature commit        |
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

@@ -3,9 +3,9 @@ package gohacks_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/gohacks"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks"
+	"github.com/shoenig/test/must"
 )
 
 func TestTypeName(t *testing.T) {
@@ -20,6 +20,6 @@ func TestTypeName(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := gohacks.TypeName(give)
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	}
 }

@@ -19,14 +19,44 @@ type TransferRepoOption struct {
 }
 
 // TransferRepo transfers the ownership of a repository
-func (c *Client) TransferRepo(owner, reponame string, opt TransferRepoOption) (*Repository, error) {
-	if err := c.CheckServerVersionConstraint(">=1.12.0"); err != nil {
-		return nil, err
+func (c *Client) TransferRepo(owner, reponame string, opt TransferRepoOption) (*Repository, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &reponame); err != nil {
+		return nil, nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_12_0); err != nil {
+		return nil, nil, err
 	}
 	body, err := json.Marshal(&opt)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	repo := new(Repository)
-	return repo, c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/transfer", owner, reponame), jsonHeader, bytes.NewReader(body), repo)
+	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/transfer", owner, reponame), jsonHeader, bytes.NewReader(body), repo)
+	return repo, resp, err
+}
+
+// AcceptRepoTransfer accepts a repo transfer.
+func (c *Client) AcceptRepoTransfer(owner, reponame string) (*Repository, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &reponame); err != nil {
+		return nil, nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_16_0); err != nil {
+		return nil, nil, err
+	}
+	repo := new(Repository)
+	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/transfer/accept", owner, reponame), jsonHeader, nil, repo)
+	return repo, resp, err
+}
+
+// RejectRepoTransfer rejects a repo transfer.
+func (c *Client) RejectRepoTransfer(owner, reponame string) (*Repository, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &reponame); err != nil {
+		return nil, nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_16_0); err != nil {
+		return nil, nil, err
+	}
+	repo := new(Repository)
+	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/transfer/reject", owner, reponame), jsonHeader, nil, repo)
+	return repo, resp, err
 }

@@ -11,7 +11,7 @@ individual commands:
 git config --global alias.hack 'town hack'
 ```
 
-### Variations
+### Arguments
 
 - when given `add`, creates the aliases
 - when given `remove`, removes the aliases

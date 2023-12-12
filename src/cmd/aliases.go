@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ Does not overwrite existing aliases.
 This can conflict with other tools that also define Git aliases.`
 
 func aliasesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
@@ -31,18 +31,19 @@ func aliasesCommand() *cobra.Command {
 		Short:   aliasesDesc,
 		Long:    long(aliasesDesc, aliasesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return aliases(args[0], readDebugFlag(cmd))
+			return executeAliases(args[0], readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func aliases(arg string, debug bool) error {
+func executeAliases(arg string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
 	})
@@ -65,7 +66,7 @@ func addAliases(run *git.ProdRunner) error {
 			return err
 		}
 	}
-	run.Stats.PrintAnalysis()
+	fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
 	return nil
 }
 
@@ -79,6 +80,6 @@ func removeAliases(run *git.ProdRunner) error {
 			}
 		}
 	}
-	run.Stats.PrintAnalysis()
+	fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
 	return nil
 }

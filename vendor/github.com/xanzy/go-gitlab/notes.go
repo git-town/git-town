@@ -135,7 +135,7 @@ func (s *NotesService) ListIssueNotes(pid interface{}, issue int, opt *ListIssue
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // GetIssueNote returns a single note for a specific project issue.
@@ -160,7 +160,7 @@ func (s *NotesService) GetIssueNote(pid interface{}, issue, note int, options ..
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // CreateIssueNoteOptions represents the available CreateIssueNote()
@@ -195,7 +195,7 @@ func (s *NotesService) CreateIssueNote(pid interface{}, issue int, opt *CreateIs
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateIssueNoteOptions represents the available UpdateIssueNote()
@@ -229,7 +229,7 @@ func (s *NotesService) UpdateIssueNote(pid interface{}, issue, note int, opt *Up
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteIssueNote deletes an existing note of an issue.
@@ -284,7 +284,7 @@ func (s *NotesService) ListSnippetNotes(pid interface{}, snippet int, opt *ListS
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // GetSnippetNote returns a single note for a given snippet.
@@ -309,7 +309,7 @@ func (s *NotesService) GetSnippetNote(pid interface{}, snippet, note int, option
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // CreateSnippetNoteOptions represents the available CreateSnippetNote()
@@ -344,7 +344,7 @@ func (s *NotesService) CreateSnippetNote(pid interface{}, snippet int, opt *Crea
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateSnippetNoteOptions represents the available UpdateSnippetNote()
@@ -378,7 +378,7 @@ func (s *NotesService) UpdateSnippetNote(pid interface{}, snippet, note int, opt
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteSnippetNote deletes an existing note of a snippet.
@@ -433,7 +433,7 @@ func (s *NotesService) ListMergeRequestNotes(pid interface{}, mergeRequest int, 
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // GetMergeRequestNote returns a single note for a given merge request.
@@ -458,7 +458,7 @@ func (s *NotesService) GetMergeRequestNote(pid interface{}, mergeRequest, note i
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // CreateMergeRequestNoteOptions represents the available
@@ -492,7 +492,7 @@ func (s *NotesService) CreateMergeRequestNote(pid interface{}, mergeRequest int,
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateMergeRequestNoteOptions represents the available
@@ -526,7 +526,7 @@ func (s *NotesService) UpdateMergeRequestNote(pid interface{}, mergeRequest, not
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteMergeRequestNote deletes an existing note of a merge request.
@@ -581,7 +581,7 @@ func (s *NotesService) ListEpicNotes(gid interface{}, epic int, opt *ListEpicNot
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // GetEpicNote returns a single note for an epic.
@@ -606,7 +606,7 @@ func (s *NotesService) GetEpicNote(gid interface{}, epic, note int, options ...R
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // CreateEpicNoteOptions represents the available CreateEpicNote() options.
@@ -639,7 +639,7 @@ func (s *NotesService) CreateEpicNote(gid interface{}, epic int, opt *CreateEpic
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // UpdateEpicNoteOptions represents the available UpdateEpicNote() options.
@@ -671,7 +671,7 @@ func (s *NotesService) UpdateEpicNote(gid interface{}, epic, note int, opt *Upda
 		return nil, resp, err
 	}
 
-	return n, resp, err
+	return n, resp, nil
 }
 
 // DeleteEpicNote deletes an existing note of a merge request.

@@ -22,19 +22,16 @@ Feature: dry run
       |         | git merge --no-edit main           |
       |         | git push                           |
     And the current branch is still "feature"
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+    Then it runs no commands
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

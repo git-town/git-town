@@ -3,20 +3,21 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/gohacks"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/spf13/cobra"
 )
 
 const configDesc = "Displays your Git Town configuration"
 
 func configCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",
@@ -24,27 +25,28 @@ func configCmd() *cobra.Command {
 		Short:   configDesc,
 		Long:    long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfig(readDebugFlag(cmd))
+			return executeConfig(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&configCmd)
+	addVerboseFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
-	configCmd.AddCommand(pullBranchStrategyCommand())
+	configCmd.AddCommand(syncPerennialStrategyCommand())
 	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(pushHookCommand())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
-	configCmd.AddCommand(syncStrategyCommand())
+	configCmd.AddCommand(syncFeatureStrategyCommand())
 	return &configCmd
 }
 
-func runConfig(debug bool) error {
+func executeConfig(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
@@ -68,67 +70,71 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	gitlabToken := run.Config.GitLabToken()
 	hosting := fc.Hosting(run.Config.HostingService())
 	isOffline := fc.Bool(run.Config.IsOffline())
-	lineage := run.Config.Lineage()
-	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	lineage := run.Config.Lineage(run.Backend.Config.RemoveLocalConfigValue)
+	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
 	pushHook := fc.Bool(run.Config.PushHook())
 	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
+	syncBeforeShip := fc.Bool(run.Config.SyncBeforeShip())
 	return ConfigConfig{
-		branchTypes:        branchTypes,
-		deleteOrigin:       deleteOrigin,
-		hosting:            hosting,
-		giteaToken:         giteaToken,
-		githubToken:        githubToken,
-		gitlabToken:        gitlabToken,
-		isOffline:          isOffline,
-		lineage:            lineage,
-		pullBranchStrategy: pullBranchStrategy,
-		pushHook:           pushHook,
-		pushNewBranches:    pushNewBranches,
-		shouldSyncUpstream: shouldSyncUpstream,
-		syncStrategy:       syncStrategy,
+		branchTypes:           branchTypes,
+		deleteOrigin:          deleteOrigin,
+		hosting:               hosting,
+		giteaToken:            giteaToken,
+		githubToken:           githubToken,
+		gitlabToken:           gitlabToken,
+		isOffline:             isOffline,
+		lineage:               lineage,
+		syncPerennialStrategy: syncPerennialStrategy,
+		pushHook:              pushHook,
+		pushNewBranches:       pushNewBranches,
+		shouldSyncUpstream:    shouldSyncUpstream,
+		syncFeatureStrategy:   syncFeatureStrategy,
+		syncBeforeShip:        syncBeforeShip,
 	}, fc.Err
 }
 
 type ConfigConfig struct {
-	branchTypes        domain.BranchTypes
-	deleteOrigin       bool
-	giteaToken         string
-	githubToken        string
-	gitlabToken        string
-	hosting            config.Hosting
-	isOffline          bool
-	lineage            config.Lineage
-	pullBranchStrategy config.PullBranchStrategy
-	pushHook           bool
-	pushNewBranches    bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branchTypes           domain.BranchTypes
+	deleteOrigin          bool
+	giteaToken            string
+	githubToken           string
+	gitlabToken           string
+	hosting               config.Hosting
+	isOffline             bool
+	lineage               config.Lineage
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushHook              bool
+	pushNewBranches       bool
+	shouldSyncUpstream    bool
+	syncFeatureStrategy   config.SyncFeatureStrategy
+	syncBeforeShip        bool
 }
 
 func printConfig(config ConfigConfig) {
 	fmt.Println()
-	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(config.branchTypes.MainBranch.String()))
-	cli.PrintEntry("perennial branches", cli.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
+	print.Header("Branches")
+	print.Entry("main branch", format.StringSetting(config.branchTypes.MainBranch.String()))
+	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
-	cli.PrintHeader("Configuration")
-	cli.PrintEntry("offline", cli.BoolSetting(config.isOffline))
-	cli.PrintEntry("pull branch strategy", config.pullBranchStrategy.String())
-	cli.PrintEntry("run pre-push hook", cli.BoolSetting(config.pushHook))
-	cli.PrintEntry("push new branches", cli.BoolSetting(config.pushNewBranches))
-	cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(config.deleteOrigin))
-	cli.PrintEntry("sync strategy", config.syncStrategy.String())
-	cli.PrintEntry("sync with upstream", cli.BoolSetting(config.shouldSyncUpstream))
+	print.Header("Configuration")
+	print.Entry("offline", format.Bool(config.isOffline))
+	print.Entry("run pre-push hook", format.Bool(config.pushHook))
+	print.Entry("push new branches", format.Bool(config.pushNewBranches))
+	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
+	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
+	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
+	print.Entry("sync with upstream", format.Bool(config.shouldSyncUpstream))
+	print.Entry("sync before shipping", format.Bool(config.syncBeforeShip))
 	fmt.Println()
-	cli.PrintHeader("Hosting")
-	cli.PrintEntry("hosting service override", cli.StringSetting(config.hosting.String()))
-	cli.PrintEntry("GitHub token", cli.StringSetting(config.githubToken))
-	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
-	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
+	print.Header("Hosting")
+	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
+	print.Entry("GitHub token", format.StringSetting(config.githubToken))
+	print.Entry("GitLab token", format.StringSetting(config.gitlabToken))
+	print.Entry("Gitea token", format.StringSetting(config.giteaToken))
 	fmt.Println()
 	if !config.branchTypes.MainBranch.IsEmpty() {
-		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(config.lineage))
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.lineage))
 	}
 }

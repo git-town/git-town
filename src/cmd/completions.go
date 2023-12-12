@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -52,14 +52,14 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		Short:                 completionsDesc,
 		Long:                  long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return completions(args, completionsNoDescFlag, rootCmd)
+			return executeCompletions(args, completionsNoDescFlag, rootCmd)
 		},
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
 }
 
-func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
+func executeCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
 	completionType, err := NewCompletionType(args[0])
 	if err != nil {
 		return err
@@ -86,7 +86,7 @@ type CompletionType struct {
 	name string
 }
 
-func (c CompletionType) String() string { return c.name }
+func (self CompletionType) String() string { return self.name }
 
 var (
 	CompletionTypeBash       = CompletionType{"bash"}       //nolint:gochecknoglobals

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/git-town/git-town/v9/test/datatable"
+	"github.com/git-town/git-town/v11/test/datatable"
 	"github.com/sergi/go-diff/diffmatchpatch"
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func TestDataTable(t *testing.T) {
 	t.Parallel()
+
 	t.Run("String serialization", func(t *testing.T) {
 		t.Parallel()
 		table := datatable.DataTable{}
@@ -36,7 +37,7 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("origin", "initial, bar")
 		table.RemoveText("initial, ")
 		expected := "| local  | main, foo |\n| origin | bar       |\n"
-		assert.Equal(t, expected, table.String())
+		must.EqOp(t, expected, table.String())
 	})
 
 	t.Run("Sort", func(t *testing.T) {
@@ -51,5 +52,68 @@ func TestDataTable(t *testing.T) {
 		if errCnt > 0 {
 			t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
 		}
+	})
+
+	t.Run("Strings", func(t *testing.T) {
+		t.Parallel()
+		table := datatable.DataTable{}
+		table.AddRow("BRANCH", "TYPE", "COMMAND")
+		table.AddRow("", "backend", "git version")
+		table.AddRow("", "backend", "git config -lz --global")
+		table.AddRow("", "backend", "git config -lz --local")
+		table.AddRow("", "backend", "git rev-parse --show-toplevel")
+		table.AddRow("", "backend", "git stash list")
+		table.AddRow("", "backend", "git branch -vva")
+		table.AddRow("", "backend", "git remote")
+		table.AddRow("old", "frontend", "git fetch --prune --tags")
+		table.AddRow("", "backend", "git branch -vva")
+		table.AddRow("", "backend", "git status --long --ignore-submodules")
+		table.AddRow("", "backend", "git rev-parse --verify --abbrev-ref @{-1}")
+		table.AddRow("old", "frontend", "git merge --no-edit main")
+		table.AddRow("", "backend", "git diff main..old")
+		table.AddRow("old", "frontend", "git checkout main")
+		table.AddRow("", "backend", "git log main..old")
+		table.AddRow("main", "frontend", "git branch -d old")
+		table.AddRow("", "backend", "git config git-town.perennial-branches")
+		table.AddRow("", "backend", "git show-ref --quiet refs/heads/main")
+		table.AddRow("", "backend", "git show-ref --quiet refs/heads/old")
+		table.AddRow("", "backend", "git rev-parse --verify --abbrev-ref @{-1}")
+		table.AddRow("", "backend", "git checkout main")
+		table.AddRow("", "backend", "git checkout main")
+		table.AddRow("", "backend", "git config -lz --global")
+		table.AddRow("", "backend", "git config -lz --local")
+		table.AddRow("", "backend", "git branch -vva")
+		table.AddRow("", "backend", "git stash list")
+		have := table.String()
+		want := `
+| BRANCH | TYPE     | COMMAND                                   |
+|        | backend  | git version                               |
+|        | backend  | git config -lz --global                   |
+|        | backend  | git config -lz --local                    |
+|        | backend  | git rev-parse --show-toplevel             |
+|        | backend  | git stash list                            |
+|        | backend  | git branch -vva                           |
+|        | backend  | git remote                                |
+| old    | frontend | git fetch --prune --tags                  |
+|        | backend  | git branch -vva                           |
+|        | backend  | git status --long --ignore-submodules     |
+|        | backend  | git rev-parse --verify --abbrev-ref @{-1} |
+| old    | frontend | git merge --no-edit main                  |
+|        | backend  | git diff main..old                        |
+| old    | frontend | git checkout main                         |
+|        | backend  | git log main..old                         |
+| main   | frontend | git branch -d old                         |
+|        | backend  | git config git-town.perennial-branches    |
+|        | backend  | git show-ref --quiet refs/heads/main      |
+|        | backend  | git show-ref --quiet refs/heads/old       |
+|        | backend  | git rev-parse --verify --abbrev-ref @{-1} |
+|        | backend  | git checkout main                         |
+|        | backend  | git checkout main                         |
+|        | backend  | git config -lz --global                   |
+|        | backend  | git config -lz --local                    |
+|        | backend  | git branch -vva                           |
+|        | backend  | git stash list                            |
+`[1:]
+		must.Eq(t, want, have)
 	})
 }

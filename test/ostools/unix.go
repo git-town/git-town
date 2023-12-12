@@ -6,7 +6,7 @@ package ostools
 import (
 	"os"
 
-	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/git-town/git-town/v11/test/asserts"
 )
 
 // This package contains platform-specific testing tool implementations for Unix-like platforms.
@@ -23,13 +23,13 @@ func CreateInputTool(toolPath string) {
 read i1
 read i2
 echo You entered $i1 and $i2
-`), 0x744))
+`), 0o744))
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
 func CreateLsTool(toolPath string) {
 	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0x744))
+	asserts.NoError(os.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0o744))
 }
 
 // ScriptName provides the name of the given script file on the Windows.

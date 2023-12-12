@@ -61,6 +61,15 @@ type Release struct {
 		} `json:"sources"`
 		Links []*ReleaseLink `json:"links"`
 	} `json:"assets"`
+	Links struct {
+		ClosedIssueURL     string `json:"closed_issues_url"`
+		ClosedMergeRequest string `json:"closed_merge_requests_url"`
+		EditURL            string `json:"edit_url"`
+		MergedMergeRequest string `json:"merged_merge_requests_url"`
+		OpenedIssues       string `json:"opened_issues_url"`
+		OpenedMergeRequest string `json:"opened_merge_requests_url"`
+		Self               string `json:"self"`
+	} `json:"_links"`
 }
 
 // ListReleasesOptions represents ListReleases() options.
@@ -96,7 +105,7 @@ func (s *ReleasesService) ListReleases(pid interface{}, opt *ListReleasesOptions
 		return nil, resp, err
 	}
 
-	return rs, resp, err
+	return rs, resp, nil
 }
 
 // GetRelease returns a single release, identified by a tag name.
@@ -109,6 +118,31 @@ func (s *ReleasesService) GetRelease(pid interface{}, tagName string, options ..
 		return nil, nil, err
 	}
 	u := fmt.Sprintf("projects/%s/releases/%s", PathEscape(project), PathEscape(tagName))
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	r := new(Release)
+	resp, err := s.client.Do(req, r)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return r, resp, nil
+}
+
+// GetLatestRelease returns the latest release for the project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/releases/#get-the-latest-release
+func (s *ReleasesService) GetLatestRelease(pid interface{}, options ...RequestOptionFunc) (*Release, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/releases/permalink/latest", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
@@ -181,7 +215,7 @@ func (s *ReleasesService) CreateRelease(pid interface{}, opts *CreateReleaseOpti
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // UpdateReleaseOptions represents UpdateRelease() options.
@@ -217,7 +251,7 @@ func (s *ReleasesService) UpdateRelease(pid interface{}, tagName string, opts *U
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // DeleteRelease deletes a release.
@@ -242,5 +276,5 @@ func (s *ReleasesService) DeleteRelease(pid interface{}, tagName string, options
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }

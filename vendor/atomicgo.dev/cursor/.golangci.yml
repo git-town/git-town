@@ -17,55 +17,83 @@ linters-settings:
       - ptrToRefParam
       - paramTypeCombine
       - unnamedResult
-  misspell:
-    locale: US
 linters:
   disable-all: true
   enable:
+    # default linters
     - errcheck
     - gosimple
     - govet
     - ineffassign
     - staticcheck
+    - typecheck
+    - unused
+    # additional linters
+    - asasalint
     - asciicheck
+    - bidichk
     - bodyclose
+    - containedctx
+    - contextcheck
+    - decorder
     - dupl
     - durationcheck
+    - errchkjson
+    - errname
     - errorlint
     - exhaustive
-    - gci
-    - gocognit
+    - exhaustruct
+    - exportloopref
+    - forcetypeassert
+    - gocheckcompilerdirectives
     - gocritic
     - godot
     - godox
     - goerr113
     - gofmt
-    - goimports
     - goprintffuncname
-    - misspell
+    - gosec
+    - gosmopolitan
+    - importas
+    - ireturn
+    - nakedret
+    - nestif
     - nilerr
-    - nlreturn
-    - noctx
+    - nilnil
     - prealloc
     - predeclared
+    - revive
+    - rowserrcheck
+    - tagalign
+    - tenv
     - thelper
+    - tparallel
     - unconvert
     - unparam
+    - usestdlibvars
     - wastedassign
+    - whitespace
     - wrapcheck
+    - wsl
+    - gocyclo
+    - misspell
 issues:
-  # Excluding configuration per-path, per-linter, per-text and per-source
+  include:
+    - EXC0012
+    - EXC0014
   exclude-rules:
     - path: _test\.go
       linters:
+        - gocyclo
         - errcheck
         - dupl
+        - gosec
         - gocritic
-        - wrapcheck
-        - goerr113
-    # https://github.com/go-critic/go-critic/issues/926
     - linters:
         - gocritic
       text: "unnecessaryDefer:"
+    - linters:
+        - gocritic
+      text: "preferDecodeRune:"
 service:
-  golangci-lint-version: 1.39.x # use the fixed version to not introduce new linters unexpectedly
+  golangci-lint-version: 1.53.x

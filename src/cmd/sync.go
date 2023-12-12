@@ -3,14 +3,15 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
-	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/opcode"
+	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -34,9 +35,9 @@ syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addDryRunFlag, readDryRunFlag := flags.DryRun()
-	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches")
+	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",
@@ -44,310 +45,346 @@ func syncCmd() *cobra.Command {
 		Short:   syncDesc,
 		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return sync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
+			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
 	addAllFlag(&cmd)
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addDryRunFlag(&cmd)
 	return &cmd
 }
 
-func sync(all, dryRun, debug bool) error {
+func executeSync(all, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineSyncConfig(all, &repo)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config)
-	if err != nil {
-		return err
-	}
+	runProgram := program.Program{}
+	syncBranchesProgram(syncBranchesProgramArgs{
+		syncBranchProgramArgs: syncBranchProgramArgs{
+			branchInfos:           config.branches.All,
+			branchTypes:           config.branches.Types,
+			remotes:               config.remotes,
+			isOffline:             config.isOffline,
+			lineage:               config.lineage,
+			program:               &runProgram,
+			mainBranch:            config.mainBranch,
+			syncPerennialStrategy: config.syncPerennialStrategy,
+			pushBranch:            true,
+			pushHook:              config.pushHook,
+			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncFeatureStrategy:   config.syncFeatureStrategy,
+		},
+		branchesToSync: config.branchesToSync,
+		hasOpenChanges: config.hasOpenChanges,
+		initialBranch:  config.branches.Initial,
+		previousBranch: config.previousBranch,
+		shouldPushTags: config.shouldPushTags,
+	})
 	runState := runstate.RunState{
-		Command:     "sync",
-		RunStepList: stepList,
+		Command:             "sync",
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunProgram:          runProgram,
 	}
-	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &runState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   config.lineage,
-		RootDir:   repo.RootDir,
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		RunState:                &runState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Verbose:                 verbose,
+		Lineage:                 config.lineage,
+		NoPushHook:              !config.pushHook,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
 	})
 }
 
 type syncConfig struct {
-	branches           domain.Branches
-	branchesToSync     domain.BranchInfos
-	hasOpenChanges     bool
-	remotes            domain.Remotes
-	isOffline          bool
-	lineage            config.Lineage
-	mainBranch         domain.LocalBranchName
-	previousBranch     domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	pushHook           bool
-	shouldPushTags     bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
+	branches              domain.Branches
+	branchesToSync        domain.BranchInfos
+	hasOpenChanges        bool
+	isOffline             bool
+	lineage               config.Lineage
+	mainBranch            domain.LocalBranchName
+	previousBranch        domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushHook              bool
+	remotes               domain.Remotes
+	shouldPushTags        bool
+	shouldSyncUpstream    bool
+	syncFeatureStrategy   config.SyncFeatureStrategy
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult) (*syncConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
+	}
+	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, exit, err
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
-	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			AllBranches: localBranches,
-			Backend:     &repo.Runner.Backend,
 			BranchTypes: branches.Types,
 			Lineage:     lineage,
 			MainBranch:  mainBranch,
+			Runner:      &repo.Runner,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
-			Backend:       &repo.Runner.Backend,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
 			Lineage:       lineage,
 			MainBranch:    mainBranch,
+			Runner:        &repo.Runner,
 		})
 		if err != nil {
-			return nil, false, err
+			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
-	}
-	if configUpdated {
-		lineage = repo.Runner.Config.Lineage() // reload after ancestry change
-		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
-		if configUpdated {
-			repo.Runner.Config.Reload()
-			branches.Types = repo.Runner.Config.BranchTypes()
-		}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
-	syncStrategy, err := repo.Runner.Config.SyncStrategy()
+	syncFeatureStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	pushHook, err := repo.Runner.Config.PushHook()
+	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
 	if err != nil {
-		return nil, false, err
-	}
-	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
-	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, false, err
+		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branches:           branches,
-		branchesToSync:     branchesToSync,
-		hasOpenChanges:     hasOpenChanges,
-		remotes:            remotes,
-		isOffline:          repo.IsOffline,
-		lineage:            lineage,
-		mainBranch:         mainBranch,
-		previousBranch:     previousBranch,
-		pullBranchStrategy: pullBranchStrategy,
-		pushHook:           pushHook,
-		shouldPushTags:     shouldPushTags,
-		shouldSyncUpstream: shouldSyncUpstream,
-		syncStrategy:       syncStrategy,
-	}, false, err
+		branches:              branches,
+		branchesToSync:        branchesToSync,
+		hasOpenChanges:        repoStatus.OpenChanges,
+		remotes:               remotes,
+		isOffline:             repo.IsOffline,
+		lineage:               lineage,
+		mainBranch:            mainBranch,
+		previousBranch:        previousBranch,
+		syncPerennialStrategy: syncPerennialStrategy,
+		pushHook:              pushHook,
+		shouldPushTags:        shouldPushTags,
+		shouldSyncUpstream:    shouldSyncUpstream,
+		syncFeatureStrategy:   syncFeatureStrategy,
+	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-// syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
-	list := runstate.StepListBuilder{}
-	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, syncBranchStepsArgs{
-			branch:             branch,
-			branchTypes:        config.branches.Types,
-			remotes:            config.remotes,
-			isOffline:          config.isOffline,
-			lineage:            config.lineage,
-			mainBranch:         config.mainBranch,
-			pullBranchStrategy: config.pullBranchStrategy,
-			pushBranch:         true,
-			pushHook:           config.pushHook,
-			shouldSyncUpstream: config.shouldSyncUpstream,
-			syncStrategy:       config.syncStrategy,
-		})
+// syncBranchesProgram provides the program for the "git sync" command.
+func syncBranchesProgram(args syncBranchesProgramArgs) {
+	for _, branch := range args.branchesToSync {
+		syncBranchProgram(branch, args.syncBranchProgramArgs)
 	}
-	list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
-	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
-		list.Add(&steps.PushTagsStep{})
+	args.program.Add(&opcode.CheckoutIfExists{Branch: args.initialBranch})
+	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
+		args.program.Add(&opcode.PushTags{})
 	}
-	list.Wrap(runstate.WrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: config.hasOpenChanges,
-		MainBranch:       config.mainBranch,
-		InitialBranch:    config.branches.Initial,
-		PreviousBranch:   config.previousBranch,
+	wrap(args.program, wrapOptions{
+		RunInGitRoot:             true,
+		StashOpenChanges:         args.hasOpenChanges,
+		PreviousBranchCandidates: domain.LocalBranchNames{args.previousBranch},
 	})
-	return list.Result()
 }
 
-// syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
-	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.LocalName)
+type syncBranchesProgramArgs struct {
+	syncBranchProgramArgs
+	branchesToSync domain.BranchInfos
+	hasOpenChanges bool
+	initialBranch  domain.LocalBranchName
+	previousBranch domain.LocalBranchName
+	shouldPushTags bool
+}
+
+func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
+	parentBranchInfo := args.branchInfos.FindByLocalName(args.lineage.Parent(branch.LocalName))
+	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == domain.SyncStatusOtherWorktree
+	switch {
+	case branch.SyncStatus == domain.SyncStatusDeletedAtRemote:
+		syncDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
+	case branch.SyncStatus == domain.SyncStatusOtherWorktree:
+		// Git Town doesn't sync branches that are active in another worktree
+	default:
+		syncNonDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
+	}
+}
+
+type syncBranchProgramArgs struct {
+	branchInfos           domain.BranchInfos
+	branchTypes           domain.BranchTypes
+	isOffline             bool
+	lineage               config.Lineage
+	program               *program.Program
+	mainBranch            domain.LocalBranchName
+	syncPerennialStrategy config.SyncPerennialStrategy
+	pushBranch            bool
+	pushHook              bool
+	remotes               domain.Remotes
+	shouldSyncUpstream    bool
+	syncFeatureStrategy   config.SyncFeatureStrategy
+}
+
+// syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
+func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
+		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
+	} else {
+		syncDeletedPerennialBranchProgram(list, branch, args)
+	}
+}
+
+// syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
+// The parent branch must have been fully synced before calling this function.
+func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+	list.Add(&opcode.Checkout{Branch: branch.LocalName})
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, args.syncFeatureStrategy)
+	list.Add(&opcode.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
+}
+
+func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
+	removeBranchFromLineage(removeBranchFromLineageArgs{
+		program: list,
+		branch:  branch.LocalName,
+		parent:  args.mainBranch,
+		lineage: args.lineage,
+	})
+	list.Add(&opcode.RemoveFromPerennialBranches{Branch: branch.LocalName})
+	list.Add(&opcode.Checkout{Branch: args.mainBranch})
+	list.Add(&opcode.DeleteLocalBranch{
+		Branch: branch.LocalName,
+		Force:  false,
+	})
+	list.Add(&opcode.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
+}
+
+// syncNonDeletedBranchProgram provides the opcode to sync a particular branch.
+func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+	isFeatureBranch := args.branchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&steps.CheckoutStep{Branch: args.branch.LocalName})
+	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
+		syncFeatureBranchProgram(list, branch, parentOtherWorktree, args.syncFeatureStrategy)
 	} else {
-		syncPerennialBranchSteps(list, syncPerennialBranchStepsArgs{
-			branch:             args.branch,
-			mainBranch:         args.mainBranch,
-			pullBranchStrategy: args.pullBranchStrategy,
-			shouldSyncUpstream: args.shouldSyncUpstream,
-			hasUpstream:        args.remotes.HasUpstream(),
-		})
+		syncPerennialBranchProgram(branch, args)
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
-		case !args.branch.HasTrackingBranch():
-			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.LocalName, NoPushHook: false})
+		case !branch.HasTrackingBranch():
+			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: !args.pushHook})
 		case !isFeatureBranch:
-			list.Add(&steps.PushCurrentBranchStep{CurrentBranch: args.branch.LocalName, NoPushHook: false, Undoable: false})
+			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: !args.pushHook})
 		default:
-			pushFeatureBranchSteps(list, args.branch.LocalName, args.syncStrategy, args.pushHook)
+			pushFeatureBranchProgram(list, branch.LocalName, args.syncFeatureStrategy, args.pushHook)
 		}
 	}
 }
 
-type syncBranchStepsArgs struct {
-	branch             domain.BranchInfo
-	branchTypes        domain.BranchTypes
-	remotes            domain.Remotes
-	isOffline          bool
-	lineage            config.Lineage
-	mainBranch         domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	pushBranch         bool
-	pushHook           bool
-	shouldSyncUpstream bool
-	syncStrategy       config.SyncStrategy
-}
-
-// syncFeatureBranchSteps adds all the steps to sync the feature branch with the given name.
-func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
+// syncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
+func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy config.SyncFeatureStrategy) {
 	if branch.HasTrackingBranch() {
-		pullTrackingBranchOfCurrentFeatureBranchStep(list, branch.RemoteName, syncStrategy)
+		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchStep(list, lineage.Parent(branch.LocalName), syncStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, syncFeatureStrategy)
 }
 
-// syncPerennialBranchSteps adds all the steps to sync the perennial branch with the given name.
-func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
-	if args.branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, args.branch.RemoteName, args.pullBranchStrategy)
+// syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
+func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
+	if branch.HasTrackingBranch() {
+		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialStrategy)
 	}
-	if args.branch.LocalName == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
-		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})
-		list.Add(&steps.RebaseBranchStep{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
+	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
+		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
+		args.program.Add(&opcode.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
 }
 
-type syncPerennialBranchStepsArgs struct {
-	branch             domain.BranchInfo
-	mainBranch         domain.LocalBranchName
-	pullBranchStrategy config.PullBranchStrategy
-	shouldSyncUpstream bool
-	hasUpstream        bool
-}
-
-// pullTrackingBranchOfCurrentFeatureBranchStep adds the step to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchStep(list *runstate.StepListBuilder, trackingBranch domain.RemoteBranchName, strategy config.SyncStrategy) {
+// pullTrackingBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the remote branch of the current feature branch into the current feature branch.
+func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch domain.RemoteBranchName, strategy config.SyncFeatureStrategy) {
 	switch strategy {
-	case config.SyncStrategyMerge:
-		list.Add(&steps.MergeStep{Branch: trackingBranch.BranchName()})
-	case config.SyncStrategyRebase:
-		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
+	case config.SyncFeatureStrategyMerge:
+		list.Add(&opcode.Merge{Branch: trackingBranch.BranchName()})
+	case config.SyncFeatureStrategyRebase:
+		list.Add(&opcode.RebaseBranch{Branch: trackingBranch.BranchName()})
 	}
 }
 
-// pullParentBranchOfCurrentFeatureBranchStep adds the step to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchStep(list *runstate.StepListBuilder, parentBranch domain.LocalBranchName, strategy config.SyncStrategy) {
+// pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
+func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentOtherWorktree bool, strategy config.SyncFeatureStrategy) {
 	switch strategy {
-	case config.SyncStrategyMerge:
-		list.Add(&steps.MergeStep{Branch: parentBranch.BranchName()})
-	case config.SyncStrategyRebase:
-		list.Add(&steps.RebaseBranchStep{Branch: parentBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
+	case config.SyncFeatureStrategyMerge:
+		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
+	case config.SyncFeatureStrategyRebase:
+		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
 	}
 }
 
-// updateCurrentPerennialBranchStep provides the steps to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchStep(list *runstate.StepListBuilder, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
+// updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
+func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.SyncPerennialStrategy) {
 	switch strategy {
-	case config.PullBranchStrategyMerge:
-		list.Add(&steps.MergeStep{Branch: otherBranch.BranchName()})
-	case config.PullBranchStrategyRebase:
-		list.Add(&steps.RebaseBranchStep{Branch: otherBranch.BranchName()})
-	default:
-		list.Fail("unknown syncStrategy value: %q", strategy)
+	case config.SyncPerennialStrategyMerge:
+		list.Add(&opcode.Merge{Branch: otherBranch.BranchName()})
+	case config.SyncPerennialStrategyRebase:
+		list.Add(&opcode.RebaseBranch{Branch: otherBranch.BranchName()})
 	}
 }
 
-func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.LocalBranchName, syncStrategy config.SyncStrategy, pushHook bool) {
-	switch syncStrategy {
-	case config.SyncStrategyMerge:
-		list.Add(&steps.PushCurrentBranchStep{CurrentBranch: branch, NoPushHook: !pushHook, Undoable: false})
-	case config.SyncStrategyRebase:
-		list.Add(&steps.ForcePushBranchStep{Branch: branch, NoPushHook: false})
-	default:
-		list.Fail("unknown syncStrategy value: %q", syncStrategy)
+func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy config.SyncFeatureStrategy, pushHook bool) {
+	switch syncFeatureStrategy {
+	case config.SyncFeatureStrategyMerge:
+		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
+	case config.SyncFeatureStrategyRebase:
+		list.Add(&opcode.ForcePushCurrentBranch{NoPushHook: !pushHook})
 	}
 }

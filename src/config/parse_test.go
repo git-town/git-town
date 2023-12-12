@@ -3,12 +3,13 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/shoenig/test/must"
 )
 
 func TestParseBool(t *testing.T) {
 	t.Parallel()
+
 	t.Run("yes/no", func(t *testing.T) {
 		t.Parallel()
 		verifyParseBool(t, map[string]bool{
@@ -45,15 +46,15 @@ func TestParseBool(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"yes", "Yes", "YES"} {
 			have, err := config.ParseBool(give)
-			assert.Nil(t, err)
-			assert.Equal(t, true, have)
+			must.NoError(t, err)
+			must.EqOp(t, true, have)
 		}
 	})
 
 	t.Run("invalid input", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.ParseBool("zonk")
-		assert.Error(t, err)
+		must.Error(t, err)
 	})
 }
 
@@ -61,7 +62,7 @@ func verifyParseBool(t *testing.T, tests map[string]bool) {
 	t.Helper()
 	for give, want := range tests {
 		have, err := config.ParseBool(give)
-		assert.Nil(t, err)
-		assert.Equal(t, want, have)
+		must.NoError(t, err)
+		must.EqOp(t, want, have)
 	}
 }

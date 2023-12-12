@@ -6,6 +6,7 @@ Feature: show help even if the current repo misses configuration
     Then it prints:
       """
       Usage:
+        git-town [flags]
         git-town [command]
       """
 

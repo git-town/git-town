@@ -3,8 +3,8 @@ package datatable_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/test/datatable"
+	"github.com/shoenig/test/must"
 )
 
 func TestTagTableBuilder(t *testing.T) {
@@ -19,5 +19,5 @@ func TestTagTableBuilder(t *testing.T) {
 | tagB | local, origin |
 | tagC | local         |
 `
-	assert.Equal(t, expected, "\n"+table.String())
+	must.EqOp(t, expected, "\n"+table.String())
 }

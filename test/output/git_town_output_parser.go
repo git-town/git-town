@@ -25,7 +25,7 @@ var (
 	CommandTypeBackend  = CommandType{"backend"}  //nolint:gochecknoglobals
 )
 
-func (c CommandType) String() string { return c.name }
+func (self CommandType) String() string { return self.name }
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
@@ -43,16 +43,25 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	return result
 }
 
+const backendCommandLineBeginning = "(verbose) " // "\e[1m"
+
+func lineContainsBackendCommand(line string) bool {
+	return strings.HasPrefix(line, backendCommandLineBeginning)
+}
+
 const frontendCommandLineBeginning = "\x1b[1m" // "\e[1m"
 
 func lineContainsFrontendCommand(line string) bool {
 	return strings.HasPrefix(line, frontendCommandLineBeginning)
 }
 
-const backendCommandLineBeginning = "(debug) " // "\e[1m"
-
-func lineContainsBackendCommand(line string) bool {
-	return strings.HasPrefix(line, backendCommandLineBeginning)
+func parseBackendLine(line string) ExecutedGitCommand {
+	command := strings.TrimPrefix(line, backendCommandLineBeginning)
+	return ExecutedGitCommand{
+		Command:     command,
+		CommandType: CommandTypeBackend,
+		Branch:      "",
+	}
 }
 
 func parseFrontendLine(line string) *ExecutedGitCommand {
@@ -72,14 +81,5 @@ func parseFrontendLine(line string) *ExecutedGitCommand {
 		Command:     line,
 		CommandType: CommandTypeFrontend,
 		Branch:      branch,
-	}
-}
-
-func parseBackendLine(line string) ExecutedGitCommand {
-	command := strings.TrimPrefix(line, backendCommandLineBeginning)
-	return ExecutedGitCommand{
-		Command:     command,
-		CommandType: CommandTypeBackend,
-		Branch:      "",
 	}
 }

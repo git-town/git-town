@@ -3,18 +3,18 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
 const skipDesc = "Restarts the last run git-town command by skipping the current branch"
 
 func skipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",
@@ -22,37 +22,44 @@ func skipCmd() *cobra.Command {
 		Short:   skipDesc,
 		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return skip(readDebugFlag(cmd))
+			return executeSkip(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func skip(debug bool) error {
+func executeSkip(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
+	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	runState, err := persistence.Load(repo.RootDir)
+	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -63,11 +70,16 @@ func skip(debug bool) error {
 		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       &repo.Runner,
-		Connector: nil,
-		Lineage:   lineage,
-		RootDir:   repo.RootDir,
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		RunState:                &skipRunState,
+		Run:                     &repo.Runner,
+		Connector:               nil,
+		Verbose:                 verbose,
+		Lineage:                 lineage,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+		NoPushHook:              !pushHook,
 	})
 }

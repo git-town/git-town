@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,27 +19,28 @@ const pushHookHelp = `
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
 
 func pushHookCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
-	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the push hook flag for all repos on this machine")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the push hook flag for all repos on this machine", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: pushHookDesc,
 		Long:  long(pushHookDesc, pushHookHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return pushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return executeConfigPushHook(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addGlobalFlag(&cmd)
 	return &cmd
 }
 
-func pushHook(args []string, global, debug bool) error {
+func executeConfigPushHook(args []string, global, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
 	})
@@ -62,7 +64,7 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(setting))
+	io.Println(format.Bool(setting))
 	return nil
 }
 

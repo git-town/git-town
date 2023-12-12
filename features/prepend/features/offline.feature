@@ -19,7 +19,7 @@ Feature: offline mode
       |        | git branch new main            |
       |        | git checkout new               |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And this branch lineage exists now
@@ -33,8 +33,6 @@ Feature: offline mode
       | BRANCH | COMMAND           |
       | new    | git checkout old  |
       | old    | git branch -D new |
-      |        | git checkout main |
-      | main   | git checkout old  |
     And the current branch is now "old"
-    And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial lineage exists

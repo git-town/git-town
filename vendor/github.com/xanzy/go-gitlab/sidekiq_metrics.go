@@ -56,7 +56,7 @@ func (s *SidekiqService) GetQueueMetrics(options ...RequestOptionFunc) (*QueueMe
 		return nil, resp, err
 	}
 
-	return q, resp, err
+	return q, resp, nil
 }
 
 // ProcessMetrics represents the GitLab sidekiq process metrics.
@@ -93,7 +93,7 @@ func (s *SidekiqService) GetProcessMetrics(options ...RequestOptionFunc) (*Proce
 		return nil, resp, err
 	}
 
-	return p, resp, err
+	return p, resp, nil
 }
 
 // JobStats represents the GitLab sidekiq job stats.
@@ -124,7 +124,7 @@ func (s *SidekiqService) GetJobStats(options ...RequestOptionFunc) (*JobStats, *
 		return nil, resp, err
 	}
 
-	return j, resp, err
+	return j, resp, nil
 }
 
 // CompoundMetrics represents the GitLab sidekiq compounded stats.
@@ -153,5 +153,5 @@ func (s *SidekiqService) GetCompoundMetrics(options ...RequestOptionFunc) (*Comp
 		return nil, resp, err
 	}
 
-	return c, resp, err
+	return c, resp, nil
 }

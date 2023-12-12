@@ -9,30 +9,28 @@ Feature: help for commands
       """
 
     Examples:
-      | COMMAND                     |
-      | aliases                     |
-      | append                      |
-      | completions                 |
-      | config                      |
-      | config main-branch          |
-      | config push-new-branches    |
-      | config offline              |
-      | config perennial-branches   |
-      | config pull-branch-strategy |
-      | config sync-strategy        |
-      | diff-parent                 |
-      | hack                        |
-      | help                        |
-      | kill                        |
-      | new-pull-request            |
-      | prepend                     |
-      | prune-branches              |
-      | rename-branch               |
-      | repo                        |
-      | set-parent                  |
-      | ship                        |
-      | sync                        |
-      | version                     |
+      | COMMAND                        |
+      | aliases                        |
+      | append                         |
+      | completions                    |
+      | config                         |
+      | config main-branch             |
+      | config push-new-branches       |
+      | config offline                 |
+      | config perennial-branches      |
+      | config sync-feature-strategy   |
+      | config sync-perennial-strategy |
+      | diff-parent                    |
+      | hack                           |
+      | help                           |
+      | kill                           |
+      | prepend                        |
+      | propose                        |
+      | rename-branch                  |
+      | repo                           |
+      | set-parent                     |
+      | ship                           |
+      | sync                           |
 
   Scenario Outline: outside a Git repository
     Given I am outside a Git repo
@@ -40,6 +38,7 @@ Feature: help for commands
     Then it prints:
       """
       Usage:
+        git-town [flags]
         git-town [command]
       """
     And it does not print "fatal: Not a Git repository"

@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -19,27 +20,28 @@ If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`
 
 func pushNewBranchesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
-	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine", flags.FlagTypeNonPersistent)
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: pushNewBranchesDesc,
 		Long:  long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return pushNewBranches(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return executeConfigPushNewBranches(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addGlobalFlag(&cmd)
 	return &cmd
 }
 
-func pushNewBranches(args []string, global, debug bool) error {
+func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
 	})
@@ -63,7 +65,7 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(setting))
+	io.Println(format.Bool(setting))
 	return nil
 }
 

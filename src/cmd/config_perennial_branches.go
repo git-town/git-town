@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/dialog"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
 )
 
@@ -17,65 +18,73 @@ They cannot be shipped.`
 const updatePerennialSummary = "Prompts to update your perennial branches"
 
 func perennialBranchesCmd() *cobra.Command {
-	addDisplayDebugFlag, readDisplayDebugFlag := flags.Debug()
+	addDisplayVerboseFlag, readDisplayVerboseFlag := flags.Verbose()
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
 		Short: perennialDesc,
 		Long:  long(perennialDesc, perennialHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return displayPerennialBranches(readDisplayDebugFlag(cmd))
+			return executeConfigPerennialBranches(readDisplayVerboseFlag(cmd))
 		},
 	}
-	addDisplayDebugFlag(&displayCmd)
+	addDisplayVerboseFlag(&displayCmd)
 
-	addUpdateDebugFlag, readUpdateDebugFlag := flags.Debug()
+	addUpdateVerboseFlag, readUpdateVerboseFlag := flags.Verbose()
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,
 		Short: updatePerennialSummary,
 		Long:  long(updatePerennialSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return updatePerennialBranches(readUpdateDebugFlag(cmd))
+			return updatePerennialBranches(readUpdateVerboseFlag(cmd))
 		},
 	}
-	addUpdateDebugFlag(&updateCmd)
+	addUpdateVerboseFlag(&updateCmd)
 	displayCmd.AddCommand(&updateCmd)
 	return &displayCmd
 }
 
-func displayPerennialBranches(debug bool) error {
+func executeConfigPerennialBranches(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
+	io.Println(format.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
 	return nil
 }
 
-func updatePerennialBranches(debug bool) error {
+func updatePerennialBranches(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return err
+	}
+	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
 		Fetch:                 false,
+		Verbose:               verbose,
 		HandleUnfinishedState: false,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})

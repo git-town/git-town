@@ -72,7 +72,7 @@ func (s *GroupLabelsService) ListGroupLabels(gid interface{}, opt *ListGroupLabe
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // GetGroupLabel get a single label for a given group.
@@ -101,7 +101,7 @@ func (s *GroupLabelsService) GetGroupLabel(gid interface{}, labelID interface{},
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // CreateGroupLabelOptions represents the available CreateGroupLabel() options.
@@ -133,7 +133,7 @@ func (s *GroupLabelsService) CreateGroupLabel(gid interface{}, opt *CreateGroupL
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // DeleteGroupLabelOptions represents the available DeleteGroupLabel() options.
@@ -189,7 +189,7 @@ func (s *GroupLabelsService) UpdateGroupLabel(gid interface{}, opt *UpdateGroupL
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // SubscribeToGroupLabel subscribes the authenticated user to a label to receive
@@ -220,7 +220,7 @@ func (s *GroupLabelsService) SubscribeToGroupLabel(gid interface{}, labelID inte
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // UnsubscribeFromGroupLabel unsubscribes the authenticated user from a label to not

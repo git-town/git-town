@@ -4,13 +4,13 @@ import "strings"
 
 type SHAs []SHA
 
-func (shas SHAs) Join(sep string) string {
-	return strings.Join(shas.Strings(), sep)
+func (self SHAs) Join(sep string) string {
+	return strings.Join(self.Strings(), sep)
 }
 
-func (shas SHAs) Strings() []string {
-	result := make([]string, len(shas))
-	for s, sha := range shas {
+func (self SHAs) Strings() []string {
+	result := make([]string, len(self))
+	for s, sha := range self {
 		result[s] = sha.String()
 	}
 	return result

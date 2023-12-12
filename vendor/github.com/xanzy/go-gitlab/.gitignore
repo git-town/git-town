@@ -28,3 +28,6 @@ _testmain.go
 *.iml
 *.swp
 *.swo
+
+# vendor
+vendor

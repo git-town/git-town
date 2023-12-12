@@ -27,4 +27,4 @@ Feature: missing configuration
       | feature | git checkout main     |
       | main    | git branch -D feature |
     And the current branch is now "main"
-    And no branch hierarchy exists now
+    And no lineage exists now

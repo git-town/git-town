@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/git-town/git-town/v9/test/envvars"
+	"github.com/git-town/git-town/v11/src/subshell"
+	"github.com/git-town/git-town/v11/test/asserts"
+	"github.com/git-town/git-town/v11/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -28,7 +28,7 @@ type TestRunner struct {
 	BinDir string
 
 	// whether to log the output of subshell commands
-	Debug bool `exhaustruct:"optional"`
+	Verbose bool `exhaustruct:"optional"`
 
 	// name of the binary to use as the custom editor during "git commit"
 	gitEditor string `exhaustruct:"optional"`
@@ -46,56 +46,38 @@ type TestRunner struct {
 	WorkingDir string
 }
 
-// createBinDir creates the directory that contains mock executables.
-// This method is idempotent.
-func (r *TestRunner) createBinDir() {
-	if r.usesBinDir {
-		// binDir already created --> nothing to do here
-		return
-	}
-	asserts.NoError(os.Mkdir(r.BinDir, 0o700))
-	r.usesBinDir = true
-}
-
-// createMockBinary creates an executable with the given name and content in ms.binDir.
-func (r *TestRunner) createMockBinary(name string, content string) {
-	r.createBinDir()
-	//nolint:gosec // intentionally creating an executable here
-	asserts.NoError(os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744))
-}
-
 // MockBrokenCommand adds a mock for the given command that returns an error.
-func (r *TestRunner) MockBrokenCommand(name string) {
+func (self *TestRunner) MockBrokenCommand(name string) {
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	r.createMockBinary("which", content)
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
+	self.createMockBinary("which", content)
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	r.createMockBinary(name, content)
+	self.createMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
-func (r *TestRunner) MockCommand(name string) {
+func (self *TestRunner) MockCommand(name string) {
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	r.createMockBinary("which", content)
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(self.BinDir, name))
+	self.createMockBinary("which", content)
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	r.createMockBinary(name, content)
+	self.createMockBinary(name, content)
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
-func (r *TestRunner) MockCommitMessage(message string) {
-	r.gitEditor = "git_editor"
-	r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+func (self *TestRunner) MockCommitMessage(message string) {
+	self.gitEditor = "git_editor"
+	self.createMockBinary(self.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
-func (r *TestRunner) MockGit(version string) {
+func (self *TestRunner) MockGit(version string) {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
-		r.createMockBinary("git.cmd", content)
+		self.createMockBinary("git.cmd", content)
 		return
 	}
 	// create Unix binary
@@ -110,86 +92,86 @@ fi`
 		log.Fatalf("cannot locate the git executable: %v", err)
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
-	r.createMockBinary("git", content)
+	self.createMockBinary("git", content)
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
-func (r *TestRunner) MockNoCommandsInstalled() {
+func (self *TestRunner) MockNoCommandsInstalled() {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	r.createMockBinary("which", content)
+	self.createMockBinary("which", content)
 }
 
 // MustQuery provides the output of the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) MustQuery(name string, arguments ...string) string {
-	return r.MustQueryWith(&Options{}, name, arguments...)
+func (self *TestRunner) MustQuery(name string, arguments ...string) string {
+	return self.MustQueryWith(&Options{}, name, arguments...)
 }
 
-func (r *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
-	return r.MustQueryStringCodeWith(fullCmd, &Options{})
+func (self *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
+	return self.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (string, int) {
+func (self *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (string, int) {
 	parts, err := shellquote.Split(fullCmd)
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
-	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
+	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
 	asserts.NoError(err)
 	return output, exitCode
 }
 
 // MustQueryWith provides the output of the given command and didn't encounter any form of error.
-func (r *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
-	output, err := r.QueryWith(opts, cmd, args...)
+func (self *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
+	output, err := self.QueryWith(opts, cmd, args...)
 	asserts.NoError(err)
 	return output
 }
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) MustRun(name string, arguments ...string) {
-	err := r.Run(name, arguments...)
+func (self *TestRunner) MustRun(name string, arguments ...string) {
+	output, err := self.Query(name, arguments...)
 	if err != nil {
-		panic(fmt.Sprintf("Error executing \"%s %v\": %v", name, arguments, err))
+		panic(fmt.Sprintf("Error executing \"%s %v\": %v\n%s", name, arguments, err, output))
 	}
 }
 
-func (r *TestRunner) MustRunMany(commands [][]string) {
-	asserts.NoError(r.RunMany(commands))
+func (self *TestRunner) MustRunMany(commands [][]string) {
+	asserts.NoError(self.RunMany(commands))
 }
 
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return r.QueryWith(&Options{}, name, arguments...)
-}
-
-// Query provides the output of the given command.
-// Overrides will be used and removed when done.
-func (r *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
-	output, err := r.QueryWith(&Options{}, name, arguments...)
-	return strings.TrimSpace(output), err
+func (self *TestRunner) Query(name string, arguments ...string) (string, error) {
+	return self.QueryWith(&Options{}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *TestRunner) QueryString(fullCmd string) (string, error) {
-	return r.QueryStringWith(fullCmd, &Options{})
+func (self *TestRunner) QueryString(fullCmd string) (string, error) {
+	return self.QueryStringWith(fullCmd, &Options{})
 }
 
 // QueryStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
+func (self *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
-	return r.QueryWith(opts, cmd, args...)
+	return self.QueryWith(opts, cmd, args...)
+}
+
+// Query provides the output of the given command.
+// Overrides will be used and removed when done.
+func (self *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
+	output, err := self.QueryWith(&Options{}, name, arguments...)
+	return strings.TrimSpace(output), err
 }
 
 // QueryWith provides the output of the given command and ensures it exited with code 0.
-func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
-	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
+func (self *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
+	output, exitCode, err := self.QueryWithCode(opts, cmd, args...)
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)
 	}
@@ -197,11 +179,11 @@ func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (strin
 }
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
+func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
 	currentBranchText := ""
-	if r.Debug {
+	if self.Verbose {
 		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-		getBranchCmd.Dir = r.WorkingDir
+		getBranchCmd.Dir = self.WorkingDir
 		currentBranch, _ := getBranchCmd.Output()
 		currentBranchText = strings.TrimSpace(string(currentBranch))
 	}
@@ -211,21 +193,21 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
-	opts.Env = envvars.Replace(opts.Env, "HOME", r.HomeDir)
+	opts.Env = envvars.Replace(opts.Env, "HOME", self.HomeDir)
 	// add the custom origin
-	if r.testOrigin != "" {
-		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", r.testOrigin)
+	if self.testOrigin != "" {
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", self.testOrigin)
 	}
 	// add the custom bin dir to the PATH
-	if r.usesBinDir {
-		opts.Env = envvars.PrependPath(opts.Env, r.BinDir)
+	if self.usesBinDir {
+		opts.Env = envvars.PrependPath(opts.Env, self.BinDir)
 	}
 	// add the custom GIT_EDITOR
-	if r.gitEditor != "" {
-		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(r.BinDir, "git_editor"))
+	if self.gitEditor != "" {
+		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(self.BinDir, "git_editor"))
 	}
 	// set the working dir
-	opts.Dir = filepath.Join(r.WorkingDir, opts.Dir)
+	opts.Dir = filepath.Join(self.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if opts.Dir != "" {
@@ -265,8 +247,8 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 			err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
 		}
 	}
-	if r.Debug {
-		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(r.WorkingDir)), currentBranchText, cmd, strings.Join(args, " "))
+	if self.Verbose {
+		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(self.WorkingDir)), currentBranchText, cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
@@ -280,14 +262,14 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) error {
-	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+func (self *TestRunner) Run(name string, arguments ...string) error {
+	_, err := self.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
 	return err
 }
 
-func (r *TestRunner) RunMany(commands [][]string) error {
+func (self *TestRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		err := r.Run(argv[0], argv[1:]...)
+		err := self.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
@@ -296,8 +278,26 @@ func (r *TestRunner) RunMany(commands [][]string) error {
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (r *TestRunner) SetTestOrigin(content string) {
-	r.testOrigin = content
+func (self *TestRunner) SetTestOrigin(content string) {
+	self.testOrigin = content
+}
+
+// createBinDir creates the directory that contains mock executables.
+// This method is idempotent.
+func (self *TestRunner) createBinDir() {
+	if self.usesBinDir {
+		// binDir already created --> nothing to do here
+		return
+	}
+	asserts.NoError(os.Mkdir(self.BinDir, 0o700))
+	self.usesBinDir = true
+}
+
+// createMockBinary creates an executable with the given name and content in ms.binDir.
+func (self *TestRunner) createMockBinary(name string, content string) {
+	self.createBinDir()
+	//nolint:gosec // intentionally creating an executable here
+	asserts.NoError(os.WriteFile(filepath.Join(self.BinDir, name), []byte(content), 0o744))
 }
 
 // Options defines optional arguments for ShellRunner.RunWith().

@@ -30,30 +30,24 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
+      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | beta   | git rebase --abort |
-      |        | git checkout alpha |
-      | alpha  | git checkout main  |
+      |        | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE            |
-      | main   | origin        | main commit        |
-      | alpha  | local, origin | alpha commit       |
-      | beta   | local         | local beta commit  |
-      |        | origin        | origin beta commit |
-      | gamma  | local, origin | gamma commit       |
+    And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: skip
     When I run "git-town skip"
@@ -68,7 +62,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop           |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
       | alpha  | local, origin | alpha commit       |

@@ -6,15 +6,16 @@ works.
 
 ## setup
 
-1. install [Go](https://golang.org) version 1.19
+1. install [Go](https://golang.org) version 1.21
 2. install [Make](https://www.gnu.org/software/make)
    - Mac and Linux users have this out of the box
    - Windows users can install
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run the tests: <code type="make/command">make test</code>
-4. compile the tool: <code type="make/command">make build</code>
+3. run all tests: <code type="make/command">make test</code>
+4. install the tool locally: <code type="make/command">make build</code>
+5. run a quick test suite during development: `make test-go`
 
 ## dependencies
 
@@ -124,22 +125,23 @@ Git commands that the Git Town test suite runs under the hood, add a tag
 `@debug` above the feature or scenario you want to debug:
 
 ```cucumber
-@debug
+@debug @this
 Scenario: A foo walks into a bar
 ```
 
-This often goes together with a `@this` tag to only run the test at hand.
+To see all Git commands that the test runner and the Git Town command execute,
+runs the Git Town command with the `--verbose` option. As an example, if the
+step `When I run "git-town append new"` mysteriously fails, you could change it
+to `When I run "git-town append new -v"`. Also enable `@debug` to see the output
+on the console.
 
-To inspect the local and remote Git repository used in an end-to-end test,
-insert the step `And inspect the repo`. This step will make Cucumber print the
-path of the workspace and wait until you hit ENTER. This gives you time to
-inspect that folder using the tool of your choice.
+To get a quick glance of which status the repo is at any point in time, insert
+the step `And display "<command_>"` running whatever command you want to execute
+in the Git repo under test. Example: `And display "git status"`.
 
-If this level of debug information isn't enough, you can run the Git Town
-command under test with the `--debug` option. As an example, if the step
-`When I run "git-town append new"` mysteriously fails, you could change it to
-`When I run "git-town append new -d"`. This will print the Git commands that Git
-Town runs under the hood.
+To manually inspect the local and remote Git repositories used in an end-to-end
+test, insert the step `And inspect the repo`. This step will make Cucumber print
+the path of the workspace and wait until you hit ENTER.
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 

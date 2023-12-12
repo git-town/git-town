@@ -1,7 +1,7 @@
-Feature: sync the current feature branch using the "rebase" sync strategy
+Feature: sync the current feature branch using the "rebase" sync-feature strategy
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
@@ -24,7 +24,7 @@ Feature: sync the current feature branch using the "rebase" sync strategy
       |         | git push --force-with-lease |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
@@ -36,16 +36,14 @@ Feature: sync the current feature branch using the "rebase" sync strategy
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND                                                                                           |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit' }}                                      |
+      |         | git push --force-with-lease origin {{ sha-in-origin-before-run 'origin feature commit' }}:feature |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local, origin | origin main commit    |
-      |         |               | local main commit     |
-      |         |               | origin feature commit |
-      |         |               | local feature commit  |
-    And the initial branches and hierarchy exist
+      | feature | local         | local feature commit  |
+      |         | origin        | origin feature commit |
+    And the initial branches and lineage exist

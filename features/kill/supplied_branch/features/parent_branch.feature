@@ -17,14 +17,17 @@ Feature: delete a parent branch
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | gamma  | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
       |        | git push origin :beta    |
       |        | git branch -D beta       |
+      |        | git stash pop            |
     And the current branch is now "gamma"
     And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | gamma  | local, origin | gamma commit |
@@ -37,9 +40,12 @@ Feature: delete a parent branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                 |
-      | gamma  | git branch beta {{ sha 'beta commit' }} |
+      | gamma  | git add -A                              |
+      |        | git stash                               |
+      |        | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
+      |        | git stash pop                           |
     And the current branch is now "gamma"
     And the uncommitted file still exists
-    And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

@@ -2,8 +2,8 @@ package git
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
@@ -23,7 +23,7 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {
 	lastBranch := ""
 	lastLocationName := ""
 	result := []Commit{}
-	counter := helpers.Counter{}
+	counter := helpers.AtomicCounter{}
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit(counter.ToString())
 		for cellNo, cell := range row.Cells {

@@ -3,12 +3,13 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/shoenig/test/must"
 )
 
 func TestGitConfigCache(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		alpha := config.Key{"alpha"}
@@ -20,8 +21,8 @@ func TestGitConfigCache(t *testing.T) {
 		cloned := original.Clone()
 		cloned[alpha] = "new A"
 		cloned[beta] = "new B"
-		assert.Equal(t, "A", original[alpha])
-		assert.Equal(t, "B", original[beta])
+		must.EqOp(t, "A", original[alpha])
+		must.EqOp(t, "B", original[beta])
 	})
 
 	t.Run("KeysMatching", func(t *testing.T) {
@@ -36,6 +37,6 @@ func TestGitConfigCache(t *testing.T) {
 			{"key1"},
 			{"key2"},
 		}
-		assert.Equal(t, want, have)
+		must.Eq(t, want, have)
 	})
 }

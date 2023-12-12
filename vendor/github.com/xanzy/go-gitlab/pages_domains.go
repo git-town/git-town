@@ -42,8 +42,11 @@ type PagesDomain struct {
 	VerificationCode string     `json:"verification_code"`
 	EnabledUntil     *time.Time `json:"enabled_until"`
 	Certificate      struct {
-		Expired    bool       `json:"expired"`
-		Expiration *time.Time `json:"expiration"`
+		Subject         string     `json:"subject"`
+		Expired         bool       `json:"expired"`
+		Expiration      *time.Time `json:"expiration"`
+		Certificate     string     `json:"certificate"`
+		CertificateText string     `json:"certificate_text"`
 	} `json:"certificate"`
 }
 
@@ -75,7 +78,7 @@ func (s *PagesDomainsService) ListPagesDomains(pid interface{}, opt *ListPagesDo
 		return nil, resp, err
 	}
 
-	return pd, resp, err
+	return pd, resp, nil
 }
 
 // ListAllPagesDomains gets a list of all pages domains.
@@ -94,7 +97,7 @@ func (s *PagesDomainsService) ListAllPagesDomains(options ...RequestOptionFunc) 
 		return nil, resp, err
 	}
 
-	return pd, resp, err
+	return pd, resp, nil
 }
 
 // GetPagesDomain get a specific pages domain for a project.
@@ -119,7 +122,7 @@ func (s *PagesDomainsService) GetPagesDomain(pid interface{}, domain string, opt
 		return nil, resp, err
 	}
 
-	return pd, resp, err
+	return pd, resp, nil
 }
 
 // CreatePagesDomainOptions represents the available CreatePagesDomain() options.
@@ -155,7 +158,7 @@ func (s *PagesDomainsService) CreatePagesDomain(pid interface{}, opt *CreatePage
 		return nil, resp, err
 	}
 
-	return pd, resp, err
+	return pd, resp, nil
 }
 
 // UpdatePagesDomainOptions represents the available UpdatePagesDomain() options.
@@ -190,7 +193,7 @@ func (s *PagesDomainsService) UpdatePagesDomain(pid interface{}, domain string, 
 		return nil, resp, err
 	}
 
-	return pd, resp, err
+	return pd, resp, nil
 }
 
 // DeletePagesDomain deletes an existing prject pages domain.

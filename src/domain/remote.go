@@ -1,20 +1,20 @@
 package domain
 
 // Remote represents a Git remote.
-type Remote struct {
-	id string
-}
+type Remote string
 
 func NewRemote(id string) Remote {
-	return Remote{id}
+	return Remote(id)
 }
 
-func (r Remote) IsEmpty() bool {
-	return r.id == ""
+func (self Remote) IsEmpty() bool {
+	return self == ""
 }
 
 // Implementation of the fmt.Stringer interface.
-func (r Remote) String() string { return r.id }
+func (self Remote) String() string {
+	return string(self)
+}
 
 var (
 	NoRemote       = NewRemote("")         //nolint:gochecknoglobals

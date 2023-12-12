@@ -3,7 +3,7 @@ package git
 import (
 	"log"
 
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v11/src/domain"
 )
 
 // Commit describes a Git commit.
@@ -18,20 +18,20 @@ type Commit struct {
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.
-func (commit *Commit) Set(name, value string) {
+func (self *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
-		commit.Branch = domain.NewLocalBranchName(value)
+		self.Branch = domain.NewLocalBranchName(value)
 	case "LOCATION":
-		commit.Locations = []string{value}
+		self.Locations = []string{value}
 	case "MESSAGE":
-		commit.Message = value
+		self.Message = value
 	case "FILE NAME":
-		commit.FileName = value
+		self.FileName = value
 	case "FILE CONTENT":
-		commit.FileContent = value
+		self.FileContent = value
 	case "AUTHOR":
-		commit.Author = value
+		self.Author = value
 	default:
 		log.Fatalf("unknown Commit property: %s", name)
 	}

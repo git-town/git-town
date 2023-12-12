@@ -158,7 +158,7 @@ func (s *MergeRequestApprovalsService) ApproveMergeRequest(pid interface{}, mr i
 		return nil, resp, err
 	}
 
-	return m, resp, err
+	return m, resp, nil
 }
 
 // UnapproveMergeRequest unapproves a previously approved merge request on GitLab.
@@ -211,7 +211,7 @@ func (s *MergeRequestApprovalsService) GetConfiguration(pid interface{}, mr int,
 		return nil, resp, err
 	}
 
-	return m, resp, err
+	return m, resp, nil
 }
 
 // ChangeApprovalConfiguration updates the approval configuration of a merge request.
@@ -236,7 +236,7 @@ func (s *MergeRequestApprovalsService) ChangeApprovalConfiguration(pid interface
 		return nil, resp, err
 	}
 
-	return m, resp, err
+	return m, resp, nil
 }
 
 // ChangeMergeRequestAllowedApproversOptions represents the available
@@ -271,7 +271,7 @@ func (s *MergeRequestApprovalsService) ChangeAllowedApprovers(pid interface{}, m
 		return nil, resp, err
 	}
 
-	return m, resp, err
+	return m, resp, nil
 }
 
 // GetApprovalRules requests information about a merge request’s approval rules
@@ -296,7 +296,7 @@ func (s *MergeRequestApprovalsService) GetApprovalRules(pid interface{}, mergeRe
 		return nil, resp, err
 	}
 
-	return par, resp, err
+	return par, resp, nil
 }
 
 // GetApprovalState requests information about a merge request’s approval state
@@ -321,7 +321,7 @@ func (s *MergeRequestApprovalsService) GetApprovalState(pid interface{}, mergeRe
 		return nil, resp, err
 	}
 
-	return pas, resp, err
+	return pas, resp, nil
 }
 
 // CreateMergeRequestApprovalRuleOptions represents the available CreateApprovalRule()
@@ -359,7 +359,7 @@ func (s *MergeRequestApprovalsService) CreateApprovalRule(pid interface{}, merge
 		return nil, resp, err
 	}
 
-	return par, resp, err
+	return par, resp, nil
 }
 
 // UpdateMergeRequestApprovalRuleOptions represents the available UpdateApprovalRule()
@@ -396,7 +396,7 @@ func (s *MergeRequestApprovalsService) UpdateApprovalRule(pid interface{}, merge
 		return nil, resp, err
 	}
 
-	return par, resp, err
+	return par, resp, nil
 }
 
 // DeleteApprovalRule deletes a mr level approval rule.

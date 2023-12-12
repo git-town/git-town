@@ -29,7 +29,7 @@ Feature: nested feature branches
       |        | git push                          |
     And all branches are now synchronized
     And the current branch is still "child"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |

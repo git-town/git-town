@@ -1,7 +1,7 @@
 Feature: offline mode
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And offline mode is enabled
     And the current branch is a feature branch "feature"
     And the commits
@@ -21,7 +21,7 @@ Feature: offline mode
       | feature | git rebase origin/feature |
       |         | git rebase main           |
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
@@ -32,10 +32,8 @@ Feature: offline mode
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git reset --hard {{ sha 'local feature commit' }} |
-      |         | git checkout main                                 |
-      | main    | git checkout feature                              |
+      | BRANCH  | COMMAND                                                      |
+      | feature | git reset --hard {{ sha-before-run 'local feature commit' }} |
     And the current branch is still "feature"
-    And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

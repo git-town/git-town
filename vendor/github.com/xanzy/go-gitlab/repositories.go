@@ -80,7 +80,7 @@ func (s *RepositoriesService) ListTree(pid interface{}, opt *ListTreeOptions, op
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // Blob gets information about blob in repository like size and content. Note
@@ -140,6 +140,7 @@ func (s *RepositoriesService) RawBlobContent(pid interface{}, sha string, option
 // https://docs.gitlab.com/ee/api/repositories.html#get-file-archive
 type ArchiveOptions struct {
 	Format *string `url:"-" json:"-"`
+	Path   *string `url:"path,omitempty" json:"path,omitempty"`
 	SHA    *string `url:"sha,omitempty" json:"sha,omitempty"`
 }
 
@@ -246,7 +247,7 @@ func (s *RepositoriesService) Compare(pid interface{}, opt *CompareOptions, opti
 		return nil, resp, err
 	}
 
-	return c, resp, err
+	return c, resp, nil
 }
 
 // Contributor represents a GitLap contributor.
@@ -294,7 +295,7 @@ func (s *RepositoriesService) Contributors(pid interface{}, opt *ListContributor
 		return nil, resp, err
 	}
 
-	return c, resp, err
+	return c, resp, nil
 }
 
 // MergeBaseOptions represents the available MergeBase() options.
@@ -328,5 +329,92 @@ func (s *RepositoriesService) MergeBase(pid interface{}, opt *MergeBaseOptions, 
 		return nil, resp, err
 	}
 
-	return c, resp, err
+	return c, resp, nil
+}
+
+// AddChangelogOptions represents the available AddChangelog() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/repositories.html#add-changelog-data-to-a-changelog-file
+type AddChangelogOptions struct {
+	Version    *string  `url:"version,omitempty" json:"version,omitempty"`
+	Branch     *string  `url:"branch,omitempty" json:"branch,omitempty"`
+	ConfigFile *string  `url:"config_file,omitempty" json:"config_file,omitempty"`
+	Date       *ISOTime `url:"date,omitempty" json:"date,omitempty"`
+	File       *string  `url:"file,omitempty" json:"file,omitempty"`
+	From       *string  `url:"from,omitempty" json:"from,omitempty"`
+	Message    *string  `url:"message,omitempty" json:"message,omitempty"`
+	To         *string  `url:"to,omitempty" json:"to,omitempty"`
+	Trailer    *string  `url:"trailer,omitempty" json:"trailer,omitempty"`
+}
+
+// AddChangelog generates changelog data based on commits in a repository.
+//
+// Gitlab API docs:
+// https://docs.gitlab.com/ee/api/repositories.html#add-changelog-data-to-a-changelog-file
+func (s *RepositoriesService) AddChangelog(pid interface{}, opt *AddChangelogOptions, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/repository/changelog", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+// ChangelogData represents the generated changelog data.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/repositories.html#generate-changelog-data
+type ChangelogData struct {
+	Notes string `json:"notes"`
+}
+
+func (c ChangelogData) String() string {
+	return Stringify(c)
+}
+
+// GenerateChangelogDataOptions represents the available GenerateChangelogData()
+// options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/repositories.html#generate-changelog-data
+type GenerateChangelogDataOptions struct {
+	Version    *string  `url:"version,omitempty" json:"version,omitempty"`
+	ConfigFile *string  `url:"config_file,omitempty" json:"config_file,omitempty"`
+	Date       *ISOTime `url:"date,omitempty" json:"date,omitempty"`
+	From       *string  `url:"from,omitempty" json:"from,omitempty"`
+	To         *string  `url:"to,omitempty" json:"to,omitempty"`
+	Trailer    *string  `url:"trailer,omitempty" json:"trailer,omitempty"`
+}
+
+// GenerateChangelogData generates changelog data based on commits in a
+// repository, without committing them to a changelog file.
+//
+// Gitlab API docs:
+// https://docs.gitlab.com/ee/api/repositories.html#generate-changelog-data
+func (s *RepositoriesService) GenerateChangelogData(pid interface{}, opt GenerateChangelogDataOptions, options ...RequestOptionFunc) (*ChangelogData, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/repository/changelog", project)
+
+	req, err := s.client.NewRequest(http.MethodGet, u, opt, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	cd := new(ChangelogData)
+	resp, err := s.client.Do(req, cd)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return cd, resp, nil
 }

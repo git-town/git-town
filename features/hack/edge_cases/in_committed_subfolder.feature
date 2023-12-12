@@ -16,7 +16,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |          | git branch new main      |
       |          | git checkout new         |
     And the current branch is now "new"
-    And now the initial commits exist
+    And the initial commits exist
     And this branch lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
@@ -25,10 +25,9 @@ Feature: inside a committed subfolder that exists only on the current feature br
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH | COMMAND               |
-      | new    | git checkout main     |
-      | main   | git branch -D new     |
-      |        | git checkout existing |
+      | BRANCH   | COMMAND               |
+      | new      | git checkout existing |
+      | existing | git branch -D new     |
     And the current branch is now "existing"
-    And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial lineage exists

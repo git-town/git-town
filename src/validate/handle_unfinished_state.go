@@ -3,20 +3,21 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/dialog"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/persistence"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/runvm"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (quit bool, err error) {
-	runState, err := persistence.Load(rootDir)
+func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
+	runState, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -34,13 +35,13 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 	switch response {
 	case dialog.ResponseDiscard:
-		return discardRunstate(rootDir)
+		return discardRunstate(args.RootDir)
 	case dialog.ResponseContinue:
-		return continueRunstate(run, runState, connector, rootDir, lineage)
-	case dialog.ResponseAbort:
-		return abortRunstate(run, runState, connector, rootDir, lineage)
+		return continueRunstate(runState, args)
+	case dialog.ResponseUndo:
+		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
-		return skipRunstate(run, runState, connector, rootDir, lineage)
+		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
 		return true, nil
 	default:
@@ -48,46 +49,73 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 	}
 }
 
-func abortRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
+type UnfinishedStateArgs struct {
+	Connector               hosting.Connector
+	Verboe                  bool
+	Lineage                 config.Lineage
+	InitialBranchesSnapshot domain.BranchesSnapshot
+	InitialConfigSnapshot   undo.ConfigSnapshot
+	InitialStashSnapshot    domain.StashSnapshot
+	PushHook                bool
+	RootDir                 domain.RepoRootDir
+	Run                     *git.ProdRunner
+}
+
+func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
-	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &abortRunState,
-		Run:       run,
-		Connector: connector,
-		RootDir:   rootDir,
-		Lineage:   lineage,
+	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		Connector:               args.Connector,
+		Verbose:                 args.Verboe,
+		Lineage:                 args.Lineage,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                &abortRunState,
 	})
 }
 
-func continueRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
-	hasConflicts, err := run.Backend.HasConflicts()
+func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+	repoStatus, err := args.Run.Backend.RepoStatus()
 	if err != nil {
 		return false, err
 	}
-	if hasConflicts {
+	if repoStatus.Conflicts {
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
-	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  runState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		Connector:               args.Connector,
+		Verbose:                 args.Verboe,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                runState,
 	})
 }
 
 func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
-	err := persistence.Delete(rootDir)
+	err := statefile.Delete(rootDir)
 	return false, err
 }
 
-func skipRunstate(run *git.ProdRunner, runState *runstate.RunState, connector hosting.Connector, rootDir domain.RepoRootDir, lineage config.Lineage) (bool, error) {
+func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
-	return true, runvm.Execute(runvm.ExecuteArgs{
-		RunState:  &skipRunState,
-		Run:       run,
-		Connector: connector,
-		Lineage:   lineage,
-		RootDir:   rootDir,
+	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		Connector:               args.Connector,
+		Verbose:                 args.Verboe,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSnapshot:    args.InitialStashSnapshot,
+		Lineage:                 args.Lineage,
+		NoPushHook:              !args.PushHook,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                &skipRunState,
 	})
 }

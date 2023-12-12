@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func BranchExists(t *testing.T, dir, expectedBranch string) {
@@ -12,6 +12,6 @@ func BranchExists(t *testing.T, dir, expectedBranch string) {
 	cmd := exec.Command("git", "branch")
 	cmd.Dir = dir
 	output, err := cmd.CombinedOutput()
-	assert.Nilf(t, err, "cannot run 'git branch' in %q", dir)
-	assert.Contains(t, string(output), expectedBranch, "doesn't have Git branch")
+	must.NoError(t, err)
+	must.StrContains(t, string(output), expectedBranch)
 }

@@ -11,7 +11,7 @@ Feature: does not kill perennial branches
       you can only kill feature branches
       """
     And the current branch is still "feature"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: perennial branch
     Given a perennial branch "qa"

@@ -9,8 +9,10 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
+	"golang.org/x/exp/maps"
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
@@ -34,53 +36,40 @@ func FromGherkin(table *messages.PickleStepArgument_PickleTable) DataTable {
 }
 
 // AddRow adds the given row of table data to this table.
-func (table *DataTable) AddRow(elements ...string) {
-	table.Cells = append(table.Cells, elements)
-}
-
-// columns provides the table data organized into columns.
-func (table *DataTable) columns() [][]string {
-	result := [][]string{}
-	for column := range table.Cells[0] {
-		colData := []string{}
-		for row := range table.Cells {
-			colData = append(colData, table.Cells[row][column])
-		}
-		result = append(result, colData)
-	}
-	return result
+func (self *DataTable) AddRow(elements ...string) {
+	self.Cells = append(self.Cells, elements)
 }
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
+func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(other.String(), table.String(), false)
+	diffs := dmp.DiffMain(other.String(), self.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}
 	return dmp.DiffPrettyText(diffs), len(diffs)
 }
 
-// EqualGherkin compares this DataTable instance to the given Gherkin table.
+// EqualGherkin compares this DataTable instance to the given Gherkin self.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
-	if len(table.Cells) == 0 {
+func (self *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
+	if len(self.Cells) == 0 {
 		return "your data is empty", 1
 	}
 	dataTable := FromGherkin(other)
-	return table.EqualDataTable(dataTable)
+	return self.EqualDataTable(dataTable)
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]domain.SHA, initialOriginSHAs map[string]domain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
-	for row := range table.Cells {
+	for row := range self.Cells {
 		cells := []string{}
-		for col := range table.Cells[row] {
-			cell := table.Cells[row][col]
+		for col := range self.Cells[row] {
+			cell := self.Cells[row][col]
 			if strings.Contains(cell, "{{") {
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
@@ -93,6 +82,28 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 					commitName := match[18 : len(match)-4]
 					sha := remoteRepo.SHAForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
+				case strings.HasPrefix(match, "{{ sha-before-run "):
+					commitName := match[19 : len(match)-4]
+					sha, found := initialDevSHAs[commitName]
+					if !found {
+						fmt.Printf("I cannot find the initial dev commit %q.\n", commitName)
+						fmt.Println("I have these commits:")
+						for _, key := range maps.Keys(initialDevSHAs) {
+							fmt.Println("  -", key)
+						}
+					}
+					cell = strings.Replace(cell, match, sha.String(), 1)
+				case strings.HasPrefix(match, "{{ sha-in-origin-before-run "):
+					commitName := match[29 : len(match)-4]
+					sha, found := initialOriginSHAs[commitName]
+					if !found {
+						fmt.Printf("I cannot find the initial origin commit %q.\n", commitName)
+						fmt.Println("I have these commits:")
+						for _, key := range maps.Keys(initialOriginSHAs) {
+							fmt.Println("  -", key)
+						}
+					}
+					cell = strings.Replace(cell, match, sha.String(), 1)
 				default:
 					log.Fatalf("DataTable.Expand: unknown template expression %q", cell)
 				}
@@ -105,44 +116,57 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 }
 
 // RemoveText deletes the given text from each cell.
-func (table *DataTable) RemoveText(text string) {
-	for row := range table.Cells {
-		for col := range table.Cells[row] {
-			table.Cells[row][col] = strings.Replace(table.Cells[row][col], text, "", 1)
+func (self *DataTable) RemoveText(text string) {
+	for row := range self.Cells {
+		for col := range self.Cells[row] {
+			self.Cells[row][col] = strings.Replace(self.Cells[row][col], text, "", 1)
 		}
 	}
 }
 
 // Sorted provides a new DataTable that contains the content of this DataTable sorted by the first column.
-func (table *DataTable) Sort() {
-	sort.Slice(table.Cells, func(a, b int) bool {
-		return table.Cells[a][0] < table.Cells[b][0]
+func (self *DataTable) Sort() {
+	sort.Slice(self.Cells, func(a, b int) bool {
+		return self.Cells[a][0] < self.Cells[b][0]
 	})
 }
 
-// String provides the data in this DataTable instance formatted in Gherkin table format.
-func (table *DataTable) String() string {
+// String provides the data in this DataTable instance formatted in Gherkin self format.
+func (self *DataTable) String() string {
 	// determine how to format each column
 	formatStrings := []string{}
-	for _, width := range table.widths() {
+	for _, width := range self.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
-	// render the table using this format
+	// render the self using this format
 	result := ""
-	for row := range table.Cells {
-		for col := range table.Cells[row] {
-			result += fmt.Sprintf(formatStrings[col], table.Cells[row][col])
+	for row := range self.Cells {
+		for col := range self.Cells[row] {
+			result += fmt.Sprintf(formatStrings[col], self.Cells[row][col])
 		}
 		result += "|\n"
 	}
 	return result
 }
 
+// columns provides the self data organized into columns.
+func (self *DataTable) columns() [][]string {
+	result := [][]string{}
+	for column := range self.Cells[0] {
+		colData := []string{}
+		for row := range self.Cells {
+			colData = append(colData, self.Cells[row][column])
+		}
+		result = append(result, colData)
+	}
+	return result
+}
+
 // widths provides the widths of all columns.
-func (table *DataTable) widths() []int {
+func (self *DataTable) widths() []int {
 	result := []int{}
-	for _, column := range table.columns() {
-		result = append(result, helpers.LongestStringLength(column))
+	for _, column := range self.columns() {
+		result = append(result, stringslice.Longest(column))
 	}
 	return result
 }

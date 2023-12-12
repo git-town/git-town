@@ -73,7 +73,7 @@ func (s *TopicsService) ListTopics(opt *ListTopicsOptions, options ...RequestOpt
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // GetTopic gets a project topic by ID.
@@ -93,7 +93,7 @@ func (s *TopicsService) GetTopic(topic int, options ...RequestOptionFunc) (*Topi
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // CreateTopicOptions represents the available CreateTopic() options.
@@ -153,7 +153,7 @@ func (s *TopicsService) CreateTopic(opt *CreateTopicOptions, options ...RequestO
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // UpdateTopicOptions represents the available UpdateTopic() options.
@@ -203,7 +203,7 @@ func (s *TopicsService) UpdateTopic(topic int, opt *UpdateTopicOptions, options 
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // DeleteTopic deletes a project topic. Only available to administrators.

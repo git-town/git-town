@@ -19,7 +19,7 @@ Feature: sync the current perennial branch
       |        | git push --tags          |
     And all branches are now synchronized
     And the current branch is still "qa"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | qa     | local, origin | origin commit |
@@ -29,9 +29,9 @@ Feature: sync the current perennial branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "qa"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |
       | qa     | local, origin | origin commit |
       |        |               | local commit  |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

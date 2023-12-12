@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/slice"
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/git-town/git-town/v9/test/fixture"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/test/datatable"
+	"github.com/git-town/git-town/v11/test/fixture"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -22,14 +22,27 @@ type ScenarioState struct {
 	// initialRemoteBranches contains the remote branches before the WHEN steps run
 	initialRemoteBranches domain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
+	// initialDevSHAs is only for looking up SHAs that existed at the developer repo before the first Git Town command ran.
+	// It's not a source of truth for which branches existed at that time
+	// because it might contain non-existing remote branches or miss existing remote branches.
+	// An example is when origin removes a branch. initialDevSHAs will still list it
+	// because the developer workspace hasn't fetched updates yet.
+	initialDevSHAs map[string]domain.SHA
+
+	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
+	initialOriginSHAs map[string]domain.SHA
+
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
-	// initialBranchHierarchy describes the branch hierarchy before the WHEN steps ran.
-	initialBranchHierarchy datatable.DataTable
+	// initialLineage describes the lineage before the WHEN steps ran.
+	initialLineage datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch domain.LocalBranchName
+
+	// insideGitRepo indicates whether the developer workspace contains a Git repository
+	insideGitRepo bool
 
 	// the error of the last run of Git Town
 	runExitCode int
@@ -47,31 +60,16 @@ type ScenarioState struct {
 	uncommittedFileName string
 }
 
-// Reset restores the null value of this ScenarioState.
-func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
-	state.fixture = gitEnv
-	state.initialLocalBranches = domain.NewLocalBranchNames("main")
-	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
-	state.initialCommits = nil
-	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
-	state.initialCurrentBranch = domain.LocalBranchName{}
-	state.runOutput = ""
-	state.runExitCode = 0
-	state.runExitCodeChecked = false
-	state.uncommittedFileName = ""
-	state.uncommittedContent = ""
-}
-
 // InitialBranches provides the branches in this Scenario before the WHEN steps ran.
-func (state *ScenarioState) InitialBranches() datatable.DataTable {
+func (self *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	state.initialLocalBranches.Sort()
-	state.initialLocalBranches = slice.Hoist(state.initialLocalBranches, domain.NewLocalBranchName("main"))
-	state.initialRemoteBranches.Sort()
-	state.initialRemoteBranches = slice.Hoist(state.initialRemoteBranches, domain.NewLocalBranchName("main"))
-	localBranchesJoined := state.initialLocalBranches.Join(", ")
-	remoteBranchesJoined := state.initialRemoteBranches.Join(", ")
+	self.initialLocalBranches.Sort()
+	slice.Hoist(&self.initialLocalBranches, domain.NewLocalBranchName("main"))
+	self.initialRemoteBranches.Sort()
+	slice.Hoist(&self.initialRemoteBranches, domain.NewLocalBranchName("main"))
+	localBranchesJoined := self.initialLocalBranches.Join(", ")
+	remoteBranchesJoined := self.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {
@@ -83,11 +81,28 @@ func (state *ScenarioState) InitialBranches() datatable.DataTable {
 	return result
 }
 
+// Reset restores the null value of this ScenarioState.
+func (self *ScenarioState) Reset(gitEnv fixture.Fixture) {
+	self.fixture = gitEnv
+	self.initialLocalBranches = domain.NewLocalBranchNames("main")
+	self.initialRemoteBranches = domain.NewLocalBranchNames("main")
+	self.initialDevSHAs = map[string]domain.SHA{}
+	self.initialOriginSHAs = map[string]domain.SHA{}
+	self.initialLineage = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	self.initialCurrentBranch = domain.EmptyLocalBranchName()
+	self.insideGitRepo = true
+	self.runOutput = ""
+	self.runExitCode = 0
+	self.runExitCodeChecked = false
+	self.uncommittedFileName = ""
+	self.uncommittedContent = ""
+}
+
 // compareExistingCommits compares the commits in the Git environment of the given ScenarioState
 // against the given Gherkin table.
-func (state *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
+func (self *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable := state.fixture.CommitTable(fields)
+	commitTable := self.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)

@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/git-town/git-town/v9/src/slice"
+import "github.com/git-town/git-town/v11/src/gohacks/slice"
 
 // BranchTypes answers questions about whether branches are long-lived or not.
 type BranchTypes struct {
@@ -8,21 +8,25 @@ type BranchTypes struct {
 	PerennialBranches LocalBranchNames
 }
 
-func (pb BranchTypes) IsFeatureBranch(branch LocalBranchName) bool {
-	return !pb.IsMainBranch(branch) && !pb.IsPerennialBranch(branch)
+func (self BranchTypes) IsFeatureBranch(branch LocalBranchName) bool {
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch)
 }
 
-func (pb BranchTypes) IsMainBranch(branch LocalBranchName) bool {
-	return branch == pb.MainBranch
+func (self BranchTypes) IsMainBranch(branch LocalBranchName) bool {
+	return branch == self.MainBranch
 }
 
-func (pb BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
-	return slice.Contains(pb.PerennialBranches, branch)
+func (self BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
+	return slice.Contains(self.PerennialBranches, branch)
+}
+
+func (self BranchTypes) MainAndPerennials() LocalBranchNames {
+	return append(LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
 }
 
 func EmptyBranchTypes() BranchTypes {
 	return BranchTypes{
-		MainBranch:        LocalBranchName{},
+		MainBranch:        EmptyLocalBranchName(),
 		PerennialBranches: LocalBranchNames{},
 	}
 }

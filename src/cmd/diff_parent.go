@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/slice"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +20,7 @@ Works on either the current branch or the branch name provided.
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`
 
 func diffParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
@@ -28,25 +28,26 @@ func diffParentCommand() *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return diffParent(args, readDebugFlag(cmd))
+			return executeDiffParent(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func diffParent(args []string, debug bool) error {
+func executeDiffParent(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineDiffParentConfig(args, &repo)
+	config, exit, err := determineDiffParentConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -54,7 +55,7 @@ func diffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	repo.Runner.Stats.PrintAnalysis()
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
@@ -64,13 +65,19 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*diffParentConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, false, err
+	}
+	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		Lineage:               lineage,
+		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -88,19 +95,16 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult) (*di
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch: mainBranch,
-		Backend:       &repo.Runner.Backend,
+	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
-		Lineage:       lineage,
 		BranchTypes:   branchTypes,
+		DefaultBranch: mainBranch,
+		Lineage:       lineage,
 		MainBranch:    mainBranch,
+		Runner:        &repo.Runner,
 	})
 	if err != nil {
 		return nil, false, err
-	}
-	if updated {
-		lineage = repo.Runner.Config.Lineage()
 	}
 	return &diffParentConfig{
 		branch:       branch,

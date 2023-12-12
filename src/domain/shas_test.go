@@ -3,12 +3,13 @@ package domain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/shoenig/test/must"
 )
 
 func TestSHAs(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Join", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
@@ -19,14 +20,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Join(", ")
 			want := "111111, 222222"
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Join(", ")
 			want := ""
-			assert.Equal(t, want, have)
+			must.EqOp(t, want, have)
 		})
 	})
 
@@ -40,14 +41,14 @@ func TestSHAs(t *testing.T) {
 			}
 			have := give.Strings()
 			want := []string{"111111", "222222"}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
 			give := domain.SHAs{}
 			have := give.Strings()
 			want := []string{}
-			assert.Equal(t, want, have)
+			must.Eq(t, want, have)
 		})
 	})
 }

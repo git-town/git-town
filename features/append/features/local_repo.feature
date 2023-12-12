@@ -19,7 +19,7 @@ Feature: in a local repo
       | new      | git stash pop       |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
     And this branch lineage exists now
@@ -37,6 +37,6 @@ Feature: in a local repo
       | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
-    And now the initial commits exist
+    And the initial commits exist
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

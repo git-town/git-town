@@ -3,12 +3,16 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/browser"
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v11/src/browser"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -26,57 +30,60 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.KeyCodeHostingDriver, config.KeyCodeHostingOriginHostname)),
+		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return repo(readDebugFlag(cmd))
+			return executeRepo(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func repo(debug bool) error {
+func executeRepo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
+		PrintCommands:    true,
 		ValidateIsOnline: true,
 		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineRepoConfig(&repo)
-	if err != nil || exit {
+	config, err := determineRepoConfig(repo)
+	if err != nil {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	repo.Runner.Stats.PrintAnalysis()
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
-func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage()
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  repo,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
-		return nil, exit, err
+func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return nil, err
+	}
+	branchTypes := repo.Runner.Config.BranchTypes()
+	branches := domain.Branches{
+		All:     branchesSnapshot.Branches,
+		Types:   branchTypes,
+		Initial: branchesSnapshot.Active,
+	}
+	_, err = validate.IsConfigured(&repo.Runner.Backend, branches)
+	if err != nil {
+		return nil, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -84,20 +91,20 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, bool, error
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
-		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintingLog{},
+		Log:             log.Printing{},
 	})
 	if err != nil {
-		return nil, false, err
+		return nil, err
 	}
 	if connector == nil {
-		return nil, false, hosting.UnsupportedServiceError()
+		return nil, hosting.UnsupportedServiceError()
 	}
 	return &repoConfig{
 		connector: connector,
-	}, false, err
+	}, err
 }
 
 type repoConfig struct {

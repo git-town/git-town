@@ -9,6 +9,7 @@ Feature: the branch to kill has a deleted tracking branch
       | other  | local, origin | other commit |
     And origin deletes the "old" branch
     And an uncommitted file
+    And the current branch is "old" and the previous branch is "other"
     When I run "git-town kill"
 
   Scenario: result
@@ -17,11 +18,11 @@ Feature: the branch to kill has a deleted tracking branch
       | old    | git fetch --prune --tags   |
       |        | git add -A                 |
       |        | git commit -m "WIP on old" |
-      |        | git checkout main          |
-      | main   | git branch -D old          |
-    And the current branch is now "main"
+      |        | git checkout other         |
+      | other  | git branch -D old          |
+    And the current branch is now "other"
     And no uncommitted files exist
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
     And the branches are now
@@ -35,13 +36,13 @@ Feature: the branch to kill has a deleted tracking branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                               |
-      | main   | git branch old {{ sha 'WIP on old' }} |
+      | other  | git branch old {{ sha 'WIP on old' }} |
       |        | git checkout old                      |
-      | old    | git reset {{ sha 'old commit' }}      |
+      | old    | git reset --soft HEAD^                |
     And the current branch is now "old"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
     And the uncommitted file still exists
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

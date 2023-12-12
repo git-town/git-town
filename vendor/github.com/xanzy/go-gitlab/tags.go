@@ -88,7 +88,7 @@ func (s *TagsService) ListTags(pid interface{}, opt *ListTagsOptions, options ..
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // GetTag a specific repository tag determined by its name. It returns 200 together
@@ -114,7 +114,7 @@ func (s *TagsService) GetTag(pid interface{}, tag string, options ...RequestOpti
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // CreateTagOptions represents the available CreateTag() options.
@@ -152,7 +152,7 @@ func (s *TagsService) CreateTag(pid interface{}, opt *CreateTagOptions, options 
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // DeleteTag deletes a tag of a repository with given name.
@@ -209,7 +209,7 @@ func (s *TagsService) CreateReleaseNote(pid interface{}, tag string, opt *Create
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }
 
 // UpdateReleaseNoteOptions represents the available UpdateReleaseNote() options.
@@ -244,5 +244,5 @@ func (s *TagsService) UpdateReleaseNote(pid interface{}, tag string, opt *Update
 		return nil, resp, err
 	}
 
-	return r, resp, err
+	return r, resp, nil
 }

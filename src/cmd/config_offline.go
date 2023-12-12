@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,25 +19,26 @@ const offlineHelp = `
 Git Town avoids network operations in offline mode.`
 
 func offlineCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: offlineDesc,
 		Long:  long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return offline(args, readDebugFlag(cmd))
+			return executeOffline(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func offline(args []string, debug bool) error {
+func executeOffline(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
 	})
@@ -54,7 +56,7 @@ func displayOfflineStatus(run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(isOffline))
+	io.Println(format.Bool(isOffline))
 	return nil
 }
 

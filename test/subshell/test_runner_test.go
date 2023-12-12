@@ -5,19 +5,20 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/test/ostools"
-	"github.com/git-town/git-town/v9/test/subshell"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/test/ostools"
+	"github.com/git-town/git-town/v11/test/subshell"
+	"github.com/shoenig/test/must"
 )
 
 func TestMockingRunner(t *testing.T) {
 	t.Parallel()
+
 	t.Run("MockCommand", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		runner := subshell.TestRunner{
 			WorkingDir: devDir,
 			HomeDir:    workDir,
@@ -26,9 +27,9 @@ func TestMockingRunner(t *testing.T) {
 		runner.MockCommand("foo")
 		// run a program that calls the mocked command
 		res, err := runner.Query("bash", "-c", "foo bar")
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		// verify that it called our overridden "foo" command
-		assert.Equal(t, "foo called with: bar", res)
+		must.EqOp(t, "foo called with: bar", res)
 	})
 
 	t.Run("Run", func(t *testing.T) {
@@ -39,8 +40,8 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		res, err := runner.Query("echo", "hello", "world")
-		assert.NoError(t, err)
-		assert.Equal(t, "hello world", res)
+		must.NoError(t, err)
+		must.EqOp(t, "hello world", res)
 	})
 
 	t.Run("QueryString", func(t *testing.T) {
@@ -52,9 +53,9 @@ func TestMockingRunner(t *testing.T) {
 			BinDir:     "",
 		}
 		_, err := runner.QueryString("touch first")
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
-		assert.False(t, os.IsNotExist(err))
+		must.False(t, os.IsNotExist(err))
 	})
 
 	t.Run("QueryWith", func(t *testing.T) {
@@ -63,7 +64,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			assert.NoError(t, err)
+			must.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -72,8 +73,8 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
-			assert.NoError(t, err)
-			assert.Equal(t, ostools.ScriptName("list-dir"), res)
+			must.NoError(t, err)
+			must.EqOp(t, ostools.ScriptName("list-dir"), res)
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -81,7 +82,7 @@ func TestMockingRunner(t *testing.T) {
 			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
-			assert.NoError(t, err)
+			must.NoError(t, err)
 			r := subshell.TestRunner{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
@@ -91,8 +92,8 @@ func TestMockingRunner(t *testing.T) {
 			ostools.CreateInputTool(toolPath)
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
-			assert.NoError(t, err)
-			assert.Contains(t, res, "You entered one and two")
+			must.NoError(t, err)
+			must.StrContains(t, res, "You entered one and two")
 		})
 	})
 
@@ -101,26 +102,26 @@ func TestMockingRunner(t *testing.T) {
 		t.Run("exit code 0", func(t *testing.T) {
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Debug:      false,
+				Verbose:    false,
 				HomeDir:    "",
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
-			assert.Equal(t, "hello", output)
-			assert.Equal(t, 0, exitCode)
-			assert.NoError(t, err)
+			must.EqOp(t, "hello", output)
+			must.EqOp(t, 0, exitCode)
+			must.NoError(t, err)
 		})
 		t.Run("exit code 1", func(t *testing.T) {
 			r := subshell.TestRunner{
 				BinDir:     "",
-				Debug:      false,
+				Verbose:    false,
 				HomeDir:    "",
 				WorkingDir: "",
 			}
 			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
-			assert.Equal(t, "hello", output)
-			assert.Equal(t, 1, exitCode)
-			assert.NoError(t, err)
+			must.EqOp(t, "hello", output)
+			must.EqOp(t, 1, exitCode)
+			must.NoError(t, err)
 		})
 	})
 }

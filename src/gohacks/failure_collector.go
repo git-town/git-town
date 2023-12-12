@@ -3,8 +3,8 @@ package gohacks
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/domain"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -19,75 +19,80 @@ type FailureCollector struct {
 	Err error `exhaustruct:"optional"`
 }
 
+// Bool provides the bool part of the given fallible function result
+// while registering the given error.
+func (self *FailureCollector) Bool(value bool, err error) bool {
+	self.Check(err)
+	return value
+}
+
+func (self *FailureCollector) Branches(value domain.Branches, err error) domain.Branches {
+	self.Check(err)
+	return value
+}
+
+func (self *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
+	self.Check(err)
+	return value
+}
+
 // Check registers the given error and indicates
 // whether this ErrorChecker contains an error now.
-func (ec *FailureCollector) Check(err error) bool {
-	if ec.Err == nil {
-		ec.Err = err
+func (self *FailureCollector) Check(err error) bool {
+	if self.Err == nil {
+		self.Err = err
 	}
-	return ec.Err != nil
+	return self.Err != nil
 }
 
 // Fail registers the error constructed using the given format arguments.
-func (ec *FailureCollector) Fail(format string, a ...any) {
-	ec.Check(fmt.Errorf(format, a...))
-}
-
-// Bool provides the bool part of the given fallible function result
-// while registering the given error.
-func (ec *FailureCollector) Bool(value bool, err error) bool {
-	ec.Check(err)
-	return value
-}
-
-func (ec *FailureCollector) Branches(value domain.Branches, err error) domain.Branches {
-	ec.Check(err)
-	return value
-}
-
-func (ec *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
-	ec.Check(err)
-	return value
+func (self *FailureCollector) Fail(format string, a ...any) {
+	self.Check(fmt.Errorf(format, a...))
 }
 
 // Hosting provides the config.Hosting part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Hosting(value config.Hosting, err error) config.Hosting {
-	ec.Check(err)
-	return value
-}
-
-// PullBranchStrategy provides the string part of the given fallible function result
-// while registering the given error.
-func (ec *FailureCollector) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
-	ec.Check(err)
+func (self *FailureCollector) Hosting(value config.Hosting, err error) config.Hosting {
+	self.Check(err)
 	return value
 }
 
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
-	ec.Check(err)
+func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
+	self.Check(err)
+	return value
+}
+
+func (self *FailureCollector) RepoStatus(value domain.RepoStatus, err error) domain.RepoStatus {
+	self.Check(err)
 	return value
 }
 
 // String provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) String(value string, err error) string {
-	ec.Check(err)
+func (self *FailureCollector) String(value string, err error) string {
+	self.Check(err)
 	return value
 }
 
 // Strings provides the []string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) Strings(value []string, err error) []string {
-	ec.Check(err)
+func (self *FailureCollector) Strings(value []string, err error) []string {
+	self.Check(err)
 	return value
 }
 
-// SyncStrategy provides the string part of the given fallible function result
+// SyncFeatureStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *FailureCollector) SyncStrategy(value config.SyncStrategy, err error) config.SyncStrategy {
-	ec.Check(err)
+func (self *FailureCollector) SyncFeatureStrategy(value config.SyncFeatureStrategy, err error) config.SyncFeatureStrategy {
+	self.Check(err)
+	return value
+}
+
+// SyncPerennialStrategy provides the string part of the given fallible function result
+// while registering the given error.
+func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
+	self.Check(err)
 	return value
 }

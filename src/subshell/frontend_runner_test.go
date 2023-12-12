@@ -3,9 +3,9 @@ package subshell_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/subshell"
+	"github.com/shoenig/test/must"
 )
 
 func TestFormat(t *testing.T) {
@@ -16,11 +16,12 @@ func TestFormat(t *testing.T) {
 		executable string
 		args       []string
 	}{
-		"[branch] git checkout foo": {omitBranch: false, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
-		"git checkout foo":          {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
+		"[branch] git checkout foo":        {omitBranch: false, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
+		"git checkout foo":                 {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"checkout", "foo"}},
+		`git config perennial-branches ""`: {omitBranch: true, branch: domain.NewLocalBranchName("branch"), executable: "git", args: []string{"config", "perennial-branches", ""}},
 	}
 	for want, give := range tests {
 		have := subshell.FormatCommand(give.branch, give.omitBranch, give.executable, give.args...)
-		assert.Equal(t, want, have)
+		must.EqOp(t, want, have)
 	}
 }

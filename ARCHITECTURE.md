@@ -1,27 +1,45 @@
 # Git Town architecture
 
-The `cmd` package defines all Git Town commands. Each Git Town command begins by
-inspecting the current state of the Git repository (which branches exist,
-whether you have open changes). It generates the list of steps and executes them
-via Git Town's `runvm`.
+### Design goals
 
-The `runstate` package provides facilities to gradually build and represent
-steps to execute.
+The major design goals of Git Town are:
 
-The `steps` package defines all available steps that Git Town can execute.
-Examples are steps to change to a different Git branch or to pull updates for
-the current branch.
+1. Execute a number of Git operations depending on conditions in the Git repo.
+   Some of these conditions might change at runtime.
+2. Allow the end user to resolve problems in the same terminal window and shell
+   environment that Git Town executes in.
+3. Reliably undo anything that Git Town has done upon request.
 
-The `runvm` package provides the virtual machine to execute a list of steps.
-When executing a step, the runvm.Execute function executes each step in the list
-of steps one by one. If a step fails (for example due to a merge conflict), the
-engine asks the step to create it's corresponding abort and continue steps, adds
-them to the respective StepLists, saves the entire runstate to disk, informs the
-user, and exits.
+### Execution framework
 
-The `persistence` package persists the runstate to disk.
+Git Town addresses requirements 1 and 2 via an
+[interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing)) that
+executes programs consisting of using Git-related opcodes. Each Git Town
+command:
 
-When running "git town continue", Git Town loads the runstate and executes the
-"continue" StepList in it. When running "git town abort", Git Town loads the
-runstate and executes the "abort" StepList in it. When running "git town undo",
-Git Town loads the runstate and executes the "undo" StepList in it.
+- inspects the state of the Git repo
+- assembles a program that implements the Git operations that Git Town needs to
+  perform
+  - this program consists of opcodes that the Git Town interpreter can execute
+- starts the Git Town interpreter engine to execute this program
+
+If there are issues that require the user to resolve in a terminal window, the
+interpreter:
+
+- persists the current interpreter state (runstate) to disk
+- exits the running Git Town process to lets the user use the terminal window
+  and shell environment that they used to call Git Town to resolve the problems
+- prints an explanation of the problem and what the user needs to do
+
+After resolving the problems and restarting Git Town, the interpreter recognizes
+and loads the persisted state from disk and resumes executing it.
+
+### Undo framework
+
+To undo a previously run Git Town command (requirement 3), Git Town:
+
+- compares snapshots of the affected Git repository before and after the command
+  ran
+- determines the changes that the Git Town command made to the repo
+- creates a program that reverses these changes
+- starts the interpreter to execute this program

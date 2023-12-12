@@ -3,12 +3,13 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/shoenig/test/must"
 )
 
 func TestGitConfig(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		original := config.GitConfig{
@@ -22,7 +23,7 @@ func TestGitConfig(t *testing.T) {
 		clone := original.Clone()
 		clone.Global[config.KeyOffline] = "0"
 		clone.Local[config.KeyMainBranch] = "dev"
-		assert.Equal(t, "1", original.Global[config.KeyOffline])
-		assert.Equal(t, "main", original.Local[config.KeyMainBranch])
+		must.EqOp(t, "1", original.Global[config.KeyOffline])
+		must.EqOp(t, "main", original.Local[config.KeyMainBranch])
 	})
 }

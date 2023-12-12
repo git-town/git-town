@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func IsGitRepo(t *testing.T, dir string) {
 	t.Helper()
 	FolderExists(t, dir)
 	entries, err := os.ReadDir(dir)
-	assert.Nilf(t, err, "cannot list directory %q", dir)
-	assert.Equal(t, ".git", entries[0].Name())
+	must.NoError(t, err)
+	must.EqOp(t, ".git", entries[0].Name())
 }

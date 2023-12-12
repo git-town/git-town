@@ -8,7 +8,7 @@ Feature: push-hook setting set to "true"
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And setting "push-hook" is "true"
+    And Git Town setting "push-hook" is "true"
 
   Scenario: result
     When I run "git-town sync"
@@ -24,7 +24,7 @@ Feature: push-hook setting set to "true"
       |         | git push                           |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |

@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/domain"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/format"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,25 +19,26 @@ const mainbranchHelp = `
 The main branch is the Git branch from which new feature branches are cut.`
 
 func mainbranchConfigCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: mainbranchDesc,
 		Long:  long(mainbranchDesc, mainbranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return configureMainBranch(args, readDebugFlag(cmd))
+			return executeConfigMainBranch(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func configureMainBranch(args []string, debug bool) error {
+func executeConfigMainBranch(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Debug:            debug,
+		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
+		PrintCommands:    true,
 		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
 	})
@@ -52,7 +54,7 @@ func configureMainBranch(args []string, debug bool) error {
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	cli.Println(cli.StringSetting(run.Config.MainBranch().String()))
+	io.Println(format.StringSetting(run.Config.MainBranch().String()))
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
