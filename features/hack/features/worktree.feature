@@ -1,4 +1,4 @@
-Feature: hacking while the main branch is checked out in another Git worktree
+Feature: hack a new branch while the main branch is checked out in another Git worktree
 
   Background:
     Given the current branch is a feature branch "existing"
