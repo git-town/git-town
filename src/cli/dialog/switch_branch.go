@@ -3,11 +3,11 @@ package dialog
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
-func NewBuilder(lineage config.Lineage) Builder {
+func NewBuilder(lineage configdomain.Lineage) Builder {
 	return Builder{
 		Entries: ModalSelectEntries{},
 		Lineage: lineage,
@@ -16,7 +16,7 @@ func NewBuilder(lineage config.Lineage) Builder {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
-func SwitchBranch(roots domain.LocalBranchNames, selected domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
+func SwitchBranch(roots domain.LocalBranchNames, selected domain.LocalBranchName, lineage configdomain.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	builder := NewBuilder(lineage)
 	err = builder.CreateEntries(roots, selected)
 	if err != nil {
@@ -35,7 +35,7 @@ func SwitchBranch(roots domain.LocalBranchNames, selected domain.LocalBranchName
 // Builder builds up the switch-branch dialog entries.
 type Builder struct {
 	Entries ModalSelectEntries
-	Lineage config.Lineage
+	Lineage configdomain.Lineage
 }
 
 // AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.

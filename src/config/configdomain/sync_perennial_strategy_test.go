@@ -1,9 +1,9 @@
-package config_test
+package configdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -12,12 +12,12 @@ func TestNewSyncPerennialStrategy(t *testing.T) {
 
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]config.SyncPerennialStrategy{
-			"merge":  config.SyncPerennialStrategyMerge,
-			"rebase": config.SyncPerennialStrategyRebase,
+		tests := map[string]configdomain.SyncPerennialStrategy{
+			"merge":  configdomain.SyncPerennialStrategyMerge,
+			"rebase": configdomain.SyncPerennialStrategyRebase,
 		}
 		for give, want := range tests {
-			have, err := config.NewSyncPerennialStrategy(give)
+			have, err := configdomain.NewSyncPerennialStrategy(give)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		}
@@ -26,22 +26,22 @@ func TestNewSyncPerennialStrategy(t *testing.T) {
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"merge", "Merge", "MERGE"} {
-			have, err := config.NewSyncPerennialStrategy(give)
+			have, err := configdomain.NewSyncPerennialStrategy(give)
 			must.NoError(t, err)
-			must.EqOp(t, config.SyncPerennialStrategyMerge, have)
+			must.EqOp(t, configdomain.SyncPerennialStrategyMerge, have)
 		}
 	})
 
 	t.Run("defaults to rebase", func(t *testing.T) {
 		t.Parallel()
-		have, err := config.NewSyncPerennialStrategy("")
+		have, err := configdomain.NewSyncPerennialStrategy("")
 		must.NoError(t, err)
-		must.EqOp(t, config.SyncPerennialStrategyRebase, have)
+		must.EqOp(t, configdomain.SyncPerennialStrategyRebase, have)
 	})
 
 	t.Run("invalid value", func(t *testing.T) {
 		t.Parallel()
-		_, err := config.NewSyncPerennialStrategy("zonk")
+		_, err := configdomain.NewSyncPerennialStrategy("zonk")
 		must.Error(t, err)
 	})
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/shoenig/test/must"
@@ -107,16 +107,16 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			must.EqOp(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
-			must.EqOp(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
+			must.EqOp(t, configdomain.HostingGitHub, fc.Hosting(configdomain.HostingGitHub, nil))
+			must.EqOp(t, configdomain.HostingGitLab, fc.Hosting(configdomain.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			fc.Hosting(config.HostingNone, nil)
+			fc.Hosting(configdomain.HostingNone, nil)
 			must.Nil(t, fc.Err)
-			fc.Hosting(config.HostingGitHub, errors.New("first"))
-			fc.Hosting(config.HostingGitHub, errors.New("second"))
+			fc.Hosting(configdomain.HostingGitHub, errors.New("first"))
+			fc.Hosting(configdomain.HostingGitHub, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
@@ -126,16 +126,16 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given SyncPerennialStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			must.EqOp(t, config.SyncPerennialStrategyMerge, fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, nil))
-			must.EqOp(t, config.SyncPerennialStrategyRebase, fc.SyncPerennialStrategy(config.SyncPerennialStrategyRebase, errors.New("")))
+			must.EqOp(t, configdomain.SyncPerennialStrategyMerge, fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, nil))
+			must.EqOp(t, configdomain.SyncPerennialStrategyRebase, fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, nil)
+			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, nil)
 			must.Nil(t, fc.Err)
-			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, errors.New("first"))
-			fc.SyncPerennialStrategy(config.SyncPerennialStrategyMerge, errors.New("second"))
+			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, errors.New("first"))
+			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
@@ -183,16 +183,16 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given SyncFeatureStrategy value", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			must.EqOp(t, config.SyncFeatureStrategyMerge, fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, nil))
-			must.EqOp(t, config.SyncFeatureStrategyRebase, fc.SyncFeatureStrategy(config.SyncFeatureStrategyRebase, errors.New("")))
+			must.EqOp(t, configdomain.SyncFeatureStrategyMerge, fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, nil))
+			must.EqOp(t, configdomain.SyncFeatureStrategyRebase, fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := gohacks.FailureCollector{}
-			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, nil)
+			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, nil)
 			must.Nil(t, fc.Err)
-			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, errors.New("first"))
-			fc.SyncFeatureStrategy(config.SyncFeatureStrategyMerge, errors.New("second"))
+			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, errors.New("first"))
+			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})

@@ -1,4 +1,4 @@
-package config
+package configdomain
 
 import (
 	"encoding/json"
@@ -10,19 +10,23 @@ import (
 
 // Key contains all the keys used in Git Town configuration.
 type Key struct {
-	Name string
+	name string
+}
+
+func NewKey(name string) Key {
+	return Key{name}
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.Name)
+	return json.Marshal(self.name)
 }
 
-func (self Key) String() string { return self.Name }
+func (self Key) String() string { return self.name }
 
 // UnmarshalJSON is used when de-serializing JSON into a Location.
 func (self *Key) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &self.Name)
+	return json.Unmarshal(b, &self.name)
 }
 
 var (
@@ -117,13 +121,13 @@ func NewAliasKey(aliasType Alias) Key {
 
 func NewParentKey(branch domain.LocalBranchName) Key {
 	return Key{
-		Name: fmt.Sprintf("git-town-branch.%s.parent", branch),
+		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}
 }
 
 func ParseKey(name string) *Key {
 	for _, configKey := range keys {
-		if configKey.Name == name {
+		if configKey.name == name {
 			return &configKey
 		}
 	}
@@ -140,7 +144,7 @@ func parseAliasKey(key string) *Key {
 	}
 	for _, alias := range Aliases() {
 		aliasKey := NewAliasKey(alias)
-		if key == aliasKey.Name {
+		if key == aliasKey.name {
 			return &aliasKey
 		}
 	}
@@ -152,6 +156,6 @@ func parseLineageKey(key string) *Key {
 		return nil
 	}
 	return &Key{
-		Name: key,
+		name: key,
 	}
 }

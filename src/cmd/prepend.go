@@ -5,7 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -87,16 +87,16 @@ type prependConfig struct {
 	hasOpenChanges            bool
 	remotes                   domain.Remotes
 	isOffline                 bool
-	lineage                   config.Lineage
+	lineage                   configdomain.Lineage
 	mainBranch                domain.LocalBranchName
 	newBranchParentCandidates domain.LocalBranchNames
 	previousBranch            domain.LocalBranchName
-	syncPerennialStrategy     config.SyncPerennialStrategy
+	syncPerennialStrategy     configdomain.SyncPerennialStrategy
 	pushHook                  bool
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
 	shouldNewBranchPush       bool
-	syncFeatureStrategy       config.SyncFeatureStrategy
+	syncFeatureStrategy       configdomain.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
 }
 

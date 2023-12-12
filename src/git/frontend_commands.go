@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -35,8 +35,8 @@ func (self *FrontendCommands) AbortRebase() error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (self *FrontendCommands) AddGitAlias(alias config.Alias) error {
-	aliasKey := config.NewAliasKey(alias)
+func (self *FrontendCommands) AddGitAlias(alias configdomain.Alias) error {
+	aliasKey := configdomain.NewAliasKey(alias)
 	return self.Run("git", "config", "--global", aliasKey.String(), "town "+alias.String())
 }
 
@@ -199,7 +199,7 @@ func (self *FrontendCommands) Rebase(target domain.BranchName) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (self *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
+func (self *FrontendCommands) RemoveGitAlias(alias configdomain.Alias) error {
 	return self.Run("git", "config", "--global", "--unset", "alias."+alias.String())
 }
 

@@ -1,30 +1,31 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
 // ConfigDiff describes the changes made to the local or global Git configuration.
 type ConfigDiff struct {
-	Added   []config.Key
-	Removed map[config.Key]string
-	Changed map[config.Key]domain.Change[string]
+	Added   []configdomain.Key
+	Removed map[configdomain.Key]string
+	Changed map[configdomain.Key]domain.Change[string]
 }
 
 func EmptyConfigDiff() ConfigDiff {
 	return ConfigDiff{
-		Added:   []config.Key{},
-		Removed: map[config.Key]string{},
-		Changed: map[config.Key]domain.Change[string]{},
+		Added:   []configdomain.Key{},
+		Removed: map[configdomain.Key]string{},
+		Changed: map[configdomain.Key]domain.Change[string]{},
 	}
 }
 
-func NewConfigDiff(before, after config.GitConfigCache) ConfigDiff {
+func NewConfigDiff(before, after gitconfig.GitConfigCache) ConfigDiff {
 	result := ConfigDiff{
-		Added:   []config.Key{},
-		Removed: map[config.Key]string{},
-		Changed: map[config.Key]domain.Change[string]{},
+		Added:   []configdomain.Key{},
+		Removed: map[configdomain.Key]string{},
+		Changed: map[configdomain.Key]domain.Change[string]{},
 	}
 	for key, beforeValue := range before {
 		afterValue, afterContains := after[key]

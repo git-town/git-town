@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -43,7 +43,7 @@ func syncCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
-		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
+		Long:    long(syncDesc, fmt.Sprintf(syncHelp, configdomain.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeSync(readAllFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
@@ -116,15 +116,15 @@ type syncConfig struct {
 	branchesToSync        domain.BranchInfos
 	hasOpenChanges        bool
 	isOffline             bool
-	lineage               config.Lineage
+	lineage               configdomain.Lineage
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
-	syncPerennialStrategy config.SyncPerennialStrategy
+	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              bool
 	remotes               domain.Remotes
 	shouldPushTags        bool
 	shouldSyncUpstream    bool
-	syncFeatureStrategy   config.SyncFeatureStrategy
+	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -262,15 +262,15 @@ type syncBranchProgramArgs struct {
 	branchInfos           domain.BranchInfos
 	branchTypes           domain.BranchTypes
 	isOffline             bool
-	lineage               config.Lineage
+	lineage               configdomain.Lineage
 	program               *program.Program
 	mainBranch            domain.LocalBranchName
-	syncPerennialStrategy config.SyncPerennialStrategy
+	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushBranch            bool
 	pushHook              bool
 	remotes               domain.Remotes
 	shouldSyncUpstream    bool
-	syncFeatureStrategy   config.SyncFeatureStrategy
+	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
@@ -332,7 +332,7 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 }
 
 // syncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
-func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy config.SyncFeatureStrategy) {
+func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
 	}
@@ -351,40 +351,40 @@ func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgram
 }
 
 // pullTrackingBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch domain.RemoteBranchName, strategy config.SyncFeatureStrategy) {
+func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch domain.RemoteBranchName, strategy configdomain.SyncFeatureStrategy) {
 	switch strategy {
-	case config.SyncFeatureStrategyMerge:
+	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.Merge{Branch: trackingBranch.BranchName()})
-	case config.SyncFeatureStrategyRebase:
+	case configdomain.SyncFeatureStrategyRebase:
 		list.Add(&opcode.RebaseBranch{Branch: trackingBranch.BranchName()})
 	}
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentOtherWorktree bool, strategy config.SyncFeatureStrategy) {
+func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentOtherWorktree bool, strategy configdomain.SyncFeatureStrategy) {
 	switch strategy {
-	case config.SyncFeatureStrategyMerge:
+	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
-	case config.SyncFeatureStrategyRebase:
+	case configdomain.SyncFeatureStrategyRebase:
 		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
 	}
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy config.SyncPerennialStrategy) {
+func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
 	switch strategy {
-	case config.SyncPerennialStrategyMerge:
+	case configdomain.SyncPerennialStrategyMerge:
 		list.Add(&opcode.Merge{Branch: otherBranch.BranchName()})
-	case config.SyncPerennialStrategyRebase:
+	case configdomain.SyncPerennialStrategyRebase:
 		list.Add(&opcode.RebaseBranch{Branch: otherBranch.BranchName()})
 	}
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy config.SyncFeatureStrategy, pushHook bool) {
+func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook bool) {
 	switch syncFeatureStrategy {
-	case config.SyncFeatureStrategyMerge:
+	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
-	case config.SyncFeatureStrategyRebase:
+	case configdomain.SyncFeatureStrategyRebase:
 		list.Add(&opcode.ForcePushCurrentBranch{NoPushHook: !pushHook})
 	}
 }

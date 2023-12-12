@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -21,7 +21,7 @@ type Connector struct {
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != config.HostingBitbucket) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != configdomain.HostingBitbucket) {
 		return nil, nil //nolint:nilnil
 	}
 	return &Connector{
@@ -37,7 +37,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 
 type NewConnectorArgs struct {
 	OriginURL       *giturl.Parts
-	HostingService  config.Hosting
+	HostingService  configdomain.Hosting
 	GetSHAForBranch common.SHAForBranchFunc
 }
 

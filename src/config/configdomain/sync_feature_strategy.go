@@ -1,4 +1,4 @@
-package config
+package configdomain
 
 import (
 	"fmt"
@@ -8,10 +8,10 @@ import (
 
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.
 type SyncFeatureStrategy struct {
-	name string
+	Name string
 }
 
-func (self SyncFeatureStrategy) String() string { return self.name }
+func (self SyncFeatureStrategy) String() string { return self.Name }
 
 var (
 	SyncFeatureStrategyMerge  = SyncFeatureStrategy{"merge"}  //nolint:gochecknoglobals

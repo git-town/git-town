@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -52,7 +52,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 type UnfinishedStateArgs struct {
 	Connector               hosting.Connector
 	Verboe                  bool
-	Lineage                 config.Lineage
+	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot

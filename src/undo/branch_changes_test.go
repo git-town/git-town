@@ -3,7 +3,7 @@ package undo_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/undo"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -20,7 +20,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames(),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("branch-1"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -97,7 +97,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames(),
 		}
-		lineage := config.Lineage{}
+		lineage := configdomain.Lineage{}
 		before := domain.BranchesSnapshot{
 			Branches: domain.BranchInfos{
 				domain.BranchInfo{
@@ -154,7 +154,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -251,7 +251,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -335,7 +335,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -421,7 +421,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -502,7 +502,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -598,7 +598,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -689,7 +689,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -802,7 +802,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -901,7 +901,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -1021,7 +1021,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -1117,7 +1117,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -1207,7 +1207,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -1293,7 +1293,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("perennial-branch"),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
@@ -1378,7 +1378,7 @@ func TestChanges(t *testing.T) {
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames(),
 		}
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			domain.NewLocalBranchName("feature-branch"): domain.NewLocalBranchName("main"),
 		}
 		before := domain.BranchesSnapshot{
