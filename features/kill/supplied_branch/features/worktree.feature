@@ -12,13 +12,14 @@ Feature: delete a branch that is checked out in another worktree
     And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | good   | git fetch --prune --tags |
     And it prints the error:
       """
-      this branch is checked out in another workspace
+      branch "dead" is checked out in another workspace
       """
     And the uncommitted file still exists
 
