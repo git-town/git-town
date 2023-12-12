@@ -1,6 +1,5 @@
 Feature: sync a branch whose parent is checked out in another worktree
 
-  @this
   Scenario:
     Given Git Town setting "sync-feature-strategy" is "rebase"
     And a feature branch "parent"
