@@ -15,9 +15,13 @@ func TestConfigfile(t *testing.T) {
 		t.Run("valid content", func(t *testing.T) {
 			t.Parallel()
 			give := `
+pushNewBranches = true
+shipDeleteRemoteBranch = false
+syncUpstream = true
+
 [branches]
 main = "main"
-perennials = [ "public", "staging" ]
+perennial = [ "public", "release" ]
 
 [code-hosting]
 platform = "github"
@@ -27,9 +31,6 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 
-pushNewBranches = true
-shipDeleteRemoteBranch = false
-syncUpstream = true
 `[1:]
 			have, err := configfile.Parse(give)
 			must.NoError(t, err)
