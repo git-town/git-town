@@ -557,14 +557,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
-		state.fixture.DevRepo.CreateFile(
-			".git-branches.toml",
-			content.Content,
-		)
-		return nil
-	})
-
 	suite.Step(`^the initial commits exist$`, func() error {
 		return state.compareTable(state.initialCommits)
 	})
@@ -645,6 +637,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 			return nil
 		}
+		return nil
+	})
+
+	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		state.fixture.DevRepo.CreateFile(
+			".git-branches.toml",
+			content.Content,
+		)
 		return nil
 	})
 

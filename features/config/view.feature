@@ -27,9 +27,14 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  @this
   Scenario: all configured in config file, no nested branches
-    Given the main branch is "main"
-    And the perennial branches are "qa" and "staging"
+    Given the config file:
+      """
+      [branches]
+      main = "main"
+      perennial = [ "qa", "staging" ]
+      """
     When I run "git-town config"
     Then it prints:
       """
