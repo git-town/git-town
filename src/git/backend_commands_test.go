@@ -679,7 +679,7 @@ func TestBackendCommands(t *testing.T) {
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
   main                         024df944 [origin/main] Commit message on main (#1234)
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
-+	branch-5                     55555555 (/path/to/other/workspace) [origin/branch-5] Commit message 5
++ branch-5                     55555555 (/path/to/other/workspace) [origin/branch-5] Commit message 5
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
