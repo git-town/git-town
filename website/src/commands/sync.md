@@ -1,7 +1,7 @@
 # git sync [--all]
 
-The _sync_ command ("synchronize this branch") gets the local Git workspace up
-to date with what happened in the rest of the repository.
+The _sync_ command ("synchronize this branch") updates the local Git workspace
+with what happened in the rest of the repository.
 
 - pulls new commits for the current branch from its tracking and ancestor
   branches
