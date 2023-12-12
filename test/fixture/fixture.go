@@ -116,7 +116,7 @@ func (self *Fixture) AddCoworkerRepo() {
 }
 
 func (self *Fixture) AddSecondWorktree(branch domain.LocalBranchName) {
-	workTreePath := filepath.Join(self.Dir, "dev2")
+	workTreePath := filepath.Join(self.Dir, "development_worktree")
 	self.DevRepo.AddWorktree(workTreePath, branch)
 	runner := subshell.TestRunner{
 		BinDir:     self.DevRepo.BinDir,
