@@ -2,6 +2,16 @@
 
 ## 11.1.0 (2023-12-12)
 
+#### New Features
+
+- Git Town now handles branches checked out in other worktrees correctly ([#2764](https://github.com/git-town/git-town/pull/2764))
+
+#### Bug Fixes
+
+- prevent error when the user pops the stash manually when resolving conflicts ([#2758](https://github.com/git-town/git-town/pull/2758))
+- retries failing commit, merge-proposal, create-branch, create-proposal, create-tracking-branch, push-branch operations ([#2756](https://github.com/git-town/git-town/pull/2756))
+- `git continue` ensures there are no untracked files ([#2754](https://github.com/git-town/git-town/pull/2754))
+- `git switch`
 
 
 ## 11.0.0 (2023-12-06)
