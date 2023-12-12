@@ -304,7 +304,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "ParentOtherWorktree": true
+        "ParentActiveInOtherWorktree": true
       },
       "type": "MergeParent"
     },
@@ -340,7 +340,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "ParentOtherWorktree": true
+        "ParentActiveInOtherWorktree": true
       },
       "type": "RebaseParent"
     },
