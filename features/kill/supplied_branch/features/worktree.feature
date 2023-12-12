@@ -24,14 +24,10 @@ Feature: delete a branch that is checked out in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | good   | git add -A                                  |
-      |        | git stash                                   |
-      |        | git branch dead {{ sha 'dead-end commit' }} |
-      |        | git push -u origin dead                     |
-      |        | git stash pop                               |
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
     And the current branch is still "good"
     And the uncommitted file still exists
-    And the initial commits exist
-    And the initial branches and lineage exist

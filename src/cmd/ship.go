@@ -172,6 +172,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	mainBranch := repo.Runner.Config.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
+	if branchToShip.SyncStatus == domain.SyncStatusCheckedOutInAnotherWorkspace {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchCheckedOutInOtherWorktree, branchNameToShip)
+	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncFeatureStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
 	if err != nil {
