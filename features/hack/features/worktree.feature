@@ -1,4 +1,4 @@
-Feature: hack a new branch while the main branch is checked out in another Git worktree
+Feature: hack a new branch while the main branch is active in another worktree
 
   Background:
     Given the current branch is a feature branch "existing"
@@ -7,7 +7,7 @@ Feature: hack a new branch while the main branch is checked out in another Git w
       | main     | origin   | origin main commit |
       |          | local    | local main commit  |
       | existing | local    | existing commit    |
-    And branch "main" is checked out in another worktree
+    And branch "main" is active in another worktree
     And an uncommitted file
     When I run "git-town hack new"
 

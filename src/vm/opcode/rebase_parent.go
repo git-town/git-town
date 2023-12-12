@@ -7,8 +7,8 @@ import (
 
 // RebaseParent rebases the given branch against the branch that is its parent at runtime.
 type RebaseParent struct {
-	CurrentBranch                        domain.LocalBranchName
-	ParentIsCheckedOutAtAnotherWorkspace bool
+	CurrentBranch       domain.LocalBranchName
+	ParentOtherWorktree bool
 	undeclaredOpcodeMethods
 }
 
@@ -30,7 +30,7 @@ func (self *RebaseParent) Run(args shared.RunArgs) error {
 		return nil
 	}
 	var branchToRebase domain.BranchName
-	if self.ParentIsCheckedOutAtAnotherWorkspace {
+	if self.ParentOtherWorktree {
 		branchToRebase = parent.TrackingBranch().BranchName()
 	} else {
 		branchToRebase = parent.BranchName()

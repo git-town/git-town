@@ -604,14 +604,14 @@ func TestBackendCommands(t *testing.T) {
 					})
 				})
 
-				t.Run("branch is checked out at another worktree", func(t *testing.T) {
+				t.Run("branch is active in another worktree", func(t *testing.T) {
 					t.Parallel()
 					give := `+ branch-1                      3d0c4c13 (/path/to/other/workspace) [origin/branch-1] commit message`
 					want := domain.BranchInfos{
 						domain.BranchInfo{
 							LocalName:  domain.NewLocalBranchName("branch-1"),
 							LocalSHA:   domain.NewSHA("3d0c4c13"),
-							SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
+							SyncStatus: domain.SyncStatusOtherWorktree,
 							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 							RemoteSHA:  domain.EmptySHA(),
 						},
@@ -726,7 +726,7 @@ func TestBackendCommands(t *testing.T) {
 				domain.BranchInfo{
 					LocalName:  domain.NewLocalBranchName("branch-5"),
 					LocalSHA:   domain.NewSHA("55555555"),
-					SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
+					SyncStatus: domain.SyncStatusOtherWorktree,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-5"),
 					RemoteSHA:  domain.NewSHA("55555555"),
 				},

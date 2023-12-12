@@ -1,4 +1,4 @@
-Feature: rename the current branch to a branch that is checked out in another worktree
+Feature: rename the current branch to a branch that is active in another worktree
 
   Background:
     Given the feature branches "old" and "other"
@@ -7,7 +7,7 @@ Feature: rename the current branch to a branch that is checked out in another wo
       | main   | local, origin | main commit  |
       | old    | local, origin | old commit   |
       | other  | local         | other commit |
-    And branch "other" is checked out in another worktree
+    And branch "other" is active in another worktree
     And the current branch is "old"
     When I run "git-town rename-branch other"
 

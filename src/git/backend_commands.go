@@ -215,7 +215,7 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.Local
 			result = append(result, domain.BranchInfo{
 				LocalName:  domain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
-				SyncStatus: domain.SyncStatusCheckedOutInAnotherWorkspace,
+				SyncStatus: domain.SyncStatusOtherWorktree,
 				RemoteName: trackingBranchName,
 				RemoteSHA:  domain.EmptySHA(),
 			})

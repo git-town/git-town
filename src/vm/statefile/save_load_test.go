@@ -96,8 +96,8 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcode.Merge{Branch: domain.NewBranchName("branch")},
 				&opcode.MergeParent{
-					CurrentBranch:                        domain.NewLocalBranchName("branch"),
-					ParentIsCheckedOutAtAnotherWorkspace: true,
+					CurrentBranch:       domain.NewLocalBranchName("branch"),
+					ParentOtherWorktree: true,
 				},
 				&opcode.PreserveCheckoutHistory{
 					PreviousBranchCandidates: domain.NewLocalBranchNames("previous"),
@@ -110,8 +110,8 @@ func TestLoadSave(t *testing.T) {
 				&opcode.PushTags{},
 				&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
 				&opcode.RebaseParent{
-					CurrentBranch:                        domain.NewLocalBranchName("branch"),
-					ParentIsCheckedOutAtAnotherWorkspace: true,
+					CurrentBranch:       domain.NewLocalBranchName("branch"),
+					ParentOtherWorktree: true,
 				},
 				&opcode.RemoveFromPerennialBranches{
 					Branch: domain.NewLocalBranchName("branch"),
@@ -304,7 +304,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "ParentIsCheckedOutAtAnotherWorkspace": true
+        "ParentOtherWorktree": true
       },
       "type": "MergeParent"
     },
@@ -340,7 +340,7 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "CurrentBranch": "branch",
-        "ParentIsCheckedOutAtAnotherWorkspace": true
+        "ParentOtherWorktree": true
       },
       "type": "RebaseParent"
     },

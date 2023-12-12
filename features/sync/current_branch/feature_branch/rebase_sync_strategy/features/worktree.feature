@@ -1,4 +1,4 @@
-Feature: sync a branch whose parent is checked out in another worktree
+Feature: sync a branch whose parent is active in another worktree
 
   Scenario:
     Given Git Town setting "sync-feature-strategy" is "rebase"
@@ -12,7 +12,7 @@ Feature: sync a branch whose parent is checked out in another worktree
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And branch "parent" is checked out in another worktree
+    And branch "parent" is active in another worktree
     And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands

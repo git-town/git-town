@@ -1,4 +1,4 @@
-Feature: delete a branch that is checked out in another worktree
+Feature: delete a branch that is active in another worktree
 
   Background:
     Given the feature branches "good" and "dead"
@@ -8,7 +8,7 @@ Feature: delete a branch that is checked out in another worktree
       | dead   | local, origin | dead-end commit    | file             |
       | good   | local, origin | good commit        | file             |
     And the current branch is "good"
-    And branch "dead" is checked out in another worktree
+    And branch "dead" is active in another worktree
     And an uncommitted file
     When I run "git-town kill dead"
 
@@ -18,7 +18,7 @@ Feature: delete a branch that is checked out in another worktree
       | good   | git fetch --prune --tags |
     And it prints the error:
       """
-      branch "dead" is checked out in another worktree
+      branch "dead" is active in another worktree
       """
     And the uncommitted file still exists
 
