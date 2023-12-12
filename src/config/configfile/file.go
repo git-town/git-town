@@ -11,21 +11,27 @@ import (
 )
 
 type Config struct {
-	Branches struct {
-		Main       string
-		Perennials []string
-	}
-	CodeHosting struct {
-		platform       string
-		originHostname string
-	}
-	SyncStrategy struct {
-		FeatureBranches   configdomain.SyncFeatureStrategy
-		PerennialBranches configdomain.SyncPerennialStrategy
-	}
+	Branches
+	CodeHosting
+	SyncStrategy
 	PushNewbranches        bool
 	ShipDeleteRemoteBranch bool
 	SyncUpstream           bool
+}
+
+type Branches struct {
+	Main       string
+	Perennials []string
+}
+
+type CodeHosting struct {
+	Platform       string
+	OriginHostname string
+}
+
+type SyncStrategy struct {
+	FeatureBranches   configdomain.SyncFeatureStrategy
+	PerennialBranches configdomain.SyncPerennialStrategy
 }
 
 func load() (*Config, error) {
@@ -38,13 +44,12 @@ func load() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	return parse(string(bytes))
+	return Parse(string(bytes))
 }
 
-func parse(text string) (*Config, error) {
+func Parse(text string) (*Config, error) {
 	var result Config
-	metadata, err := toml.Decode(text, &result)
-	fmt.Println("1111111111111111", metadata)
+	_, err := toml.Decode(text, &result)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
 	}
