@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/BurntSushi/toml"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -31,6 +32,14 @@ type CodeHosting struct {
 type SyncStrategy struct {
 	FeatureBranches   string `toml:"feature-branches"`
 	PerennialBranches string `toml:"perennial-branches"`
+}
+
+func (self SyncStrategy) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
+	return configdomain.ToSyncFeatureStrategy(self.FeatureBranches)
+}
+
+func (self SyncStrategy) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
+	return configdomain.NewSyncPerennialStrategy(self.PerennialBranches)
 }
 
 func load() (*ConfigFile, error) {

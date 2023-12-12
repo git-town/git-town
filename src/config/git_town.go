@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
@@ -21,6 +22,7 @@ import (
 // stored in the local and global Git configuration.
 type GitTown struct {
 	gitconfig.Git
+	configfile.ConfigFile
 	originURLCache OriginURLCache
 }
 
