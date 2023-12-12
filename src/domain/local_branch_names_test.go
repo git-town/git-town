@@ -54,7 +54,7 @@ func TestLocalBranchNames(t *testing.T) {
 	t.Run("RemoveMarkers", func(t *testing.T) {
 		t.Parallel()
 		branches := domain.NewLocalBranchNames("one", "+ two")
-		have := branches.RemoveMarkers()
+		have := branches.RemoveWorkspaceMarkers()
 		want := domain.NewLocalBranchNames("one", "two")
 		must.Eq(t, want, have)
 	})
