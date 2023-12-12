@@ -2,8 +2,8 @@ package gitconfig
 
 // GitConfig is an in-memory representation of the total Git configuration, global and local.
 type GitConfig struct {
-	Global GitConfigCache
-	Local  GitConfigCache
+	Global Cache
+	Local  Cache
 }
 
 func LoadGitConfig(runner Runner) GitConfig {

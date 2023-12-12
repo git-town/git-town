@@ -8,14 +8,14 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestGitConfigCache(t *testing.T) {
+func TestCache(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		alpha := configdomain.NewKey("alpha")
 		beta := configdomain.NewKey("beta")
-		original := gitconfig.GitConfigCache{
+		original := gitconfig.Cache{
 			alpha: "A",
 			beta:  "B",
 		}
@@ -28,7 +28,7 @@ func TestGitConfigCache(t *testing.T) {
 
 	t.Run("KeysMatching", func(t *testing.T) {
 		t.Parallel()
-		cache := gitconfig.GitConfigCache{
+		cache := gitconfig.Cache{
 			configdomain.NewKey("key1"):  "A",
 			configdomain.NewKey("key2"):  "B",
 			configdomain.NewKey("other"): "other",

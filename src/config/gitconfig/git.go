@@ -22,7 +22,7 @@ func NewGit(gitConfig GitConfig, runner Runner) Git {
 	}
 }
 
-func (self Git) GlobalConfigClone() GitConfigCache {
+func (self Git) GlobalConfigClone() Cache {
 	return self.Config.Global.Clone()
 }
 
@@ -30,7 +30,7 @@ func (self Git) GlobalConfigValue(key configdomain.Key) string {
 	return self.Config.Global[key]
 }
 
-func (self Git) LocalConfigClone() GitConfigCache {
+func (self Git) LocalConfigClone() Cache {
 	return self.Config.Local.Clone()
 }
 
