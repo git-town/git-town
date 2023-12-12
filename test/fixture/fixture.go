@@ -115,27 +115,6 @@ func (self *Fixture) AddCoworkerRepo() {
 	self.CoworkerRepo.Verbose = self.DevRepo.Verbose
 }
 
-// AddSubmodule adds a submodule repository.
-func (self *Fixture) AddSubmoduleRepo() {
-	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
-	}
-	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
-	submoduleRepo.MustRunMany([][]string{
-		{"git", "config", "--global", "protocol.file.allow", "always"},
-		{"git", "commit", "--allow-empty", "-m", "initial commit"},
-	})
-	self.SubmoduleRepo = &submoduleRepo
-}
-
-// AddUpstream adds an upstream repository.
-func (self *Fixture) AddUpstream() {
-	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, domain.UpstreamRemote.String()))
-	self.UpstreamRepo = &repo
-	self.DevRepo.AddRemote(domain.UpstreamRemote, self.UpstreamRepo.WorkingDir)
-}
-
 func (self *Fixture) AddSecondWorktree(branch domain.LocalBranchName) {
 	workTreePath := filepath.Join(self.Dir, "dev2")
 	self.DevRepo.AddWorktree(workTreePath, branch)
@@ -158,6 +137,27 @@ func (self *Fixture) AddSecondWorktree(branch domain.LocalBranchName) {
 		},
 		Backend: backendCommands,
 	}
+}
+
+// AddSubmodule adds a submodule repository.
+func (self *Fixture) AddSubmoduleRepo() {
+	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
+	if err != nil {
+		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
+	}
+	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
+	submoduleRepo.MustRunMany([][]string{
+		{"git", "config", "--global", "protocol.file.allow", "always"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
+	})
+	self.SubmoduleRepo = &submoduleRepo
+}
+
+// AddUpstream adds an upstream repository.
+func (self *Fixture) AddUpstream() {
+	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, domain.UpstreamRemote.String()))
+	self.UpstreamRepo = &repo
+	self.DevRepo.AddRemote(domain.UpstreamRemote, self.UpstreamRepo.WorkingDir)
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
