@@ -439,7 +439,7 @@ func (self *GitTown) SyncFeatureStrategy() (SyncFeatureStrategy, error) {
 		return SyncFeatureStrategyMerge, err
 	}
 	text := self.LocalOrGlobalConfigValue(KeySyncFeatureStrategy)
-	return ToSyncFeatureStrategy(text)
+	return NewSyncFeatureStrategy(text)
 }
 
 func (self *GitTown) SyncFeatureStrategyGlobal() (SyncFeatureStrategy, error) {
@@ -448,7 +448,7 @@ func (self *GitTown) SyncFeatureStrategyGlobal() (SyncFeatureStrategy, error) {
 		return SyncFeatureStrategyMerge, err
 	}
 	setting := self.GlobalConfigValue(KeySyncFeatureStrategy)
-	return ToSyncFeatureStrategy(setting)
+	return NewSyncFeatureStrategy(setting)
 }
 
 // SyncPerennialStrategy provides the currently configured sync-perennial strategy.

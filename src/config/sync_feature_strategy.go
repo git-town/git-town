@@ -18,7 +18,7 @@ var (
 	SyncFeatureStrategyRebase = SyncFeatureStrategy{"rebase"} //nolint:gochecknoglobals
 )
 
-func ToSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
+func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 	switch text {
 	case "merge", "":
 		return SyncFeatureStrategyMerge, nil
