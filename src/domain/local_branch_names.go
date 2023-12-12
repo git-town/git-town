@@ -26,6 +26,7 @@ func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, fe
 	return
 }
 
+// Hoist moves the given needle to the front of the list.
 func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
 	foundNeedle := false
