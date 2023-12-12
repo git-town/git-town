@@ -32,7 +32,7 @@ perennial-branches = "rebase"
 `[1:]
 			have, err := configfile.Parse(give)
 			must.NoError(t, err)
-			want := configfile.Config{
+			want := configfile.ConfigFile{
 				Branches: configfile.Branches{
 					Main:       "main",
 					Perennials: []string{"public", "release"},

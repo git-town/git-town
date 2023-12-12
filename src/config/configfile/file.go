@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-type Config struct {
+type ConfigFile struct {
 	Branches               Branches
 	CodeHosting            CodeHosting  `toml:"code-hosting"`
 	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
@@ -33,7 +33,7 @@ type SyncStrategy struct {
 	PerennialBranches string `toml:"perennial-branches"`
 }
 
-func load() (*Config, error) {
+func load() (*ConfigFile, error) {
 	file, err := os.Open(".git-branches.toml")
 	defer file.Close()
 	if err != nil {
@@ -46,8 +46,8 @@ func load() (*Config, error) {
 	return Parse(string(bytes))
 }
 
-func Parse(text string) (*Config, error) {
-	var result Config
+func Parse(text string) (*ConfigFile, error) {
+	var result ConfigFile
 	_, err := toml.Decode(text, &result)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
