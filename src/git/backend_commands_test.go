@@ -606,7 +606,7 @@ func TestBackendCommands(t *testing.T) {
 
 				t.Run("branch is active in another worktree", func(t *testing.T) {
 					t.Parallel()
-					give := `+ branch-1                      3d0c4c13 (/path/to/other/workspace) [origin/branch-1] commit message`
+					give := `+ branch-1    3d0c4c13 (/path/to/other/workspace) [origin/branch-1] commit message`
 					want := domain.BranchInfos{
 						domain.BranchInfo{
 							LocalName:  domain.NewLocalBranchName("branch-1"),
