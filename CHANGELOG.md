@@ -1,5 +1,9 @@
 # Git Town Changelog
 
+## 11.1.0 (2023-12-12)
+
+
+
 ## 11.0.0 (2023-12-06)
 
 Git Town 11 continues the effort to make the Git Town user experience more consistent and intuitive.
