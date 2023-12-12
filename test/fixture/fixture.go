@@ -167,6 +167,7 @@ func (self *Fixture) Branches() datatable.DataTable {
 	mainBranch := self.DevRepo.Config.MainBranch()
 	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
+	localBranches = localBranches.RemoveMarkers().Hoist(self.DevRepo.Config.MainBranch())
 	initialBranch := domain.NewLocalBranchName("initial")
 	slice.Remove(&localBranches, initialBranch)
 	localBranchesJoined := localBranches.Join(", ")

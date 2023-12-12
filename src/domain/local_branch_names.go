@@ -26,6 +26,22 @@ func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, fe
 	return
 }
 
+func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self))
+	foundNeedle := false
+	for _, branch := range self {
+		if branch == needle {
+			foundNeedle = true
+		} else {
+			result = append(result, branch)
+		}
+	}
+	if foundNeedle {
+		result = append(LocalBranchNames{needle}, result...)
+	}
+	return result
+}
+
 // Join provides the names of all branches in this collection connected by the given separator.
 func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
@@ -36,6 +52,18 @@ func (self LocalBranchNames) Remove(toRemove LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self)-1)
 	for _, branch := range self {
 		if branch != toRemove {
+			result = append(result, branch)
+		}
+	}
+	return result
+}
+
+func (self LocalBranchNames) RemoveMarkers() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self)-1)
+	for _, branch := range self {
+		if strings.HasPrefix(branch.String(), "+ ") {
+			result = append(result, branch[2:])
+		} else {
 			result = append(result, branch)
 		}
 	}

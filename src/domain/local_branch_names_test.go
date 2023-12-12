@@ -18,6 +18,14 @@ func TestLocalBranchNames(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
+	t.Run("Hoist", func(t *testing.T) {
+		t.Parallel()
+		branches := domain.NewLocalBranchNames("one", "two", "three")
+		have := branches.Hoist(domain.NewLocalBranchName("two"))
+		want := domain.NewLocalBranchNames("two", "one", "three")
+		must.Eq(t, want, have)
+	})
+
 	t.Run("NewLocalBranchNames and Strings", func(t *testing.T) {
 		t.Parallel()
 		branches := domain.NewLocalBranchNames("one", "two", "three")
@@ -41,6 +49,14 @@ func TestLocalBranchNames(t *testing.T) {
 			want := domain.NewLocalBranchNames("one", "two")
 			must.Eq(t, want, have)
 		})
+	})
+
+	t.Run("RemoveMarkers", func(t *testing.T) {
+		t.Parallel()
+		branches := domain.NewLocalBranchNames("one", "+ two")
+		have := branches.RemoveMarkers()
+		want := domain.NewLocalBranchNames("one", "two")
+		must.Eq(t, want, have)
 	})
 
 	t.Run("TrackingBranch", func(t *testing.T) {
