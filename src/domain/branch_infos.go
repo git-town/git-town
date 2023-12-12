@@ -11,11 +11,6 @@ import (
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchInfos []BranchInfo
 
-func (self BranchInfos) Clone() BranchInfos {
-	// appending to a slice with zero capacity (zero value) allocates only once
-	return append(self[:0:0], self...)
-}
-
 // FindByLocalName provides the branch with the given name if one exists.
 func (self BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
 	for bi, branch := range self {

@@ -69,7 +69,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	branches := domain.Branches{
-		All:     branchesSnapshot.Branches.Clone(),
+		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
 	}

@@ -266,7 +266,7 @@ type syncBranchProgramArgs struct {
 	syncFeatureStrategy   config.SyncFeatureStrategy
 }
 
-// syncDeletedBranchProgram provides a program that syncs a branch that was deleted at origin.
+// syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
 func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
 	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
 		syncDeletedFeatureBranchProgram(list, branch, args)
