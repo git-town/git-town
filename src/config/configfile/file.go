@@ -35,7 +35,7 @@ type SyncStrategy struct {
 }
 
 func (self SyncStrategy) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
-	return configdomain.ToSyncFeatureStrategy(self.FeatureBranches)
+	return configdomain.NewSyncFeatureStrategy(self.FeatureBranches)
 }
 
 func (self SyncStrategy) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
