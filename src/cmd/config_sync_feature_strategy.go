@@ -66,7 +66,7 @@ func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
 }
 
 func setSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
-	syncFeatureStrategy, err := config.ToSyncFeatureStrategy(value)
+	syncFeatureStrategy, err := config.NewSyncFeatureStrategy(value)
 	if err != nil {
 		return err
 	}
