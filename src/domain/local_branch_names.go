@@ -61,12 +61,12 @@ func (self LocalBranchNames) Remove(toRemove LocalBranchName) LocalBranchNames {
 
 // RemoveWorkspaceMarkers removes the workspace markers from the branch names in this list.
 func (self LocalBranchNames) RemoveWorkspaceMarkers() LocalBranchNames {
-	result := make(LocalBranchNames, 0, len(self)-1)
-	for _, branch := range self {
+	result := make(LocalBranchNames, len(self))
+	for b, branch := range self {
 		if strings.HasPrefix(branch.String(), "+ ") {
-			result = append(result, branch[2:])
+			result[b] = branch[2:]
 		} else {
-			result = append(result, branch)
+			result[b] = branch
 		}
 	}
 	return result
