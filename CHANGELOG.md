@@ -11,7 +11,7 @@
 - prevent error when the user pops the stash manually when resolving conflicts ([#2758](https://github.com/git-town/git-town/pull/2758))
 - retries failing commit, merge-proposal, create-branch, create-proposal, create-tracking-branch, push-branch operations ([#2756](https://github.com/git-town/git-town/pull/2756))
 - `git continue` ensures there are no untracked files ([#2754](https://github.com/git-town/git-town/pull/2754))
-- `git switch`
+- `git switch` now allows switching to all branches ([#2752](https://github.com/git-town/git-town/pull/2752))
 
 
 ## 11.0.0 (2023-12-06)
