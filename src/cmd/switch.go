@@ -8,6 +8,8 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
 )
@@ -43,29 +45,15 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
-	if err != nil {
-		return err
-	}
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 false,
-		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
+	config, exit, err := determineSwitchConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.SwitchBranch(branches.Types.MainAndPerennials(), branches.Initial, lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(config.branches.Types.MainAndPerennials(), config.branches.Initial, config.lineage)
 	if err != nil {
 		return err
 	}
-	if validChoice && newBranch != branches.Initial {
+	if validChoice && newBranch != config.branches.Initial {
 		fmt.Println()
 		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
@@ -78,4 +66,31 @@ func executeSwitch(verbose bool) error {
 		}
 	}
 	return nil
+}
+
+type switchConfig struct {
+	branches domain.Branches
+	lineage  config.Lineage
+}
+
+func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
+	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.Config.PushHook()
+	if err != nil {
+		return nil, false, err
+	}
+	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 false,
+		HandleUnfinishedState: true,
+		Lineage:               lineage,
+		PushHook:              pushHook,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	return &switchConfig{
+		branches: branches,
+		lineage:  lineage,
+	}, exit, err
 }
