@@ -189,6 +189,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^branch "([^"]+)" is active in another worktree`, func(branch string) error {
+		state.fixture.AddSecondWorktree(domain.NewLocalBranchName(branch))
+		return nil
+	})
+
 	suite.Step(`^display "([^"]+)"$`, func(command string) error {
 		parts := strings.Split(command, " ")
 		output, err := state.fixture.DevRepo.BackendRunner.Query(parts[0], parts[1:]...)
@@ -245,35 +250,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
 	})
 
-	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
-	})
-
-	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
-		return err
-	})
-
-	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
-		if newValue == "" {
-			return nil
-		}
-		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
-	})
-
-	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
-		if newValue == "" {
-			return nil
-		}
-		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
-	})
-
 	suite.Step(`^Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue(*configKey)
@@ -283,13 +259,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
+	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
+		configKey := config.ParseKey("git-town." + name)
+		err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
+		return err
+	})
+
+	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
+		configKey := config.ParseKey("git-town." + name)
+		newValue := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
+		if newValue == "" {
+			return nil
 		}
-		return nil
+		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
@@ -505,6 +487,29 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
+		configKey := config.ParseKey("git-town." + name)
+		newValue := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
+		if newValue == "" {
+			return nil
+		}
+		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
+	})
+
+	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
+		configKey := config.ParseKey("git-town." + name)
+		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
+	})
+
+	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
+		configKey := config.ParseKey("git-town." + name)
+		have := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
+		if have != want {
+			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(domain.OriginRemote)
 		state.initialRemoteBranches = domain.LocalBranchNames{}
@@ -557,14 +562,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the initial commits exist$`, func() error {
-		return state.compareTable(state.initialCommits)
-	})
-
-	suite.Step(`^these commits exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return state.compareTable(table)
-	})
-
 	suite.Step(`^offline mode is disabled$`, func() error {
 		isOffline, err := state.fixture.DevRepo.Config.IsOffline()
 		if err != nil {
@@ -594,11 +591,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
 		slice.Remove(&state.initialRemoteBranches, domain.NewLocalBranchName(branch))
-		return nil
-	})
-
-	suite.Step(`^branch "([^"]+)" is active in another worktree`, func(branch string) error {
-		state.fixture.AddSecondWorktree(domain.NewLocalBranchName(branch))
 		return nil
 	})
 
@@ -782,6 +774,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the initial commits exist$`, func() error {
+		return state.compareTable(state.initialCommits)
+	})
+
 	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2} {
@@ -905,6 +901,40 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^there are still no perennial branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.PerennialBranches()
+		if len(branches) > 0 {
+			return fmt.Errorf("expected no perennial branches, got %q", branches)
+		}
+		return nil
+	})
+
+	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		fileTable := state.fixture.DevRepo.FilesInBranches(domain.NewLocalBranchName("main"))
+		diff, errorCount := fileTable.EqualGherkin(table)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching files found, see diff above")
+		}
+		return nil
+	})
+
+	suite.Step(`^these commits exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		return state.compareTable(table)
+	})
+
+	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		tagTable := state.fixture.TagTable()
+		diff, errorCount := tagTable.EqualGherkin(table)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching tags found, see diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.fixture.CreateTags(table)
 		return nil
@@ -934,36 +964,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 		if hasFile != "" {
 			return errors.New(hasFile)
-		}
-		return nil
-	})
-
-	suite.Step(`^there are still no perennial branches$`, func() error {
-		branches := state.fixture.DevRepo.Config.PerennialBranches()
-		if len(branches) > 0 {
-			return fmt.Errorf("expected no perennial branches, got %q", branches)
-		}
-		return nil
-	})
-
-	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable := state.fixture.DevRepo.FilesInBranches(domain.NewLocalBranchName("main"))
-		diff, errorCount := fileTable.EqualGherkin(table)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching files found, see diff above")
-		}
-		return nil
-	})
-
-	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		tagTable := state.fixture.TagTable()
-		diff, errorCount := tagTable.EqualGherkin(table)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching tags found, see diff above")
 		}
 		return nil
 	})
