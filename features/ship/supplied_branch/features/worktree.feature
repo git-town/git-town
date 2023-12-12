@@ -8,7 +8,7 @@ Feature: ship a feature branch that is checked out in another worktree
     And the current branch is "other"
     And branch "feature" is checked out in another worktree
     And an uncommitted file
-    When I run "git-town ship feature" and enter "feature done" for the commit message
+    When I run "git-town ship feature"
 
   Scenario: result
     Then it runs the commands
