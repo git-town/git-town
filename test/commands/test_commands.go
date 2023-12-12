@@ -36,6 +36,10 @@ func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
+func (self *TestCommands) AddWorktree(path string, branch domain.LocalBranchName) {
+	self.MustRun("git", "worktree", "add", path, branch.String())
+}
+
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
 	asserts.NoError(self.BackendCommands.CheckoutBranch(branch))
@@ -64,6 +68,9 @@ func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranch
 	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
+		if strings.HasPrefix(branch.String(), "+ ") {
+			continue
+		}
 		commits := self.CommitsInBranch(branch, fields)
 		result = append(result, commits...)
 	}
