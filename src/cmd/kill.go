@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -83,7 +83,7 @@ type killConfig struct {
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
 	isOffline      bool
-	lineage        config.Lineage
+	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	noPushHook     bool
 	previousBranch domain.LocalBranchName
@@ -211,7 +211,7 @@ func removeBranchFromLineage(args removeBranchFromLineageArgs) {
 
 type removeBranchFromLineageArgs struct {
 	branch  domain.LocalBranchName
-	lineage config.Lineage
+	lineage configdomain.Lineage
 	program *program.Program
 	parent  domain.LocalBranchName
 }

@@ -3,7 +3,7 @@ package bitbucket_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
@@ -20,7 +20,7 @@ func TestBitbucketConnector(t *testing.T) {
 		t.Run("Bitbucket SaaS", func(t *testing.T) {
 			t.Parallel()
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingService:  config.HostingNone,
+				HostingService:  configdomain.HostingNone,
 				OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
 				GetSHAForBranch: emptySHAForBranch,
 			})
@@ -37,7 +37,7 @@ func TestBitbucketConnector(t *testing.T) {
 		t.Run("hosted service type provided manually", func(t *testing.T) {
 			t.Parallel()
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingService:  config.HostingBitbucket,
+				HostingService:  configdomain.HostingBitbucket,
 				OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 				GetSHAForBranch: emptySHAForBranch,
 			})
@@ -54,7 +54,7 @@ func TestBitbucketConnector(t *testing.T) {
 		t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 			t.Parallel()
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingService:  config.HostingNone,
+				HostingService:  configdomain.HostingNone,
 				OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
 				GetSHAForBranch: emptySHAForBranch,
 			})
@@ -66,7 +66,7 @@ func TestBitbucketConnector(t *testing.T) {
 			t.Parallel()
 			var originURL *giturl.Parts
 			have, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-				HostingService:  config.HostingNone,
+				HostingService:  configdomain.HostingNone,
 				OriginURL:       originURL,
 				GetSHAForBranch: emptySHAForBranch,
 			})
@@ -78,7 +78,7 @@ func TestBitbucketConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		connector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-			HostingService:  config.HostingNone,
+			HostingService:  configdomain.HostingNone,
 			OriginURL:       giturl.Parse("username@bitbucket.org:org/repo.git"),
 			GetSHAForBranch: emptySHAForBranch,
 		})

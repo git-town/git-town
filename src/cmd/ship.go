@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -57,7 +57,7 @@ func shipCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   shipDesc,
-		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.KeyGithubToken, config.KeyShipDeleteRemoteBranch)),
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteRemoteBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readVerboseFlag(cmd))
 		},
@@ -125,15 +125,15 @@ type shipConfig struct {
 	remotes                  domain.Remotes
 	isShippingInitialBranch  bool
 	isOffline                bool
-	lineage                  config.Lineage
+	lineage                  configdomain.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
 	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
-	syncPerennialStrategy    config.SyncPerennialStrategy
+	syncPerennialStrategy    configdomain.SyncPerennialStrategy
 	pushHook                 bool
 	shouldSyncUpstream       bool
-	syncFeatureStrategy      config.SyncFeatureStrategy
+	syncFeatureStrategy      configdomain.SyncFeatureStrategy
 	syncBeforeShip           bool
 }
 
@@ -294,7 +294,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage config.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)

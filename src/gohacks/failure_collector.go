@@ -3,7 +3,7 @@ package gohacks
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
@@ -52,7 +52,7 @@ func (self *FailureCollector) Fail(format string, a ...any) {
 
 // Hosting provides the config.Hosting part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) Hosting(value config.Hosting, err error) config.Hosting {
+func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) configdomain.Hosting {
 	self.Check(err)
 	return value
 }
@@ -85,14 +85,14 @@ func (self *FailureCollector) Strings(value []string, err error) []string {
 
 // SyncFeatureStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncFeatureStrategy(value config.SyncFeatureStrategy, err error) config.SyncFeatureStrategy {
+func (self *FailureCollector) SyncFeatureStrategy(value configdomain.SyncFeatureStrategy, err error) configdomain.SyncFeatureStrategy {
 	self.Check(err)
 	return value
 }
 
 // SyncPerennialStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncPerennialStrategy(value config.SyncPerennialStrategy, err error) config.SyncPerennialStrategy {
+func (self *FailureCollector) SyncPerennialStrategy(value configdomain.SyncPerennialStrategy, err error) configdomain.SyncPerennialStrategy {
 	self.Check(err)
 	return value
 }

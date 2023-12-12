@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -110,7 +110,7 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != config.HostingGitea) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != configdomain.HostingGitea) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
@@ -130,7 +130,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 
 type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
-	HostingService config.Hosting
+	HostingService configdomain.Hosting
 	APIToken       string
 	Log            common.Log
 }

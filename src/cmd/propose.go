@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -42,7 +42,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),
+		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePropose(readVerboseFlag(cmd))
 		},
@@ -96,13 +96,13 @@ type proposeConfig struct {
 	hasOpenChanges        bool
 	remotes               domain.Remotes
 	isOffline             bool
-	lineage               config.Lineage
+	lineage               configdomain.Lineage
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
-	syncPerennialStrategy config.SyncPerennialStrategy
+	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              bool
 	shouldSyncUpstream    bool
-	syncFeatureStrategy   config.SyncFeatureStrategy
+	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {

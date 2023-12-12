@@ -5,7 +5,7 @@ import (
 
 	giteasdk "code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/cli/log"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -82,7 +82,7 @@ func TestGitea(t *testing.T) {
 
 	t.Run("NewProposalURL", func(t *testing.T) {
 		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: config.HostingGitea,
+			HostingService: configdomain.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
 			Log:            log.Silent{},
@@ -95,7 +95,7 @@ func TestGitea(t *testing.T) {
 
 	t.Run("RepositoryURL", func(t *testing.T) {
 		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: config.HostingGitea,
+			HostingService: configdomain.HostingGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
 			Log:            log.Silent{},
@@ -112,7 +112,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: config.HostingGitea,
+			HostingService: configdomain.HostingGitea,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			Log:            log.Silent{},
@@ -130,7 +130,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: config.HostingNone,
+			HostingService: configdomain.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
 			Log:            log.Silent{},
@@ -143,7 +143,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
 		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: config.HostingNone,
+			HostingService: configdomain.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
 			Log:            log.Silent{},
