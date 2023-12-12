@@ -9,17 +9,17 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-type GitConfigCache map[configdomain.Key]string
+type Cache map[configdomain.Key]string
 
 // Clone provides a copy of this GitConfiguration instance.
-func (self GitConfigCache) Clone() GitConfigCache {
-	result := GitConfigCache{}
+func (self Cache) Clone() Cache {
+	result := Cache{}
 	maps.Copy(result, self)
 	return result
 }
 
 // KeysMatching provides the keys in this GitConfigCache that match the given regex.
-func (self GitConfigCache) KeysMatching(pattern string) []configdomain.Key {
+func (self Cache) KeysMatching(pattern string) []configdomain.Key {
 	result := []configdomain.Key{}
 	re := regexp.MustCompile(pattern)
 	for key := range self {
@@ -32,8 +32,8 @@ func (self GitConfigCache) KeysMatching(pattern string) []configdomain.Key {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGitConfigCache(runner Runner, global bool) GitConfigCache {
-	result := GitConfigCache{}
+func LoadGitConfigCache(runner Runner, global bool) Cache {
+	result := Cache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")

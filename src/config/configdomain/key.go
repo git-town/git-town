@@ -13,10 +13,6 @@ type Key struct {
 	name string
 }
 
-func NewKey(name string) Key {
-	return Key{name}
-}
-
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (self Key) MarshalJSON() ([]byte, error) {
 	return json.Marshal(self.name)
@@ -117,6 +113,10 @@ func NewAliasKey(aliasType Alias) Key {
 		return KeyAliasSync
 	}
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
+}
+
+func NewKey(name string) Key {
+	return Key{name}
 }
 
 func NewParentKey(branch domain.LocalBranchName) Key {
