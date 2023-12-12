@@ -5,14 +5,14 @@ This guide is for maintainers who make releases of Git Town.
 - in a branch:
   - update CHANGELOG.md
   - search-and-replace the old version with the new version
-    - triple-digits: `11.0.0`
-    - double-digits: `11.0`
+    - triple-digits: `11.1.0`
+    - double-digits: `11.1`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
     - update `github.com/git-town/git-town/v11/` everywhere in this repo
     - update `github.com/git-town/git-town/v11` (without trailing slash)
 - ship the branch
-- `git tag v11.0.0 && git push --tags`
+- `git tag v11.1.0 && git push --tags`
 - open the new release in the browser
 - copy the changelog into the release notes
 - publish the release

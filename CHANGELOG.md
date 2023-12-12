@@ -1,5 +1,19 @@
 # Git Town Changelog
 
+## 11.1.0 (2023-12-12)
+
+#### New Features
+
+- Git Town now handles branches checked out in other worktrees correctly ([#2764](https://github.com/git-town/git-town/pull/2764))
+- Git Town now checks out the previous Git branch ("git checkout -") after removing a local branch ([#2742](https://github.com/git-town/git-town/pull/2742))
+
+#### Bug Fixes
+
+- `git continue` now correctly handles a manually popped stash after resolving conflicts ([#2758](https://github.com/git-town/git-town/pull/2758))
+- `git continue` retries failing commit, merge-proposal, create-branch, create-proposal, create-tracking-branch, and push-branch operations ([#2756](https://github.com/git-town/git-town/pull/2756))
+- `git continue` ensures there are no untracked files ([#2754](https://github.com/git-town/git-town/pull/2754))
+- `git switch` now allows switching to perennial branches ([#2752](https://github.com/git-town/git-town/pull/2752))
+
 ## 11.0.0 (2023-12-06)
 
 Git Town 11 continues the effort to make the Git Town user experience more consistent and intuitive.
