@@ -6,6 +6,7 @@ require (
 	atomicgo.dev/cursor v0.2.0
 	code.gitea.io/sdk/gitea v0.17.0
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
+	github.com/BurntSushi/toml v1.3.2
 	github.com/cucumber/godog v0.9.0
 	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/dustin/go-humanize v1.0.1

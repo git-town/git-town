@@ -4,6 +4,10 @@ atomicgo.dev/cursor
 # code.gitea.io/sdk/gitea v0.17.0
 ## explicit; go 1.13
 code.gitea.io/sdk/gitea
+# github.com/BurntSushi/toml v1.3.2
+## explicit; go 1.16
+github.com/BurntSushi/toml
+github.com/BurntSushi/toml/internal
 # github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c
 ## explicit; go 1.13
 github.com/ProtonMail/go-crypto/bitcurves

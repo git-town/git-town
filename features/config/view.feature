@@ -1,6 +1,33 @@
 Feature: show the configuration
 
-  Scenario: all configured, no nested branches
+  Scenario: all configured in Git, no nested branches
+    Given the main branch is "main"
+    And the perennial branches are "qa" and "staging"
+    When I run "git-town config"
+    Then it prints:
+      """
+      Branches:
+        main branch: main
+        perennial branches: qa, staging
+
+      Configuration:
+        offline: no
+        run pre-push hook: yes
+        push new branches: no
+        ship removes the remote branch: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
+        sync with upstream: yes
+        sync before shipping: no
+
+      Hosting:
+        hosting service override: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
+      """
+
+  Scenario: all configured in config file, no nested branches
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
     When I run "git-town config"

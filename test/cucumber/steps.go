@@ -557,6 +557,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the configuration$`, func() error {
+		state.fixture.DevRepo.CreateFile(
+			state.uncommittedFileName,
+			state.uncommittedContent,
+		)
+	})
+
 	suite.Step(`^the initial commits exist$`, func() error {
 		return state.compareTable(state.initialCommits)
 	})

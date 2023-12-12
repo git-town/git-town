@@ -3,6 +3,8 @@ atomicgo.dev/cursor v0.2.0/go.mod h1:Lr4ZJB3U7DfPPOkbH7/6TOtJ4vFGHlgj1nc+n900IpU
 code.gitea.io/sdk/gitea v0.17.0 h1:8JPBss4+Jf7AE1YcfyiGrngTXE8dFSG3si/bypsTH34=
 code.gitea.io/sdk/gitea v0.17.0/go.mod h1:ndkDk99BnfiUCCYEUhpNzi0lpmApXlwRFqClBlOlEBg=
 github.com/AlecAivazis/survey/v2 v2.0.5/go.mod h1:WYBhg6f0y/fNYUuesWQc0PKbJcEliGcYHB9sNT3Bg74=
+github.com/BurntSushi/toml v1.3.2 h1:o7IhLm0Msx3BaB+n3Ag7L8EVlByGnpq14C4YWiu/gL8=
+github.com/BurntSushi/toml v1.3.2/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c h1:kMFnB0vCcX7IL/m9Y5LO+KQYv+t1CQOiFe6+SV2J7bE=
