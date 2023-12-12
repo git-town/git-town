@@ -1,3 +1,4 @@
+@this
 Feature: delete a branch that is checked out in another worktree
 
   Background:
@@ -9,7 +10,7 @@ Feature: delete a branch that is checked out in another worktree
       | good   | local, origin | good commit        | file             |
     And the current branch is "good"
     And branch "dead" is checked out in another worktree
-    And an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file
     When I run "git-town kill dead"
 
   Scenario: result
