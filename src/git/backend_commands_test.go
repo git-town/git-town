@@ -603,6 +603,23 @@ func TestBackendCommands(t *testing.T) {
 						must.Eq(t, "", remoteBranchName)
 					})
 				})
+
+				t.Run("branch is active in another worktree", func(t *testing.T) {
+					t.Parallel()
+					give := `+ branch-1    3d0c4c13 (/path/to/other/worktree) [origin/branch-1] commit message`
+					want := domain.BranchInfos{
+						domain.BranchInfo{
+							LocalName:  domain.NewLocalBranchName("branch-1"),
+							LocalSHA:   domain.NewSHA("3d0c4c13"),
+							SyncStatus: domain.SyncStatusOtherWorktree,
+							RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
+							RemoteSHA:  domain.EmptySHA(),
+						},
+					}
+					have, _ := git.ParseVerboseBranchesOutput(give)
+					must.Eq(t, want, have)
+				})
+
 				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 					t.Parallel()
 					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
@@ -662,9 +679,11 @@ func TestBackendCommands(t *testing.T) {
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
   main                         024df944 [origin/main] Commit message on main (#1234)
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
++ branch-5                     55555555 (/path/to/other/worktree) [origin/branch-5] Commit message 5
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
+  remotes/origin/branch-5      55555555 Commit message 5
   remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
@@ -703,6 +722,13 @@ func TestBackendCommands(t *testing.T) {
 					SyncStatus: domain.SyncStatusDeletedAtRemote,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-4"),
 					RemoteSHA:  domain.EmptySHA(),
+				},
+				domain.BranchInfo{
+					LocalName:  domain.NewLocalBranchName("branch-5"),
+					LocalSHA:   domain.NewSHA("55555555"),
+					SyncStatus: domain.SyncStatusOtherWorktree,
+					RemoteName: domain.NewRemoteBranchName("origin/branch-5"),
+					RemoteSHA:  domain.NewSHA("55555555"),
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

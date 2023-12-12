@@ -63,6 +63,7 @@ const (
 	HostingServiceUnknown              = "unknown hosting service: %q"
 	InputAddOrRemove                   = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                       = `invalid argument: %q. Please provide either "yes" or "no".\n`
+	KillBranchOtherWorktree            = `branch %q is active in another worktree`
 	KillOnlyFeatureBranches            = "you can only kill feature branches"
 	OfflineNotAllowed                  = "this command requires an active internet connection"
 	OpcodeUnknown                      = "unknown opcode: %q, run \"git town status reset\" to reset it"
@@ -90,6 +91,7 @@ const (
 	RunstateSaveProblem                = "cannot save run state: %w"
 	SetParentNoFeatureBranch           = "the branch %q is not a feature branch. Only feature branches can have parent branches"
 	ShipAbortedMergeError              = "aborted because commit exited with error"
+	ShipBranchOtherWorktree            = "branch %q is active in another worktree"
 	ShipBranchNothingToDo              = "the branch %q has no shippable changes"
 	ShipNoFeatureBranch                = "the branch %q is not a feature branch. Only feature branches can be shipped"
 	ShipOpenChanges                    = "you have uncommitted changes. Did you mean to commit them before shipping?"
