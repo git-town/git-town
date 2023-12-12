@@ -252,7 +252,7 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 	case branch.SyncStatus == domain.SyncStatusDeletedAtRemote:
 		syncDeletedBranchProgram(args.program, branch, parentIsCheckedOutInAnotherWorkspace, args)
 	case branch.SyncStatus == domain.SyncStatusCheckedOutInAnotherWorkspace:
-		// Git Town doesn't sync branches that are checked out at another workspace
+		// Git Town doesn't sync branches that are checked out at another worktree
 	default:
 		syncNonDeletedBranchProgram(args.program, branch, parentIsCheckedOutInAnotherWorkspace, args)
 	}

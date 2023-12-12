@@ -1,4 +1,4 @@
-Feature: ship a feature branch that is checked out in another workspace
+Feature: ship a feature branch that is checked out in another worktree
 
   Background:
     Given the feature branches "feature" and "other"

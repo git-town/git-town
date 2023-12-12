@@ -604,7 +604,7 @@ func TestBackendCommands(t *testing.T) {
 					})
 				})
 
-				t.Run("branch is checked out at another workspace", func(t *testing.T) {
+				t.Run("branch is checked out at another worktree", func(t *testing.T) {
 					t.Parallel()
 					give := `+ branch-1                      3d0c4c13 (/path/to/other/workspace) [origin/branch-1] commit message`
 					want := domain.BranchInfos{
