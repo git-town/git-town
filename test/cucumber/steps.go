@@ -594,10 +594,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the initial commits exist$`, func() error {
-		return state.compareTable(state.initialCommits)
-	})
-
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branchName := range []string{branch1, branch2} {
 			branch := domain.NewLocalBranchName(branchName)
@@ -778,6 +774,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the initial commits exist$`, func() error {
+		return state.compareTable(state.initialCommits)
+	})
+
 	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2} {
@@ -901,8 +901,38 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^there are still no perennial branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.PerennialBranches()
+		if len(branches) > 0 {
+			return fmt.Errorf("expected no perennial branches, got %q", branches)
+		}
+		return nil
+	})
+
+	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		fileTable := state.fixture.DevRepo.FilesInBranches(domain.NewLocalBranchName("main"))
+		diff, errorCount := fileTable.EqualGherkin(table)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching files found, see diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^these commits exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return state.compareTable(table)
+	})
+
+	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
+		tagTable := state.fixture.TagTable()
+		diff, errorCount := tagTable.EqualGherkin(table)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching tags found, see diff above")
+		}
+		return nil
 	})
 
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
@@ -934,36 +964,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 		if hasFile != "" {
 			return errors.New(hasFile)
-		}
-		return nil
-	})
-
-	suite.Step(`^there are still no perennial branches$`, func() error {
-		branches := state.fixture.DevRepo.Config.PerennialBranches()
-		if len(branches) > 0 {
-			return fmt.Errorf("expected no perennial branches, got %q", branches)
-		}
-		return nil
-	})
-
-	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable := state.fixture.DevRepo.FilesInBranches(domain.NewLocalBranchName("main"))
-		diff, errorCount := fileTable.EqualGherkin(table)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching files found, see diff above")
-		}
-		return nil
-	})
-
-	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		tagTable := state.fixture.TagTable()
-		diff, errorCount := tagTable.EqualGherkin(table)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching tags found, see diff above")
 		}
 		return nil
 	})
