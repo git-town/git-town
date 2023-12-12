@@ -1,4 +1,3 @@
-@this
 Feature: ship a feature branch that is checked out in another worktree
 
   Background:
@@ -17,7 +16,7 @@ Feature: ship a feature branch that is checked out in another worktree
       | other  | git fetch --prune --tags |
     And it prints the error:
       """
-      I cannot ship branch "feature" because it is checked out in another worktree
+      branch "feature" is checked out in another worktree
       """
     And the current branch is still "other"
     And the uncommitted file still exists
