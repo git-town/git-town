@@ -364,9 +364,9 @@ func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, track
 func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentOtherWorktree bool, strategy config.SyncFeatureStrategy) {
 	switch strategy {
 	case config.SyncFeatureStrategyMerge:
-		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentOtherWorktree: parentOtherWorktree})
+		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
 	case config.SyncFeatureStrategyRebase:
-		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch, ParentOtherWorktree: parentOtherWorktree})
+		list.Add(&opcode.RebaseParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
 	}
 }
 

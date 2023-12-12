@@ -96,8 +96,8 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcode.Merge{Branch: domain.NewBranchName("branch")},
 				&opcode.MergeParent{
-					CurrentBranch:       domain.NewLocalBranchName("branch"),
-					ParentOtherWorktree: true,
+					CurrentBranch:               domain.NewLocalBranchName("branch"),
+					ParentActiveInOtherWorktree: true,
 				},
 				&opcode.PreserveCheckoutHistory{
 					PreviousBranchCandidates: domain.NewLocalBranchNames("previous"),
@@ -110,8 +110,8 @@ func TestLoadSave(t *testing.T) {
 				&opcode.PushTags{},
 				&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
 				&opcode.RebaseParent{
-					CurrentBranch:       domain.NewLocalBranchName("branch"),
-					ParentOtherWorktree: true,
+					CurrentBranch:               domain.NewLocalBranchName("branch"),
+					ParentActiveInOtherWorktree: true,
 				},
 				&opcode.RemoveFromPerennialBranches{
 					Branch: domain.NewLocalBranchName("branch"),
