@@ -75,7 +75,7 @@ func executeAppend(arg string, verbose bool) error {
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
 		Lineage:                 config.lineage,
-		NoPushHook:              !config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 	})
 }
 
@@ -88,7 +88,7 @@ type appendConfig struct {
 	lineage                   configdomain.Lineage
 	mainBranch                domain.LocalBranchName
 	newBranchParentCandidates domain.LocalBranchNames
-	pushHook                  bool
+	pushHook                  domain.PushHook
 	parentBranch              domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
@@ -101,7 +101,7 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	pushHook := fc.PushHook(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -197,7 +197,7 @@ func appendProgram(config *appendConfig) program.Program {
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,

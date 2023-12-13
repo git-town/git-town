@@ -57,6 +57,11 @@ func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) con
 	return value
 }
 
+func (self *FailureCollector) PushHook(value domain.PushHook, err error) domain.PushHook {
+	self.Check(err)
+	return value
+}
+
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {

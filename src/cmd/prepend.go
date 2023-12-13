@@ -92,7 +92,7 @@ type prependConfig struct {
 	newBranchParentCandidates domain.LocalBranchNames
 	previousBranch            domain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
-	pushHook                  bool
+	pushHook                  domain.PushHook
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
 	shouldNewBranchPush       bool
@@ -103,7 +103,7 @@ type prependConfig struct {
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	pushHook := fc.PushHook(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,

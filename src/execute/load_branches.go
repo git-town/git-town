@@ -85,7 +85,7 @@ type LoadBranchesArgs struct {
 	Verbose               bool
 	HandleUnfinishedState bool
 	Lineage               configdomain.Lineage
-	PushHook              bool
+	PushHook              domain.PushHook
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 }
