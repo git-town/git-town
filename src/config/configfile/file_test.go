@@ -24,7 +24,7 @@ perennials = [ "public", "release" ]
 
 [code-hosting]
 platform = "github"
-originHostname = "github.com"
+origin-hostname = "github.com"
 
 [sync-strategy]
 feature-branches = "merge"
@@ -60,7 +60,10 @@ perennial-branches = "rebase"
 				Main:       "main",
 				Perennials: []string{"public", "qa"},
 			},
-			CodeHosting:            configfile.CodeHosting{},
+			CodeHosting: configfile.CodeHosting{
+				Platform:       "github",
+				OriginHostname: "github.com",
+			},
 			SyncStrategy:           configfile.SyncStrategy{},
 			PushNewbranches:        false,
 			ShipDeleteRemoteBranch: false,
@@ -77,8 +80,8 @@ sync-upstream = true
   perennials = ["public", "qa"]
 
 [code-hosting]
-  Platform = ""
-  OriginHostname = ""
+  platform = "github"
+  origin-hostname = "github.com"
 
 [sync-strategy]
   feature-branches = ""

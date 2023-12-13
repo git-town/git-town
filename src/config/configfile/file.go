@@ -26,8 +26,8 @@ type Branches struct {
 }
 
 type CodeHosting struct {
-	Platform       string
-	OriginHostname string
+	Platform       string `toml:"platform"`
+	OriginHostname string `toml:"origin-hostname"`
 }
 
 type SyncStrategy struct {
