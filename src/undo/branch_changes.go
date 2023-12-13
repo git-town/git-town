@@ -199,6 +199,6 @@ type BranchChangesUndoProgramArgs struct {
 	BranchTypes              domain.BranchTypes
 	InitialBranch            domain.LocalBranchName
 	FinalBranch              domain.LocalBranchName
-	NoPushHook               domain.NoPushHook
+	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []domain.SHA
 }

@@ -1,6 +1,7 @@
 package opcode
 
 import (
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -8,7 +9,7 @@ import (
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
 type PushCurrentBranch struct {
 	CurrentBranch domain.LocalBranchName
-	NoPushHook    domain.NoPushHook
+	NoPushHook    configdomain.NoPushHook
 	undeclaredOpcodeMethods
 }
 

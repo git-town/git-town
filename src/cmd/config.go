@@ -105,7 +105,7 @@ type ConfigConfig struct {
 	isOffline             bool
 	lineage               configdomain.Lineage
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              domain.PushHook
+	pushHook              configdomain.PushHook
 	pushNewBranches       bool
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy

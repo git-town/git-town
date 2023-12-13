@@ -92,7 +92,7 @@ type prependConfig struct {
 	newBranchParentCandidates domain.LocalBranchNames
 	previousBranch            domain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
-	pushHook                  domain.PushHook
+	pushHook                  configdomain.PushHook
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
 	shouldNewBranchPush       bool

@@ -56,7 +56,7 @@ type UnfinishedStateArgs struct {
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
-	PushHook                domain.PushHook
+	PushHook                configdomain.PushHook
 	RootDir                 domain.RepoRootDir
 	Run                     *git.ProdRunner
 }

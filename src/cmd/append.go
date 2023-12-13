@@ -88,7 +88,7 @@ type appendConfig struct {
 	lineage                   configdomain.Lineage
 	mainBranch                domain.LocalBranchName
 	newBranchParentCandidates domain.LocalBranchNames
-	pushHook                  domain.PushHook
+	pushHook                  configdomain.PushHook
 	parentBranch              domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy

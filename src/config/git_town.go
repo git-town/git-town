@@ -39,7 +39,7 @@ func (self *GitTown) BranchTypes() domain.BranchTypes {
 	}
 }
 
-func DetermineOriginURL(originURL string, originOverride domain.OriginHostnameOverride, originURLCache OriginURLCache) *giturl.Parts {
+func DetermineOriginURL(originURL string, originOverride configdomain.OriginHostnameOverride, originURLCache OriginURLCache) *giturl.Parts {
 	cached, has := originURLCache[originURL]
 	if has {
 		return cached
@@ -149,8 +149,8 @@ func (self *GitTown) MainBranch() domain.LocalBranchName {
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
-func (self *GitTown) OriginOverride() domain.OriginHostnameOverride {
-	return domain.OriginHostnameOverride(self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname))
+func (self *GitTown) OriginOverride() configdomain.OriginHostnameOverride {
+	return configdomain.OriginHostnameOverride(self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname))
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -189,7 +189,7 @@ func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
 }
 
 // PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHook() (domain.PushHook, error) {
+func (self *GitTown) PushHook() (configdomain.PushHook, error) {
 	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
 	if err != nil {
 		return false, err
@@ -202,11 +202,11 @@ func (self *GitTown) PushHook() (domain.PushHook, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushHook, setting)
 	}
-	return domain.PushHook(result), nil
+	return configdomain.PushHook(result), nil
 }
 
 // PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHookGlobal() (domain.PushHook, error) {
+func (self *GitTown) PushHookGlobal() (configdomain.PushHook, error) {
 	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
 	if err != nil {
 		return false, err
@@ -219,7 +219,7 @@ func (self *GitTown) PushHookGlobal() (domain.PushHook, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueGlobalInvalid, configdomain.KeyPushHook, setting)
 	}
-	return domain.PushHook(result), nil
+	return configdomain.PushHook(result), nil
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -328,13 +328,13 @@ func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) erro
 }
 
 // SetPushHook updates the configured push-hook strategy.
-func (self *GitTown) SetPushHookGlobally(value domain.PushHook) error {
+func (self *GitTown) SetPushHookGlobally(value configdomain.PushHook) error {
 	err := self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 	return err
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
-func (self *GitTown) SetPushHookLocally(value domain.PushHook) error {
+func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
 	err := self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 	return err
 }

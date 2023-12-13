@@ -1,6 +1,7 @@
 package opcode
 
 import (
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -9,7 +10,7 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranch struct {
 	Branch     domain.LocalBranchName
-	NoPushHook domain.NoPushHook
+	NoPushHook configdomain.NoPushHook
 	undeclaredOpcodeMethods
 }
 
