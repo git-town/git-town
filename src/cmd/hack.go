@@ -107,7 +107,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	branchNamesToSync := domain.LocalBranchNames{mainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	syncUpstream := fc.SyncUpstream(repo.Runner.Config.ShouldSyncUpstream())
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
 	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
 	return &appendConfig{
@@ -125,7 +125,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		syncPerennialStrategy:     syncPerennialStrategy,
 		pushHook:                  pushHook,
 		isOnline:                  isOffline.ToOnline(),
-		shouldSyncUpstream:        shouldSyncUpstream,
+		syncUpstream:              syncUpstream,
 		syncFeatureStrategy:       syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

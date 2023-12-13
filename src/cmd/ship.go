@@ -120,7 +120,7 @@ type shipConfig struct {
 	canShipViaAPI            bool
 	childBranches            domain.LocalBranchNames
 	proposalMessage          string
-	deleteOriginBranch       bool
+	deleteTrackingBranch     configdomain.ShipDeleteTrackingBranch
 	hasOpenChanges           bool
 	remotes                  domain.Remotes
 	isShippingInitialBranch  bool
@@ -132,7 +132,7 @@ type shipConfig struct {
 	proposalsOfChildBranches []domain.Proposal
 	syncPerennialStrategy    configdomain.SyncPerennialStrategy
 	pushHook                 configdomain.PushHook
-	shouldSyncUpstream       bool
+	syncUpstream             configdomain.SyncUpstream
 	syncFeatureStrategy      configdomain.SyncFeatureStrategy
 	syncBeforeShip           bool
 }
@@ -165,7 +165,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteOrigin, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
+	deleteTrackingBranch, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -184,7 +184,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
+	syncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -276,7 +276,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
 		proposalMessage:          proposalMessage,
-		deleteOriginBranch:       deleteOrigin,
+		deleteTrackingBranch:     deleteTrackingBranch,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		remotes:                  remotes,
 		isOnline:                 repo.IsOffline.ToOnline(),
@@ -288,7 +288,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		syncPerennialStrategy:    syncPerennialStrategy,
 		pushHook:                 pushHook,
-		shouldSyncUpstream:       shouldSyncUpstream,
+		syncUpstream:             syncUpstream,
 		syncFeatureStrategy:      syncFeatureStrategy,
 		syncBeforeShip:           syncBeforeShip,
 	}, branchesSnapshot, stashSnapshot, false, nil
@@ -321,7 +321,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			syncPerennialStrategy: config.syncPerennialStrategy,
 			pushBranch:            true,
 			pushHook:              config.pushHook,
-			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncUpstream:          config.syncUpstream,
 			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 		// sync the branch to ship (local sync only)
@@ -336,7 +336,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			syncPerennialStrategy: config.syncPerennialStrategy,
 			pushBranch:            false,
 			pushHook:              config.pushHook,
-			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncUpstream:          config.syncUpstream,
 			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
@@ -370,7 +370,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.isOnline.Bool()) {
-		if config.deleteOriginBranch {
+		if config.deleteTrackingBranch {
 			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}

@@ -94,7 +94,7 @@ type prependConfig struct {
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
 	pushHook                  configdomain.PushHook
 	parentBranch              domain.LocalBranchName
-	shouldSyncUpstream        bool
+	syncUpstream              configdomain.SyncUpstream
 	shouldNewBranchPush       configdomain.NewBranchPush
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
@@ -124,7 +124,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	mainBranch := repo.Runner.Config.MainBranch()
 	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
-	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	syncUpstream := fc.SyncUpstream(repo.Runner.Config.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -165,7 +165,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 		pushHook:                  pushHook,
 		parentBranch:              parent,
 		shouldNewBranchPush:       shouldNewBranchPush,
-		shouldSyncUpstream:        shouldSyncUpstream,
+		syncUpstream:              syncUpstream,
 		syncFeatureStrategy:       syncFeatureStrategy,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
@@ -185,7 +185,7 @@ func prependProgram(config *prependConfig) program.Program {
 			pushBranch:            true,
 			pushHook:              config.pushHook,
 			remotes:               config.remotes,
-			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncUpstream:          config.syncUpstream,
 			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}

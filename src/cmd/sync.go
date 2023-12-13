@@ -83,7 +83,7 @@ func executeSync(all, dryRun, verbose bool) error {
 			syncPerennialStrategy: config.syncPerennialStrategy,
 			pushBranch:            true,
 			pushHook:              config.pushHook,
-			shouldSyncUpstream:    config.shouldSyncUpstream,
+			syncUpstream:          config.syncUpstream,
 			syncFeatureStrategy:   config.syncFeatureStrategy,
 		},
 		branchesToSync: config.branchesToSync,
@@ -123,7 +123,7 @@ type syncConfig struct {
 	pushHook              configdomain.PushHook
 	remotes               domain.Remotes
 	shouldPushTags        bool
-	shouldSyncUpstream    bool
+	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
@@ -198,7 +198,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
+	syncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -215,7 +215,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		syncPerennialStrategy: syncPerennialStrategy,
 		pushHook:              pushHook,
 		shouldPushTags:        shouldPushTags,
-		shouldSyncUpstream:    shouldSyncUpstream,
+		syncUpstream:          syncUpstream,
 		syncFeatureStrategy:   syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
@@ -269,7 +269,7 @@ type syncBranchProgramArgs struct {
 	pushBranch            bool
 	pushHook              configdomain.PushHook
 	remotes               domain.Remotes
-	shouldSyncUpstream    bool
+	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
@@ -344,7 +344,7 @@ func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgram
 	if branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialStrategy)
 	}
-	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.shouldSyncUpstream {
+	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.syncUpstream.Bool() {
 		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
 		args.program.Add(&opcode.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
