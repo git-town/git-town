@@ -14,7 +14,7 @@ func TestConfigfile(t *testing.T) {
 		t.Run("valid content", func(t *testing.T) {
 			t.Parallel()
 			give := `
-pushNewBranches = true
+push-new-branches = true
 shipDeleteRemoteBranch = false
 syncUpstream = true
 
@@ -67,7 +67,7 @@ perennial-branches = "rebase"
 		}
 		have := configfile.Encode(give)
 		want := `
-PushNewbranches = false
+push-new-branches = false
 ShipDeleteRemoteBranch = false
 SyncUpstream = true
 

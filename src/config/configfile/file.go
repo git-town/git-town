@@ -15,7 +15,7 @@ type ConfigFile struct {
 	Branches               Branches
 	CodeHosting            CodeHosting  `toml:"code-hosting"`
 	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
-	PushNewbranches        bool
+	PushNewbranches        bool         `toml:"push-new-branches"`
 	ShipDeleteRemoteBranch bool
 	SyncUpstream           bool
 }
