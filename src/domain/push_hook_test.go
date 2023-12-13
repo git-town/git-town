@@ -11,19 +11,15 @@ func TestPushHook(t *testing.T) {
 	t.Parallel()
 	t.Run("Negate", func(t *testing.T) {
 		t.Parallel()
-		t.Run("true", func(t *testing.T) {
-			t.Parallel()
-			hook := domain.PushHook(true)
+		tests := map[bool]bool{
+			true:  false,
+			false: true,
+		}
+		for give, want := range tests {
+			hook := domain.PushHook(give)
 			have := hook.Negate()
-			want := domain.PushHook(false)
+			want := domain.PushHook(want)
 			must.EqOp(t, want, have)
-		})
-		t.Run("false", func(t *testing.T) {
-			t.Parallel()
-			hook := domain.PushHook(false)
-			have := hook.Negate()
-			want := domain.PushHook(true)
-			must.EqOp(t, want, have)
-		})
+		}
 	})
 }
