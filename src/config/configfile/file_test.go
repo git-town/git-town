@@ -57,7 +57,8 @@ perennial-branches = "rebase"
 		t.Parallel()
 		give := configfile.ConfigFile{
 			Branches: configfile.Branches{
-				Main: "main",
+				Main:       "main",
+				Perennials: []string{"public", "qa"},
 			},
 			CodeHosting:            configfile.CodeHosting{},
 			SyncStrategy:           configfile.SyncStrategy{},
@@ -73,6 +74,7 @@ sync-upstream = true
 
 [Branches]
   main = "main"
+  perennials = ["public", "qa"]
 
 [code-hosting]
   Platform = ""

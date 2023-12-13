@@ -21,8 +21,8 @@ type ConfigFile struct {
 }
 
 type Branches struct {
-	Main       string `toml:"main"`
-	Perennials []string
+	Main       string   `toml:"main"`
+	Perennials []string `toml:"perennials"`
 }
 
 type CodeHosting struct {
