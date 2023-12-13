@@ -95,7 +95,7 @@ type prependConfig struct {
 	pushHook                  configdomain.PushHook
 	parentBranch              domain.LocalBranchName
 	shouldSyncUpstream        bool
-	shouldNewBranchPush       bool
+	shouldNewBranchPush       configdomain.NewBranchPush
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
 }
@@ -120,7 +120,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
+	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.Config.ShouldNewBranchPush())
 	mainBranch := repo.Runner.Config.MainBranch()
 	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
@@ -206,7 +206,7 @@ func prependProgram(config *prependConfig) program.Program {
 		Parent: config.targetBranch,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && !config.isOffline {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	wrap(&prog, wrapOptions{
