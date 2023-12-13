@@ -8,7 +8,7 @@ import (
 // CreateRemoteBranch pushes the given local branch up to origin.
 type CreateRemoteBranch struct {
 	Branch     domain.LocalBranchName
-	NoPushHook domain.PushHook
+	NoPushHook domain.NoPushHook
 	SHA        domain.SHA
 	undeclaredOpcodeMethods
 }

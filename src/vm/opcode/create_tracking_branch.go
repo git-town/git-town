@@ -9,7 +9,7 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranch struct {
 	Branch     domain.LocalBranchName
-	NoPushHook domain.PushHook
+	NoPushHook domain.NoPushHook
 	undeclaredOpcodeMethods
 }
 

@@ -62,7 +62,7 @@ func executeUndo(verbose bool) error {
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 lineage,
-		NoPushHook:              !config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

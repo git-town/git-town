@@ -93,7 +93,7 @@ type renameBranchConfig struct {
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	newBranch      domain.LocalBranchName
-	noPushHook     domain.PushHook
+	noPushHook     domain.NoPushHook
 	oldBranch      domain.BranchInfo
 	previousBranch domain.LocalBranchName
 }
@@ -158,7 +158,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		lineage:        lineage,
 		mainBranch:     mainBranch,
 		newBranch:      newBranchName,
-		noPushHook:     !pushHook,
+		noPushHook:     pushHook.Negate(),
 		oldBranch:      *oldBranch,
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, err

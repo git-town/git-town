@@ -47,7 +47,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       | BRANCH | COMMAND                                     |
       | new    | git checkout parent                         |
       | parent | git reset --hard {{ sha 'parent commit' }}  |
-      |        | git push --force-with-lease --no-verify     |
+      |        | git push --force-with-lease                 |
       |        | git checkout main                           |
       | main   | git reset --hard {{ sha 'initial commit' }} |
       |        | git branch child {{ sha 'child commit' }}   |
