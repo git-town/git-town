@@ -116,3 +116,8 @@ func (self *FailureCollector) SyncPerennialStrategy(value configdomain.SyncPeren
 	self.Check(err)
 	return value
 }
+
+func (self *FailureCollector) SyncUpstream(value configdomain.SyncUpstream, err error) configdomain.SyncUpstream {
+	self.Check(err)
+	return value
+}

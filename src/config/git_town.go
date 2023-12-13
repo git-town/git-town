@@ -326,8 +326,8 @@ func (self *GitTown) SetShouldShipDeleteRemoteBranch(value configdomain.ShipDele
 }
 
 // SetShouldSyncUpstream updates the configured sync-upstream strategy.
-func (self *GitTown) SetShouldSyncUpstream(value bool) error {
-	err := self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value))
+func (self *GitTown) SetShouldSyncUpstream(value configdomain.SyncUpstream) error {
+	err := self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	return err
 }
 
@@ -400,12 +400,13 @@ func (self *GitTown) ShouldShipDeleteOriginBranch() (configdomain.ShipDeleteTrac
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
-func (self *GitTown) ShouldSyncUpstream() (bool, error) {
+func (self *GitTown) ShouldSyncUpstream() (configdomain.SyncUpstream, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncUpstream)
 	if text == "" {
 		return true, nil
 	}
-	return confighelpers.ParseBool(text)
+	boolValue, err := confighelpers.ParseBool(text)
+	return configdomain.SyncUpstream(boolValue), err
 }
 
 // SyncBeforeShip indicates whether a sync should be performed before a ship.
