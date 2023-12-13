@@ -72,7 +72,7 @@ ship-delete-remote-branch = false
 sync-upstream = true
 
 [Branches]
-  Main = "main"
+  main = "main"
 
 [code-hosting]
   Platform = ""
