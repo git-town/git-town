@@ -8,7 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
@@ -69,7 +69,7 @@ func executeSwitch(verbose bool) error {
 
 type switchConfig struct {
 	branches domain.Branches
-	lineage  config.Lineage
+	lineage  configdomain.Lineage
 }
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {

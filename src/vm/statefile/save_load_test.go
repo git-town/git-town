@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -117,10 +117,10 @@ func TestLoadSave(t *testing.T) {
 					Branch: domain.NewLocalBranchName("branch"),
 				},
 				&opcode.RemoveGlobalConfig{
-					Key: config.KeyOffline,
+					Key: configdomain.KeyOffline,
 				},
 				&opcode.RemoveLocalConfig{
-					Key: config.KeyOffline,
+					Key: configdomain.KeyOffline,
 				},
 				&opcode.ResetCurrentBranchToSHA{
 					Hard:        true,
@@ -132,11 +132,11 @@ func TestLoadSave(t *testing.T) {
 					SHA: domain.NewSHA("123456"),
 				},
 				&opcode.SetGlobalConfig{
-					Key:   config.KeyOffline,
+					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
 				&opcode.SetLocalConfig{
-					Key:   config.KeyOffline,
+					Key:   configdomain.KeyOffline,
 					Value: "1",
 				},
 				&opcode.SetParent{

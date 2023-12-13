@@ -1,7 +1,7 @@
 package hosting
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
@@ -53,7 +53,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService  config.Hosting
+	HostingService  configdomain.Hosting
 	OriginURL       *giturl.Parts
 	GetSHAForBranch common.SHAForBranchFunc
 	GiteaAPIToken   string

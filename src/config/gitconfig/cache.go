@@ -1,38 +1,39 @@
-package config
+package gitconfig
 
 import (
 	"regexp"
 	"sort"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"golang.org/x/exp/maps"
 )
 
-type GitConfigCache map[Key]string
+type Cache map[configdomain.Key]string
 
 // Clone provides a copy of this GitConfiguration instance.
-func (self GitConfigCache) Clone() GitConfigCache {
-	result := GitConfigCache{}
+func (self Cache) Clone() Cache {
+	result := Cache{}
 	maps.Copy(result, self)
 	return result
 }
 
 // KeysMatching provides the keys in this GitConfigCache that match the given regex.
-func (self GitConfigCache) KeysMatching(pattern string) []Key {
-	result := []Key{}
+func (self Cache) KeysMatching(pattern string) []configdomain.Key {
+	result := []configdomain.Key{}
 	re := regexp.MustCompile(pattern)
 	for key := range self {
 		if re.MatchString(key.String()) {
 			result = append(result, key)
 		}
 	}
-	sort.Slice(result, func(a, b int) bool { return result[a].Name < result[b].Name })
+	sort.Slice(result, func(a, b int) bool { return result[a].String() < result[b].String() })
 	return result
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGitConfigCache(runner runner, global bool) GitConfigCache {
-	result := GitConfigCache{}
+func LoadGitConfigCache(runner Runner, global bool) Cache {
+	result := Cache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -52,7 +53,7 @@ func LoadGitConfigCache(runner runner, global bool) GitConfigCache {
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey := ParseKey(key)
+		configKey := configdomain.ParseKey(key)
 		if configKey != nil {
 			result[*configKey] = value
 		}

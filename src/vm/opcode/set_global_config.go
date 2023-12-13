@@ -1,12 +1,12 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 type SetGlobalConfig struct {
-	Key   config.Key
+	Key   configdomain.Key
 	Value string
 	undeclaredOpcodeMethods
 }

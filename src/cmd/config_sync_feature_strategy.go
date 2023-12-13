@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/spf13/cobra"
@@ -51,7 +51,7 @@ func executeConfigSyncFeatureStrategy(args []string, global, verbose bool) error
 }
 
 func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
-	var strategy config.SyncFeatureStrategy
+	var strategy configdomain.SyncFeatureStrategy
 	var err error
 	if globalFlag {
 		strategy, err = run.Config.SyncFeatureStrategyGlobal()
@@ -66,7 +66,7 @@ func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
 }
 
 func setSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
-	syncFeatureStrategy, err := config.NewSyncFeatureStrategy(value)
+	syncFeatureStrategy, err := configdomain.NewSyncFeatureStrategy(value)
 	if err != nil {
 		return err
 	}

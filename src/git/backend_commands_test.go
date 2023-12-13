@@ -3,7 +3,7 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -202,7 +202,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.Config.Reload()
 		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage(runtime.Config.RemoveLocalConfigValue)
-		lineageWant := config.Lineage{}
+		lineageWant := configdomain.Lineage{}
 		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")
 		must.Eq(t, lineageWant, lineageHave)
 	})

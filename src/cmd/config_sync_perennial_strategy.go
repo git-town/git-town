@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/spf13/cobra"
@@ -59,7 +59,7 @@ func displaySyncPerennialStrategy(run *git.ProdRunner) error {
 }
 
 func setSyncPerennialStrategy(value string, run *git.ProdRunner) error {
-	syncPerennialStrategy, err := config.NewSyncPerennialStrategy(value)
+	syncPerennialStrategy, err := configdomain.NewSyncPerennialStrategy(value)
 	if err != nil {
 		return err
 	}

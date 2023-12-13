@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -75,12 +75,12 @@ type undoConfig struct {
 	hasOpenChanges          bool
 	initialBranchesSnapshot domain.BranchesSnapshot
 	mainBranch              domain.LocalBranchName
-	lineage                 config.Lineage
+	lineage                 configdomain.Lineage
 	previousBranch          domain.LocalBranchName
 	pushHook                bool
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, config.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, configdomain.Lineage, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
