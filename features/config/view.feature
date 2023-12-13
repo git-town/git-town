@@ -29,7 +29,7 @@ Feature: show the configuration
 
   @this
   Scenario: all configured in config file, no nested branches
-    Given the config file:
+    Given the configuration file:
       """
       [branches]
       main = "main"
