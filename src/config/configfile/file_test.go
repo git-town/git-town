@@ -52,4 +52,36 @@ perennial-branches = "rebase"
 			must.Eq(t, want, *have)
 		})
 	})
+
+	t.Run("Encode", func(t *testing.T) {
+		t.Parallel()
+		give := configfile.ConfigFile{
+			Branches: configfile.Branches{
+				Main: "main",
+			},
+			CodeHosting:            configfile.CodeHosting{},
+			SyncStrategy:           configfile.SyncStrategy{},
+			PushNewbranches:        false,
+			ShipDeleteRemoteBranch: false,
+			SyncUpstream:           true,
+		}
+		have := configfile.Encode(give)
+		want := `
+PushNewbranches = false
+ShipDeleteRemoteBranch = false
+SyncUpstream = true
+
+[Branches]
+  Main = "main"
+
+[code-hosting]
+  Platform = ""
+  OriginHostname = ""
+
+[sync-strategy]
+  feature-branches = ""
+  perennial-branches = ""
+`[1:]
+		must.EqOp(t, want, have)
+	})
 }

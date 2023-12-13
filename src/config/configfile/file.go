@@ -1,6 +1,7 @@
 package configfile
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -53,6 +54,15 @@ func load() (*ConfigFile, error) {
 		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
 	return Parse(string(bytes))
+}
+
+func Encode(config ConfigFile) string {
+	buf := new(bytes.Buffer)
+	err := toml.NewEncoder(buf).Encode(config)
+	if err != nil {
+		panic(fmt.Sprintf("cannot encode config: %v", err))
+	}
+	return buf.String()
 }
 
 func Parse(text string) (*ConfigFile, error) {
