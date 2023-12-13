@@ -13,7 +13,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And an uncommitted file
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
