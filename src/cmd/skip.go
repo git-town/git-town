@@ -80,6 +80,6 @@ func executeSkip(verbose bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !pushHook,
+		NoPushHook:              pushHook.Negate(),
 	})
 }

@@ -7,7 +7,7 @@ import (
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
-	NoPushHook domain.PushHook
+	NoPushHook domain.NoPushHook
 	undeclaredOpcodeMethods
 }
 

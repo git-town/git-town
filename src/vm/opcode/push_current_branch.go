@@ -8,7 +8,7 @@ import (
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
 type PushCurrentBranch struct {
 	CurrentBranch domain.LocalBranchName
-	NoPushHook    domain.PushHook
+	NoPushHook    domain.NoPushHook
 	undeclaredOpcodeMethods
 }
 

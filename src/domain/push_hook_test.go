@@ -19,7 +19,7 @@ func TestPushHook(t *testing.T) {
 		for giveBool, wantBool := range tests {
 			hook := domain.PushHook(giveBool)
 			have := hook.Negate()
-			want := domain.PushHook(wantBool)
+			want := domain.NoPushHook(wantBool)
 			must.EqOp(t, want, have)
 		}
 	})

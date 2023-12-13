@@ -85,7 +85,7 @@ type killConfig struct {
 	isOffline      bool
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
-	noPushHook     domain.PushHook
+	noPushHook     domain.NoPushHook
 	previousBranch domain.LocalBranchName
 }
 
@@ -152,7 +152,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		isOffline:      repo.IsOffline,
 		lineage:        lineage,
 		mainBranch:     mainBranch,
-		noPushHook:     !pushHook,
+		noPushHook:     pushHook.Negate(),
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
