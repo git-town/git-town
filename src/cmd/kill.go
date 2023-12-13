@@ -85,7 +85,7 @@ type killConfig struct {
 	isOffline      bool
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
-	noPushHook     domain.NoPushHook
+	noPushHook     configdomain.NoPushHook
 	previousBranch domain.LocalBranchName
 }
 

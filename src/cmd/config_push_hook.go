@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -55,7 +55,7 @@ func executeConfigPushHook(args []string, global, verbose bool) error {
 }
 
 func printPushHook(globalFlag bool, run *git.ProdRunner) error {
-	var setting domain.PushHook
+	var setting configdomain.PushHook
 	var err error
 	if globalFlag {
 		setting, err = run.Config.PushHookGlobal()
@@ -74,7 +74,7 @@ func setPushHook(text string, global bool, run *git.ProdRunner) error {
 	if err != nil {
 		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
-	value := domain.PushHook(valueBool)
+	value := configdomain.PushHook(valueBool)
 	if global {
 		return run.Config.SetPushHookGlobally(value)
 	}

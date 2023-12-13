@@ -1,3 +1,3 @@
-package domain
+package configdomain
 
 type OriginHostnameOverride string

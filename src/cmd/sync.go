@@ -120,7 +120,7 @@ type syncConfig struct {
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              domain.PushHook
+	pushHook              configdomain.PushHook
 	remotes               domain.Remotes
 	shouldPushTags        bool
 	shouldSyncUpstream    bool
@@ -267,7 +267,7 @@ type syncBranchProgramArgs struct {
 	mainBranch            domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushBranch            bool
-	pushHook              domain.PushHook
+	pushHook              configdomain.PushHook
 	remotes               domain.Remotes
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
@@ -380,7 +380,7 @@ func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domai
 	}
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook domain.PushHook) {
+func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook configdomain.PushHook) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: pushHook.Negate()})

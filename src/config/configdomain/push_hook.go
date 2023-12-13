@@ -1,4 +1,4 @@
-package domain
+package configdomain
 
 // PushHook contains the push-hook configuration setting.
 type PushHook bool
