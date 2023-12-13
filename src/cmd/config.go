@@ -76,7 +76,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	pushNewBranches := fc.NewBranchPush(run.Config.ShouldNewBranchPush())
 	syncUpstream := fc.SyncUpstream(run.Config.ShouldSyncUpstream())
 	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
-	syncBeforeShip := fc.Bool(run.Config.SyncBeforeShip())
+	syncBeforeShip := fc.SyncBeforeShip(run.Config.SyncBeforeShip())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteOrigin,
@@ -109,7 +109,7 @@ type ConfigConfig struct {
 	pushNewBranches       configdomain.NewBranchPush
 	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
-	syncBeforeShip        bool
+	syncBeforeShip        configdomain.SyncBeforeShip
 }
 
 func printConfig(config ConfigConfig) {
@@ -126,7 +126,7 @@ func printConfig(config ConfigConfig) {
 	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
 	print.Entry("sync with upstream", format.Bool(config.syncUpstream.Bool()))
-	print.Entry("sync before shipping", format.Bool(config.syncBeforeShip))
+	print.Entry("sync before shipping", format.Bool(config.syncBeforeShip.Bool()))
 	fmt.Println()
 	print.Header("Hosting")
 	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
