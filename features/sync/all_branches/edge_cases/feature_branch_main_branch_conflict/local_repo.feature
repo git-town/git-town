@@ -28,9 +28,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
     And it prints the error:
       """
-      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
+      To go back to where you started, run "git-town undo".
       """
     And the current branch is now "beta"
     And the uncommitted file is stashed
