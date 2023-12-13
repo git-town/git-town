@@ -104,7 +104,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
-	APIToken       domain.GitLabToken
+	APIToken       configdomain.GitLabToken
 	Log            common.Log
 }
 
