@@ -12,12 +12,12 @@ import (
 )
 
 type ConfigFile struct {
-	Branches               Branches     `toml:"branches"`
-	CodeHosting            CodeHosting  `toml:"code-hosting"`
-	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
-	PushNewbranches        bool         `toml:"push-new-branches"`
-	ShipDeleteRemoteBranch bool         `toml:"ship-delete-remote-branch"`
-	SyncUpstream           bool         `toml:"sync-upstream"`
+	Branches               Branches      `toml:"branches"`
+	CodeHosting            *CodeHosting  `toml:"code-hosting"`
+	SyncStrategy           *SyncStrategy `toml:"sync-strategy"`
+	PushNewbranches        *bool         `toml:"push-new-branches"`
+	ShipDeleteRemoteBranch *bool         `toml:"ship-delete-remote-branch"`
+	SyncUpstream           *bool         `toml:"sync-upstream"`
 }
 
 type Branches struct {
@@ -26,21 +26,27 @@ type Branches struct {
 }
 
 type CodeHosting struct {
-	Platform       string `toml:"platform"`
-	OriginHostname string `toml:"origin-hostname"`
+	Platform       *string `toml:"platform"`
+	OriginHostname *string `toml:"origin-hostname"`
 }
 
 type SyncStrategy struct {
-	FeatureBranches   string `toml:"feature-branches"`
-	PerennialBranches string `toml:"perennial-branches"`
+	FeatureBranches   *string `toml:"feature-branches"`
+	PerennialBranches *string `toml:"perennial-branches"`
 }
 
 func (self SyncStrategy) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
-	return configdomain.NewSyncFeatureStrategy(self.FeatureBranches)
+	if self.FeatureBranches == nil {
+		return configdomain.SyncFeatureStrategyMerge, nil
+	}
+	return configdomain.NewSyncFeatureStrategy(*self.FeatureBranches)
 }
 
 func (self SyncStrategy) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
-	return configdomain.NewSyncPerennialStrategy(self.PerennialBranches)
+	if self.PerennialBranches == nil {
+		return configdomain.SyncPerennialStrategyRebase, nil
+	}
+	return configdomain.NewSyncPerennialStrategy(*self.PerennialBranches)
 }
 
 func load() (*ConfigFile, error) {

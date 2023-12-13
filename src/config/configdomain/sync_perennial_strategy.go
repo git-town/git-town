@@ -9,10 +9,10 @@ import (
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
 type SyncPerennialStrategy struct {
-	name string
+	Name string
 }
 
-func (self SyncPerennialStrategy) String() string { return self.name }
+func (self SyncPerennialStrategy) String() string { return self.Name }
 
 var (
 	SyncPerennialStrategyMerge  = SyncPerennialStrategy{"merge"}  //nolint:gochecknoglobals
