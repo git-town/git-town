@@ -34,11 +34,11 @@ type CreateUndoProgramArgs struct {
 	InitialBranchesSnapshot  domain.BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot
 	InitialStashSnapshot     domain.StashSnapshot
-	NoPushHook               domain.PushHook
+	NoPushHook               domain.NoPushHook
 	UndoablePerennialCommits []domain.SHA
 }
 
-func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook domain.PushHook, runner *git.ProdRunner) (program.Program, error) {
+func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook domain.NoPushHook, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return program.Program{}, err

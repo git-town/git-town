@@ -47,5 +47,5 @@ type ExecuteArgs struct {
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
 	Lineage                 configdomain.Lineage
-	NoPushHook              domain.PushHook
+	NoPushHook              domain.NoPushHook
 }

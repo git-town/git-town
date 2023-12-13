@@ -73,7 +73,7 @@ func executePrepend(args []string, verbose bool) error {
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
-		NoPushHook:              config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -207,7 +207,7 @@ func prependProgram(config *prependConfig) program.Program {
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
-		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: !config.pushHook})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
