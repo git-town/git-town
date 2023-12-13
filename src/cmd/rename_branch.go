@@ -89,7 +89,7 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 
 type renameBranchConfig struct {
 	branches       domain.Branches
-	isOffline      bool
+	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	newBranch      domain.LocalBranchName
@@ -154,7 +154,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	return &renameBranchConfig{
 		branches:       branches,
-		isOffline:      repo.IsOffline,
+		isOnline:       repo.IsOffline.ToOnline(),
 		lineage:        lineage,
 		mainBranch:     mainBranch,
 		newBranch:      newBranchName,
@@ -181,7 +181,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
+	if config.oldBranch.HasTrackingBranch() && config.isOnline.Bool() {
 		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}

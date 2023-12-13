@@ -82,7 +82,7 @@ type killConfig struct {
 	branchWhenDone domain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
-	isOffline      bool
+	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
@@ -149,16 +149,12 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		branchWhenDone: branchWhenDone,
 		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
-		isOffline:      repo.IsOffline,
+		isOnline:       repo.IsOffline.ToOnline(),
 		lineage:        lineage,
 		mainBranch:     mainBranch,
 		noPushHook:     pushHook.Negate(),
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
-}
-
-func (self killConfig) isOnline() bool {
-	return !self.isOffline
 }
 
 func (self killConfig) branchToKillParent() domain.LocalBranchName {
@@ -178,7 +174,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
-	if config.branchToKill.HasTrackingBranch() && config.isOnline() {
+	if config.branchToKill.HasTrackingBranch() && config.isOnline.Bool() {
 		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
 	}
 	if config.initialBranch == config.branchToKill.LocalName {
