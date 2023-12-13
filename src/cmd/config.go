@@ -74,7 +74,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
 	pushHook := fc.PushHook(run.Config.PushHook())
 	pushNewBranches := fc.NewBranchPush(run.Config.ShouldNewBranchPush())
-	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
+	syncUpstream := fc.SyncUpstream(run.Config.ShouldSyncUpstream())
 	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
 	syncBeforeShip := fc.Bool(run.Config.SyncBeforeShip())
 	return ConfigConfig{
@@ -89,7 +89,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 		syncPerennialStrategy: syncPerennialStrategy,
 		pushHook:              pushHook,
 		pushNewBranches:       pushNewBranches,
-		shouldSyncUpstream:    shouldSyncUpstream,
+		syncUpstream:          syncUpstream,
 		syncFeatureStrategy:   syncFeatureStrategy,
 		syncBeforeShip:        syncBeforeShip,
 	}, fc.Err
@@ -107,7 +107,7 @@ type ConfigConfig struct {
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              configdomain.PushHook
 	pushNewBranches       configdomain.NewBranchPush
-	shouldSyncUpstream    bool
+	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 	syncBeforeShip        bool
 }
@@ -125,7 +125,7 @@ func printConfig(config ConfigConfig) {
 	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
 	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
-	print.Entry("sync with upstream", format.Bool(config.shouldSyncUpstream))
+	print.Entry("sync with upstream", format.Bool(config.syncUpstream.Bool()))
 	print.Entry("sync before shipping", format.Bool(config.syncBeforeShip))
 	fmt.Println()
 	print.Header("Hosting")
