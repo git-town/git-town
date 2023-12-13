@@ -98,7 +98,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	mainBranch := repo.Runner.Config.MainBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.Config.ShouldNewBranchPush())
-	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
+	isOffline := fc.Offline(repo.Runner.Config.IsOffline())
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -124,7 +124,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		previousBranch:            previousBranch,
 		syncPerennialStrategy:     syncPerennialStrategy,
 		pushHook:                  pushHook,
-		isOffline:                 isOffline,
+		isOnline:                  isOffline.ToOnline(),
 		shouldSyncUpstream:        shouldSyncUpstream,
 		syncFeatureStrategy:       syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
