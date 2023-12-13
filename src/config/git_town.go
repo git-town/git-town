@@ -269,13 +269,6 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
-// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
-func (self *GitTown) SetCodeHostingDriver(value string) error {
-	self.Config.Local[configdomain.KeyCodeHostingPlatform] = value
-	err := self.Run("git", "config", configdomain.KeyCodeHostingPlatform.String(), value)
-	return err
-}
-
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (self *GitTown) SetCodeHostingOriginHostname(value string) error {
 	self.Config.Local[configdomain.KeyCodeHostingOriginHostname] = value
