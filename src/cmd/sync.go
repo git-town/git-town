@@ -261,7 +261,7 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 type syncBranchProgramArgs struct {
 	branchInfos           domain.BranchInfos
 	branchTypes           domain.BranchTypes
-	isOffline             bool
+	isOffline             configdomain.Offline
 	lineage               configdomain.Lineage
 	program               *program.Program
 	mainBranch            domain.LocalBranchName

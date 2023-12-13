@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
@@ -117,7 +118,7 @@ type OpenRepoArgs struct {
 type OpenRepoResult struct {
 	Runner         git.ProdRunner
 	RootDir        domain.RepoRootDir
-	IsOffline      bool
+	IsOffline      configdomain.Offline
 	ConfigSnapshot undo.ConfigSnapshot
 }
 

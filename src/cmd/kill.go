@@ -82,7 +82,7 @@ type killConfig struct {
 	branchWhenDone domain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  domain.LocalBranchName
-	isOffline      bool
+	isOffline      configdomain.Offline
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
