@@ -69,7 +69,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	githubToken := run.Config.GitHubToken()
 	gitlabToken := run.Config.GitLabToken()
 	hosting := fc.Hosting(run.Config.HostingService())
-	isOffline := fc.Bool(run.Config.IsOffline())
+	isOffline := fc.Offline(run.Config.IsOffline())
 	lineage := run.Config.Lineage(run.Backend.Config.RemoveLocalConfigValue)
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
 	pushHook := fc.PushHook(run.Config.PushHook())
@@ -102,7 +102,7 @@ type ConfigConfig struct {
 	githubToken           configdomain.GitHubToken
 	gitlabToken           configdomain.GitLabToken
 	hosting               configdomain.Hosting
-	isOffline             bool
+	isOffline             configdomain.Offline
 	lineage               configdomain.Lineage
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              configdomain.PushHook
@@ -119,7 +119,7 @@ func printConfig(config ConfigConfig) {
 	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
-	print.Entry("offline", format.Bool(config.isOffline))
+	print.Entry("offline", format.Bool(config.isOffline.Bool()))
 	print.Entry("run pre-push hook", format.Bool(bool(config.pushHook)))
 	print.Entry("push new branches", format.Bool(config.pushNewBranches.Bool()))
 	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))

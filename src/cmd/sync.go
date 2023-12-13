@@ -76,7 +76,7 @@ func executeSync(all, dryRun, verbose bool) error {
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
-			isOffline:             config.isOffline,
+			isOnline:              config.isOnline,
 			lineage:               config.lineage,
 			program:               &runProgram,
 			mainBranch:            config.mainBranch,
@@ -115,7 +115,7 @@ type syncConfig struct {
 	branches              domain.Branches
 	branchesToSync        domain.BranchInfos
 	hasOpenChanges        bool
-	isOffline             bool
+	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
@@ -208,7 +208,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchesToSync:        branchesToSync,
 		hasOpenChanges:        repoStatus.OpenChanges,
 		remotes:               remotes,
-		isOffline:             repo.IsOffline,
+		isOnline:              repo.IsOffline.ToOnline(),
 		lineage:               lineage,
 		mainBranch:            mainBranch,
 		previousBranch:        previousBranch,
@@ -226,7 +226,7 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 		syncBranchProgram(branch, args.syncBranchProgramArgs)
 	}
 	args.program.Add(&opcode.CheckoutIfExists{Branch: args.initialBranch})
-	if args.remotes.HasOrigin() && args.shouldPushTags && !args.isOffline {
+	if args.remotes.HasOrigin() && args.shouldPushTags && args.isOnline.Bool() {
 		args.program.Add(&opcode.PushTags{})
 	}
 	wrap(args.program, wrapOptions{
@@ -261,7 +261,7 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 type syncBranchProgramArgs struct {
 	branchInfos           domain.BranchInfos
 	branchTypes           domain.BranchTypes
-	isOffline             bool
+	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
 	program               *program.Program
 	mainBranch            domain.LocalBranchName
@@ -319,7 +319,7 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 	} else {
 		syncPerennialBranchProgram(branch, args)
 	}
-	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
+	if args.pushBranch && args.remotes.HasOrigin() && args.isOnline.Bool() {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: args.pushHook.Negate()})

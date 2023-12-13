@@ -135,11 +135,11 @@ func TestGitTown(t *testing.T) {
 		must.NoError(t, err)
 		offline, err := repo.Config.IsOffline()
 		must.NoError(t, err)
-		must.True(t, offline)
+		must.True(t, offline.Bool())
 		err = repo.Config.SetOffline(false)
 		must.NoError(t, err)
 		offline, err = repo.Config.IsOffline()
 		must.NoError(t, err)
-		must.False(t, offline)
+		must.False(t, offline.Bool())
 	})
 }

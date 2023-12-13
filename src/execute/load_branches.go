@@ -50,7 +50,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		if err != nil {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
-		if remotes.HasOrigin() && !args.Repo.IsOffline {
+		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
 			err = args.Repo.Runner.Frontend.Fetch()
 			if err != nil {
 				return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err

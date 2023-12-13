@@ -62,6 +62,11 @@ func (self *FailureCollector) NewBranchPush(value configdomain.NewBranchPush, er
 	return value
 }
 
+func (self *FailureCollector) Offline(value configdomain.Offline, err error) configdomain.Offline {
+	self.Check(err)
+	return value
+}
+
 func (self *FailureCollector) PushHook(value configdomain.PushHook, err error) configdomain.PushHook {
 	self.Check(err)
 	return value
