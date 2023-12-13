@@ -12,7 +12,7 @@ import (
 )
 
 type ConfigFile struct {
-	Branches               Branches
+	Branches               Branches     `toml:"branches"`
 	CodeHosting            CodeHosting  `toml:"code-hosting"`
 	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
 	PushNewbranches        bool         `toml:"push-new-branches"`

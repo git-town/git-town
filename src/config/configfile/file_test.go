@@ -75,7 +75,7 @@ push-new-branches = false
 ship-delete-remote-branch = false
 sync-upstream = true
 
-[Branches]
+[branches]
   main = "main"
   perennials = ["public", "qa"]
 
