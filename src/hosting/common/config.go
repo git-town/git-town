@@ -4,9 +4,6 @@ import "strings"
 
 // Config contains data needed by all platform connectors.
 type Config struct {
-	// bearer token to authenticate with the API
-	APIToken string
-
 	// Hostname override
 	Hostname string
 
