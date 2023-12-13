@@ -88,7 +88,7 @@ func (self *FrontendCommands) CreateBranch(name domain.LocalBranchName, parent d
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (self *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook domain.PushHook) error {
+func (self *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch domain.LocalBranchName, noPushHook domain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -98,7 +98,7 @@ func (self *FrontendCommands) CreateRemoteBranch(localSHA domain.SHA, branch dom
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (self *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook domain.PushHook) error {
+func (self *FrontendCommands) CreateTrackingBranch(branch domain.LocalBranchName, remote domain.Remote, noPushHook domain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -149,7 +149,7 @@ func (self *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (self *FrontendCommands) ForcePushBranch(noPushHook domain.PushHook) error {
+func (self *FrontendCommands) ForcePushBranch(noPushHook domain.NoPushHook) error {
 	args := []string{"push", "--force-with-lease"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -180,7 +180,7 @@ func (self *FrontendCommands) Pull() error {
 }
 
 // PushCurrentBranch pushes the current branch to its tracking branch.
-func (self *FrontendCommands) PushCurrentBranch(noPushHook domain.PushHook) error {
+func (self *FrontendCommands) PushCurrentBranch(noPushHook domain.NoPushHook) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")

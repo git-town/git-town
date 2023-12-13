@@ -103,7 +103,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
-		NoPushHook:              !config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
