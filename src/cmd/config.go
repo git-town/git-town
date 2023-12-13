@@ -72,7 +72,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	isOffline := fc.Bool(run.Config.IsOffline())
 	lineage := run.Config.Lineage(run.Backend.Config.RemoveLocalConfigValue)
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
-	pushHook := fc.Bool(run.Config.PushHook())
+	pushHook := fc.PushHook(run.Config.PushHook())
 	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
@@ -105,7 +105,7 @@ type ConfigConfig struct {
 	isOffline             bool
 	lineage               configdomain.Lineage
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              bool
+	pushHook              domain.PushHook
 	pushNewBranches       bool
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
@@ -120,7 +120,7 @@ func printConfig(config ConfigConfig) {
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.isOffline))
-	print.Entry("run pre-push hook", format.Bool(config.pushHook))
+	print.Entry("run pre-push hook", format.Bool(bool(config.pushHook)))
 	print.Entry("push new branches", format.Bool(config.pushNewBranches))
 	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
 	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())

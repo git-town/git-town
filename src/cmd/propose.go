@@ -85,7 +85,7 @@ func executePropose(verbose bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              !config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 	})
 }
 
@@ -100,7 +100,7 @@ type proposeConfig struct {
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              bool
+	pushHook              domain.PushHook
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
