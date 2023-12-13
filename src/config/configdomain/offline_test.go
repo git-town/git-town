@@ -19,5 +19,13 @@ func TestOffline(t *testing.T) {
 			want := configdomain.Online(false)
 			must.EqOp(t, want, have)
 		})
+
+		t.Run("is online", func(t *testing.T) {
+			t.Parallel()
+			offline := configdomain.Offline(false)
+			have := offline.ToOnline()
+			want := configdomain.Online(true)
+			must.EqOp(t, want, have)
+		})
 	})
 }
