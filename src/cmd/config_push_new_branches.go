@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
@@ -55,7 +56,7 @@ func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 }
 
 func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
-	var setting bool
+	var setting configdomain.NewBranchPush
 	var err error
 	if globalFlag {
 		setting, err = run.Config.ShouldNewBranchPushGlobal()
@@ -65,14 +66,14 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	io.Println(format.Bool(setting))
+	io.Println(format.Bool(setting.Bool()))
 	return nil
 }
 
 func setPushNewBranches(text string, globalFlag bool, run *git.ProdRunner) error {
-	value, err := confighelpers.ParseBool(text)
+	boolValue, err := confighelpers.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
-	return run.Config.SetNewBranchPush(value, globalFlag)
+	return run.Config.SetNewBranchPush(configdomain.NewBranchPush(boolValue), globalFlag)
 }

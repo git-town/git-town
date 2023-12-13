@@ -57,6 +57,11 @@ func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) con
 	return value
 }
 
+func (self *FailureCollector) NewBranchPush(value configdomain.NewBranchPush, err error) configdomain.NewBranchPush {
+	self.Check(err)
+	return value
+}
+
 func (self *FailureCollector) PushHook(value configdomain.PushHook, err error) configdomain.PushHook {
 	self.Check(err)
 	return value
