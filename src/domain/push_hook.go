@@ -6,15 +6,15 @@ type PushHook bool
 // NoPushHook helps using the type checker to verify correct negation of the push-hook configuration setting.
 type NoPushHook bool
 
-func (pushHook PushHook) Bool() bool {
-	return bool(pushHook)
+func (self PushHook) Bool() bool {
+	return bool(self)
 }
 
-func (pushHook PushHook) Negate() NoPushHook {
-	boolValue := bool(pushHook)
+func (self NoPushHook) Bool() bool {
+	return bool(self)
+}
+
+func (self PushHook) Negate() NoPushHook {
+	boolValue := bool(self)
 	return NoPushHook(!boolValue)
-}
-
-func (noPushHook NoPushHook) Bool() bool {
-	return bool(noPushHook)
 }
