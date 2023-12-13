@@ -321,7 +321,7 @@ func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
 
 // SetShouldShipDeleteRemoteBranch updates the configured delete-remote-branch strategy.
 func (self *GitTown) SetShouldShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch) error {
-	err := self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(bool(value)))
+	err := self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(value.Bool()))
 	return err
 }
 
