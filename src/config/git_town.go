@@ -22,6 +22,8 @@ import (
 type GitTown struct {
 	gitconfig.Git
 	originURLCache OriginURLCache
+	gitData        configdomain.PartialConfig // the configuration data stored in git
+	ConfigData     configdomain.Config        // the configuration data to use
 }
 
 type OriginURLCache map[string]*giturl.Parts
