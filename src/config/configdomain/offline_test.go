@@ -9,6 +9,7 @@ import (
 
 func TestOffline(t *testing.T) {
 	t.Parallel()
+
 	t.Run("ToOnline", func(t *testing.T) {
 		t.Parallel()
 		tests := map[bool]bool{
