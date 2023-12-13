@@ -241,7 +241,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town setting "color.ui" is "([^"]*)"$`, func(value string) error {
-		return state.fixture.DevRepo.Config.SetColorUI(value)
+		return state.fixture.DevRepo.SetColorUI(value)
 	})
 
 	suite.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(branch, value string) error {

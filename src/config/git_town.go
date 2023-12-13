@@ -271,26 +271,6 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
-// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
-func (self *GitTown) SetCodeHostingDriver(value string) error {
-	self.Config.Local[configdomain.KeyCodeHostingPlatform] = value
-	err := self.Run("git", "config", configdomain.KeyCodeHostingPlatform.String(), value)
-	return err
-}
-
-// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
-func (self *GitTown) SetCodeHostingOriginHostname(value string) error {
-	self.Config.Local[configdomain.KeyCodeHostingOriginHostname] = value
-	err := self.Run("git", "config", configdomain.KeyCodeHostingOriginHostname.String(), value)
-	return err
-}
-
-// SetColorUI configures whether Git output contains color codes.
-func (self *GitTown) SetColorUI(value string) error {
-	err := self.Run("git", "config", "color.ui", value)
-	return err
-}
-
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
@@ -300,8 +280,8 @@ func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
 
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *GitTown) SetNewBranchPush(value bool, global bool) error {
-	setting := strconv.FormatBool(value)
+func (self *GitTown) SetNewBranchPush(value configdomain.NewBranchPush, global bool) error {
+	setting := strconv.FormatBool(bool(value))
 	if global {
 		err := self.SetGlobalConfigValue(configdomain.KeyPushNewBranches, setting)
 		return err
@@ -377,7 +357,7 @@ func (self *GitTown) SetTestOrigin(value string) error {
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
-func (self *GitTown) ShouldNewBranchPush() (bool, error) {
+func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
 	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
 	if err != nil {
 		return false, err
@@ -390,12 +370,12 @@ func (self *GitTown) ShouldNewBranchPush() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushNewBranches, config)
 	}
-	return value, nil
+	return configdomain.NewBranchPush(value), nil
 }
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
-func (self *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
+func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, error) {
 	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
 	if err != nil {
 		return false, err
@@ -404,7 +384,8 @@ func (self *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	return confighelpers.ParseBool(config)
+	boolValue, err := confighelpers.ParseBool(config)
+	return configdomain.NewBranchPush(boolValue), err
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
