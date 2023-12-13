@@ -345,12 +345,6 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 	_ = os.Remove(filepath.Join(self.WorkingDir, ".git", "description"))
 }
 
-// SetColorUI configures whether Git output contains color codes.
-func (self *TestCommands) SetColorUI(value string) error {
-	err := self.Run("git", "config", "color.ui", value)
-	return err
-}
-
 // SHAForCommit provides the SHA for the commit with the given name.
 // TODO: return a domain.SHA here.
 func (self *TestCommands) SHAForCommit(name string) string {
@@ -359,6 +353,12 @@ func (self *TestCommands) SHAForCommit(name string) string {
 		log.Fatalf("cannot find the SHA of commit %q", name)
 	}
 	return strings.Split(output, "\n")[0]
+}
+
+// SetColorUI configures whether Git output contains color codes.
+func (self *TestCommands) SetColorUI(value string) error {
+	err := self.Run("git", "config", "color.ui", value)
+	return err
 }
 
 // StageFiles adds the file with the given name to the Git index.
