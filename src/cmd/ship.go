@@ -134,7 +134,7 @@ type shipConfig struct {
 	pushHook                 configdomain.PushHook
 	syncUpstream             configdomain.SyncUpstream
 	syncFeatureStrategy      configdomain.SyncFeatureStrategy
-	syncBeforeShip           bool
+	syncBeforeShip           configdomain.SyncBeforeShip
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
