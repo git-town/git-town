@@ -11,8 +11,8 @@ Feature: handle previously unfinished Git Town commands
     And I run "git-town sync"
     And it prints the error:
       """
-      To go back to where you started, run "git-town undo".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
 
   Scenario: quit a command that is blocked by a previously unfinished Git Town command
