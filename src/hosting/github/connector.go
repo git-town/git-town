@@ -102,15 +102,16 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func GetAPIToken(gitConfig gitTownConfig) string {
+func GetAPIToken(gitConfigToken string) string {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
-	if apiToken == "" {
-		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
+	if apiToken != "" {
+		return apiToken
 	}
-	if apiToken == "" {
-		apiToken = gitConfig.GitHubToken()
+	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
+	if apiToken != "" {
+		return apiToken
 	}
-	return apiToken
+	return gitConfigToken
 }
 
 // NewConnector provides a fully configured GithubConnector instance
