@@ -1,7 +1,7 @@
 package messages
 
 const (
-	UndoContinueGuidance               = "\n\nTo go back to where you started, run \"git-town undo\".\nTo continue after having resolved conflicts, run \"git-town continue\".\n"
+	UndoContinueGuidance               = "\n\nTo continue after having resolved conflicts, run \"git-town continue\".\nTo go back to where you started, run \"git-town undo\".\n"
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
