@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	common.Config
+	APIToken domain.GitLabToken
 }
 
 func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {

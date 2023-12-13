@@ -79,15 +79,17 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != configdomain.HostingGitLab) {
 		return nil, nil //nolint:nilnil
 	}
-	gitlabConfig := Config{common.Config{
-		APIToken:     args.APIToken,
-		Hostname:     args.OriginURL.Host,
-		Organization: args.OriginURL.Org,
-		Repository:   args.OriginURL.Repo,
-	}}
+	gitlabConfig := Config{
+		Config: common.Config{
+			Hostname:     args.OriginURL.Host,
+			Organization: args.OriginURL.Org,
+			Repository:   args.OriginURL.Repo,
+		},
+		APIToken: args.APIToken,
+	}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
+	client, err := gitlab.NewOAuthClient(string(gitlabConfig.APIToken), httpClient, clientOptFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +104,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
-	APIToken       string
+	APIToken       domain.GitLabToken
 	Log            common.Log
 }
 

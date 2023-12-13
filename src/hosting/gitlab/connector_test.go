@@ -19,11 +19,11 @@ func TestGitlabConnector(t *testing.T) {
 		t.Parallel()
 		config := gitlab.Config{
 			Config: common.Config{
-				APIToken:     "",
 				Hostname:     "",
 				Organization: "",
 				Repository:   "",
 			},
+			APIToken: "",
 		}
 		give := domain.Proposal{
 			Number:       1,
@@ -67,8 +67,8 @@ func TestGitlabConnector(t *testing.T) {
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
-							APIToken:     "",
 						},
+						APIToken: "apiToken",
 					},
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
@@ -93,11 +93,11 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
 			Config: common.Config{
-				APIToken:     "apiToken",
 				Hostname:     "gitlab.com",
 				Organization: "git-town",
 				Repository:   "docs",
 			},
+			APIToken: "apiToken",
 		}
 		must.EqOp(t, wantConfig, have.Config)
 	})
@@ -113,11 +113,11 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
 			Config: common.Config{
-				APIToken:     "apiToken",
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",
 			},
+			APIToken: "apiToken",
 		}
 		must.EqOp(t, wantConfig, have.Config)
 	})

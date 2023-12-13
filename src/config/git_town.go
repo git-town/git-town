@@ -77,18 +77,18 @@ func (self *GitTown) GitAlias(alias configdomain.Alias) string {
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
-func (self *GitTown) GitHubToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGithubToken)
+func (self *GitTown) GitHubToken() domain.GitHubToken {
+	return domain.GitHubToken(self.LocalOrGlobalConfigValue(configdomain.KeyGithubToken))
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
-func (self *GitTown) GitLabToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGitlabToken)
+func (self *GitTown) GitLabToken() domain.GitLabToken {
+	return domain.GitLabToken(self.LocalOrGlobalConfigValue(configdomain.KeyGitlabToken))
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
-func (self *GitTown) GiteaToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGiteaToken)
+func (self *GitTown) GiteaToken() domain.GiteaToken {
+	return domain.GiteaToken(self.LocalOrGlobalConfigValue(configdomain.KeyGiteaToken))
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
