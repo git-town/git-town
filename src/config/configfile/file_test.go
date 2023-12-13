@@ -16,7 +16,7 @@ func TestConfigfile(t *testing.T) {
 			give := `
 push-new-branches = true
 ship-delete-remote-branch = false
-syncUpstream = true
+sync-upstream = true
 
 [branches]
 main = "main"
@@ -69,7 +69,7 @@ perennial-branches = "rebase"
 		want := `
 push-new-branches = false
 ship-delete-remote-branch = false
-SyncUpstream = true
+sync-upstream = true
 
 [Branches]
   Main = "main"

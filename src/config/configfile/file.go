@@ -17,7 +17,7 @@ type ConfigFile struct {
 	SyncStrategy           SyncStrategy `toml:"sync-strategy"`
 	PushNewbranches        bool         `toml:"push-new-branches"`
 	ShipDeleteRemoteBranch bool         `toml:"ship-delete-remote-branch"`
-	SyncUpstream           bool
+	SyncUpstream           bool         `toml:"sync-upstream"`
 }
 
 type Branches struct {
