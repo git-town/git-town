@@ -9,6 +9,7 @@ import (
 
 func TestOffline(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Online", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is offline", func(t *testing.T) {

@@ -314,7 +314,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
-			isOffline:             config.isOffline,
+			isOnline:              config.isOnline,
 			lineage:               config.lineage,
 			program:               &prog,
 			mainBranch:            config.mainBranch,
@@ -329,7 +329,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
-			isOffline:             config.isOffline,
+			isOnline:              config.isOnline,
 			lineage:               config.lineage,
 			program:               &prog,
 			mainBranch:            config.mainBranch,
@@ -362,14 +362,14 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	} else {
 		prog.Add(&opcode.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
-	if config.remotes.HasOrigin() && !config.isOffline {
+	if config.remotes.HasOrigin() && config.isOnline.Bool() {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName, NoPushHook: config.pushHook.Negate()})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
+	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.isOnline.Bool()) {
 		if config.deleteOriginBranch {
 			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}

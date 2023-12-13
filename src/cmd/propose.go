@@ -95,7 +95,7 @@ type proposeConfig struct {
 	connector             hosting.Connector
 	hasOpenChanges        bool
 	remotes               domain.Remotes
-	isOffline             configdomain.Offline
+	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
@@ -186,7 +186,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		connector:             connector,
 		hasOpenChanges:        repoStatus.OpenChanges,
 		remotes:               remotes,
-		isOffline:             repo.IsOffline,
+		isOnline:              repo.IsOffline.ToOnline(),
 		lineage:               lineage,
 		mainBranch:            mainBranch,
 		previousBranch:        previousBranch,
@@ -204,7 +204,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
 			remotes:               config.remotes,
-			isOffline:             config.isOffline,
+			isOnline:              config.isOnline,
 			lineage:               config.lineage,
 			program:               &prog,
 			mainBranch:            config.mainBranch,
