@@ -120,7 +120,7 @@ type shipConfig struct {
 	canShipViaAPI            bool
 	childBranches            domain.LocalBranchNames
 	proposalMessage          string
-	deleteOriginBranch       bool
+	deleteTrackingBranch     configdomain.ShipDeleteTrackingBranch
 	hasOpenChanges           bool
 	remotes                  domain.Remotes
 	isShippingInitialBranch  bool
@@ -165,7 +165,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteOrigin, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
+	deleteTrackingBranch, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -276,7 +276,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
 		proposalMessage:          proposalMessage,
-		deleteOriginBranch:       deleteOrigin,
+		deleteTrackingBranch:     deleteTrackingBranch,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		remotes:                  remotes,
 		isOnline:                 repo.IsOffline.ToOnline(),
@@ -370,7 +370,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.isOnline.Bool()) {
-		if config.deleteOriginBranch {
+		if config.deleteTrackingBranch {
 			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}

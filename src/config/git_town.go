@@ -320,8 +320,8 @@ func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
 }
 
 // SetShouldShipDeleteRemoteBranch updates the configured delete-remote-branch strategy.
-func (self *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
-	err := self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(value))
+func (self *GitTown) SetShouldShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch) error {
+	err := self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(bool(value)))
 	return err
 }
 
@@ -387,7 +387,7 @@ func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, er
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
-func (self *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
+func (self *GitTown) ShouldShipDeleteOriginBranch() (configdomain.ShipDeleteTrackingBranch, error) {
 	setting := self.LocalOrGlobalConfigValue(configdomain.KeyShipDeleteRemoteBranch)
 	if setting == "" {
 		return true, nil
@@ -396,7 +396,7 @@ func (self *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
 	if err != nil {
 		return true, fmt.Errorf(messages.ValueInvalid, configdomain.KeyShipDeleteRemoteBranch, setting)
 	}
-	return result, nil
+	return configdomain.ShipDeleteTrackingBranch(result), nil
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.

@@ -64,7 +64,7 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := gohacks.FailureCollector{}
 	branchTypes := run.Config.BranchTypes()
-	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
+	deleteOrigin := fc.ShipDeleteRemoteBranch(run.Config.ShouldShipDeleteOriginBranch())
 	giteaToken := run.Config.GiteaToken()
 	githubToken := run.Config.GitHubToken()
 	gitlabToken := run.Config.GitLabToken()
@@ -79,7 +79,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	syncBeforeShip := fc.Bool(run.Config.SyncBeforeShip())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
-		deleteOrigin:          deleteOrigin,
+		deleteTrackingBranch:  deleteOrigin,
 		hosting:               hosting,
 		giteaToken:            giteaToken,
 		githubToken:           githubToken,
@@ -97,7 +97,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 
 type ConfigConfig struct {
 	branchTypes           domain.BranchTypes
-	deleteOrigin          bool
+	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
 	giteaToken            configdomain.GiteaToken
 	githubToken           configdomain.GitHubToken
 	gitlabToken           configdomain.GitLabToken
@@ -122,7 +122,7 @@ func printConfig(config ConfigConfig) {
 	print.Entry("offline", format.Bool(config.isOffline.Bool()))
 	print.Entry("run pre-push hook", format.Bool(bool(config.pushHook)))
 	print.Entry("push new branches", format.Bool(config.pushNewBranches.Bool()))
-	print.Entry("ship removes the remote branch", format.Bool(config.deleteOrigin))
+	print.Entry("ship deletes the tracking branch", format.Bool(config.deleteTrackingBranch.Bool()))
 	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
 	print.Entry("sync with upstream", format.Bool(config.shouldSyncUpstream))
