@@ -181,7 +181,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && !config.isOnline.Bool() {
+	if config.oldBranch.HasTrackingBranch() && config.isOnline.Bool() {
 		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
