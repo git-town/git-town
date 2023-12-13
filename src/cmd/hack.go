@@ -124,7 +124,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		previousBranch:            previousBranch,
 		syncPerennialStrategy:     syncPerennialStrategy,
 		pushHook:                  pushHook,
-		isOffline:                 isOffline,
+		isOnline:                  isOffline.ToOnline(),
 		shouldSyncUpstream:        shouldSyncUpstream,
 		syncFeatureStrategy:       syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err

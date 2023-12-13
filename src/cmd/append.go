@@ -84,7 +84,7 @@ type appendConfig struct {
 	branchesToSync            domain.BranchInfos
 	hasOpenChanges            bool
 	remotes                   domain.Remotes
-	isOffline                 configdomain.Offline
+	isOnline                  configdomain.Online
 	lineage                   configdomain.Lineage
 	mainBranch                domain.LocalBranchName
 	newBranchParentCandidates domain.LocalBranchNames
@@ -152,7 +152,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 		branchesToSync:            branchesToSync,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
-		isOffline:                 repo.IsOffline,
+		isOnline:                  repo.IsOffline.ToOnline(),
 		lineage:                   lineage,
 		mainBranch:                mainBranch,
 		newBranchParentCandidates: initialAndAncestors,
@@ -173,7 +173,7 @@ func appendProgram(config *appendConfig) program.Program {
 		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
-			isOnline:              config.isOffline.ToOnline(),
+			isOnline:              config.isOnline,
 			lineage:               config.lineage,
 			program:               &prog,
 			remotes:               config.remotes,
@@ -196,7 +196,7 @@ func appendProgram(config *appendConfig) program.Program {
 		MainBranch: config.mainBranch,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && !config.isOffline.Bool() {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && config.isOnline.Bool() {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	wrap(&prog, wrapOptions{
