@@ -56,7 +56,7 @@ type NewConnectorArgs struct {
 	HostingService  configdomain.Hosting
 	OriginURL       *giturl.Parts
 	GetSHAForBranch common.SHAForBranchFunc
-	GiteaAPIToken   string
+	GiteaAPIToken   domain.GiteaToken
 	GithubAPIToken  domain.GitHubToken
 	GitlabAPIToken  domain.GitLabToken
 	MainBranch      domain.LocalBranchName

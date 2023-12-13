@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	common.Config
-	APIToken domain.GitLabToken // bearer token to authenticate with the API
+	APIToken domain.GitLabToken
 }
 
 func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {

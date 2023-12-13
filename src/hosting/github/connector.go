@@ -20,7 +20,7 @@ import (
 type Connector struct {
 	client *github.Client
 	common.Config
-	APIToken   domain.GitHubToken // bearer token to authenticate with the API
+	APIToken   domain.GitHubToken
 	MainBranch domain.LocalBranchName
 	log        common.Log
 }

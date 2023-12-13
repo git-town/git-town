@@ -98,7 +98,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 type ConfigConfig struct {
 	branchTypes           domain.BranchTypes
 	deleteOrigin          bool
-	giteaToken            string
+	giteaToken            domain.GiteaToken
 	githubToken           domain.GitHubToken
 	gitlabToken           domain.GitLabToken
 	hosting               configdomain.Hosting
@@ -132,7 +132,7 @@ func printConfig(config ConfigConfig) {
 	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
 	print.Entry("GitHub token", format.StringSetting(string(config.githubToken)))
 	print.Entry("GitLab token", format.StringSetting(string(config.gitlabToken)))
-	print.Entry("Gitea token", format.StringSetting(config.giteaToken))
+	print.Entry("Gitea token", format.StringSetting(string(config.giteaToken)))
 	fmt.Println()
 	if !config.branchTypes.MainBranch.IsEmpty() {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.lineage))

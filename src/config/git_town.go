@@ -85,8 +85,8 @@ func (self *GitTown) GitLabToken() domain.GitLabToken {
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
-func (self *GitTown) GiteaToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGiteaToken)
+func (self *GitTown) GiteaToken() domain.GiteaToken {
+	return domain.GiteaToken(self.LocalOrGlobalConfigValue(configdomain.KeyGiteaToken))
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
