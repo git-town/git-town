@@ -77,7 +77,7 @@ type undoConfig struct {
 	mainBranch              domain.LocalBranchName
 	lineage                 configdomain.Lineage
 	previousBranch          domain.LocalBranchName
-	pushHook                bool
+	pushHook                domain.PushHook
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, configdomain.Lineage, error) {

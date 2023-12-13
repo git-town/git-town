@@ -1,10 +1,13 @@
 package opcode
 
-import "github.com/git-town/git-town/v11/src/vm/shared"
+import (
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/vm/shared"
+)
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
-	NoPushHook bool
+	NoPushHook domain.PushHook
 	undeclaredOpcodeMethods
 }
 

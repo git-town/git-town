@@ -120,7 +120,7 @@ type syncConfig struct {
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              bool
+	pushHook              domain.PushHook
 	remotes               domain.Remotes
 	shouldPushTags        bool
 	shouldSyncUpstream    bool
@@ -267,7 +267,7 @@ type syncBranchProgramArgs struct {
 	mainBranch            domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushBranch            bool
-	pushHook              bool
+	pushHook              domain.PushHook
 	remotes               domain.Remotes
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
@@ -322,9 +322,9 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		switch {
 		case !branch.HasTrackingBranch():
-			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: !args.pushHook})
+			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: args.pushHook.Negate()})
 		case !isFeatureBranch:
-			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: !args.pushHook})
+			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: args.pushHook.Negate()})
 		default:
 			pushFeatureBranchProgram(list, branch.LocalName, args.syncFeatureStrategy, args.pushHook)
 		}
@@ -380,11 +380,11 @@ func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domai
 	}
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook bool) {
+func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook domain.PushHook) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: !pushHook})
+		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: pushHook.Negate()})
 	case configdomain.SyncFeatureStrategyRebase:
-		list.Add(&opcode.ForcePushCurrentBranch{NoPushHook: !pushHook})
+		list.Add(&opcode.ForcePushCurrentBranch{NoPushHook: pushHook.Negate()})
 	}
 }
