@@ -269,19 +269,6 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
-// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
-func (self *GitTown) SetCodeHostingOriginHostname(value string) error {
-	self.Config.Local[configdomain.KeyCodeHostingOriginHostname] = value
-	err := self.Run("git", "config", configdomain.KeyCodeHostingOriginHostname.String(), value)
-	return err
-}
-
-// SetColorUI configures whether Git output contains color codes.
-func (self *GitTown) SetColorUI(value string) error {
-	err := self.Run("git", "config", "color.ui", value)
-	return err
-}
-
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
