@@ -100,7 +100,7 @@ type proposeConfig struct {
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              domain.PushHook
+	pushHook              configdomain.PushHook
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }

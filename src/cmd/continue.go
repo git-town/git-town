@@ -124,7 +124,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 type continueConfig struct {
 	connector hosting.Connector
 	lineage   configdomain.Lineage
-	pushHook  domain.PushHook
+	pushHook  configdomain.PushHook
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {

@@ -98,14 +98,14 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 type ConfigConfig struct {
 	branchTypes           domain.BranchTypes
 	deleteOrigin          bool
-	giteaToken            domain.GiteaToken
-	githubToken           domain.GitHubToken
-	gitlabToken           domain.GitLabToken
+	giteaToken            configdomain.GiteaToken
+	githubToken           configdomain.GitHubToken
+	gitlabToken           configdomain.GitLabToken
 	hosting               configdomain.Hosting
 	isOffline             bool
 	lineage               configdomain.Lineage
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              domain.PushHook
+	pushHook              configdomain.PushHook
 	pushNewBranches       bool
 	shouldSyncUpstream    bool
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy

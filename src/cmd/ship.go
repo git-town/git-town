@@ -131,7 +131,7 @@ type shipConfig struct {
 	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
 	syncPerennialStrategy    configdomain.SyncPerennialStrategy
-	pushHook                 domain.PushHook
+	pushHook                 configdomain.PushHook
 	shouldSyncUpstream       bool
 	syncFeatureStrategy      configdomain.SyncFeatureStrategy
 	syncBeforeShip           bool

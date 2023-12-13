@@ -57,7 +57,7 @@ func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) con
 	return value
 }
 
-func (self *FailureCollector) PushHook(value domain.PushHook, err error) domain.PushHook {
+func (self *FailureCollector) PushHook(value configdomain.PushHook, err error) configdomain.PushHook {
 	self.Check(err)
 	return value
 }

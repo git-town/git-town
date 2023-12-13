@@ -1,9 +1,9 @@
-package domain_test
+package configdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,9 +17,9 @@ func TestPushHook(t *testing.T) {
 			false: true,
 		}
 		for giveBool, wantBool := range tests {
-			hook := domain.PushHook(giveBool)
+			hook := configdomain.PushHook(giveBool)
 			have := hook.Negate()
-			want := domain.NoPushHook(wantBool)
+			want := configdomain.NoPushHook(wantBool)
 			must.EqOp(t, want, have)
 		}
 	})
