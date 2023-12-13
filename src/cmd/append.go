@@ -92,7 +92,7 @@ type appendConfig struct {
 	parentBranch              domain.LocalBranchName
 	previousBranch            domain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
-	shouldNewBranchPush       bool
+	shouldNewBranchPush       configdomain.NewBranchPush
 	shouldSyncUpstream        bool
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
 	targetBranch              domain.LocalBranchName
@@ -120,7 +120,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	mainBranch := repo.Runner.Config.MainBranch()
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
+	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
@@ -196,7 +196,7 @@ func appendProgram(config *appendConfig) program.Program {
 		MainBranch: config.mainBranch,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && !config.isOffline {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	wrap(&prog, wrapOptions{
