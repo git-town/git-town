@@ -103,6 +103,11 @@ func (self *FailureCollector) Strings(value []string, err error) []string {
 	return value
 }
 
+func (self *FailureCollector) SyncBeforeShip(value configdomain.SyncBeforeShip, err error) configdomain.SyncBeforeShip {
+	self.Check(err)
+	return value
+}
+
 // SyncFeatureStrategy provides the string part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) SyncFeatureStrategy(value configdomain.SyncFeatureStrategy, err error) configdomain.SyncFeatureStrategy {

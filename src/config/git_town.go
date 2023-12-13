@@ -410,12 +410,13 @@ func (self *GitTown) ShouldSyncUpstream() (configdomain.SyncUpstream, error) {
 }
 
 // SyncBeforeShip indicates whether a sync should be performed before a ship.
-func (self *GitTown) SyncBeforeShip() (bool, error) {
+func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncBeforeShip)
 	if text == "" {
 		return false, nil
 	}
-	return confighelpers.ParseBool(text)
+	boolValue, err := confighelpers.ParseBool(text)
+	return configdomain.SyncBeforeShip(boolValue), err
 }
 
 func (self *GitTown) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
