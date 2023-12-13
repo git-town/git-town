@@ -89,7 +89,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
+	client, err := gitlab.NewOAuthClient(string(gitlabConfig.APIToken), httpClient, clientOptFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
-	APIToken       string
+	APIToken       domain.GitLabToken
 	Log            common.Log
 }
 

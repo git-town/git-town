@@ -58,7 +58,7 @@ type NewConnectorArgs struct {
 	GetSHAForBranch common.SHAForBranchFunc
 	GiteaAPIToken   string
 	GithubAPIToken  domain.GitHubToken
-	GitlabAPIToken  string
+	GitlabAPIToken  domain.GitLabToken
 	MainBranch      domain.LocalBranchName
 	Log             common.Log
 }

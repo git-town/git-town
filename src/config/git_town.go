@@ -80,8 +80,8 @@ func (self *GitTown) GitHubToken() domain.GitHubToken {
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
-func (self *GitTown) GitLabToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGitlabToken)
+func (self *GitTown) GitLabToken() domain.GitLabToken {
+	return domain.GitLabToken(self.LocalOrGlobalConfigValue(configdomain.KeyGitlabToken))
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.

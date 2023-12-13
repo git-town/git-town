@@ -100,7 +100,7 @@ type ConfigConfig struct {
 	deleteOrigin          bool
 	giteaToken            string
 	githubToken           domain.GitHubToken
-	gitlabToken           string
+	gitlabToken           domain.GitLabToken
 	hosting               configdomain.Hosting
 	isOffline             bool
 	lineage               configdomain.Lineage
@@ -131,7 +131,7 @@ func printConfig(config ConfigConfig) {
 	print.Header("Hosting")
 	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
 	print.Entry("GitHub token", format.StringSetting(string(config.githubToken)))
-	print.Entry("GitLab token", format.StringSetting(config.gitlabToken))
+	print.Entry("GitLab token", format.StringSetting(string(config.gitlabToken)))
 	print.Entry("Gitea token", format.StringSetting(config.giteaToken))
 	fmt.Println()
 	if !config.branchTypes.MainBranch.IsEmpty() {
