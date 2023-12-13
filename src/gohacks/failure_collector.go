@@ -84,6 +84,11 @@ func (self *FailureCollector) RepoStatus(value domain.RepoStatus, err error) dom
 	return value
 }
 
+func (self *FailureCollector) ShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch, err error) configdomain.ShipDeleteTrackingBranch {
+	self.Check(err)
+	return value
+}
+
 // String provides the string part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) String(value string, err error) string {
