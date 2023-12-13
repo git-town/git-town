@@ -20,9 +20,9 @@ func TestPushHook(t *testing.T) {
 		})
 		t.Run("false", func(t *testing.T) {
 			t.Parallel()
-			hook := domain.PushHook(true)
+			hook := domain.PushHook(false)
 			have := hook.Negate()
-			want := domain.PushHook(false)
+			want := domain.PushHook(true)
 			must.EqOp(t, want, have)
 		})
 	})
