@@ -39,14 +39,14 @@ func (self *GitTown) BranchTypes() domain.BranchTypes {
 	}
 }
 
-func DetermineOriginURL(originURL, originOverride string, originURLCache OriginURLCache) *giturl.Parts {
+func DetermineOriginURL(originURL string, originOverride domain.OriginHostnameOverride, originURLCache OriginURLCache) *giturl.Parts {
 	cached, has := originURLCache[originURL]
 	if has {
 		return cached
 	}
 	url := giturl.Parse(originURL)
 	if originOverride != "" {
-		url.Host = originOverride
+		url.Host = string(originOverride)
 	}
 	originURLCache[originURL] = url
 	return url
@@ -149,8 +149,8 @@ func (self *GitTown) MainBranch() domain.LocalBranchName {
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
-func (self *GitTown) OriginOverride() string {
-	return self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname)
+func (self *GitTown) OriginOverride() domain.OriginHostnameOverride {
+	return domain.OriginHostnameOverride(self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname))
 }
 
 // OriginURL provides the URL for the "origin" remote.
