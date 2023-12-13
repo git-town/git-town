@@ -70,10 +70,11 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 }
 
 func setPushHook(text string, global bool, run *git.ProdRunner) error {
-	value, err := confighelpers.ParseBool(text)
+	valueBool, err := confighelpers.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
+	value := domain.PushHook(valueBool)
 	if global {
 		return run.Config.SetPushHookGlobally(value)
 	}
