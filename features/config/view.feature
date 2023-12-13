@@ -14,7 +14,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
+        ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
@@ -75,7 +75,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
+        ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
@@ -110,7 +110,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
+        ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes
