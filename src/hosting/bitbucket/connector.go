@@ -26,7 +26,6 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	}
 	return &Connector{
 		Config: common.Config{
-			APIToken:     "",
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

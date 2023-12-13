@@ -119,7 +119,6 @@ func TestNewGiteaConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := common.Config{
-			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",

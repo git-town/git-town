@@ -15,7 +15,8 @@ import (
 )
 
 type Connector struct {
-	client *gitea.Client
+	client   *gitea.Client
+	APIToken domain.GiteaToken
 	common.Config
 	log common.Log
 }
@@ -113,13 +114,13 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != configdomain.HostingGitea) {
 		return nil, nil //nolint:nilnil
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: string(args.APIToken)})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &Connector{
-		client: giteaClient,
+		APIToken: args.APIToken,
+		client:   giteaClient,
 		Config: common.Config{
-			APIToken:     args.APIToken,
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
@@ -131,6 +132,6 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	HostingService configdomain.Hosting
-	APIToken       string
+	APIToken       domain.GiteaToken
 	Log            common.Log
 }

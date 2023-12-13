@@ -26,7 +26,6 @@ func TestBitbucketConnector(t *testing.T) {
 			})
 			must.NoError(t, err)
 			wantConfig := common.Config{
-				APIToken:     "",
 				Hostname:     "bitbucket.org",
 				Organization: "git-town",
 				Repository:   "docs",
@@ -43,7 +42,6 @@ func TestBitbucketConnector(t *testing.T) {
 			})
 			must.NoError(t, err)
 			wantConfig := common.Config{
-				APIToken:     "",
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",
