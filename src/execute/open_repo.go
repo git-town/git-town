@@ -83,7 +83,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	if args.ValidateIsOnline && isOffline {
+	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err
 	}

@@ -95,7 +95,7 @@ type proposeConfig struct {
 	connector             hosting.Connector
 	hasOpenChanges        bool
 	remotes               domain.Remotes
-	isOffline             bool
+	isOffline             configdomain.Offline
 	lineage               configdomain.Lineage
 	mainBranch            domain.LocalBranchName
 	previousBranch        domain.LocalBranchName

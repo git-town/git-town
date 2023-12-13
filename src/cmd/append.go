@@ -173,7 +173,7 @@ func appendProgram(config *appendConfig) program.Program {
 		syncBranchProgram(branch, syncBranchProgramArgs{
 			branchInfos:           config.branches.All,
 			branchTypes:           config.branches.Types,
-			isOffline:             config.isOffline,
+			isOnline:              config.isOffline.ToOnline(),
 			lineage:               config.lineage,
 			program:               &prog,
 			remotes:               config.remotes,

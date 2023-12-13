@@ -124,7 +124,7 @@ type shipConfig struct {
 	hasOpenChanges           bool
 	remotes                  domain.Remotes
 	isShippingInitialBranch  bool
-	isOffline                bool
+	isOnline                 configdomain.Online
 	lineage                  configdomain.Lineage
 	mainBranch               domain.LocalBranchName
 	previousBranch           domain.LocalBranchName
@@ -279,7 +279,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		deleteOriginBranch:       deleteOrigin,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		remotes:                  remotes,
-		isOffline:                repo.IsOffline,
+		isOnline:                 repo.IsOffline.ToOnline(),
 		isShippingInitialBranch:  isShippingInitialBranch,
 		lineage:                  lineage,
 		mainBranch:               mainBranch,
