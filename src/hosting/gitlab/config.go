@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/hosting/common"
 )
 
 type Config struct {
 	common.Config
-	APIToken domain.GitLabToken
+	APIToken configdomain.GitLabToken
 }
 
 func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {

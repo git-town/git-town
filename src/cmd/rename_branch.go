@@ -93,7 +93,7 @@ type renameBranchConfig struct {
 	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	newBranch      domain.LocalBranchName
-	noPushHook     domain.NoPushHook
+	noPushHook     configdomain.NoPushHook
 	oldBranch      domain.BranchInfo
 	previousBranch domain.LocalBranchName
 }

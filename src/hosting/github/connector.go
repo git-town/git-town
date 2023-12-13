@@ -20,7 +20,7 @@ import (
 type Connector struct {
 	client *github.Client
 	common.Config
-	APIToken   domain.GitHubToken
+	APIToken   configdomain.GitHubToken
 	MainBranch domain.LocalBranchName
 	log        common.Log
 }
@@ -103,14 +103,14 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func GetAPIToken(gitConfigToken domain.GitHubToken) domain.GitHubToken {
+func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubToken {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken != "" {
-		return domain.GitHubToken(apiToken)
+		return configdomain.GitHubToken(apiToken)
 	}
 	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
 	if apiToken != "" {
-		return domain.GitHubToken(apiToken)
+		return configdomain.GitHubToken(apiToken)
 	}
 	return gitConfigToken
 }
@@ -139,7 +139,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
-	APIToken       domain.GitHubToken
+	APIToken       configdomain.GitHubToken
 	MainBranch     domain.LocalBranchName
 	Log            common.Log
 }
