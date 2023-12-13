@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -69,7 +69,7 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 }
 
 func setPushHook(text string, global bool, run *git.ProdRunner) error {
-	value, err := config.ParseBool(text)
+	value, err := confighelpers.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.InputYesOrNo, text)
 	}

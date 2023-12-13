@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -116,7 +116,7 @@ func GetAPIToken(gitConfig gitTownConfig) string {
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != config.HostingGitHub) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != configdomain.HostingGitHub) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
@@ -135,7 +135,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService config.Hosting
+	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
 	MainBranch     domain.LocalBranchName

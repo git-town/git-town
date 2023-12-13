@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/cli/log"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -88,7 +88,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: config.HostingNone,
+			HostingService: configdomain.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
@@ -107,7 +107,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: config.HostingGitHub,
+			HostingService: configdomain.HostingGitHub,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
@@ -126,7 +126,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: config.HostingNone,
+			HostingService: configdomain.HostingNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),
@@ -140,7 +140,7 @@ func TestNewConnector(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: config.HostingNone,
+			HostingService: configdomain.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
 			MainBranch:     domain.NewLocalBranchName("mainBranch"),

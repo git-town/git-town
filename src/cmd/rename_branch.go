@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -90,7 +90,7 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 type renameBranchConfig struct {
 	branches       domain.Branches
 	isOffline      bool
-	lineage        config.Lineage
+	lineage        configdomain.Lineage
 	mainBranch     domain.LocalBranchName
 	newBranch      domain.LocalBranchName
 	noPushHook     bool

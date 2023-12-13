@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,7 @@ func newPullRequestCommand() *cobra.Command {
 		Hidden:  true,
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),
+		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printDeprecationNotice()
 			result := executePropose(readVerboseFlag(cmd))

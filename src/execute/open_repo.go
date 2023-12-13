@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -44,7 +45,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(backendRunner),
+		GitConfig: gitconfig.LoadGitConfig(backendRunner),
 	}
 	repoConfig := git.RepoConfig{
 		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner),

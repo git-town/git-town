@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -35,7 +35,7 @@ func repoCommand() *cobra.Command {
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.KeyCodeHostingPlatform, config.KeyCodeHostingOriginHostname)),
+		Long:  long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeRepo(readVerboseFlag(cmd))
 		},

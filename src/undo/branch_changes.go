@@ -3,7 +3,7 @@ package undo
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -195,7 +195,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 }
 
 type BranchChangesUndoProgramArgs struct {
-	Lineage                  config.Lineage
+	Lineage                  configdomain.Lineage
 	BranchTypes              domain.BranchTypes
 	InitialBranch            domain.LocalBranchName
 	FinalBranch              domain.LocalBranchName

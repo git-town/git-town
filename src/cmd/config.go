@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
@@ -101,14 +101,14 @@ type ConfigConfig struct {
 	giteaToken            string
 	githubToken           string
 	gitlabToken           string
-	hosting               config.Hosting
+	hosting               configdomain.Hosting
 	isOffline             bool
-	lineage               config.Lineage
-	syncPerennialStrategy config.SyncPerennialStrategy
+	lineage               configdomain.Lineage
+	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              bool
 	pushNewBranches       bool
 	shouldSyncUpstream    bool
-	syncFeatureStrategy   config.SyncFeatureStrategy
+	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 	syncBeforeShip        bool
 }
 

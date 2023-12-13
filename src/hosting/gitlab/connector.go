@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -76,7 +76,7 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingGitLab) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != configdomain.HostingGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := Config{common.Config{
@@ -100,7 +100,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService config.Hosting
+	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
 	Log            common.Log

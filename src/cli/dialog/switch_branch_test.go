@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/shoenig/test/must"
 )
@@ -19,7 +19,7 @@ func TestBuilder(t *testing.T) {
 			feature1 := domain.NewLocalBranchName("feature-1")
 			feature2 := domain.NewLocalBranchName("feature-2")
 			featureA := domain.NewLocalBranchName("feature-A")
-			lineage := config.Lineage{
+			lineage := configdomain.Lineage{
 				feature1: main,
 				feature2: feature1,
 				featureA: main,
@@ -58,7 +58,7 @@ func TestBuilder(t *testing.T) {
 		mainBranch := domain.NewLocalBranchName("main")
 		feature1 := domain.NewLocalBranchName("feature-1")
 		feature2 := domain.NewLocalBranchName("feature-2")
-		lineage := config.Lineage{
+		lineage := configdomain.Lineage{
 			feature1: mainBranch,
 			feature2: feature1,
 		}

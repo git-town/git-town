@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -60,7 +60,7 @@ func executeAliases(arg string, verbose bool) error {
 }
 
 func addAliases(run *git.ProdRunner) error {
-	for _, alias := range config.Aliases() {
+	for _, alias := range configdomain.Aliases() {
 		err := run.Frontend.AddGitAlias(alias)
 		if err != nil {
 			return err
@@ -71,7 +71,7 @@ func addAliases(run *git.ProdRunner) error {
 }
 
 func removeAliases(run *git.ProdRunner) error {
-	for _, alias := range config.Aliases() {
+	for _, alias := range configdomain.Aliases() {
 		existingAlias := run.Config.GitAlias(alias)
 		if existingAlias == "town "+alias.String() {
 			err := run.Frontend.RemoveGitAlias(alias)

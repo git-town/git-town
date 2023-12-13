@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -62,7 +62,7 @@ func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *g
 	}
 	finalConfigSnapshot := ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: config.LoadGitConfig(backend),
+		GitConfig: gitconfig.LoadGitConfig(backend),
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil

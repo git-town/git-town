@@ -1,7 +1,7 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/validate"
@@ -13,7 +13,7 @@ import (
 //
 // The purpose of this function is to implement proper cache invalidation.
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
-func EnsureKnownBranchAncestry(branch domain.LocalBranchName, args EnsureKnownBranchAncestryArgs) (domain.BranchTypes, config.Lineage, error) {
+func EnsureKnownBranchAncestry(branch domain.LocalBranchName, args EnsureKnownBranchAncestryArgs) (domain.BranchTypes, configdomain.Lineage, error) {
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		AllBranches:   args.AllBranches,
 		Backend:       &args.Runner.Backend,
@@ -36,7 +36,7 @@ type EnsureKnownBranchAncestryArgs struct {
 	AllBranches   domain.BranchInfos
 	BranchTypes   domain.BranchTypes
 	DefaultBranch domain.LocalBranchName
-	Lineage       config.Lineage
+	Lineage       configdomain.Lineage
 	MainBranch    domain.LocalBranchName
 	Runner        *git.ProdRunner
 }

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
@@ -76,7 +77,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	gitConfig := config.LoadGitConfig(&runner)
+	gitConfig := gitconfig.LoadGitConfig(&runner)
 	config := git.RepoConfig{
 		GitTown: config.NewGitTown(gitConfig, &runner),
 		DryRun:  false,

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	prodgit "github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -167,7 +167,7 @@ func (self *TestCommands) CreateTag(name string) {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (self *TestCommands) DeleteMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", config.KeyMainBranch.String())
+	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
 // Fetch retrieves the updates from the origin repo.

@@ -1,12 +1,12 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 type RemoveLocalConfig struct {
-	Key config.Key // the config key to remove
+	Key configdomain.Key // the config key to remove
 	undeclaredOpcodeMethods
 }
 

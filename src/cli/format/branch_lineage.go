@@ -3,11 +3,11 @@ package format
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
 // BranchLineage provides printable formatting of the given branch lineage.
-func BranchLineage(lineage config.Lineage) string {
+func BranchLineage(lineage configdomain.Lineage) string {
 	roots := lineage.Roots()
 	trees := make([]string, len(roots))
 	for r, root := range roots {

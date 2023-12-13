@@ -1,7 +1,7 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
@@ -84,7 +84,7 @@ type LoadBranchesArgs struct {
 	Fetch                 bool
 	Verbose               bool
 	HandleUnfinishedState bool
-	Lineage               config.Lineage
+	Lineage               configdomain.Lineage
 	PushHook              bool
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool

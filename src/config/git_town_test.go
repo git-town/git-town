@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/test/testruntime"
@@ -102,7 +103,7 @@ func TestGitTown(t *testing.T) {
 		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
 		repo.Config.Reload()
 		have := repo.Config.Lineage(repo.Config.RemoveLocalConfigValue)
-		want := config.Lineage{}
+		want := configdomain.Lineage{}
 		want[domain.NewLocalBranchName("feature1")] = domain.NewLocalBranchName("main")
 		want[domain.NewLocalBranchName("feature2")] = domain.NewLocalBranchName("main")
 		must.Eq(t, want, have)

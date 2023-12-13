@@ -1,7 +1,7 @@
 package interpreter
 
 import (
-	"github.com/git-town/git-town/v11/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -46,6 +46,6 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
-	Lineage                 config.Lineage
+	Lineage                 configdomain.Lineage
 	NoPushHook              bool
 }
