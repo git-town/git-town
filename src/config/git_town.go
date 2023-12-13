@@ -191,7 +191,7 @@ func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
 }
 
 // PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHook() (bool, error) {
+func (self *GitTown) PushHook() (domain.PushHook, error) {
 	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
 	if err != nil {
 		return false, err
@@ -204,11 +204,11 @@ func (self *GitTown) PushHook() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushHook, setting)
 	}
-	return result, nil
+	return domain.PushHook(result), nil
 }
 
 // PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHookGlobal() (bool, error) {
+func (self *GitTown) PushHookGlobal() (domain.PushHook, error) {
 	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
 	if err != nil {
 		return false, err
@@ -221,7 +221,7 @@ func (self *GitTown) PushHookGlobal() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueGlobalInvalid, configdomain.KeyPushHook, setting)
 	}
-	return result, nil
+	return domain.PushHook(result), nil
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -330,14 +330,14 @@ func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) erro
 }
 
 // SetPushHook updates the configured push-hook strategy.
-func (self *GitTown) SetPushHookGlobally(value bool) error {
-	err := self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(value))
+func (self *GitTown) SetPushHookGlobally(value domain.PushHook) error {
+	err := self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 	return err
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
-func (self *GitTown) SetPushHookLocally(value bool) error {
-	err := self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(value))
+func (self *GitTown) SetPushHookLocally(value domain.PushHook) error {
+	err := self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 	return err
 }
 

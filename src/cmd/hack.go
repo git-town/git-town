@@ -78,7 +78,7 @@ func executeHack(args []string, verbose bool) error {
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.Config.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
-	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	pushHook := fc.PushHook(repo.Runner.Config.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,

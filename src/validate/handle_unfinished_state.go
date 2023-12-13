@@ -56,7 +56,7 @@ type UnfinishedStateArgs struct {
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
-	PushHook                bool
+	PushHook                domain.PushHook
 	RootDir                 domain.RepoRootDir
 	Run                     *git.ProdRunner
 }
@@ -70,7 +70,7 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
-		NoPushHook:              !args.PushHook,
+		NoPushHook:              args.PushHook.Negate(),
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &abortRunState,

@@ -104,7 +104,7 @@ func executeShip(args []string, message string, verbose bool) error {
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
-		NoPushHook:              !config.pushHook,
+		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -131,7 +131,7 @@ type shipConfig struct {
 	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
 	syncPerennialStrategy    configdomain.SyncPerennialStrategy
-	pushHook                 bool
+	pushHook                 domain.PushHook
 	shouldSyncUpstream       bool
 	syncFeatureStrategy      configdomain.SyncFeatureStrategy
 	syncBeforeShip           bool
