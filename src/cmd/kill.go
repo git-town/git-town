@@ -158,7 +158,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 }
 
 func (self killConfig) isOnline() bool {
-	return !self.isOffline
+	return !self.isOffline.Bool()
 }
 
 func (self killConfig) branchToKillParent() domain.LocalBranchName {
