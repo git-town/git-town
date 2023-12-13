@@ -15,7 +15,8 @@ import (
 )
 
 type Connector struct {
-	client *gitea.Client
+	client   *gitea.Client
+	APIToken string // bearer token to authenticate with the API
 	common.Config
 	log common.Log
 }
@@ -117,9 +118,9 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &Connector{
-		client: giteaClient,
+		APIToken: args.APIToken,
+		client:   giteaClient,
 		Config: common.Config{
-			APIToken:     args.APIToken,
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

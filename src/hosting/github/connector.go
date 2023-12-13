@@ -20,6 +20,7 @@ import (
 type Connector struct {
 	client *github.Client
 	common.Config
+	APIToken   domain.GitHubToken // bearer token to authenticate with the API
 	MainBranch domain.LocalBranchName
 	log        common.Log
 }
@@ -102,14 +103,14 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func GetAPIToken(gitConfigToken string) string {
+func GetAPIToken(gitConfigToken domain.GitHubToken) domain.GitHubToken {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken != "" {
-		return apiToken
+		return domain.GitHubToken(apiToken)
 	}
 	apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
 	if apiToken != "" {
-		return apiToken
+		return domain.GitHubToken(apiToken)
 	}
 	return gitConfigToken
 }
@@ -120,12 +121,12 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != configdomain.HostingGitHub) {
 		return nil, nil //nolint:nilnil
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: string(args.APIToken)})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &Connector{
-		client: github.NewClient(httpClient),
+		client:   github.NewClient(httpClient),
+		APIToken: args.APIToken,
 		Config: common.Config{
-			APIToken:     args.APIToken,
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
@@ -138,7 +139,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
-	APIToken       string
+	APIToken       domain.GitHubToken
 	MainBranch     domain.LocalBranchName
 	Log            common.Log
 }

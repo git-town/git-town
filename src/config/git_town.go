@@ -75,8 +75,8 @@ func (self *GitTown) GitAlias(alias configdomain.Alias) string {
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
-func (self *GitTown) GitHubToken() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyGithubToken)
+func (self *GitTown) GitHubToken() domain.GitHubToken {
+	return domain.GitHubToken(self.LocalOrGlobalConfigValue(configdomain.KeyGithubToken))
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.

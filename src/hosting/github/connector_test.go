@@ -53,11 +53,12 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := github.Connector{
-					Config: common.Config{ //nolint:exhaustruct
+					Config: common.Config{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
 					},
+					APIToken:   "apiToken",
 					MainBranch: domain.NewLocalBranchName("main"),
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
@@ -70,7 +71,7 @@ func TestConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{ //nolint:exhaustruct
-			Config: common.Config{ //nolint:exhaustruct
+			Config: common.Config{
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",
@@ -96,7 +97,6 @@ func TestNewConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := common.Config{
-			APIToken:     "apiToken",
 			Hostname:     "github.com",
 			Organization: "git-town",
 			Repository:   "docs",
@@ -115,7 +115,6 @@ func TestNewConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := common.Config{
-			APIToken:     "apiToken",
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",

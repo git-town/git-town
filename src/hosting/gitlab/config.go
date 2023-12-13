@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	common.Config
+	APIToken string // bearer token to authenticate with the API
 }
 
 func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {
