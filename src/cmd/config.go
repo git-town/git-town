@@ -63,20 +63,20 @@ func executeConfig(verbose bool) error {
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := gohacks.FailureCollector{}
-	branchTypes := run.Config.BranchTypes()
-	deleteOrigin := fc.ShipDeleteRemoteBranch(run.Config.ShouldShipDeleteOriginBranch())
-	giteaToken := run.Config.GiteaToken()
-	githubToken := run.Config.GitHubToken()
-	gitlabToken := run.Config.GitLabToken()
-	hosting := fc.Hosting(run.Config.HostingService())
-	isOffline := fc.Offline(run.Config.IsOffline())
-	lineage := run.Config.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
-	syncPerennialStrategy := fc.SyncPerennialStrategy(run.Config.SyncPerennialStrategy())
-	pushHook := fc.PushHook(run.Config.PushHook())
-	pushNewBranches := fc.NewBranchPush(run.Config.ShouldNewBranchPush())
-	syncUpstream := fc.SyncUpstream(run.Config.ShouldSyncUpstream())
-	syncFeatureStrategy := fc.SyncFeatureStrategy(run.Config.SyncFeatureStrategy())
-	syncBeforeShip := fc.SyncBeforeShip(run.Config.SyncBeforeShip())
+	branchTypes := run.GitTown.BranchTypes()
+	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShouldShipDeleteOriginBranch())
+	giteaToken := run.GitTown.GiteaToken()
+	githubToken := run.GitTown.GitHubToken()
+	gitlabToken := run.GitTown.GitLabToken()
+	hosting := fc.Hosting(run.GitTown.HostingService())
+	isOffline := fc.Offline(run.GitTown.IsOffline())
+	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
+	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
+	pushHook := fc.PushHook(run.GitTown.PushHook())
+	pushNewBranches := fc.NewBranchPush(run.GitTown.ShouldNewBranchPush())
+	syncUpstream := fc.SyncUpstream(run.GitTown.ShouldSyncUpstream())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(run.GitTown.SyncFeatureStrategy())
+	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteOrigin,

@@ -70,8 +70,8 @@ func executeContinue(verbose bool) error {
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
 	}
@@ -98,19 +98,19 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if repoStatus.UntrackedChanges {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUntrackedChanges)
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
+	originURL := repo.Runner.GitTown.OriginURL()
+	hostingService, err := repo.Runner.GitTown.HostingService()
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken()),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken()),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

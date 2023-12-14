@@ -99,9 +99,9 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
-	pushHook := fc.PushHook(repo.Runner.Config.PushHook())
+	pushHook := fc.PushHook(repo.Runner.GitTown.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -117,10 +117,10 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.Config.MainBranch()
-	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
+	mainBranch := repo.Runner.GitTown.MainBranch()
+	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.Config.ShouldNewBranchPush())
+	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
@@ -143,8 +143,8 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
-	syncUpstream := fc.SyncUpstream(repo.Runner.Config.ShouldSyncUpstream())
+	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
+	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.ShouldSyncUpstream())
 	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{

@@ -138,8 +138,8 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
 	}
@@ -165,30 +165,30 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteTrackingBranch, err := repo.Runner.Config.ShouldShipDeleteOriginBranch()
+	deleteTrackingBranch, err := repo.Runner.GitTown.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == domain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
-	syncFeatureStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
+	syncFeatureStrategy, err := repo.Runner.GitTown.SyncFeatureStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
+	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
+	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncBeforeShip, err := repo.Runner.Config.SyncBeforeShip()
+	syncBeforeShip, err := repo.Runner.GitTown.SyncBeforeShip()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -225,12 +225,12 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	var proposal *domain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []domain.Proposal{}
-	pushHook, err = repo.Runner.Config.PushHook()
+	pushHook, err = repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
+	originURL := repo.Runner.GitTown.OriginURL()
+	hostingService, err := repo.Runner.GitTown.HostingService()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -238,9 +238,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken()),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken()),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

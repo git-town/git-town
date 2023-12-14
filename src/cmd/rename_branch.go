@@ -99,8 +99,8 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
 	}
@@ -118,7 +118,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	mainBranch := repo.Runner.Config.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch()
 	var oldBranchName domain.LocalBranchName
 	var newBranchName domain.LocalBranchName
 	if len(args) == 1 {
@@ -128,7 +128,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		oldBranchName = domain.NewLocalBranchName(args[0])
 		newBranchName = domain.NewLocalBranchName(args[1])
 	}
-	if repo.Runner.Config.IsMainBranch(oldBranchName) {
+	if repo.Runner.GitTown.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
