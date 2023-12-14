@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/test/asserts"
 	"github.com/git-town/git-town/v11/test/datatable"
@@ -287,6 +288,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := domain.LocalBranchName(wantStr)
 		if *have != want {
 			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.Offline
+		wantBool, err := gohacks.ParseBool(wantStr)
+		if err != nil {
+			panic(err)
+		}
+		want := configdomain.Offline(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected global setting "offline" to be %t, but was %t`, want, *have)
 		}
 		return nil
 	})
