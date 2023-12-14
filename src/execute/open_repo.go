@@ -46,7 +46,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: gitconfig.LoadGitConfig(backendRunner),
+		GitConfig: gitconfig.LoadLocalGlobal(backendRunner),
 	}
 	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
 	backendCommands.GitTown = gitTown
