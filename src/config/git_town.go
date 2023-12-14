@@ -20,9 +20,9 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.Cached      // access to the Git configuration settings
-	DryRun           bool // whether to dry-run Git commands in this repo
-	originURLCache   OriginURLCache
+	gitconfig.CachedAccess      // access to the Git configuration settings
+	DryRun                 bool // whether to dry-run Git commands in this repo
+	originURLCache         OriginURLCache
 }
 
 type OriginURLCache map[string]*giturl.Parts
@@ -55,7 +55,7 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 
 func NewGitTown(gitConfig gitconfig.LocalGlobal, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
-		Cached:         gitconfig.NewGit(gitConfig, runner),
+		CachedAccess:   gitconfig.NewGit(gitConfig, runner),
 		DryRun:         false,
 		originURLCache: OriginURLCache{},
 	}

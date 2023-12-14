@@ -6,7 +6,7 @@ type LocalGlobal struct {
 	Local  Cache
 }
 
-func LoadLocalGlobal(git *Git) LocalGlobal {
+func LoadLocalGlobal(git *Access) LocalGlobal {
 	return LocalGlobal{
 		Global: git.LoadCache(true),
 		Local:  git.LoadCache(false),

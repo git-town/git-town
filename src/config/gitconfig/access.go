@@ -11,33 +11,33 @@ type Runner interface {
 	Run(executable string, args ...string) error
 }
 
-// Git provides typesafe access to the Git configuration on disk.
-type Git struct {
+// Access provides typesafe access to the Git configuration on disk.
+type Access struct {
 	Runner
 }
 
-func (self *Git) RemoveGlobalConfigValue(key configdomain.Key) error {
+func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *Git) RemoveLocalConfigValue(key configdomain.Key) error {
+func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
 	err := self.Run("git", "config", "--unset", key.String())
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *Git) SetGlobalConfigValue(key configdomain.Key, value string) error {
+func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *Git) SetLocalConfigValue(key configdomain.Key, value string) error {
+func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", key.String(), value)
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Git) LoadCache(global bool) Cache {
+func (self *Access) LoadCache(global bool) Cache {
 	result := Cache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
