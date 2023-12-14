@@ -6,7 +6,7 @@ type FullCache struct {
 	Local  SingleCache
 }
 
-func LoadLocalGlobal(git *Access) FullCache {
+func LoadFullCache(git *Access) FullCache {
 	return FullCache{
 		Global: git.LoadCache(true),
 		Local:  git.LoadCache(false),
