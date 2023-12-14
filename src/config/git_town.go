@@ -67,7 +67,7 @@ func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner, dryrun b
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
-	for key := range self.GitConfig.Local {
+	for key := range self.GitConfig.LocalCache {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
 			return true
 		}
