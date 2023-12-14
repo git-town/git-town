@@ -518,9 +518,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.Config.MainBranch
+		have := state.fixture.DevRepo.GitTown.LocalConfig.MainBranch
 		want := domain.NewLocalBranchName(wantStr)
-		if have != want {
+		if *have != want {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
