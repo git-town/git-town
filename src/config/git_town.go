@@ -89,7 +89,6 @@ func (self *GitTown) HostingService() (configdomain.Hosting, error) {
 
 // HostingServiceName provides the name of the code hosting connector to use.
 func (self *GitTown) HostingServiceName() string {
-	_ = self.updateDeprecatedSetting(configdomain.KeyDeprecatedCodeHostingDriver, configdomain.KeyCodeHostingPlatform)
 	return self.LocalOrGlobalConfigValue(configdomain.KeyCodeHostingPlatform)
 }
 
@@ -132,7 +131,6 @@ func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdom
 
 // MainBranch provides the name of the main branch.
 func (self *GitTown) MainBranch() domain.LocalBranchName {
-	_ = self.updateDeprecatedSetting(configdomain.KeyDeprecatedMainBranchName, configdomain.KeyMainBranch)
 	mainBranch := self.LocalOrGlobalConfigValue(configdomain.KeyMainBranch)
 	if mainBranch == "" {
 		return domain.EmptyLocalBranchName()
@@ -169,10 +167,6 @@ func (self *GitTown) OriginURLString() string {
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedPerennialBranchNames, configdomain.KeyPerennialBranches)
-	if err != nil {
-		return domain.NewLocalBranchNames()
-	}
 	result := self.LocalOrGlobalConfigValue(configdomain.KeyPerennialBranches)
 	if result == "" {
 		return domain.LocalBranchNames{}
@@ -182,10 +176,6 @@ func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
 
 // PushHook provides the currently configured push-hook setting.
 func (self *GitTown) PushHook() (configdomain.PushHook, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
-	if err != nil {
-		return false, err
-	}
 	setting := self.LocalOrGlobalConfigValue(configdomain.KeyPushHook)
 	if setting == "" {
 		return true, nil
@@ -199,10 +189,6 @@ func (self *GitTown) PushHook() (configdomain.PushHook, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (self *GitTown) PushHookGlobal() (configdomain.PushHook, error) {
-	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedPushVerify, configdomain.KeyPushHook)
-	if err != nil {
-		return false, err
-	}
 	setting := self.GlobalConfigValue(configdomain.KeyPushHook)
 	if setting == "" {
 		return true, nil
@@ -348,10 +334,6 @@ func (self *GitTown) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
-	if err != nil {
-		return false, err
-	}
 	config := self.LocalOrGlobalConfigValue(configdomain.KeyPushNewBranches)
 	if config == "" {
 		return false, nil
@@ -366,10 +348,6 @@ func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, error) {
-	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
-	if err != nil {
-		return false, err
-	}
 	config := self.GlobalConfigValue(configdomain.KeyPushNewBranches)
 	if config == "" {
 		return false, nil
@@ -412,29 +390,17 @@ func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
 }
 
 func (self *GitTown) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedSyncStrategy, configdomain.KeySyncFeatureStrategy)
-	if err != nil {
-		return configdomain.SyncFeatureStrategyMerge, err
-	}
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncFeatureStrategy)
 	return configdomain.NewSyncFeatureStrategy(text)
 }
 
 func (self *GitTown) SyncFeatureStrategyGlobal() (configdomain.SyncFeatureStrategy, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedSyncStrategy, configdomain.KeySyncFeatureStrategy)
-	if err != nil {
-		return configdomain.SyncFeatureStrategyMerge, err
-	}
 	setting := self.GlobalConfigValue(configdomain.KeySyncFeatureStrategy)
 	return configdomain.NewSyncFeatureStrategy(setting)
 }
 
 // SyncPerennialStrategy provides the currently configured sync-perennial strategy.
 func (self *GitTown) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedPullBranchStrategy, configdomain.KeySyncPerennialStrategy)
-	if err != nil {
-		return configdomain.SyncPerennialStrategyRebase, err
-	}
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncPerennialStrategy)
 	return configdomain.NewSyncPerennialStrategy(text)
 }
