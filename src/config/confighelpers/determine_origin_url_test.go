@@ -92,5 +92,4 @@ func TestDetermineOriginURL(t *testing.T) {
 			must.EqOp(t, *want, *have)
 		})
 	})
-
 }
