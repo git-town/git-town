@@ -13,12 +13,12 @@ func TestGitConfig(t *testing.T) {
 
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
-		original := gitconfig.GitConfig{
+		original := gitconfig.FullCache{
 			GlobalCache: gitconfig.SingleCache{
 				configdomain.KeyOffline: "1",
 			},
 			GlobalConfig: configdomain.EmptyPartialConfig(),
-			LocalCache: gitconfig.Cache{
+			LocalCache: gitconfig.SingleCache{
 				configdomain.KeyMainBranch: "main",
 			},
 			LocalConfig: configdomain.EmptyPartialConfig(),

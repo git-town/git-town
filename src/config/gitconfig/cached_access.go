@@ -20,15 +20,15 @@ func NewGit(fullCache FullCache, runner Runner) CachedAccess {
 }
 
 func (self CachedAccess) GlobalConfigValue(key configdomain.Key) string {
-	return self.FullCache.Global[key]
+	return self.FullCache.GlobalCache[key]
 }
 
 func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
-	return self.FullCache.Local.KeysMatching(pattern)
+	return self.FullCache.LocalCache.KeysMatching(pattern)
 }
 
 func (self CachedAccess) LocalConfigValue(key configdomain.Key) string {
-	return self.FullCache.Local[key]
+	return self.FullCache.LocalCache[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
@@ -47,24 +47,24 @@ func (self *CachedAccess) Reload() {
 }
 
 func (self *CachedAccess) RemoveGlobalConfigValue(key configdomain.Key) error {
-	delete(self.FullCache.Global, key)
+	delete(self.FullCache.GlobalCache, key)
 	return self.Access.RemoveGlobalConfigValue(key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *CachedAccess) RemoveLocalConfigValue(key configdomain.Key) error {
-	delete(self.FullCache.Local, key)
+	delete(self.FullCache.LocalCache, key)
 	return self.Access.RemoveLocalConfigValue(key)
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
 func (self *CachedAccess) SetGlobalConfigValue(key configdomain.Key, value string) error {
-	self.FullCache.Global[key] = value
+	self.FullCache.GlobalCache[key] = value
 	return self.Access.SetGlobalConfigValue(key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *CachedAccess) SetLocalConfigValue(key configdomain.Key, value string) error {
-	self.FullCache.Local[key] = value
+	self.FullCache.LocalCache[key] = value
 	return self.Access.SetLocalConfigValue(key, value)
 }
