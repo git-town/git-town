@@ -54,9 +54,9 @@ func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
 	var strategy configdomain.SyncFeatureStrategy
 	var err error
 	if globalFlag {
-		strategy, err = run.Config.SyncFeatureStrategyGlobal()
+		strategy, err = run.GitTown.SyncFeatureStrategyGlobal()
 	} else {
-		strategy, err = run.Config.SyncFeatureStrategy()
+		strategy, err = run.GitTown.SyncFeatureStrategy()
 	}
 	if err != nil {
 		return err
@@ -71,7 +71,7 @@ func setSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner, value string) 
 		return err
 	}
 	if globalFlag {
-		return run.Config.SetSyncFeatureStrategyGlobal(syncFeatureStrategy)
+		return run.GitTown.SetSyncFeatureStrategyGlobal(syncFeatureStrategy)
 	}
-	return run.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
+	return run.GitTown.SetSyncFeatureStrategy(syncFeatureStrategy)
 }
