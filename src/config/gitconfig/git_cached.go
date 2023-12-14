@@ -51,7 +51,7 @@ func (self Cached) LocalOrGlobalConfigValue(key configdomain.Key) string {
 
 // Reload refreshes the cached configuration information.
 func (self *Cached) Reload() {
-	self.LocalGlobal = LoadLocalGlobal(self.Runner)
+	self.LocalGlobal = LoadLocalGlobal(&self.Git)
 }
 
 func (self *Cached) RemoveGlobalConfigValue(key configdomain.Key) error {

@@ -6,10 +6,10 @@ type LocalGlobal struct {
 	Local  Cache
 }
 
-func LoadLocalGlobal(runner Runner) LocalGlobal {
+func LoadLocalGlobal(git *Git) LocalGlobal {
 	return LocalGlobal{
-		Global: LoadGitConfigCache(runner, true),
-		Local:  LoadGitConfigCache(runner, false),
+		Global: git.LoadCache(true),
+		Local:  git.LoadCache(false),
 	}
 }
 
