@@ -65,7 +65,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := gohacks.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
 	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShouldShipDeleteOriginBranch())
-	giteaToken := run.GitTown.GiteaToken()
+	giteaToken := run.GitTown.Config.GiteaToken
 	githubToken := run.GitTown.Config.GitHubToken
 	gitlabToken := run.GitTown.Config.GitLabToken
 	hosting := fc.Hosting(run.GitTown.HostingService())

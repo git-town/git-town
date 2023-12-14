@@ -2,12 +2,16 @@ package configdomain
 
 // Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
+	GiteaToken  *GiteaToken
 	GitHubToken *GitHubToken
 	GitLabToken *GitLabToken
 }
 
 func (self *PartialConfig) Add(key Key, value string) bool {
 	switch key {
+	case KeyGiteaToken:
+		token := GiteaToken(value)
+		self.GiteaToken = &token
 	case KeyGithubToken:
 		token := GitHubToken(value)
 		self.GitHubToken = &token

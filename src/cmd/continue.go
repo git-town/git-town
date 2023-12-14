@@ -108,7 +108,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
+		GiteaAPIToken:   repo.Runner.GitTown.Config.GiteaToken,
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
 		MainBranch:      mainBranch,

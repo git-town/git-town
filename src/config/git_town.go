@@ -80,11 +80,6 @@ func (self *GitTown) GitAlias(alias configdomain.Alias) string {
 	return self.GlobalConfigValue(configdomain.NewAliasKey(alias))
 }
 
-// GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
-func (self *GitTown) GiteaToken() configdomain.GiteaToken {
-	return configdomain.GiteaToken(self.LocalOrGlobalConfigValue(configdomain.KeyGiteaToken))
-}
-
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *GitTown) HostingService() (configdomain.Hosting, error) {
