@@ -23,6 +23,7 @@ import (
 type GitTown struct {
 	gitconfig.Git
 	configfile.ConfigFile
+	DryRun         bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache OriginURLCache
 }
 
@@ -57,6 +58,7 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
 		Git:            gitconfig.NewGit(gitConfig, runner),
+		DryRun:         false,
 		originURLCache: OriginURLCache{},
 	}
 }

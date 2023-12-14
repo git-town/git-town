@@ -22,7 +22,7 @@ func EnterPerennialBranches(backend *git.BackendCommands, branches domain.Branch
 	}
 	newPerennialBranches := domain.NewLocalBranchNames(newPerennialBranchNames...)
 	branches.Types.PerennialBranches = newPerennialBranches
-	err = backend.Config.SetPerennialBranches(newPerennialBranches)
+	err = backend.GitTown.SetPerennialBranches(newPerennialBranches)
 	return branches.Types, err
 }
 
