@@ -274,6 +274,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 	})
 
+	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.CodeHostingPlatformName
+		if *have != want {
+			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
@@ -499,6 +507,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(*configKey, value)
+	})
+
+	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.CodeHostingPlatformName
+		if *have != want {
+			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+		}
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
