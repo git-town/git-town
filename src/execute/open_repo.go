@@ -27,7 +27,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
+		GitTown:            nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
@@ -49,7 +49,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		GitConfig: gitconfig.LoadGitConfig(backendRunner),
 	}
 	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
-	backendCommands.Config = gitTown
+	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
 		Config:  *gitTown,
 		Backend: backendCommands,

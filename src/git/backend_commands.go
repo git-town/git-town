@@ -27,7 +27,7 @@ type BackendRunner interface {
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
 	BackendRunner                                     // executes shell commands in the directory of the Git repo
-	Config             *config.GitTown                // the known state of the Git repository
+	GitTown            *config.GitTown                // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	RemotesCache       *cache.Remotes                 // caches Git remotes
 }
@@ -106,7 +106,7 @@ func (self *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error)
 
 // CheckoutBranch checks out the Git branch with the given name.
 func (self *BackendCommands) CheckoutBranch(name domain.LocalBranchName) error {
-	if !self.Config.DryRun {
+	if !self.GitTown.DryRun {
 		err := self.CheckoutBranchUncached(name)
 		if err != nil {
 			return err
@@ -353,7 +353,7 @@ func (self *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) er
 
 // CurrentBranch provides the name of the currently checked out branch.
 func (self *BackendCommands) CurrentBranch() (domain.LocalBranchName, error) {
-	if self.Config.DryRun {
+	if self.GitTown.DryRun {
 		return self.CurrentBranchCache.Value(), nil
 	}
 	if !self.CurrentBranchCache.Initialized() {
@@ -468,11 +468,11 @@ func (self *BackendCommands) RemotesUncached() (domain.Remotes, error) {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
-	for child, parent := range self.Config.Lineage(self.Config.RemoveLocalConfigValue) {
+	for child, parent := range self.GitTown.Lineage(self.GitTown.RemoveLocalConfigValue) {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {
-			self.Config.RemoveParent(child)
+			self.GitTown.RemoveParent(child)
 		}
 	}
 	return nil
