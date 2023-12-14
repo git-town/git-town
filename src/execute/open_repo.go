@@ -81,10 +81,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 	}
-	isOffline, err := gitTown.IsOffline()
-	if err != nil {
-		return nil, err
-	}
+	isOffline := gitTown.Config.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err

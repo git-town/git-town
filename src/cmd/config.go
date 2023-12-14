@@ -68,7 +68,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	githubToken := run.GitTown.Config.GitHubToken
 	gitlabToken := run.GitTown.Config.GitLabToken
 	hosting := fc.Hosting(run.GitTown.HostingService())
-	isOffline := fc.Offline(run.GitTown.IsOffline())
+	isOffline := run.GitTown.Config.Offline
 	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
 	pushHook := fc.PushHook(run.GitTown.PushHook())

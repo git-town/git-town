@@ -51,13 +51,11 @@ func TestGitTown(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		err := repo.GitTown.SetOffline(true)
 		must.NoError(t, err)
-		offline, err := repo.GitTown.IsOffline()
-		must.NoError(t, err)
+		offline := repo.GitTown.Config.Offline
 		must.True(t, offline.Bool())
 		err = repo.GitTown.SetOffline(false)
 		must.NoError(t, err)
-		offline, err = repo.GitTown.IsOffline()
-		must.NoError(t, err)
+		offline = repo.GitTown.Offline
 		must.False(t, offline.Bool())
 	})
 }

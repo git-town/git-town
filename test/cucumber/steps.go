@@ -597,10 +597,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline, err := state.fixture.DevRepo.GitTown.IsOffline()
-		if err != nil {
-			return err
-		}
+		isOffline := state.fixture.DevRepo.GitTown.Config.Offline
 		if isOffline {
 			return fmt.Errorf("expected to not be offline but am")
 		}

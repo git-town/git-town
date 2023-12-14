@@ -79,19 +79,6 @@ func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
 }
 
-// IsOffline indicates whether Git Town is currently in offline mode.
-func (self *GitTown) IsOffline() (configdomain.Offline, error) {
-	config := self.GlobalConfigValue(configdomain.KeyOffline)
-	if config == "" {
-		return false, nil
-	}
-	boolValue, err := gohacks.ParseBool(config)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, config)
-	}
-	return configdomain.Offline(boolValue), nil
-}
-
 // Lineage provides the configured ancestry information for this Git repo.
 func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
 	lineage := configdomain.Lineage{}
@@ -240,8 +227,8 @@ func (self *GitTown) SetNewBranchPush(value configdomain.NewBranchPush, global b
 
 // SetOffline updates whether Git Town is in offline mode.
 func (self *GitTown) SetOffline(value configdomain.Offline) error {
-	err := self.SetGlobalConfigValue(configdomain.KeyOffline, strconv.FormatBool(value.Bool()))
-	return err
+	self.Config.Offline = value
+	return self.SetGlobalConfigValue(configdomain.KeyOffline, strconv.FormatBool(value.Bool()))
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
