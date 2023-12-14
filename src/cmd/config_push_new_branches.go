@@ -7,9 +7,9 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -71,7 +71,7 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 }
 
 func setPushNewBranches(text string, globalFlag bool, run *git.ProdRunner) error {
-	boolValue, err := confighelpers.ParseBool(text)
+	boolValue, err := gohacks.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(messages.InputYesOrNo, text)
 	}

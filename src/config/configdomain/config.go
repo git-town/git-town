@@ -4,17 +4,18 @@ import "github.com/git-town/git-town/v11/src/domain"
 
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
-	CodeHostingPlatformName *string
+	CodeHostingPlatformName string
 	GiteaToken              GiteaToken
 	GitHubToken             GitHubToken
 	GitLabToken             GitLabToken
 	MainBranch              domain.LocalBranchName
+	Offline                 Offline
 }
 
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	if other.CodeHostingPlatformName != nil {
-		self.CodeHostingPlatformName = other.CodeHostingPlatformName
+		self.CodeHostingPlatformName = *other.CodeHostingPlatformName
 	}
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
@@ -32,12 +33,12 @@ func (self *Config) Merge(other PartialConfig) {
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() Config {
-	emptyString := ""
 	return Config{
-		CodeHostingPlatformName: &emptyString,
+		CodeHostingPlatformName: "",
 		GiteaToken:              "",
 		GitLabToken:             "",
 		GitHubToken:             "",
 		MainBranch:              domain.EmptyLocalBranchName(),
+		Offline:                 false,
 	}
 }

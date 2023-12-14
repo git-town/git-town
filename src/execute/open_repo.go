@@ -45,9 +45,13 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
+	fullCache, err := gitconfig.LoadFullCache(&configGitAccess)
+	if err != nil {
+		return nil, err
+	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: gitconfig.LoadFullCache(&configGitAccess),
+		GitConfig: fullCache,
 	}
 	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
 	backendCommands.GitTown = gitTown

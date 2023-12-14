@@ -43,7 +43,11 @@ func (self CachedAccess) LocalOrGlobalConfigValue(key configdomain.Key) string {
 
 // Reload refreshes the cached configuration information.
 func (self *CachedAccess) Reload() {
-	self.FullCache = LoadFullCache(&self.Access)
+	var err error
+	self.FullCache, err = LoadFullCache(&self.Access)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (self *CachedAccess) RemoveGlobalConfigValue(key configdomain.Key) error {

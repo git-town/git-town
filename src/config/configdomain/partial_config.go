@@ -1,6 +1,9 @@
 package configdomain
 
-import "github.com/git-town/git-town/v11/src/domain"
+import (
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks"
+)
 
 // Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
@@ -9,9 +12,10 @@ type PartialConfig struct {
 	GitHubToken             *GitHubToken
 	GitLabToken             *GitLabToken
 	MainBranch              *domain.LocalBranchName
+	Offline                 *Offline
 }
 
-func (self *PartialConfig) Add(key Key, value string) bool {
+func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	switch key {
 	case KeyCodeHostingPlatform:
 		self.CodeHostingPlatformName = &value
@@ -32,10 +36,17 @@ func (self *PartialConfig) Add(key Key, value string) bool {
 			token = domain.NewLocalBranchName(value)
 		}
 		self.MainBranch = &token
+	case KeyOffline:
+		boolValue, err := gohacks.ParseBool(value)
+		if err != nil {
+			return false, err
+		}
+		token := Offline(boolValue)
+		self.Offline = &token
 	default:
-		return false
+		return false, nil
 	}
-	return true
+	return true, nil
 }
 
 func EmptyPartialConfig() PartialConfig {

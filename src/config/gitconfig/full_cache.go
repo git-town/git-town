@@ -10,15 +10,27 @@ type FullCache struct {
 	LocalConfig  configdomain.PartialConfig
 }
 
-func LoadFullCache(access *Access) FullCache {
-	globalCache, globalConfig := access.LoadCache(true)
-	localCache, localConfig := access.LoadCache(false)
+func EmptyFullCache() FullCache {
+	return FullCache{
+		GlobalCache:  map[configdomain.Key]string{},
+		GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+		LocalCache:   map[configdomain.Key]string{},
+		LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
+	}
+}
+
+func LoadFullCache(access *Access) (FullCache, error) {
+	globalCache, globalConfig, err := access.LoadCache(true)
+	if err != nil {
+		return EmptyFullCache(), err
+	}
+	localCache, localConfig, err := access.LoadCache(false)
 	return FullCache{
 		GlobalCache:  globalCache,
 		GlobalConfig: globalConfig,
 		LocalCache:   localCache,
 		LocalConfig:  localConfig,
-	}
+	}, err
 }
 
 func (self FullCache) Clone() FullCache {
