@@ -67,7 +67,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	branchTypes := args.Repo.Runner.Config.BranchTypes()
+	branchTypes := args.Repo.Runner.GitTown.BranchTypes()
 	branches := domain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,

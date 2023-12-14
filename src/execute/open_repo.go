@@ -51,7 +51,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
 	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
-		Config:  *gitTown,
+		GitTown: *gitTown,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
@@ -67,7 +67,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		FinalMessages:   &stringslice.Collector{},
 	}
 	if args.DryRun {
-		prodRunner.Config.DryRun = true
+		prodRunner.GitTown.DryRun = true
 	}
 	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {

@@ -128,8 +128,8 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
 	}
@@ -155,7 +155,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
 	if allFlag {
@@ -190,15 +190,15 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
-	syncFeatureStrategy, err := repo.Runner.Config.SyncFeatureStrategy()
+	syncFeatureStrategy, err := repo.Runner.GitTown.SyncFeatureStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncPerennialStrategy, err := repo.Runner.Config.SyncPerennialStrategy()
+	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
+	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
