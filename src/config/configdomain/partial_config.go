@@ -2,9 +2,10 @@ package configdomain
 
 // Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
-	GiteaToken  *GiteaToken
-	GitHubToken *GitHubToken
-	GitLabToken *GitLabToken
+	CodeHostingPlatformName *string
+	GiteaToken              *GiteaToken
+	GitHubToken             *GitHubToken
+	GitLabToken             *GitLabToken
 }
 
 func (self *PartialConfig) Add(key Key, value string) bool {
@@ -18,6 +19,8 @@ func (self *PartialConfig) Add(key Key, value string) bool {
 	case KeyGitlabToken:
 		token := GitLabToken(value)
 		self.GitLabToken = &token
+	case KeyCodeHostingPlatform:
+		self.CodeHostingPlatformName = &value
 	default:
 		return false
 	}

@@ -2,13 +2,17 @@ package configdomain
 
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
-	GiteaToken  GiteaToken
-	GitHubToken GitHubToken
-	GitLabToken GitLabToken
+	CodeHostingPlatformName *string
+	GiteaToken              GiteaToken
+	GitHubToken             GitHubToken
+	GitLabToken             GitLabToken
 }
 
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
+	if other.CodeHostingPlatformName != nil {
+		self.CodeHostingPlatformName = other.CodeHostingPlatformName
+	}
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
 	}
@@ -22,7 +26,11 @@ func (self *Config) Merge(other PartialConfig) {
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() Config {
+	emptyString := ""
 	return Config{ //nolint:exhaustruct
-		GitHubToken: "",
+		CodeHostingPlatformName: &emptyString,
+		GiteaToken:              "",
+		GitLabToken:             "",
+		GitHubToken:             "",
 	}
 }

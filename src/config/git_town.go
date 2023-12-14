@@ -69,12 +69,7 @@ func (self *GitTown) GitAlias(alias configdomain.Alias) string {
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *GitTown) HostingService() (configdomain.Hosting, error) {
-	return configdomain.NewHosting(self.HostingServiceName())
-}
-
-// HostingServiceName provides the name of the code hosting connector to use.
-func (self *GitTown) HostingServiceName() string {
-	return self.LocalOrGlobalConfigValue(configdomain.KeyCodeHostingPlatform)
+	return configdomain.NewHosting(*self.Config.CodeHostingPlatformName)
 }
 
 // IsMainBranch indicates whether the branch with the given name
