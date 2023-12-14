@@ -19,7 +19,9 @@ func LoadFullCache(git *Access) FullCache {
 
 func (self FullCache) Clone() FullCache {
 	return FullCache{
-		GlobalCache: self.GlobalCache.Clone(),
-		LocalCache:  self.LocalCache.Clone(),
+		GlobalCache:  self.GlobalCache.Clone(),
+		GlobalConfig: self.GlobalConfig,
+		LocalCache:   self.LocalCache.Clone(),
+		LocalConfig:  self.LocalConfig,
 	}
 }

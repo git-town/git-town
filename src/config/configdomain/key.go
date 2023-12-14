@@ -161,7 +161,7 @@ func parseLineageKey(key string) *Key {
 }
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
-var DeprecatedKeys = map[Key]Key{
+var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver:    KeyCodeHostingPlatform,
 	KeyDeprecatedMainBranchName:       KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:    KeyPushNewBranches,

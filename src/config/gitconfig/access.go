@@ -45,15 +45,8 @@ func (self *Access) LoadCache(global bool) SingleCache {
 		}
 		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*configKey]
 		if keyIsDeprecated {
-			fmt.Printf("I found the deprecated local setting %q.\n", key)
-			fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
-			if global {
-				_ = self.RemoveGlobalConfigValue(*configKey)
-				err = self.SetGlobalConfigValue(newKey, value)
-			} else {
-				_ = self.RemoveLocalConfigValue(*configKey)
-				err = self.SetLocalConfigValue(newKey, value)
-			}
+			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
+			configKey = &newKey
 		}
 		result[*configKey] = value
 	}
@@ -78,4 +71,28 @@ func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) err
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", key.String(), value)
+}
+
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
+	fmt.Printf("I found the deprecated local setting %q.\n", oldKey)
+	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	if global {
+		err := self.RemoveGlobalConfigValue(oldKey)
+		if err != nil {
+			fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
+		}
+		err = self.SetGlobalConfigValue(newKey, value)
+		if err != nil {
+			fmt.Printf("ERROR: cannot write global Git setting %q: %v", newKey, err)
+		}
+	} else {
+		err := self.RemoveLocalConfigValue(oldKey)
+		if err != nil {
+			fmt.Printf("ERROR: cannot remove local Git setting %q: %v", oldKey, err)
+		}
+		err = self.SetLocalConfigValue(newKey, value)
+		if err != nil {
+			fmt.Printf("ERROR: cannot write local Git setting %q: %v", newKey, err)
+		}
+	}
 }
