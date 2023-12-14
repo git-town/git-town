@@ -101,9 +101,9 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
-	pushHook := fc.PushHook(repo.Runner.Config.PushHook())
+	pushHook := fc.PushHook(repo.Runner.GitTown.PushHook())
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -120,11 +120,11 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.Config.ShouldNewBranchPush())
-	mainBranch := repo.Runner.Config.MainBranch()
-	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.Config.SyncFeatureStrategy())
-	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.Config.SyncPerennialStrategy())
-	syncUpstream := fc.SyncUpstream(repo.Runner.Config.ShouldSyncUpstream())
+	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
+	mainBranch := repo.Runner.GitTown.MainBranch()
+	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
+	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
+	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.ShouldSyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)

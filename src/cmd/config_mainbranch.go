@@ -54,12 +54,12 @@ func executeConfigMainBranch(args []string, verbose bool) error {
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	io.Println(format.StringSetting(run.Config.MainBranch().String()))
+	io.Println(format.StringSetting(run.GitTown.MainBranch().String()))
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
 	if !run.Backend.HasLocalBranch(branch) {
 		return fmt.Errorf(messages.BranchDoesntExist, branch)
 	}
-	return run.Config.SetMainBranch(branch)
+	return run.GitTown.SetMainBranch(branch)
 }

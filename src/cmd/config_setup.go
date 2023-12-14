@@ -37,8 +37,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.Config.PushHook()
+	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
+	pushHook, err := repo.Runner.GitTown.PushHook()
 	if err != nil {
 		return err
 	}
