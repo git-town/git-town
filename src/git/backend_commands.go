@@ -27,7 +27,7 @@ type BackendRunner interface {
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
 	BackendRunner                                     // executes shell commands in the directory of the Git repo
-	GitTown            *config.GitTown                // the known state of the Git repository
+	*config.GitTown                                   // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	RemotesCache       *cache.Remotes                 // caches Git remotes
 }
