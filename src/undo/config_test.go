@@ -30,7 +30,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
@@ -65,7 +65,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
@@ -77,7 +77,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
@@ -116,7 +116,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
@@ -127,7 +127,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "1",
 				},
@@ -169,7 +169,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -180,7 +180,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -215,7 +215,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -227,7 +227,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -266,7 +266,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -277,7 +277,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
@@ -319,7 +319,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:  "0",
 					configdomain.KeyPushHook: "0",
@@ -334,7 +334,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "1",
 					configdomain.KeySyncPerennialStrategy: "1",
