@@ -282,6 +282,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.MainBranch
+		want := domain.LocalBranchName(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
