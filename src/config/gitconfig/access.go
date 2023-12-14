@@ -39,9 +39,14 @@ func (self *Access) LoadCache(global bool) SingleCache {
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey := configdomain.ParseKey(key)
-		if configKey != nil {
-			result[*configKey] = value
+		if configKey == nil {
+			continue
 		}
+		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*configKey]
+		if keyIsDeprecated {
+
+		}
+		result[*configKey] = value
 	}
 	return result
 }
