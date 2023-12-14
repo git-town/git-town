@@ -8,18 +8,18 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-// Cache caches a Git configuration type (local or global).
-type Cache map[configdomain.Key]string
+// SingleCache caches a single Git configuration type (local or global).
+type SingleCache map[configdomain.Key]string
 
 // Clone provides a copy of this GitConfiguration instance.
-func (self Cache) Clone() Cache {
-	result := Cache{}
+func (self SingleCache) Clone() SingleCache {
+	result := SingleCache{}
 	maps.Copy(result, self)
 	return result
 }
 
 // KeysMatching provides the keys in this GitConfigCache that match the given regex.
-func (self Cache) KeysMatching(pattern string) []configdomain.Key {
+func (self SingleCache) KeysMatching(pattern string) []configdomain.Key {
 	result := []configdomain.Key{}
 	re := regexp.MustCompile(pattern)
 	for key := range self {

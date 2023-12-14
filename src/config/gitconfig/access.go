@@ -37,8 +37,8 @@ func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) erro
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) Cache {
-	result := Cache{}
+func (self *Access) LoadCache(global bool) SingleCache {
+	result := SingleCache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")

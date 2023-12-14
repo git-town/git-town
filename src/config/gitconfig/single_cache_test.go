@@ -15,7 +15,7 @@ func TestCache(t *testing.T) {
 		t.Parallel()
 		alpha := configdomain.NewKey("alpha")
 		beta := configdomain.NewKey("beta")
-		original := gitconfig.Cache{
+		original := gitconfig.SingleCache{
 			alpha: "A",
 			beta:  "B",
 		}
@@ -28,7 +28,7 @@ func TestCache(t *testing.T) {
 
 	t.Run("KeysMatching", func(t *testing.T) {
 		t.Parallel()
-		cache := gitconfig.Cache{
+		cache := gitconfig.SingleCache{
 			configdomain.NewKey("key1"):  "A",
 			configdomain.NewKey("key2"):  "B",
 			configdomain.NewKey("other"): "other",

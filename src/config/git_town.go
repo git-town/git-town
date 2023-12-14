@@ -53,7 +53,7 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 	return url
 }
 
-func NewGitTown(gitConfig gitconfig.LocalGlobal, runner gitconfig.Runner) *GitTown {
+func NewGitTown(gitConfig gitconfig.FullCache, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
 		CachedAccess:   gitconfig.NewGit(gitConfig, runner),
 		DryRun:         false,
@@ -63,7 +63,7 @@ func NewGitTown(gitConfig gitconfig.LocalGlobal, runner gitconfig.Runner) *GitTo
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
-	for key := range self.LocalGlobal.Local {
+	for key := range self.FullCache.Local {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
 			return true
 		}
