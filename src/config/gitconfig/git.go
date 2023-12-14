@@ -77,6 +77,6 @@ func (self *Git) SetGlobalConfigValue(key configdomain.Key, value string) error 
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *Git) SetLocalConfigValue(key configdomain.Key, value string) error {
-	self.Config.Local[key] = value
+	self.Config.LocalCache[key] = value
 	return self.Run("git", "config", key.String(), value)
 }
