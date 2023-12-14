@@ -22,7 +22,7 @@ func (self *Config) Merge(other PartialConfig) {
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() Config {
-	return Config{
+	return Config{ //nolint:exhaustruct
 		GitHubToken: "",
 	}
 }

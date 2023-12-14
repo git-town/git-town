@@ -25,5 +25,5 @@ func (self *PartialConfig) Add(key Key, value string) bool {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{}
+	return PartialConfig{} //nolint:exhaustruct
 }

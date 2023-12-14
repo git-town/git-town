@@ -59,6 +59,7 @@ func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner, dryrun b
 	config.Merge(gitConfig.GlobalConfig)
 	config.Merge(gitConfig.LocalConfig)
 	return &GitTown{
+		Config:         config,
 		Git:            gitconfig.NewGit(gitConfig, runner),
 		DryRun:         dryrun,
 		originURLCache: OriginURLCache{},
