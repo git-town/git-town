@@ -222,7 +222,6 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
 	self.Config.MainBranch = branch
-	fmt.Printf("SETTING VARIABLE %p\n", &self)
 	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
