@@ -27,7 +27,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
+		GitTown:            nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
@@ -48,13 +48,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Cwd:       currentDirectory,
 		GitConfig: gitconfig.LoadGitConfig(backendRunner),
 	}
-	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner),
-		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
-	}
-	backendCommands.Config = &repoConfig
+	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
+	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
-		Config:  repoConfig,
+		Config:  *gitTown,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
@@ -79,7 +76,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 	}
-	isOffline, err := repoConfig.IsOffline()
+	isOffline, err := gitTown.IsOffline()
 	if err != nil {
 		return nil, err
 	}

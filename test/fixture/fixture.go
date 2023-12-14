@@ -126,7 +126,7 @@ func (self *Fixture) AddSecondWorktree(branch domain.LocalBranchName) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
-		Config:             self.DevRepo.Config,
+		GitTown:            self.DevRepo.GitTown,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
@@ -164,10 +164,10 @@ func (self *Fixture) AddUpstream() {
 func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	mainBranch := self.DevRepo.Config.MainBranch()
+	mainBranch := self.DevRepo.GitTown.MainBranch()
 	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	localBranches = localBranches.RemoveWorkspaceMarkers().Hoist(self.DevRepo.Config.MainBranch())
+	localBranches = localBranches.RemoveWorkspaceMarkers().Hoist(self.DevRepo.GitTown.MainBranch())
 	initialBranch := domain.NewLocalBranchName("initial")
 	slice.Remove(&localBranches, initialBranch)
 	localBranchesJoined := localBranches.Join(", ")
@@ -297,8 +297,8 @@ func (self Fixture) developerRepoPath() string {
 }
 
 func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
-	asserts.NoError(repo.Config.SetMainBranch(domain.NewLocalBranchName("main")))
-	asserts.NoError(repo.Config.SetPerennialBranches(domain.LocalBranchNames{}))
+	asserts.NoError(repo.GitTown.SetMainBranch(domain.NewLocalBranchName("main")))
+	asserts.NoError(repo.GitTown.SetPerennialBranches(domain.LocalBranchNames{}))
 	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
