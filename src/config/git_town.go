@@ -53,9 +53,9 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 	return url
 }
 
-func NewGitTown(gitConfig gitconfig.FullCache, runner gitconfig.Runner) *GitTown {
+func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
-		CachedAccess:   gitconfig.NewGit(gitConfig, runner),
+		CachedAccess:   gitconfig.NewGit(fullCache, runner),
 		DryRun:         false,
 		originURLCache: OriginURLCache{},
 	}
