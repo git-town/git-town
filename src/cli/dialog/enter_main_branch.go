@@ -20,7 +20,7 @@ func EnterMainBranch(localBranches domain.LocalBranchNames, oldMainBranch domain
 		return domain.EmptyLocalBranchName(), err
 	}
 	newMainBranch := domain.NewLocalBranchName(newMainBranchName)
-	return newMainBranch, backend.Config.SetMainBranch(newMainBranch)
+	return newMainBranch, backend.GitTown.SetMainBranch(newMainBranch)
 }
 
 func mainBranchPrompt(mainBranch domain.LocalBranchName) string {

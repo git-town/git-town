@@ -16,7 +16,7 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 	}
 	updated := false
 	for {
-		lineage := args.Backend.Config.Lineage(args.Backend.Config.RemoveLocalConfigValue) // need to load a fresh lineage here because ancestry data was changed
+		lineage := args.Backend.GitTown.Lineage(args.Backend.GitTown.RemoveLocalConfigValue) // need to load a fresh lineage here because ancestry data was changed
 		parent, hasParent := lineage[currentBranch]
 		var err error
 		if !hasParent { //nolint:nestif
@@ -29,14 +29,14 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 				return false, err
 			}
 			if parent.String() == dialog.PerennialBranchOption {
-				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
+				err = args.Backend.GitTown.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
 				}
 				updated = true
 				break
 			}
-			err = args.Backend.Config.SetParent(currentBranch, parent)
+			err = args.Backend.GitTown.SetParent(currentBranch, parent)
 			if err != nil {
 				return false, err
 			}
