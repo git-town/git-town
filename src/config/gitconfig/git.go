@@ -6,7 +6,7 @@ import "github.com/git-town/git-town/v11/src/config/configdomain"
 // Supports configuration in the local repo and the global Git configuration.
 type Git struct {
 	Runner
-	Config GitConfig
+	GitConfig
 }
 
 type Runner interface {
@@ -17,29 +17,29 @@ type Runner interface {
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
 func NewGit(gitConfig GitConfig, runner Runner) Git {
 	return Git{
-		Config: gitConfig,
-		Runner: runner,
+		GitConfig: gitConfig,
+		Runner:    runner,
 	}
 }
 
 func (self Git) GlobalConfigClone() Cache {
-	return self.Config.Global.Clone()
+	return self.GitConfig.Global.Clone()
 }
 
 func (self Git) GlobalConfigValue(key configdomain.Key) string {
-	return self.Config.Global[key]
+	return self.GitConfig.Global[key]
 }
 
 func (self Git) LocalConfigClone() Cache {
-	return self.Config.Local.Clone()
+	return self.GitConfig.Local.Clone()
 }
 
 func (self Git) LocalConfigKeysMatching(pattern string) []configdomain.Key {
-	return self.Config.Local.KeysMatching(pattern)
+	return self.GitConfig.Local.KeysMatching(pattern)
 }
 
 func (self Git) LocalConfigValue(key configdomain.Key) string {
-	return self.Config.Local[key]
+	return self.GitConfig.Local[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
@@ -54,29 +54,29 @@ func (self Git) LocalOrGlobalConfigValue(key configdomain.Key) string {
 
 // Reload refreshes the cached configuration information.
 func (self *Git) Reload() {
-	self.Config = LoadGitConfig(self.Runner)
+	self.GitConfig = LoadGitConfig(self.Runner)
 }
 
 func (self *Git) RemoveGlobalConfigValue(key configdomain.Key) error {
-	delete(self.Config.Global, key)
+	delete(self.GitConfig.Global, key)
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Git) RemoveLocalConfigValue(key configdomain.Key) error {
-	delete(self.Config.Local, key)
+	delete(self.GitConfig.Local, key)
 	err := self.Run("git", "config", "--unset", key.String())
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
 func (self *Git) SetGlobalConfigValue(key configdomain.Key, value string) error {
-	self.Config.Global[key] = value
+	self.GitConfig.Global[key] = value
 	return self.Run("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *Git) SetLocalConfigValue(key configdomain.Key, value string) error {
-	self.Config.Local[key] = value
+	self.GitConfig.Local[key] = value
 	return self.Run("git", "config", key.String(), value)
 }
