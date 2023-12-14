@@ -77,26 +77,36 @@ func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) erro
 	return self.Run("git", "config", key.String(), value)
 }
 
-func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
+func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
+	fmt.Printf("I found the deprecated global setting %q.\n", oldKey)
+	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	err := self.RemoveGlobalConfigValue(oldKey)
+	if err != nil {
+		fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
+	}
+	err = self.SetGlobalConfigValue(newKey, value)
+	if err != nil {
+		fmt.Printf("ERROR: cannot write global Git setting %q: %v", newKey, err)
+	}
+}
+
+func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
 	fmt.Printf("I found the deprecated local setting %q.\n", oldKey)
 	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	err := self.RemoveLocalConfigValue(oldKey)
+	if err != nil {
+		fmt.Printf("ERROR: cannot remove local Git setting %q: %v", oldKey, err)
+	}
+	err = self.SetLocalConfigValue(newKey, value)
+	if err != nil {
+		fmt.Printf("ERROR: cannot write local Git setting %q: %v", newKey, err)
+	}
+}
+
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
 	if global {
-		err := self.RemoveGlobalConfigValue(oldKey)
-		if err != nil {
-			fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
-		}
-		err = self.SetGlobalConfigValue(newKey, value)
-		if err != nil {
-			fmt.Printf("ERROR: cannot write global Git setting %q: %v", newKey, err)
-		}
+		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
 	} else {
-		err := self.RemoveLocalConfigValue(oldKey)
-		if err != nil {
-			fmt.Printf("ERROR: cannot remove local Git setting %q: %v", oldKey, err)
-		}
-		err = self.SetLocalConfigValue(newKey, value)
-		if err != nil {
-			fmt.Printf("ERROR: cannot write local Git setting %q: %v", newKey, err)
-		}
+		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
 	}
 }
