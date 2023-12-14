@@ -14,3 +14,7 @@ func (self *PartialConfig) Add(key Key, value string) bool {
 	}
 	return false
 }
+
+func EmptyPartialConfig() PartialConfig {
+	return PartialConfig{}
+}

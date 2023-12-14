@@ -1,6 +1,6 @@
 package configdomain
 
-// Data is the
+// Config is the merged configuration to be used by Git Town commands.
 type Config struct {
 	GitHubToken GitHubToken
 }
