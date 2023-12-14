@@ -63,7 +63,7 @@ func executeHack(args []string, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
@@ -76,6 +76,7 @@ func executeHack(args []string, verbose bool) error {
 }
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+	fmt.Printf("READING VARIABLE %p\n", &repo.Runner.GitTown)
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := gohacks.FailureCollector{}
 	pushHook := fc.PushHook(repo.Runner.GitTown.PushHook())

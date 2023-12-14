@@ -7,6 +7,7 @@ Feature: missing configuration
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
 
+  @debug @this
   Scenario: result
     And it runs the commands
       | BRANCH | COMMAND                  |

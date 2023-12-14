@@ -75,7 +75,7 @@ func executeSetParent(verbose bool) error {
 		DefaultBranch: existingParent,
 		Lineage:       lineage,
 		MainBranch:    mainBranch,
-		Runner:        &repo.Runner,
+		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return err

@@ -47,9 +47,9 @@ func executeConfigMainBranch(args []string, verbose bool) error {
 	}
 	if len(args) > 0 {
 		newMainBranch := domain.NewLocalBranchName(args[0])
-		return setMainBranch(newMainBranch, &repo.Runner)
+		return setMainBranch(newMainBranch, repo.Runner)
 	}
-	printMainBranch(&repo.Runner)
+	printMainBranch(repo.Runner)
 	return nil
 }
 

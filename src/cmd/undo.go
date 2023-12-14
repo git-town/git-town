@@ -58,7 +58,7 @@ func executeUndo(verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &undoRunState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 lineage,

@@ -53,7 +53,7 @@ func executeConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineConfigConfig(&repo.Runner)
+	config, err := determineConfigConfig(repo.Runner)
 	if err != nil {
 		return err
 	}

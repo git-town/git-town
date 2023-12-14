@@ -28,7 +28,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 			Lineage:                 args.Lineage,
 			PushHook:                args.PushHook,
 			RootDir:                 args.Repo.RootDir,
-			Run:                     &args.Repo.Runner,
+			Run:                     args.Repo.Runner,
 		})
 		if err != nil || exit {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, exit, err

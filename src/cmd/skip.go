@@ -72,7 +72,7 @@ func executeSkip(verbose bool) error {
 	skipRunState := runState.CreateSkipRunState()
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &skipRunState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 lineage,
