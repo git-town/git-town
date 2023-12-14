@@ -10,10 +10,14 @@ type FullCache struct {
 	LocalConfig  configdomain.PartialConfig
 }
 
-func LoadFullCache(git *Access) FullCache {
+func LoadFullCache(access *Access) FullCache {
+	globalCache, globalConfig := access.LoadCache(true)
+	localCache, localConfig := access.LoadCache(false)
 	return FullCache{
-		GlobalCache: git.LoadCache(true),
-		LocalCache:  git.LoadCache(false),
+		GlobalCache:  globalCache,
+		GlobalConfig: globalConfig,
+		LocalCache:   localCache,
+		LocalConfig:  localConfig,
 	}
 }
 

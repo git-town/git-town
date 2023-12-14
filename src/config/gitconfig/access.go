@@ -18,8 +18,9 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) SingleCache {
-	result := SingleCache{}
+func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig) {
+	cache := SingleCache{}
+	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -28,10 +29,10 @@ func (self *Access) LoadCache(global bool) SingleCache {
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return result
+		return cache, config
 	}
 	if output == "" {
-		return result
+		return cache, config
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -48,9 +49,12 @@ func (self *Access) LoadCache(global bool) SingleCache {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
-		result[*configKey] = value
+		if config.Add(*configKey, value) {
+			continue
+		}
+		cache[*configKey] = value
 	}
-	return result
+	return cache, config
 }
 
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
