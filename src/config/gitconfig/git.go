@@ -23,23 +23,23 @@ func NewGit(gitConfig GitConfig, runner Runner) Git {
 }
 
 func (self Git) GlobalConfigClone() Cache {
-	return self.Config.Global.Clone()
+	return self.Config.GlobalCache.Clone()
 }
 
 func (self Git) GlobalConfigValue(key configdomain.Key) string {
-	return self.Config.Global[key]
+	return self.Config.GlobalCache[key]
 }
 
 func (self Git) LocalConfigClone() Cache {
-	return self.Config.Local.Clone()
+	return self.Config.LocalCache.Clone()
 }
 
 func (self Git) LocalConfigKeysMatching(pattern string) []configdomain.Key {
-	return self.Config.Local.KeysMatching(pattern)
+	return self.Config.LocalCache.KeysMatching(pattern)
 }
 
 func (self Git) LocalConfigValue(key configdomain.Key) string {
-	return self.Config.Local[key]
+	return self.Config.LocalCache[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
@@ -58,20 +58,20 @@ func (self *Git) Reload() {
 }
 
 func (self *Git) RemoveGlobalConfigValue(key configdomain.Key) error {
-	delete(self.Config.Global, key)
+	delete(self.Config.GlobalCache, key)
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Git) RemoveLocalConfigValue(key configdomain.Key) error {
-	delete(self.Config.Local, key)
+	delete(self.Config.LocalCache, key)
 	err := self.Run("git", "config", "--unset", key.String())
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
 func (self *Git) SetGlobalConfigValue(key configdomain.Key, value string) error {
-	self.Config.Global[key] = value
+	self.Config.GlobalCache[key] = value
 	return self.Run("git", "config", "--global", key.String(), value)
 }
 

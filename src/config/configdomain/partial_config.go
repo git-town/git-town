@@ -4,3 +4,13 @@ package configdomain
 type PartialConfig struct {
 	GitHubToken *GitHubToken
 }
+
+func (self *PartialConfig) Add(key Key, value string) bool {
+	switch key {
+	case KeyGithubToken:
+		token := GitHubToken(value)
+		self.GitHubToken = &token
+		return true
+	}
+	return false
+}

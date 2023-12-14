@@ -32,8 +32,7 @@ func (self Cache) KeysMatching(pattern string) []configdomain.Key {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGitConfigCache(runner Runner, global bool) Cache {
-	result := Cache{}
+func LoadGitConfigCache(runner Runner, global bool) (config configdomain.PartialConfig, cache Cache) {
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -42,10 +41,10 @@ func LoadGitConfigCache(runner Runner, global bool) Cache {
 	}
 	output, err := runner.Query("git", cmdArgs...)
 	if err != nil {
-		return result
+		return config, cache
 	}
 	if output == "" {
-		return result
+		return config, cache
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -54,9 +53,13 @@ func LoadGitConfigCache(runner Runner, global bool) Cache {
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey := configdomain.ParseKey(key)
-		if configKey != nil {
-			result[*configKey] = value
+		if configKey == nil {
+			continue
 		}
+		if config.Add(*configKey, value) {
+			continue
+		}
+		cache[*configKey] = value
 	}
-	return result
+	return config, cache
 }

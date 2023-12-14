@@ -21,9 +21,8 @@ import (
 // stored in the local and global Git configuration.
 type GitTown struct {
 	gitconfig.Git
+	Config         configdomain.Config // the merged configuration data
 	originURLCache OriginURLCache
-	gitData        configdomain.PartialConfig // the configuration data stored in git
-	ConfigData     configdomain.Config        // the configuration data to use
 }
 
 type OriginURLCache map[string]*giturl.Parts
@@ -55,6 +54,9 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 }
 
 func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner) *GitTown {
+	config := configdomain.DefaultConfig()
+	config.Merge(gitConfig.GlobalConfig)
+	config.Merge(gitConfig.LocalConfig)
 	return &GitTown{
 		Git:            gitconfig.NewGit(gitConfig, runner),
 		originURLCache: OriginURLCache{},
@@ -63,7 +65,7 @@ func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner) *GitTown
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
-	for key := range self.Config.Local {
+	for key := range self.Git.Config.LocalCache {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
 			return true
 		}

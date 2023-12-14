@@ -14,17 +14,19 @@ func TestGitConfig(t *testing.T) {
 	t.Run("Clone", func(t *testing.T) {
 		t.Parallel()
 		original := gitconfig.GitConfig{
-			Global: gitconfig.Cache{
+			GlobalCache: gitconfig.Cache{
 				configdomain.KeyOffline: "1",
 			},
-			Local: gitconfig.Cache{
+			GlobalConfig: configdomain.PartialConfig{},
+			LocalCache: gitconfig.Cache{
 				configdomain.KeyMainBranch: "main",
 			},
+			LocalConfig: configdomain.PartialConfig{},
 		}
 		clone := original.Clone()
-		clone.Global[configdomain.KeyOffline] = "0"
-		clone.Local[configdomain.KeyMainBranch] = "dev"
-		must.EqOp(t, "1", original.Global[configdomain.KeyOffline])
-		must.EqOp(t, "main", original.Local[configdomain.KeyMainBranch])
+		clone.GlobalCache[configdomain.KeyOffline] = "0"
+		clone.LocalCache[configdomain.KeyMainBranch] = "dev"
+		must.EqOp(t, "1", original.GlobalCache[configdomain.KeyOffline])
+		must.EqOp(t, "main", original.LocalCache[configdomain.KeyMainBranch])
 	})
 }
