@@ -49,8 +49,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		GitConfig: gitconfig.LoadGitConfig(backendRunner),
 	}
 	repoConfig := git.RepoConfig{
-		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner),
-		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+		GitTown: config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false),
 	}
 	backendCommands.Config = &repoConfig
 	prodRunner := git.ProdRunner{
