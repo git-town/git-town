@@ -66,7 +66,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	branchTypes := run.GitTown.BranchTypes()
 	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShouldShipDeleteOriginBranch())
 	giteaToken := run.GitTown.GiteaToken()
-	githubToken := run.GitTown.GitHubToken()
+	githubToken := run.GitTown.Config.GitHubToken
 	gitlabToken := run.GitTown.GitLabToken()
 	hosting := fc.Hosting(run.GitTown.HostingService())
 	isOffline := fc.Offline(run.GitTown.IsOffline())

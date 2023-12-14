@@ -91,7 +91,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken()),
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
