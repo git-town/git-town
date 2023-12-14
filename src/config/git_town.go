@@ -21,9 +21,9 @@ import (
 // stored in the local and global Git configuration.
 type GitTown struct {
 	gitconfig.Git
-	Config         configdomain.Config // the merged configuration data
-	DryRun         bool                // single source of truth for whether to dry-run Git commands in this repo
-	originURLCache OriginURLCache
+	configdomain.Config      // the merged configuration data
+	DryRun              bool // single source of truth for whether to dry-run Git commands in this repo
+	originURLCache      OriginURLCache
 }
 
 type OriginURLCache map[string]*giturl.Parts
