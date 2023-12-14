@@ -21,7 +21,7 @@ func EmptyConfigDiff() ConfigDiff {
 	}
 }
 
-func NewConfigDiff(before, after gitconfig.Cache) ConfigDiff {
+func NewConfigDiff(before, after gitconfig.SingleCache) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},

@@ -77,7 +77,8 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	gitConfig := gitconfig.LoadGitConfig(&runner)
+	configGit := gitconfig.Access{Runner: &runner}
+	gitConfig := gitconfig.LoadFullCache(&configGit)
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
 		GitTown:            config.NewGitTown(gitConfig, &runner),
