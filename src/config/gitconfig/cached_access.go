@@ -19,16 +19,8 @@ func NewGit(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) GlobalConfigClone() SingleCache {
-	return self.FullCache.Global.Clone()
-}
-
 func (self CachedAccess) GlobalConfigValue(key configdomain.Key) string {
 	return self.FullCache.Global[key]
-}
-
-func (self CachedAccess) LocalConfigClone() SingleCache {
-	return self.FullCache.Local.Clone()
 }
 
 func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
