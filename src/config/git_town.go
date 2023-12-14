@@ -22,10 +22,8 @@ import (
 type GitTown struct {
 	gitconfig.CachedAccess      // access to the Git configuration settings
 	DryRun                 bool // whether to dry-run Git commands in this repo
-	originURLCache         OriginURLCache
+	originURLCache         configdomain.OriginURLCache
 }
-
-type OriginURLCache map[string]*giturl.Parts
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
@@ -40,24 +38,11 @@ func (self *GitTown) BranchTypes() domain.BranchTypes {
 	}
 }
 
-func DetermineOriginURL(originURL string, originOverride configdomain.OriginHostnameOverride, originURLCache OriginURLCache) *giturl.Parts {
-	cached, has := originURLCache[originURL]
-	if has {
-		return cached
-	}
-	url := giturl.Parse(originURL)
-	if originOverride != "" {
-		url.Host = string(originOverride)
-	}
-	originURLCache[originURL] = url
-	return url
-}
-
 func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
 		DryRun:         false,
-		originURLCache: OriginURLCache{},
+		originURLCache: configdomain.OriginURLCache{},
 	}
 }
 
@@ -163,7 +148,7 @@ func (self *GitTown) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	return DetermineOriginURL(text, self.OriginOverride(), self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.OriginOverride(), self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
