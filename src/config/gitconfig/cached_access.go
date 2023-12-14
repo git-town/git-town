@@ -10,7 +10,7 @@ type CachedAccess struct {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(fullCache FullCache, runner Runner) CachedAccess {
+func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	return CachedAccess{
 		FullCache: fullCache,
 		Access: Access{
