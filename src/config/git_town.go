@@ -54,10 +54,10 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 	return url
 }
 
-func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner, dryrun bool) *GitTown {
+func NewGitTown(gitConfig gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
 	config := configdomain.DefaultConfig()
-	config.Merge(gitConfig.GlobalConfig)
-	config.Merge(gitConfig.LocalConfig)
+	config.Merge(gitConfig.Global)
+	config.Merge(gitConfig.Local)
 	return &GitTown{
 		Config:         config,
 		CachedAccess:   gitcofig.NewGit(fullCache, runner),

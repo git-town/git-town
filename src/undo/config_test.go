@@ -19,7 +19,7 @@ func TestConfigUndo(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
-			GitConfig: gitconfig.GitConfig{
+			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
