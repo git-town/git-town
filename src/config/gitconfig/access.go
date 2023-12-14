@@ -1,6 +1,7 @@
 package gitconfig
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -44,7 +45,15 @@ func (self *Access) LoadCache(global bool) SingleCache {
 		}
 		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*configKey]
 		if keyIsDeprecated {
-
+			fmt.Printf("I found the deprecated local setting %q.\n", key)
+			fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+			if global {
+				_ = self.RemoveGlobalConfigValue(*configKey)
+				err = self.SetGlobalConfigValue(newKey, value)
+			} else {
+				_ = self.RemoveLocalConfigValue(*configKey)
+				err = self.SetLocalConfigValue(newKey, value)
+			}
 		}
 		result[*configKey] = value
 	}
