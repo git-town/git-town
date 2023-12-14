@@ -29,6 +29,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.MainBranch != nil {
 		self.MainBranch = *other.MainBranch
 	}
+	if other.Offline != nil {
+		self.Offline = *other.Offline
+	}
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
