@@ -25,7 +25,12 @@ func (self *PartialConfig) Add(key Key, value string) bool {
 		token := GitLabToken(value)
 		self.GitLabToken = &token
 	case KeyMainBranch:
-		token := domain.NewLocalBranchName(value)
+		var token domain.LocalBranchName
+		if value == "" {
+			token = domain.EmptyLocalBranchName()
+		} else {
+			token = domain.NewLocalBranchName(value)
+		}
 		self.MainBranch = &token
 	default:
 		return false
