@@ -20,9 +20,9 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.Git
-	DryRun         bool // single source of truth for whether to dry-run Git commands in this repo
-	originURLCache OriginURLCache
+	gitconfig.CachedAccess      // access to the Git configuration settings
+	DryRun                 bool // whether to dry-run Git commands in this repo
+	originURLCache         OriginURLCache
 }
 
 type OriginURLCache map[string]*giturl.Parts
@@ -53,9 +53,9 @@ func DetermineOriginURL(originURL string, originOverride configdomain.OriginHost
 	return url
 }
 
-func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner) *GitTown {
+func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner) *GitTown {
 	return &GitTown{
-		Git:            gitconfig.NewGit(gitConfig, runner),
+		CachedAccess:   gitconfig.NewGit(fullCache, runner),
 		DryRun:         false,
 		originURLCache: OriginURLCache{},
 	}
@@ -63,7 +63,7 @@ func NewGitTown(gitConfig gitconfig.GitConfig, runner gitconfig.Runner) *GitTown
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
-	for key := range self.GitConfig.Local {
+	for key := range self.FullCache.Local {
 		if strings.HasPrefix(key.String(), "git-town-branch.") {
 			return true
 		}

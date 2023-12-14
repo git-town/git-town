@@ -13,7 +13,7 @@ import (
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
-	undoConfigProgram, err := determineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Backend)
+	undoConfigProgram, err := determineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.GitTown.Access)
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -56,14 +56,14 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	}), nil
 }
 
-func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, backend *git.BackendCommands) (program.Program, error) {
+func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		return program.Program{}, errors.New(messages.DirCurrentProblem)
 	}
 	finalConfigSnapshot := ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: gitconfig.LoadGitConfig(backend),
+		GitConfig: gitconfig.LoadFullCache(configGit),
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil
