@@ -33,6 +33,7 @@ func (self Cache) KeysMatching(pattern string) []configdomain.Key {
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
 func LoadGitConfigCache(runner Runner, global bool) (config configdomain.PartialConfig, cache Cache) {
+	cache = Cache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
