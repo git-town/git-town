@@ -1,7 +1,6 @@
 package fixture
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -166,7 +165,6 @@ func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := self.DevRepo.GitTown.Config.MainBranch
-	fmt.Println("1111111111111111", mainBranch)
 	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	localBranches = localBranches.RemoveWorkspaceMarkers().Hoist(self.DevRepo.GitTown.Config.MainBranch)
