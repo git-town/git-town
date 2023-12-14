@@ -240,7 +240,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		OriginURL:       originURL,
 		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
+		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})
