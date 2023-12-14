@@ -103,7 +103,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,

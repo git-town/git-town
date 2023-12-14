@@ -99,7 +99,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	mainBranch := repo.Runner.Backend.GitTown.MainBranch()
+	mainBranch := repo.Runner.Backend.GitTown.Config.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {

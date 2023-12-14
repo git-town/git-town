@@ -118,7 +118,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	var oldBranchName domain.LocalBranchName
 	var newBranchName domain.LocalBranchName
 	if len(args) == 1 {

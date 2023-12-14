@@ -95,7 +95,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := domain.NewLocalBranchName(args[0])
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
 	isOffline := fc.Offline(repo.Runner.GitTown.IsOffline())

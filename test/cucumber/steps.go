@@ -847,7 +847,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.MainBranch()
+		have := state.fixture.DevRepo.GitTown.Config.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}

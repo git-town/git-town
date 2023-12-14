@@ -94,7 +94,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if !branchTypes.IsFeatureBranch(branch) {
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branchTypes,

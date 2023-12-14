@@ -108,7 +108,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	branchNameToKill := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToKill := branches.All.FindByLocalName(branchNameToKill)
 	if branchToKill == nil {

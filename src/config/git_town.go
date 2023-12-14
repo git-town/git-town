@@ -34,7 +34,7 @@ func (self *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) 
 
 func (self *GitTown) BranchTypes() domain.BranchTypes {
 	return domain.BranchTypes{
-		MainBranch:        self.MainBranch(),
+		MainBranch:        self.Config.MainBranch,
 		PerennialBranches: self.PerennialBranches(),
 	}
 }
@@ -75,7 +75,7 @@ func (self *GitTown) HostingService() (configdomain.Hosting, error) {
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
-	return branch == self.MainBranch()
+	return branch == self.Config.MainBranch
 }
 
 // IsOffline indicates whether Git Town is currently in offline mode.
@@ -107,15 +107,6 @@ func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdom
 		}
 	}
 	return lineage
-}
-
-// MainBranch provides the name of the main branch.
-func (self *GitTown) MainBranch() domain.LocalBranchName {
-	mainBranch := self.LocalOrGlobalConfigValue(configdomain.KeyMainBranch)
-	if mainBranch == "" {
-		return domain.EmptyLocalBranchName()
-	}
-	return domain.NewLocalBranchName(mainBranch)
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
@@ -230,8 +221,8 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
-	err := self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
-	return err
+	self.Config.MainBranch = branch
+	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
 // SetNewBranchPush updates whether the current repository is configured to push
