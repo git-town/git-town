@@ -17,7 +17,7 @@ type ChangeParent struct {
 }
 
 func (self *ChangeParent) Run(args shared.RunArgs) error {
-	err := args.Runner.Config.SetParent(self.Branch, self.Parent)
+	err := args.Runner.GitTown.SetParent(self.Branch, self.Parent)
 	if err != nil {
 		return err
 	}

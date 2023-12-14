@@ -53,7 +53,7 @@ func executeOffline(args []string, verbose bool) error {
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {
-	isOffline, err := run.Config.IsOffline()
+	isOffline, err := run.GitTown.IsOffline()
 	if err != nil {
 		return err
 	}
@@ -66,5 +66,5 @@ func setOfflineStatus(text string, run *git.ProdRunner) error {
 	if err != nil {
 		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
 	}
-	return run.Config.SetOffline(configdomain.Offline(value))
+	return run.GitTown.SetOffline(configdomain.Offline(value))
 }
