@@ -1,6 +1,13 @@
 package gitconfig
 
-import "github.com/git-town/git-town/v11/src/config/configdomain"
+import (
+	"errors"
+	"fmt"
+	"os/exec"
+
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/messages"
+)
 
 // CachedAccess provides access to the local and global configuration data stored in Git metadata
 // made efficient through an in-memory cache.
@@ -55,6 +62,29 @@ func (self *CachedAccess) RemoveGlobalConfigValue(key configdomain.Key) error {
 func (self *CachedAccess) RemoveLocalConfigValue(key configdomain.Key) error {
 	delete(self.LocalCache, key)
 	return self.Access.RemoveLocalConfigValue(key)
+}
+
+// RemoveLocalGitConfiguration removes all Git Town configuration.
+func (self *CachedAccess) RemoveLocalGitConfiguration() error {
+	err := self.Run("git", "config", "--remove-section", "git-town")
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			if exitErr.ExitCode() == 128 {
+				// Git returns exit code 128 when trying to delete a non-existing config section.
+				// This is not an error condition in this workflow so we can ignore it here.
+				return nil
+			}
+		}
+		return fmt.Errorf(messages.ConfigRemoveError, err)
+	}
+	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		err = self.Run("git", "config", "--unset", key.String())
+		if err != nil {
+			return fmt.Errorf(messages.ConfigRemoveError, err)
+		}
+	}
+	return nil
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.

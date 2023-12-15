@@ -239,7 +239,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		state.fixture.DevRepo.RemoveMainBranchConfiguration()
 		return nil
 	})
 
