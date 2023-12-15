@@ -1,9 +1,8 @@
-package gohacks
+package configdomain
 
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
@@ -52,22 +51,22 @@ func (self *FailureCollector) Fail(format string, a ...any) {
 
 // Hosting provides the config.Hosting part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) configdomain.Hosting {
+func (self *FailureCollector) Hosting(value Hosting, err error) Hosting {
 	self.Check(err)
 	return value
 }
 
-func (self *FailureCollector) NewBranchPush(value configdomain.NewBranchPush, err error) configdomain.NewBranchPush {
+func (self *FailureCollector) NewBranchPush(value NewBranchPush, err error) NewBranchPush {
 	self.Check(err)
 	return value
 }
 
-func (self *FailureCollector) Offline(value configdomain.Offline, err error) configdomain.Offline {
+func (self *FailureCollector) Offline(value Offline, err error) Offline {
 	self.Check(err)
 	return value
 }
 
-func (self *FailureCollector) PushHook(value configdomain.PushHook, err error) configdomain.PushHook {
+func (self *FailureCollector) PushHook(value PushHook, err error) PushHook {
 	self.Check(err)
 	return value
 }
@@ -84,7 +83,7 @@ func (self *FailureCollector) RepoStatus(value domain.RepoStatus, err error) dom
 	return value
 }
 
-func (self *FailureCollector) ShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch, err error) configdomain.ShipDeleteTrackingBranch {
+func (self *FailureCollector) ShipDeleteRemoteBranch(value ShipDeleteTrackingBranch, err error) ShipDeleteTrackingBranch {
 	self.Check(err)
 	return value
 }
@@ -103,26 +102,26 @@ func (self *FailureCollector) Strings(value []string, err error) []string {
 	return value
 }
 
-func (self *FailureCollector) SyncBeforeShip(value configdomain.SyncBeforeShip, err error) configdomain.SyncBeforeShip {
+func (self *FailureCollector) SyncBeforeShip(value SyncBeforeShip, err error) SyncBeforeShip {
 	self.Check(err)
 	return value
 }
 
 // SyncFeatureStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncFeatureStrategy(value configdomain.SyncFeatureStrategy, err error) configdomain.SyncFeatureStrategy {
+func (self *FailureCollector) SyncFeatureStrategy(value SyncFeatureStrategy, err error) SyncFeatureStrategy {
 	self.Check(err)
 	return value
 }
 
 // SyncPerennialStrategy provides the string part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) SyncPerennialStrategy(value configdomain.SyncPerennialStrategy, err error) configdomain.SyncPerennialStrategy {
+func (self *FailureCollector) SyncPerennialStrategy(value SyncPerennialStrategy, err error) SyncPerennialStrategy {
 	self.Check(err)
 	return value
 }
 
-func (self *FailureCollector) SyncUpstream(value configdomain.SyncUpstream, err error) configdomain.SyncUpstream {
+func (self *FailureCollector) SyncUpstream(value SyncUpstream, err error) SyncUpstream {
 	self.Check(err)
 	return value
 }
