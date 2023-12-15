@@ -967,7 +967,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
 		branches := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
-		if len(*branches) > 0 {
+		if branches != nil && len(*branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
 		return nil
