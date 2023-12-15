@@ -49,6 +49,6 @@ Feature: display all executed Git commands
     When I run "git-town undo --verbose"
     Then it prints:
       """
-      Ran 17 shell commands.
+      Ran 16 shell commands.
       """
     And the current branch is now "existing"
