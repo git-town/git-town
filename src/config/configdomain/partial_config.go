@@ -69,7 +69,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Removed: map[Key]string{},
 		Changed: map[Key]domain.Change[string]{},
 	}
-	Check(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
+	CheckPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
 	Check(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
 	Check(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
 	CheckPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)

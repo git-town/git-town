@@ -94,10 +94,22 @@ func TestConfigdiff(t *testing.T) {
 
 	t.Run("Check", func(t *testing.T) {
 		t.Parallel()
-
 	})
+
 	t.Run("CheckPtr", func(t *testing.T) {
 		t.Parallel()
+		t.Run("added", func(t *testing.T) {
+			t.Parallel()
+			after := configdomain.GitHubToken("token2")
+			have := configdomain.EmptyConfigDiff()
+			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, nil, &after)
+			want := configdomain.ConfigDiff{
+				Added:   []configdomain.Key{configdomain.KeyGithubToken},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]domain.Change[string]{},
+			}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("CheckString", func(t *testing.T) {
