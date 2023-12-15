@@ -139,6 +139,40 @@ func TestConfigdiff(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+		t.Run("changed from empty string", func(t *testing.T) {
+			t.Parallel()
+			before := configdomain.GitHubToken("")
+			after := configdomain.GitHubToken("token")
+			have := configdomain.EmptyConfigDiff()
+			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := configdomain.ConfigDiff{
+				Added:   []configdomain.Key{},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]domain.Change[string]{
+					configdomain.KeyGithubToken: {
+						Before: "",
+						After:  "token",
+					}},
+			}
+			must.Eq(t, want, have)
+		})
+		t.Run("changed to empty string", func(t *testing.T) {
+			t.Parallel()
+			before := configdomain.GitHubToken("token")
+			after := configdomain.GitHubToken("")
+			have := configdomain.EmptyConfigDiff()
+			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := configdomain.ConfigDiff{
+				Added:   []configdomain.Key{},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]domain.Change[string]{
+					configdomain.KeyGithubToken: {
+						Before: "token",
+						After:  "",
+					}},
+			}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("CheckString", func(t *testing.T) {
