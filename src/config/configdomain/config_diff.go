@@ -39,17 +39,18 @@ type checkArg interface {
 }
 
 func Check[T checkArg](diff *ConfigDiff, key Key, before T, after T) {
-	if before == after {
-		return
-	}
 	beforeText := before.String()
 	afterText := after.String()
+	if beforeText == afterText {
+		return
+	}
 	if beforeText == "" {
 		diff.Added = append(diff.Added, key)
 		return
 	}
 	if afterText == "" {
 		diff.Removed[key] = beforeText
+		return
 	}
 	diff.Changed[key] = domain.Change[string]{
 		Before: beforeText,
