@@ -1,8 +1,6 @@
 package gitconfig
 
-import (
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-)
+import "github.com/git-town/git-town/v11/src/config/configdomain"
 
 // CachedAccess provides access to the local and global configuration data stored in Git metadata
 // made efficient through an in-memory cache.
