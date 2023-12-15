@@ -128,7 +128,7 @@ fmt.Printf("%#v\n", variable)
 
 Inspect more complex variables:
 
-```
+```go
 import "github.com/davecgh/go-spew/spew"
 
 spew.Dump(variable)
