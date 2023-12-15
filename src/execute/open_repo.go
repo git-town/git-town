@@ -53,7 +53,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
 	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
-		GitTown: *gitTown,
+		GitTown: gitTown,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{

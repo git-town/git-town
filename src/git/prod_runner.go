@@ -8,7 +8,7 @@ import (
 
 // ProdRunner provides Git functionality for production code.
 type ProdRunner struct {
-	config.GitTown
+	*config.GitTown
 	Backend         BackendCommands
 	Frontend        FrontendCommands
 	CommandsCounter *gohacks.Counter
