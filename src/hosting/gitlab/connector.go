@@ -89,7 +89,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(string(gitlabConfig.APIToken), httpClient, clientOptFunc)
+	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken.String(), httpClient, clientOptFunc)
 	if err != nil {
 		return nil, err
 	}
