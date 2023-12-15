@@ -6,23 +6,23 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
-// SingleCacheDiff describes the changes made to the local or global Git configuration.
-type SingleCacheDiff struct {
+// ConfigDiff describes the changes made to the local or global Git configuration.
+type ConfigDiff struct {
 	Added   []configdomain.Key
 	Removed map[configdomain.Key]string
 	Changed map[configdomain.Key]domain.Change[string]
 }
 
-func EmptySingleCacheDiff() SingleCacheDiff {
-	return SingleCacheDiff{
+func EmptyConfigDiff() ConfigDiff {
+	return ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},
 		Changed: map[configdomain.Key]domain.Change[string]{},
 	}
 }
 
-func NewSingleCacheDiff(before, after gitconfig.SingleCache) SingleCacheDiff {
-	result := SingleCacheDiff{
+func NewConfigDiff(before, after gitconfig.SingleCache) ConfigDiff {
+	result := ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},
 		Changed: map[configdomain.Key]domain.Change[string]{},
