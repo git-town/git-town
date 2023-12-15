@@ -357,8 +357,7 @@ func (self *TestCommands) SHAForCommit(name string) string {
 
 // SetColorUI configures whether Git output contains color codes.
 func (self *TestCommands) SetColorUI(value string) error {
-	err := self.Run("git", "config", "color.ui", value)
-	return err
+	return self.Run("git", "config", "color.ui", value)
 }
 
 // StageFiles adds the file with the given name to the Git index.
