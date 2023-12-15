@@ -70,10 +70,10 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Changed: map[Key]domain.Change[string]{},
 	}
 	CheckPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
-	Check(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
-	Check(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
+	CheckPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
+	CheckPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
 	CheckPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
-	Check(&result, KeyOffline, before.Offline, after.Offline)
+	CheckPtr(&result, KeyOffline, before.Offline, after.Offline)
 	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	CheckStringRef(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result

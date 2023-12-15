@@ -125,7 +125,7 @@ func TestConfigdiff(t *testing.T) {
 			before := configdomain.GitHubToken("token1")
 			after := configdomain.GitHubToken("token2")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.Check(&have, configdomain.KeyGithubToken, before, after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
