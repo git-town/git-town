@@ -219,7 +219,7 @@ func (self *GitTown) SetNewBranchPush(value configdomain.NewBranchPush, global b
 // SetOffline updates whether Git Town is in offline mode.
 func (self *GitTown) SetOffline(value configdomain.Offline) error {
 	self.Config.Offline = value
-	return self.SetGlobalConfigValue(configdomain.KeyOffline, strconv.FormatBool(value.Bool()))
+	return self.SetGlobalConfigValue(configdomain.KeyOffline, value.String())
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
