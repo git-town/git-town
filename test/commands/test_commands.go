@@ -170,6 +170,11 @@ func (self *TestCommands) DeleteMainBranchConfiguration() {
 	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
+// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
+func (self *TestCommands) DeletePerennialBranchConfiguration() error {
+	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+}
+
 // Fetch retrieves the updates from the origin repo.
 func (self *TestCommands) Fetch() {
 	self.MustRun("git", "fetch")
