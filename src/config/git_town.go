@@ -1,10 +1,8 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 
@@ -215,29 +213,6 @@ func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) 
 	perennialBranches := self.PerennialBranches()
 	slice.Remove(&perennialBranches, branch)
 	return self.SetPerennialBranches(perennialBranches)
-}
-
-// RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *GitTown) RemoveLocalGitConfiguration() error {
-	err := self.Run("git", "config", "--remove-section", "git-town")
-	if err != nil {
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
-			if exitErr.ExitCode() == 128 {
-				// Git returns exit code 128 when trying to delete a non-existing config section.
-				// This is not an error condition in this workflow so we can ignore it here.
-				return nil
-			}
-		}
-		return fmt.Errorf(messages.ConfigRemoveError, err)
-	}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		err = self.Run("git", "config", "--unset", key.String())
-		if err != nil {
-			return fmt.Errorf(messages.ConfigRemoveError, err)
-		}
-	}
-	return nil
 }
 
 // RemoveParent removes the parent branch entry for the given branch
