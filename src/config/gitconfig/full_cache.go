@@ -2,20 +2,20 @@ package gitconfig
 
 // FullCache caches all Git-based configuration types (global and local).
 type FullCache struct {
-	Global SingleCache
-	Local  SingleCache
+	GlobalCache SingleCache
+	LocalCache  SingleCache
 }
 
 func LoadFullCache(git *Access) FullCache {
 	return FullCache{
-		Global: git.LoadCache(true),
-		Local:  git.LoadCache(false),
+		GlobalCache: git.LoadCache(true),
+		LocalCache:  git.LoadCache(false),
 	}
 }
 
 func (self FullCache) Clone() FullCache {
 	return FullCache{
-		Global: self.Global.Clone(),
-		Local:  self.Local.Clone(),
+		GlobalCache: self.GlobalCache.Clone(),
+		LocalCache:  self.LocalCache.Clone(),
 	}
 }
