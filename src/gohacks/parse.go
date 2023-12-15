@@ -1,4 +1,4 @@
-package confighelpers
+package gohacks
 
 import (
 	"strconv"
