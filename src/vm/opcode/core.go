@@ -91,6 +91,7 @@ func Types() []shared.Opcode {
 		&SetGlobalConfig{},
 		&SetLocalConfig{},
 		&SetParent{},
+		&SetParentIfBranchExists{},
 		&SkipCurrentBranch{},
 		&StashOpenChanges{},
 		&SquashMerge{},
