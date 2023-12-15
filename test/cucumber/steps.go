@@ -261,8 +261,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		err := state.fixture.DevRepo.GitTown.SetGlobalConfigValue(*configKey, value)
-		return err
+		return state.fixture.DevRepo.GitTown.SetGlobalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
