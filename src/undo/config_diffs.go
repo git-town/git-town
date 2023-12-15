@@ -7,14 +7,14 @@ import (
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
 type ConfigDiffs struct {
-	Global ConfigDiff
-	Local  ConfigDiff
+	Global SingleCacheDiff
+	Local  SingleCacheDiff
 }
 
 func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	return ConfigDiffs{
-		Global: NewConfigDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache),
-		Local:  NewConfigDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache),
+		Global: NewSingleCacheDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache),
+		Local:  NewSingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache),
 	}
 }
 
