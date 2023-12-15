@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -65,8 +64,6 @@ func EmptyPartialConfig() PartialConfig {
 }
 
 func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
-	fmt.Println("222222222222222222")
-	spew.Dump(before, after)
 	result := ConfigDiff{
 		Added:   []Key{},
 		Removed: map[Key]string{},
@@ -79,7 +76,5 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	CheckPtr(&result, KeyOffline, before.Offline, after.Offline)
 	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	CheckStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
-	fmt.Println("3333333333333333333")
-	spew.Dump(result)
 	return result
 }

@@ -12,6 +12,23 @@ func TestConfigdiff(t *testing.T) {
 	t.Parallel()
 	t.Run("Merge", func(t *testing.T) {
 		t.Parallel()
+		t.Run("nothing changed", func(t *testing.T) {
+			t.Parallel()
+			diff1 := configdomain.ConfigDiff{ //nolint:exhaustruct
+				Added: []configdomain.Key{
+					configdomain.KeyGithubToken,
+				},
+			}
+			diff2 := configdomain.ConfigDiff{ //nolint:exhaustruct
+			}
+			have := diff1.Merge(&diff2)
+			want := configdomain.ConfigDiff{
+				Added:   []configdomain.Key{configdomain.KeyGithubToken},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]domain.Change[string]{},
+			}
+			must.Eq(t, want, have)
+		})
 		t.Run("added entries", func(t *testing.T) {
 			t.Parallel()
 			diff1 := configdomain.ConfigDiff{ //nolint:exhaustruct
