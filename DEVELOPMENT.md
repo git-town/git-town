@@ -118,6 +118,22 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
+## inspecting variables
+
+Inspect basic variables:
+
+```go
+fmt.Printf("%#v\n", variable)
+```
+
+Inspect more complex variables:
+
+```
+import "github.com/davecgh/go-spew/spew"
+
+spew.Dump(variable)
+```
+
 ## debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, as well as the
