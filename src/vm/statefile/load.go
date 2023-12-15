@@ -27,7 +27,6 @@ func Load(repoDir domain.RepoRootDir) (*runstate.RunState, error) {
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
-	fmt.Println("22222222222222222 STATEFILE", string(content))
 	var runState runstate.RunState
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
