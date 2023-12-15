@@ -15,7 +15,7 @@ import (
 func TestConfigUndo(t *testing.T) {
 	t.Parallel()
 
-	t.Run("global config added", func(t *testing.T) {
+	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
@@ -57,7 +57,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("global config removed", func(t *testing.T) {
+	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
@@ -104,7 +104,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("global config changed", func(t *testing.T) {
+	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
@@ -153,7 +153,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("local config added", func(t *testing.T) {
+	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
@@ -195,7 +195,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("local config removed", func(t *testing.T) {
+	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
@@ -242,7 +242,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantProgram, haveProgram)
 	})
 
-	t.Run("local config changed", func(t *testing.T) {
+	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
