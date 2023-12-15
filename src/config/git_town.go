@@ -156,11 +156,6 @@ func (self *GitTown) RemoveLocalGitConfiguration() error {
 	return nil
 }
 
-// RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
-func (self *GitTown) RemoveMainBranchConfiguration() error {
-	return self.RemoveLocalConfigValue(configdomain.KeyMainBranch)
-}
-
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
 func (self *GitTown) RemoveParent(branch domain.LocalBranchName) {
