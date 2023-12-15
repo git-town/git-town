@@ -165,16 +165,6 @@ func (self *TestCommands) CreateTag(name string) {
 	self.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (self *TestCommands) DeleteMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
-}
-
-// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
-func (self *TestCommands) DeletePerennialBranchConfiguration() error {
-	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
-}
-
 // Fetch retrieves the updates from the origin repo.
 func (self *TestCommands) Fetch() {
 	self.MustRun("git", "fetch")
@@ -334,6 +324,16 @@ func (self *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) err
 // RemoveBranch deletes the branch with the given name from this repo.
 func (self *TestCommands) RemoveBranch(name domain.LocalBranchName) {
 	self.MustRun("git", "branch", "-D", name.String())
+}
+
+// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
+func (self *TestCommands) RemoveMainBranchConfiguration() {
+	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
+}
+
+// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
+func (self *TestCommands) RemovePerennialBranchConfiguration() error {
+	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
