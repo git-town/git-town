@@ -91,4 +91,16 @@ func TestConfigdiff(t *testing.T) {
 			must.Eq(t, want, have)
 		})
 	})
+
+	t.Run("Check", func(t *testing.T) {
+		t.Parallel()
+
+	})
+	t.Run("CheckPtr", func(t *testing.T) {
+		t.Parallel()
+	})
+
+	t.Run("CheckString", func(t *testing.T) {
+		t.Parallel()
+	})
 }
