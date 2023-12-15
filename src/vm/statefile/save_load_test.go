@@ -143,6 +143,10 @@ func TestLoadSave(t *testing.T) {
 					Branch: domain.NewLocalBranchName("branch"),
 					Parent: domain.NewLocalBranchName("parent"),
 				},
+				&opcode.SetParentIfBranchExists{
+					Branch: domain.NewLocalBranchName("branch"),
+					Parent: domain.NewLocalBranchName("parent"),
+				},
 				&opcode.SkipCurrentBranch{},
 				&opcode.SquashMerge{
 					Branch:        domain.NewLocalBranchName("branch"),
@@ -400,6 +404,13 @@ func TestLoadSave(t *testing.T) {
         "Parent": "parent"
       },
       "type": "SetParent"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "SetParentIfBranchExists"
     },
     {
       "data": {},
