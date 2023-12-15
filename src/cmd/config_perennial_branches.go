@@ -57,7 +57,7 @@ func executeConfigPerennialBranches(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	io.Println(format.StringSetting(repo.Runner.GitTown.PerennialBranches().Join("\n")))
+	io.Println(format.StringSetting(repo.Runner.GitTown.Config.PerennialBranches.Join("\n")))
 	return nil
 }
 

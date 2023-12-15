@@ -30,5 +30,6 @@ func Save(runState *runstate.RunState, repoDir domain.RepoRootDir) error {
 	if err != nil {
 		return fmt.Errorf(messages.FileWriteProblem, persistencePath, err)
 	}
+	fmt.Println("555555555555555555555 WROTE PERSISTENCE", persistencePath)
 	return nil
 }

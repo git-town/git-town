@@ -79,6 +79,13 @@ func (self LocalBranchNames) Sort() {
 	})
 }
 
+func (self LocalBranchNames) String() string {
+	if self == nil {
+		return ""
+	}
+	return strings.Join(self.Strings(), " ")
+}
+
 // Strings provides the names of all branches in this collection as strings.
 func (self LocalBranchNames) Strings() []string {
 	result := make([]string, len(self))

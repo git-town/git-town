@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -16,6 +17,7 @@ type PartialConfig struct {
 	GitLabToken             *GitLabToken
 	MainBranch              *domain.LocalBranchName
 	Offline                 *Offline
+	PerennialBranches       *domain.LocalBranchNames
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
@@ -46,6 +48,11 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 		}
 		token := Offline(boolValue)
 		self.Offline = &token
+	case KeyPerennialBranches:
+		if value != "" {
+			branches := domain.NewLocalBranchNames(strings.Split(value, " ")...)
+			self.PerennialBranches = &branches
+		}
 	default:
 		return false, nil
 	}
@@ -54,4 +61,20 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 
 func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{} //nolint:exhaustruct
+}
+
+func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
+	result := ConfigDiff{
+		Added:   []Key{},
+		Removed: map[Key]string{},
+		Changed: map[Key]domain.Change[string]{},
+	}
+	Check(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
+	Check(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
+	Check(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
+	Check(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
+	Check(&result, KeyOffline, before.Offline, after.Offline)
+	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
+	CheckStringRef(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
+	return result
 }

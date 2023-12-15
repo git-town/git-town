@@ -30,13 +30,14 @@ type GitTown struct {
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.PerennialBranches(), branches...))
+	self.Config.PerennialBranches = append(self.Config.PerennialBranches, branches...)
+	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
 func (self *GitTown) BranchTypes() domain.BranchTypes {
 	return domain.BranchTypes{
 		MainBranch:        self.Config.MainBranch,
-		PerennialBranches: self.PerennialBranches(),
+		PerennialBranches: self.Config.PerennialBranches,
 	}
 }
 
@@ -124,15 +125,6 @@ func (self *GitTown) OriginURLString() string {
 	return strings.TrimSpace(output)
 }
 
-// PerennialBranches returns all branches that are marked as perennial.
-func (self *GitTown) PerennialBranches() domain.LocalBranchNames {
-	result := self.LocalOrGlobalConfigValue(configdomain.KeyPerennialBranches)
-	if result == "" {
-		return domain.LocalBranchNames{}
-	}
-	return domain.NewLocalBranchNames(strings.Split(result, " ")...)
-}
-
 // PushHook provides the currently configured push-hook setting.
 func (self *GitTown) PushHook() (configdomain.PushHook, error) {
 	setting := self.LocalOrGlobalConfigValue(configdomain.KeyPushHook)
@@ -161,9 +153,8 @@ func (self *GitTown) PushHookGlobal() (configdomain.PushHook, error) {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
-	perennialBranches := self.PerennialBranches()
-	slice.Remove(&perennialBranches, branch)
-	return self.SetPerennialBranches(perennialBranches)
+	slice.Remove(&self.Config.PerennialBranches, branch)
+	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
@@ -240,8 +231,8 @@ func (self *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) erro
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
-	err := self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
-	return err
+	self.PerennialBranches = branches
+	return self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
 }
 
 // SetPushHook updates the configured push-hook strategy.

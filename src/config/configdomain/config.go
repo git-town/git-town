@@ -10,6 +10,7 @@ type Config struct {
 	GitLabToken             GitLabToken
 	MainBranch              domain.LocalBranchName
 	Offline                 Offline
+	PerennialBranches       domain.LocalBranchNames
 }
 
 // Merges the given PartialConfig into this configuration object.
@@ -32,6 +33,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.Offline != nil {
 		self.Offline = *other.Offline
 	}
+	if other.PerennialBranches != nil {
+		self.PerennialBranches = *other.PerennialBranches
+	}
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
@@ -43,5 +47,6 @@ func DefaultConfig() Config {
 		GitHubToken:             "",
 		MainBranch:              domain.EmptyLocalBranchName(),
 		Offline:                 false,
+		PerennialBranches:       domain.NewLocalBranchNames(),
 	}
 }

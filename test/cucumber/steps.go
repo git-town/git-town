@@ -26,6 +26,7 @@ import (
 	"github.com/git-town/git-town/v11/test/helpers"
 	"github.com/git-town/git-town/v11/test/output"
 	"github.com/git-town/git-town/v11/test/subshell"
+	"github.com/google/go-cmp/cmp"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -305,6 +306,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.PerennialBranches
+		want := domain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+	})
+
 	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
@@ -547,6 +557,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		want := domain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
 	})
 
 	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
@@ -917,22 +936,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
-		actual := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(actual) != 1 {
+		actual := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
-		if actual[0].String() != name {
-			return fmt.Errorf("expected %q, got %q", name, actual[0])
+		if (*actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (*actual)[0])
 		}
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		actual := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(actual) != 2 {
+		actual := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if len(*actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
-		if actual[0].String() != branch1 || actual[1].String() != branch2 {
+		if (*actual)[0].String() != branch1 || (*actual)[1].String() != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
@@ -947,8 +966,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
-		branches := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(branches) > 0 {
+		branches := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if len(*branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
 		return nil
