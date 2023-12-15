@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -102,7 +103,7 @@ func (self *GitTown) IsOffline() (configdomain.Offline, error) {
 	if config == "" {
 		return false, nil
 	}
-	boolValue, err := confighelpers.ParseBool(config)
+	boolValue, err := gohacks.ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, config)
 	}
@@ -187,7 +188,7 @@ func (self *GitTown) PushHook() (configdomain.PushHook, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := confighelpers.ParseBool(setting)
+	result, err := gohacks.ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushHook, setting)
 	}
@@ -204,7 +205,7 @@ func (self *GitTown) PushHookGlobal() (configdomain.PushHook, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := confighelpers.ParseBool(setting)
+	result, err := gohacks.ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueGlobalInvalid, configdomain.KeyPushHook, setting)
 	}
@@ -353,7 +354,7 @@ func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
 	if config == "" {
 		return false, nil
 	}
-	value, err := confighelpers.ParseBool(config)
+	value, err := gohacks.ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushNewBranches, config)
 	}
@@ -371,7 +372,7 @@ func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, er
 	if config == "" {
 		return false, nil
 	}
-	boolValue, err := confighelpers.ParseBool(config)
+	boolValue, err := gohacks.ParseBool(config)
 	return configdomain.NewBranchPush(boolValue), err
 }
 
@@ -394,7 +395,7 @@ func (self *GitTown) ShouldSyncUpstream() (configdomain.SyncUpstream, error) {
 	if text == "" {
 		return true, nil
 	}
-	boolValue, err := confighelpers.ParseBool(text)
+	boolValue, err := gohacks.ParseBool(text)
 	return configdomain.SyncUpstream(boolValue), err
 }
 
@@ -404,7 +405,7 @@ func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
 	if text == "" {
 		return false, nil
 	}
-	boolValue, err := confighelpers.ParseBool(text)
+	boolValue, err := gohacks.ParseBool(text)
 	return configdomain.SyncBeforeShip(boolValue), err
 }
 

@@ -1,9 +1,9 @@
-package confighelpers_test
+package gohacks_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/confighelpers"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/shoenig/test/must"
 )
 
@@ -45,7 +45,7 @@ func TestParseBool(t *testing.T) {
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"yes", "Yes", "YES"} {
-			have, err := confighelpers.ParseBool(give)
+			have, err := gohacks.ParseBool(give)
 			must.NoError(t, err)
 			must.EqOp(t, true, have)
 		}
@@ -53,7 +53,7 @@ func TestParseBool(t *testing.T) {
 
 	t.Run("invalid input", func(t *testing.T) {
 		t.Parallel()
-		_, err := confighelpers.ParseBool("zonk")
+		_, err := gohacks.ParseBool("zonk")
 		must.Error(t, err)
 	})
 }
@@ -61,7 +61,7 @@ func TestParseBool(t *testing.T) {
 func verifyParseBool(t *testing.T, tests map[string]bool) {
 	t.Helper()
 	for give, want := range tests {
-		have, err := confighelpers.ParseBool(give)
+		have, err := gohacks.ParseBool(give)
 		must.NoError(t, err)
 		must.EqOp(t, want, have)
 	}
