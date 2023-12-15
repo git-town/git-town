@@ -44,9 +44,9 @@ func executeConfigPullBranch(args []string, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncPerennialStrategy(args[0], &repo.Runner)
+		return setSyncPerennialStrategy(args[0], repo.Runner)
 	}
-	return displaySyncPerennialStrategy(&repo.Runner)
+	return displaySyncPerennialStrategy(repo.Runner)
 }
 
 func displaySyncPerennialStrategy(run *git.ProdRunner) error {

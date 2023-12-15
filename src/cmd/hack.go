@@ -63,7 +63,7 @@ func executeHack(args []string, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,

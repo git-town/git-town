@@ -50,9 +50,9 @@ func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushNewBranches(args[0], global, &repo.Runner)
+		return setPushNewBranches(args[0], global, repo.Runner)
 	}
-	return printPushNewBranches(global, &repo.Runner)
+	return printPushNewBranches(global, repo.Runner)
 }
 
 func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {

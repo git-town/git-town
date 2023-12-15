@@ -57,7 +57,7 @@ func executeContinue(verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,

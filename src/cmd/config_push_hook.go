@@ -49,9 +49,9 @@ func executeConfigPushHook(args []string, global, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushHook(args[0], global, &repo.Runner)
+		return setPushHook(args[0], global, repo.Runner)
 	}
-	return printPushHook(global, &repo.Runner)
+	return printPushHook(global, repo.Runner)
 }
 
 func printPushHook(globalFlag bool, run *git.ProdRunner) error {
