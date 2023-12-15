@@ -18,6 +18,7 @@ type PartialConfig struct {
 	MainBranch              *domain.LocalBranchName
 	Offline                 *Offline
 	PerennialBranches       *domain.LocalBranchNames
+	PushHook                *PushHook
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
@@ -53,6 +54,13 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 			branches := domain.NewLocalBranchNames(strings.Split(value, " ")...)
 			self.PerennialBranches = &branches
 		}
+	case KeyPushHook:
+		parsed, err := gohacks.ParseBool(value)
+		if err != nil {
+			return false, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
+		}
+		token := PushHook(parsed)
+		self.PushHook = &token
 	default:
 		return false, nil
 	}

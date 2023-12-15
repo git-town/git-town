@@ -21,9 +21,10 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.CachedAccess      // access to the Git configuration settings
-	configdomain.Config         // the merged configuration data
-	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
+	gitconfig.CachedAccess                     // access to the Git configuration settings
+	configdomain.Config                        // the merged configuration data
+	Defaults               configdomain.Config // the default values
+	DryRun                 bool                // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache         configdomain.OriginURLCache
 }
 
@@ -47,6 +48,7 @@ func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun b
 	config.Merge(fullCache.LocalConfig)
 	return &GitTown{
 		Config:         config,
+		Defaults:       configdomain.DefaultConfig(),
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
@@ -123,32 +125,6 @@ func (self *GitTown) OriginURLString() string {
 	}
 	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
 	return strings.TrimSpace(output)
-}
-
-// PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHook() (configdomain.PushHook, error) {
-	setting := self.LocalOrGlobalConfigValue(configdomain.KeyPushHook)
-	if setting == "" {
-		return true, nil
-	}
-	result, err := gohacks.ParseBool(setting)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushHook, setting)
-	}
-	return configdomain.PushHook(result), nil
-}
-
-// PushHook provides the currently configured push-hook setting.
-func (self *GitTown) PushHookGlobal() (configdomain.PushHook, error) {
-	setting := self.GlobalConfigValue(configdomain.KeyPushHook)
-	if setting == "" {
-		return true, nil
-	}
-	result, err := gohacks.ParseBool(setting)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueGlobalInvalid, configdomain.KeyPushHook, setting)
-	}
-	return configdomain.PushHook(result), nil
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.

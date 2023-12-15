@@ -71,10 +71,7 @@ func executeContinue(verbose bool) error {
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,

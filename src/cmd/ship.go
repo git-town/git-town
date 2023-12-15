@@ -139,10 +139,7 @@ type shipConfig struct {
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -225,10 +222,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	var proposal *domain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []domain.Proposal{}
-	pushHook, err = repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	pushHook = repo.Runner.GitTown.PushHook
 	originURL := repo.Runner.GitTown.OriginURL()
 	hostingService, err := repo.Runner.GitTown.HostingService()
 	if err != nil {

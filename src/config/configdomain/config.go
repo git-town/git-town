@@ -1,6 +1,8 @@
 package configdomain
 
-import "github.com/git-town/git-town/v11/src/domain"
+import (
+	"github.com/git-town/git-town/v11/src/domain"
+)
 
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
@@ -11,6 +13,7 @@ type Config struct {
 	MainBranch              domain.LocalBranchName
 	Offline                 Offline
 	PerennialBranches       domain.LocalBranchNames
+	PushHook                PushHook
 }
 
 // Merges the given PartialConfig into this configuration object.
@@ -36,6 +39,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = *other.PerennialBranches
 	}
+	if other.PushHook != nil {
+		self.PushHook = *other.PushHook
+	}
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
@@ -48,5 +54,6 @@ func DefaultConfig() Config {
 		MainBranch:              domain.EmptyLocalBranchName(),
 		Offline:                 false,
 		PerennialBranches:       domain.NewLocalBranchNames(),
+		PushHook:                true,
 	}
 }
