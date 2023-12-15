@@ -262,8 +262,7 @@ func (self *GitTown) RemovePerennialBranchConfiguration() error {
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
-	err := self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
 // SetNewBranchPush updates whether the current repository is configured to push
@@ -271,76 +270,63 @@ func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
 func (self *GitTown) SetNewBranchPush(value configdomain.NewBranchPush, global bool) error {
 	setting := strconv.FormatBool(bool(value))
 	if global {
-		err := self.SetGlobalConfigValue(configdomain.KeyPushNewBranches, setting)
-		return err
+		return self.SetGlobalConfigValue(configdomain.KeyPushNewBranches, setting)
 	}
-	err := self.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (self *GitTown) SetOffline(value configdomain.Offline) error {
-	err := self.SetGlobalConfigValue(configdomain.KeyOffline, value.String())
-	return err
+	return self.SetGlobalConfigValue(configdomain.KeyOffline, value.String())
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) error {
-	err := self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
-	return err
+	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
-	err := self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
 }
 
 // SetPushHook updates the configured push-hook strategy.
 func (self *GitTown) SetPushHookGlobally(value configdomain.PushHook) error {
-	err := self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
-	return err
+	return self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
-	err := self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
 // SetShouldShipDeleteRemoteBranch updates the configured delete-remote-branch strategy.
 func (self *GitTown) SetShouldShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch) error {
-	err := self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(value.Bool()))
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(value.Bool()))
 }
 
 // SetShouldSyncUpstream updates the configured sync-upstream strategy.
 func (self *GitTown) SetShouldSyncUpstream(value configdomain.SyncUpstream) error {
-	err := self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
-	return err
+	return self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
 func (self *GitTown) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
-	err := self.SetLocalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
-	return err
+	return self.SetLocalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
 }
 
 func (self *GitTown) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
-	err := self.SetGlobalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
-	return err
+	return self.SetGlobalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
-	err := self.SetLocalConfigValue(configdomain.KeySyncPerennialStrategy, strategy.String())
-	return err
+	return self.SetLocalConfigValue(configdomain.KeySyncPerennialStrategy, strategy.String())
 }
 
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
-	err := self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
-	return err
+	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
