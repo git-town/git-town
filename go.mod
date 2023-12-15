@@ -27,6 +27,7 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/go-fed/httpsig v1.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
