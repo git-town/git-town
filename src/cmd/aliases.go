@@ -52,9 +52,9 @@ func executeAliases(arg string, verbose bool) error {
 	}
 	switch strings.ToLower(arg) {
 	case "add":
-		return addAliases(&repo.Runner)
+		return addAliases(repo.Runner)
 	case "remove":
-		return removeAliases(&repo.Runner)
+		return removeAliases(repo.Runner)
 	}
 	return fmt.Errorf(messages.InputAddOrRemove, arg)
 }

@@ -45,9 +45,9 @@ func executeConfigSyncFeatureStrategy(args []string, global, verbose bool) error
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncFeatureStrategy(global, &repo.Runner, args[0])
+		return setSyncFeatureStrategy(global, repo.Runner, args[0])
 	}
-	return printSyncFeatureStrategy(global, &repo.Runner)
+	return printSyncFeatureStrategy(global, repo.Runner)
 }
 
 func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {

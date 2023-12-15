@@ -101,7 +101,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,
 		MainBranch:    mainBranch,
-		Runner:        &repo.Runner,
+		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, false, err
