@@ -210,11 +210,15 @@ func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) erro
 
 // SetPushHook updates the configured push-hook strategy.
 func (self *GitTown) SetPushHookGlobally(value configdomain.PushHook) error {
-	return self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
+	self.GlobalConfig.PushHook = &value
+	self.PushHook = value
+	return self.SetGlobalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(value.Bool()))
 }
 
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
+	self.LocalConfig.PushHook = &value
+	self.PushHook = value
 	return self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 

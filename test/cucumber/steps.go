@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -565,6 +566,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.PushHook
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.PushHook(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
 	})
 
 	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
