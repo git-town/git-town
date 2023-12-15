@@ -163,7 +163,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "token1",
 						After:  "token2",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -221,7 +222,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "token1",
 						After:  "token2",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -238,7 +240,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "",
 						After:  "token",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -255,7 +258,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "token",
 						After:  "",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -315,7 +319,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "token1",
 						After:  "token2",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})
@@ -399,7 +404,8 @@ func TestConfigdiff(t *testing.T) {
 					configdomain.KeyGithubToken: {
 						Before: "token1",
 						After:  "token2",
-					}},
+					},
+				},
 			}
 			must.Eq(t, want, have)
 		})

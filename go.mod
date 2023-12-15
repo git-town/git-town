@@ -25,8 +25,6 @@ require (
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
 
-require github.com/davecgh/go-spew v1.1.1
-
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
