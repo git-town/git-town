@@ -77,7 +77,7 @@ func TestConfigUndo(t *testing.T) {
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{},
-				GlobalConfig: configdomain.PartialConfig{
+				GlobalConfig: configdomain.PartialConfig{ //nolint:exhaustruct
 					PerennialBranches: &perennialsAfter,
 				},
 				LocalCache:  gitconfig.SingleCache{},
