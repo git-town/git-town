@@ -78,10 +78,12 @@ func TestConfigdiff(t *testing.T) {
 				Changed: map[configdomain.Key]domain.Change[string]{
 					configdomain.KeyGiteaToken: {
 						Before: "giteaBefore",
-						After:  "giteaAfter"},
+						After:  "giteaAfter",
+					},
 					configdomain.KeyGithubToken: {
 						Before: "githubBefore",
-						After:  "githubAfter"},
+						After:  "githubAfter",
+					},
 				},
 				Added:   nil,
 				Removed: map[configdomain.Key]string{},

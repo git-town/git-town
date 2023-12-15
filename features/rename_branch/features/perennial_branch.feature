@@ -38,10 +38,8 @@ Feature: rename a perennial branch
       | BRANCH | PARENT |
       | hotfix | new    |
 
-  @debug @this
   Scenario: undo
     Given I ran "git-town rename-branch --force production new -v"
-    And inspect the repo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                                             |
