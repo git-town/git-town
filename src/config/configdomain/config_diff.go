@@ -103,6 +103,7 @@ func CheckString(diff *ConfigDiff, key Key, before string, after string) {
 	}
 	if after == "" {
 		diff.Removed[key] = before
+		return
 	}
 	diff.Changed[key] = domain.Change[string]{
 		Before: before,
