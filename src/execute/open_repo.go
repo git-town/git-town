@@ -97,7 +97,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		}
 	}
 	return &OpenRepoResult{
-		Runner:         prodRunner,
+		Runner:         &prodRunner,
 		RootDir:        rootDir,
 		IsOffline:      isOffline,
 		ConfigSnapshot: configSnapshot,
@@ -114,7 +114,7 @@ type OpenRepoArgs struct {
 }
 
 type OpenRepoResult struct {
-	Runner         git.ProdRunner
+	Runner         *git.ProdRunner
 	RootDir        domain.RepoRootDir
 	IsOffline      configdomain.Offline
 	ConfigSnapshot undo.ConfigSnapshot

@@ -99,7 +99,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
@@ -165,7 +165,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			BranchTypes: branches.Types,
 			Lineage:     lineage,
 			MainBranch:  mainBranch,
-			Runner:      &repo.Runner,
+			Runner:      repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
@@ -179,7 +179,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			DefaultBranch: mainBranch,
 			Lineage:       lineage,
 			MainBranch:    mainBranch,
-			Runner:        &repo.Runner,
+			Runner:        repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err

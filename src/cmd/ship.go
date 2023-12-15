@@ -100,7 +100,7 @@ func executeShip(args []string, message string, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
@@ -206,7 +206,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,
 		MainBranch:    mainBranch,
-		Runner:        &repo.Runner,
+		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

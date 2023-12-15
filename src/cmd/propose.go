@@ -77,7 +77,7 @@ func executePropose(verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		RunState:                &runState,
-		Run:                     &repo.Runner,
+		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
 		Lineage:                 config.lineage,
@@ -140,7 +140,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		DefaultBranch: mainBranch,
 		Lineage:       lineage,
 		MainBranch:    mainBranch,
-		Runner:        &repo.Runner,
+		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
