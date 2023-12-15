@@ -78,24 +78,17 @@ func CheckPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
 	if before == after {
 		return
 	}
-	beforeText := ""
-	if before != nil {
-		beforeText = (*before).String()
-	}
-	afterText := ""
-	if after != nil {
-		afterText = (*after).String()
-	}
-	if beforeText == "" {
+	if before == nil {
 		diff.Added = append(diff.Added, key)
 		return
 	}
-	if afterText == "" {
-		diff.Removed[key] = beforeText
+	if after == nil {
+		diff.Removed[key] = (*before).String()
+		return
 	}
 	diff.Changed[key] = domain.Change[string]{
-		Before: beforeText,
-		After:  afterText,
+		Before: (*before).String(),
+		After:  (*after).String(),
 	}
 }
 
