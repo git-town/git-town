@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/domain"
 )
 
 type Runner interface {
@@ -53,6 +54,13 @@ func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key configdomain.Key) error {
 	return self.Run("git", "config", "--unset", key.String())
+}
+
+// RemoveParent removes the parent branch entry for the given branch
+// from the Git configuration.
+func (self *Access) RemoveParent(branch domain.LocalBranchName) {
+	// ignoring errors here because the entry might not exist
+	_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
