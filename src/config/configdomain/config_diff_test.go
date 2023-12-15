@@ -10,6 +10,7 @@ import (
 
 func TestConfigdiff(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Merge", func(t *testing.T) {
 		t.Parallel()
 		t.Run("nothing changed", func(t *testing.T) {
