@@ -1,6 +1,9 @@
 package undo
 
 import (
+	"fmt"
+
+	"github.com/davecgh/go-spew/spew"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -18,6 +21,8 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	localCacheDiff := gitconfig.SingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache)
 	globalConfigDiff := configdomain.PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)
 	localConfigDiff := configdomain.PartialConfigDiff(before.GitConfig.LocalConfig, after.GitConfig.LocalConfig)
+	fmt.Println("\n111111111111111111")
+	spew.Dump(localCacheDiff)
 	return ConfigDiffs{
 		Global: globalCacheDiff.Merge(&globalConfigDiff),
 		Local:  localCacheDiff.Merge(&localConfigDiff),

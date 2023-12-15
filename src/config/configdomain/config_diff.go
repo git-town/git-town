@@ -76,7 +76,7 @@ func CheckLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranch
 }
 
 func CheckPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
-	if before == after {
+	if before == nil && after == nil {
 		return
 	}
 	if before == nil {
@@ -85,6 +85,9 @@ func CheckPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
 	}
 	if after == nil {
 		diff.Removed[key] = (*before).String()
+		return
+	}
+	if *before == *after {
 		return
 	}
 	diff.Changed[key] = domain.Change[string]{
@@ -111,7 +114,7 @@ func CheckString(diff *ConfigDiff, key Key, before string, after string) {
 	}
 }
 
-func CheckStringRef(diff *ConfigDiff, key Key, before *string, after *string) {
+func CheckStringPtr(diff *ConfigDiff, key Key, before *string, after *string) {
 	beforeText := ""
 	if before != nil {
 		beforeText = *before
