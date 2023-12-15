@@ -51,6 +51,9 @@ github.com/cucumber/godog/colors
 # github.com/cucumber/messages-go/v10 v10.0.3
 ## explicit; go 1.13
 github.com/cucumber/messages-go/v10
+# github.com/davecgh/go-spew v1.1.1
+## explicit
+github.com/davecgh/go-spew/spew
 # github.com/davidmz/go-pageant v1.0.2
 ## explicit; go 1.16
 github.com/davidmz/go-pageant
