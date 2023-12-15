@@ -72,7 +72,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	Check(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
 	Check(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
 	Check(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
-	Check(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
+	CheckPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
 	Check(&result, KeyOffline, before.Offline, after.Offline)
 	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	CheckStringRef(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)

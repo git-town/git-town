@@ -57,6 +57,31 @@ func Check[T checkArg](diff *ConfigDiff, key Key, before T, after T) {
 	}
 }
 
+func CheckPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
+	if before == after {
+		return
+	}
+	var beforeText = ""
+	if before != nil {
+		beforeText = (*before).String()
+	}
+	var afterText = ""
+	if after != nil {
+		afterText = (*after).String()
+	}
+	if beforeText == "" {
+		diff.Added = append(diff.Added, key)
+		return
+	}
+	if afterText == "" {
+		diff.Removed[key] = beforeText
+	}
+	diff.Changed[key] = domain.Change[string]{
+		Before: beforeText,
+		After:  afterText,
+	}
+}
+
 func CheckLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
 	if cmp.Equal(before, after) {
 		return
