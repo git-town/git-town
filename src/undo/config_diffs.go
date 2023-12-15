@@ -13,8 +13,8 @@ type ConfigDiffs struct {
 
 func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	return ConfigDiffs{
-		Global: NewConfigDiff(before.GitConfig.Global, after.GitConfig.Global),
-		Local:  NewConfigDiff(before.GitConfig.Local, after.GitConfig.Local),
+		Global: NewConfigDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache),
+		Local:  NewConfigDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache),
 	}
 }
 
