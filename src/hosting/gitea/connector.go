@@ -114,7 +114,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != configdomain.HostingGitea) {
 		return nil, nil //nolint:nilnil
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: string(args.APIToken)})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &Connector{
