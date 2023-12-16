@@ -16,13 +16,10 @@ func NewLocalBranchName(id string) LocalBranchName {
 	return LocalBranchName(id)
 }
 
+// NewLocalBranchNameRefAllowEmpty constructs a new LocalBranchName instance and provides a reference to it.
+// It does not verify the branch name.
 func NewLocalBranchNameRefAllowEmpty(id string) *LocalBranchName {
-	var result LocalBranchName
-	if id == "" {
-		result = EmptyLocalBranchName()
-	} else {
-		result = NewLocalBranchName(id)
-	}
+	result := LocalBranchName(id)
 	return &result
 }
 
