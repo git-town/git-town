@@ -22,7 +22,7 @@ func (self ShipDeleteTrackingBranch) String() string {
 func NewShipDeleteTrackingBranchRef(value string) (*ShipDeleteTrackingBranch, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, KeyShipDeleteTrackingBranch, value)
 	}
 	token := ShipDeleteTrackingBranch(parsed)
 	return &token, nil

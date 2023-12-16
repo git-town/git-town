@@ -182,9 +182,9 @@ func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
 	return self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-// SetShouldShipDeleteRemoteBranch updates the configured delete-remote-branch strategy.
-func (self *GitTown) SetShouldShipDeleteRemoteBranch(value configdomain.ShipDeleteTrackingBranch) error {
-	return self.SetLocalConfigValue(configdomain.KeyShipDeleteRemoteBranch, strconv.FormatBool(value.Bool()))
+// SetShouldShipDeleteTrackingBranch updates the configured delete-remote-branch strategy.
+func (self *GitTown) SetShouldShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch) error {
+	return self.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 
 // SetShouldSyncUpstream updates the configured sync-upstream strategy.

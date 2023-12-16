@@ -22,7 +22,7 @@ func (self SyncUpstream) String() string {
 func NewSyncUpstreamRef(value string) (*SyncUpstream, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, KeySyncUpstream, value)
 	}
 	token := SyncUpstream(parsed)
 	return &token, nil

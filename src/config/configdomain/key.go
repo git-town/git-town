@@ -53,7 +53,7 @@ var (
 	KeyPerennialBranches              = Key{"git-town.perennial-branches"}           //nolint:gochecknoglobals
 	KeyPushHook                       = Key{"git-town.push-hook"}                    //nolint:gochecknoglobals
 	KeyPushNewBranches                = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
-	KeyShipDeleteRemoteBranch         = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
+	KeyShipDeleteTrackingBranch       = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
 	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
 	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
 	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
@@ -80,7 +80,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyPerennialBranches,
 	KeyPushHook,
 	KeyPushNewBranches,
-	KeyShipDeleteRemoteBranch,
+	KeyShipDeleteTrackingBranch,
 	KeySyncBeforeShip,
 	KeySyncFeatureStrategy,
 	KeySyncPerennialStrategy,
