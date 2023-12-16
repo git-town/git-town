@@ -27,22 +27,13 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyCodeHostingPlatform:
 		self.CodeHostingPlatformName = &value
 	case KeyGiteaToken:
-		token := GiteaToken(value)
-		self.GiteaToken = &token
+		self.GiteaToken = NewGiteaTokenRef(value)
 	case KeyGithubToken:
-		token := GitHubToken(value)
-		self.GitHubToken = &token
+		self.GitHubToken = NewGitHubTokenRef(value)
 	case KeyGitlabToken:
-		token := GitLabToken(value)
-		self.GitLabToken = &token
+		self.GitLabToken = NewGitLabTokenRef(value)
 	case KeyMainBranch:
-		var token domain.LocalBranchName
-		if value == "" {
-			token = domain.EmptyLocalBranchName()
-		} else {
-			token = domain.NewLocalBranchName(value)
-		}
-		self.MainBranch = &token
+		self.MainBranch = domain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyOffline:
 		boolValue, err := gohacks.ParseBool(value)
 		if err != nil {

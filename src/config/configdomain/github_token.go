@@ -6,3 +6,8 @@ type GitHubToken string
 func (self GitHubToken) String() string {
 	return string(self)
 }
+
+func NewGitHubTokenRef(value string) *GitHubToken {
+	token := GitHubToken(value)
+	return &token
+}

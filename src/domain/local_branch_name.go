@@ -16,6 +16,16 @@ func NewLocalBranchName(id string) LocalBranchName {
 	return LocalBranchName(id)
 }
 
+func NewLocalBranchNameRefAllowEmpty(id string) *LocalBranchName {
+	var result LocalBranchName
+	if id == "" {
+		result = EmptyLocalBranchName()
+	} else {
+		result = NewLocalBranchName(id)
+	}
+	return &result
+}
+
 func isValidLocalBranchName(value string) bool {
 	return len(value) > 0
 }
