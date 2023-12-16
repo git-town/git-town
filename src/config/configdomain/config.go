@@ -34,6 +34,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.MainBranch != nil {
 		self.MainBranch = *other.MainBranch
 	}
+	if other.NewBranchPush != nil {
+		self.NewBranchPush = *other.NewBranchPush
+	}
 	if other.Offline != nil {
 		self.Offline = *other.Offline
 	}
