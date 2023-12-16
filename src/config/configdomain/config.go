@@ -17,6 +17,7 @@ type Config struct {
 	PushHook                 PushHook
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	SyncBeforeShip           SyncBeforeShip
+	SyncFeatureStrategy      SyncFeatureStrategy
 	SyncUpstream             SyncUpstream
 }
 
@@ -55,6 +56,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.SyncBeforeShip != nil {
 		self.SyncBeforeShip = *other.SyncBeforeShip
 	}
+	if other.SyncFeatureStrategy != nil {
+		self.SyncFeatureStrategy = *other.SyncFeatureStrategy
+	}
 	if other.SyncUpstream != nil {
 		self.SyncUpstream = *other.SyncUpstream
 	}
@@ -74,6 +78,7 @@ func DefaultConfig() Config {
 		PushHook:                 true,
 		ShipDeleteTrackingBranch: true,
 		SyncBeforeShip:           false,
+		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
 		SyncUpstream:             true,
 	}
 }
