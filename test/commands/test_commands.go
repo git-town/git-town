@@ -331,6 +331,11 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
 }
 
+// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
+func (self *TestCommands) RemovePerennialBranchConfiguration() error {
+	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+}
+
 // RemoveRemote deletes the Git remote with the given name.
 func (self *TestCommands) RemoveRemote(name domain.Remote) {
 	self.RemotesCache.Invalidate()
