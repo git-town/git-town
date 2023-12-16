@@ -11,6 +11,7 @@ type Config struct {
 	GitHubToken             GitHubToken
 	GitLabToken             GitLabToken
 	MainBranch              domain.LocalBranchName
+	NewBranchPush           NewBranchPush
 	Offline                 Offline
 	PerennialBranches       domain.LocalBranchNames
 	PushHook                PushHook

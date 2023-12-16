@@ -16,6 +16,7 @@ type PartialConfig struct {
 	GitHubToken             *GitHubToken
 	GitLabToken             *GitLabToken
 	MainBranch              *domain.LocalBranchName
+	NewBranchPush           *NewBranchPush
 	Offline                 *Offline
 	PerennialBranches       *domain.LocalBranchNames
 	PushHook                *PushHook
@@ -61,6 +62,13 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 		}
 		token := PushHook(parsed)
 		self.PushHook = &token
+	case KeyPushNewBranches:
+		parsed, err := gohacks.ParseBool(value)
+		if err != nil {
+			return false, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, value)
+		}
+		token := NewBranchPush(parsed)
+		self.NewBranchPush = &token
 	default:
 		return false, nil
 	}
@@ -82,6 +90,8 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	CheckPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
 	CheckPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
 	CheckPtr(&result, KeyOffline, before.Offline, after.Offline)
+	CheckPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
+	CheckPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
 	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	CheckStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result
