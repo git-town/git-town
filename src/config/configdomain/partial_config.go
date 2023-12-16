@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -38,10 +37,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyOffline:
 		self.Offline, err = NewOfflineRef(value)
 	case KeyPerennialBranches:
-		if value != "" {
-			branches := domain.NewLocalBranchNames(strings.Split(value, " ")...)
-			self.PerennialBranches = &branches
-		}
+		self.PerennialBranches = domain.NewLocalBranchNamesRef(value)
 	case KeyPushHook:
 		parsed, err := gohacks.ParseBool(value)
 		if err != nil {
