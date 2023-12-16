@@ -178,10 +178,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	syncBeforeShip, err := repo.Runner.GitTown.SyncBeforeShip()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

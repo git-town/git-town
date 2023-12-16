@@ -195,10 +195,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branches:              branches,

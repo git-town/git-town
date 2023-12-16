@@ -150,10 +150,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	originURL := repo.Runner.GitTown.OriginURL()
 	hostingService, err := repo.Runner.GitTown.HostingService()
 	if err != nil {

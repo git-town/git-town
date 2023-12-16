@@ -210,16 +210,6 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-// ShouldSyncUpstream indicates whether this repo should sync with its upstream.
-func (self *GitTown) ShouldSyncUpstream() (configdomain.SyncUpstream, error) {
-	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncUpstream)
-	if text == "" {
-		return true, nil
-	}
-	boolValue, err := gohacks.ParseBool(text)
-	return configdomain.SyncUpstream(boolValue), err
-}
-
 // SyncBeforeShip indicates whether a sync should be performed before a ship.
 func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncBeforeShip)
