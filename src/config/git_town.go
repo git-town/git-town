@@ -208,20 +208,6 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-// ShouldNewBranchPush indicates whether the current repository is configured to push
-// freshly created branches up to origin.
-func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
-	config := self.LocalOrGlobalConfigValue(configdomain.KeyPushNewBranches)
-	if config == "" {
-		return false, nil
-	}
-	value, err := gohacks.ParseBool(config)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushNewBranches, config)
-	}
-	return configdomain.NewBranchPush(value), nil
-}
-
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, error) {

@@ -53,6 +53,7 @@ func DefaultConfig() Config {
 		GitLabToken:             "",
 		GitHubToken:             "",
 		MainBranch:              domain.EmptyLocalBranchName(),
+		NewBranchPush:           false,
 		Offline:                 false,
 		PerennialBranches:       domain.NewLocalBranchNames(),
 		PushHook:                true,
