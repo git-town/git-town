@@ -48,6 +48,7 @@ func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{} //nolint:exhaustruct
 }
 
+// PartialConfigDiff diffs the given PartialConfig instances.
 func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []Key{},
