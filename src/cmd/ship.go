@@ -162,10 +162,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteTrackingBranch, err := repo.Runner.GitTown.ShouldShipDeleteOriginBranch()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	deleteTrackingBranch := repo.Runner.GitTown.ShipDeleteTrackingBranch
 	mainBranch := repo.Runner.GitTown.Config.MainBranch
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)

@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -209,19 +208,6 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
-}
-
-// ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
-func (self *GitTown) ShouldShipDeleteOriginBranch() (configdomain.ShipDeleteTrackingBranch, error) {
-	setting := self.LocalOrGlobalConfigValue(configdomain.KeyShipDeleteRemoteBranch)
-	if setting == "" {
-		return true, nil
-	}
-	result, err := strconv.ParseBool(setting)
-	if err != nil {
-		return true, fmt.Errorf(messages.ValueInvalid, configdomain.KeyShipDeleteRemoteBranch, setting)
-	}
-	return configdomain.ShipDeleteTrackingBranch(result), nil
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.

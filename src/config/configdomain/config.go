@@ -6,16 +6,16 @@ import (
 
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
-	CodeHostingPlatformName string
-	GiteaToken              GiteaToken
-	GitHubToken             GitHubToken
-	GitLabToken             GitLabToken
-	MainBranch              domain.LocalBranchName
-	NewBranchPush           NewBranchPush
-	Offline                 Offline
-	PerennialBranches       domain.LocalBranchNames
-	PushHook                PushHook
-	ShipDeleteRemoteBranch  ShipDeleteRemoteBranch
+	CodeHostingPlatformName  string
+	GiteaToken               GiteaToken
+	GitHubToken              GitHubToken
+	GitLabToken              GitLabToken
+	MainBranch               domain.LocalBranchName
+	NewBranchPush            NewBranchPush
+	Offline                  Offline
+	PerennialBranches        domain.LocalBranchNames
+	PushHook                 PushHook
+	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 }
 
 // Merges the given PartialConfig into this configuration object.
@@ -47,23 +47,23 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook
 	}
-	if other.ShipDeleteRemoteBranch != nil {
-		self.ShipDeleteRemoteBranch = *other.ShipDeleteRemoteBranch
+	if other.ShipDeleteTrackingBranch != nil {
+		self.ShipDeleteTrackingBranch = *other.ShipDeleteTrackingBranch
 	}
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() Config {
 	return Config{
-		CodeHostingPlatformName: "",
-		GiteaToken:              "",
-		GitLabToken:             "",
-		GitHubToken:             "",
-		MainBranch:              domain.EmptyLocalBranchName(),
-		NewBranchPush:           false,
-		Offline:                 false,
-		PerennialBranches:       domain.NewLocalBranchNames(),
-		PushHook:                true,
-		ShipDeleteRemoteBranch:  true,
+		CodeHostingPlatformName:  "",
+		GiteaToken:               "",
+		GitLabToken:              "",
+		GitHubToken:              "",
+		MainBranch:               domain.EmptyLocalBranchName(),
+		NewBranchPush:            false,
+		Offline:                  false,
+		PerennialBranches:        domain.NewLocalBranchNames(),
+		PushHook:                 true,
+		ShipDeleteTrackingBranch: true,
 	}
 }

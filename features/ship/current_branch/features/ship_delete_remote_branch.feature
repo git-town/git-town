@@ -9,6 +9,7 @@ Feature: ship-delete-remote-branch disabled
     When I run "git-town ship -m 'feature done'"
     And origin deletes the "feature" branch
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                      |

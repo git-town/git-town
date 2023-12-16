@@ -6,16 +6,16 @@ import (
 
 // Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
-	CodeHostingPlatformName *string
-	GiteaToken              *GiteaToken
-	GitHubToken             *GitHubToken
-	GitLabToken             *GitLabToken
-	MainBranch              *domain.LocalBranchName
-	NewBranchPush           *NewBranchPush
-	Offline                 *Offline
-	PerennialBranches       *domain.LocalBranchNames
-	PushHook                *PushHook
-	ShipDeleteRemoteBranch  *ShipDeleteRemoteBranch
+	CodeHostingPlatformName  *string
+	GiteaToken               *GiteaToken
+	GitHubToken              *GitHubToken
+	GitLabToken              *GitLabToken
+	MainBranch               *domain.LocalBranchName
+	NewBranchPush            *NewBranchPush
+	Offline                  *Offline
+	PerennialBranches        *domain.LocalBranchNames
+	PushHook                 *PushHook
+	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
@@ -40,7 +40,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyPushNewBranches:
 		self.NewBranchPush, err = NewNewBranchPushRef(value)
 	case KeyShipDeleteRemoteBranch:
-		self.ShipDeleteRemoteBranch, err = NewShipDeleteRemoteBranchRef(value)
+		self.ShipDeleteTrackingBranch, err = NewShipDeleteTrackingBranchRef(value)
 	default:
 		return false, nil
 	}
@@ -65,7 +65,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	DiffPtr(&result, KeyOffline, before.Offline, after.Offline)
 	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
 	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
-	DiffPtr(&result, KeyShipDeleteRemoteBranch, before.ShipDeleteRemoteBranch, after.ShipDeleteRemoteBranch)
+	DiffPtr(&result, KeyShipDeleteRemoteBranch, before.ShipDeleteTrackingBranch, after.ShipDeleteTrackingBranch)
 	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result

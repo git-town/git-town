@@ -63,12 +63,12 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := configdomain.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
-	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShouldShipDeleteOriginBranch())
-	giteaToken := run.GitTown.Config.GiteaToken
-	githubToken := run.GitTown.Config.GitHubToken
-	gitlabToken := run.GitTown.Config.GitLabToken
+	deleteRemoteBranch := run.GitTown.ShipDeleteTrackingBranch
+	giteaToken := run.GitTown.GiteaToken
+	githubToken := run.GitTown.GitHubToken
+	gitlabToken := run.GitTown.GitLabToken
 	hosting := fc.Hosting(run.GitTown.HostingService())
-	isOffline := run.GitTown.Config.Offline
+	isOffline := run.GitTown.Offline
 	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
 	pushHook := run.GitTown.PushHook
@@ -78,7 +78,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
-		deleteTrackingBranch:  deleteOrigin,
+		deleteTrackingBranch:  deleteRemoteBranch,
 		hosting:               hosting,
 		giteaToken:            giteaToken,
 		githubToken:           githubToken,
