@@ -142,9 +142,12 @@ func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
 // freshly created branches to origin.
 func (self *GitTown) SetNewBranchPush(value configdomain.NewBranchPush, global bool) error {
 	setting := strconv.FormatBool(bool(value))
+	self.NewBranchPush = value
 	if global {
+		self.GlobalConfig.NewBranchPush = &value
 		return self.SetGlobalConfigValue(configdomain.KeyPushNewBranches, setting)
 	}
+	self.LocalConfig.NewBranchPush = &value
 	return self.SetLocalConfigValue(configdomain.KeyPushNewBranches, setting)
 }
 
@@ -206,17 +209,6 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
-}
-
-// ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
-// freshly created branches to origin.
-func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, error) {
-	config := self.GlobalConfigValue(configdomain.KeyPushNewBranches)
-	if config == "" {
-		return false, nil
-	}
-	boolValue, err := gohacks.ParseBool(config)
-	return configdomain.NewBranchPush(boolValue), err
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
