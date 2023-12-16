@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
 
@@ -208,16 +207,6 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
-}
-
-// SyncBeforeShip indicates whether a sync should be performed before a ship.
-func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
-	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncBeforeShip)
-	if text == "" {
-		return false, nil
-	}
-	boolValue, err := gohacks.ParseBool(text)
-	return configdomain.SyncBeforeShip(boolValue), err
 }
 
 func (self *GitTown) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {

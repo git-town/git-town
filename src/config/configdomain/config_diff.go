@@ -96,7 +96,7 @@ func DiffPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
 	}
 }
 
-func CheckString(diff *ConfigDiff, key Key, before string, after string) {
+func DiffString(diff *ConfigDiff, key Key, before string, after string) {
 	if before == after {
 		return
 	}
@@ -123,7 +123,7 @@ func DiffStringPtr(diff *ConfigDiff, key Key, before *string, after *string) {
 	if after != nil {
 		afterText = *after
 	}
-	CheckString(diff, key, beforeText, afterText)
+	DiffString(diff, key, beforeText, afterText)
 }
 
 func EmptyConfigDiff() ConfigDiff {

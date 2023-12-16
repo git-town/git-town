@@ -75,7 +75,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	pushNewBranches := run.GitTown.NewBranchPush
 	syncUpstream := run.GitTown.SyncUpstream
 	syncFeatureStrategy := fc.SyncFeatureStrategy(run.GitTown.SyncFeatureStrategy())
-	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())
+	syncBeforeShip := run.GitTown.SyncBeforeShip
 	return ConfigConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteRemoteBranch,

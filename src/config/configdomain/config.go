@@ -16,6 +16,7 @@ type Config struct {
 	PerennialBranches        domain.LocalBranchNames
 	PushHook                 PushHook
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
+	SyncBeforeShip           SyncBeforeShip
 	SyncUpstream             SyncUpstream
 }
 
@@ -51,6 +52,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.ShipDeleteTrackingBranch != nil {
 		self.ShipDeleteTrackingBranch = *other.ShipDeleteTrackingBranch
 	}
+	if other.SyncBeforeShip != nil {
+		self.SyncBeforeShip = *other.SyncBeforeShip
+	}
 	if other.SyncUpstream != nil {
 		self.SyncUpstream = *other.SyncUpstream
 	}
@@ -69,6 +73,7 @@ func DefaultConfig() Config {
 		PerennialBranches:        domain.NewLocalBranchNames(),
 		PushHook:                 true,
 		ShipDeleteTrackingBranch: true,
+		SyncBeforeShip:           false,
 		SyncUpstream:             true,
 	}
 }

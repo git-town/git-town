@@ -179,10 +179,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
-	syncBeforeShip, err := repo.Runner.GitTown.SyncBeforeShip()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncBeforeShip := repo.Runner.GitTown.SyncBeforeShip
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
