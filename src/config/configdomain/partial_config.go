@@ -16,6 +16,7 @@ type PartialConfig struct {
 	PerennialBranches        *domain.LocalBranchNames
 	PushHook                 *PushHook
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
+	SyncUpstream             *SyncUpstream
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
@@ -41,6 +42,8 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 		self.NewBranchPush, err = NewNewBranchPushRef(value)
 	case KeyShipDeleteRemoteBranch:
 		self.ShipDeleteTrackingBranch, err = NewShipDeleteTrackingBranchRef(value)
+	case KeySyncUpstream:
+		self.SyncUpstream, err = NewSyncUpstreamRef(value)
 	default:
 		return false, nil
 	}
