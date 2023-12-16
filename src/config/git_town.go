@@ -209,16 +209,6 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func (self *GitTown) SyncFeatureStrategy() (configdomain.SyncFeatureStrategy, error) {
-	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncFeatureStrategy)
-	return configdomain.NewSyncFeatureStrategy(text)
-}
-
-func (self *GitTown) SyncFeatureStrategyGlobal() (configdomain.SyncFeatureStrategy, error) {
-	setting := self.GlobalConfigValue(configdomain.KeySyncFeatureStrategy)
-	return configdomain.NewSyncFeatureStrategy(setting)
-}
-
 // SyncPerennialStrategy provides the currently configured sync-perennial strategy.
 func (self *GitTown) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncPerennialStrategy)

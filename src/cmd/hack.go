@@ -109,7 +109,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
-	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
+	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,

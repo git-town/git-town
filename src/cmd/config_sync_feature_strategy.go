@@ -51,15 +51,14 @@ func executeConfigSyncFeatureStrategy(args []string, global, verbose bool) error
 }
 
 func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
-	var strategy configdomain.SyncFeatureStrategy
-	var err error
+	var strategy *configdomain.SyncFeatureStrategy
 	if globalFlag {
-		strategy, err = run.GitTown.SyncFeatureStrategyGlobal()
+		strategy = run.GitTown.GlobalConfig.SyncFeatureStrategy
 	} else {
-		strategy, err = run.GitTown.SyncFeatureStrategy()
+		strategy = run.GitTown.LocalConfig.SyncFeatureStrategy
 	}
-	if err != nil {
-		return err
+	if strategy == nil {
+		strategy = &run.GitTown.Defaults.SyncFeatureStrategy
 	}
 	io.Println(strategy)
 	return nil
