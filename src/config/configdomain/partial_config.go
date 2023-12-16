@@ -1,11 +1,7 @@
 package configdomain
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v11/src/domain"
-	"github.com/git-town/git-town/v11/src/gohacks"
-	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
@@ -41,12 +37,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyPushHook:
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:
-		parsed, err := gohacks.ParseBool(value)
-		if err != nil {
-			return true, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, value)
-		}
-		token := NewBranchPush(parsed)
-		self.NewBranchPush = &token
+		self.NewBranchPush, err = NewNewBranchPushRef(value)
 	default:
 		return false, nil
 	}
