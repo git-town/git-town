@@ -69,6 +69,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
 	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
 	DiffPtr(&result, KeyShipDeleteRemoteBranch, before.ShipDeleteTrackingBranch, after.ShipDeleteTrackingBranch)
+	DiffPtr(&result, KeySyncUpstream, before.SyncUpstream, after.SyncUpstream)
 	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result
