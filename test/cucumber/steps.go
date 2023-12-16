@@ -590,6 +590,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.NewBranchPush
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.NewBranchPush(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+	})
+
 	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.GitTown.LocalConfigValue(*configKey)
