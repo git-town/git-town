@@ -15,6 +15,7 @@ type Config struct {
 	Offline                 Offline
 	PerennialBranches       domain.LocalBranchNames
 	PushHook                PushHook
+	ShipDeleteRemoteBranch  ShipDeleteRemoteBranch
 }
 
 // Merges the given PartialConfig into this configuration object.
@@ -46,6 +47,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook
 	}
+	if other.ShipDeleteRemoteBranch != nil {
+		self.ShipDeleteRemoteBranch = *other.ShipDeleteRemoteBranch
+	}
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
@@ -60,5 +64,6 @@ func DefaultConfig() Config {
 		Offline:                 false,
 		PerennialBranches:       domain.NewLocalBranchNames(),
 		PushHook:                true,
+		ShipDeleteRemoteBranch:  true,
 	}
 }

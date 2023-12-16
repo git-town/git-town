@@ -15,6 +15,7 @@ type PartialConfig struct {
 	Offline                 *Offline
 	PerennialBranches       *domain.LocalBranchNames
 	PushHook                *PushHook
+	ShipDeleteRemoteBranch  *ShipDeleteRemoteBranch
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
@@ -38,6 +39,8 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:
 		self.NewBranchPush, err = NewNewBranchPushRef(value)
+	case KeyShipDeleteRemoteBranch:
+		self.ShipDeleteRemoteBranch, err = NewShipDeleteRemoteBranchRef(value)
 	default:
 		return false, nil
 	}
@@ -62,6 +65,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	DiffPtr(&result, KeyOffline, before.Offline, after.Offline)
 	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
 	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
+	DiffPtr(&result, KeyShipDeleteRemoteBranch, before.ShipDeleteRemoteBranch, after.ShipDeleteRemoteBranch)
 	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result
