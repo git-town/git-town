@@ -23,6 +23,7 @@ type PartialConfig struct {
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
+	var err error
 	switch key {
 	case KeyCodeHostingPlatform:
 		self.CodeHostingPlatformName = &value
@@ -35,12 +36,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyMainBranch:
 		self.MainBranch = domain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyOffline:
-		boolValue, err := gohacks.ParseBool(value)
-		if err != nil {
-			return true, fmt.Errorf(messages.ValueInvalid, KeyOffline, value)
-		}
-		token := Offline(boolValue)
-		self.Offline = &token
+		self.Offline, err = NewOfflineRef(value)
 	case KeyPerennialBranches:
 		if value != "" {
 			branches := domain.NewLocalBranchNames(strings.Split(value, " ")...)
@@ -63,7 +59,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	default:
 		return false, nil
 	}
-	return true, nil
+	return true, err
 }
 
 func EmptyPartialConfig() PartialConfig {
