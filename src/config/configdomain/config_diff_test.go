@@ -178,7 +178,7 @@ func TestConfigdiff(t *testing.T) {
 			before := domain.LocalBranchName("main")
 			after := domain.LocalBranchName("main")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -190,7 +190,7 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			after := configdomain.GitHubToken("token")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, nil, &after)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, nil, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
@@ -202,7 +202,7 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := configdomain.GitHubToken("token")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, nil)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, nil)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
@@ -215,7 +215,7 @@ func TestConfigdiff(t *testing.T) {
 			before := configdomain.GitHubToken("token1")
 			after := configdomain.GitHubToken("token2")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -233,7 +233,7 @@ func TestConfigdiff(t *testing.T) {
 			before := configdomain.GitHubToken("")
 			after := configdomain.GitHubToken("token")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -251,7 +251,7 @@ func TestConfigdiff(t *testing.T) {
 			before := configdomain.GitHubToken("token")
 			after := configdomain.GitHubToken("")
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -334,7 +334,7 @@ func TestConfigdiff(t *testing.T) {
 			before := "main"
 			after := "main"
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -346,7 +346,7 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			after := "token"
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, nil, &after)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, nil, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
@@ -359,7 +359,7 @@ func TestConfigdiff(t *testing.T) {
 			before := ""
 			after := "token"
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
@@ -371,7 +371,7 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "token"
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, &before, nil)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, nil)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
@@ -384,7 +384,7 @@ func TestConfigdiff(t *testing.T) {
 			before := "token"
 			after := ""
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
@@ -397,7 +397,7 @@ func TestConfigdiff(t *testing.T) {
 			before := "token1"
 			after := "token2"
 			have := configdomain.EmptyConfigDiff()
-			configdomain.CheckStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			configdomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},

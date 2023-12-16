@@ -58,7 +58,7 @@ func Check[T checkArg](diff *ConfigDiff, key Key, before T, after T) {
 	}
 }
 
-func CheckLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
+func DiffLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
 	if cmp.Equal(before, after) {
 		return
 	}
@@ -75,7 +75,7 @@ func CheckLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranch
 	}
 }
 
-func CheckPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
+func DiffPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
 	if before == nil && after == nil {
 		return
 	}
@@ -114,7 +114,7 @@ func CheckString(diff *ConfigDiff, key Key, before string, after string) {
 	}
 }
 
-func CheckStringPtr(diff *ConfigDiff, key Key, before *string, after *string) {
+func DiffStringPtr(diff *ConfigDiff, key Key, before *string, after *string) {
 	beforeText := ""
 	if before != nil {
 		beforeText = *before

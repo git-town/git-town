@@ -55,14 +55,14 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Removed: map[Key]string{},
 		Changed: map[Key]domain.Change[string]{},
 	}
-	CheckPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
-	CheckPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
-	CheckPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
-	CheckPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
-	CheckPtr(&result, KeyOffline, before.Offline, after.Offline)
-	CheckPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
-	CheckPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
-	CheckLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
-	CheckStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
+	DiffPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
+	DiffPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
+	DiffPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
+	DiffPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
+	DiffPtr(&result, KeyOffline, before.Offline, after.Offline)
+	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
+	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
+	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
+	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result
 }
