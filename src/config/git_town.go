@@ -215,11 +215,6 @@ func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) 
 	return self.SetPerennialBranches(perennialBranches)
 }
 
-// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
-func (self *GitTown) RemovePerennialBranchConfiguration() error {
-	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
-}
-
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
