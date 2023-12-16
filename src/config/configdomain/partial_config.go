@@ -46,7 +46,7 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyOffline:
 		boolValue, err := gohacks.ParseBool(value)
 		if err != nil {
-			return false, fmt.Errorf(messages.ValueInvalid, KeyOffline, value)
+			return true, fmt.Errorf(messages.ValueInvalid, KeyOffline, value)
 		}
 		token := Offline(boolValue)
 		self.Offline = &token
@@ -58,14 +58,14 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeyPushHook:
 		parsed, err := gohacks.ParseBool(value)
 		if err != nil {
-			return false, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
+			return true, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
 		}
 		token := PushHook(parsed)
 		self.PushHook = &token
 	case KeyPushNewBranches:
 		parsed, err := gohacks.ParseBool(value)
 		if err != nil {
-			return false, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, value)
+			return true, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, value)
 		}
 		token := NewBranchPush(parsed)
 		self.NewBranchPush = &token
