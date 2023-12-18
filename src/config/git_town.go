@@ -26,7 +26,7 @@ type GitTown struct {
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.Config.PerennialBranches, branches...))
+	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
 func (self *GitTown) BranchTypes() domain.BranchTypes {
