@@ -1,8 +1,6 @@
 package configdomain
 
-import (
-	"github.com/git-town/git-town/v11/src/domain"
-)
+import "github.com/git-town/git-town/v11/src/domain"
 
 // PartialConfig contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
