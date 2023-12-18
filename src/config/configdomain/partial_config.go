@@ -72,18 +72,18 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Changed: map[Key]domain.Change[string]{},
 	}
 	DiffPtr(&result, KeyCodeHostingOriginHostname, before.CodeHostingOriginHostname, after.CodeHostingOriginHostname)
+	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	DiffPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
 	DiffPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
 	DiffPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
 	DiffPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
 	DiffPtr(&result, KeyOffline, before.Offline, after.Offline)
+	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
 	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
 	DiffPtr(&result, KeyShipDeleteTrackingBranch, before.ShipDeleteTrackingBranch, after.ShipDeleteTrackingBranch)
 	DiffPtr(&result, KeySyncFeatureStrategy, before.SyncFeatureStrategy, after.SyncFeatureStrategy)
 	DiffPtr(&result, KeySyncPerennialStrategy, before.SyncPerennialStrategy, after.SyncPerennialStrategy)
 	DiffPtr(&result, KeySyncUpstream, before.SyncUpstream, after.SyncUpstream)
-	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
-	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	return result
 }
