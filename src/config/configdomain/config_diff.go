@@ -30,26 +30,6 @@ type checkArg interface {
 	comparable
 }
 
-func Check[T checkArg](diff *ConfigDiff, key Key, before T, after T) {
-	beforeText := before.String()
-	afterText := after.String()
-	if beforeText == afterText {
-		return
-	}
-	if beforeText == "" {
-		diff.Added = append(diff.Added, key)
-		return
-	}
-	if afterText == "" {
-		diff.Removed[key] = beforeText
-		return
-	}
-	diff.Changed[key] = domain.Change[string]{
-		Before: beforeText,
-		After:  afterText,
-	}
-}
-
 func DiffLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
 	if cmp.Equal(before, after) {
 		return

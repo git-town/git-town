@@ -118,67 +118,6 @@ func TestConfigdiff(t *testing.T) {
 		})
 	})
 
-	t.Run("Check", func(t *testing.T) {
-		t.Parallel()
-		t.Run("value not changed", func(t *testing.T) {
-			t.Parallel()
-			before := domain.LocalBranchName("main")
-			after := domain.LocalBranchName("main")
-			have := configdomain.EmptyConfigDiff()
-			configdomain.Check(&have, configdomain.KeyGithubToken, before, after)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
-			}
-			must.Eq(t, want, have)
-		})
-		t.Run("added", func(t *testing.T) {
-			t.Parallel()
-			before := configdomain.GitHubToken("")
-			after := configdomain.GitHubToken("token")
-			have := configdomain.EmptyConfigDiff()
-			configdomain.Check(&have, configdomain.KeyGithubToken, before, after)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{configdomain.KeyGithubToken},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
-			}
-			must.Eq(t, want, have)
-		})
-		t.Run("removed", func(t *testing.T) {
-			t.Parallel()
-			before := configdomain.GitHubToken("token")
-			after := configdomain.GitHubToken("")
-			have := configdomain.EmptyConfigDiff()
-			configdomain.Check(&have, configdomain.KeyGithubToken, before, after)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
-				Changed: map[configdomain.Key]domain.Change[string]{},
-			}
-			must.Eq(t, want, have)
-		})
-		t.Run("changed", func(t *testing.T) {
-			t.Parallel()
-			before := configdomain.GitHubToken("token1")
-			after := configdomain.GitHubToken("token2")
-			have := configdomain.EmptyConfigDiff()
-			configdomain.Check(&have, configdomain.KeyGithubToken, before, after)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{
-					configdomain.KeyGithubToken: {
-						Before: "token1",
-						After:  "token2",
-					},
-				},
-			}
-			must.Eq(t, want, have)
-		})
-	})
-
 	t.Run("CheckPtr", func(t *testing.T) {
 		t.Parallel()
 		t.Run("value not changed", func(t *testing.T) {
