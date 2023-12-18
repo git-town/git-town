@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestCache(t *testing.T) {
+func TestSingleCache(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Clone", func(t *testing.T) {
