@@ -331,16 +331,6 @@ func (self *GitTown) ShipDeleteTrackingBranch() (configdomain.ShipDeleteTracking
 	return configdomain.ShipDeleteTrackingBranch(result), nil
 }
 
-// SyncUpstream indicates whether this repo should sync with its upstream.
-func (self *GitTown) SyncUpstream() (configdomain.SyncUpstream, error) {
-	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncUpstream)
-	if text == "" {
-		return true, nil
-	}
-	boolValue, err := gohacks.ParseBool(text)
-	return configdomain.SyncUpstream(boolValue), err
-}
-
 // SyncBeforeShip indicates whether a sync should be performed before a ship.
 func (self *GitTown) SyncBeforeShip() (configdomain.SyncBeforeShip, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncBeforeShip)
@@ -377,6 +367,16 @@ func (self *GitTown) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy
 	}
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncPerennialStrategy)
 	return configdomain.NewSyncPerennialStrategy(text)
+}
+
+// SyncUpstream indicates whether this repo should sync with its upstream.
+func (self *GitTown) SyncUpstream() (configdomain.SyncUpstream, error) {
+	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncUpstream)
+	if text == "" {
+		return true, nil
+	}
+	boolValue, err := gohacks.ParseBool(text)
+	return configdomain.SyncUpstream(boolValue), err
 }
 
 func (self *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey configdomain.Key) error {
