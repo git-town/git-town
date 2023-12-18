@@ -25,11 +25,6 @@ func (self *ConfigDiff) Merge(other *ConfigDiff) {
 	}
 }
 
-type checkArg interface {
-	fmt.Stringer
-	comparable
-}
-
 func DiffLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
 	if cmp.Equal(before, after) {
 		return
@@ -47,7 +42,12 @@ func DiffLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchN
 	}
 }
 
-func DiffPtr[T checkArg](diff *ConfigDiff, key Key, before *T, after *T) {
+type diffArg interface {
+	fmt.Stringer
+	comparable
+}
+
+func DiffPtr[T diffArg](diff *ConfigDiff, key Key, before *T, after *T) {
 	if before == nil && after == nil {
 		return
 	}
