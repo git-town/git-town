@@ -166,13 +166,13 @@ func (self *GitTown) SetPushHookLocally(value configdomain.PushHook) error {
 	return self.SetLocalConfigValue(configdomain.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-// SetShouldShipDeleteTrackingBranch updates the configured delete-remote-branch strategy.
-func (self *GitTown) SetShouldShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch) error {
+// SetShipDeleteTrackingBranch updates the configured delete-remote-branch strategy.
+func (self *GitTown) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch) error {
 	return self.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 
-// SetShouldSyncUpstream updates the configured sync-upstream strategy.
-func (self *GitTown) SetShouldSyncUpstream(value configdomain.SyncUpstream) error {
+// SetSyncUpstream updates the configured sync-upstream strategy.
+func (self *GitTown) SetSyncUpstream(value configdomain.SyncUpstream) error {
 	return self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
