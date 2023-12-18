@@ -119,7 +119,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	mainBranch := repo.Runner.GitTown.MainBranch()
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
+	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.NewBranchPush())
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}

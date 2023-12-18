@@ -134,6 +134,39 @@ func (self *GitTown) MainBranch() domain.LocalBranchName {
 	return domain.NewLocalBranchName(mainBranch)
 }
 
+// NewBranchPush indicates whether the current repository is configured to push
+// freshly created branches up to origin.
+func (self *GitTown) NewBranchPush() (configdomain.NewBranchPush, error) {
+	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
+	if err != nil {
+		return false, err
+	}
+	config := self.LocalOrGlobalConfigValue(configdomain.KeyPushNewBranches)
+	if config == "" {
+		return false, nil
+	}
+	value, err := gohacks.ParseBool(config)
+	if err != nil {
+		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushNewBranches, config)
+	}
+	return configdomain.NewBranchPush(value), nil
+}
+
+// NewBranchPushGlobal indictes whether the global configuration requires to push
+// freshly created branches to origin.
+func (self *GitTown) NewBranchPushGlobal() (configdomain.NewBranchPush, error) {
+	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
+	if err != nil {
+		return false, err
+	}
+	config := self.GlobalConfigValue(configdomain.KeyPushNewBranches)
+	if config == "" {
+		return false, nil
+	}
+	boolValue, err := gohacks.ParseBool(config)
+	return configdomain.NewBranchPush(boolValue), err
+}
+
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (self *GitTown) OriginOverride() configdomain.OriginHostnameOverride {
 	return configdomain.OriginHostnameOverride(self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname))
@@ -285,41 +318,8 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-// ShouldNewBranchPush indicates whether the current repository is configured to push
-// freshly created branches up to origin.
-func (self *GitTown) ShouldNewBranchPush() (configdomain.NewBranchPush, error) {
-	err := self.updateDeprecatedSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
-	if err != nil {
-		return false, err
-	}
-	config := self.LocalOrGlobalConfigValue(configdomain.KeyPushNewBranches)
-	if config == "" {
-		return false, nil
-	}
-	value, err := gohacks.ParseBool(config)
-	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, configdomain.KeyPushNewBranches, config)
-	}
-	return configdomain.NewBranchPush(value), nil
-}
-
-// ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
-// freshly created branches to origin.
-func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, error) {
-	err := self.updateDeprecatedGlobalSetting(configdomain.KeyDeprecatedNewBranchPushFlag, configdomain.KeyPushNewBranches)
-	if err != nil {
-		return false, err
-	}
-	config := self.GlobalConfigValue(configdomain.KeyPushNewBranches)
-	if config == "" {
-		return false, nil
-	}
-	boolValue, err := gohacks.ParseBool(config)
-	return configdomain.NewBranchPush(boolValue), err
-}
-
-// ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
-func (self *GitTown) ShouldShipDeleteOriginBranch() (configdomain.ShipDeleteTrackingBranch, error) {
+// ShipDeleteTrackingBranch indicates whether to delete the remote branch after shipping.
+func (self *GitTown) ShipDeleteTrackingBranch() (configdomain.ShipDeleteTrackingBranch, error) {
 	setting := self.LocalOrGlobalConfigValue(configdomain.KeyShipDeleteRemoteBranch)
 	if setting == "" {
 		return true, nil
