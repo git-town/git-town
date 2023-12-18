@@ -188,10 +188,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{

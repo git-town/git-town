@@ -31,12 +31,12 @@ func configCmd() *cobra.Command {
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
-	configCmd.AddCommand(syncPerennialStrategyCommand())
-	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(pushHookCommand())
+	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
 	configCmd.AddCommand(syncFeatureStrategyCommand())
+	configCmd.AddCommand(syncPerennialStrategyCommand())
 	return &configCmd
 }
 
@@ -70,7 +70,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	hosting := fc.Hosting(run.GitTown.HostingService())
 	isOffline := run.GitTown.Offline
 	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
-	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
+	syncPerennialStrategy := run.GitTown.SyncPerennialStrategy
 	pushHook := run.GitTown.PushHook
 	pushNewBranches := run.GitTown.NewBranchPush
 	syncUpstream := run.GitTown.SyncUpstream

@@ -50,10 +50,7 @@ func executeConfigPullBranch(args []string, verbose bool) error {
 }
 
 func displaySyncPerennialStrategy(run *git.ProdRunner) error {
-	syncPerennialStrategy, err := run.GitTown.SyncPerennialStrategy()
-	if err != nil {
-		return err
-	}
+	syncPerennialStrategy := run.GitTown.SyncPerennialStrategy
 	io.Println(syncPerennialStrategy)
 	return nil
 }

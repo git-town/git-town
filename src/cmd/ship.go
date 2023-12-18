@@ -171,10 +171,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	syncBeforeShip := repo.Runner.GitTown.SyncBeforeShip
 	if !isShippingInitialBranch {

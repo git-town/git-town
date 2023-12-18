@@ -83,7 +83,7 @@ func DefaultConfig() Config {
 		ShipDeleteTrackingBranch: true,
 		SyncBeforeShip:           false,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
-		SyncPerennialStrategy:    SyncPerennialStrategyMerge,
+		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
 		SyncUpstream:             true,
 	}
 }

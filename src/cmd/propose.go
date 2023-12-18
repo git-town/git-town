@@ -143,10 +143,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	originURL := repo.Runner.GitTown.OriginURL()
 	hostingService, err := repo.Runner.GitTown.HostingService()

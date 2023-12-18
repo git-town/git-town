@@ -214,9 +214,3 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
-
-// SyncPerennialStrategy provides the currently configured sync-perennial strategy.
-func (self *GitTown) SyncPerennialStrategy() (configdomain.SyncPerennialStrategy, error) {
-	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncPerennialStrategy)
-	return configdomain.NewSyncPerennialStrategy(text)
-}
