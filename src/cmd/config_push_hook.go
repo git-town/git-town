@@ -62,7 +62,8 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 		setting = run.GitTown.LocalConfig.PushHook
 	}
 	if setting == nil {
-		setting = &run.GitTown.Defaults.PushHook
+		defaults := run.GitTown.Defaults()
+		setting = &defaults.PushHook
 	}
 	io.Println(format.Bool(setting.Bool()))
 	return nil

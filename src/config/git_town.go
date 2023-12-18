@@ -17,10 +17,9 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.CachedAccess                     // access to the Git configuration settings
-	configdomain.Config                        // the merged configuration data
-	Defaults               configdomain.Config // the default values
-	DryRun                 bool                // single source of truth for whether to dry-run Git commands in this repo
+	gitconfig.CachedAccess      // access to the Git configuration settings
+	configdomain.Config         // the merged configuration data
+	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache         configdomain.OriginURLCache
 }
 
@@ -38,19 +37,6 @@ func (self *GitTown) BranchTypes() domain.BranchTypes {
 	}
 }
 
-func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
-	config := configdomain.DefaultConfig()
-	config.Merge(fullCache.GlobalConfig)
-	config.Merge(fullCache.LocalConfig)
-	return &GitTown{
-		Config:         config,
-		Defaults:       configdomain.DefaultConfig(),
-		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
-		DryRun:         dryrun,
-		originURLCache: configdomain.OriginURLCache{},
-	}
-}
-
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
 	for key := range self.LocalCache {
@@ -59,6 +45,10 @@ func (self *GitTown) ContainsLineage() bool {
 		}
 	}
 	return false
+}
+
+func (self *GitTown) Defaults() configdomain.Config {
+	return configdomain.DefaultConfig()
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -208,4 +198,16 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
+}
+
+func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
+	config := configdomain.DefaultConfig()
+	config.Merge(fullCache.GlobalConfig)
+	config.Merge(fullCache.LocalConfig)
+	return &GitTown{
+		Config:         config,
+		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
+		DryRun:         dryrun,
+		originURLCache: configdomain.OriginURLCache{},
+	}
 }
