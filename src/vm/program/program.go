@@ -23,10 +23,6 @@ func (self *Program) AddProgram(otherProgram Program) {
 	*self = append(*self, otherProgram...)
 }
 
-// func (self Program) Equal(other Program) bool {
-// 	return true
-// }
-
 // IsEmpty returns whether or not this Program has any elements.
 func (self Program) IsEmpty() bool {
 	return len(self) == 0
