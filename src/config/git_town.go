@@ -205,6 +205,8 @@ func (self *GitTown) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeature
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
+	self.LocalConfig.SyncPerennialStrategy = &strategy
+	self.Config.SyncPerennialStrategy = strategy
 	return self.SetLocalConfigValue(configdomain.KeySyncPerennialStrategy, strategy.String())
 }
 

@@ -18,6 +18,7 @@ type Config struct {
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	SyncBeforeShip           SyncBeforeShip
 	SyncFeatureStrategy      SyncFeatureStrategy
+	SyncPerennialStrategy    SyncPerennialStrategy
 	SyncUpstream             SyncUpstream
 }
 
@@ -59,6 +60,9 @@ func (self *Config) Merge(other PartialConfig) {
 	if other.SyncFeatureStrategy != nil {
 		self.SyncFeatureStrategy = *other.SyncFeatureStrategy
 	}
+	if other.SyncPerennialStrategy != nil {
+		self.SyncPerennialStrategy = *other.SyncPerennialStrategy
+	}
 	if other.SyncUpstream != nil {
 		self.SyncUpstream = *other.SyncUpstream
 	}
@@ -79,6 +83,7 @@ func DefaultConfig() Config {
 		ShipDeleteTrackingBranch: true,
 		SyncBeforeShip:           false,
 		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
+		SyncPerennialStrategy:    SyncPerennialStrategyMerge,
 		SyncUpstream:             true,
 	}
 }

@@ -18,6 +18,7 @@ type PartialConfig struct {
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
 	SyncBeforeShip           *SyncBeforeShip
 	SyncFeatureStrategy      *SyncFeatureStrategy
+	SyncPerennialStrategy    *SyncPerennialStrategy
 	SyncUpstream             *SyncUpstream
 }
 
@@ -48,6 +49,8 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 		self.SyncBeforeShip, err = NewSyncBeforeShipRef(value)
 	case KeySyncFeatureStrategy:
 		self.SyncFeatureStrategy, err = NewSyncFeatureStrategyRef(value)
+	case KeySyncPerennialStrategy:
+		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(value)
 	case KeySyncUpstream:
 		self.SyncUpstream, err = NewSyncUpstreamRef(value)
 	default:
@@ -76,6 +79,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
 	DiffPtr(&result, KeyShipDeleteTrackingBranch, before.ShipDeleteTrackingBranch, after.ShipDeleteTrackingBranch)
 	DiffPtr(&result, KeySyncFeatureStrategy, before.SyncFeatureStrategy, after.SyncFeatureStrategy)
+	DiffPtr(&result, KeySyncPerennialStrategy, before.SyncPerennialStrategy, after.SyncPerennialStrategy)
 	DiffPtr(&result, KeySyncUpstream, before.SyncUpstream, after.SyncUpstream)
 	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
 	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)

@@ -348,6 +348,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected global setting "sync-feature-strategy" to be %v, but was %v`, want, *have)
 	})
 
+	suite.Step(`^global Git Town setting "sync-perennial-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.SyncPerennialStrategy
+		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
+		asserts.NoError(err)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, *have)
+	})
+
 	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
@@ -629,6 +639,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		asserts.NoError(err)
 		if *have != want {
 			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.SyncPerennialStrategy
+		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
+		asserts.NoError(err)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
 		}
 		return nil
 	})
