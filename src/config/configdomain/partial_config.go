@@ -4,25 +4,28 @@ import "github.com/git-town/git-town/v11/src/domain"
 
 // PartialConfig contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
-	CodeHostingPlatformName  *string
-	GiteaToken               *GiteaToken
-	GitHubToken              *GitHubToken
-	GitLabToken              *GitLabToken
-	MainBranch               *domain.LocalBranchName
-	NewBranchPush            *NewBranchPush
-	Offline                  *Offline
-	PerennialBranches        *domain.LocalBranchNames
-	PushHook                 *PushHook
-	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
-	SyncBeforeShip           *SyncBeforeShip
-	SyncFeatureStrategy      *SyncFeatureStrategy
-	SyncPerennialStrategy    *SyncPerennialStrategy
-	SyncUpstream             *SyncUpstream
+	CodeHostingOriginHostname *CodeHostingOriginHostname
+	CodeHostingPlatformName   *string
+	GiteaToken                *GiteaToken
+	GitHubToken               *GitHubToken
+	GitLabToken               *GitLabToken
+	MainBranch                *domain.LocalBranchName
+	NewBranchPush             *NewBranchPush
+	Offline                   *Offline
+	PerennialBranches         *domain.LocalBranchNames
+	PushHook                  *PushHook
+	ShipDeleteTrackingBranch  *ShipDeleteTrackingBranch
+	SyncBeforeShip            *SyncBeforeShip
+	SyncFeatureStrategy       *SyncFeatureStrategy
+	SyncPerennialStrategy     *SyncPerennialStrategy
+	SyncUpstream              *SyncUpstream
 }
 
 func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	var err error
 	switch key {
+	case KeyCodeHostingOriginHostname:
+		self.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
 		self.CodeHostingPlatformName = &value
 	case KeyGiteaToken:
@@ -68,6 +71,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Removed: map[Key]string{},
 		Changed: map[Key]domain.Change[string]{},
 	}
+	DiffPtr(&result, KeyCodeHostingOriginHostname, before.CodeHostingOriginHostname, after.CodeHostingOriginHostname)
 	DiffPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
 	DiffPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
 	DiffPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)

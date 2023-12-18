@@ -56,6 +56,9 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 		if added {
 			continue
 		}
+		if strings.HasPrefix(configKey.String(), "git-town.") {
+			panic("key not in PartialConfig: " + configKey.String())
+		}
 		cache[*configKey] = value
 	}
 	return cache, config, nil

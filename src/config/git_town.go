@@ -96,11 +96,6 @@ func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdom
 	return lineage
 }
 
-// OriginOverride provides the override for the origin hostname from the Git Town configuration.
-func (self *GitTown) OriginOverride() configdomain.OriginHostnameOverride {
-	return configdomain.OriginHostnameOverride(self.LocalConfigValue(configdomain.KeyCodeHostingOriginHostname))
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -109,7 +104,7 @@ func (self *GitTown) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	return confighelpers.DetermineOriginURL(text, self.OriginOverride(), self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.CodeHostingOriginHostname, self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
