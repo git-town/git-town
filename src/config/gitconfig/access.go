@@ -49,17 +49,14 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
-		added, err := config.Add(*configKey, value)
-		if err != nil {
-			return cache, config, err
-		}
-		if added {
-			continue
-		}
 		if strings.HasPrefix(configKey.String(), "git-town.") {
-			panic("key not in PartialConfig: " + configKey.String())
+			err := config.Add(*configKey, value)
+			if err != nil {
+				return cache, config, err
+			}
+		} else {
+			cache[*configKey] = value
 		}
-		cache[*configKey] = value
 	}
 	return cache, config, nil
 }

@@ -21,7 +21,7 @@ type PartialConfig struct {
 	SyncUpstream              *SyncUpstream
 }
 
-func (self *PartialConfig) Add(key Key, value string) (bool, error) {
+func (self *PartialConfig) Add(key Key, value string) error {
 	var err error
 	switch key {
 	case KeyCodeHostingOriginHostname:
@@ -55,9 +55,9 @@ func (self *PartialConfig) Add(key Key, value string) (bool, error) {
 	case KeySyncUpstream:
 		self.SyncUpstream, err = NewSyncUpstreamRef(value)
 	default:
-		return false, nil
+		panic("unprocessed key: " + key.String())
 	}
-	return true, err
+	return err
 }
 
 func EmptyPartialConfig() PartialConfig {
