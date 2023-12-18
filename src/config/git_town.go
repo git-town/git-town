@@ -318,8 +318,8 @@ func (self *GitTown) ShouldNewBranchPushGlobal() (configdomain.NewBranchPush, er
 	return configdomain.NewBranchPush(boolValue), err
 }
 
-// ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
-func (self *GitTown) ShouldShipDeleteOriginBranch() (configdomain.ShipDeleteTrackingBranch, error) {
+// ShipDeleteTrackingBranch indicates whether to delete the remote branch after shipping.
+func (self *GitTown) ShipDeleteTrackingBranch() (configdomain.ShipDeleteTrackingBranch, error) {
 	setting := self.LocalOrGlobalConfigValue(configdomain.KeyShipDeleteRemoteBranch)
 	if setting == "" {
 		return true, nil

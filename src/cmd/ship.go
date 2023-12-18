@@ -165,7 +165,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteTrackingBranch, err := repo.Runner.GitTown.ShouldShipDeleteOriginBranch()
+	deleteTrackingBranch, err := repo.Runner.GitTown.ShipDeleteTrackingBranch()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}

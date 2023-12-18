@@ -63,7 +63,7 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := configdomain.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
-	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShouldShipDeleteOriginBranch())
+	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShipDeleteTrackingBranch())
 	giteaToken := run.GitTown.GiteaToken()
 	githubToken := run.GitTown.GitHubToken()
 	gitlabToken := run.GitTown.GitLabToken()
