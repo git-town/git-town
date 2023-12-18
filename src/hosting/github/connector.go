@@ -103,6 +103,7 @@ func (self *Connector) UpdateProposalTarget(number int, target domain.LocalBranc
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
+// TODO: move this into a separate config layer for environment variables.
 func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubToken {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken != "" {
