@@ -57,7 +57,6 @@ func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 
 func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	var setting *configdomain.NewBranchPush
-	fmt.Println("22222222222222")
 	if globalFlag {
 		setting = run.GitTown.GlobalConfig.NewBranchPush
 		if setting == nil {
