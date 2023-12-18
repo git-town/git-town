@@ -171,11 +171,6 @@ func (self *GitTown) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTr
 	return self.SetLocalConfigValue(configdomain.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 
-// SetSyncUpstream updates the configured sync-upstream strategy.
-func (self *GitTown) SetSyncUpstream(value configdomain.SyncUpstream) error {
-	return self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
-}
-
 func (self *GitTown) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.LocalConfig.SyncFeatureStrategy = &value
 	self.Config.SyncFeatureStrategy = value
@@ -198,6 +193,11 @@ func (self *GitTown) SetSyncPerennialStrategy(strategy configdomain.SyncPerennia
 // SetTestOrigin sets the origin to be used for testing.
 func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
+}
+
+// SetSyncUpstream updates the configured sync-upstream strategy.
+func (self *GitTown) SetSyncUpstream(value configdomain.SyncUpstream) error {
+	return self.SetLocalConfigValue(configdomain.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
 func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
