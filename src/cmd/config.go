@@ -31,12 +31,12 @@ func configCmd() *cobra.Command {
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
-	configCmd.AddCommand(syncPerennialStrategyCommand())
-	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(pushHookCommand())
+	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
 	configCmd.AddCommand(syncFeatureStrategyCommand())
+	configCmd.AddCommand(syncPerennialStrategyCommand())
 	return &configCmd
 }
 
