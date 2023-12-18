@@ -17,9 +17,11 @@ func TestGitConfig(t *testing.T) {
 			GlobalCache: gitconfig.SingleCache{
 				configdomain.KeyOffline: "1",
 			},
+			GlobalConfig: configdomain.EmptyPartialConfig(),
 			LocalCache: gitconfig.SingleCache{
 				configdomain.KeyMainBranch: "main",
 			},
+			LocalConfig: configdomain.EmptyPartialConfig(),
 		}
 		clone := original.Clone()
 		clone.GlobalCache[configdomain.KeyOffline] = "0"

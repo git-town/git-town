@@ -159,3 +159,14 @@ func parseLineageKey(key string) *Key {
 		name: key,
 	}
 }
+
+// DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
+var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
+	KeyDeprecatedCodeHostingDriver:    KeyCodeHostingPlatform,
+	KeyDeprecatedMainBranchName:       KeyMainBranch,
+	KeyDeprecatedNewBranchPushFlag:    KeyPushNewBranches,
+	KeyDeprecatedPerennialBranchNames: KeyPerennialBranches,
+	KeyDeprecatedPullBranchStrategy:   KeySyncPerennialStrategy,
+	KeyDeprecatedPushVerify:           KeyPushHook,
+	KeyDeprecatedSyncStrategy:         KeySyncFeatureStrategy,
+}

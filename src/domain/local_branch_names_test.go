@@ -38,9 +38,38 @@ func TestLocalBranchNames(t *testing.T) {
 
 	t.Run("NewLocalBranchNames and Strings", func(t *testing.T) {
 		t.Parallel()
-		branches := domain.NewLocalBranchNames("one", "two", "three")
-		want := []string{"one", "two", "three"}
-		must.Eq(t, want, branches.Strings())
+		t.Run("with value", func(t *testing.T) {
+			t.Parallel()
+			branches := domain.NewLocalBranchNames("one", "two", "three")
+			want := []string{"one", "two", "three"}
+			must.Eq(t, want, branches.Strings())
+		})
+		t.Run("no branch names", func(t *testing.T) {
+			t.Parallel()
+			branches := domain.NewLocalBranchNames()
+			must.Eq(t, 0, len(branches))
+		})
+	})
+
+	t.Run("NewLocalBranchNamesRef", func(t *testing.T) {
+		t.Parallel()
+		t.Run("no branches", func(t *testing.T) {
+			t.Parallel()
+			have := domain.NewLocalBranchNamesRef("")
+			must.EqOp(t, 0, len(*have))
+		})
+		t.Run("one branch", func(t *testing.T) {
+			t.Parallel()
+			have := domain.NewLocalBranchNamesRef("one")
+			want := []string{"one"}
+			must.Eq(t, want, have.Strings())
+		})
+		t.Run("multiple branches", func(t *testing.T) {
+			t.Parallel()
+			have := domain.NewLocalBranchNamesRef("one two three")
+			want := []string{"one", "two", "three"}
+			must.Eq(t, want, have.Strings())
+		})
 	})
 
 	t.Run("Remove", func(t *testing.T) {

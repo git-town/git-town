@@ -120,25 +120,6 @@ func TestCollector(t *testing.T) {
 		})
 	})
 
-	t.Run("SyncPerennialStrategy", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given SyncPerennialStrategy value", func(t *testing.T) {
-			t.Parallel()
-			fc := configdomain.FailureCollector{}
-			must.EqOp(t, configdomain.SyncPerennialStrategyMerge, fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, nil))
-			must.EqOp(t, configdomain.SyncPerennialStrategyRebase, fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyRebase, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := configdomain.FailureCollector{}
-			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, nil)
-			must.Nil(t, fc.Err)
-			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, errors.New("first"))
-			fc.SyncPerennialStrategy(configdomain.SyncPerennialStrategyMerge, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
-
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string value", func(t *testing.T) {
@@ -173,25 +154,6 @@ func TestCollector(t *testing.T) {
 			must.Nil(t, fc.Err)
 			fc.Strings([]string{}, errors.New("first"))
 			fc.Strings([]string{}, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
-
-	t.Run("SyncFeatureStrategy", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given SyncFeatureStrategy value", func(t *testing.T) {
-			t.Parallel()
-			fc := configdomain.FailureCollector{}
-			must.EqOp(t, configdomain.SyncFeatureStrategyMerge, fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, nil))
-			must.EqOp(t, configdomain.SyncFeatureStrategyRebase, fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyRebase, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := configdomain.FailureCollector{}
-			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, nil)
-			must.Nil(t, fc.Err)
-			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, errors.New("first"))
-			fc.SyncFeatureStrategy(configdomain.SyncFeatureStrategyMerge, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})

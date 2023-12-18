@@ -63,19 +63,19 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := configdomain.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
-	deleteTrackingBranch := fc.ShipDeleteRemoteBranch(run.GitTown.ShipDeleteTrackingBranch())
-	giteaToken := run.GitTown.GiteaToken()
-	githubToken := run.GitTown.GitHubToken()
-	gitlabToken := run.GitTown.GitLabToken()
+	deleteTrackingBranch := run.GitTown.ShipDeleteTrackingBranch
+	giteaToken := run.GitTown.GiteaToken
+	githubToken := run.GitTown.GitHubToken
+	gitlabToken := run.GitTown.GitLabToken
 	hosting := fc.Hosting(run.GitTown.HostingService())
-	isOffline := fc.Offline(run.GitTown.IsOffline())
+	isOffline := run.GitTown.Offline
 	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
-	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
-	pushHook := fc.PushHook(run.GitTown.PushHook())
-	pushNewBranches := fc.NewBranchPush(run.GitTown.NewBranchPush())
-	syncUpstream := fc.SyncUpstream(run.GitTown.SyncUpstream())
-	syncFeatureStrategy := fc.SyncFeatureStrategy(run.GitTown.SyncFeatureStrategy())
-	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())
+	syncPerennialStrategy := run.GitTown.SyncPerennialStrategy
+	pushHook := run.GitTown.PushHook
+	pushNewBranches := run.GitTown.NewBranchPush
+	syncUpstream := run.GitTown.SyncUpstream
+	syncFeatureStrategy := run.GitTown.SyncFeatureStrategy
+	syncBeforeShip := run.GitTown.SyncBeforeShip
 	return ConfigConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteTrackingBranch,

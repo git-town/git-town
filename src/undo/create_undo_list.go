@@ -61,9 +61,13 @@ func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit 
 	if err != nil {
 		return program.Program{}, errors.New(messages.DirCurrentProblem)
 	}
+	fullCache, err := gitconfig.LoadFullCache(configGit)
+	if err != nil {
+		return program.Program{}, errors.New(messages.DirCurrentProblem)
+	}
 	finalConfigSnapshot := ConfigSnapshot{
 		Cwd:       currentDirectory,
-		GitConfig: gitconfig.LoadFullCache(configGit),
+		GitConfig: fullCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil

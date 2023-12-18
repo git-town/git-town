@@ -51,7 +51,7 @@ func (self CachedAccess) LocalOrGlobalConfigValue(key configdomain.Key) string {
 
 // Reload refreshes the cached configuration information.
 func (self *CachedAccess) Reload() {
-	self.FullCache = LoadFullCache(&self.Access)
+	self.FullCache, _ = LoadFullCache(&self.Access)
 }
 
 func (self *CachedAccess) RemoveGlobalConfigValue(key configdomain.Key) error {

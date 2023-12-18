@@ -41,10 +41,7 @@ func executeSetParent(verbose bool) error {
 		return err
 	}
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -66,9 +63,9 @@ func executeSetParent(verbose bool) error {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.GitTown.RemoveParent(branches.Initial)
 	} else {
-		existingParent = repo.Runner.GitTown.MainBranch()
+		existingParent = repo.Runner.GitTown.MainBranch
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch
 	branches.Types, _, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,

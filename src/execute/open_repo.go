@@ -45,12 +45,15 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	fullCache := gitconfig.LoadFullCache(&configGitAccess)
+	fullCache, err := gitconfig.LoadFullCache(&configGitAccess)
+	if err != nil {
+		return nil, err
+	}
 	configSnapshot := undo.ConfigSnapshot{
 		Cwd:       currentDirectory,
 		GitConfig: fullCache,
 	}
-	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner)
+	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
 	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
 		GitTown: gitTown,
@@ -78,10 +81,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 	}
-	isOffline, err := gitTown.IsOffline()
-	if err != nil {
-		return nil, err
-	}
+	isOffline := gitTown.Config.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err
