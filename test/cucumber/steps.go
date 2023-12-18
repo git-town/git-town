@@ -349,15 +349,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, *have)
 	})
 
-	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
-		}
-		return nil
-	})
-
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
 		state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      domain.NewLocalBranchName(branch),
