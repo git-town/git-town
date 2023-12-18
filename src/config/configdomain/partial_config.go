@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
-// Data contains configuration data as it is stored in a particular configuration data source (Git, config file).
+// PartialConfig contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
 	CodeHostingPlatformName  *string
 	GiteaToken               *GiteaToken
