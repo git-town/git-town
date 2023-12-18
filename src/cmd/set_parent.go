@@ -63,9 +63,9 @@ func executeSetParent(verbose bool) error {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.GitTown.RemoveParent(branches.Initial)
 	} else {
-		existingParent = repo.Runner.GitTown.Config.MainBranch
+		existingParent = repo.Runner.GitTown.MainBranch
 	}
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	branches.Types, _, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,

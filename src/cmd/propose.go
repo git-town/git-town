@@ -130,7 +130,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
@@ -154,9 +154,9 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

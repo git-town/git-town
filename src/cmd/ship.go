@@ -163,7 +163,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	deleteTrackingBranch := repo.Runner.GitTown.ShipDeleteTrackingBranch
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == domain.SyncStatusOtherWorktree {
@@ -217,9 +217,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

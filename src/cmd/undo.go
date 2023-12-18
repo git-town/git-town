@@ -96,7 +96,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	mainBranch := repo.Runner.Backend.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.Backend.GitTown.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -111,9 +111,9 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

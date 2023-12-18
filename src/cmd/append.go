@@ -116,7 +116,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush

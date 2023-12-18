@@ -120,7 +120,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
 	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	syncUpstream := repo.Runner.GitTown.SyncUpstream

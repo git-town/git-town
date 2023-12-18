@@ -64,7 +64,7 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 			setting = &run.GitTown.Defaults.NewBranchPush
 		}
 	} else {
-		setting = &run.GitTown.Config.NewBranchPush
+		setting = &run.GitTown.NewBranchPush
 	}
 	io.Println(format.Bool(setting.Bool()))
 	return nil

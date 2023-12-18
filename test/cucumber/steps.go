@@ -706,7 +706,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline := state.fixture.DevRepo.GitTown.Config.Offline
+		isOffline := state.fixture.DevRepo.GitTown.Offline
 		if isOffline {
 			return fmt.Errorf("expected to not be offline but am")
 		}
@@ -987,7 +987,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.Config.MainBranch
+		have := state.fixture.DevRepo.GitTown.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}

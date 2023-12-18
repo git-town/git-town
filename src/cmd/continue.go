@@ -100,14 +100,14 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.Config.GitLabToken,
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

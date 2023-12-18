@@ -152,7 +152,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.GitTown.Config.MainBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
 	if allFlag {
