@@ -18,9 +18,11 @@ func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	localCacheDiff := gitconfig.SingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache)
 	globalConfigDiff := configdomain.PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)
 	localConfigDiff := configdomain.PartialConfigDiff(before.GitConfig.LocalConfig, after.GitConfig.LocalConfig)
+	globalConfigDiff.Merge(&globalCacheDiff)
+	localConfigDiff.Merge(&localCacheDiff)
 	return ConfigDiffs{
-		Global: globalCacheDiff.Merge(&globalConfigDiff),
-		Local:  localCacheDiff.Merge(&localConfigDiff),
+		Global: globalConfigDiff,
+		Local:  localConfigDiff,
 	}
 }
 

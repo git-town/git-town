@@ -15,22 +15,14 @@ type ConfigDiff struct {
 }
 
 // Merge merges the given ConfigDiff into this ConfigDiff.
-func (self *ConfigDiff) Merge(other *ConfigDiff) ConfigDiff {
-	result := EmptyConfigDiff()
-	result.Added = append(self.Added, other.Added...) //nolint:gocritic
-	for key, value := range self.Removed {
-		result.Removed[key] = value
-	}
+func (self *ConfigDiff) Merge(other *ConfigDiff) {
+	self.Added = append(self.Added, other.Added...)
 	for key, value := range other.Removed {
-		result.Removed[key] = value
-	}
-	for key, value := range self.Changed {
-		result.Changed[key] = value
+		self.Removed[key] = value
 	}
 	for key, value := range other.Changed {
-		result.Changed[key] = value
+		self.Changed[key] = value
 	}
-	return result
 }
 
 type checkArg interface {
