@@ -63,7 +63,7 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := configdomain.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
-	deleteOrigin := fc.ShipDeleteRemoteBranch(run.GitTown.ShipDeleteTrackingBranch())
+	deleteTrackingBranch := fc.ShipDeleteRemoteBranch(run.GitTown.ShipDeleteTrackingBranch())
 	giteaToken := run.GitTown.GiteaToken()
 	githubToken := run.GitTown.GitHubToken()
 	gitlabToken := run.GitTown.GitLabToken()
@@ -78,7 +78,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())
 	return ConfigConfig{
 		branchTypes:           branchTypes,
-		deleteTrackingBranch:  deleteOrigin,
+		deleteTrackingBranch:  deleteTrackingBranch,
 		hosting:               hosting,
 		giteaToken:            giteaToken,
 		githubToken:           githubToken,
