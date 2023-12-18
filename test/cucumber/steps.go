@@ -330,6 +330,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.GitTown.GlobalConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
+		// TODO: use NewBranchPushRef here and remove the manual bool parsing above
 		want := configdomain.NewBranchPush(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
@@ -610,6 +611,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.SyncFeatureStrategy
+		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
+		asserts.NoError(err)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but was %v`, want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {

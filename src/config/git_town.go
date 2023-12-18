@@ -192,10 +192,14 @@ func (self *GitTown) SetShouldSyncUpstream(value configdomain.SyncUpstream) erro
 }
 
 func (self *GitTown) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
+	self.LocalConfig.SyncFeatureStrategy = &value
+	self.Config.SyncFeatureStrategy = value
 	return self.SetLocalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
 }
 
 func (self *GitTown) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
+	self.GlobalConfig.SyncFeatureStrategy = &value
+	self.Config.SyncFeatureStrategy = value
 	return self.SetGlobalConfigValue(configdomain.KeySyncFeatureStrategy, value.Name)
 }
 
