@@ -25,20 +25,22 @@ func (self *ConfigDiff) Merge(other *ConfigDiff) {
 	}
 }
 
-func DiffLocalBranchNames(diff *ConfigDiff, key Key, before *domain.LocalBranchNames, after *domain.LocalBranchNames) {
-	if cmp.Equal(before, after) {
+// DiffLocalBranchNames adds the difference between the given before and after values
+// for the attribute with the given key to the given ConfigDiff.
+func DiffLocalBranchNames(diff *ConfigDiff, key Key, beforeValue *domain.LocalBranchNames, afterValue *domain.LocalBranchNames) {
+	if cmp.Equal(beforeValue, afterValue) {
 		return
 	}
-	if before == nil || len(*before) == 0 {
+	if beforeValue == nil || len(*beforeValue) == 0 {
 		diff.Added = append(diff.Added, key)
 		return
 	}
-	if after == nil || len(*after) == 0 {
-		diff.Removed[key] = before.String()
+	if afterValue == nil || len(*afterValue) == 0 {
+		diff.Removed[key] = beforeValue.String()
 	}
 	diff.Changed[key] = domain.Change[string]{
-		Before: before.String(),
-		After:  after.String(),
+		Before: beforeValue.String(),
+		After:  afterValue.String(),
 	}
 }
 

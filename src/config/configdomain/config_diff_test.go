@@ -15,31 +15,25 @@ func TestConfigdiff(t *testing.T) {
 		t.Parallel()
 		t.Run("nothing changed", func(t *testing.T) {
 			t.Parallel()
-			have := configdomain.ConfigDiff{
+			have := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
 					configdomain.KeyGithubToken,
 				},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
 			}
 			other := configdomain.ConfigDiff{ //nolint:exhaustruct
 			}
 			have.Merge(&other)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{configdomain.KeyGithubToken},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
+			want := configdomain.ConfigDiff{ //nolint:exhaustruct
+				Added: []configdomain.Key{configdomain.KeyGithubToken},
 			}
 			must.Eq(t, want, have)
 		})
 		t.Run("added entries", func(t *testing.T) {
 			t.Parallel()
-			have := configdomain.ConfigDiff{
+			have := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
 					configdomain.KeyGiteaToken,
 				},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
 			}
 			other := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
@@ -47,21 +41,17 @@ func TestConfigdiff(t *testing.T) {
 				},
 			}
 			have.Merge(&other)
-			want := configdomain.ConfigDiff{
-				Added:   []configdomain.Key{configdomain.KeyGiteaToken, configdomain.KeyGithubToken},
-				Removed: map[configdomain.Key]string{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
+			want := configdomain.ConfigDiff{ //nolint:exhaustruct
+				Added: []configdomain.Key{configdomain.KeyGiteaToken, configdomain.KeyGithubToken},
 			}
 			must.Eq(t, want, have)
 		})
 		t.Run("removed entries", func(t *testing.T) {
 			t.Parallel()
-			have := configdomain.ConfigDiff{
+			have := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
 					configdomain.KeyGiteaToken: "gitea",
 				},
-				Added:   []configdomain.Key{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
 			}
 			other := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
@@ -69,27 +59,23 @@ func TestConfigdiff(t *testing.T) {
 				},
 			}
 			have.Merge(&other)
-			want := configdomain.ConfigDiff{
+			want := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
 					configdomain.KeyGiteaToken:  "gitea",
 					configdomain.KeyGithubToken: "github",
 				},
-				Added:   []configdomain.Key{},
-				Changed: map[configdomain.Key]domain.Change[string]{},
 			}
 			must.Eq(t, want, have)
 		})
 		t.Run("changed entries", func(t *testing.T) {
 			t.Parallel()
-			have := configdomain.ConfigDiff{
+			have := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]domain.Change[string]{
 					configdomain.KeyGiteaToken: {
 						Before: "giteaBefore",
 						After:  "giteaAfter",
 					},
 				},
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{},
 			}
 			other := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]domain.Change[string]{
@@ -100,7 +86,7 @@ func TestConfigdiff(t *testing.T) {
 				},
 			}
 			have.Merge(&other)
-			want := configdomain.ConfigDiff{
+			want := configdomain.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]domain.Change[string]{
 					configdomain.KeyGiteaToken: {
 						Before: "giteaBefore",
@@ -111,8 +97,6 @@ func TestConfigdiff(t *testing.T) {
 						After:  "githubAfter",
 					},
 				},
-				Added:   []configdomain.Key{},
-				Removed: map[configdomain.Key]string{},
 			}
 			must.Eq(t, want, have)
 		})
