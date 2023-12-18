@@ -14,7 +14,7 @@ type ConfigDiff struct {
 	Changed map[Key]domain.Change[string]
 }
 
-// Merge merges the given ConfigDiff into this ConfigDiff.
+// Merge merges the given ConfigDiff into this ConfigDiff, overwriting values that exist in both.
 func (self *ConfigDiff) Merge(other *ConfigDiff) {
 	self.Added = append(self.Added, other.Added...)
 	for key, value := range other.Removed {
