@@ -72,7 +72,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	lineage := run.GitTown.Lineage(run.Backend.GitTown.RemoveLocalConfigValue)
 	syncPerennialStrategy := fc.SyncPerennialStrategy(run.GitTown.SyncPerennialStrategy())
 	pushHook := fc.PushHook(run.GitTown.PushHook())
-	pushNewBranches := fc.NewBranchPush(run.GitTown.ShouldNewBranchPush())
+	pushNewBranches := fc.NewBranchPush(run.GitTown.NewBranchPush())
 	syncUpstream := fc.SyncUpstream(run.GitTown.ShouldSyncUpstream())
 	syncFeatureStrategy := fc.SyncFeatureStrategy(run.GitTown.SyncFeatureStrategy())
 	syncBeforeShip := fc.SyncBeforeShip(run.GitTown.SyncBeforeShip())

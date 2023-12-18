@@ -59,9 +59,9 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	var setting configdomain.NewBranchPush
 	var err error
 	if globalFlag {
-		setting, err = run.GitTown.ShouldNewBranchPushGlobal()
+		setting, err = run.GitTown.NewBranchPushGlobal()
 	} else {
-		setting, err = run.GitTown.ShouldNewBranchPush()
+		setting, err = run.GitTown.NewBranchPush()
 	}
 	if err != nil {
 		return err
