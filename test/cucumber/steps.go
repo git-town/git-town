@@ -644,15 +644,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.GitTown.LocalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
-		}
-		return nil
-	})
-
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(domain.OriginRemote)
 		state.initialRemoteBranches = domain.LocalBranchNames{}
