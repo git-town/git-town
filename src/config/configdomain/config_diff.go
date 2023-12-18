@@ -7,7 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// ConfigDiff describes the changes made to the Git Town configuration.
+// ConfigDiff describes changes made to the Git Town configuration.
 type ConfigDiff struct {
 	Added   []Key
 	Removed map[Key]string
