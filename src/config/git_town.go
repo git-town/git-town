@@ -331,8 +331,8 @@ func (self *GitTown) ShipDeleteTrackingBranch() (configdomain.ShipDeleteTracking
 	return configdomain.ShipDeleteTrackingBranch(result), nil
 }
 
-// ShouldSyncUpstream indicates whether this repo should sync with its upstream.
-func (self *GitTown) ShouldSyncUpstream() (configdomain.SyncUpstream, error) {
+// SyncUpstream indicates whether this repo should sync with its upstream.
+func (self *GitTown) SyncUpstream() (configdomain.SyncUpstream, error) {
 	text := self.LocalOrGlobalConfigValue(configdomain.KeySyncUpstream)
 	if text == "" {
 		return true, nil

@@ -153,7 +153,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
+	syncUpstream, err := repo.Runner.GitTown.SyncUpstream()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}

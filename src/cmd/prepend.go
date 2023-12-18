@@ -123,7 +123,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	mainBranch := repo.Runner.GitTown.MainBranch()
 	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
 	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
-	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.ShouldSyncUpstream())
+	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.SyncUpstream())
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
