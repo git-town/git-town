@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-// Unit tests for SingleCacheDiff are in src/undo/config_test.go.
+// Tests for SingleCacheDiff are in src/undo/config_test.go.
 
 func TestSingleCache(t *testing.T) {
 	t.Parallel()
