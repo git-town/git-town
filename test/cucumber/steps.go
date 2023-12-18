@@ -287,9 +287,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.GitTown.GlobalConfig.Offline
 		wantBool, err := gohacks.ParseBool(wantStr)
-		if err != nil {
-			panic(err)
-		}
+		asserts.NoError(err)
 		want := configdomain.Offline(wantBool)
 		if *have != want {
 			return fmt.Errorf(`expected global setting "offline" to be %t, but was %t`, want, *have)
