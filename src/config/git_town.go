@@ -116,7 +116,8 @@ func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
-	self.Config.MainBranch = branch
+	self.MainBranch = branch
+	self.LocalConfig.MainBranch = &branch
 	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
 }
 
