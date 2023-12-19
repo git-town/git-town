@@ -1,5 +1,5 @@
 # dev tooling and versions
-RUN_THAT_APP_VERSION = 0.2.1
+RUN_THAT_APP_VERSION = 0.3.0
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -42,8 +42,9 @@ fix: tools/run-that-app@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes
 	tools/rta actionlint
 	tools/rta golangci-lint run
 	tools/ensure_no_files_with_dashes.sh
-	# tools/rta ghokin fmt replace features/
+	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
+	tools/rta deadcode
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
