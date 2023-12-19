@@ -1,4 +1,4 @@
-package helpers
+package helpers_test
 
 import (
 	"testing"
