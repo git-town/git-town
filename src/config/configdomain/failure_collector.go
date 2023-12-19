@@ -25,11 +25,6 @@ func (self *FailureCollector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (self *FailureCollector) Branches(value domain.Branches, err error) domain.Branches {
-	self.Check(err)
-	return value
-}
-
 func (self *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
 	self.Check(err)
 	return value
