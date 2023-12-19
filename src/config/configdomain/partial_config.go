@@ -5,7 +5,7 @@ import "github.com/git-town/git-town/v11/src/domain"
 // PartialConfig contains configuration data as it is stored in a particular configuration data source (Git, config file).
 type PartialConfig struct {
 	CodeHostingOriginHostname *CodeHostingOriginHostname
-	CodeHostingPlatformName   *string
+	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
@@ -27,7 +27,7 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	case KeyCodeHostingOriginHostname:
 		self.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
-		self.CodeHostingPlatformName = &value
+		self.CodeHostingPlatformName = NewCodeHostingPlatformNameRef(value)
 	case KeyGiteaToken:
 		self.GiteaToken = NewGiteaTokenRef(value)
 	case KeyGithubToken:
@@ -72,7 +72,7 @@ func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
 		Changed: map[Key]domain.Change[string]{},
 	}
 	DiffPtr(&result, KeyCodeHostingOriginHostname, before.CodeHostingOriginHostname, after.CodeHostingOriginHostname)
-	DiffStringPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
+	DiffPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
 	DiffPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
 	DiffPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
 	DiffPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
