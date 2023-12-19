@@ -1,5 +1,4 @@
-# dev tooling and versions
-RUN_THAT_APP_VERSION = 0.3.0
+RTA_VERSION = 0.3.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
@@ -22,13 +21,13 @@ cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/rta@${RUN_THAT_APP_VERSION}  # prints the dependencies between the internal Go packages as a tree
+dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
 	@tools/rta depth . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
+fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
 	git diff --check
 	go run tools/format_unittests/format.go run
 	go run tools/format_self/format.go run
@@ -44,18 +43,18 @@ fix: tools/rta@${RUN_THAT_APP_VERSION} tools/node_modules  # auto-fixes lint iss
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	tools/rta deadcode github.com/git-town/git-town/...
+	tools/rta deadcode -test github.com/git-town/git-town/...
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-stats: tools/rta@${RUN_THAT_APP_VERSION}  # shows code statistics
+stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/rta@${RUN_THAT_APP_VERSION}  # smoke tests for Go refactorings
+test-go: tools/rta@${RTA_VERSION}  # smoke tests for Go refactorings
 	tools/rta gofumpt -l -w . &
 	make --no-print-directory build &
 	tools/rta golangci-lint run &
@@ -78,7 +77,7 @@ unit-all: build  # runs all the unit tests
 unit-race: build  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
-update: tools/rta@${RUN_THAT_APP_VERSION}  # updates all dependencies
+update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
@@ -87,11 +86,11 @@ update: tools/rta@${RUN_THAT_APP_VERSION}  # updates all dependencies
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/rta@${RUN_THAT_APP_VERSION}:
+tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
-	@mv tools/rta tools/rta@${RUN_THAT_APP_VERSION}
-	@ln -s rta@${RUN_THAT_APP_VERSION} tools/rta
+	@mv tools/rta tools/rta@${RTA_VERSION}
+	@ln -s rta@${RTA_VERSION} tools/rta
 
 tools/node_modules: tools/yarn.lock
 	@echo "Installing Node based tools"
