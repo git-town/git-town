@@ -7,7 +7,7 @@ import (
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
 	CodeHostingOriginHostname CodeHostingOriginHostname
-	CodeHostingPlatformName   string
+	CodeHostingPlatformName   CodeHostingPlatformName
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
 	GitLabToken               GitLabToken
