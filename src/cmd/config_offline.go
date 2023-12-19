@@ -53,11 +53,7 @@ func executeOffline(args []string, verbose bool) error {
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {
-	isOffline, err := run.GitTown.IsOffline()
-	if err != nil {
-		return err
-	}
-	io.Println(format.Bool(isOffline.Bool()))
+	io.Println(format.Bool(run.GitTown.Offline.Bool()))
 	return nil
 }
 

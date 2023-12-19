@@ -23,18 +23,13 @@ sudo port install git-town
 
 ## Windows
 
-The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v11.1.0/git-town_windows_intel_64.msi)
-and run it.
+You can install Git Town on Windows using:
 
-You can also install Git Town via [scoop](https://scoop.sh):
-
-```
-scoop install git-town
-```
-
-You can also [install Git Town manually](#manual-installation) or
-[compile from source](#compile-from-source).
+- [Chocolatey](https://community.chocolatey.org/packages/git-town):
+  `choco install git-town`
+- [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
+- the
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v11.1.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands

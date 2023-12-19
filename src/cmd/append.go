@@ -100,7 +100,7 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := configdomain.FailureCollector{}
-	pushHook := fc.PushHook(repo.Runner.GitTown.PushHook())
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -116,10 +116,10 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.GitTown.MainBranch()
-	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
+	mainBranch := repo.Runner.GitTown.MainBranch
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
+	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
@@ -142,8 +142,8 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
-	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.ShouldSyncUpstream())
+	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{

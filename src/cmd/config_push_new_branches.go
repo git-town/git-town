@@ -56,15 +56,15 @@ func executeConfigPushNewBranches(args []string, global, verbose bool) error {
 }
 
 func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
-	var setting configdomain.NewBranchPush
-	var err error
+	var setting *configdomain.NewBranchPush
 	if globalFlag {
-		setting, err = run.GitTown.ShouldNewBranchPushGlobal()
+		setting = run.GitTown.GlobalConfig.NewBranchPush
+		if setting == nil {
+			defaults := run.GitTown.Defaults()
+			setting = &defaults.NewBranchPush
+		}
 	} else {
-		setting, err = run.GitTown.ShouldNewBranchPush()
-	}
-	if err != nil {
-		return err
+		setting = &run.GitTown.NewBranchPush
 	}
 	io.Println(format.Bool(setting.Bool()))
 	return nil

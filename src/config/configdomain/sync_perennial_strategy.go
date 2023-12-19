@@ -29,3 +29,8 @@ func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 		return SyncPerennialStrategyMerge, fmt.Errorf(messages.ConfigSyncPerennialStrategyUnknown, text)
 	}
 }
+
+func NewSyncPerennialStrategyRef(text string) (*SyncPerennialStrategy, error) {
+	result, err := NewSyncPerennialStrategy(text)
+	return &result, err
+}

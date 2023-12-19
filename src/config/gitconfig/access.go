@@ -1,6 +1,7 @@
 package gitconfig
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -17,8 +18,9 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) SingleCache {
-	result := SingleCache{}
+func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig, error) {
+	cache := SingleCache{}
+	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -27,10 +29,10 @@ func (self *Access) LoadCache(global bool) SingleCache {
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return result
+		return cache, config, nil //nolint:nilerr
 	}
 	if output == "" {
-		return result
+		return cache, config, nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -39,11 +41,24 @@ func (self *Access) LoadCache(global bool) SingleCache {
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		configKey := configdomain.ParseKey(key)
-		if configKey != nil {
-			result[*configKey] = value
+		if configKey == nil {
+			continue
+		}
+		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*configKey]
+		if keyIsDeprecated {
+			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
+			configKey = &newKey
+		}
+		if strings.HasPrefix(configKey.String(), "git-town.") {
+			err := config.Add(*configKey, value)
+			if err != nil {
+				return cache, config, err
+			}
+		} else {
+			cache[*configKey] = value
 		}
 	}
-	return result
+	return cache, config, nil
 }
 
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {
@@ -63,4 +78,38 @@ func (self *Access) SetGlobalConfigValue(key configdomain.Key, value string) err
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *Access) SetLocalConfigValue(key configdomain.Key, value string) error {
 	return self.Run("git", "config", key.String(), value)
+}
+
+func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey configdomain.Key, value string) {
+	fmt.Printf("I found the deprecated global setting %q.\n", oldKey)
+	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	err := self.RemoveGlobalConfigValue(oldKey)
+	if err != nil {
+		fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
+	}
+	err = self.SetGlobalConfigValue(newKey, value)
+	if err != nil {
+		fmt.Printf("ERROR: cannot write global Git setting %q: %v", newKey, err)
+	}
+}
+
+func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey configdomain.Key, value string) {
+	fmt.Printf("I found the deprecated local setting %q.\n", oldKey)
+	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	err := self.RemoveLocalConfigValue(oldKey)
+	if err != nil {
+		fmt.Printf("ERROR: cannot remove local Git setting %q: %v", oldKey, err)
+	}
+	err = self.SetLocalConfigValue(newKey, value)
+	if err != nil {
+		fmt.Printf("ERROR: cannot write local Git setting %q: %v", newKey, err)
+	}
+}
+
+func (self *Access) UpdateDeprecatedSetting(oldKey, newKey configdomain.Key, value string, global bool) {
+	if global {
+		self.UpdateDeprecatedGlobalSetting(oldKey, newKey, value)
+	} else {
+		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
+	}
 }

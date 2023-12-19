@@ -23,7 +23,9 @@ func TestConfigUndo(t *testing.T) {
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
 		after := undo.ConfigSnapshot{
@@ -33,25 +35,71 @@ func TestConfigUndo(t *testing.T) {
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeySyncPerennialStrategy,
 				},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{},
 			},
-			Local: undo.EmptyConfigDiff(),
+			Local: configdomain.EmptyConfigDiff(),
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
 			&opcode.RemoveGlobalConfig{
 				Key: configdomain.KeySyncPerennialStrategy,
+			},
+		}
+		must.Eq(t, wantProgram, haveProgram)
+	})
+
+	t.Run("adding a value to the global config", func(t *testing.T) {
+		t.Parallel()
+		before := undo.ConfigSnapshot{
+			Cwd: "/foo",
+			GitConfig: gitconfig.FullCache{
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
+			},
+		}
+		perennialsAfter := domain.NewLocalBranchNames("one", "two")
+		after := undo.ConfigSnapshot{
+			Cwd: "/foo",
+			GitConfig: gitconfig.FullCache{
+				GlobalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{ //nolint:exhaustruct
+					PerennialBranches: &perennialsAfter,
+				},
+				LocalCache:  gitconfig.SingleCache{},
+				LocalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+			},
+		}
+		haveDiff := undo.NewConfigDiffs(before, after)
+		wantDiff := undo.ConfigDiffs{
+			Global: configdomain.ConfigDiff{
+				Added: []configdomain.Key{
+					configdomain.KeyPerennialBranches,
+				},
+				Removed: map[configdomain.Key]string{},
+				Changed: map[configdomain.Key]domain.Change[string]{},
+			},
+			Local: configdomain.EmptyConfigDiff(),
+		}
+		must.Eq(t, wantDiff, haveDiff)
+		haveProgram := haveDiff.UndoProgram()
+		wantProgram := program.Program{
+			&opcode.RemoveGlobalConfig{
+				Key: configdomain.KeyPerennialBranches,
 			},
 		}
 		must.Eq(t, wantProgram, haveProgram)
@@ -66,7 +114,9 @@ func TestConfigUndo(t *testing.T) {
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
 		after := undo.ConfigSnapshot{
@@ -75,19 +125,21 @@ func TestConfigUndo(t *testing.T) {
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added: []configdomain.Key{},
 				Removed: map[configdomain.Key]string{
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
 				Changed: map[configdomain.Key]domain.Change[string]{},
 			},
-			Local: undo.ConfigDiff{
+			Local: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{},
@@ -112,7 +164,9 @@ func TestConfigUndo(t *testing.T) {
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.EmptyPartialConfig(),
 			},
 		}
 		after := undo.ConfigSnapshot{
@@ -121,12 +175,14 @@ func TestConfigUndo(t *testing.T) {
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "1",
 				},
-				LocalCache: gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
+				LocalCache:   gitconfig.SingleCache{},
+				LocalConfig:  configdomain.EmptyPartialConfig(),
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{
@@ -136,7 +192,7 @@ func TestConfigUndo(t *testing.T) {
 					},
 				},
 			},
-			Local: undo.ConfigDiff{
+			Local: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{},
@@ -158,26 +214,30 @@ func TestConfigUndo(t *testing.T) {
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.EmptyConfigDiff(),
-			Local: undo.ConfigDiff{
+			Global: configdomain.EmptyConfigDiff(),
+			Local: configdomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeySyncPerennialStrategy,
 				},
@@ -200,30 +260,34 @@ func TestConfigUndo(t *testing.T) {
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{},
 			},
-			Local: undo.ConfigDiff{
+			Local: configdomain.ConfigDiff{
 				Added: []configdomain.Key{},
 				Removed: map[configdomain.Key]string{
 					configdomain.KeySyncPerennialStrategy: "1",
@@ -247,29 +311,33 @@ func TestConfigUndo(t *testing.T) {
 		before := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		after := undo.ConfigSnapshot{
 			Cwd: "/foo",
 			GitConfig: gitconfig.FullCache{
-				GlobalCache: gitconfig.SingleCache{},
+				GlobalCache:  gitconfig.SingleCache{},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "1",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{},
 			},
-			Local: undo.ConfigDiff{
+			Local: configdomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]domain.Change[string]{
@@ -300,10 +368,12 @@ func TestConfigUndo(t *testing.T) {
 					configdomain.KeyOffline:  "0",
 					configdomain.KeyPushHook: "0",
 				},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyPerennialBranches: "prod",
 					configdomain.KeyGithubToken:       "token",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		after := undo.ConfigSnapshot{
@@ -313,15 +383,17 @@ func TestConfigUndo(t *testing.T) {
 					configdomain.KeyOffline:               "1",
 					configdomain.KeySyncPerennialStrategy: "1",
 				},
+				GlobalConfig: configdomain.EmptyPartialConfig(),
 				LocalCache: gitconfig.SingleCache{
 					configdomain.KeyPerennialBranches: "prod qa",
 					configdomain.KeyPushHook:          "1",
 				},
+				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
 		haveDiff := undo.NewConfigDiffs(before, after)
 		wantDiff := undo.ConfigDiffs{
-			Global: undo.ConfigDiff{
+			Global: configdomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeySyncPerennialStrategy,
 				},
@@ -335,7 +407,7 @@ func TestConfigUndo(t *testing.T) {
 					},
 				},
 			},
-			Local: undo.ConfigDiff{
+			Local: configdomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeyPushHook,
 				},

@@ -78,7 +78,7 @@ func executeHack(args []string, verbose bool) error {
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := configdomain.FailureCollector{}
-	pushHook := fc.PushHook(repo.Runner.GitTown.PushHook())
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -95,10 +95,10 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := domain.NewLocalBranchName(args[0])
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	mainBranch := repo.Runner.GitTown.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := fc.NewBranchPush(repo.Runner.GitTown.ShouldNewBranchPush())
-	isOffline := fc.Offline(repo.Runner.GitTown.IsOffline())
+	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
+	isOffline := repo.Runner.GitTown.Offline
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -107,9 +107,9 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	branchNamesToSync := domain.LocalBranchNames{mainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncUpstream := fc.SyncUpstream(repo.Runner.GitTown.ShouldSyncUpstream())
-	syncPerennialStrategy := fc.SyncPerennialStrategy(repo.Runner.GitTown.SyncPerennialStrategy())
-	syncFeatureStrategy := fc.SyncFeatureStrategy(repo.Runner.GitTown.SyncFeatureStrategy())
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
+	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
