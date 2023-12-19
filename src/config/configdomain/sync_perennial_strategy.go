@@ -9,10 +9,10 @@ import (
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
 type SyncPerennialStrategy struct {
-	name string
+	Name string
 }
 
-func (self SyncPerennialStrategy) String() string { return self.name }
+func (self SyncPerennialStrategy) String() string { return self.Name }
 
 var (
 	SyncPerennialStrategyMerge  = SyncPerennialStrategy{"merge"}  //nolint:gochecknoglobals
@@ -28,4 +28,9 @@ func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {
 	default:
 		return SyncPerennialStrategyMerge, fmt.Errorf(messages.ConfigSyncPerennialStrategyUnknown, text)
 	}
+}
+
+func NewSyncPerennialStrategyRef(text string) (*SyncPerennialStrategy, error) {
+	result, err := NewSyncPerennialStrategy(text)
+	return &result, err
 }

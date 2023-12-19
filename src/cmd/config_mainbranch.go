@@ -54,7 +54,7 @@ func executeConfigMainBranch(args []string, verbose bool) error {
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	io.Println(format.StringSetting(run.GitTown.MainBranch().String()))
+	io.Println(format.StringSetting(run.GitTown.MainBranch.String()))
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {

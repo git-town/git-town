@@ -8,7 +8,9 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestCache(t *testing.T) {
+// Tests for SingleCacheDiff are in src/undo/config_test.go.
+
+func TestSingleCache(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Clone", func(t *testing.T) {

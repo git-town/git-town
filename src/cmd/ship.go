@@ -57,7 +57,7 @@ func shipCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   shipDesc,
-		Long:    long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteRemoteBranch)),
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readVerboseFlag(cmd))
 		},
@@ -139,10 +139,7 @@ type shipConfig struct {
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, domain.EmptyBranchesSnapshot(), domain.EmptyStashSnapshot(), false, err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -165,33 +162,18 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteTrackingBranch, err := repo.Runner.GitTown.ShouldShipDeleteOriginBranch()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	mainBranch := repo.Runner.GitTown.MainBranch()
+	deleteTrackingBranch := repo.Runner.GitTown.ShipDeleteTrackingBranch
+	mainBranch := repo.Runner.GitTown.MainBranch
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == domain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
-	syncFeatureStrategy, err := repo.Runner.GitTown.SyncFeatureStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	syncPerennialStrategy, err := repo.Runner.GitTown.SyncPerennialStrategy()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	syncUpstream, err := repo.Runner.GitTown.ShouldSyncUpstream()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
-	syncBeforeShip, err := repo.Runner.GitTown.SyncBeforeShip()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
+	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
+	syncUpstream := repo.Runner.GitTown.SyncUpstream
+	syncBeforeShip := repo.Runner.GitTown.SyncBeforeShip
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
@@ -225,10 +207,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	var proposal *domain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []domain.Proposal{}
-	pushHook, err = repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
+	pushHook = repo.Runner.GitTown.PushHook
 	originURL := repo.Runner.GitTown.OriginURL()
 	hostingService, err := repo.Runner.GitTown.HostingService()
 	if err != nil {
@@ -238,9 +217,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken()),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

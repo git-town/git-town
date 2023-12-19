@@ -57,7 +57,7 @@ func executeConfigPerennialBranches(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	io.Println(format.StringSetting(repo.Runner.GitTown.PerennialBranches().Join("\n")))
+	io.Println(format.StringSetting(repo.Runner.GitTown.PerennialBranches.Join("\n")))
 	return nil
 }
 
@@ -74,10 +74,7 @@ func updatePerennialBranches(verbose bool) error {
 		return err
 	}
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,

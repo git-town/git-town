@@ -6,3 +6,8 @@ type GiteaToken string
 func (self GiteaToken) String() string {
 	return string(self)
 }
+
+func NewGiteaTokenRef(value string) *GiteaToken {
+	token := GiteaToken(value)
+	return &token
+}

@@ -15,6 +15,17 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
+// NewLocalBranchNamesRef constructs a LocalBranchNames instance
+// containing the branches listed in the given space-separated string.
+func NewLocalBranchNamesRef(names string) *LocalBranchNames {
+	var branchNames []string
+	if names != "" {
+		branchNames = strings.Split(names, " ")
+	}
+	result := NewLocalBranchNames(branchNames...)
+	return &result
+}
+
 func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
 	for _, branch := range self {
 		if branchTypes.IsFeatureBranch(branch) {
@@ -77,6 +88,13 @@ func (self LocalBranchNames) Sort() {
 	sort.Slice(self, func(a, b int) bool {
 		return self[a] < self[b]
 	})
+}
+
+func (self LocalBranchNames) String() string {
+	if self == nil {
+		return ""
+	}
+	return strings.Join(self.Strings(), " ")
 }
 
 // Strings provides the names of all branches in this collection as strings.

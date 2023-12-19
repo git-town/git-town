@@ -2,7 +2,7 @@ Feature: set push-new-branches
 
   Scenario Outline: local setting
     When I run "git-town config push-new-branches <GIVE>"
-    Then Git Town setting "push-new-branches" is now "<WANT>"
+    Then local Git Town setting "push-new-branches" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -26,7 +26,7 @@ Feature: set push-new-branches
 
   Scenario Outline: global setting
     When I run "git-town config push-new-branches --global <GIVE>"
-    Then Git Town setting "push-new-branches" is now "<WANT>"
+    Then global Git Town setting "push-new-branches" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |

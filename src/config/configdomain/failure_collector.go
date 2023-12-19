@@ -51,21 +51,6 @@ func (self *FailureCollector) Hosting(value Hosting, err error) Hosting {
 	return value
 }
 
-func (self *FailureCollector) NewBranchPush(value NewBranchPush, err error) NewBranchPush {
-	self.Check(err)
-	return value
-}
-
-func (self *FailureCollector) Offline(value Offline, err error) Offline {
-	self.Check(err)
-	return value
-}
-
-func (self *FailureCollector) PushHook(value PushHook, err error) PushHook {
-	self.Check(err)
-	return value
-}
-
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
@@ -74,11 +59,6 @@ func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Re
 }
 
 func (self *FailureCollector) RepoStatus(value domain.RepoStatus, err error) domain.RepoStatus {
-	self.Check(err)
-	return value
-}
-
-func (self *FailureCollector) ShipDeleteRemoteBranch(value ShipDeleteTrackingBranch, err error) ShipDeleteTrackingBranch {
 	self.Check(err)
 	return value
 }
@@ -93,30 +73,6 @@ func (self *FailureCollector) String(value string, err error) string {
 // Strings provides the []string part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Strings(value []string, err error) []string {
-	self.Check(err)
-	return value
-}
-
-func (self *FailureCollector) SyncBeforeShip(value SyncBeforeShip, err error) SyncBeforeShip {
-	self.Check(err)
-	return value
-}
-
-// SyncFeatureStrategy provides the string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) SyncFeatureStrategy(value SyncFeatureStrategy, err error) SyncFeatureStrategy {
-	self.Check(err)
-	return value
-}
-
-// SyncPerennialStrategy provides the string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) SyncPerennialStrategy(value SyncPerennialStrategy, err error) SyncPerennialStrategy {
-	self.Check(err)
-	return value
-}
-
-func (self *FailureCollector) SyncUpstream(value SyncUpstream, err error) SyncUpstream {
 	self.Check(err)
 	return value
 }

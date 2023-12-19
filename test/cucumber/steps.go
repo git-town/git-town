@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/test/asserts"
 	"github.com/git-town/git-town/v11/test/datatable"
@@ -25,6 +27,7 @@ import (
 	"github.com/git-town/git-town/v11/test/helpers"
 	"github.com/git-town/git-town/v11/test/output"
 	"github.com/git-town/git-town/v11/test/subshell"
+	"github.com/google/go-cmp/cmp"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -250,15 +253,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(configKey, value)
 	})
 
-	suite.Step(`^Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.GitTown.LocalOrGlobalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
-		}
-		return nil
-	})
-
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.GitTown.SetGlobalConfigValue(*configKey, value)
@@ -273,13 +267,84 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 	})
 
-	suite.Step(`^global Git Town setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.GitTown.GlobalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
+	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.CodeHostingPlatformName
+		if *have != want {
+			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, *have)
 		}
 		return nil
+	})
+
+	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.MainBranch
+		want := domain.LocalBranchName(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.Offline
+		wantBool, err := gohacks.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.Offline(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected global setting "offline" to be %t, but was %t`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.PerennialBranches
+		want := domain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.PushHook
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.PushHook(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.NewBranchPush
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		// TODO: use NewBranchPushRef here and remove the manual bool parsing above
+		want := configdomain.NewBranchPush(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "sync-feature-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.SyncFeatureStrategy
+		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
+		asserts.NoError(err)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-feature-strategy" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "sync-perennial-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.GlobalConfig.SyncPerennialStrategy
+		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
+		asserts.NoError(err)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
@@ -500,11 +565,70 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(*configKey, value)
 	})
 
-	suite.Step(`^local Git Town setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey := configdomain.ParseKey("git-town." + name)
-		have := state.fixture.DevRepo.GitTown.LocalConfigValue(*configKey)
-		if have != want {
-			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
+	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.CodeHostingPlatformName
+		if *have != want {
+			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.MainBranch
+		want := domain.NewLocalBranchName(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		want := domain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.PushHook
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.PushHook(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.NewBranchPush
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.NewBranchPush(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.SyncFeatureStrategy
+		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
+		asserts.NoError(err)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-feature-strategy" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.GitTown.LocalConfig.SyncPerennialStrategy
+		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
+		asserts.NoError(err)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
 		}
 		return nil
 	})
@@ -562,10 +686,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline, err := state.fixture.DevRepo.GitTown.IsOffline()
-		if err != nil {
-			return err
-		}
+		isOffline := state.fixture.DevRepo.GitTown.Offline
 		if isOffline {
 			return fmt.Errorf("expected to not be offline but am")
 		}
@@ -846,7 +967,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.MainBranch()
+		have := state.fixture.DevRepo.GitTown.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
@@ -871,22 +992,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
-		actual := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(actual) != 1 {
+		actual := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
-		if actual[0].String() != name {
-			return fmt.Errorf("expected %q, got %q", name, actual[0])
+		if (*actual)[0].String() != name {
+			return fmt.Errorf("expected %q, got %q", name, (*actual)[0])
 		}
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		actual := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(actual) != 2 {
+		actual := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if len(*actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
-		if actual[0].String() != branch1 || actual[1].String() != branch2 {
+		if (*actual)[0].String() != branch1 || (*actual)[1].String() != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
@@ -901,8 +1022,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
-		branches := state.fixture.DevRepo.GitTown.PerennialBranches()
-		if len(branches) > 0 {
+		branches := state.fixture.DevRepo.GitTown.LocalConfig.PerennialBranches
+		if branches != nil && len(*branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
 		return nil

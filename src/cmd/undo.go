@@ -82,10 +82,7 @@ type undoConfig struct {
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, configdomain.Lineage, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	pushHook, err := repo.Runner.GitTown.PushHook()
-	if err != nil {
-		return nil, domain.EmptyStashSnapshot(), lineage, err
-	}
+	pushHook := repo.Runner.GitTown.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -99,7 +96,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	mainBranch := repo.Runner.Backend.GitTown.MainBranch()
+	mainBranch := repo.Runner.Backend.GitTown.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
@@ -114,9 +111,9 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken(),
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken()),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
+		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

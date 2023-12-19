@@ -28,3 +28,8 @@ func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
 		return SyncFeatureStrategyMerge, fmt.Errorf(messages.ConfigSyncFeatureStrategyUnknown, text)
 	}
 }
+
+func NewSyncFeatureStrategyRef(text string) (*SyncFeatureStrategy, error) {
+	result, err := NewSyncFeatureStrategy(text)
+	return &result, err
+}
