@@ -34,12 +34,6 @@ func (self *FrontendCommands) AbortRebase() error {
 	return self.Run("git", "rebase", "--abort")
 }
 
-// AddGitAlias sets the given Git alias.
-func (self *FrontendCommands) AddGitAlias(alias configdomain.Alias) error {
-	aliasKey := configdomain.NewAliasKey(alias)
-	return self.Run("git", "config", "--global", aliasKey.String(), "town "+alias.String())
-}
-
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
 	err := self.Run("git", "checkout", name.String())
@@ -198,8 +192,9 @@ func (self *FrontendCommands) Rebase(target domain.BranchName) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (self *FrontendCommands) RemoveGitAlias(alias configdomain.Alias) error {
-	return self.Run("git", "config", "--global", "--unset", "alias."+alias.String())
+func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.AliasableCommand) error {
+	aliasKey := aliasableCommand.Key()
+	return self.Run("git", "config", "--global", "--unset", aliasKey.String())
 }
 
 // ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
@@ -220,6 +215,12 @@ func (self *FrontendCommands) ResetRemoteBranchToSHA(branch domain.RemoteBranchN
 // RevertCommit reverts the commit with the given SHA.
 func (self *FrontendCommands) RevertCommit(sha domain.SHA) error {
 	return self.Run("git", "revert", sha.String())
+}
+
+// SetGitAlias sets the given Git alias.
+func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
+	aliasKey := aliasableCommand.Key()
+	return self.Run("git", "config", "--global", aliasKey.String(), "town "+aliasableCommand.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
