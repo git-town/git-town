@@ -70,6 +70,56 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  Scenario: configured in both Git and config file
+    Given the main branch is "git-main"
+    And the perennial branches are "git-perennial-1" and "git-perennial-2"
+    And Git Town setting "push-new-branches" is "false"
+    And Git Town setting "ship-delete-remote-branch" is "false"
+    And Git Town setting "sync-upstream" is "false"
+    And Git Town setting "sync-perennial-strategy" is "merge"
+    And Git Town setting "sync-feature-strategy" is "merge"
+    And the configuration file:
+      """
+      push-new-branches = true
+      ship-delete-remote-branch = true
+      sync-upstream = true
+
+      [branches]
+      main = "config-main"
+      perennials = [ "config-perennial-1", "config-perennial-2" ]
+
+      [code-hosting]
+      platform = "github"
+      origin-hostname = "github.com"
+
+      [sync-strategy]
+      feature-branches = "merge"
+      perennial-branches = "merge"
+      """
+    When I run "git-town config"
+    Then it prints:
+      """
+      Branches:
+        main branch: git-main
+        perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
+
+      Configuration:
+        offline: no
+        run pre-push hook: yes
+        push new branches: no
+        ship deletes the tracking branch: no
+        sync-feature strategy: merge
+        sync-perennial strategy: merge
+        sync with upstream: no
+        sync before shipping: no
+
+      Hosting:
+        hosting service override: github
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
+      """
+
   Scenario: all configured, with nested branches
     Given the perennial branches "qa" and "staging"
     And the feature branches "alpha" and "beta"
