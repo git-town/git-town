@@ -55,18 +55,18 @@ func TestLocalBranchNames(t *testing.T) {
 		t.Parallel()
 		t.Run("no branches", func(t *testing.T) {
 			t.Parallel()
-			have := domain.NewLocalBranchNamesRef("")
+			have := domain.ParseLocalBranchNamesRef("")
 			must.EqOp(t, 0, len(*have))
 		})
 		t.Run("one branch", func(t *testing.T) {
 			t.Parallel()
-			have := domain.NewLocalBranchNamesRef("one")
+			have := domain.ParseLocalBranchNamesRef("one")
 			want := []string{"one"}
 			must.Eq(t, want, have.Strings())
 		})
 		t.Run("multiple branches", func(t *testing.T) {
 			t.Parallel()
-			have := domain.NewLocalBranchNamesRef("one two three")
+			have := domain.ParseLocalBranchNamesRef("one two three")
 			want := []string{"one", "two", "three"}
 			must.Eq(t, want, have.Strings())
 		})

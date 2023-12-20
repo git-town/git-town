@@ -39,7 +39,7 @@ func (self *PartialGitConfig) Add(key Key, value string) error {
 	case KeyOffline:
 		self.Offline, err = NewOfflineRef(value)
 	case KeyPerennialBranches:
-		self.PerennialBranches = domain.NewLocalBranchNamesRef(value)
+		self.PerennialBranches = domain.ParseLocalBranchNamesRef(value)
 	case KeyPushHook:
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:
