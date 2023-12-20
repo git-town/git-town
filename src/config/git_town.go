@@ -46,10 +46,6 @@ func (self *GitTown) ContainsLineage() bool {
 	return false
 }
 
-func (self *GitTown) Defaults() configdomain.Config {
-	return configdomain.DefaultConfig()
-}
-
 // GitAlias provides the currently set alias for the given Git Town command.
 func (self *GitTown) GitAlias(aliasableCommand configdomain.AliasableCommand) string {
 	return self.GlobalConfigValue(aliasableCommand.Key())
