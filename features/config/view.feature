@@ -30,29 +30,41 @@ Feature: show the configuration
   Scenario: all configured in config file, no nested branches
     Given the configuration file:
       """
+      push-new-branches = true
+      ship-delete-remote-branch = true
+      sync-upstream = true
+
       [branches]
       main = "main"
-      perennials = [ "qa", "staging" ]
+      perennials = [ "public", "release" ]
+
+      [code-hosting]
+      platform = "github"
+      origin-hostname = "github.com"
+
+      [sync-strategy]
+      feature-branches = "rebase"
+      perennial-branches = "merge"
       """
     When I run "git-town config"
     Then it prints:
       """
       Branches:
         main branch: main
-        perennial branches: qa, staging
+        perennial branches: public, release
 
       Configuration:
         offline: no
         run pre-push hook: yes
-        push new branches: no
+        push new branches: yes
         ship deletes the tracking branch: yes
-        sync-feature strategy: merge
-        sync-perennial strategy: rebase
+        sync-feature strategy: rebase
+        sync-perennial strategy: merge
         sync with upstream: yes
         sync before shipping: no
 
       Hosting:
-        hosting service override: (not set)
+        hosting service override: github
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
