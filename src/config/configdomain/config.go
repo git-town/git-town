@@ -26,31 +26,6 @@ type Config struct {
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) MergeConfigFile(file ConfigFile) error {
 	var err error
-	if file.Branches.Main != nil {
-		self.MainBranch = *file.Branches.Main
-	}
-	self.PerennialBranches = append(self.PerennialBranches, file.Branches.Perennials...)
-	if file.CodeHosting.Platform != nil {
-		self.CodeHostingPlatformName = *file.CodeHosting.Platform
-	}
-	if file.CodeHosting.OriginHostname != nil {
-		self.CodeHostingOriginHostname = *file.CodeHosting.OriginHostname
-	}
-	if file.SyncStrategy.FeatureBranches != nil {
-		self.SyncFeatureStrategy, err = NewSyncFeatureStrategy(*file.SyncStrategy.FeatureBranches)
-	}
-	if file.SyncStrategy.PerennialBranches != nil {
-		self.SyncPerennialStrategy = *file.SyncStrategy.PerennialBranches
-	}
-	if file.PushNewbranches != nil {
-		self.NewBranchPush = *file.PushNewbranches
-	}
-	if file.ShipDeleteTrackingBranch != nil {
-		self.ShipDeleteTrackingBranch = *file.ShipDeleteTrackingBranch
-	}
-	if file.SyncUpstream != nil {
-		self.SyncUpstream = *file.SyncUpstream
-	}
 	return err
 }
 

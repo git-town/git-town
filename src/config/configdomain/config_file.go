@@ -38,13 +38,35 @@ type SyncStrategy struct {
 
 func (self ConfigFileData) Validate() (PartialGitConfig, error) {
 	result := PartialGitConfig{}
+	var err error
 	if self.Branches.Main != nil {
 		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
 	}
 	if self.Branches.Perennials != nil {
 		result.PerennialBranches = domain.NewLocalBranchNamesRef(self.Branches.Perennials...)
 	}
-	return result, nil
+	if self.CodeHosting.Platform != nil {
+		result.CodeHostingPlatformName = NewCodeHostingPlatformNameRef(*self.CodeHosting.Platform)
+	}
+	if self.CodeHosting.OriginHostname != nil {
+		result.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(*self.CodeHosting.OriginHostname)
+	}
+	if self.SyncStrategy.FeatureBranches != nil {
+		result.SyncFeatureStrategy, err = NewSyncFeatureStrategyRef(*self.SyncStrategy.FeatureBranches)
+	}
+	if self.SyncStrategy.PerennialBranches != nil {
+		result.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(*self.SyncStrategy.PerennialBranches)
+	}
+	if self.PushNewbranches != nil {
+		result.NewBranchPush = NewNewBranchPushRef(*self.PushNewbranches)
+	}
+	if self.ShipDeleteTrackingBranch != nil {
+		result.ShipDeleteTrackingBranch = NewShipDeleteTrackingBranchRef(*self.ShipDeleteTrackingBranch)
+	}
+	if self.SyncUpstream != nil {
+		result.SyncUpstream = NewSyncUpstreamRef(*self.SyncUpstream)
+	}
+	return result, err
 }
 
 // ConfigFile is validated data from the configuration file, ready to be used by the application.
@@ -66,21 +88,25 @@ func EncodeConfigFile(config ConfigFile) string {
 	return buf.String()
 }
 
-func LoadConfigFile() (*ConfigFile, error) {
+func LoadConfigFile() (PartialGitConfig, error) {
 	file, err := os.Open(".git-branches.toml")
 	defer file.Close()
 	if err != nil {
-		return nil, nil
+		return EmptyPartialConfig(), nil
 	}
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	return ParseConfigFileData(string(bytes))
+	configFileData, err := ParseTOML(string(bytes))
+	if err != nil {
+		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
+	}
+	return configFileData.Validate()
 }
 
 func ParseTOML(text string) (*ConfigFileData, error) {
-	var result ConfigFile
+	var result ConfigFileData
 	_, err := toml.Decode(text, &result)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
