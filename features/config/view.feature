@@ -27,7 +27,7 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  Scenario: all configured in config file, no nested branches
+  Scenario: all configured in config file
     Given the configuration file:
       """
       push-new-branches = true
