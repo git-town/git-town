@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
@@ -20,7 +19,7 @@ import (
 type GitTown struct {
 	gitconfig.CachedAccess // access to the Git configuration settings
 	configdomain.Config    // the merged configuration data
-	ConfigFile             configfile.ConfigFile
+	ConfigFile             configdomain.ConfigFile
 	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache         configdomain.OriginURLCache
 }

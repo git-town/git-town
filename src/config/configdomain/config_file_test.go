@@ -64,26 +64,28 @@ perennial-branches = "rebase"
 		t.Parallel()
 		t.Run("fully configured", func(t *testing.T) {
 			t.Parallel()
-			github := "github"
-			githubCom := "github.com"
-			boolFalse := false
-			boolTrue := true
+			github := configdomain.CodeHostingPlatformName("github")
+			githubCom := configdomain.CodeHostingOriginHostname("github.com")
+			newBranchPush := configdomain.NewBranchPush(false)
+			shipDeleteTrackingBranch := configdomain.ShipDeleteTrackingBranch(false)
+			syncUpstream := configdomain.SyncUpstream(true)
+			mainBranch := domain.NewLocalBranchName("main")
 			give := configdomain.ConfigFile{
 				Branches: configdomain.Branches{
-					Main:       "main",
-					Perennials: []string{"public", "qa"},
+					Main:       &mainBranch,
+					Perennials: domain.NewLocalBranchNames("public", "qa"),
 				},
 				CodeHosting: &configdomain.CodeHosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
 				},
 				SyncStrategy: &configdomain.SyncStrategy{
-					FeatureBranches:   &configdomain.SyncFeatureStrategyMerge.Name,
-					PerennialBranches: &configdomain.SyncPerennialStrategyRebase.Name,
+					FeatureBranches:   &configdomain.SyncFeatureStrategyMerge,
+					PerennialBranches: &configdomain.SyncPerennialStrategyRebase,
 				},
-				PushNewbranches:          &boolFalse,
-				ShipDeleteTrackingBranch: &boolFalse,
-				SyncUpstream:             &boolTrue,
+				PushNewbranches:          &newBranchPush,
+				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
+				SyncUpstream:             &syncUpstream,
 			}
 			have := configdomain.EncodeConfigFile(give)
 			want := `
@@ -108,10 +110,11 @@ sync-upstream = true
 
 		t.Run("partially configured", func(t *testing.T) {
 			t.Parallel()
+			mainBranch := domain.NewLocalBranchName("main")
 			give := configdomain.ConfigFile{
 				Branches: configdomain.Branches{
-					Main:       "main",
-					Perennials: []string{"public", "qa"},
+					Main:       &mainBranch,
+					Perennials: domain.NewLocalBranchNames("public", "qa"),
 				},
 			}
 			have := configdomain.EncodeConfigFile(give)
