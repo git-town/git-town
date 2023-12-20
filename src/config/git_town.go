@@ -51,7 +51,7 @@ func (self *GitTown) Defaults() configdomain.Config {
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
-func (self *GitTown) GitAlias(alias configdomain.Alias) string {
+func (self *GitTown) GitAlias(alias configdomain.AliasableCommand) string {
 	return self.GlobalConfigValue(configdomain.NewAliasKey(alias))
 }
 
