@@ -51,8 +51,8 @@ func (self *GitTown) Defaults() configdomain.Config {
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
-func (self *GitTown) GitAlias(alias configdomain.AliasableCommand) string {
-	return self.GlobalConfigValue(alias.Key())
+func (self *GitTown) GitAlias(aliasableCommand configdomain.AliasableCommand) string {
+	return self.GlobalConfigValue(aliasableCommand.Key())
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
