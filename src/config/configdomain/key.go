@@ -109,18 +109,10 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	return parseAliasKey(name)
-}
-
-func parseAliasKey(key string) *Key {
-	if !strings.HasPrefix(key, "alias.") {
-		return nil
-	}
-	for _, alias := range AliasableCommands() {
-		aliasKey := NewAliasKey(alias)
-		if key == aliasKey.name {
-			return &aliasKey
-		}
+	aliasableCommand := LookupAliasCommand(name)
+	if aliasableCommand != nil {
+		result := aliasableCommand.Key()
+		return &result
 	}
 	return nil
 }

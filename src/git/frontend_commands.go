@@ -36,7 +36,7 @@ func (self *FrontendCommands) AbortRebase() error {
 
 // AddGitAlias sets the given Git alias.
 func (self *FrontendCommands) AddGitAlias(aliasableCommand configdomain.AliasableCommand) error {
-	aliasKey := configdomain.NewAliasKey(aliasableCommand)
+	aliasKey := aliasableCommand.Key()
 	return self.Run("git", "config", "--global", aliasKey.String(), "town "+aliasableCommand.String())
 }
 
@@ -199,7 +199,7 @@ func (self *FrontendCommands) Rebase(target domain.BranchName) error {
 
 // RemoveGitAlias removes the given Git alias.
 func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.AliasableCommand) error {
-	aliasKey := configdomain.NewAliasKey(aliasableCommand)
+	aliasKey := aliasableCommand.Key()
 	return self.Run("git", "config", "--global", "--unset", aliasKey.String())
 }
 
