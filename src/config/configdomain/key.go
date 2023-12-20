@@ -26,40 +26,40 @@ func (self *Key) UnmarshalJSON(b []byte) error {
 }
 
 var (
-	KeyAliasAppend                    = Key{"alias." + AliasAppend.name}             //nolint:gochecknoglobals
-	KeyAliasDiffParent                = Key{"alias." + AliasDiffParent.name}         //nolint:gochecknoglobals
-	KeyAliasHack                      = Key{"alias." + AliasHack.name}               //nolint:gochecknoglobals
-	KeyAliasKill                      = Key{"alias." + AliasKill.name}               //nolint:gochecknoglobals
-	KeyAliasPrepend                   = Key{"alias." + AliasPrepend.name}            //nolint:gochecknoglobals
-	KeyAliasPropose                   = Key{"alias." + AliasPropose.name}            //nolint:gochecknoglobals
-	KeyAliasRenameBranch              = Key{"alias." + AliasRenameBranch.name}       //nolint:gochecknoglobals
-	KeyAliasRepo                      = Key{"alias." + AliasRepo.name}               //nolint:gochecknoglobals
-	KeyAliasShip                      = Key{"alias." + AliasShip.name}               //nolint:gochecknoglobals
-	KeyAliasSync                      = Key{"alias." + AliasSync.name}               //nolint:gochecknoglobals
-	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
-	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}        //nolint:gochecknoglobals
-	KeyDeprecatedCodeHostingDriver    = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
-	KeyDeprecatedMainBranchName       = Key{"git-town.main-branch-name"}             //nolint:gochecknoglobals
-	KeyDeprecatedNewBranchPushFlag    = Key{"git-town.new-branch-push-flag"}         //nolint:gochecknoglobals
-	KeyDeprecatedPerennialBranchNames = Key{"git-town.perennial-branch-names"}       //nolint:gochecknoglobals
-	KeyDeprecatedPullBranchStrategy   = Key{"git-town.pull-branch-strategy"}         //nolint:gochecknoglobals
-	KeyDeprecatedPushVerify           = Key{"git-town.push-verify"}                  //nolint:gochecknoglobals
-	KeyDeprecatedSyncStrategy         = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
-	KeyGiteaToken                     = Key{"git-town.gitea-token"}                  //nolint:gochecknoglobals
-	KeyGithubToken                    = Key{"git-town.github-token"}                 //nolint:gochecknoglobals
-	KeyGitlabToken                    = Key{"git-town.gitlab-token"}                 //nolint:gochecknoglobals
-	KeyMainBranch                     = Key{"git-town.main-branch"}                  //nolint:gochecknoglobals
-	KeyOffline                        = Key{"git-town.offline"}                      //nolint:gochecknoglobals
-	KeyPerennialBranches              = Key{"git-town.perennial-branches"}           //nolint:gochecknoglobals
-	KeyPushHook                       = Key{"git-town.push-hook"}                    //nolint:gochecknoglobals
-	KeyPushNewBranches                = Key{"git-town.push-new-branches"}            //nolint:gochecknoglobals
-	KeyShipDeleteTrackingBranch       = Key{"git-town.ship-delete-remote-branch"}    //nolint:gochecknoglobals
-	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}             //nolint:gochecknoglobals
-	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}        //nolint:gochecknoglobals
-	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
-	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
-	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
-	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
+	KeyAliasAppend                    = Key{"alias." + AliasableCommandAppend.name}       //nolint:gochecknoglobals
+	KeyAliasDiffParent                = Key{"alias." + AliasableCommandDiffParent.name}   //nolint:gochecknoglobals
+	KeyAliasHack                      = Key{"alias." + AliasableCommandHack.name}         //nolint:gochecknoglobals
+	KeyAliasKill                      = Key{"alias." + AliasableCommandKill.name}         //nolint:gochecknoglobals
+	KeyAliasPrepend                   = Key{"alias." + AliasableCommandPrepend.name}      //nolint:gochecknoglobals
+	KeyAliasPropose                   = Key{"alias." + AliasableCommandPropose.name}      //nolint:gochecknoglobals
+	KeyAliasRenameBranch              = Key{"alias." + AliasableCommandRenameBranch.name} //nolint:gochecknoglobals
+	KeyAliasRepo                      = Key{"alias." + AliasableCommandRepo.name}         //nolint:gochecknoglobals
+	KeyAliasShip                      = Key{"alias." + AliasableCommandShip.name}         //nolint:gochecknoglobals
+	KeyAliasSync                      = Key{"alias." + AliasableCommandSync.name}         //nolint:gochecknoglobals
+	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"}      //nolint:gochecknoglobals
+	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}             //nolint:gochecknoglobals
+	KeyDeprecatedCodeHostingDriver    = Key{"git-town.code-hosting-driver"}               //nolint:gochecknoglobals
+	KeyDeprecatedMainBranchName       = Key{"git-town.main-branch-name"}                  //nolint:gochecknoglobals
+	KeyDeprecatedNewBranchPushFlag    = Key{"git-town.new-branch-push-flag"}              //nolint:gochecknoglobals
+	KeyDeprecatedPerennialBranchNames = Key{"git-town.perennial-branch-names"}            //nolint:gochecknoglobals
+	KeyDeprecatedPullBranchStrategy   = Key{"git-town.pull-branch-strategy"}              //nolint:gochecknoglobals
+	KeyDeprecatedPushVerify           = Key{"git-town.push-verify"}                       //nolint:gochecknoglobals
+	KeyDeprecatedSyncStrategy         = Key{"git-town.sync-strategy"}                     //nolint:gochecknoglobals
+	KeyGiteaToken                     = Key{"git-town.gitea-token"}                       //nolint:gochecknoglobals
+	KeyGithubToken                    = Key{"git-town.github-token"}                      //nolint:gochecknoglobals
+	KeyGitlabToken                    = Key{"git-town.gitlab-token"}                      //nolint:gochecknoglobals
+	KeyMainBranch                     = Key{"git-town.main-branch"}                       //nolint:gochecknoglobals
+	KeyOffline                        = Key{"git-town.offline"}                           //nolint:gochecknoglobals
+	KeyPerennialBranches              = Key{"git-town.perennial-branches"}                //nolint:gochecknoglobals
+	KeyPushHook                       = Key{"git-town.push-hook"}                         //nolint:gochecknoglobals
+	KeyPushNewBranches                = Key{"git-town.push-new-branches"}                 //nolint:gochecknoglobals
+	KeyShipDeleteTrackingBranch       = Key{"git-town.ship-delete-remote-branch"}         //nolint:gochecknoglobals
+	KeySyncBeforeShip                 = Key{"git-town.sync-before-ship"}                  //nolint:gochecknoglobals
+	KeySyncFeatureStrategy            = Key{"git-town.sync-feature-strategy"}             //nolint:gochecknoglobals
+	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}           //nolint:gochecknoglobals
+	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                     //nolint:gochecknoglobals
+	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                     //nolint:gochecknoglobals
+	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}                //nolint:gochecknoglobals
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
@@ -89,32 +89,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func NewAliasKey(aliasType Alias) Key {
-	switch aliasType {
-	case AliasAppend:
-		return KeyAliasAppend
-	case AliasDiffParent:
-		return KeyAliasDiffParent
-	case AliasHack:
-		return KeyAliasHack
-	case AliasKill:
-		return KeyAliasKill
-	case AliasPrepend:
-		return KeyAliasPrepend
-	case AliasPropose:
-		return KeyAliasPropose
-	case AliasRenameBranch:
-		return KeyAliasRenameBranch
-	case AliasRepo:
-		return KeyAliasRepo
-	case AliasShip:
-		return KeyAliasShip
-	case AliasSync:
-		return KeyAliasSync
-	}
-	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
-}
-
 func NewKey(name string) Key {
 	return Key{name}
 }
@@ -135,18 +109,10 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	return parseAliasKey(name)
-}
-
-func parseAliasKey(key string) *Key {
-	if !strings.HasPrefix(key, "alias.") {
-		return nil
-	}
-	for _, alias := range Aliases() {
-		aliasKey := NewAliasKey(alias)
-		if key == aliasKey.name {
-			return &aliasKey
-		}
+	aliasableCommand := LookupAliasableCommand(name)
+	if aliasableCommand != nil {
+		result := aliasableCommand.Key()
+		return &result
 	}
 	return nil
 }
