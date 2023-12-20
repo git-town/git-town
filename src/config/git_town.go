@@ -20,9 +20,9 @@ import (
 type GitTown struct {
 	gitconfig.CachedAccess // access to the Git configuration settings
 	configdomain.Config    // the merged configuration data
-	configfile.ConfigFile
-	DryRun         bool // single source of truth for whether to dry-run Git commands in this repo
-	originURLCache configdomain.OriginURLCache
+	ConfigFile             configfile.ConfigFile
+	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
+	originURLCache         configdomain.OriginURLCache
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -202,14 +202,19 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
+func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) (*GitTown, error) {
+	// configFile, err := configfile.Load()
+	// if err != nil {
+	// 	return nil, err
+	// }
 	config := configdomain.DefaultConfig()
-	config.Merge(fullCache.GlobalConfig)
-	config.Merge(fullCache.LocalConfig)
+	// config.Merge(configFile)
+	config.MergePartialConfig(fullCache.GlobalConfig)
+	config.MergePartialConfig(fullCache.LocalConfig)
 	return &GitTown{
 		Config:         config,
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
-	}
+	}, nil
 }

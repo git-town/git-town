@@ -53,7 +53,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Cwd:       currentDirectory,
 		GitConfig: fullCache,
 	}
-	gitTown := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
+	gitTown, err := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
+	if err != nil {
+		return nil, err
+	}
 	backendCommands.GitTown = gitTown
 	prodRunner := git.ProdRunner{
 		GitTown: gitTown,
