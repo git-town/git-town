@@ -41,11 +41,8 @@ func (self ConfigFileData) Validate() (PartialGitConfig, error) {
 	if self.Branches.Main != nil {
 		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
 	}
-	fmt.Println("1111111111111111111111111111")
 	if self.Branches.Perennials != nil {
-		fmt.Println("2222222222222222222222", self.Branches.Perennials)
 		result.PerennialBranches = domain.NewLocalBranchNamesRef(self.Branches.Perennials...)
-		fmt.Println("3333333333333333333333", result.PerennialBranches)
 	}
 	if self.CodeHosting != nil {
 		if self.CodeHosting.Platform != nil {
