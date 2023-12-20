@@ -4,18 +4,6 @@ Git Town prompts for all the configuration information it needs. The commands
 below set additional configuration options that might be helpful in your use
 case. We will cover the full list of options [later](configuration-commands.md).
 
-## Shorter commands
-
-Having to type `git town <command>` gets old. Git Town can install aliases for
-its commands that make them feel like native Git commands, i.e. allow you to run
-for example `git hack` instead of `git town hack`. To enable this feature:
-
-```
-git town aliases add
-```
-
-To remove these aliases, run `git town aliases remove`.
-
 ## API access to your hosting provider
 
 Git Town can ship branches that have an open proposal by merging this proposal
@@ -57,3 +45,15 @@ git config git-town.ship-delete-remote-branch false
 
 Follow the instructions given by `git-town help completions` to install the
 autocompletions for your shell.
+
+## Shorter commands
+
+Having to type `git town <command>` gets old. Git Town can install aliases for
+its commands that make them feel like native Git commands, i.e. allow you to run
+for example `git hack` instead of `git town hack`. To enable this feature:
+
+```
+git town aliases add
+```
+
+To remove these aliases, run `git town aliases remove`.
