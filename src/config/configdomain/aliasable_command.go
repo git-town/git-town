@@ -68,7 +68,7 @@ func AliasableCommands() []AliasableCommand {
 	}
 }
 
-func LookupAliasCommand(key string) *AliasableCommand {
+func LookupAliasableCommand(key string) *AliasableCommand {
 	if !strings.HasPrefix(key, "alias.") {
 		return nil
 	}

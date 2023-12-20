@@ -109,7 +109,7 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	aliasableCommand := LookupAliasCommand(name)
+	aliasableCommand := LookupAliasableCommand(name)
 	if aliasableCommand != nil {
 		result := aliasableCommand.Key()
 		return &result
