@@ -31,10 +31,11 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 `[1:]
-			have, err := configdomain.ParseConfigFile(give)
+			have, err := configdomain.ParseConfigFileData(give)
 			must.NoError(t, err)
 			github := configdomain.CodeHostingPlatformName("github")
 			githubCom := configdomain.CodeHostingOriginHostname("github.com")
+			merge := "merge"
 			newBranchPush := configdomain.NewBranchPush(true)
 			shipDeleteTrackingBranch := configdomain.ShipDeleteTrackingBranch(false)
 			syncUpstream := configdomain.SyncUpstream(true)
@@ -49,7 +50,7 @@ perennial-branches = "rebase"
 					OriginHostname: &githubCom,
 				},
 				SyncStrategy: &configdomain.SyncStrategy{
-					FeatureBranches:   &configdomain.SyncFeatureStrategyMerge,
+					FeatureBranches:   &merge,
 					PerennialBranches: &configdomain.SyncPerennialStrategyRebase,
 				},
 				PushNewbranches:          &newBranchPush,
@@ -68,6 +69,7 @@ perennial-branches = "rebase"
 			githubCom := configdomain.CodeHostingOriginHostname("github.com")
 			newBranchPush := configdomain.NewBranchPush(false)
 			shipDeleteTrackingBranch := configdomain.ShipDeleteTrackingBranch(false)
+			syncFeatureStrategy := "merge"
 			syncUpstream := configdomain.SyncUpstream(true)
 			mainBranch := domain.NewLocalBranchName("main")
 			give := configdomain.ConfigFile{
@@ -80,7 +82,7 @@ perennial-branches = "rebase"
 					OriginHostname: &githubCom,
 				},
 				SyncStrategy: &configdomain.SyncStrategy{
-					FeatureBranches:   &configdomain.SyncFeatureStrategyMerge,
+					FeatureBranches:   &syncFeatureStrategy,
 					PerennialBranches: &configdomain.SyncPerennialStrategyRebase,
 				},
 				PushNewbranches:          &newBranchPush,

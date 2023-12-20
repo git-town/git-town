@@ -204,8 +204,8 @@ func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun b
 	// }
 	config := configdomain.DefaultConfig()
 	// config.Merge(configFile)
-	config.MergePartialConfig(fullCache.GlobalConfig)
-	config.MergePartialConfig(fullCache.LocalConfig)
+	config.MergePartialGitConfig(fullCache.GlobalConfig)
+	config.MergePartialGitConfig(fullCache.LocalConfig)
 	return &GitTown{
 		Config:         config,
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),

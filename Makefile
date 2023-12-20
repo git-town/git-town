@@ -60,7 +60,7 @@ test-go: tools/rta@${RTA_VERSION}  # smoke tests for Go refactorings
 	tools/rta golangci-lint run &
 	go run tools/format_unittests/format.go test &
 	go run tools/format_self/format.go test &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --show-path alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	make --no-print-directory unit
 
 todo:  # displays all TODO items
