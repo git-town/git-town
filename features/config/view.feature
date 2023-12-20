@@ -27,13 +27,12 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  @this
   Scenario: all configured in config file, no nested branches
     Given the configuration file:
       """
       [branches]
       main = "main"
-      perennial = [ "qa", "staging" ]
+      perennials = [ "qa", "staging" ]
       """
     When I run "git-town config"
     Then it prints:
@@ -46,7 +45,7 @@ Feature: show the configuration
         offline: no
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
+        ship deletes the tracking branch: yes
         sync-feature strategy: merge
         sync-perennial strategy: rebase
         sync with upstream: yes

@@ -41,20 +41,27 @@ func (self ConfigFileData) Validate() (PartialGitConfig, error) {
 	if self.Branches.Main != nil {
 		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
 	}
+	fmt.Println("1111111111111111111111111111")
 	if self.Branches.Perennials != nil {
+		fmt.Println("2222222222222222222222", self.Branches.Perennials)
 		result.PerennialBranches = domain.NewLocalBranchNamesRef(self.Branches.Perennials...)
+		fmt.Println("3333333333333333333333", result.PerennialBranches)
 	}
-	if self.CodeHosting.Platform != nil {
-		result.CodeHostingPlatformName = NewCodeHostingPlatformNameRef(*self.CodeHosting.Platform)
+	if self.CodeHosting != nil {
+		if self.CodeHosting.Platform != nil {
+			result.CodeHostingPlatformName = NewCodeHostingPlatformNameRef(*self.CodeHosting.Platform)
+		}
+		if self.CodeHosting.OriginHostname != nil {
+			result.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(*self.CodeHosting.OriginHostname)
+		}
 	}
-	if self.CodeHosting.OriginHostname != nil {
-		result.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(*self.CodeHosting.OriginHostname)
-	}
-	if self.SyncStrategy.FeatureBranches != nil {
-		result.SyncFeatureStrategy, err = NewSyncFeatureStrategyRef(*self.SyncStrategy.FeatureBranches)
-	}
-	if self.SyncStrategy.PerennialBranches != nil {
-		result.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(*self.SyncStrategy.PerennialBranches)
+	if self.SyncStrategy != nil {
+		if self.SyncStrategy.FeatureBranches != nil {
+			result.SyncFeatureStrategy, err = NewSyncFeatureStrategyRef(*self.SyncStrategy.FeatureBranches)
+		}
+		if self.SyncStrategy.PerennialBranches != nil {
+			result.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(*self.SyncStrategy.PerennialBranches)
+		}
 	}
 	if self.PushNewbranches != nil {
 		result.NewBranchPush = NewNewBranchPushRef(*self.PushNewbranches)
