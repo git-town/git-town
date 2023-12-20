@@ -1,7 +1,6 @@
 package configdomain
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -37,7 +36,7 @@ type SyncStrategy struct {
 }
 
 func (self ConfigFileData) Validate() (PartialGitConfig, error) {
-	result := PartialGitConfig{}
+	result := PartialGitConfig{} //nolint:exhaustruct
 	var err error
 	if self.Branches.Main != nil {
 		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
@@ -79,21 +78,12 @@ type ConfigFile struct {
 	SyncUpstream             *SyncUpstream             `toml:"sync-upstream"`
 }
 
-func EncodeConfigFile(config ConfigFileData) string {
-	buf := new(bytes.Buffer)
-	err := toml.NewEncoder(buf).Encode(config)
-	if err != nil {
-		panic(fmt.Sprintf("cannot encode config: %v", err))
-	}
-	return buf.String()
-}
-
 func LoadConfigFile() (PartialGitConfig, error) {
 	file, err := os.Open(".git-branches.toml")
-	defer file.Close()
 	if err != nil {
-		return EmptyPartialConfig(), nil
+		return EmptyPartialConfig(), nil //nolint:nilerr
 	}
+	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
 		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
