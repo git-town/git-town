@@ -24,7 +24,7 @@ type Config struct {
 }
 
 // Merges the given PartialConfig into this configuration object.
-func (self *Config) MergePartialConfig(other PartialConfig) {
+func (self *Config) MergePartialConfig(other PartialGitConfig) {
 	if other.CodeHostingOriginHostname != nil {
 		self.CodeHostingOriginHostname = *other.CodeHostingOriginHostname
 	}

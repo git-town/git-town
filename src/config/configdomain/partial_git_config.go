@@ -2,8 +2,8 @@ package configdomain
 
 import "github.com/git-town/git-town/v11/src/domain"
 
-// PartialConfig contains configuration data as it is stored in a particular configuration data source (Git, config file).
-type PartialConfig struct {
+// PartialGitConfig contains configuration data as it is stored in the local or global Git configuration.
+type PartialGitConfig struct {
 	CodeHostingOriginHostname *CodeHostingOriginHostname
 	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
@@ -21,7 +21,7 @@ type PartialConfig struct {
 	SyncUpstream              *SyncUpstream
 }
 
-func (self *PartialConfig) Add(key Key, value string) error {
+func (self *PartialGitConfig) Add(key Key, value string) error {
 	var err error
 	switch key {
 	case KeyCodeHostingOriginHostname:
@@ -60,12 +60,12 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	return err
 }
 
-func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{} //nolint:exhaustruct
+func EmptyPartialConfig() PartialGitConfig {
+	return PartialGitConfig{} //nolint:exhaustruct
 }
 
 // PartialConfigDiff diffs the given PartialConfig instances.
-func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
+func PartialConfigDiff(before, after PartialGitConfig) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []Key{},
 		Removed: map[Key]string{},

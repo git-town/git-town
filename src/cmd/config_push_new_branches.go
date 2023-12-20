@@ -60,7 +60,7 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	if globalFlag {
 		setting = run.GitTown.GlobalConfig.NewBranchPush
 		if setting == nil {
-			defaults := run.GitTown.Defaults()
+			defaults := configdomain.DefaultConfig()
 			setting = &defaults.NewBranchPush
 		}
 	} else {
