@@ -79,7 +79,7 @@ type ConfigFile struct {
 	SyncUpstream             *SyncUpstream             `toml:"sync-upstream"`
 }
 
-func EncodeConfigFile(config ConfigFile) string {
+func EncodeConfigFile(config ConfigFileData) string {
 	buf := new(bytes.Buffer)
 	err := toml.NewEncoder(buf).Encode(config)
 	if err != nil {

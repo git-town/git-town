@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/shoenig/test/must"
 )
 
@@ -31,19 +30,20 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 `[1:]
-			have, err := configdomain.ParseConfigFileData(give)
+			have, err := configdomain.ParseTOML(give)
 			must.NoError(t, err)
-			github := configdomain.CodeHostingPlatformName("github")
-			githubCom := configdomain.CodeHostingOriginHostname("github.com")
+			github := "github"
+			githubCom := "github.com"
+			main := "main"
 			merge := "merge"
-			newBranchPush := configdomain.NewBranchPush(true)
-			shipDeleteTrackingBranch := configdomain.ShipDeleteTrackingBranch(false)
-			syncUpstream := configdomain.SyncUpstream(true)
-			mainBranch := domain.NewLocalBranchName("main")
-			want := configdomain.ConfigFile{
+			newBranchPush := true
+			rebase := "rebase"
+			shipDeleteTrackingBranch := false
+			syncUpstream := true
+			want := configdomain.ConfigFileData{
 				Branches: configdomain.Branches{
-					Main:       &mainBranch,
-					Perennials: domain.NewLocalBranchNames("public", "release"),
+					Main:       &main,
+					Perennials: []string{"public", "release"},
 				},
 				CodeHosting: &configdomain.CodeHosting{
 					Platform:       &github,
@@ -51,7 +51,7 @@ perennial-branches = "rebase"
 				},
 				SyncStrategy: &configdomain.SyncStrategy{
 					FeatureBranches:   &merge,
-					PerennialBranches: &configdomain.SyncPerennialStrategyRebase,
+					PerennialBranches: &rebase,
 				},
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
@@ -65,25 +65,26 @@ perennial-branches = "rebase"
 		t.Parallel()
 		t.Run("fully configured", func(t *testing.T) {
 			t.Parallel()
-			github := configdomain.CodeHostingPlatformName("github")
-			githubCom := configdomain.CodeHostingOriginHostname("github.com")
-			newBranchPush := configdomain.NewBranchPush(false)
-			shipDeleteTrackingBranch := configdomain.ShipDeleteTrackingBranch(false)
-			syncFeatureStrategy := "merge"
-			syncUpstream := configdomain.SyncUpstream(true)
-			mainBranch := domain.NewLocalBranchName("main")
-			give := configdomain.ConfigFile{
+			github := "github"
+			githubCom := "github.com"
+			mainBranch := "main"
+			merge := "merge"
+			newBranchPush := false
+			rebase := "rebase"
+			shipDeleteTrackingBranch := false
+			syncUpstream := true
+			give := configdomain.ConfigFileData{
 				Branches: configdomain.Branches{
 					Main:       &mainBranch,
-					Perennials: domain.NewLocalBranchNames("public", "qa"),
+					Perennials: []string{"public", "qa"},
 				},
 				CodeHosting: &configdomain.CodeHosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
 				},
 				SyncStrategy: &configdomain.SyncStrategy{
-					FeatureBranches:   &syncFeatureStrategy,
-					PerennialBranches: &configdomain.SyncPerennialStrategyRebase,
+					FeatureBranches:   &merge,
+					PerennialBranches: &rebase,
 				},
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
@@ -112,11 +113,11 @@ sync-upstream = true
 
 		t.Run("partially configured", func(t *testing.T) {
 			t.Parallel()
-			mainBranch := domain.NewLocalBranchName("main")
-			give := configdomain.ConfigFile{
+			mainBranch := "main"
+			give := configdomain.ConfigFileData{
 				Branches: configdomain.Branches{
 					Main:       &mainBranch,
-					Perennials: domain.NewLocalBranchNames("public", "qa"),
+					Perennials: []string{"public", "qa"},
 				},
 			}
 			have := configdomain.EncodeConfigFile(give)
