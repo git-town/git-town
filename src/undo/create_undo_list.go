@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
@@ -31,7 +32,7 @@ type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  domain.BranchesSnapshot
 	InitialConfigSnapshot    ConfigSnapshot
-	InitialStashSnapshot     domain.StashSnapshot
+	InitialStashSnapshot     undodomain.StashSnapshot
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA
 }
@@ -65,7 +66,7 @@ func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit 
 	return configDiff.UndoProgram(), nil
 }
 
-func determineUndoStashProgram(initialStashSnapshot domain.StashSnapshot, backend *git.BackendCommands) (program.Program, error) {
+func determineUndoStashProgram(initialStashSnapshot undodomain.StashSnapshot, backend *git.BackendCommands) (program.Program, error) {
 	finalStashSnapshot, err := backend.StashSnapshot()
 	if err != nil {
 		return program.Program{}, err

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -100,7 +101,7 @@ type prependConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := configdomain.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook

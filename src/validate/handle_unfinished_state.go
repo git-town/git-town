@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/statefile"
@@ -56,7 +57,7 @@ type UnfinishedStateArgs struct {
 	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
-	InitialStashSnapshot    domain.StashSnapshot
+	InitialStashSnapshot    undodomain.StashSnapshot
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner

@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -90,7 +91,7 @@ type killConfig struct {
 	previousBranch gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

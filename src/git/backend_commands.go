@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
 type BackendRunner interface {
@@ -527,9 +528,9 @@ func (self *BackendCommands) ShouldPushBranch(branch gitdomain.LocalBranchName, 
 }
 
 // StashSnapshot provides the number of stashes in this repository.
-func (self *BackendCommands) StashSnapshot() (domain.StashSnapshot, error) {
+func (self *BackendCommands) StashSnapshot() (undodomain.StashSnapshot, error) {
 	output, err := self.QueryTrim("git", "stash", "list")
-	return domain.StashSnapshot(len(stringslice.Lines(output))), err
+	return undodomain.StashSnapshot(len(stringslice.Lines(output))), err
 }
 
 // Version indicates whether the needed Git version is installed.

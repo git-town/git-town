@@ -4,11 +4,12 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	var branchesSnapshot domain.BranchesSnapshot
 	var err error
 	stashSnapshot, err := args.Repo.Runner.Backend.StashSnapshot()

@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -81,7 +82,7 @@ type undoConfig struct {
 	pushHook                configdomain.PushHook
 }
 
-func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, domain.StashSnapshot, configdomain.Lineage, error) {
+func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, undodomain.StashSnapshot, configdomain.Lineage, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{

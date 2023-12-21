@@ -1,7 +1,7 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -12,7 +12,7 @@ type StashDiff struct {
 	EntriesAdded int
 }
 
-func NewStashDiff(before, after domain.StashSnapshot) StashDiff {
+func NewStashDiff(before, after undodomain.StashSnapshot) StashDiff {
 	return StashDiff{
 		EntriesAdded: int(after) - int(before),
 	}

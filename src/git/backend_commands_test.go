@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/subshell"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	testgit "github.com/git-town/git-town/v11/test/git"
 	"github.com/git-town/git-town/v11/test/testruntime"
 	"github.com/shoenig/test/must"
@@ -797,7 +798,7 @@ func TestBackendCommands(t *testing.T) {
 			runtime.CreateFile("file2", "content")
 			runtime.StashOpenFiles()
 			have, err := runtime.StashSnapshot()
-			want := domain.StashSnapshot(2)
+			want := undodomain.StashSnapshot(2)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})
@@ -805,7 +806,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			have, err := runtime.StashSnapshot()
-			want := domain.StashSnapshot(0)
+			want := undodomain.StashSnapshot(0)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})
