@@ -10,6 +10,8 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
+const ConfigFileName = ".git-branches.toml"
+
 // ConfigFileData is the unvalidated data as read by the TOML parser.
 type ConfigFileData struct {
 	Branches                 Branches      `toml:"branches"`
@@ -73,7 +75,7 @@ func (self ConfigFileData) Validate() (PartialConfig, error) {
 }
 
 func LoadConfigFile() (PartialConfig, error) {
-	file, err := os.Open(".git-branches.toml")
+	file, err := os.Open(ConfigFileName)
 	if err != nil {
 		return EmptyPartialConfig(), nil //nolint:nilerr
 	}

@@ -754,7 +754,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(
-			".git-branches.toml",
+			configdomain.ConfigFileName,
 			content.Content,
 		)
 		return nil
