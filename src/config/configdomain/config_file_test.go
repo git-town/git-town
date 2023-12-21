@@ -11,7 +11,7 @@ func TestConfigfile(t *testing.T) {
 	t.Parallel()
 	t.Run("parse", func(t *testing.T) {
 		t.Parallel()
-		t.Run("valid content", func(t *testing.T) {
+		t.Run("complete content", func(t *testing.T) {
 			t.Parallel()
 			give := `
 push-new-branches = true
@@ -56,6 +56,29 @@ perennial-branches = "rebase"
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
 				SyncUpstream:             &syncUpstream,
+			}
+			must.Eq(t, want, *have)
+		})
+
+		t.Run("incomplete content", func(t *testing.T) {
+			t.Parallel()
+			give := `
+[branches]
+main = "main"
+`[1:]
+			have, err := configdomain.ParseTOML(give)
+			must.NoError(t, err)
+			main := "main"
+			want := configdomain.ConfigFileData{
+				Branches: configdomain.Branches{
+					Main:       &main,
+					Perennials: nil,
+				},
+				CodeHosting:              nil,
+				SyncStrategy:             nil,
+				PushNewbranches:          nil,
+				ShipDeleteTrackingBranch: nil,
+				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)
 		})
