@@ -1,4 +1,4 @@
-package undo
+package undodomain
 
 import "github.com/git-town/git-town/v11/src/config/gitconfig"
 

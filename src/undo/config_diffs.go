@@ -3,6 +3,7 @@ package undo
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -13,7 +14,7 @@ type ConfigDiffs struct {
 	Local  configdomain.ConfigDiff
 }
 
-func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
+func NewConfigDiffs(before, after undodomain.ConfigSnapshot) ConfigDiffs {
 	globalCacheDiff := gitconfig.SingleCacheDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache)
 	localCacheDiff := gitconfig.SingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache)
 	globalConfigDiff := configdomain.PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)

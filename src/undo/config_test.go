@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 	"github.com/shoenig/test/must"
@@ -18,7 +19,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
@@ -28,7 +29,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
@@ -62,7 +63,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the global config", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
@@ -71,7 +72,7 @@ func TestConfigUndo(t *testing.T) {
 			},
 		}
 		perennialsAfter := gitdomain.NewLocalBranchNames("one", "two")
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{},
 				GlobalConfig: configdomain.PartialConfig{ //nolint:exhaustruct
@@ -104,7 +105,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "0",
@@ -115,7 +116,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
@@ -153,7 +154,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "0",
@@ -163,7 +164,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.EmptyPartialConfig(),
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline: "1",
@@ -204,7 +205,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -214,7 +215,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -248,7 +249,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -259,7 +260,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -297,7 +298,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -307,7 +308,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache:  gitconfig.SingleCache{},
 				GlobalConfig: configdomain.EmptyPartialConfig(),
@@ -348,7 +349,7 @@ func TestConfigUndo(t *testing.T) {
 
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
-		before := undo.ConfigSnapshot{
+		before := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:  "0",
@@ -362,7 +363,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		after := undo.ConfigSnapshot{
+		after := undodomain.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{
 					configdomain.KeyOffline:               "1",

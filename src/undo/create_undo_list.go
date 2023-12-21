@@ -31,7 +31,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  domain.BranchesSnapshot
-	InitialConfigSnapshot    ConfigSnapshot
+	InitialConfigSnapshot    undodomain.ConfigSnapshot
 	InitialStashSnapshot     undodomain.StashSnapshot
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA
@@ -54,12 +54,12 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 	}), nil
 }
 
-func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {
+func determineUndoConfigProgram(initialConfigSnapshot undodomain.ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {
 	fullCache, err := gitconfig.LoadFullCache(configGit)
 	if err != nil {
 		return program.Program{}, err
 	}
-	finalConfigSnapshot := ConfigSnapshot{
+	finalConfigSnapshot := undodomain.ConfigSnapshot{
 		GitConfig: fullCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
