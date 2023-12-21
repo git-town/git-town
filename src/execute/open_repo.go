@@ -31,11 +31,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}
-	majorVersion, minorVersion, err := backendCommands.Version()
+	gitVersionMajor, gitVersionMinor, err := backendCommands.Version()
 	if err != nil {
 		return nil, err
 	}
-	err = validate.HasGitVersion(majorVersion, minorVersion)
+	err = validate.HasAcceptableGitVersion(gitVersionMajor, gitVersionMinor)
 	if err != nil {
 		return nil, err
 	}
