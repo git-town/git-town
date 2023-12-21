@@ -6,6 +6,7 @@ import (
 
 // Config is the merged configuration to be used by Git Town commands.
 type Config struct {
+	Aliases                   map[Key]string
 	CodeHostingOriginHostname CodeHostingOriginHostname
 	CodeHostingPlatformName   CodeHostingPlatformName
 	GiteaToken                GiteaToken
@@ -25,6 +26,9 @@ type Config struct {
 
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
+	for key, value := range other.Aliases {
+		self.Aliases[key] = value
+	}
 	if other.CodeHostingOriginHostname != nil {
 		self.CodeHostingOriginHostname = *other.CodeHostingOriginHostname
 	}
@@ -75,6 +79,7 @@ func (self *Config) Merge(other PartialConfig) {
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() Config {
 	return Config{
+		Aliases:                   map[Key]string{},
 		CodeHostingOriginHostname: "",
 		CodeHostingPlatformName:   "",
 		GiteaToken:                "",

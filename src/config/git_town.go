@@ -46,11 +46,6 @@ func (self *GitTown) ContainsLineage() bool {
 	return false
 }
 
-// GitAlias provides the currently set alias for the given Git Town command.
-func (self *GitTown) GitAlias(aliasableCommand configdomain.AliasableCommand) string {
-	return self.GlobalConfigValue(aliasableCommand.Key())
-}
-
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *GitTown) HostingService() (configdomain.Hosting, error) {

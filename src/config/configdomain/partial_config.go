@@ -1,9 +1,14 @@
 package configdomain
 
-import "github.com/git-town/git-town/v11/src/domain"
+import (
+	"strings"
+
+	"github.com/git-town/git-town/v11/src/domain"
+)
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
+	Aliases                   map[Key]string
 	CodeHostingOriginHostname *CodeHostingOriginHostname
 	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
@@ -22,6 +27,10 @@ type PartialConfig struct {
 }
 
 func (self *PartialConfig) Add(key Key, value string) error {
+	if strings.HasPrefix(key.name, "alias.") {
+		self.Aliases[key] = value
+		return nil
+	}
 	var err error
 	switch key {
 	case KeyCodeHostingOriginHostname:
@@ -61,7 +70,9 @@ func (self *PartialConfig) Add(key Key, value string) error {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{} //nolint:exhaustruct
+	return PartialConfig{ //nolint:exhaustruct
+		Aliases: map[Key]string{},
+	}
 }
 
 // PartialConfigDiff diffs the given PartialConfig instances.
