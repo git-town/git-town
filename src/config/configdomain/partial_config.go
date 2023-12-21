@@ -70,9 +70,9 @@ func (self *PartialConfig) Add(key Key, value string) error {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{
+	return PartialConfig{ //nolint:exhaustruct
 		Aliases: map[Key]string{},
-	} //nolint:exhaustruct
+	}
 }
 
 // PartialConfigDiff diffs the given PartialConfig instances.
