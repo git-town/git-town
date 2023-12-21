@@ -27,10 +27,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) GlobalConfigValue(key configdomain.Key) string {
-	return self.GlobalCache[key]
-}
-
 func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
 	return self.LocalCache.KeysMatching(pattern)
 }
@@ -42,7 +38,7 @@ func (self CachedAccess) LocalOrGlobalConfigValue(key configdomain.Key) string {
 	if local != "" {
 		return local
 	}
-	return self.GlobalConfigValue(key)
+	return self.GlobalCache[key]
 }
 
 // Reload refreshes the cached configuration information.
