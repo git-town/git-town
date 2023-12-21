@@ -4,18 +4,14 @@ import "github.com/git-town/git-town/v11/src/config/configdomain"
 
 // FullCache caches all Git-based configuration types (global and local).
 type FullCache struct {
-	GlobalCache  SingleCache
-	GlobalConfig configdomain.PartialConfig
-	LocalCache   SingleCache
-	LocalConfig  configdomain.PartialConfig
+	GlobalCache SingleCache
+	LocalCache  SingleCache
 }
 
 func EmptyFullCache() FullCache {
 	return FullCache{
-		GlobalCache:  map[configdomain.Key]string{},
-		GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
-		LocalCache:   map[configdomain.Key]string{},
-		LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
+		GlobalCache: map[configdomain.Key]string{},
+		LocalCache:  map[configdomain.Key]string{},
 	}
 }
 
@@ -26,18 +22,14 @@ func LoadFullCache(access *Access) (FullCache, error) {
 	}
 	localCache, localConfig, err := access.LoadCache(false)
 	return FullCache{
-		GlobalCache:  globalCache,
-		GlobalConfig: globalConfig,
-		LocalCache:   localCache,
-		LocalConfig:  localConfig,
+		GlobalCache: globalCache,
+		LocalCache:  localCache,
 	}, err
 }
 
 func (self FullCache) Clone() FullCache {
 	return FullCache{
-		GlobalCache:  self.GlobalCache.Clone(),
-		GlobalConfig: self.GlobalConfig,
-		LocalCache:   self.LocalCache.Clone(),
-		LocalConfig:  self.LocalConfig,
+		GlobalCache: self.GlobalCache.Clone(),
+		LocalCache:  self.LocalCache.Clone(),
 	}
 }
