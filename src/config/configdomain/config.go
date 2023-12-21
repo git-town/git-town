@@ -12,6 +12,7 @@ type Config struct {
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
 	GitLabToken               GitLabToken
+	Lineage                   Lineage
 	MainBranch                domain.LocalBranchName
 	NewBranchPush             NewBranchPush
 	Offline                   Offline
@@ -43,6 +44,9 @@ func (self *Config) Merge(other PartialConfig) {
 	}
 	if other.GitLabToken != nil {
 		self.GitLabToken = *other.GitLabToken
+	}
+	for branch, parent := range other.Lineage {
+		self.Lineage[branch] = parent
 	}
 	if other.MainBranch != nil {
 		self.MainBranch = *other.MainBranch
@@ -85,6 +89,7 @@ func DefaultConfig() Config {
 		GiteaToken:                "",
 		GitLabToken:               "",
 		GitHubToken:               "",
+		Lineage:                   Lineage{},
 		MainBranch:                domain.EmptyLocalBranchName(),
 		NewBranchPush:             false,
 		Offline:                   false,
