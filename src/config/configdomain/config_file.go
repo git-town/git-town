@@ -84,7 +84,7 @@ func LoadConfigFile() (PartialConfig, error) {
 	}
 	configFileData, err := ParseTOML(string(bytes))
 	if err != nil {
-		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
+		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return configFileData.Validate()
 }
@@ -93,7 +93,7 @@ func ParseTOML(text string) (*ConfigFileData, error) {
 	var result ConfigFileData
 	_, err := toml.Decode(text, &result)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ConfigFileWrongInput, ".git-branches.yml", err)
+		return nil, fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return &result, err
 }

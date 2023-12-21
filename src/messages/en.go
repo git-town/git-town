@@ -23,7 +23,7 @@ const (
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
-	ConfigFileWrongInput               = "the configuration file %q does not contain TOML-formatted content: %w"
+	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigSyncFeatureStrategyUnknown   = "unknown sync-feature strategy: %q"
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
