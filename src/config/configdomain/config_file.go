@@ -72,16 +72,6 @@ func (self ConfigFileData) Validate() (PartialGitConfig, error) {
 	return result, err
 }
 
-// ConfigFile is validated data from the configuration file, ready to be used by the application.
-type ConfigFile struct {
-	Branches                 Branches                  `toml:"branches"`
-	CodeHosting              *CodeHosting              `toml:"code-hosting"`
-	SyncStrategy             *SyncStrategy             `toml:"sync-strategy"`
-	PushNewbranches          *NewBranchPush            `toml:"push-new-branches"`
-	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch `toml:"ship-delete-remote-branch"`
-	SyncUpstream             *SyncUpstream             `toml:"sync-upstream"`
-}
-
 func LoadConfigFile() (PartialGitConfig, error) {
 	file, err := os.Open(".git-branches.toml")
 	if err != nil {
