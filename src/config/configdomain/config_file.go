@@ -35,8 +35,8 @@ type SyncStrategy struct {
 	PerennialBranches *string `toml:"perennial-branches"`
 }
 
-func (self ConfigFileData) Validate() (PartialGitConfig, error) {
-	result := PartialGitConfig{} //nolint:exhaustruct
+func (self ConfigFileData) Validate() (PartialConfig, error) {
+	result := PartialConfig{} //nolint:exhaustruct
 	var err error
 	if self.Branches.Main != nil {
 		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
@@ -72,7 +72,7 @@ func (self ConfigFileData) Validate() (PartialGitConfig, error) {
 	return result, err
 }
 
-func LoadConfigFile() (PartialGitConfig, error) {
+func LoadConfigFile() (PartialConfig, error) {
 	file, err := os.Open(".git-branches.toml")
 	if err != nil {
 		return EmptyPartialConfig(), nil //nolint:nilerr
