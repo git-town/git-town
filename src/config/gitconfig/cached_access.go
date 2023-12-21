@@ -27,10 +27,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-// func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
-// 	return self.LocalCache.KeysMatching(pattern)
-// }
-
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
 func (self CachedAccess) LocalOrGlobalConfigValue(key configdomain.Key) string {
