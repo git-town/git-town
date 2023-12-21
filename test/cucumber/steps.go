@@ -647,7 +647,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
-		if state.fixture.DevRepo.GitTown.ContainsLineage() {
+		if len(state.fixture.DevRepo.GitTown.Lineage) > 0 {
 			branchInfo := state.fixture.DevRepo.GitTown.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", branchInfo)
 		}

@@ -1,6 +1,7 @@
 package configdomain
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/domain"
@@ -27,14 +28,18 @@ type PartialConfig struct {
 	SyncUpstream              *SyncUpstream
 }
 
-func (self *PartialConfig) Add(key Key, value string) error {
+func (self *PartialConfig) Add(key Key, value string, deleteEntry func(Key) error) error {
 	if strings.HasPrefix(key.name, "alias.") {
 		self.Aliases[key] = value
 		return nil
 	}
 	if strings.HasPrefix(key.name, "git-town-branch.") {
-		if value != "" {
-			child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		if value == "" {
+			_ = deleteEntry(key)
+			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
+			fmt.Println("I have deleted this configuration entry.")
+		} else {
 			self.Lineage[child] = domain.NewLocalBranchName(value)
 		}
 		return nil

@@ -1,6 +1,8 @@
 package gitconfig
 
-import "github.com/git-town/git-town/v11/src/config/configdomain"
+import (
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+)
 
 // FullCache caches all Git-based configuration types (global and local).
 type FullCache struct {
@@ -20,11 +22,11 @@ func EmptyFullCache() FullCache {
 }
 
 func LoadFullCache(access *Access) (FullCache, error) {
-	globalCache, globalConfig, err := access.LoadCache(true)
+	globalCache, globalConfig, err := access.LoadCache(true, access.RemoveGlobalConfigValue)
 	if err != nil {
 		return EmptyFullCache(), err
 	}
-	localCache, localConfig, err := access.LoadCache(false)
+	localCache, localConfig, err := access.LoadCache(false, access.RemoveLocalConfigValue)
 	return FullCache{
 		GlobalCache:  globalCache,
 		GlobalConfig: globalConfig,

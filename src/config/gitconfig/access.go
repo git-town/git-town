@@ -18,7 +18,7 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig, error) {
+func (self *Access) LoadCache(global bool, deleteEntry func(configdomain.Key) error) (SingleCache, configdomain.PartialConfig, error) {
 	cache := SingleCache{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
@@ -51,7 +51,7 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 		}
 		// TODO: delete this line, it should not be necessary since we already verify that it's a known key in configdomain.ParseKey.
 		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "git-town-branch.") || strings.HasPrefix(configKey.String(), "alias.") {
-			err := config.Add(*configKey, value)
+			err := config.Add(*configKey, value, deleteEntry)
 			if err != nil {
 				return cache, config, err
 			}
