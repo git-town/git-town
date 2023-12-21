@@ -73,7 +73,7 @@ func (self BranchChanges) String() string {
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
 	result := program.Program{}
-	omniChangedPerennials, omniChangedFeatures := self.OmniChanged.Categorize(args.BranchTypes)
+	omniChangedPerennials, omniChangedFeatures := CategorizeLocalBranchChange(self.OmniChanged, args.BranchTypes)
 
 	// revert omni-changed perennial branches
 	for _, branch := range omniChangedPerennials.BranchNames() {
@@ -100,7 +100,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		result.Add(&opcode.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
 	}
 
-	inconsistentlyChangedPerennials, inconsistentChangedFeatures := self.InconsistentlyChanged.Categorize(args.BranchTypes)
+	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.BranchTypes)
 
 	// reset inconsintently changed perennial branches
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
@@ -138,7 +138,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	}
 
 	// re-create remotely removed feature branches
-	_, removedFeatureTrackingBranches := self.RemoteRemoved.Categorize(args.BranchTypes)
+	_, removedFeatureTrackingBranches := CategorizeRemoteBranchesSHAs(self.RemoteRemoved, args.BranchTypes)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
 		result.Add(&opcode.CreateRemoteBranch{
@@ -179,7 +179,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// and we would need the local branch to revert commits on them, but we can't change the local branch.
 
 	// reset remotely changed feature branches
-	_, remoteFeatureChanges := self.RemoteChanged.Categorize(args.BranchTypes)
+	_, remoteFeatureChanges := CategorizeRemoteBranchChange(self.RemoteChanged, args.BranchTypes)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
 		result.Add(&opcode.ResetRemoteBranchToSHA{

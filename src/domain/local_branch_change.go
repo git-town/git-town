@@ -17,16 +17,3 @@ func (self LocalBranchChange) BranchNames() gitdomain.LocalBranchNames {
 	result.Sort()
 	return result
 }
-
-func (self LocalBranchChange) Categorize(branchTypes BranchTypes) (changedPerennials, changedFeatures LocalBranchChange) {
-	changedPerennials = LocalBranchChange{}
-	changedFeatures = LocalBranchChange{}
-	for branch, change := range self {
-		if branchTypes.IsFeatureBranch(branch) {
-			changedFeatures[branch] = change
-		} else {
-			changedPerennials[branch] = change
-		}
-	}
-	return
-}

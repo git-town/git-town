@@ -12,16 +12,3 @@ func (self RemoteBranchChange) BranchNames() gitdomain.RemoteBranchNames {
 	result.Sort()
 	return result
 }
-
-func (self RemoteBranchChange) Categorize(branchTypes BranchTypes) (perennialChanges, featureChanges RemoteBranchChange) {
-	perennialChanges = RemoteBranchChange{}
-	featureChanges = RemoteBranchChange{}
-	for branch, change := range self {
-		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
-			featureChanges[branch] = change
-		} else {
-			perennialChanges[branch] = change
-		}
-	}
-	return
-}

@@ -31,17 +31,6 @@ func ParseLocalBranchNamesRef(names string) *LocalBranchNames {
 	return &result
 }
 
-func (self LocalBranchNames) Categorize(branchTypes BranchTypes) (perennials, features LocalBranchNames) {
-	for _, branch := range self {
-		if branchTypes.IsFeatureBranch(branch) {
-			features = append(features, branch)
-		} else {
-			perennials = append(perennials, branch)
-		}
-	}
-	return
-}
-
 // Hoist moves the given needle to the front of the list.
 func (self LocalBranchNames) Hoist(needle LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self))
