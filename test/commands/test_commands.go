@@ -255,6 +255,8 @@ func (self *TestCommands) HasGitTownConfigNow() bool {
 		return false
 	}
 	if output != "" {
+		fmt.Println("UNEXPECTED LOCAL CONFIGURATION")
+		fmt.Println(output)
 		return true
 	}
 	output, err = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
@@ -262,6 +264,8 @@ func (self *TestCommands) HasGitTownConfigNow() bool {
 		return false
 	}
 	if output != "" {
+		fmt.Println("UNEXPECTED GLOBAL CONFIGURATION")
+		fmt.Println(output)
 		return true
 	}
 	return false
