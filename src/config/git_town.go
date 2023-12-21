@@ -61,7 +61,7 @@ func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 // Lineage provides the configured ancestry information for this Git repo.
 func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
 	lineage := configdomain.Lineage{}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+	for _, key := range self.LocalCache.KeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
 		parentName := self.LocalCache[key]
 		if parentName == "" {

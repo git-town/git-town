@@ -27,9 +27,9 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
-	return self.LocalCache.KeysMatching(pattern)
-}
+// func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
+// 	return self.LocalCache.KeysMatching(pattern)
+// }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
@@ -71,7 +71,7 @@ func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 		}
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+	for _, key := range self.LocalCache.KeysMatching(`^git-town-branch\..*\.parent$`) {
 		err = self.Run("git", "config", "--unset", key.String())
 		if err != nil {
 			return fmt.Errorf(messages.ConfigRemoveError, err)
