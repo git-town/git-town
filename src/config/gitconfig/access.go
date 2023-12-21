@@ -49,7 +49,8 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") || strings.HasPrefix(configKey.String(), "git-town-branch.") {
+		// TODO: delete this line, it should not be necessary since we already verify that it's a known key in configdomain.ParseKey.
+		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "git-town-branch.") || strings.HasPrefix(configKey.String(), "alias.") {
 			err := config.Add(*configKey, value)
 			if err != nil {
 				return cache, config, err

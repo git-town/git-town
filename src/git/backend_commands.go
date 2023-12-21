@@ -468,7 +468,7 @@ func (self *BackendCommands) RemotesUncached() (domain.Remotes, error) {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
-	for child, parent := range self.GitTown.Lineage(self.GitTown.RemoveLocalConfigValue) {
+	for child, parent := range self.GitTown.Lineage {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {

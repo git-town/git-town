@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -58,24 +57,6 @@ func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
 }
 
-// Lineage provides the configured ancestry information for this Git repo.
-func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
-	lineage := configdomain.Lineage{}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
-		parentName := self.LocalConfigValue(key)
-		if parentName == "" {
-			_ = deleteEntry(key)
-			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
-			fmt.Println("I have deleted this configuration entry.")
-		} else {
-			parent := domain.NewLocalBranchName(parentName)
-			lineage[child] = parent
-		}
-	}
-	return lineage
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -96,6 +77,11 @@ func (self *GitTown) OriginURLString() string {
 	}
 	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
 	return strings.TrimSpace(output)
+}
+
+func (self *GitTown) Reload() {
+	self.CachedAccess.Reload()
+	self.Config = mergeAll(self.Config)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -196,14 +182,18 @@ func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun b
 	if err != nil {
 		return nil, err
 	}
+	return &GitTown{
+		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
+		Config:         mergeAll(configFile, fullCache),
+		DryRun:         dryrun,
+		originURLCache: configdomain.OriginURLCache{},
+	}, nil
+}
+
+func mergeAll(configFile configdomain.PartialConfig, fullCache gitconfig.FullCache) Config {
 	config := configdomain.DefaultConfig()
 	config.Merge(configFile)
 	config.Merge(fullCache.GlobalConfig)
 	config.Merge(fullCache.LocalConfig)
-	return &GitTown{
-		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
-		Config:         config,
-		DryRun:         dryrun,
-		originURLCache: configdomain.OriginURLCache{},
-	}, nil
+	return config
 }

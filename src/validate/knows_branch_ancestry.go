@@ -16,7 +16,7 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 	}
 	updated := false
 	for {
-		lineage := args.Backend.GitTown.Lineage(args.Backend.GitTown.RemoveLocalConfigValue) // need to load a fresh lineage here because ancestry data was changed
+		lineage := args.Backend.GitTown.Lineage // need to load a fresh lineage here because ancestry data was changed
 		parent, hasParent := lineage[currentBranch]
 		var err error
 		if !hasParent { //nolint:nestif

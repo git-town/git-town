@@ -20,10 +20,11 @@ func TestGitTown(t *testing.T) {
 		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
 		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
 		repo.GitTown.Reload()
-		have := repo.GitTown.Lineage(repo.GitTown.RemoveLocalConfigValue)
-		want := configdomain.Lineage{}
-		want[domain.NewLocalBranchName("feature1")] = domain.NewLocalBranchName("main")
-		want[domain.NewLocalBranchName("feature2")] = domain.NewLocalBranchName("main")
+		have := repo.GitTown.Lineage
+		want := configdomain.Lineage{
+			domain.NewLocalBranchName("feature1"): domain.NewLocalBranchName("main"),
+			domain.NewLocalBranchName("feature2"): domain.NewLocalBranchName("main"),
+		}
 		must.Eq(t, want, have)
 	})
 
