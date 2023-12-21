@@ -1,9 +1,9 @@
-package domain_test
+package gitdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,7 +17,7 @@ func TestRepoRootDir(t *testing.T) {
 			"":        true,
 		}
 		for give, want := range tests {
-			rootDir := domain.NewRepoRootDir(give)
+			rootDir := gitdomain.NewRepoRootDir(give)
 			have := rootDir.IsEmpty()
 			must.EqOp(t, want, have)
 		}

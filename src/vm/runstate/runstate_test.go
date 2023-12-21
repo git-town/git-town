@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -20,27 +20,27 @@ func TestRunState(t *testing.T) {
 			Command: "sync",
 			AbortProgram: program.Program{
 				&opcode.ResetCurrentBranchToSHA{
-					MustHaveSHA: domain.NewSHA("222222"),
-					SetToSHA:    domain.NewSHA("111111"),
+					MustHaveSHA: gitdomain.NewSHA("222222"),
+					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
 			RunProgram: program.Program{
 				&opcode.ResetCurrentBranchToSHA{
-					MustHaveSHA: domain.NewSHA("222222"),
-					SetToSHA:    domain.NewSHA("111111"),
+					MustHaveSHA: gitdomain.NewSHA("222222"),
+					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
 			UndoProgram: program.Program{
 				&opcode.ResetCurrentBranchToSHA{
-					MustHaveSHA: domain.NewSHA("222222"),
-					SetToSHA:    domain.NewSHA("111111"),
+					MustHaveSHA: gitdomain.NewSHA("222222"),
+					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
-			UndoablePerennialCommits: []domain.SHA{},
-			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
+			UndoablePerennialCommits: []gitdomain.SHA{},
+			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)

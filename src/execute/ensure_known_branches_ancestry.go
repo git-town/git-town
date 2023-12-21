@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -35,6 +36,6 @@ type EnsureKnownBranchesAncestryArgs struct {
 	AllBranches domain.BranchInfos
 	BranchTypes domain.BranchTypes
 	Lineage     configdomain.Lineage
-	MainBranch  domain.LocalBranchName
+	MainBranch  gitdomain.LocalBranchName
 	Runner      *git.ProdRunner
 }

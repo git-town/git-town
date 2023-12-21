@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -27,7 +28,7 @@ func (self *ConfigDiff) Merge(other *ConfigDiff) {
 
 // DiffLocalBranchNames adds the difference between the given before and after values
 // for the attribute with the given key to the given ConfigDiff.
-func DiffLocalBranchNames(diff *ConfigDiff, key Key, beforeValue *domain.LocalBranchNames, afterValue *domain.LocalBranchNames) {
+func DiffLocalBranchNames(diff *ConfigDiff, key Key, beforeValue *gitdomain.LocalBranchNames, afterValue *gitdomain.LocalBranchNames) {
 	if cmp.Equal(beforeValue, afterValue) {
 		return
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -55,7 +56,7 @@ func executeAppend(arg string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -82,22 +83,22 @@ type appendConfig struct {
 	branches                  domain.Branches
 	branchesToSync            domain.BranchInfos
 	hasOpenChanges            bool
-	remotes                   domain.Remotes
+	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
 	lineage                   configdomain.Lineage
-	mainBranch                domain.LocalBranchName
-	newBranchParentCandidates domain.LocalBranchNames
+	mainBranch                gitdomain.LocalBranchName
+	newBranchParentCandidates gitdomain.LocalBranchNames
 	pushHook                  configdomain.PushHook
-	parentBranch              domain.LocalBranchName
-	previousBranch            domain.LocalBranchName
+	parentBranch              gitdomain.LocalBranchName
+	previousBranch            gitdomain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
 	shouldNewBranchPush       configdomain.NewBranchPush
 	syncUpstream              configdomain.SyncUpstream
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
-	targetBranch              domain.LocalBranchName
+	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := configdomain.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
@@ -201,7 +202,7 @@ func appendProgram(config *appendConfig) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.branches.Initial, config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.branches.Initial, config.previousBranch},
 	})
 	return prog
 }

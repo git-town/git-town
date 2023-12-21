@@ -2,7 +2,7 @@ package git
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/test/helpers"
 )
 
@@ -11,8 +11,8 @@ func DefaultCommit(filenameSuffix string) Commit {
 	return Commit{
 		FileName:    "default_file_name_" + filenameSuffix,
 		Message:     "default commit message",
-		Locations:   []string{"local", domain.OriginRemote.String()},
-		Branch:      domain.NewLocalBranchName("main"),
+		Locations:   []string{"local", gitdomain.OriginRemote.String()},
+		Branch:      gitdomain.NewLocalBranchName("main"),
 		FileContent: "default file content",
 	}
 }

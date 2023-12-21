@@ -5,8 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
@@ -60,8 +60,8 @@ func executeDiffParent(args []string, verbose bool) error {
 }
 
 type diffParentConfig struct {
-	branch       domain.LocalBranchName
-	parentBranch domain.LocalBranchName
+	branch       gitdomain.LocalBranchName
+	parentBranch gitdomain.LocalBranchName
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
@@ -81,7 +81,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if branch != branches.Initial {
 		if !branches.All.HasLocalBranch(branch) {
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)

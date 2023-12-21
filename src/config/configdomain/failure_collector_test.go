@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -41,18 +42,18 @@ func TestCollector(t *testing.T) {
 			fc := configdomain.FailureCollector{}
 			syncStatuses := domain.BranchInfos{
 				{
-					LocalName:  domain.NewLocalBranchName("branch1"),
-					LocalSHA:   domain.EmptySHA(),
+					LocalName:  gitdomain.NewLocalBranchName("branch1"),
+					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
-					RemoteName: domain.EmptyRemoteBranchName(),
-					RemoteSHA:  domain.EmptySHA(),
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 				{
-					LocalName:  domain.NewLocalBranchName("branch2"),
-					LocalSHA:   domain.EmptySHA(),
+					LocalName:  gitdomain.NewLocalBranchName("branch2"),
+					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: domain.SyncStatusLocalOnly,
-					RemoteName: domain.EmptyRemoteBranchName(),
-					RemoteSHA:  domain.EmptySHA(),
+					RemoteName: gitdomain.EmptyRemoteBranchName(),
+					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)

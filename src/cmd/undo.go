@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -74,9 +75,9 @@ type undoConfig struct {
 	connector               hosting.Connector
 	hasOpenChanges          bool
 	initialBranchesSnapshot domain.BranchesSnapshot
-	mainBranch              domain.LocalBranchName
+	mainBranch              gitdomain.LocalBranchName
 	lineage                 configdomain.Lineage
-	previousBranch          domain.LocalBranchName
+	previousBranch          gitdomain.LocalBranchName
 	pushHook                configdomain.PushHook
 }
 
@@ -148,7 +149,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	wrap(&undoRunState.RunProgram, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	// If the command to undo failed and was continued,
 	// there might be opcodes in the undo stack that became obsolete

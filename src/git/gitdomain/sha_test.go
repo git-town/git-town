@@ -1,10 +1,10 @@
-package domain_test
+package gitdomain_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/test/asserts"
 	"github.com/shoenig/test/must"
 )
@@ -16,19 +16,19 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			sha := domain.EmptySHA()
+			sha := gitdomain.EmptySHA()
 			must.True(t, sha.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
 			t.Parallel()
-			sha := domain.NewSHA("123456")
+			sha := gitdomain.NewSHA("123456")
 			must.False(t, sha.IsEmpty())
 		})
 	})
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		sha := domain.NewSHA("123456")
+		sha := gitdomain.NewSHA("123456")
 		have, err := json.MarshalIndent(sha, "", "  ")
 		must.NoError(t, err)
 		want := `"123456"`
@@ -40,28 +40,28 @@ func TestSHA(t *testing.T) {
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			sha := domain.NewSHA(text)
+			sha := gitdomain.NewSHA(text)
 			must.EqOp(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewSHA("")
+			gitdomain.NewSHA("")
 		})
 		t.Run("does not allow spaces", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewSHA("abc def")
+			gitdomain.NewSHA("abc def")
 		})
 		t.Run("does not allow uppercase characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewSHA("ABCDEF")
+			gitdomain.NewSHA("ABCDEF")
 		})
 		t.Run("does not allow non-hex characters", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewSHA("abcdefg")
+			gitdomain.NewSHA("abcdefg")
 		})
 	})
 
@@ -69,16 +69,16 @@ func TestSHA(t *testing.T) {
 		t.Parallel()
 		t.Run("SHA is longer than the new length", func(t *testing.T) {
 			t.Parallel()
-			sha := domain.NewSHA("123456789abcdef")
+			sha := gitdomain.NewSHA("123456789abcdef")
 			have := sha.TruncateTo(8)
-			want := domain.NewSHA("12345678")
+			want := gitdomain.NewSHA("12345678")
 			must.EqOp(t, want, have)
 		})
 		t.Run("SHA is shorter than the new length", func(t *testing.T) {
 			t.Parallel()
-			sha := domain.NewSHA("123456789")
+			sha := gitdomain.NewSHA("123456789")
 			have := sha.TruncateTo(12)
-			want := domain.NewSHA("123456789")
+			want := gitdomain.NewSHA("123456789")
 			must.EqOp(t, want, have)
 		})
 	})
@@ -86,10 +86,10 @@ func TestSHA(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"123456"`
-		have := domain.EmptySHA()
+		have := gitdomain.EmptySHA()
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := domain.NewSHA("123456")
+		want := gitdomain.NewSHA("123456")
 		must.EqOp(t, want, have)
 	})
 }

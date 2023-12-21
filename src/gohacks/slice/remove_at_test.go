@@ -3,7 +3,7 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
@@ -37,9 +37,9 @@ func TestRemoveAt(t *testing.T) {
 
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
-		list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333")}
+		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
 		slice.RemoveAt(&list, 0)
-		want := domain.SHAs{domain.NewSHA("222222"), domain.NewSHA("333333")}
+		want := gitdomain.SHAs{gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
 		must.Eq(t, want, list)
 	})
 }

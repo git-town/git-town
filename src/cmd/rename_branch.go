@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -91,11 +92,11 @@ type renameBranchConfig struct {
 	branches       domain.Branches
 	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
-	mainBranch     domain.LocalBranchName
-	newBranch      domain.LocalBranchName
+	mainBranch     gitdomain.LocalBranchName
+	newBranch      gitdomain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
 	oldBranch      domain.BranchInfo
-	previousBranch domain.LocalBranchName
+	previousBranch gitdomain.LocalBranchName
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -116,14 +117,14 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	mainBranch := repo.Runner.GitTown.MainBranch
-	var oldBranchName domain.LocalBranchName
-	var newBranchName domain.LocalBranchName
+	var oldBranchName gitdomain.LocalBranchName
+	var newBranchName gitdomain.LocalBranchName
 	if len(args) == 1 {
 		oldBranchName = branches.Initial
-		newBranchName = domain.NewLocalBranchName(args[0])
+		newBranchName = gitdomain.NewLocalBranchName(args[0])
 	} else {
-		oldBranchName = domain.NewLocalBranchName(args[0])
-		newBranchName = domain.NewLocalBranchName(args[1])
+		oldBranchName = gitdomain.NewLocalBranchName(args[0])
+		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
 	if repo.Runner.GitTown.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
@@ -186,7 +187,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	wrap(&result, wrapOptions{
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch, config.newBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.newBranch},
 	})
 	return result
 }

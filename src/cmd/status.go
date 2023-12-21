@@ -6,8 +6,8 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -58,7 +58,7 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(rootDir domain.RepoRootDir) (*displayStatusConfig, error) {
+func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfig, error) {
 	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
 		return nil, err

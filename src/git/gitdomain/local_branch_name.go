@@ -1,4 +1,4 @@
-package domain
+package gitdomain
 
 // LocalBranchName is the name of a local Git branch.
 // The zero value is an empty local branch name,

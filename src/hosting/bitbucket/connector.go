@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -44,7 +45,7 @@ func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(_, _ domain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*domain.Proposal, error) {
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
@@ -52,7 +53,7 @@ func (self *Connector) HostingServiceName() string {
 	return "Bitbucket"
 }
 
-func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 			self.RepositoryURL(),
 			url.QueryEscape(branch.String()),
@@ -66,10 +67,10 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(_ int, _ string) (mergeSHA domain.SHA, err error) {
-	return domain.EmptySHA(), errors.New(messages.HostingBitBucketNotImplemented)
+func (self *Connector) SquashMergeProposal(_ int, _ string) (mergeSHA gitdomain.SHA, err error) {
+	return gitdomain.EmptySHA(), errors.New(messages.HostingBitBucketNotImplemented)
 }
 
-func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
+func (self *Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
 	return errors.New(messages.HostingBitBucketNotImplemented)
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,56 +16,56 @@ func TestInconsistentChange(t *testing.T) {
 		give := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("perennial-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					RemoteName: domain.NewRemoteBranchName("origin/perennial-1"),
-					RemoteSHA:  domain.NewSHA("222222"),
+					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
+					LocalSHA:   gitdomain.NewSHA("111111"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
+					RemoteSHA:  gitdomain.NewSHA("222222"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("perennial-1"),
-					LocalSHA:   domain.NewSHA("333333"),
-					RemoteName: domain.NewRemoteBranchName("origin/perennial-1"),
-					RemoteSHA:  domain.NewSHA("444444"),
+					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
+					LocalSHA:   gitdomain.NewSHA("333333"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
+					RemoteSHA:  gitdomain.NewSHA("444444"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 			},
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("feature-1"),
-					LocalSHA:   domain.NewSHA("555555"),
-					RemoteName: domain.NewRemoteBranchName("origin/feature-1"),
-					RemoteSHA:  domain.NewSHA("666666"),
+					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
+					LocalSHA:   gitdomain.NewSHA("555555"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
+					RemoteSHA:  gitdomain.NewSHA("666666"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("feature-1"),
-					LocalSHA:   domain.NewSHA("777777"),
-					RemoteName: domain.NewRemoteBranchName("origin/feature-1"),
-					RemoteSHA:  domain.NewSHA("888888"),
+					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
+					LocalSHA:   gitdomain.NewSHA("777777"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
+					RemoteSHA:  gitdomain.NewSHA("888888"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 			},
 		}
 		branchTypes := domain.BranchTypes{
-			MainBranch:        domain.NewLocalBranchName("main"),
-			PerennialBranches: domain.NewLocalBranchNames("perennial-1"),
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 		}
 		havePerennials, haveFeatures := give.Categorize(branchTypes)
 		wantPerennials := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("perennial-1"),
-					LocalSHA:   domain.NewSHA("111111"),
-					RemoteName: domain.NewRemoteBranchName("origin/perennial-1"),
-					RemoteSHA:  domain.NewSHA("222222"),
+					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
+					LocalSHA:   gitdomain.NewSHA("111111"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
+					RemoteSHA:  gitdomain.NewSHA("222222"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("perennial-1"),
-					LocalSHA:   domain.NewSHA("333333"),
-					RemoteName: domain.NewRemoteBranchName("origin/perennial-1"),
-					RemoteSHA:  domain.NewSHA("444444"),
+					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
+					LocalSHA:   gitdomain.NewSHA("333333"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
+					RemoteSHA:  gitdomain.NewSHA("444444"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 			},
@@ -73,17 +74,17 @@ func TestInconsistentChange(t *testing.T) {
 		wantFeatures := domain.InconsistentChanges{
 			domain.InconsistentChange{
 				Before: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("feature-1"),
-					LocalSHA:   domain.NewSHA("555555"),
-					RemoteName: domain.NewRemoteBranchName("origin/feature-1"),
-					RemoteSHA:  domain.NewSHA("666666"),
+					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
+					LocalSHA:   gitdomain.NewSHA("555555"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
+					RemoteSHA:  gitdomain.NewSHA("666666"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 				After: domain.BranchInfo{
-					LocalName:  domain.NewLocalBranchName("feature-1"),
-					LocalSHA:   domain.NewSHA("777777"),
-					RemoteName: domain.NewRemoteBranchName("origin/feature-1"),
-					RemoteSHA:  domain.NewSHA("888888"),
+					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
+					LocalSHA:   gitdomain.NewSHA("777777"),
+					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
+					RemoteSHA:  gitdomain.NewSHA("888888"),
 					SyncStatus: domain.SyncStatusNotInSync,
 				},
 			},

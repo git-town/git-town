@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/undo"
@@ -57,7 +58,7 @@ type UnfinishedStateArgs struct {
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot
 	PushHook                configdomain.PushHook
-	RootDir                 domain.RepoRootDir
+	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
 }
 
@@ -99,7 +100,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	})
 }
 
-func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
+func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 	err := statefile.Delete(rootDir)
 	return false, err
 }

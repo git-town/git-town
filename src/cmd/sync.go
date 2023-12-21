@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -117,11 +118,11 @@ type syncConfig struct {
 	hasOpenChanges        bool
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
-	mainBranch            domain.LocalBranchName
-	previousBranch        domain.LocalBranchName
+	mainBranch            gitdomain.LocalBranchName
+	previousBranch        gitdomain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              configdomain.PushHook
-	remotes               domain.Remotes
+	remotes               gitdomain.Remotes
 	shouldPushTags        bool
 	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
@@ -153,7 +154,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	mainBranch := repo.Runner.GitTown.MainBranch
-	var branchNamesToSync domain.LocalBranchNames
+	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
@@ -183,7 +184,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		}
 	}
 	if !allFlag {
-		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
+		branchNamesToSync = gitdomain.LocalBranchNames{branches.Initial}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
@@ -220,7 +221,7 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 	wrap(args.program, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{args.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.previousBranch},
 	})
 }
 
@@ -228,8 +229,8 @@ type syncBranchesProgramArgs struct {
 	syncBranchProgramArgs
 	branchesToSync domain.BranchInfos
 	hasOpenChanges bool
-	initialBranch  domain.LocalBranchName
-	previousBranch domain.LocalBranchName
+	initialBranch  gitdomain.LocalBranchName
+	previousBranch gitdomain.LocalBranchName
 	shouldPushTags bool
 }
 
@@ -252,11 +253,11 @@ type syncBranchProgramArgs struct {
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
 	program               *program.Program
-	mainBranch            domain.LocalBranchName
+	mainBranch            gitdomain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushBranch            bool
 	pushHook              configdomain.PushHook
-	remotes               domain.Remotes
+	remotes               gitdomain.Remotes
 	syncUpstream          configdomain.SyncUpstream
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
@@ -334,12 +335,12 @@ func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgram
 	}
 	if branch.LocalName == args.mainBranch && args.remotes.HasUpstream() && args.syncUpstream.Bool() {
 		args.program.Add(&opcode.FetchUpstream{Branch: args.mainBranch})
-		args.program.Add(&opcode.RebaseBranch{Branch: domain.NewBranchName("upstream/" + args.mainBranch.String())})
+		args.program.Add(&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("upstream/" + args.mainBranch.String())})
 	}
 }
 
 // pullTrackingBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the remote branch of the current feature branch into the current feature branch.
-func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch domain.RemoteBranchName, strategy configdomain.SyncFeatureStrategy) {
+func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, trackingBranch gitdomain.RemoteBranchName, strategy configdomain.SyncFeatureStrategy) {
 	switch strategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.Merge{Branch: trackingBranch.BranchName()})
@@ -349,7 +350,7 @@ func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, track
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch domain.LocalBranchName, parentOtherWorktree bool, strategy configdomain.SyncFeatureStrategy) {
+func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch gitdomain.LocalBranchName, parentOtherWorktree bool, strategy configdomain.SyncFeatureStrategy) {
 	switch strategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.MergeParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
@@ -359,7 +360,7 @@ func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, current
 }
 
 // updateCurrentPerennialBranchOpcode provides the opcode to update the current perennial branch with changes from the given other branch.
-func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
+func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch gitdomain.RemoteBranchName, strategy configdomain.SyncPerennialStrategy) {
 	switch strategy {
 	case configdomain.SyncPerennialStrategyMerge:
 		list.Add(&opcode.Merge{Branch: otherBranch.BranchName()})
@@ -368,7 +369,7 @@ func updateCurrentPerennialBranchOpcode(list *program.Program, otherBranch domai
 	}
 }
 
-func pushFeatureBranchProgram(list *program.Program, branch domain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook configdomain.PushHook) {
+func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook configdomain.PushHook) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
 		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: pushHook.Negate()})

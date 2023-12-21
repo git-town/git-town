@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 	"github.com/git-town/git-town/v11/src/vm/shared"
@@ -259,12 +259,12 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 			}
 			must.Eq(t, want, have)
 		})
@@ -272,13 +272,13 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.AbortRebase{},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.AbortRebase{},
 			}
 			must.Eq(t, want, have)
@@ -287,18 +287,18 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-1")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-1")},
 				&opcode.AbortRebase{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-3")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-3")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
 			must.Eq(t, want, have)
 		})
@@ -307,13 +307,13 @@ func TestProgram(t *testing.T) {
 			have := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
 			have.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-3")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
 			must.Eq(t, want, have)
 		})
@@ -325,13 +325,13 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-1")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-2")},
 			}
 			give.RemoveDuplicateCheckout()
 			want := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-2")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-2")},
 			}
 			must.Eq(t, want, give)
 		})
@@ -339,13 +339,13 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			give := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch-1")},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-1")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
 			}
 			give.RemoveDuplicateCheckout()
 			want := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.CheckoutIfExists{Branch: domain.NewLocalBranchName("branch-2")},
+				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-2")},
 			}
 			must.Eq(t, want, give)
 		})
@@ -369,7 +369,7 @@ func TestProgram(t *testing.T) {
 		give := program.Program{
 			&opcode.AbortMerge{},
 			&opcode.AddToPerennialBranches{
-				Branch: domain.NewLocalBranchName("branch"),
+				Branch: gitdomain.NewLocalBranchName("branch"),
 			},
 		}
 		have := give.String()
@@ -385,7 +385,7 @@ Program:
 		t.Parallel()
 		prog := program.Program{
 			&opcode.AbortMerge{},
-			&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
+			&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 		}
 		have := prog.OpcodeTypes()
 		want := []string{"*opcode.AbortMerge", "*opcode.Checkout"}
@@ -415,8 +415,8 @@ Program:
 		want := program.Program{
 			&opcode.ResetCurrentBranchToSHA{
 				Hard:        false,
-				MustHaveSHA: domain.NewSHA("abcdef"),
-				SetToSHA:    domain.NewSHA("123456"),
+				MustHaveSHA: gitdomain.NewSHA("abcdef"),
+				SetToSHA:    gitdomain.NewSHA("123456"),
 			},
 			&opcode.StashOpenChanges{},
 		}

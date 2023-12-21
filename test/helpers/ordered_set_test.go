@@ -3,7 +3,7 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/test/helpers"
 	"github.com/shoenig/test/must"
 )
@@ -61,9 +61,9 @@ func TestOrderedSet(t *testing.T) {
 		})
 		t.Run("SHAs", func(t *testing.T) {
 			set := helpers.NewOrderedSet(
-				domain.NewSHA("111111"),
-				domain.NewSHA("222222"),
-				domain.NewSHA("333333"),
+				gitdomain.NewSHA("111111"),
+				gitdomain.NewSHA("222222"),
+				gitdomain.NewSHA("333333"),
 			)
 			have := set.Join(", ")
 			want := "111111, 222222, 333333"

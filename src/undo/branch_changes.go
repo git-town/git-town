@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -13,10 +14,10 @@ import (
 // BranchChanges describes the changes made to the branches in a Git repo.
 // Various types of changes are distinguished.
 type BranchChanges struct {
-	LocalAdded    domain.LocalBranchNames
+	LocalAdded    gitdomain.LocalBranchNames
 	LocalRemoved  domain.LocalBranchesSHAs
 	LocalChanged  domain.LocalBranchChange
-	RemoteAdded   domain.RemoteBranchNames
+	RemoteAdded   gitdomain.RemoteBranchNames
 	RemoteRemoved domain.RemoteBranchesSHAs
 	RemoteChanged domain.RemoteBranchChange
 	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
@@ -32,12 +33,12 @@ type BranchChanges struct {
 // EmptyBranchChanges provides a properly initialized empty Changes instance.
 func EmptyBranchChanges() BranchChanges {
 	return BranchChanges{
-		LocalAdded:            domain.LocalBranchNames{},
+		LocalAdded:            gitdomain.LocalBranchNames{},
 		LocalRemoved:          domain.LocalBranchesSHAs{},
 		LocalChanged:          domain.LocalBranchChange{},
-		RemoteAdded:           domain.RemoteBranchNames{},
-		RemoteRemoved:         map[domain.RemoteBranchName]domain.SHA{},
-		RemoteChanged:         map[domain.RemoteBranchName]domain.Change[domain.SHA]{},
+		RemoteAdded:           gitdomain.RemoteBranchNames{},
+		RemoteRemoved:         map[gitdomain.RemoteBranchName]gitdomain.SHA{},
+		RemoteChanged:         map[gitdomain.RemoteBranchName]domain.Change[gitdomain.SHA]{},
 		OmniRemoved:           domain.LocalBranchesSHAs{},
 		OmniChanged:           domain.LocalBranchChange{},
 		InconsistentlyChanged: domain.InconsistentChanges{},
@@ -129,7 +130,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
-		if addedRemoteBranch.Remote() != domain.UpstreamRemote {
+		if addedRemoteBranch.Remote() != gitdomain.UpstreamRemote {
 			result.Add(&opcode.DeleteTrackingBranch{
 				Branch: addedRemoteBranch,
 			})
@@ -197,8 +198,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 type BranchChangesUndoProgramArgs struct {
 	Lineage                  configdomain.Lineage
 	BranchTypes              domain.BranchTypes
-	InitialBranch            domain.LocalBranchName
-	FinalBranch              domain.LocalBranchName
+	InitialBranch            gitdomain.LocalBranchName
+	FinalBranch              gitdomain.LocalBranchName
 	NoPushHook               configdomain.NoPushHook
-	UndoablePerennialCommits []domain.SHA
+	UndoablePerennialCommits []gitdomain.SHA
 }

@@ -1,14 +1,14 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CheckoutIfExists does the same as Checkout
 // but only if that branch actually exists.
 type CheckoutIfExists struct {
-	Branch domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

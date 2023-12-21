@@ -3,6 +3,7 @@ package execute
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -45,7 +46,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, domain.BranchesSnapsh
 		}
 	}
 	if args.Fetch {
-		var remotes domain.Remotes
+		var remotes gitdomain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
 			return domain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err

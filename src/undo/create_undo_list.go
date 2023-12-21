@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
@@ -32,10 +33,10 @@ type CreateUndoProgramArgs struct {
 	InitialConfigSnapshot    ConfigSnapshot
 	InitialStashSnapshot     domain.StashSnapshot
 	NoPushHook               configdomain.NoPushHook
-	UndoablePerennialCommits []domain.SHA
+	UndoablePerennialCommits []gitdomain.SHA
 }
 
-func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []domain.SHA, noPushHook configdomain.NoPushHook, runner *git.ProdRunner) (program.Program, error) {
+func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, noPushHook configdomain.NoPushHook, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return program.Program{}, err

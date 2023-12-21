@@ -1,4 +1,4 @@
-package domain
+package gitdomain
 
 // Location is a location within a Git repo.
 // Examples for locations are SHA addresses of commits or branch names.

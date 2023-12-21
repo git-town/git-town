@@ -6,7 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -90,7 +90,7 @@ func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
-func (self *CachedAccess) RemoveParent(branch domain.LocalBranchName) {
+func (self *CachedAccess) RemoveParent(branch gitdomain.LocalBranchName) {
 	// ignoring errors here because the entry might not exist
 	_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
 }

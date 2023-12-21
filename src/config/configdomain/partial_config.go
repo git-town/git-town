@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
@@ -14,10 +15,10 @@ type PartialConfig struct {
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
-	MainBranch                *domain.LocalBranchName
+	MainBranch                *gitdomain.LocalBranchName
 	NewBranchPush             *NewBranchPush
 	Offline                   *Offline
-	PerennialBranches         *domain.LocalBranchNames
+	PerennialBranches         *gitdomain.LocalBranchNames
 	PushHook                  *PushHook
 	ShipDeleteTrackingBranch  *ShipDeleteTrackingBranch
 	SyncBeforeShip            *SyncBeforeShip
@@ -44,11 +45,11 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	case KeyGitlabToken:
 		self.GitLabToken = NewGitLabTokenRef(value)
 	case KeyMainBranch:
-		self.MainBranch = domain.NewLocalBranchNameRefAllowEmpty(value)
+		self.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyOffline:
 		self.Offline, err = NewOfflineRef(value)
 	case KeyPerennialBranches:
-		self.PerennialBranches = domain.ParseLocalBranchNamesRef(value)
+		self.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
 	case KeyPushHook:
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:

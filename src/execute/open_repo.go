@@ -7,8 +7,8 @@ import (
 	"github.com/git-town/git-town/v11/src/config"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
@@ -113,7 +113,7 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Runner         *git.ProdRunner
-	RootDir        domain.RepoRootDir
+	RootDir        gitdomain.RepoRootDir
 	IsOffline      configdomain.Offline
 	ConfigSnapshot undo.ConfigSnapshot
 }

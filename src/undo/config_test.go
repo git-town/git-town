@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/undo"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -69,7 +70,7 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		perennialsAfter := domain.NewLocalBranchNames("one", "two")
+		perennialsAfter := gitdomain.NewLocalBranchNames("one", "two")
 		after := undo.ConfigSnapshot{
 			GitConfig: gitconfig.FullCache{
 				GlobalCache: gitconfig.SingleCache{},

@@ -1,11 +1,14 @@
 package domain
 
-import "golang.org/x/exp/maps"
+import (
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"golang.org/x/exp/maps"
+)
 
-type LocalBranchesSHAs map[LocalBranchName]SHA
+type LocalBranchesSHAs map[gitdomain.LocalBranchName]gitdomain.SHA
 
-func (self LocalBranchesSHAs) BranchNames() LocalBranchNames {
-	result := LocalBranchNames(maps.Keys(self))
+func (self LocalBranchesSHAs) BranchNames() gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames(maps.Keys(self))
 	result.Sort()
 	return result
 }

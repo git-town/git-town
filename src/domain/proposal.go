@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/git-town/git-town/v11/src/git/gitdomain"
+
 // Proposal contains information about a change request on a code hosting platform.
 // Alternative names are "pull request" or "merge request".
 type Proposal struct {
@@ -10,7 +12,7 @@ type Proposal struct {
 	Number int
 
 	// name of the target branch ("base") of this proposal
-	Target LocalBranchName
+	Target gitdomain.LocalBranchName
 
 	// textual title of the proposal
 	Title string

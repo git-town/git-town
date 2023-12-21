@@ -1,6 +1,9 @@
 package undo
 
-import "github.com/git-town/git-town/v11/src/domain"
+import (
+	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+)
 
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.
 type BranchSpans []BranchSpan
@@ -37,7 +40,7 @@ func (self BranchSpans) Changes() BranchChanges {
 			continue
 		}
 		if branchSpan.IsOmniChange() {
-			result.OmniChanged[branchSpan.Before.LocalName] = domain.Change[domain.SHA]{
+			result.OmniChanged[branchSpan.Before.LocalName] = domain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.LocalSHA,
 				After:  branchSpan.After.LocalSHA,
 			}
@@ -56,7 +59,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		case branchSpan.LocalRemoved():
 			result.LocalRemoved[branchSpan.Before.LocalName] = branchSpan.Before.LocalSHA
 		case branchSpan.LocalChanged():
-			result.LocalChanged[branchSpan.Before.LocalName] = domain.Change[domain.SHA]{
+			result.LocalChanged[branchSpan.Before.LocalName] = domain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.LocalSHA,
 				After:  branchSpan.After.LocalSHA,
 			}
@@ -67,7 +70,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		case branchSpan.RemoteRemoved():
 			result.RemoteRemoved[branchSpan.Before.RemoteName] = branchSpan.Before.RemoteSHA
 		case branchSpan.RemoteChanged():
-			result.RemoteChanged[branchSpan.Before.RemoteName] = domain.Change[domain.SHA]{
+			result.RemoteChanged[branchSpan.Before.RemoteName] = domain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.RemoteSHA,
 				After:  branchSpan.After.RemoteSHA,
 			}

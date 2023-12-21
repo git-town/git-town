@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -106,8 +107,8 @@ func TestConfigdiff(t *testing.T) {
 		t.Parallel()
 		t.Run("value not changed", func(t *testing.T) {
 			t.Parallel()
-			before := domain.LocalBranchName("main")
-			after := domain.LocalBranchName("main")
+			before := gitdomain.LocalBranchName("main")
+			after := gitdomain.LocalBranchName("main")
 			have := configdomain.EmptyConfigDiff()
 			configdomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
 			want := configdomain.ConfigDiff{

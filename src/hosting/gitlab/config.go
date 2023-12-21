@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting/common"
 )
 
@@ -22,7 +23,7 @@ func (self *Config) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (self *Config) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *Config) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch.String())
 	query.Add("merge_request[target_branch]", parentBranch.String())

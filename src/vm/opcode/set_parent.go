@@ -1,15 +1,15 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // SetParent sets the given parent branch as the parent of the given branch.
 // Use ChangeParent to change an existing parent.
 type SetParent struct {
-	Branch domain.LocalBranchName
-	Parent domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

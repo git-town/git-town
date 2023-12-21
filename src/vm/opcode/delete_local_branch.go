@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // DeleteLocalBranch deletes the branch with the given name.
 type DeleteLocalBranch struct {
-	Branch domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
 	Force  bool
 	undeclaredOpcodeMethods
 }

@@ -1,10 +1,10 @@
-package domain_test
+package gitdomain_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -13,7 +13,7 @@ func TestLocation(t *testing.T) {
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		location := domain.NewLocation("branch-1")
+		location := gitdomain.NewLocation("branch-1")
 		have, err := json.MarshalIndent(location, "", "  ")
 		must.NoError(t, err)
 		want := `"branch-1"`
@@ -23,10 +23,10 @@ func TestLocation(t *testing.T) {
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"branch-1"`
-		have := domain.EmptyLocation()
+		have := gitdomain.EmptyLocation()
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := domain.NewLocation("branch-1")
+		want := gitdomain.NewLocation("branch-1")
 		must.EqOp(t, want, have)
 	})
 }

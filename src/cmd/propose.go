@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -94,11 +95,11 @@ type proposeConfig struct {
 	branchesToSync        domain.BranchInfos
 	connector             hosting.Connector
 	hasOpenChanges        bool
-	remotes               domain.Remotes
+	remotes               gitdomain.Remotes
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
-	mainBranch            domain.LocalBranchName
-	previousBranch        domain.LocalBranchName
+	mainBranch            gitdomain.LocalBranchName
+	previousBranch        gitdomain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              configdomain.PushHook
 	syncUpstream          configdomain.SyncUpstream
@@ -206,7 +207,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	prog.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
 	return prog

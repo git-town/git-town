@@ -1,4 +1,4 @@
-package domain
+package gitdomain
 
 // Remote represents a Git remote.
 type Remote string

@@ -1,6 +1,8 @@
 package common
 
-import "github.com/git-town/git-town/v11/src/domain"
+import (
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+)
 
 // TODO: remove and replace with a direct link to git.BackendCommands.
-type SHAForBranchFunc func(domain.BranchName) (domain.SHA, error)
+type SHAForBranchFunc func(gitdomain.BranchName) (gitdomain.SHA, error)

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -118,16 +119,16 @@ type shipConfig struct {
 	connector                hosting.Connector
 	targetBranch             domain.BranchInfo
 	canShipViaAPI            bool
-	childBranches            domain.LocalBranchNames
+	childBranches            gitdomain.LocalBranchNames
 	proposalMessage          string
 	deleteTrackingBranch     configdomain.ShipDeleteTrackingBranch
 	hasOpenChanges           bool
-	remotes                  domain.Remotes
+	remotes                  gitdomain.Remotes
 	isShippingInitialBranch  bool
 	isOnline                 configdomain.Online
 	lineage                  configdomain.Lineage
-	mainBranch               domain.LocalBranchName
-	previousBranch           domain.LocalBranchName
+	mainBranch               gitdomain.LocalBranchName
+	previousBranch           gitdomain.LocalBranchName
 	proposal                 *domain.Proposal
 	proposalsOfChildBranches []domain.Proposal
 	syncPerennialStrategy    configdomain.SyncPerennialStrategy
@@ -164,7 +165,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	deleteTrackingBranch := repo.Runner.GitTown.ShipDeleteTrackingBranch
 	mainBranch := repo.Runner.GitTown.MainBranch
-	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
+	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == domain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
@@ -273,7 +274,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes domain.BranchTypes, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
@@ -364,7 +365,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         !config.isShippingInitialBranch && config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	return prog
 }

@@ -114,7 +114,7 @@ issues:
       text: (gitea.PRBranchInfo|github.PullRequest|github.PullRequestBranch|oauth2.Token|http.Client) is missing fields
     - linters:
         - exhaustruct
-      text: domain.LocalBranchName is missing field id
+      text: gitdomain.LocalBranchName is missing field id
     - linters:
         - predeclared
       text: package name print has same name as predeclared identifier

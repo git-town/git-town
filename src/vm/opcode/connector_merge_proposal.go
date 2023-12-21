@@ -3,14 +3,14 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // ConnectorMergeProposal squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposal struct {
-	Branch                    domain.LocalBranchName
+	Branch                    gitdomain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool

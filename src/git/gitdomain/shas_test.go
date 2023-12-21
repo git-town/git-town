@@ -1,9 +1,9 @@
-package domain_test
+package gitdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -14,9 +14,9 @@ func TestSHAs(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
 			t.Parallel()
-			give := domain.SHAs{
-				domain.NewSHA("111111"),
-				domain.NewSHA("222222"),
+			give := gitdomain.SHAs{
+				gitdomain.NewSHA("111111"),
+				gitdomain.NewSHA("222222"),
 			}
 			have := give.Join(", ")
 			want := "111111, 222222"
@@ -24,7 +24,7 @@ func TestSHAs(t *testing.T) {
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			give := domain.SHAs{}
+			give := gitdomain.SHAs{}
 			have := give.Join(", ")
 			want := ""
 			must.EqOp(t, want, have)
@@ -35,9 +35,9 @@ func TestSHAs(t *testing.T) {
 		t.Parallel()
 		t.Run("contains elements", func(t *testing.T) {
 			t.Parallel()
-			give := domain.SHAs{
-				domain.NewSHA("111111"),
-				domain.NewSHA("222222"),
+			give := gitdomain.SHAs{
+				gitdomain.NewSHA("111111"),
+				gitdomain.NewSHA("222222"),
 			}
 			have := give.Strings()
 			want := []string{"111111", "222222"}
@@ -45,7 +45,7 @@ func TestSHAs(t *testing.T) {
 		})
 		t.Run("empty list", func(t *testing.T) {
 			t.Parallel()
-			give := domain.SHAs{}
+			give := gitdomain.SHAs{}
 			have := give.Strings()
 			want := []string{}
 			must.Eq(t, want, have)

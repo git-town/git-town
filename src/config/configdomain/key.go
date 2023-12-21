@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // Key contains all the keys used in Git Town configuration.
@@ -93,7 +93,7 @@ func NewKey(name string) Key {
 	return Key{name}
 }
 
-func NewParentKey(branch domain.LocalBranchName) Key {
+func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key{
 		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}

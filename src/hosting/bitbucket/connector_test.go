@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -81,7 +81,7 @@ func TestBitbucketConnector(t *testing.T) {
 			GetSHAForBranch: emptySHAForBranch,
 		})
 		must.NoError(t, err)
-		have, err := connector.NewProposalURL("branch", domain.NewLocalBranchName("parent-branch"))
+		have, err := connector.NewProposalURL("branch", gitdomain.NewLocalBranchName("parent-branch"))
 		must.NoError(t, err)
 		want := "https://bitbucket.org/org/repo/pull-requests/new?source=branch&dest=org%2Frepo%3Aparent-branch"
 		must.EqOp(t, want, have)
@@ -89,6 +89,6 @@ func TestBitbucketConnector(t *testing.T) {
 }
 
 // emptySHAForBranch is a dummy implementation for hosting.SHAForBranchfunc to be used in tests.
-func emptySHAForBranch(domain.BranchName) (domain.SHA, error) {
-	return domain.EmptySHA(), nil
+func emptySHAForBranch(gitdomain.BranchName) (gitdomain.SHA, error) {
+	return gitdomain.EmptySHA(), nil
 }

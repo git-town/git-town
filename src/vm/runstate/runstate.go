@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 	"github.com/git-town/git-town/v11/src/vm/shared"
@@ -21,10 +21,10 @@ type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
 	UndoProgram              program.Program `exhaustruct:"optional"`
-	InitialActiveBranch      domain.LocalBranchName
+	InitialActiveBranch      gitdomain.LocalBranchName
 	FinalUndoProgram         program.Program            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
-	UndoablePerennialCommits []domain.SHA               `exhaustruct:"optional"`
+	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
@@ -102,7 +102,7 @@ func (self *RunState) CreateUndoRunState() RunState {
 		InitialActiveBranch:      self.InitialActiveBranch,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []domain.SHA{},
+		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
 	result.RunProgram.Add(&opcode.Checkout{Branch: self.InitialActiveBranch})
 	result.RunProgram.RemoveDuplicateCheckout()
@@ -147,7 +147,7 @@ func (self *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
 
 // RegisterUndoablePerennialCommit stores the given commit on a perennial branch as undoable.
 // This method is used as a callback.
-func (self *RunState) RegisterUndoablePerennialCommit(commit domain.SHA) {
+func (self *RunState) RegisterUndoablePerennialCommit(commit gitdomain.SHA) {
 	self.UndoablePerennialCommits = append(self.UndoablePerennialCommits, commit)
 }
 

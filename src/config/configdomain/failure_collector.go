@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -53,7 +54,7 @@ func (self *FailureCollector) Hosting(value Hosting, err error) Hosting {
 
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) Remotes(value domain.Remotes, err error) domain.Remotes {
+func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdomain.Remotes {
 	self.Check(err)
 	return value
 }

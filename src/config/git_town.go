@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
@@ -25,7 +26,7 @@ type GitTown struct {
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (self *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
+func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
@@ -54,7 +55,7 @@ func (self *GitTown) HostingService() (configdomain.Hosting, error) {
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
+func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
 }
 
@@ -62,14 +63,14 @@ func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
 	lineage := configdomain.Lineage{}
 	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
 		parentName := self.LocalConfigValue(key)
 		if parentName == "" {
 			_ = deleteEntry(key)
 			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
 			fmt.Println("I have deleted this configuration entry.")
 		} else {
-			parent := domain.NewLocalBranchName(parentName)
+			parent := gitdomain.NewLocalBranchName(parentName)
 			lineage[child] = parent
 		}
 	}
@@ -94,19 +95,19 @@ func (self *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
+	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
 	return strings.TrimSpace(output)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
+func (self *GitTown) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	slice.Remove(&self.Config.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
+func (self *GitTown) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.MainBranch = branch
 	self.LocalConfig.MainBranch = &branch
 	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
@@ -133,12 +134,12 @@ func (self *GitTown) SetOffline(value configdomain.Offline) error {
 
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (self *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) error {
+func (self *GitTown) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
 	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
-func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
+func (self *GitTown) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
 	return self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
 }

@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -46,7 +46,7 @@ func executeConfigMainBranch(args []string, verbose bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		newMainBranch := domain.NewLocalBranchName(args[0])
+		newMainBranch := gitdomain.NewLocalBranchName(args[0])
 		return setMainBranch(newMainBranch, repo.Runner)
 	}
 	printMainBranch(repo.Runner)
@@ -57,7 +57,7 @@ func printMainBranch(run *git.ProdRunner) {
 	io.Println(format.StringSetting(run.GitTown.MainBranch.String()))
 }
 
-func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
+func setMainBranch(branch gitdomain.LocalBranchName, run *git.ProdRunner) error {
 	if !run.Backend.HasLocalBranch(branch) {
 		return fmt.Errorf(messages.BranchDoesntExist, branch)
 	}

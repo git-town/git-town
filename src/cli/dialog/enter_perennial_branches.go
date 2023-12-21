@@ -6,6 +6,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // EnterPerennialBranches lets the user update the perennial branches.
@@ -20,13 +21,13 @@ func EnterPerennialBranches(backend *git.BackendCommands, branches domain.Branch
 	if err != nil {
 		return branches.Types, err
 	}
-	newPerennialBranches := domain.NewLocalBranchNames(newPerennialBranchNames...)
+	newPerennialBranches := gitdomain.NewLocalBranchNames(newPerennialBranchNames...)
 	branches.Types.PerennialBranches = newPerennialBranches
 	err = backend.GitTown.SetPerennialBranches(newPerennialBranches)
 	return branches.Types, err
 }
 
-func perennialBranchesPrompt(perennialBranches domain.LocalBranchNames) string {
+func perennialBranchesPrompt(perennialBranches gitdomain.LocalBranchNames) string {
 	result := "Please specify perennial branches:"
 	if len(perennialBranches) > 0 {
 		coloredBranches := color.New(color.Bold).Add(color.FgCyan).Sprintf(perennialBranches.Join(", "))

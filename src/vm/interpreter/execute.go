@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/undo"
@@ -42,7 +43,7 @@ type ExecuteArgs struct {
 	Run                     *git.ProdRunner
 	Connector               hosting.Connector
 	Verbose                 bool
-	RootDir                 domain.RepoRootDir
+	RootDir                 gitdomain.RepoRootDir
 	InitialBranchesSnapshot domain.BranchesSnapshot
 	InitialConfigSnapshot   undo.ConfigSnapshot
 	InitialStashSnapshot    domain.StashSnapshot

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -84,19 +85,19 @@ type prependConfig struct {
 	branches                  domain.Branches
 	branchesToSync            domain.BranchInfos
 	hasOpenChanges            bool
-	remotes                   domain.Remotes
+	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
 	lineage                   configdomain.Lineage
-	mainBranch                domain.LocalBranchName
-	newBranchParentCandidates domain.LocalBranchNames
-	previousBranch            domain.LocalBranchName
+	mainBranch                gitdomain.LocalBranchName
+	newBranchParentCandidates gitdomain.LocalBranchNames
+	previousBranch            gitdomain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
 	pushHook                  configdomain.PushHook
-	parentBranch              domain.LocalBranchName
+	parentBranch              gitdomain.LocalBranchName
 	syncUpstream              configdomain.SyncUpstream
 	shouldNewBranchPush       configdomain.NewBranchPush
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
-	targetBranch              domain.LocalBranchName
+	targetBranch              gitdomain.LocalBranchName
 }
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
@@ -124,7 +125,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
 	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
-	targetBranch := domain.NewLocalBranchName(args[0])
+	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -211,7 +212,7 @@ func prependProgram(config *prependConfig) program.Program {
 	wrap(&prog, wrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	return prog
 }

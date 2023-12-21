@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CheckoutParent checks out the parent branch of the current branch.
 type CheckoutParent struct {
-	CurrentBranch domain.LocalBranchName
+	CurrentBranch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

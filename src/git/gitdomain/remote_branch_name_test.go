@@ -1,10 +1,10 @@
-package domain_test
+package gitdomain_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/test/asserts"
 	"github.com/shoenig/test/must"
 )
@@ -15,11 +15,11 @@ func TestRemoteBranchName(t *testing.T) {
 	t.Run("IsEmpty", func(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
-			give := domain.EmptyRemoteBranchName()
+			give := gitdomain.EmptyRemoteBranchName()
 			must.True(t, give.IsEmpty())
 		})
 		t.Run("is not empty", func(t *testing.T) {
-			give := domain.NewRemoteBranchName("origin/branch-1")
+			give := gitdomain.NewRemoteBranchName("origin/branch-1")
 			must.False(t, give.IsEmpty())
 		})
 	})
@@ -28,21 +28,21 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is at the origin remote", func(t *testing.T) {
 			t.Parallel()
-			branch := domain.NewRemoteBranchName("origin/branch")
-			want := domain.NewLocalBranchName("branch")
+			branch := gitdomain.NewRemoteBranchName("origin/branch")
+			want := gitdomain.NewLocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 		t.Run("branch is at the upstream remote", func(t *testing.T) {
 			t.Parallel()
-			branch := domain.NewRemoteBranchName("upstream/branch")
-			want := domain.NewLocalBranchName("branch")
+			branch := gitdomain.NewRemoteBranchName("upstream/branch")
+			want := gitdomain.NewLocalBranchName("branch")
 			must.EqOp(t, want, branch.LocalBranchName())
 		})
 	})
 
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
-		branch := domain.NewRemoteBranchName("origin/branch-1")
+		branch := gitdomain.NewRemoteBranchName("origin/branch-1")
 		have, err := json.MarshalIndent(branch, "", "  ")
 		must.NoError(t, err)
 		want := `"origin/branch-1"`
@@ -53,36 +53,36 @@ func TestRemoteBranchName(t *testing.T) {
 		t.Parallel()
 		t.Run("valid remote branch name", func(t *testing.T) {
 			t.Parallel()
-			branch := domain.NewRemoteBranchName("origin/branch")
+			branch := gitdomain.NewRemoteBranchName("origin/branch")
 			must.EqOp(t, "origin/branch", branch.String())
 		})
 		t.Run("local branch name", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewRemoteBranchName("branch")
+			gitdomain.NewRemoteBranchName("branch")
 		})
 		t.Run("empty branch name", func(t *testing.T) {
 			t.Parallel()
 			defer asserts.Paniced(t)
-			domain.NewRemoteBranchName("")
+			gitdomain.NewRemoteBranchName("")
 		})
 	})
 
 	t.Run("Parts", func(t *testing.T) {
 		t.Parallel()
-		remoteBranch := domain.NewRemoteBranchName("origin/branch")
+		remoteBranch := gitdomain.NewRemoteBranchName("origin/branch")
 		remote, localBranch := remoteBranch.Parts()
-		must.EqOp(t, domain.OriginRemote, remote)
-		must.EqOp(t, domain.NewLocalBranchName("branch"), localBranch)
+		must.EqOp(t, gitdomain.OriginRemote, remote)
+		must.EqOp(t, gitdomain.NewLocalBranchName("branch"), localBranch)
 	})
 
 	t.Run("UnmarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		give := `"origin/branch-1"`
-		have := domain.EmptyRemoteBranchName()
+		have := gitdomain.EmptyRemoteBranchName()
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
-		want := domain.NewRemoteBranchName("origin/branch-1")
+		want := gitdomain.NewRemoteBranchName("origin/branch-1")
 		must.EqOp(t, want, have)
 	})
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/BurntSushi/toml"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -41,10 +41,10 @@ func (self ConfigFileData) Validate() (PartialConfig, error) {
 	result := PartialConfig{} //nolint:exhaustruct
 	var err error
 	if self.Branches.Main != nil {
-		result.MainBranch = domain.NewLocalBranchNameRef(*self.Branches.Main)
+		result.MainBranch = gitdomain.NewLocalBranchNameRef(*self.Branches.Main)
 	}
 	if self.Branches.Perennials != nil {
-		result.PerennialBranches = domain.NewLocalBranchNamesRef(self.Branches.Perennials...)
+		result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(self.Branches.Perennials...)
 	}
 	if self.CodeHosting != nil {
 		if self.CodeHosting.Platform != nil {

@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // PreserveCheckoutHistory does stuff.
 type PreserveCheckoutHistory struct {
-	PreviousBranchCandidates domain.LocalBranchNames
+	PreviousBranchCandidates gitdomain.LocalBranchNames
 	undeclaredOpcodeMethods
 }
 
@@ -20,7 +20,7 @@ func (self *PreserveCheckoutHistory) Run(args shared.RunArgs) error {
 	actualPreviousBranch := args.Runner.Backend.CurrentBranchCache.Previous()
 	// remove the current branch from the list of previous branch candidates because the current branch should never also be the previous branch
 	candidatesWithoutCurrent := self.PreviousBranchCandidates.Remove(currentBranch)
-	expectedPreviousBranch := args.Runner.Backend.FirstExistingBranch(candidatesWithoutCurrent, domain.EmptyLocalBranchName())
+	expectedPreviousBranch := args.Runner.Backend.FirstExistingBranch(candidatesWithoutCurrent, gitdomain.EmptyLocalBranchName())
 	if expectedPreviousBranch.IsEmpty() || actualPreviousBranch == expectedPreviousBranch {
 		return nil
 	}

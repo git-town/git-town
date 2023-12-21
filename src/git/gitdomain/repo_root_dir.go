@@ -1,4 +1,4 @@
-package domain
+package gitdomain
 
 // RepoRootDir represents the root directory of a Git repository.
 type RepoRootDir string

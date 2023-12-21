@@ -2,7 +2,7 @@ package hosting
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v11/src/hosting/common"
@@ -59,6 +59,6 @@ type NewConnectorArgs struct {
 	GiteaAPIToken   configdomain.GiteaToken
 	GithubAPIToken  configdomain.GitHubToken
 	GitlabAPIToken  configdomain.GitLabToken
-	MainBranch      domain.LocalBranchName
+	MainBranch      gitdomain.LocalBranchName
 	Log             common.Log
 }
