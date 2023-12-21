@@ -1,14 +1,10 @@
 package undo
 
 import (
-	"errors"
-	"os"
-
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
@@ -57,16 +53,11 @@ func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapsho
 }
 
 func determineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return program.Program{}, errors.New(messages.DirCurrentProblem)
-	}
 	fullCache, err := gitconfig.LoadFullCache(configGit)
 	if err != nil {
-		return program.Program{}, errors.New(messages.DirCurrentProblem)
+		return program.Program{}, err
 	}
 	finalConfigSnapshot := ConfigSnapshot{
-		Cwd:       currentDirectory,
 		GitConfig: fullCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
