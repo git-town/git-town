@@ -553,7 +553,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.GitTown.LocalConfigValue(*configKey)
+		newValue := state.fixture.DevRepo.GitTown.LocalCache[*configKey]
 		if newValue == "" {
 			return nil
 		}

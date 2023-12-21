@@ -63,7 +63,7 @@ func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdom
 	lineage := configdomain.Lineage{}
 	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
-		parentName := self.LocalConfigValue(key)
+		parentName := self.LocalCache[key]
 		if parentName == "" {
 			_ = deleteEntry(key)
 			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
