@@ -29,6 +29,7 @@ type PartialConfig struct {
 func (self *PartialConfig) Add(key Key, value string) error {
 	if strings.HasPrefix(key.name, "alias.") {
 		self.Aliases[key] = value
+		return nil
 	}
 	var err error
 	switch key {
@@ -69,7 +70,9 @@ func (self *PartialConfig) Add(key Key, value string) error {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{} //nolint:exhaustruct
+	return PartialConfig{
+		Aliases: map[Key]string{},
+	} //nolint:exhaustruct
 }
 
 // PartialConfigDiff diffs the given PartialConfig instances.
