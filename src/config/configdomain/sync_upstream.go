@@ -19,7 +19,12 @@ func (self SyncUpstream) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewSyncUpstreamRef(value string) (*SyncUpstream, error) {
+func NewSyncUpstreamRef(value bool) *SyncUpstream {
+	result := SyncUpstream(value)
+	return &result
+}
+
+func ParseSyncUpstreamRef(value string) (*SyncUpstream, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ValueInvalid, KeySyncUpstream, value)

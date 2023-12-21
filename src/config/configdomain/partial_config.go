@@ -43,9 +43,9 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	case KeyPushHook:
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:
-		self.NewBranchPush, err = NewNewBranchPushRef(value)
+		self.NewBranchPush, err = ParseNewBranchPushRef(value)
 	case KeyShipDeleteTrackingBranch:
-		self.ShipDeleteTrackingBranch, err = NewShipDeleteTrackingBranchRef(value)
+		self.ShipDeleteTrackingBranch, err = ParseShipDeleteTrackingBranchRef(value)
 	case KeySyncBeforeShip:
 		self.SyncBeforeShip, err = NewSyncBeforeShipRef(value)
 	case KeySyncFeatureStrategy:
@@ -53,7 +53,7 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	case KeySyncPerennialStrategy:
 		self.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(value)
 	case KeySyncUpstream:
-		self.SyncUpstream, err = NewSyncUpstreamRef(value)
+		self.SyncUpstream, err = ParseSyncUpstreamRef(value)
 	default:
 		panic("unprocessed key: " + key.String())
 	}

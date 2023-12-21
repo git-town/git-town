@@ -50,7 +50,7 @@ func (self *Config) Merge(other PartialConfig) {
 		self.Offline = *other.Offline
 	}
 	if other.PerennialBranches != nil {
-		self.PerennialBranches = *other.PerennialBranches
+		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook

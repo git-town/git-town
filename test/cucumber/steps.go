@@ -752,6 +752,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		state.fixture.DevRepo.CreateFile(
+			configdomain.ConfigFileName,
+			content.Content,
+		)
+		return nil
+	})
+
 	suite.Step(`^the coworker fetches updates$`, func() error {
 		state.fixture.CoworkerRepo.Fetch()
 		return nil

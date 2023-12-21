@@ -19,7 +19,12 @@ func (self ShipDeleteTrackingBranch) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewShipDeleteTrackingBranchRef(value string) (*ShipDeleteTrackingBranch, error) {
+func NewShipDeleteTrackingBranchRef(value bool) *ShipDeleteTrackingBranch {
+	result := ShipDeleteTrackingBranch(value)
+	return &result
+}
+
+func ParseShipDeleteTrackingBranchRef(value string) (*ShipDeleteTrackingBranch, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ValueInvalid, KeyShipDeleteTrackingBranch, value)

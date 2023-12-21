@@ -196,14 +196,19 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) *GitTown {
+func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) (*GitTown, error) {
+	configFile, err := configdomain.LoadConfigFile()
+	if err != nil {
+		return nil, err
+	}
 	config := configdomain.DefaultConfig()
+	config.Merge(configFile)
 	config.Merge(fullCache.GlobalConfig)
 	config.Merge(fullCache.LocalConfig)
 	return &GitTown{
-		Config:         config,
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
+		Config:         config,
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
-	}
+	}, nil
 }
