@@ -92,8 +92,5 @@ func LoadConfigFile() (PartialConfig, error) {
 func ParseTOML(text string) (*ConfigFileData, error) {
 	var result ConfigFileData
 	_, err := toml.Decode(text, &result)
-	if err != nil {
-		return nil, fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
-	}
 	return &result, err
 }
