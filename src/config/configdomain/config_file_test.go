@@ -9,6 +9,7 @@ import (
 
 func TestConfigfile(t *testing.T) {
 	t.Parallel()
+
 	t.Run("parse", func(t *testing.T) {
 		t.Parallel()
 		t.Run("complete content", func(t *testing.T) {
