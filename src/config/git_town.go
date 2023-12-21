@@ -16,8 +16,9 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.CachedAccess      // access to the Git configuration settings
-	configdomain.Config         // the merged configuration data
+	gitconfig.CachedAccess // access to the Git configuration settings
+	configdomain.Config    // the merged configuration data
+	configFile             configdomain.PartialConfig
 	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache         configdomain.OriginURLCache
 }
@@ -81,7 +82,7 @@ func (self *GitTown) OriginURLString() string {
 
 func (self *GitTown) Reload() {
 	self.CachedAccess.Reload()
-	self.Config = mergeAll(self.Config)
+	self.Config = mergeAll(self.configFile, self.CachedAccess.FullCache)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -185,12 +186,13 @@ func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun b
 	return &GitTown{
 		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
 		Config:         mergeAll(configFile, fullCache),
+		configFile:     configFile,
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
 	}, nil
 }
 
-func mergeAll(configFile configdomain.PartialConfig, fullCache gitconfig.FullCache) Config {
+func mergeAll(configFile configdomain.PartialConfig, fullCache gitconfig.FullCache) configdomain.Config {
 	config := configdomain.DefaultConfig()
 	config.Merge(configFile)
 	config.Merge(fullCache.GlobalConfig)
