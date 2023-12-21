@@ -40,12 +40,13 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
+	configSnapshot := undo.ConfigSnapshot{
+		GitConfig: fullCache,
+	}
+
 	fullCache, err := gitconfig.LoadFullCache(&configGitAccess)
 	if err != nil {
 		return nil, err
-	}
-	configSnapshot := undo.ConfigSnapshot{
-		GitConfig: fullCache,
 	}
 	gitTown, err := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
 	if err != nil {

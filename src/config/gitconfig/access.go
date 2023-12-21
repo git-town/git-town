@@ -18,9 +18,8 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig, error) {
-	cache := SingleCache{}
-	config := configdomain.EmptyPartialConfig()
+func (self *Access) LoadCache(global bool) (SingleCache, error) {
+	result := SingleCache{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -29,10 +28,10 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return cache, config, nil //nolint:nilerr
+		return result, nil //nolint:nilerr
 	}
 	if output == "" {
-		return cache, config, nil
+		return result, nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -44,21 +43,14 @@ func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialCon
 		if configKey == nil {
 			continue
 		}
-		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*configKey]
+		newKey, keyIsDeprecated := configdomain.DeprecatedKeys[*&configKey]
 		if keyIsDeprecated {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
-			err := config.Add(*configKey, value)
-			if err != nil {
-				return cache, config, err
-			}
-		} else {
-			cache[*configKey] = value
-		}
+		result[*configKey] = value
 	}
-	return cache, config, nil
+	return result, nil
 }
 
 func (self *Access) RemoveGlobalConfigValue(key configdomain.Key) error {

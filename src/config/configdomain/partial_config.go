@@ -3,6 +3,7 @@ package configdomain
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/domain"
 )
 
@@ -73,6 +74,21 @@ func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{ //nolint:exhaustruct
 		Aliases: map[Key]string{},
 	}
+}
+
+func NewPartialConfig(snapshot gitconfig.SingleCache) PartialConfig {
+	result := PartialConfig{}
+	for key, value := range snapshot {
+		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
+			err := config.Add(*configKey, value)
+			if err != nil {
+				return cache, config, err
+			}
+		} else {
+			cache[*configKey] = value
+		}
+	}
+	return cache, config, nil
 }
 
 // PartialConfigDiff diffs the given PartialConfig instances.
