@@ -166,7 +166,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if connector == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, hosting.UnsupportedServiceError()
+		return nil, branchesSnapshot, stashSnapshot, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)

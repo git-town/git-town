@@ -1,4 +1,4 @@
-package hosting
+package hostingdomain
 
 import "errors"
 

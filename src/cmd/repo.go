@@ -101,7 +101,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	if connector == nil {
-		return nil, hosting.UnsupportedServiceError()
+		return nil, hostingdomain.UnsupportedServiceError()
 	}
 	return &repoConfig{
 		connector: connector,
