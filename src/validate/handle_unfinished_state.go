@@ -5,11 +5,11 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/statefile"
@@ -50,14 +50,14 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Connector               hosting.Connector
+	Connector               hostingdomain.Connector
 	Verboe                  bool
 	Lineage                 configdomain.Lineage
-	InitialBranchesSnapshot domain.BranchesSnapshot
-	InitialConfigSnapshot   undo.ConfigSnapshot
-	InitialStashSnapshot    domain.StashSnapshot
+	InitialBranchesSnapshot gitdomain.BranchesStatus
+	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialStashSnapshot    gitdomain.StashSize
 	PushHook                configdomain.PushHook
-	RootDir                 domain.RepoRootDir
+	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
 }
 
@@ -99,7 +99,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	})
 }
 
-func discardRunstate(rootDir domain.RepoRootDir) (bool, error) {
+func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 	err := statefile.Delete(rootDir)
 	return false, err
 }

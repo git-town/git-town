@@ -1,14 +1,14 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // RebaseBranch rebases the current branch
 // against the branch with the given name.
 type RebaseBranch struct {
-	Branch domain.BranchName
+	Branch gitdomain.BranchName
 	undeclaredOpcodeMethods
 }
 

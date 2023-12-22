@@ -3,14 +3,14 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // DeleteBranchIfEmptyAtRuntime allows running different opcodes based on a condition evaluated at runtime.
 type DeleteBranchIfEmptyAtRuntime struct {
-	Branch domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

@@ -3,7 +3,7 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -12,8 +12,8 @@ import (
 // all the way until the given SHA.
 type ResetCurrentBranchToSHA struct {
 	Hard        bool
-	MustHaveSHA domain.SHA
-	SetToSHA    domain.SHA
+	MustHaveSHA gitdomain.SHA
+	SetToSHA    gitdomain.SHA
 	undeclaredOpcodeMethods
 }
 

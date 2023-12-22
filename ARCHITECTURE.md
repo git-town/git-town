@@ -2,13 +2,27 @@
 
 ### Design goals
 
-The major design goals of Git Town are:
+The major design goals of the Git Town codebase are:
 
 1. Execute a number of Git operations depending on conditions in the Git repo.
    Some of these conditions might change at runtime.
 2. Allow the end user to resolve problems in the same terminal window and shell
    environment that Git Town executes in.
 3. Reliably undo anything that Git Town has done upon request.
+
+### General structure
+
+To keep the amount of code manageable, the Git Town codebase separates
+functionality into subsystems for parsing configuration data, syncing branches,
+undoing changes, interacting with the CLI, interacting with external hosting
+services, etc.
+
+Each subsystem defines its own domain concepts, helpers, and business logic. To
+prevent cyclic package dependencies, subsystems define concepts and data types
+in dedicated `*domain` packages.
+
+Higher-level subsystems like syncing branches use lower-level subsystems like
+Git and configuration access but never the other way around.
 
 ### Execution framework
 

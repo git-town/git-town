@@ -7,9 +7,10 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/commitmessage"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"golang.org/x/oauth2"
 )
@@ -17,15 +18,15 @@ import (
 type Connector struct {
 	client   *gitea.Client
 	APIToken configdomain.GiteaToken
-	common.Config
-	log common.Log
+	hostingdomain.Config
+	log hostingdomain.Log
 }
 
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -43,10 +44,10 @@ func (self *Connector) FindProposal(branch, target domain.LocalBranchName) (*dom
 		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
-	return &domain.Proposal{
+	return &hostingdomain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
-		Target:       domain.NewLocalBranchName(pullRequest.Base.Ref),
+		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:        pullRequest.Title,
 	}, nil
 }
@@ -55,7 +56,7 @@ func (self *Connector) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (self *Connector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := parentBranch.String() + "..." + branch.String()
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
@@ -64,27 +65,27 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
+func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
-		return domain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	title, body := common.CommitMessageParts(message)
+	commitMessageParts := commitmessage.Split(message)
 	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   title,
-		Message: body,
+		Title:   commitMessageParts.Title,
+		Message: commitMessageParts.Body,
 	})
 	if err != nil {
-		return domain.EmptySHA(), err
+		return gitdomain.EmptySHA(), err
 	}
 	pullRequest, _, err := self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
 	if err != nil {
-		return domain.EmptySHA(), err
+		return gitdomain.EmptySHA(), err
 	}
-	return domain.NewSHA(*pullRequest.MergedCommitID), nil
+	return gitdomain.NewSHA(*pullRequest.MergedCommitID), nil
 }
 
-func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) error {
+func (self *Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {
 	// TODO: update the client and uncomment
 	// if self.log != nil {
 	// 	self.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
@@ -96,7 +97,7 @@ func (self *Connector) UpdateProposalTarget(_ int, _ domain.LocalBranchName) err
 	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
-func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target domain.LocalBranchName) []*gitea.PullRequest {
+func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
 	result := []*gitea.PullRequest{}
 	headName := organization + "/" + branch.String()
 	for p := range pullRequests {
@@ -120,7 +121,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	return &Connector{
 		APIToken: args.APIToken,
 		client:   giteaClient,
-		Config: common.Config{
+		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
@@ -133,5 +134,5 @@ type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	HostingService configdomain.Hosting
 	APIToken       configdomain.GiteaToken
-	Log            common.Log
+	Log            hostingdomain.Log
 }

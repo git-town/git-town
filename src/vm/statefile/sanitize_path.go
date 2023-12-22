@@ -4,10 +4,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-func SanitizePath(dir domain.RepoRootDir) string {
+func SanitizePath(dir gitdomain.RepoRootDir) string {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(dir.String(), "-")
 	sanitized = strings.ToLower(sanitized)
