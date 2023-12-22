@@ -253,7 +253,6 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	self.GitTown.Reload()
 	lineage := self.GitTown.Lineage
-	fmt.Println("111111111111111", lineage)
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())
