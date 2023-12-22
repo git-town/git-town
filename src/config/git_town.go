@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -67,8 +68,7 @@ func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdom
 		parentName := self.LocalCache[key]
 		if parentName == "" {
 			_ = deleteEntry(key)
-			fmt.Printf("\nNOTICE: I have found an empty parent configuration entry for branch %q.\n", child)
-			fmt.Println("I have deleted this configuration entry.")
+			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, child)
 		} else {
 			parent := gitdomain.NewLocalBranchName(parentName)
 			lineage[child] = parent
