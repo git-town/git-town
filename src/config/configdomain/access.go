@@ -55,7 +55,7 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			continue
 		}
 
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
+		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "git-town-branch.") || strings.HasPrefix(configKey.String(), "alias.") {
 			err := config.Add(*configKey, value)
 			if err != nil {
 				return cache, config, err
