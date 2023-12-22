@@ -1,21 +1,19 @@
-package gitconfig
-
-import "github.com/git-town/git-town/v11/src/config/configdomain"
+package configdomain
 
 // FullCache caches all Git-based configuration types (global and local).
 type FullCache struct {
 	GlobalCache  SingleCache
-	GlobalConfig configdomain.PartialConfig
+	GlobalConfig PartialConfig
 	LocalCache   SingleCache
-	LocalConfig  configdomain.PartialConfig
+	LocalConfig  PartialConfig
 }
 
 func EmptyFullCache() FullCache {
 	return FullCache{
-		GlobalCache:  map[configdomain.Key]string{},
-		GlobalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
-		LocalCache:   map[configdomain.Key]string{},
-		LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
+		GlobalCache:  map[Key]string{},
+		GlobalConfig: PartialConfig{}, //nolint:exhaustruct
+		LocalCache:   map[Key]string{},
+		LocalConfig:  PartialConfig{}, //nolint:exhaustruct
 	}
 }
 

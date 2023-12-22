@@ -1,10 +1,9 @@
-package gitconfig_test
+package configdomain_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/shoenig/test/must"
 )
 
@@ -17,7 +16,7 @@ func TestSingleCache(t *testing.T) {
 		t.Parallel()
 		alpha := configdomain.NewKey("alpha")
 		beta := configdomain.NewKey("beta")
-		original := gitconfig.SingleCache{
+		original := configdomain.SingleCache{
 			alpha: "A",
 			beta:  "B",
 		}
@@ -30,7 +29,7 @@ func TestSingleCache(t *testing.T) {
 
 	t.Run("KeysMatching", func(t *testing.T) {
 		t.Parallel()
-		cache := gitconfig.SingleCache{
+		cache := configdomain.SingleCache{
 			configdomain.NewKey("key1"):  "A",
 			configdomain.NewKey("key2"):  "B",
 			configdomain.NewKey("other"): "other",

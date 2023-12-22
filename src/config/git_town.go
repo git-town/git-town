@@ -8,7 +8,6 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -17,10 +16,10 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	gitconfig.CachedAccess      // access to the Git configuration settings
-	configdomain.Config         // the merged configuration data
-	DryRun                 bool // single source of truth for whether to dry-run Git commands in this repo
-	originURLCache         configdomain.OriginURLCache
+	configdomain.CachedAccess      // access to the Git configuration settings
+	configdomain.Config            // the merged configuration data
+	DryRun                    bool // single source of truth for whether to dry-run Git commands in this repo
+	originURLCache            configdomain.OriginURLCache
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -191,7 +190,7 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) (*GitTown, error) {
+func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner, dryrun bool) (*GitTown, error) {
 	configFile, err := configdomain.LoadConfigFile()
 	if err != nil {
 		return nil, err
@@ -201,7 +200,7 @@ func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun b
 	config.Merge(fullCache.GlobalConfig)
 	config.Merge(fullCache.LocalConfig)
 	return &GitTown{
-		CachedAccess:   gitconfig.NewCachedAccess(fullCache, runner),
+		CachedAccess:   configdomain.NewCachedAccess(fullCache, runner),
 		Config:         config,
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},

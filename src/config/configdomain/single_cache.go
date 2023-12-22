@@ -1,15 +1,14 @@
-package gitconfig
+package configdomain
 
 import (
 	"regexp"
 	"sort"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"golang.org/x/exp/maps"
 )
 
 // SingleCache caches a single Git configuration type (local or global).
-type SingleCache map[configdomain.Key]string
+type SingleCache map[Key]string
 
 // Clone provides a copy of this GitConfiguration instance.
 func (self SingleCache) Clone() SingleCache {
@@ -19,8 +18,8 @@ func (self SingleCache) Clone() SingleCache {
 }
 
 // KeysMatching provides the keys in this GitConfigCache that match the given regex.
-func (self SingleCache) KeysMatching(pattern string) []configdomain.Key {
-	result := []configdomain.Key{}
+func (self SingleCache) KeysMatching(pattern string) []Key {
+	result := []Key{}
 	re := regexp.MustCompile(pattern)
 	for key := range self {
 		if re.MatchString(key.String()) {

@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/statefile"
@@ -54,7 +53,7 @@ type UnfinishedStateArgs struct {
 	Verboe                  bool
 	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot gitdomain.BranchesStatus
-	InitialConfigSnapshot   undodomain.ConfigSnapshot
+	InitialConfigSnapshot   configdomain.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir

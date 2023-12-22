@@ -1,11 +1,10 @@
-package gitconfig
+package configdomain
 
 import (
 	"errors"
 	"fmt"
 	"os/exec"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -27,21 +26,21 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) GlobalConfigValue(key configdomain.Key) string {
+func (self CachedAccess) GlobalConfigValue(key Key) string {
 	return self.GlobalCache[key]
 }
 
-func (self CachedAccess) LocalConfigKeysMatching(pattern string) []configdomain.Key {
+func (self CachedAccess) LocalConfigKeysMatching(pattern string) []Key {
 	return self.LocalCache.KeysMatching(pattern)
 }
 
-func (self CachedAccess) LocalConfigValue(key configdomain.Key) string {
+func (self CachedAccess) LocalConfigValue(key Key) string {
 	return self.LocalCache[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
-func (self CachedAccess) LocalOrGlobalConfigValue(key configdomain.Key) string {
+func (self CachedAccess) LocalOrGlobalConfigValue(key Key) string {
 	local := self.LocalConfigValue(key)
 	if local != "" {
 		return local
@@ -54,13 +53,13 @@ func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
 }
 
-func (self *CachedAccess) RemoveGlobalConfigValue(key configdomain.Key) error {
+func (self *CachedAccess) RemoveGlobalConfigValue(key Key) error {
 	delete(self.GlobalCache, key)
 	return self.Access.RemoveGlobalConfigValue(key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *CachedAccess) RemoveLocalConfigValue(key configdomain.Key) error {
+func (self *CachedAccess) RemoveLocalConfigValue(key Key) error {
 	delete(self.LocalCache, key)
 	return self.Access.RemoveLocalConfigValue(key)
 }
@@ -92,17 +91,17 @@ func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 // from the Git configuration.
 func (self *CachedAccess) RemoveParent(branch gitdomain.LocalBranchName) {
 	// ignoring errors here because the entry might not exist
-	_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
+	_ = self.RemoveLocalConfigValue(NewParentKey(branch))
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *CachedAccess) SetGlobalConfigValue(key configdomain.Key, value string) error {
+func (self *CachedAccess) SetGlobalConfigValue(key Key, value string) error {
 	self.GlobalCache[key] = value
 	return self.Access.SetGlobalConfigValue(key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *CachedAccess) SetLocalConfigValue(key configdomain.Key, value string) error {
+func (self *CachedAccess) SetLocalConfigValue(key Key, value string) error {
 	self.LocalCache[key] = value
 	return self.Access.SetLocalConfigValue(key, value)
 }

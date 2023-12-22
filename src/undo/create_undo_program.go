@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undoconfig"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/undo/undostash"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -32,7 +31,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  gitdomain.BranchesStatus
-	InitialConfigSnapshot    undodomain.ConfigSnapshot
+	InitialConfigSnapshot    configdomain.ConfigSnapshot
 	InitialStashSnapshot     gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA
