@@ -18,6 +18,9 @@ undoing changes, interacting with the CLI, interacting with external hosting
 services, etc. Each subsystem defines its own domain concepts, helpers, and
 business logic.
 
+Higher-level subsystems like syncing branches use lower-level subsystems like
+Git and configuration access but not the other way around.
+
 To prevent cyclic package dependencies, the Git Town codebase defines concepts
 and data types in dedicated `*domain` packages.
 
