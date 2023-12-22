@@ -84,7 +84,7 @@ func executeAppend(arg string, verbose bool) error {
 
 type appendConfig struct {
 	branches                  syncdomain.Branches
-	branchesToSync            syncdomain.BranchInfos
+	branchesToSync            gitdomain.BranchInfos
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online

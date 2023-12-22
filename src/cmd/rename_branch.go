@@ -97,7 +97,7 @@ type renameBranchConfig struct {
 	mainBranch     gitdomain.LocalBranchName
 	newBranch      gitdomain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
-	oldBranch      syncdomain.BranchInfo
+	oldBranch      gitdomain.BranchInfo
 	previousBranch gitdomain.LocalBranchName
 }
 
@@ -143,7 +143,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if oldBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	if oldBranch.SyncStatus != syncdomain.SyncStatusUpToDate && oldBranch.SyncStatus != syncdomain.SyncStatusLocalOnly {
+	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {

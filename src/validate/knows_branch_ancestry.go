@@ -52,7 +52,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	AllBranches   syncdomain.BranchInfos
+	AllBranches   gitdomain.BranchInfos
 	Backend       *git.BackendCommands
 	BranchTypes   syncdomain.BranchTypes
 	DefaultBranch gitdomain.LocalBranchName
@@ -84,7 +84,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	AllBranches syncdomain.BranchInfos
+	AllBranches gitdomain.BranchInfos
 	Backend     *git.BackendCommands
 	BranchTypes syncdomain.BranchTypes
 	MainBranch  gitdomain.LocalBranchName

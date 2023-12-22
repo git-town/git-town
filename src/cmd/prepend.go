@@ -86,7 +86,7 @@ func executePrepend(args []string, verbose bool) error {
 
 type prependConfig struct {
 	branches                  syncdomain.Branches
-	branchesToSync            syncdomain.BranchInfos
+	branchesToSync            gitdomain.BranchInfos
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online

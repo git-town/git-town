@@ -1,10 +1,10 @@
 package undodomain
 
-import "github.com/git-town/git-town/v11/src/sync/syncdomain"
+import "github.com/git-town/git-town/v11/src/git/gitdomain"
 
 // InconsistentChange describes a change where both local and remote branch exist before and after,
 // but it's not an OmniChange, i.e. the SHA are different.
 type InconsistentChange struct {
-	Before syncdomain.BranchInfo
-	After  syncdomain.BranchInfo
+	Before gitdomain.BranchInfo
+	After  gitdomain.BranchInfo
 }

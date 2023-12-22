@@ -119,9 +119,9 @@ func executeShip(args []string, message string, verbose bool) error {
 
 type shipConfig struct {
 	branches                 syncdomain.Branches
-	branchToShip             syncdomain.BranchInfo
+	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
-	targetBranch             syncdomain.BranchInfo
+	targetBranch             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
 	proposalMessage          string
@@ -171,7 +171,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	mainBranch := repo.Runner.GitTown.MainBranch
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
-	if branchToShip != nil && branchToShip.SyncStatus == syncdomain.SyncStatusOtherWorktree {
+	if branchToShip != nil && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial

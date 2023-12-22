@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -41,18 +40,18 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			syncStatuses := syncdomain.BranchInfos{
+			syncStatuses := gitdomain.BranchInfos{
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch1"),
 					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: syncdomain.SyncStatusLocalOnly,
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch2"),
 					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: syncdomain.SyncStatusLocalOnly,
+					SyncStatus: gitdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},

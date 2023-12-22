@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -82,7 +81,7 @@ func executeKill(args []string, verbose bool) error {
 }
 
 type killConfig struct {
-	branchToKill   syncdomain.BranchInfo
+	branchToKill   gitdomain.BranchInfo
 	branchWhenDone gitdomain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  gitdomain.LocalBranchName
@@ -115,7 +114,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if branchToKill == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
-	if branchToKill.SyncStatus == syncdomain.SyncStatusOtherWorktree {
+	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	if branchToKill.IsLocal() {

@@ -1,4 +1,4 @@
-package syncdomain
+package gitdomain
 
 // SyncStatus encodes the places a branch can exist at.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.

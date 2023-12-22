@@ -96,7 +96,7 @@ func executePropose(verbose bool) error {
 
 type proposeConfig struct {
 	branches              syncdomain.Branches
-	branchesToSync        syncdomain.BranchInfos
+	branchesToSync        gitdomain.BranchInfos
 	connector             hostingdomain.Connector
 	hasOpenChanges        bool
 	remotes               gitdomain.Remotes

@@ -33,7 +33,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (syncdoma
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
-	AllBranches syncdomain.BranchInfos
+	AllBranches gitdomain.BranchInfos
 	BranchTypes syncdomain.BranchTypes
 	Lineage     configdomain.Lineage
 	MainBranch  gitdomain.LocalBranchName

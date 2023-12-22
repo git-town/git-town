@@ -6,7 +6,7 @@ import (
 
 // TODO: this struct doesn't really belong here. Do we even need it in the new world where most config information is available via a single variable?
 type Branches struct {
-	All     BranchInfos
+	All     gitdomain.BranchInfos
 	Types   BranchTypes
 	Initial gitdomain.LocalBranchName
 }
@@ -14,7 +14,7 @@ type Branches struct {
 // EmptyBranches provides the zero value for Branches.
 func EmptyBranches() Branches {
 	return Branches{
-		All:     BranchInfos{},
+		All:     gitdomain.BranchInfos{},
 		Types:   EmptyBranchTypes(),
 		Initial: gitdomain.EmptyLocalBranchName(),
 	}

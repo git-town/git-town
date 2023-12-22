@@ -9,13 +9,13 @@ import (
 )
 
 // SyncBranchProgram syncs the given branch.
-func SyncBranchProgram(branch syncdomain.BranchInfo, args SyncBranchProgramArgs) {
+func SyncBranchProgram(branch gitdomain.BranchInfo, args SyncBranchProgramArgs) {
 	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Lineage.Parent(branch.LocalName))
-	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == syncdomain.SyncStatusOtherWorktree
+	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	switch {
-	case branch.SyncStatus == syncdomain.SyncStatusDeletedAtRemote:
+	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
 		syncDeletedBranchProgram(args.Program, branch, parentOtherWorktree, args)
-	case branch.SyncStatus == syncdomain.SyncStatusOtherWorktree:
+	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
 		SyncExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
@@ -23,7 +23,7 @@ func SyncBranchProgram(branch syncdomain.BranchInfo, args SyncBranchProgramArgs)
 }
 
 type SyncBranchProgramArgs struct {
-	BranchInfos           syncdomain.BranchInfos
+	BranchInfos           gitdomain.BranchInfos
 	BranchTypes           syncdomain.BranchTypes
 	IsOnline              configdomain.Online
 	Lineage               configdomain.Lineage
@@ -38,7 +38,7 @@ type SyncBranchProgramArgs struct {
 }
 
 // SyncExistingBranchProgram provides the opcode to sync a particular branch.
-func SyncExistingBranchProgram(list *program.Program, branch syncdomain.BranchInfo, parentOtherWorktree bool, args SyncBranchProgramArgs) {
+func SyncExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args SyncBranchProgramArgs) {
 	isFeatureBranch := args.BranchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced

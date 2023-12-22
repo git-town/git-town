@@ -17,35 +17,35 @@ func TestCategorize(t *testing.T) {
 		t.Parallel()
 		give := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
-				Before: syncdomain.BranchInfo{
+				Before: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
 					RemoteSHA:  gitdomain.NewSHA("222222"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
-				After: syncdomain.BranchInfo{
+				After: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
 					LocalSHA:   gitdomain.NewSHA("333333"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
 					RemoteSHA:  gitdomain.NewSHA("444444"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
 			undodomain.InconsistentChange{
-				Before: syncdomain.BranchInfo{
+				Before: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
 					LocalSHA:   gitdomain.NewSHA("555555"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
 					RemoteSHA:  gitdomain.NewSHA("666666"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
-				After: syncdomain.BranchInfo{
+				After: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
 					LocalSHA:   gitdomain.NewSHA("777777"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
 					RemoteSHA:  gitdomain.NewSHA("888888"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
 		}
@@ -56,38 +56,38 @@ func TestCategorize(t *testing.T) {
 		havePerennials, haveFeatures := undobranches.CategorizeInconsistentChanges(give, branchTypes)
 		wantPerennials := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
-				Before: syncdomain.BranchInfo{
+				Before: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
 					RemoteSHA:  gitdomain.NewSHA("222222"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
-				After: syncdomain.BranchInfo{
+				After: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-1"),
 					LocalSHA:   gitdomain.NewSHA("333333"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/perennial-1"),
 					RemoteSHA:  gitdomain.NewSHA("444444"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
 		}
 		must.Eq(t, wantPerennials, havePerennials)
 		wantFeatures := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
-				Before: syncdomain.BranchInfo{
+				Before: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
 					LocalSHA:   gitdomain.NewSHA("555555"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
 					RemoteSHA:  gitdomain.NewSHA("666666"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
-				After: syncdomain.BranchInfo{
+				After: gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("feature-1"),
 					LocalSHA:   gitdomain.NewSHA("777777"),
 					RemoteName: gitdomain.NewRemoteBranchName("origin/feature-1"),
 					RemoteSHA:  gitdomain.NewSHA("888888"),
-					SyncStatus: syncdomain.SyncStatusNotInSync,
+					SyncStatus: gitdomain.SyncStatusNotInSync,
 				},
 			},
 		}

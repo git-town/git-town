@@ -27,7 +27,7 @@ func (self *FailureCollector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (self *FailureCollector) BranchesSyncStatus(value syncdomain.BranchInfos, err error) syncdomain.BranchInfos {
+func (self *FailureCollector) BranchesSyncStatus(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
 	self.Check(err)
 	return value
 }

@@ -115,7 +115,7 @@ func executeSync(all, dryRun, verbose bool) error {
 
 type syncConfig struct {
 	branches              syncdomain.Branches
-	branchesToSync        syncdomain.BranchInfos
+	branchesToSync        gitdomain.BranchInfos
 	hasOpenChanges        bool
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage

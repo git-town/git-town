@@ -6,11 +6,10 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent gitdomain.LocalBranchName, lineage configdomain.Lineage, branches syncdomain.BranchInfos) (gitdomain.LocalBranchName, error) {
+func EnterParent(branch, defaultParent gitdomain.LocalBranchName, lineage configdomain.Lineage, branches gitdomain.BranchInfos) (gitdomain.LocalBranchName, error) {
 	choices := branches.LocalBranches().Names()
 	slice.Hoist(&choices, defaultParent)
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)

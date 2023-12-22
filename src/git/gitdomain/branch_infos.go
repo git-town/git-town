@@ -1,9 +1,8 @@
-package syncdomain
+package gitdomain
 
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -13,7 +12,7 @@ import (
 type BranchInfos []BranchInfo
 
 // FindByLocalName provides the branch with the given name if one exists.
-func (self BranchInfos) FindByLocalName(branchName gitdomain.LocalBranchName) *BranchInfo {
+func (self BranchInfos) FindByLocalName(branchName LocalBranchName) *BranchInfo {
 	for bi, branch := range self {
 		if branch.LocalName == branchName {
 			return &self[bi]
@@ -24,7 +23,7 @@ func (self BranchInfos) FindByLocalName(branchName gitdomain.LocalBranchName) *B
 
 // FindByRemoteName provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (self BranchInfos) FindByRemoteName(remoteBranch gitdomain.RemoteBranchName) *BranchInfo {
+func (self BranchInfos) FindByRemoteName(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, bi := range self {
 		if bi.RemoteName == remoteBranch {
 			return &self[b]
@@ -46,7 +45,7 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 }
 
 // IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
-func (self BranchInfos) HasLocalBranch(localBranch gitdomain.LocalBranchName) bool {
+func (self BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, bi := range self {
 		if bi.LocalName == localBranch {
 			return true
@@ -56,7 +55,7 @@ func (self BranchInfos) HasLocalBranch(localBranch gitdomain.LocalBranchName) bo
 }
 
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch gitdomain.LocalBranchName) bool {
+func (self BranchInfos) HasMatchingTrackingBranchFor(localBranch LocalBranchName) bool {
 	return self.FindByRemoteName(localBranch.TrackingBranch()) != nil
 }
 
@@ -83,8 +82,8 @@ func (self BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 }
 
 // Names provides the names of all local branches in this BranchesSyncStatus instance.
-func (self BranchInfos) Names() gitdomain.LocalBranchNames {
-	result := make(gitdomain.LocalBranchNames, 0, len(self))
+func (self BranchInfos) Names() LocalBranchNames {
+	result := make(LocalBranchNames, 0, len(self))
 	for _, bi := range self {
 		if !bi.LocalName.IsEmpty() {
 			result = append(result, bi.LocalName)
@@ -93,7 +92,7 @@ func (self BranchInfos) Names() gitdomain.LocalBranchNames {
 	return result
 }
 
-func (self BranchInfos) Remove(branchName gitdomain.LocalBranchName) BranchInfos {
+func (self BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 	result := BranchInfos{}
 	for _, bi := range self {
 		if bi.LocalName != branchName {
@@ -104,7 +103,7 @@ func (self BranchInfos) Remove(branchName gitdomain.LocalBranchName) BranchInfos
 }
 
 // Select provides the BranchSyncStatus elements with the given names.
-func (self BranchInfos) Select(names []gitdomain.LocalBranchName) (BranchInfos, error) {
+func (self BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for b, bi := range names {
 		branch := self.FindByLocalName(bi)
@@ -116,7 +115,7 @@ func (self BranchInfos) Select(names []gitdomain.LocalBranchName) (BranchInfos, 
 	return result, nil
 }
 
-func (self BranchInfos) UpdateLocalSHA(branch gitdomain.LocalBranchName, sha gitdomain.SHA) error {
+func (self BranchInfos) UpdateLocalSHA(branch LocalBranchName, sha SHA) error {
 	for b := range self {
 		if self[b].LocalName == branch {
 			self[b].LocalSHA = sha

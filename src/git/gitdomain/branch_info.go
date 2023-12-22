@@ -1,34 +1,30 @@
-package syncdomain
-
-import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-)
+package gitdomain
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
 	// LocalName contains the local name of the branch.
-	LocalName gitdomain.LocalBranchName
+	LocalName LocalBranchName
 
 	// LocalSHA contains the SHA that this branch had locally before Git Town ran.
-	LocalSHA gitdomain.SHA
+	LocalSHA SHA
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
 	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	RemoteName gitdomain.RemoteBranchName
+	RemoteName RemoteBranchName
 
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
-	RemoteSHA gitdomain.SHA
+	RemoteSHA SHA
 }
 
 func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
-		LocalName:  gitdomain.EmptyLocalBranchName(),
-		LocalSHA:   gitdomain.EmptySHA(),
+		LocalName:  EmptyLocalBranchName(),
+		LocalSHA:   EmptySHA(),
 		SyncStatus: SyncStatusUpToDate,
-		RemoteName: gitdomain.EmptyRemoteBranchName(),
-		RemoteSHA:  gitdomain.EmptySHA(),
+		RemoteName: EmptyRemoteBranchName(),
+		RemoteSHA:  EmptySHA(),
 	}
 }
 
