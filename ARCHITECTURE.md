@@ -2,7 +2,7 @@
 
 ### Design goals
 
-The major design goals of Git Town are:
+The major design goals of the Git Town codebase are:
 
 1. Execute a number of Git operations depending on conditions in the Git repo.
    Some of these conditions might change at runtime.
