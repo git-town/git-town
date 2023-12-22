@@ -1,4 +1,4 @@
-package undo
+package undostash
 
 import (
 	"github.com/git-town/git-town/v11/src/undo/undodomain"

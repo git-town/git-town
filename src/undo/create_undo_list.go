@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
+	"github.com/git-town/git-town/v11/src/undo/undostash"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
@@ -72,6 +73,6 @@ func determineUndoStashProgram(initialStashSnapshot undodomain.StashSnapshot, ba
 	if err != nil {
 		return program.Program{}, err
 	}
-	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
+	stashDiff := undostash.NewStashDiff(initialStashSnapshot, finalStashSnapshot)
 	return stashDiff.Program(), nil
 }
