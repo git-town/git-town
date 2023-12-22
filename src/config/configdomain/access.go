@@ -47,13 +47,12 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
+		cache[*configKey] = value
 		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
 			err := config.Add(*configKey, value)
 			if err != nil {
 				return cache, config, err
 			}
-		} else {
-			cache[*configKey] = value
 		}
 	}
 	return cache, config, nil
