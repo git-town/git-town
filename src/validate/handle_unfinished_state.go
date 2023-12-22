@@ -55,7 +55,7 @@ type UnfinishedStateArgs struct {
 	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot undodomain.BranchesSnapshot
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
-	InitialStashSnapshot    undodomain.StashSnapshot
+	InitialStashSnapshot    gitdomain.StashSize
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner

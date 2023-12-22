@@ -76,7 +76,7 @@ func executeHack(args []string, verbose bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook

@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/subshell"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	testgit "github.com/git-town/git-town/v11/test/git"
 	"github.com/git-town/git-town/v11/test/testruntime"
 	"github.com/shoenig/test/must"
@@ -796,16 +795,16 @@ func TestBackendCommands(t *testing.T) {
 			runtime.StashOpenFiles()
 			runtime.CreateFile("file2", "content")
 			runtime.StashOpenFiles()
-			have, err := runtime.StashSnapshot()
-			want := undodomain.StashSnapshot(2)
+			have, err := runtime.StashSize()
+			want := gitdomain.StashSize(2)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})
 		t.Run("no stash entries", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			have, err := runtime.StashSnapshot()
-			want := undodomain.StashSnapshot(0)
+			have, err := runtime.StashSize()
+			want := gitdomain.StashSize(0)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		})

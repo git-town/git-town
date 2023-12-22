@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
@@ -71,7 +72,7 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

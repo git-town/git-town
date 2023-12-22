@@ -109,7 +109,7 @@ type proposeConfig struct {
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

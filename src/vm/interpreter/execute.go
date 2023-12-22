@@ -45,7 +45,7 @@ type ExecuteArgs struct {
 	RootDir                 gitdomain.RepoRootDir
 	InitialBranchesSnapshot undodomain.BranchesSnapshot
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
-	InitialStashSnapshot    undodomain.StashSnapshot
+	InitialStashSnapshot    gitdomain.StashSize
 	Lineage                 configdomain.Lineage
 	NoPushHook              configdomain.NoPushHook
 }

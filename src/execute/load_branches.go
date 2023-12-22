@@ -8,10 +8,10 @@ import (
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (configdomain.Branches, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func LoadBranches(args LoadBranchesArgs) (configdomain.Branches, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot undodomain.BranchesSnapshot
 	var err error
-	stashSnapshot, err := args.Repo.Runner.Backend.StashSnapshot()
+	stashSnapshot, err := args.Repo.Runner.Backend.StashSize()
 	if err != nil {
 		return configdomain.EmptyBranches(), undodomain.EmptyBranchesSnapshot(), stashSnapshot, false, err
 	}

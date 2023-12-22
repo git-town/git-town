@@ -1075,7 +1075,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSnapshot, err := state.fixture.DevRepo.StashSnapshot()
+		stashSnapshot, err := state.fixture.DevRepo.StashSize()
 		if err != nil {
 			return err
 		}

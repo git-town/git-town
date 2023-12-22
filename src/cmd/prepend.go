@@ -102,7 +102,7 @@ type prependConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook

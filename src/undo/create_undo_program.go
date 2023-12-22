@@ -33,7 +33,7 @@ type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  undodomain.BranchesSnapshot
 	InitialConfigSnapshot    undodomain.ConfigSnapshot
-	InitialStashSnapshot     undodomain.StashSnapshot
+	InitialStashSnapshot     gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA
 }

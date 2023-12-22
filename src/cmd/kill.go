@@ -92,7 +92,7 @@ type killConfig struct {
 	previousBranch gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

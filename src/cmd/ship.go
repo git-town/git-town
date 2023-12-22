@@ -141,7 +141,7 @@ type shipConfig struct {
 	syncBeforeShip           configdomain.SyncBeforeShip
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

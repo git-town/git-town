@@ -526,10 +526,11 @@ func (self *BackendCommands) ShouldPushBranch(branch gitdomain.LocalBranchName, 
 	return out != "", nil
 }
 
-// StashSnapshot provides the number of stashes in this repository.
-func (self *BackendCommands) StashSnapshot() (undodomain.StashSnapshot, error) {
+// StashSize provides the number of stashes in this repository.
+// TODO: return a low-level data structure here, like an int, not something from the undodomain.
+func (self *BackendCommands) StashSize() (gitdomain.StashSize, error) {
 	output, err := self.QueryTrim("git", "stash", "list")
-	return undodomain.StashSnapshot(len(stringslice.Lines(output))), err
+	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
 // Version indicates whether the needed Git version is installed.
