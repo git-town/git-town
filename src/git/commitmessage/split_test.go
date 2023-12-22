@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestParseCommitMessage(t *testing.T) {
+func TestSplitCommitMessage(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
 		title string
