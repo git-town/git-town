@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
-// wrap wraps the given list with opcodes that change the Git root directory or stash away open changes.
-// TODO: only wrap if the list actually contains any opcodes.
+// Wrap prepends and appends housekeeping activities to the given program.
+// TODO: only wrap if the program actually contains any opcodes.
 func Wrap(program *program.Program, options WrapOptions) {
 	program.Add(&opcode.PreserveCheckoutHistory{
 		PreviousBranchCandidates: options.PreviousBranchCandidates,
