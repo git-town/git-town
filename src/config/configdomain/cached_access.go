@@ -91,6 +91,7 @@ func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
 func (self *CachedAccess) RemoveParent(branch gitdomain.LocalBranchName) {
+	self.LocalConfig.Lineage.RemoveBranch(branch)
 	// ignoring errors here because the entry might not exist
 	_ = self.RemoveLocalConfigValue(NewParentKey(branch))
 }

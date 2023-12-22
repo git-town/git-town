@@ -69,8 +69,8 @@ func (self *Access) RemoveGlobalConfigValue(key Key) error {
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key Key) error {
-	_ = self.Run("git", "config", "--unset", key.String())
-	return nil
+	err := self.Run("git", "config", "--unset", key.String())
+	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
