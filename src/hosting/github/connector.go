@@ -20,7 +20,7 @@ import (
 // via the GitHub API.
 type Connector struct {
 	client *github.Client
-	common.Config
+	hostingdomain.Config
 	APIToken   configdomain.GitHubToken
 	MainBranch gitdomain.LocalBranchName
 	log        common.Log
@@ -128,7 +128,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	return &Connector{
 		client:   github.NewClient(httpClient),
 		APIToken: args.APIToken,
-		Config: common.Config{
+		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

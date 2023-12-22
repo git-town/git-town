@@ -6,12 +6,11 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 )
 
 type Config struct {
-	common.Config
+	hostingdomain.Config
 	APIToken configdomain.GitLabToken
 }
 

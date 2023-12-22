@@ -81,7 +81,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := Config{
-		Config: common.Config{
+		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

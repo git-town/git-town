@@ -1,9 +1,9 @@
-package common_test
+package hostingdomain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -12,7 +12,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 
 	t.Run("no port in hostname", func(t *testing.T) {
 		t.Parallel()
-		config := common.Config{
+		config := hostingdomain.Config{
 			Hostname:     "git.example.com",
 			Organization: "org",
 			Repository:   "repo",
@@ -24,7 +24,7 @@ func TestHostnameWithStandardPort(t *testing.T) {
 
 	t.Run("port in hostname", func(t *testing.T) {
 		t.Parallel()
-		config := common.Config{
+		config := hostingdomain.Config{
 			Hostname:     "git.example.com:4022",
 			Organization: "org",
 			Repository:   "repo",

@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitlab"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -19,7 +18,7 @@ func TestGitlabConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
 		config := gitlab.Config{
-			Config: common.Config{
+			Config: hostingdomain.Config{
 				Hostname:     "",
 				Organization: "",
 				Repository:   "",
@@ -64,7 +63,7 @@ func TestGitlabConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				connector := gitlab.Connector{
 					Config: gitlab.Config{
-						Config: common.Config{
+						Config: hostingdomain.Config{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
@@ -93,7 +92,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
-			Config: common.Config{
+			Config: hostingdomain.Config{
 				Hostname:     "gitlab.com",
 				Organization: "git-town",
 				Repository:   "docs",
@@ -113,7 +112,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
-			Config: common.Config{
+			Config: hostingdomain.Config{
 				Hostname:     "custom-url.com",
 				Organization: "git-town",
 				Repository:   "docs",

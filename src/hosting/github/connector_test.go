@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -54,7 +53,7 @@ func TestConnector(t *testing.T) {
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := github.Connector{
-					Config: common.Config{
+					Config: hostingdomain.Config{
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
@@ -72,7 +71,7 @@ func TestConnector(t *testing.T) {
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
 		connector := github.Connector{ //nolint:exhaustruct
-			Config: common.Config{
+			Config: hostingdomain.Config{
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",
@@ -97,7 +96,7 @@ func TestNewConnector(t *testing.T) {
 			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
-		wantConfig := common.Config{
+		wantConfig := hostingdomain.Config{
 			Hostname:     "github.com",
 			Organization: "git-town",
 			Repository:   "docs",
@@ -115,7 +114,7 @@ func TestNewConnector(t *testing.T) {
 			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
-		wantConfig := common.Config{
+		wantConfig := hostingdomain.Config{
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",

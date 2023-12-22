@@ -15,7 +15,7 @@ import (
 
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
-	common.Config
+	hostingdomain.Config
 	getSHAForBranch common.SHAForBranchFunc
 }
 
@@ -26,7 +26,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 		return nil, nil //nolint:nilnil
 	}
 	return &Connector{
-		Config: common.Config{
+		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,

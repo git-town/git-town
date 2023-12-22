@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
@@ -119,7 +118,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			Log:            log.Silent{},
 		})
 		must.NoError(t, err)
-		wantConfig := common.Config{
+		wantConfig := hostingdomain.Config{
 			Hostname:     "custom-url.com",
 			Organization: "git-town",
 			Repository:   "docs",

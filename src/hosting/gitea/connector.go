@@ -18,7 +18,7 @@ import (
 type Connector struct {
 	client   *gitea.Client
 	APIToken configdomain.GiteaToken
-	common.Config
+	hostingdomain.Config
 	log common.Log
 }
 
@@ -121,7 +121,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	return &Connector{
 		APIToken: args.APIToken,
 		client:   giteaClient,
-		Config: common.Config{
+		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
