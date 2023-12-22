@@ -5,6 +5,15 @@ Feature: configure the main branch
     Then it prints no output
     And local Git Town setting "main-branch" is now "main"
 
+  Scenario: empty setting
+    Given local Git Town setting "main-branch" is ""
+    When I run "git-town config main-branch main"
+    Then it prints:
+      """
+      NOTICE: deleted empty configuration entry "git-town.main-branch"
+      """
+    And local Git Town setting "main-branch" is now "main"
+
   Scenario: previously configured
     Given the branches "old" and "new"
     And local Git Town setting "main-branch" is "old"
