@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -91,7 +90,7 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	branches       syncdomain.Branches
+	branches       configdomain.Branches
 	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     gitdomain.LocalBranchName

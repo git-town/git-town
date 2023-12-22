@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -95,7 +94,7 @@ func executePropose(verbose bool) error {
 }
 
 type proposeConfig struct {
-	branches              syncdomain.Branches
+	branches              configdomain.Branches
 	branchesToSync        gitdomain.BranchInfos
 	connector             hostingdomain.Connector
 	hasOpenChanges        bool

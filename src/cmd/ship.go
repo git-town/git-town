@@ -15,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
@@ -118,7 +117,7 @@ func executeShip(args []string, message string, verbose bool) error {
 }
 
 type shipConfig struct {
-	branches                 syncdomain.Branches
+	branches                 configdomain.Branches
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
 	targetBranch             gitdomain.BranchInfo

@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -73,7 +72,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	branchTypes := repo.Runner.GitTown.BranchTypes()
-	branches := syncdomain.Branches{
+	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
