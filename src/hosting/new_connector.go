@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/gitlab"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
@@ -55,7 +56,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 type NewConnectorArgs struct {
 	HostingService  configdomain.Hosting
 	OriginURL       *giturl.Parts
-	GetSHAForBranch common.SHAForBranchFunc
+	GetSHAForBranch hostingdomain.SHAForBranchFunc
 	GiteaAPIToken   configdomain.GiteaToken
 	GithubAPIToken  configdomain.GitHubToken
 	GitlabAPIToken  configdomain.GitLabToken

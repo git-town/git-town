@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -16,7 +15,7 @@ import (
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
 	hostingdomain.Config
-	getSHAForBranch common.SHAForBranchFunc
+	getSHAForBranch hostingdomain.SHAForBranchFunc
 }
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
@@ -38,7 +37,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	OriginURL       *giturl.Parts
 	HostingService  configdomain.Hosting
-	GetSHAForBranch common.SHAForBranchFunc
+	GetSHAForBranch hostingdomain.SHAForBranchFunc
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
