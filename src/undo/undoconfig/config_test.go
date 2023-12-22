@@ -17,17 +17,17 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -53,17 +53,17 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -94,16 +94,16 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline: "1",
 			},
-			LocalCache: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -137,14 +137,14 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
@@ -173,15 +173,15 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline:               "0",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
 		}
@@ -214,14 +214,14 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline: "0",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{},
-			LocalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{},
+			Local: configdomain.SingleCache{
 				configdomain.KeyOffline: "1",
 			},
 		}
@@ -257,21 +257,21 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline:  "0",
 				configdomain.KeyPushHook: "0",
 			},
-			LocalCache: configdomain.SingleCache{
+			Local: configdomain.SingleCache{
 				configdomain.KeyPerennialBranches: "prod",
 				configdomain.KeyGithubToken:       "token",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			GlobalCache: configdomain.SingleCache{
+			Global: configdomain.SingleCache{
 				configdomain.KeyOffline:               "1",
 				configdomain.KeySyncPerennialStrategy: "1",
 			},
-			LocalCache: configdomain.SingleCache{
+			Local: configdomain.SingleCache{
 				configdomain.KeyPerennialBranches: "prod qa",
 				configdomain.KeyPushHook:          "1",
 			},

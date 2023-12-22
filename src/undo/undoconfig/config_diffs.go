@@ -12,11 +12,9 @@ type ConfigDiffs struct {
 }
 
 func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
-	globalCacheDiff := SingleCacheDiff(before.GlobalCache, after.GlobalCache)
-	localCacheDiff := SingleCacheDiff(before.LocalCache, after.LocalCache)
 	return ConfigDiffs{
-		Global: globalCacheDiff,
-		Local:  localCacheDiff,
+		Global: SingleCacheDiff(before.Global, after.Global),
+		Local:  SingleCacheDiff(before.Local, after.Local),
 	}
 }
 
