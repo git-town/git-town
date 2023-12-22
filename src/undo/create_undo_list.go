@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -41,9 +42,9 @@ func determineUndoBranchesProgram(initialBranchesSnapshot undodomain.BranchesSna
 	if err != nil {
 		return program.Program{}, err
 	}
-	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
+	branchSpans := undobranches.NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
-	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
+	return branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Lineage:                  runner.GitTown.Lineage(runner.GitTown.RemoveLocalConfigValue),
 		BranchTypes:              runner.GitTown.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,

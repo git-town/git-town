@@ -1,4 +1,4 @@
-package undo_test
+package undobranches_test
 
 import "testing"
 

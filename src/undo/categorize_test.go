@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
@@ -53,7 +53,7 @@ func TestCategorize(t *testing.T) {
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 		}
-		havePerennials, haveFeatures := undo.CategorizeInconsistentChanges(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeInconsistentChanges(give, branchTypes)
 		wantPerennials := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
 				Before: undodomain.BranchInfo{
@@ -110,7 +110,7 @@ func TestCategorize(t *testing.T) {
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := undo.CategorizeLocalBranchChange(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, branchTypes)
 		wantPerennials := undodomain.LocalBranchChange{
 			gitdomain.NewLocalBranchName("dev"): {
 				Before: gitdomain.NewSHA("333333"),
@@ -143,7 +143,7 @@ func TestCategorize(t *testing.T) {
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := undo.CategorizeRemoteBranchChange(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, branchTypes)
 		wantPerennials := undodomain.RemoteBranchChange{
 			gitdomain.NewRemoteBranchName("origin/dev"): {
 				Before: gitdomain.NewSHA("333333"),
@@ -170,7 +170,7 @@ func TestCategorize(t *testing.T) {
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
-		havePerennials, haveFeatures := undo.CategorizeRemoteBranchesSHAs(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, branchTypes)
 		wantPerennials := undodomain.RemoteBranchesSHAs{
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}

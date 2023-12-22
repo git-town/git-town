@@ -1,4 +1,4 @@
-package undo
+package undobranches
 
 import (
 	"strings"

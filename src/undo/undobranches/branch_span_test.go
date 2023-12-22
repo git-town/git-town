@@ -1,11 +1,11 @@
-package undo_test
+package undobranches_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
@@ -17,7 +17,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni change", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -37,7 +37,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("333333"),
@@ -61,7 +61,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omni remove", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -81,7 +81,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("not an omni change", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("333333"),
@@ -105,7 +105,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("is an inconsistent change", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -125,7 +125,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("no before-local", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -145,7 +145,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("no before-remote", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -165,7 +165,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("no after-local", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -185,7 +185,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("no after-remote", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -208,7 +208,7 @@ func TestBranchSpan(t *testing.T) {
 	t.Run("LocalAdded", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add a new local branch", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -227,7 +227,7 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, bs.LocalAdded())
 		})
 		t.Run("add a local counterpart for an existing remote branch", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -246,7 +246,7 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, bs.LocalAdded())
 		})
 		t.Run("doesn't add anything", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -270,7 +270,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("changed a local branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -290,7 +290,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("changed the local part of an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -310,7 +310,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("no local changes", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -333,7 +333,7 @@ func TestBranchSpan(t *testing.T) {
 	t.Run("LocalRemoved", func(t *testing.T) {
 		t.Parallel()
 		t.Run("removed a local branch", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -352,7 +352,7 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, bs.LocalRemoved())
 		})
 		t.Run("removed the local part of an omni branch", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -371,7 +371,7 @@ func TestBranchSpan(t *testing.T) {
 			must.True(t, bs.LocalRemoved())
 		})
 		t.Run("doesn't remove anything", func(t *testing.T) {
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -395,7 +395,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("no changes", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -415,7 +415,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("has changes", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -439,7 +439,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("adds a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -459,7 +459,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("adds the remote part for an existing local branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -479,7 +479,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -503,7 +503,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("changes a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -523,7 +523,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("changes the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -543,7 +543,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("changes the local part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -567,7 +567,7 @@ func TestBranchSpan(t *testing.T) {
 		t.Parallel()
 		t.Run("removing a remote-only branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -587,7 +587,7 @@ func TestBranchSpan(t *testing.T) {
 		})
 		t.Run("removing the remote part of an omni branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
@@ -608,7 +608,7 @@ func TestBranchSpan(t *testing.T) {
 
 		t.Run("changes a remote branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -629,7 +629,7 @@ func TestBranchSpan(t *testing.T) {
 
 		t.Run("upstream branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undo.BranchSpan{
+			bs := undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),

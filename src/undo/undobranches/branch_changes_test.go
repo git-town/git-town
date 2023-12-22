@@ -1,4 +1,4 @@
-package undo_test
+package undobranches_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -41,9 +41,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("branch-1"),
 		}
-		haveSpan := undo.NewBranchSpans(before, after)
-		wantSpan := undo.BranchSpans{
-			undo.BranchSpan{
+		haveSpan := undobranches.NewBranchSpans(before, after)
+		wantSpan := undobranches.BranchSpans{
+			undobranches.BranchSpan{
 				Before: undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -62,7 +62,7 @@ func TestChanges(t *testing.T) {
 		}
 		must.Eq(t, wantSpan, haveSpan)
 		haveChanges := haveSpan.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:            gitdomain.NewLocalBranchNames("branch-1"),
 			LocalRemoved:          undodomain.LocalBranchesSHAs{},
 			LocalChanged:          undodomain.LocalBranchChange{},
@@ -74,7 +74,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -116,9 +116,9 @@ func TestChanges(t *testing.T) {
 			Branches: undodomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{
 				gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewSHA("111111"),
@@ -132,7 +132,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -198,9 +198,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{
@@ -221,7 +221,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -294,9 +294,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{},
@@ -311,7 +311,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -378,9 +378,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{
 				gitdomain.NewLocalBranchName("perennial-branch"),
 				gitdomain.NewLocalBranchName("feature-branch"),
@@ -395,7 +395,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -449,9 +449,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{
 				gitdomain.NewLocalBranchName("perennial-branch"),
 				gitdomain.NewLocalBranchName("feature-branch"),
@@ -469,7 +469,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -545,9 +545,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{
@@ -568,7 +568,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -641,9 +641,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undodomain.LocalBranchesSHAs{},
 			LocalChanged:  undodomain.LocalBranchChange{},
@@ -664,7 +664,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -746,9 +746,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undodomain.LocalBranchesSHAs{},
 			LocalChanged:  undodomain.LocalBranchChange{},
@@ -773,7 +773,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:       lineage,
 			BranchTypes:   branchTypes,
 			InitialBranch: before.Active,
@@ -852,9 +852,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undodomain.LocalBranchesSHAs{},
 			LocalChanged:  undodomain.LocalBranchChange{},
@@ -873,7 +873,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:       lineage,
 			BranchTypes:   branchTypes,
 			InitialBranch: before.Active,
@@ -944,9 +944,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undodomain.LocalBranchesSHAs{},
 			LocalChanged:  undodomain.LocalBranchChange{},
@@ -991,7 +991,7 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1064,9 +1064,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{
@@ -1087,7 +1087,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1160,9 +1160,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:    gitdomain.LocalBranchNames{},
 			LocalRemoved:  undodomain.LocalBranchesSHAs{},
 			LocalChanged:  undodomain.LocalBranchChange{},
@@ -1183,7 +1183,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1250,9 +1250,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded: gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{
 				gitdomain.NewLocalBranchName("perennial-branch"): gitdomain.NewSHA("111111"),
@@ -1267,7 +1267,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1336,9 +1336,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{},
@@ -1353,7 +1353,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
@@ -1414,9 +1414,9 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		span := undo.NewBranchSpans(before, after)
+		span := undobranches.NewBranchSpans(before, after)
 		haveChanges := span.Changes()
-		wantChanges := undo.BranchChanges{
+		wantChanges := undobranches.BranchChanges{
 			LocalAdded:   gitdomain.LocalBranchNames{},
 			LocalRemoved: undodomain.LocalBranchesSHAs{},
 			LocalChanged: undodomain.LocalBranchChange{},
@@ -1435,7 +1435,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		haveProgram := haveChanges.UndoProgram(undo.BranchChangesUndoProgramArgs{
+		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 			Lineage:                  lineage,
 			BranchTypes:              branchTypes,
 			InitialBranch:            before.Active,
