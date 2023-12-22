@@ -4,6 +4,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -35,7 +36,7 @@ func appendCmd() *cobra.Command {
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
 		Short:   appendDesc,
-		Long:    long(appendDesc, appendHelp),
+		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeAppend(args[0], readVerboseFlag(cmd))
 		},

@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -37,7 +38,7 @@ func prependCommand() *cobra.Command {
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
 		Short:   prependDesc,
-		Long:    long(prependDesc, prependHelp),
+		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePrepend(args, readVerboseFlag(cmd))
 		},

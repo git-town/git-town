@@ -1,4 +1,4 @@
-package cmd
+package configcmds
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
@@ -27,7 +28,7 @@ func pushNewBranchesCommand() *cobra.Command {
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: pushNewBranchesDesc,
-		Long:  long(pushNewBranchesDesc, pushNewBranchesHelp),
+		Long:  cmdhelpers.Long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeConfigPushNewBranches(args, readGlobalFlag(cmd), readVerboseFlag(cmd))
 		},

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -31,7 +32,7 @@ func hackCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
-		Long:    long(hackDesc, hackHelp),
+		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeHack(args, readVerboseFlag(cmd))
 		},

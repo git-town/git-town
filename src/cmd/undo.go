@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -29,7 +30,7 @@ func undoCmd() *cobra.Command {
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   undoDesc,
-		Long:    long(undoDesc),
+		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeUndo(readVerboseFlag(cmd))
 		},

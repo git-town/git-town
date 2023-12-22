@@ -1,10 +1,11 @@
-package cmd
+package configcmds
 
 import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
 )
@@ -23,7 +24,7 @@ func perennialBranchesCmd() *cobra.Command {
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
 		Short: perennialDesc,
-		Long:  long(perennialDesc, perennialHelp),
+		Long:  cmdhelpers.Long(perennialDesc, perennialHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeConfigPerennialBranches(readDisplayVerboseFlag(cmd))
 		},
@@ -35,7 +36,7 @@ func perennialBranchesCmd() *cobra.Command {
 		Use:   "update",
 		Args:  cobra.NoArgs,
 		Short: updatePerennialSummary,
-		Long:  long(updatePerennialSummary),
+		Long:  cmdhelpers.Long(updatePerennialSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return updatePerennialBranches(readUpdateVerboseFlag(cmd))
 		},

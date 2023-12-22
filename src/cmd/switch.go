@@ -8,6 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
@@ -23,7 +24,7 @@ func switchCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   switchDesc,
-		Long:    long(switchDesc),
+		Long:    cmdhelpers.Long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeSwitch(readVerboseFlag(cmd))
 		},

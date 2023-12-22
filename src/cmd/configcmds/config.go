@@ -1,4 +1,4 @@
-package cmd
+package configcmds
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
@@ -15,14 +16,14 @@ import (
 
 const configDesc = "Displays your Git Town configuration"
 
-func configCmd() *cobra.Command {
+func ConfigCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",
 		Args:    cobra.NoArgs,
 		Short:   configDesc,
-		Long:    long(configDesc),
+		Long:    cmdhelpers.Long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeConfig(readVerboseFlag(cmd))
 		},

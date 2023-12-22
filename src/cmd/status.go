@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -22,7 +23,7 @@ func statusCommand() *cobra.Command {
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   statusDesc,
-		Long:    long(statusDesc),
+		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeStatus(readVerboseFlag(cmd))
 		},

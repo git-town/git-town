@@ -1,8 +1,9 @@
-package cmd
+package configcmds
 
 import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +17,7 @@ func setupConfigCommand() *cobra.Command {
 		Use:   "setup",
 		Args:  cobra.NoArgs,
 		Short: setupConfigDesc,
-		Long:  long(setupConfigDesc),
+		Long:  cmdhelpers.Long(setupConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeConfigSetup(readVerboseFlag(cmd))
 		},

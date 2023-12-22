@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -30,7 +31,7 @@ func killCommand() *cobra.Command {
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: killDesc,
-		Long:  long(killDesc, killHelp),
+		Long:  cmdhelpers.Long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeKill(args, readVerboseFlag(cmd))
 		},

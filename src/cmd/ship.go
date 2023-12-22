@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -60,7 +61,7 @@ func shipCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   shipDesc,
-		Long:    long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
+		Long:    cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeShip(args, readMessageFlag(cmd), readVerboseFlag(cmd))
 		},

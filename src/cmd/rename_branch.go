@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -44,7 +45,7 @@ func renameBranchCommand() *cobra.Command {
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
 		Short: renameBranchDesc,
-		Long:  long(renameBranchDesc, renameBranchHelp),
+		Long:  cmdhelpers.Long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeRenameBranch(args, readForceFlag(cmd), readVerboseFlag(cmd))
 		},

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -44,7 +45,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePropose(readVerboseFlag(cmd))
 		},

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -26,7 +27,7 @@ func diffParentCommand() *cobra.Command {
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   diffParentDesc,
-		Long:    long(diffParentDesc, diffParentHelp),
+		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeDiffParent(args, readVerboseFlag(cmd))
 		},

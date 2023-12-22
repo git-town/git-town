@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v11/src/cmd/configcmds"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -13,7 +14,7 @@ func Execute() error {
 	rootCmd.AddCommand(aliasesCommand())
 	rootCmd.AddCommand(appendCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(configCmd())
+	rootCmd.AddCommand(configcmds.ConfigCmd())
 	rootCmd.AddCommand(continueCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
@@ -31,13 +32,6 @@ func Execute() error {
 	rootCmd.AddCommand(syncCmd())
 	rootCmd.AddCommand(undoCmd())
 	return rootCmd.Execute()
-}
-
-func long(summary string, desc ...string) string {
-	if len(desc) == 1 {
-		return summary + ".\n" + desc[0]
-	}
-	return summary + "."
 }
 
 // wrap wraps the given list with opcodes that change the Git root directory or stash away open changes.
