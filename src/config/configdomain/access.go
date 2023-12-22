@@ -3,6 +3,8 @@ package configdomain
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 type Runner interface {
@@ -49,7 +51,7 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 		}
 		if key != KeyPerennialBranches.String() && value == "" {
 			_ = self.RemoveLocalConfigValue(*configKey)
-			fmt.Printf("\nNOTICE: deleted empty configuration entry %q\n", key)
+			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
 

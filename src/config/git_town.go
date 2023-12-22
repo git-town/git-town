@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -11,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -56,23 +54,6 @@ func (self *GitTown) HostingService() (configdomain.Hosting, error) {
 // is the main branch of the repository.
 func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
-}
-
-// Lineage provides the configured ancestry information for this Git repo.
-func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
-	lineage := configdomain.Lineage{}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
-		parentName := self.LocalConfigValue(key)
-		if parentName == "" {
-			_ = deleteEntry(key)
-			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, child)
-		} else {
-			parent := gitdomain.NewLocalBranchName(parentName)
-			lineage[child] = parent
-		}
-	}
-	return lineage
 }
 
 // OriginURL provides the URL for the "origin" remote.
