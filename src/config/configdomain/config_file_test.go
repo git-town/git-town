@@ -42,7 +42,7 @@ perennial-branches = "rebase"
 			shipDeleteTrackingBranch := false
 			syncUpstream := true
 			want := configdomain.ConfigFileData{
-				Branches: configdomain.Branches{
+				Branches: configdomain.ConfigFileBranches{
 					Main:       &main,
 					Perennials: []string{"public", "release"},
 				},
@@ -71,7 +71,7 @@ main = "main"
 			must.NoError(t, err)
 			main := "main"
 			want := configdomain.ConfigFileData{
-				Branches: configdomain.Branches{
+				Branches: configdomain.ConfigFileBranches{
 					Main:       &main,
 					Perennials: nil,
 				},

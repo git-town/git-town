@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state.
 type UnfinishedRunStateDetails struct {
 	CanSkip   bool
-	EndBranch domain.LocalBranchName
+	EndBranch gitdomain.LocalBranchName
 	EndTime   time.Time
 }
 

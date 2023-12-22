@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,7 @@ func rootCmd() cobra.Command {
 		SilenceErrors: true,
 		SilenceUsage:  true,
 		Short:         rootDesc,
-		Long:          long(rootDesc, rootHelp),
+		Long:          cmdhelpers.Long(rootDesc, rootHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeRoot(cmd, readVersionFlag(cmd))
 		},

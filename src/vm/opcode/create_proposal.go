@@ -2,13 +2,13 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v11/src/browser"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CreateProposal creates a new proposal for the current branch.
 type CreateProposal struct {
-	Branch domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

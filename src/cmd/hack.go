@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -31,7 +31,7 @@ func hackCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
-		Long:    long(hackDesc, hackHelp),
+		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeHack(args, readVerboseFlag(cmd))
 		},
@@ -75,9 +75,9 @@ func executeHack(args []string, verbose bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	fc := configdomain.FailureCollector{}
+	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
@@ -94,7 +94,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	targetBranch := domain.NewLocalBranchName(args[0])
+	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	mainBranch := repo.Runner.GitTown.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
@@ -105,7 +105,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := domain.LocalBranchNames{mainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{mainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	syncUpstream := repo.Runner.GitTown.SyncUpstream
 	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
@@ -119,7 +119,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		remotes:                   remotes,
 		lineage:                   lineage,
 		mainBranch:                mainBranch,
-		newBranchParentCandidates: domain.LocalBranchNames{mainBranch},
+		newBranchParentCandidates: gitdomain.LocalBranchNames{mainBranch},
 		shouldNewBranchPush:       shouldNewBranchPush,
 		previousBranch:            previousBranch,
 		syncPerennialStrategy:     syncPerennialStrategy,

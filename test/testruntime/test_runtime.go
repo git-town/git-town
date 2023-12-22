@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/test/commands"
 	testshell "github.com/git-town/git-town/v11/test/subshell"
@@ -49,10 +49,10 @@ func Create(t *testing.T) TestRuntime {
 func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
-	repo.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
-	err := repo.GitTown.SetMainBranch(domain.NewLocalBranchName("main"))
+	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewLocalBranchName("initial"))
+	err := repo.GitTown.SetMainBranch(gitdomain.NewLocalBranchName("main"))
 	must.NoError(t, err)
-	err = repo.GitTown.SetPerennialBranches(domain.LocalBranchNames{})
+	err = repo.GitTown.SetPerennialBranches(gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }
@@ -77,8 +77,8 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	configGitAccess := gitconfig.Access{Runner: &runner}
-	gitConfig, err := gitconfig.LoadFullCache(&configGitAccess)
+	configGitAccess := configdomain.Access{Runner: &runner}
+	gitConfig, err := configdomain.LoadFullCache(&configGitAccess)
 	if err != nil {
 		panic(err)
 	}

@@ -3,7 +3,7 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -11,8 +11,8 @@ import (
 // ChangeParent changes the parent of the given branch to the given parent.
 // Use SetParent to set the parent if no parent existed before.
 type ChangeParent struct {
-	Branch domain.LocalBranchName
-	Parent domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

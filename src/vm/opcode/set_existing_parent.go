@@ -1,15 +1,15 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // SetExistingParent sets the first existing entry in the given ancestor list as the parent branch of the given branch.
 type SetExistingParent struct {
-	Branch     domain.LocalBranchName
-	Ancestors  domain.LocalBranchNames
-	MainBranch domain.LocalBranchName
+	Branch     gitdomain.LocalBranchName
+	Ancestors  gitdomain.LocalBranchNames
+	MainBranch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

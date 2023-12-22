@@ -5,7 +5,7 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
@@ -30,7 +30,7 @@ var (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch domain.LocalBranchName, endTime time.Time, canSkip bool) (Response, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool) (Response, error) {
 	formattedOptions := map[Response]string{
 		ResponseContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
 		ResponseDiscard:  "Discard the unfinished state and run the new command",

@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SelectSquashCommitAuthor(branch domain.LocalBranchName, authors []string) (string, error) {
+func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string) (string, error) {
 	if len(authors) == 1 {
 		return authors[0], nil
 	}

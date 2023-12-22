@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -26,7 +26,7 @@ func TestLoadSave(t *testing.T) {
 			"c:\\Users\\user\\development\\git-town": "c-users-user-development-git-town",
 		}
 		for give, want := range tests {
-			rootDir := domain.NewRepoRootDir(give)
+			rootDir := gitdomain.NewRepoRootDir(give)
 			have := statefile.SanitizePath(rootDir)
 			must.EqOp(t, want, have)
 		}
@@ -41,15 +41,15 @@ func TestLoadSave(t *testing.T) {
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
-				&opcode.AddToPerennialBranches{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.ChangeParent{
-					Branch: domain.NewLocalBranchName("branch"),
-					Parent: domain.NewLocalBranchName("parent"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.Checkout{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.CommitOpenChanges{},
 				&opcode.ConnectorMergeProposal{
-					Branch:          domain.NewLocalBranchName("branch"),
+					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   "commit message",
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
@@ -57,64 +57,64 @@ func TestLoadSave(t *testing.T) {
 				&opcode.ContinueMerge{},
 				&opcode.ContinueRebase{},
 				&opcode.CreateBranch{
-					Branch:        domain.NewLocalBranchName("branch"),
-					StartingPoint: domain.NewSHA("123456").Location(),
+					Branch:        gitdomain.NewLocalBranchName("branch"),
+					StartingPoint: gitdomain.NewSHA("123456").Location(),
 				},
-				&opcode.CreateProposal{Branch: domain.NewLocalBranchName("branch")},
+				&opcode.CreateProposal{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.CreateRemoteBranch{
-					Branch:     domain.NewLocalBranchName("branch"),
+					Branch:     gitdomain.NewLocalBranchName("branch"),
 					NoPushHook: true,
-					SHA:        domain.NewSHA("123456"),
+					SHA:        gitdomain.NewSHA("123456"),
 				},
 				&opcode.CreateTrackingBranch{
-					Branch:     domain.NewLocalBranchName("branch"),
+					Branch:     gitdomain.NewLocalBranchName("branch"),
 					NoPushHook: true,
 				},
 				&opcode.DeleteLocalBranch{
-					Branch: domain.NewLocalBranchName("branch"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
 					Force:  false,
 				},
 				&opcode.DeleteRemoteBranch{
-					Branch: domain.NewRemoteBranchName("origin/branch"),
+					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
 				&opcode.DeleteParentBranch{
-					Branch: domain.NewLocalBranchName("branch"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcode.DeleteTrackingBranch{
-					Branch: domain.NewRemoteBranchName("origin/branch"),
+					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
 				&opcode.DiscardOpenChanges{},
 				&opcode.EnsureHasShippableChanges{
-					Branch: domain.NewLocalBranchName("branch"),
-					Parent: domain.NewLocalBranchName("parent"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcode.FetchUpstream{
-					Branch: domain.NewLocalBranchName("branch"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcode.ForcePushCurrentBranch{
 					NoPushHook: true,
 				},
-				&opcode.Merge{Branch: domain.NewBranchName("branch")},
+				&opcode.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcode.MergeParent{
-					CurrentBranch:               domain.NewLocalBranchName("branch"),
+					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
 					ParentActiveInOtherWorktree: true,
 				},
 				&opcode.PreserveCheckoutHistory{
-					PreviousBranchCandidates: domain.NewLocalBranchNames("previous"),
+					PreviousBranchCandidates: gitdomain.NewLocalBranchNames("previous"),
 				},
 				&opcode.PullCurrentBranch{},
 				&opcode.PushCurrentBranch{
-					CurrentBranch: domain.NewLocalBranchName("branch"),
+					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 					NoPushHook:    true,
 				},
 				&opcode.PushTags{},
-				&opcode.RebaseBranch{Branch: domain.NewBranchName("branch")},
+				&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
 				&opcode.RebaseParent{
-					CurrentBranch:               domain.NewLocalBranchName("branch"),
+					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
 					ParentActiveInOtherWorktree: true,
 				},
 				&opcode.RemoveFromPerennialBranches{
-					Branch: domain.NewLocalBranchName("branch"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcode.RemoveGlobalConfig{
 					Key: configdomain.KeyOffline,
@@ -124,12 +124,12 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcode.ResetCurrentBranchToSHA{
 					Hard:        true,
-					MustHaveSHA: domain.NewSHA("222222"),
-					SetToSHA:    domain.NewSHA("111111"),
+					MustHaveSHA: gitdomain.NewSHA("222222"),
+					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
 				&opcode.RestoreOpenChanges{},
 				&opcode.RevertCommit{
-					SHA: domain.NewSHA("123456"),
+					SHA: gitdomain.NewSHA("123456"),
 				},
 				&opcode.SetGlobalConfig{
 					Key:   configdomain.KeyOffline,
@@ -140,33 +140,33 @@ func TestLoadSave(t *testing.T) {
 					Value: "1",
 				},
 				&opcode.SetParent{
-					Branch: domain.NewLocalBranchName("branch"),
-					Parent: domain.NewLocalBranchName("parent"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcode.SetParentIfBranchExists{
-					Branch: domain.NewLocalBranchName("branch"),
-					Parent: domain.NewLocalBranchName("parent"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcode.SkipCurrentBranch{},
 				&opcode.SquashMerge{
-					Branch:        domain.NewLocalBranchName("branch"),
+					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: "commit message",
-					Parent:        domain.NewLocalBranchName("parent"),
+					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
 				&opcode.StashOpenChanges{},
 				&opcode.UpdateProposalTarget{
 					ProposalNumber: 123,
-					NewTarget:      domain.NewLocalBranchName("new-target"),
+					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
 			UndoProgram: program.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
-				EndBranch: domain.NewLocalBranchName("end-branch"),
+				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
-			InitialActiveBranch:      domain.NewLocalBranchName("initial"),
-			UndoablePerennialCommits: []domain.SHA{},
+			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
+			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 
 		wantJSON := `
@@ -447,7 +447,7 @@ func TestLoadSave(t *testing.T) {
   "UndoablePerennialCommits": []
 }`[1:]
 
-		repoRoot := domain.NewRepoRootDir("/path/to/git-town-unit-tests")
+		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
 		err := statefile.Save(&runState, repoRoot)
 		must.NoError(t, err)
 		filepath, err := statefile.FilePath(repoRoot)

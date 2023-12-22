@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/exp/maps"
@@ -62,7 +62,7 @@ func (self *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTab
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]domain.SHA, initialOriginSHAs map[string]domain.SHA) DataTable {
+func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHAs map[string]gitdomain.SHA, initialOriginSHAs map[string]gitdomain.SHA) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}

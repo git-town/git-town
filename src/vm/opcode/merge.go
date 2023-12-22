@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // Merge merges the branch with the given name into the current branch.
 type Merge struct {
-	Branch domain.BranchName
+	Branch gitdomain.BranchName
 	undeclaredOpcodeMethods
 }
 

@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
 
 // EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent domain.LocalBranchName, lineage configdomain.Lineage, branches domain.BranchInfos) (domain.LocalBranchName, error) {
+func EnterParent(branch, defaultParent gitdomain.LocalBranchName, lineage configdomain.Lineage, branches gitdomain.BranchInfos) (gitdomain.LocalBranchName, error) {
 	choices := branches.LocalBranches().Names()
 	slice.Hoist(&choices, defaultParent)
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)
@@ -19,13 +19,13 @@ func EnterParent(branch, defaultParent domain.LocalBranchName, lineage configdom
 		Default: defaultParent.String(),
 	})
 	if err != nil {
-		return domain.EmptyLocalBranchName(), err
+		return gitdomain.EmptyLocalBranchName(), err
 	}
-	return domain.NewLocalBranchName(choice), nil
+	return gitdomain.NewLocalBranchName(choice), nil
 }
 
-func filterOutSelfAndDescendants(branch domain.LocalBranchName, choices domain.LocalBranchNames, lineage configdomain.Lineage) domain.LocalBranchNames {
-	result := domain.LocalBranchNames{}
+func filterOutSelfAndDescendants(branch gitdomain.LocalBranchName, choices gitdomain.LocalBranchNames, lineage configdomain.Lineage) gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
 	for _, choice := range choices {
 		if choice == branch || lineage.IsAncestor(branch, choice) {
 			continue

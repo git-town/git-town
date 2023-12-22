@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // RebaseParent rebases the given branch against the branch that is its parent at runtime.
 type RebaseParent struct {
-	CurrentBranch               domain.LocalBranchName
+	CurrentBranch               gitdomain.LocalBranchName
 	ParentActiveInOtherWorktree bool
 	undeclaredOpcodeMethods
 }
@@ -29,7 +29,7 @@ func (self *RebaseParent) Run(args shared.RunArgs) error {
 	if parent.IsEmpty() {
 		return nil
 	}
-	var branchToRebase domain.BranchName
+	var branchToRebase gitdomain.BranchName
 	if self.ParentActiveInOtherWorktree {
 		branchToRebase = parent.TrackingBranch().BranchName()
 	} else {

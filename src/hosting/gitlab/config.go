@@ -5,16 +5,16 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
-	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 )
 
 type Config struct {
-	common.Config
+	hostingdomain.Config
 	APIToken configdomain.GitLabToken
 }
 
-func (self *Config) DefaultProposalMessage(proposal domain.Proposal) string {
+func (self *Config) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
@@ -22,7 +22,7 @@ func (self *Config) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (self *Config) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+func (self *Config) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch.String())
 	query.Add("merge_request[target_branch]", parentBranch.String())
