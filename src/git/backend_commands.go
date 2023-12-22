@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
@@ -91,16 +91,16 @@ func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBran
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *BackendCommands) BranchesSnapshot() (domain.BranchesSnapshot, error) { //nolint:nonamedreturns
+func (self *BackendCommands) BranchesSnapshot() (undodomain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := self.Query("git", "branch", "-vva")
 	if err != nil {
-		return domain.EmptyBranchesSnapshot(), err
+		return undodomain.EmptyBranchesSnapshot(), err
 	}
 	branches, currentBranch := ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return domain.BranchesSnapshot{
+	return undodomain.BranchesSnapshot{
 		Branches: branches,
 		Active:   currentBranch,
 	}, nil
@@ -174,8 +174,8 @@ func IsRemoteGone(branchName, remoteText string) (bool, gitdomain.RemoteBranchNa
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, gitdomain.LocalBranchName) {
-	result := domain.BranchInfos{}
+func ParseVerboseBranchesOutput(output string) (undodomain.BranchInfos, gitdomain.LocalBranchName) {
+	result := undodomain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
 	lines := stringslice.Lines(output)
 	checkedoutBranch := gitdomain.EmptyLocalBranchName()
@@ -215,15 +215,15 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, gitdomain.Lo
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {
 		case line[0] == '+':
-			result = append(result, domain.BranchInfo{
+			result = append(result, undodomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
-				SyncStatus: domain.SyncStatusOtherWorktree,
+				SyncStatus: syncdomain.SyncStatusOtherWorktree,
 				RemoteName: trackingBranchName,
 				RemoteSHA:  gitdomain.EmptySHA(),
 			})
 		case isLocalBranchName(branchName):
-			result = append(result, domain.BranchInfo{
+			result = append(result, undodomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
 				SyncStatus: syncStatus,
@@ -236,10 +236,10 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, gitdomain.Lo
 			if existingBranchWithTracking != nil {
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
-				result = append(result, domain.BranchInfo{
+				result = append(result, undodomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: domain.SyncStatusRemoteOnly,
+					SyncStatus: syncdomain.SyncStatusRemoteOnly,
 					RemoteName: remoteBranchName,
 					RemoteSHA:  sha,
 				})
@@ -249,31 +249,31 @@ func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, gitdomain.Lo
 	return result, checkedoutBranch
 }
 
-func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName gitdomain.RemoteBranchName) {
+func determineSyncStatus(branchName, remoteText string) (syncStatus syncdomain.SyncStatus, trackingBranchName gitdomain.RemoteBranchName) {
 	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
 	if isInSync {
-		return domain.SyncStatusUpToDate, trackingBranchName
+		return syncdomain.SyncStatusUpToDate, trackingBranchName
 	}
 	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
 	if isGone {
-		return domain.SyncStatusDeletedAtRemote, trackingBranchName
+		return syncdomain.SyncStatusDeletedAtRemote, trackingBranchName
 	}
 	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
 	if IsAhead {
-		return domain.SyncStatusNotInSync, trackingBranchName
+		return syncdomain.SyncStatusNotInSync, trackingBranchName
 	}
 	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
 	if IsBehind {
-		return domain.SyncStatusNotInSync, trackingBranchName
+		return syncdomain.SyncStatusNotInSync, trackingBranchName
 	}
 	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
 	if IsAheadAndBehind {
-		return domain.SyncStatusNotInSync, trackingBranchName
+		return syncdomain.SyncStatusNotInSync, trackingBranchName
 	}
 	if strings.HasPrefix(branchName, "remotes/") {
-		return domain.SyncStatusRemoteOnly, gitdomain.EmptyRemoteBranchName()
+		return syncdomain.SyncStatusRemoteOnly, gitdomain.EmptyRemoteBranchName()
 	}
-	return domain.SyncStatusLocalOnly, gitdomain.EmptyRemoteBranchName()
+	return syncdomain.SyncStatusLocalOnly, gitdomain.EmptyRemoteBranchName()
 }
 
 // isLocalBranchName indicates whether the branch with the given Git ref is local or remote.
@@ -469,7 +469,7 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
+func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches undodomain.BranchInfos) error {
 	for child, parent := range self.GitTown.Lineage(self.GitTown.RemoveLocalConfigValue) {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
@@ -481,16 +481,16 @@ func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.Bran
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (self *BackendCommands) RepoStatus() (domain.RepoStatus, error) {
+func (self *BackendCommands) RepoStatus() (syncdomain.RepoStatus, error) {
 	output, err := self.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
-		return domain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+		return syncdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
 	hasConflicts := strings.Contains(output, "Unmerged paths")
 	hasOpenChanges := outputIndicatesOpenChanges(output)
 	hasUntrackedChanges := outputIndicatesUntrackedChanges(output)
 	rebaseInProgress := outputIndicatesRebaseInProgress(output)
-	return domain.RepoStatus{
+	return syncdomain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges,
 		RebaseInProgress: rebaseInProgress,

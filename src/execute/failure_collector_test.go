@@ -1,12 +1,14 @@
-package configdomain_test
+package execute_test
 
 import (
 	"errors"
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,7 +18,7 @@ func TestCollector(t *testing.T) {
 	t.Run("Bool", func(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			must.True(t, fc.Bool(true, nil))
 			must.False(t, fc.Bool(false, nil))
 			err := errors.New("test error")
@@ -26,7 +28,7 @@ func TestCollector(t *testing.T) {
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
 			must.Nil(t, fc.Err)
@@ -39,19 +41,19 @@ func TestCollector(t *testing.T) {
 	t.Run("BranchesSyncStatus", func(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
-			syncStatuses := domain.BranchInfos{
+			fc := execute.FailureCollector{}
+			syncStatuses := undodomain.BranchInfos{
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch1"),
 					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: domain.SyncStatusLocalOnly,
+					SyncStatus: syncdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch2"),
 					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: domain.SyncStatusLocalOnly,
+					SyncStatus: syncdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
@@ -65,7 +67,7 @@ func TestCollector(t *testing.T) {
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
 			must.Nil(t, fc.Err)
@@ -78,7 +80,7 @@ func TestCollector(t *testing.T) {
 	t.Run("Check", func(t *testing.T) {
 		t.Parallel()
 		t.Run("captures the first error it receives", func(t *testing.T) {
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Check(nil)
 			must.Nil(t, fc.Err)
 			fc.Check(errors.New("first"))
@@ -86,7 +88,7 @@ func TestCollector(t *testing.T) {
 			must.ErrorContains(t, fc.Err, "first")
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			must.False(t, fc.Check(nil))
 			must.True(t, fc.Check(errors.New("")))
 			must.True(t, fc.Check(nil))
@@ -96,7 +98,7 @@ func TestCollector(t *testing.T) {
 	t.Run("Fail", func(t *testing.T) {
 		t.Parallel()
 		t.Run("registers the given error", func(t *testing.T) {
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")
 		})
@@ -106,13 +108,13 @@ func TestCollector(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			must.EqOp(t, configdomain.HostingGitHub, fc.Hosting(configdomain.HostingGitHub, nil))
 			must.EqOp(t, configdomain.HostingGitLab, fc.Hosting(configdomain.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Hosting(configdomain.HostingNone, nil)
 			must.Nil(t, fc.Err)
 			fc.Hosting(configdomain.HostingGitHub, errors.New("first"))
@@ -125,13 +127,13 @@ func TestCollector(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string value", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			must.EqOp(t, "alpha", fc.String("alpha", nil))
 			must.EqOp(t, "beta", fc.String("beta", errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.String("", nil)
 			must.Nil(t, fc.Err)
 			fc.String("", errors.New("first"))
@@ -144,13 +146,13 @@ func TestCollector(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string slice", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			must.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
 			must.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := configdomain.FailureCollector{}
+			fc := execute.FailureCollector{}
 			fc.Strings([]string{}, nil)
 			must.Nil(t, fc.Err)
 			fc.Strings([]string{}, errors.New("first"))

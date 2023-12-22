@@ -8,10 +8,10 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -71,7 +71,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	branchTypes := repo.Runner.GitTown.BranchTypes()
-	branches := domain.Branches{
+	branches := undodomain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,

@@ -7,9 +7,9 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -61,7 +61,7 @@ func executeConfig(verbose bool) error {
 }
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
-	fc := configdomain.FailureCollector{}
+	fc := execute.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
 	deleteTrackingBranch := run.GitTown.ShipDeleteTrackingBranch
 	giteaToken := run.GitTown.GiteaToken
@@ -95,7 +95,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 }
 
 type ConfigConfig struct {
-	branchTypes           domain.BranchTypes
+	branchTypes           syncdomain.BranchTypes
 	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
 	giteaToken            configdomain.GiteaToken
 	githubToken           configdomain.GitHubToken

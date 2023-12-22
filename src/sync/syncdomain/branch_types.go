@@ -1,4 +1,4 @@
-package domain
+package syncdomain
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"

@@ -9,8 +9,8 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/spf13/cobra"
 )
 
@@ -68,7 +68,7 @@ func executeSwitch(verbose bool) error {
 }
 
 type switchConfig struct {
-	branches domain.Branches
+	branches undodomain.Branches
 	lineage  configdomain.Lineage
 }
 

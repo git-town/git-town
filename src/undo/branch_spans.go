@@ -1,14 +1,14 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.
 type BranchSpans []BranchSpan
 
-func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) BranchSpans {
+func NewBranchSpans(beforeSnapshot, afterSnapshot undodomain.BranchesSnapshot) BranchSpans {
 	result := BranchSpans{}
 	for _, before := range beforeSnapshot.Branches {
 		after := afterSnapshot.Branches.FindMatchingRecord(before)
@@ -20,7 +20,7 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot domain.BranchesSnapshot) Branc
 	for _, after := range afterSnapshot.Branches {
 		if beforeSnapshot.Branches.FindMatchingRecord(after).IsEmpty() {
 			result = append(result, BranchSpan{
-				Before: domain.EmptyBranchInfo(),
+				Before: undodomain.EmptyBranchInfo(),
 				After:  after,
 			})
 		}
@@ -40,14 +40,14 @@ func (self BranchSpans) Changes() BranchChanges {
 			continue
 		}
 		if branchSpan.IsOmniChange() {
-			result.OmniChanged[branchSpan.Before.LocalName] = domain.Change[gitdomain.SHA]{
+			result.OmniChanged[branchSpan.Before.LocalName] = undodomain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.LocalSHA,
 				After:  branchSpan.After.LocalSHA,
 			}
 			continue
 		}
 		if branchSpan.IsInconsistentChange() {
-			result.InconsistentlyChanged = append(result.InconsistentlyChanged, domain.InconsistentChange{
+			result.InconsistentlyChanged = append(result.InconsistentlyChanged, undodomain.InconsistentChange{
 				Before: branchSpan.Before,
 				After:  branchSpan.After,
 			})
@@ -59,7 +59,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		case branchSpan.LocalRemoved():
 			result.LocalRemoved[branchSpan.Before.LocalName] = branchSpan.Before.LocalSHA
 		case branchSpan.LocalChanged():
-			result.LocalChanged[branchSpan.Before.LocalName] = domain.Change[gitdomain.SHA]{
+			result.LocalChanged[branchSpan.Before.LocalName] = undodomain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.LocalSHA,
 				After:  branchSpan.After.LocalSHA,
 			}
@@ -70,7 +70,7 @@ func (self BranchSpans) Changes() BranchChanges {
 		case branchSpan.RemoteRemoved():
 			result.RemoteRemoved[branchSpan.Before.RemoteName] = branchSpan.Before.RemoteSHA
 		case branchSpan.RemoteChanged():
-			result.RemoteChanged[branchSpan.Before.RemoteName] = domain.Change[gitdomain.SHA]{
+			result.RemoteChanged[branchSpan.Before.RemoteName] = undodomain.Change[gitdomain.SHA]{
 				Before: branchSpan.Before.RemoteSHA,
 				After:  branchSpan.After.RemoteSHA,
 			}

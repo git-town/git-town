@@ -2,9 +2,10 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -14,7 +15,7 @@ import (
 //
 // The purpose of this function is to implement proper cache invalidation.
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
-func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (domain.BranchTypes, configdomain.Lineage, error) {
+func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (syncdomain.BranchTypes, configdomain.Lineage, error) {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 		AllBranches: args.AllBranches,
 		Backend:     &args.Runner.Backend,
@@ -33,8 +34,8 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (domain.B
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
-	AllBranches domain.BranchInfos
-	BranchTypes domain.BranchTypes
+	AllBranches undodomain.BranchInfos
+	BranchTypes syncdomain.BranchTypes
 	Lineage     configdomain.Lineage
 	MainBranch  gitdomain.LocalBranchName
 	Runner      *git.ProdRunner

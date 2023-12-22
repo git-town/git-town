@@ -4,9 +4,10 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -15,33 +16,33 @@ import (
 // Various types of changes are distinguished.
 type BranchChanges struct {
 	LocalAdded    gitdomain.LocalBranchNames
-	LocalRemoved  domain.LocalBranchesSHAs
-	LocalChanged  domain.LocalBranchChange
+	LocalRemoved  undodomain.LocalBranchesSHAs
+	LocalChanged  undodomain.LocalBranchChange
 	RemoteAdded   gitdomain.RemoteBranchNames
-	RemoteRemoved domain.RemoteBranchesSHAs
-	RemoteChanged domain.RemoteBranchChange
+	RemoteRemoved undodomain.RemoteBranchesSHAs
+	RemoteChanged undodomain.RemoteBranchChange
 	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
-	OmniRemoved domain.LocalBranchesSHAs
+	OmniRemoved undodomain.LocalBranchesSHAs
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
-	OmniChanged domain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
+	OmniChanged undodomain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch
 	// don't have the same SHA before or after.
 	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
-	InconsistentlyChanged domain.InconsistentChanges
+	InconsistentlyChanged undodomain.InconsistentChanges
 }
 
 // EmptyBranchChanges provides a properly initialized empty Changes instance.
 func EmptyBranchChanges() BranchChanges {
 	return BranchChanges{
 		LocalAdded:            gitdomain.LocalBranchNames{},
-		LocalRemoved:          domain.LocalBranchesSHAs{},
-		LocalChanged:          domain.LocalBranchChange{},
+		LocalRemoved:          undodomain.LocalBranchesSHAs{},
+		LocalChanged:          undodomain.LocalBranchChange{},
 		RemoteAdded:           gitdomain.RemoteBranchNames{},
 		RemoteRemoved:         map[gitdomain.RemoteBranchName]gitdomain.SHA{},
-		RemoteChanged:         map[gitdomain.RemoteBranchName]domain.Change[gitdomain.SHA]{},
-		OmniRemoved:           domain.LocalBranchesSHAs{},
-		OmniChanged:           domain.LocalBranchChange{},
-		InconsistentlyChanged: domain.InconsistentChanges{},
+		RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
+		OmniRemoved:           undodomain.LocalBranchesSHAs{},
+		OmniChanged:           undodomain.LocalBranchChange{},
+		InconsistentlyChanged: undodomain.InconsistentChanges{},
 	}
 }
 
@@ -197,7 +198,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	Lineage                  configdomain.Lineage
-	BranchTypes              domain.BranchTypes
+	BranchTypes              syncdomain.BranchTypes
 	InitialBranch            gitdomain.LocalBranchName
 	FinalBranch              gitdomain.LocalBranchName
 	NoPushHook               configdomain.NoPushHook

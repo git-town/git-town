@@ -1,4 +1,4 @@
-package domain
+package syncdomain
 
 type RepoStatus struct {
 	Conflicts        bool // the repo contains merge conflicts

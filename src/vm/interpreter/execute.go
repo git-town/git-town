@@ -2,7 +2,6 @@ package interpreter
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -44,7 +43,7 @@ type ExecuteArgs struct {
 	Connector               hosting.Connector
 	Verbose                 bool
 	RootDir                 gitdomain.RepoRootDir
-	InitialBranchesSnapshot domain.BranchesSnapshot
+	InitialBranchesSnapshot undodomain.BranchesSnapshot
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
 	InitialStashSnapshot    undodomain.StashSnapshot
 	Lineage                 configdomain.Lineage

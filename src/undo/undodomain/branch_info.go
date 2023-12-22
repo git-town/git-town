@@ -1,6 +1,9 @@
-package domain
+package undodomain
 
-import "github.com/git-town/git-town/v11/src/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+)
 
 // BranchInfo describes the sync status of a branch in relation to its tracking branch.
 type BranchInfo struct {
@@ -11,7 +14,7 @@ type BranchInfo struct {
 	LocalSHA gitdomain.SHA
 
 	// SyncStatus of the branch
-	SyncStatus SyncStatus
+	SyncStatus syncdomain.SyncStatus
 
 	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
 	RemoteName gitdomain.RemoteBranchName
@@ -24,7 +27,7 @@ func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
 		LocalName:  gitdomain.EmptyLocalBranchName(),
 		LocalSHA:   gitdomain.EmptySHA(),
-		SyncStatus: SyncStatusUpToDate,
+		SyncStatus: syncdomain.SyncStatusUpToDate,
 		RemoteName: gitdomain.EmptyRemoteBranchName(),
 		RemoteSHA:  gitdomain.EmptySHA(),
 	}

@@ -9,10 +9,10 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -30,8 +30,8 @@ func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-func (self *GitTown) BranchTypes() domain.BranchTypes {
-	return domain.BranchTypes{
+func (self *GitTown) BranchTypes() syncdomain.BranchTypes {
+	return syncdomain.BranchTypes{
 		MainBranch:        self.Config.MainBranch,
 		PerennialBranches: self.Config.PerennialBranches,
 	}

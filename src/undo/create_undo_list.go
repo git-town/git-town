@@ -3,7 +3,6 @@ package undo
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
@@ -30,14 +29,14 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 
 type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
-	InitialBranchesSnapshot  domain.BranchesSnapshot
+	InitialBranchesSnapshot  undodomain.BranchesSnapshot
 	InitialConfigSnapshot    undodomain.ConfigSnapshot
 	InitialStashSnapshot     undodomain.StashSnapshot
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA
 }
 
-func determineUndoBranchesProgram(initialBranchesSnapshot domain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, noPushHook configdomain.NoPushHook, runner *git.ProdRunner) (program.Program, error) {
+func determineUndoBranchesProgram(initialBranchesSnapshot undodomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, noPushHook configdomain.NoPushHook, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return program.Program{}, err

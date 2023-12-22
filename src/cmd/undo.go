@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -75,7 +74,7 @@ func executeUndo(verbose bool) error {
 type undoConfig struct {
 	connector               hosting.Connector
 	hasOpenChanges          bool
-	initialBranchesSnapshot domain.BranchesSnapshot
+	initialBranchesSnapshot undodomain.BranchesSnapshot
 	mainBranch              gitdomain.LocalBranchName
 	lineage                 configdomain.Lineage
 	previousBranch          gitdomain.LocalBranchName

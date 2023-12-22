@@ -5,10 +5,10 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -90,17 +90,17 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	branches       domain.Branches
+	branches       undodomain.Branches
 	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     gitdomain.LocalBranchName
 	newBranch      gitdomain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
-	oldBranch      domain.BranchInfo
+	oldBranch      undodomain.BranchInfo
 	previousBranch gitdomain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -142,7 +142,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if oldBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	if oldBranch.SyncStatus != domain.SyncStatusUpToDate && oldBranch.SyncStatus != domain.SyncStatusLocalOnly {
+	if oldBranch.SyncStatus != syncdomain.SyncStatusUpToDate && oldBranch.SyncStatus != syncdomain.SyncStatusLocalOnly {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {

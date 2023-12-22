@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -115,10 +116,10 @@ func executeShip(args []string, message string, verbose bool) error {
 }
 
 type shipConfig struct {
-	branches                 domain.Branches
-	branchToShip             domain.BranchInfo
+	branches                 undodomain.Branches
+	branchToShip             undodomain.BranchInfo
 	connector                hosting.Connector
-	targetBranch             domain.BranchInfo
+	targetBranch             undodomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
 	proposalMessage          string
@@ -139,7 +140,7 @@ type shipConfig struct {
 	syncBeforeShip           configdomain.SyncBeforeShip
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -168,7 +169,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	mainBranch := repo.Runner.GitTown.MainBranch
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
-	if branchToShip != nil && branchToShip.SyncStatus == domain.SyncStatusOtherWorktree {
+	if branchToShip != nil && branchToShip.SyncStatus == syncdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
@@ -275,7 +276,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes domain.BranchTypes, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes syncdomain.BranchTypes, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)

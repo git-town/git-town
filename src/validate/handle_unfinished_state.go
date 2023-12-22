@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
@@ -54,7 +53,7 @@ type UnfinishedStateArgs struct {
 	Connector               hosting.Connector
 	Verboe                  bool
 	Lineage                 configdomain.Lineage
-	InitialBranchesSnapshot domain.BranchesSnapshot
+	InitialBranchesSnapshot undodomain.BranchesSnapshot
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
 	InitialStashSnapshot    undodomain.StashSnapshot
 	PushHook                configdomain.PushHook

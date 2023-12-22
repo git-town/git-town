@@ -5,10 +5,10 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -114,8 +114,8 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	branches              domain.Branches
-	branchesToSync        domain.BranchInfos
+	branches              undodomain.Branches
+	branchesToSync        undodomain.BranchInfos
 	hasOpenChanges        bool
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
@@ -129,7 +129,7 @@ type syncConfig struct {
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
-func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, domain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
+func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, undodomain.BranchesSnapshot, undodomain.StashSnapshot, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -228,20 +228,20 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 
 type syncBranchesProgramArgs struct {
 	syncBranchProgramArgs
-	branchesToSync domain.BranchInfos
+	branchesToSync undodomain.BranchInfos
 	hasOpenChanges bool
 	initialBranch  gitdomain.LocalBranchName
 	previousBranch gitdomain.LocalBranchName
 	shouldPushTags bool
 }
 
-func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncBranchProgram(branch undodomain.BranchInfo, args syncBranchProgramArgs) {
 	parentBranchInfo := args.branchInfos.FindByLocalName(args.lineage.Parent(branch.LocalName))
-	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == domain.SyncStatusOtherWorktree
+	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == syncdomain.SyncStatusOtherWorktree
 	switch {
-	case branch.SyncStatus == domain.SyncStatusDeletedAtRemote:
+	case branch.SyncStatus == syncdomain.SyncStatusDeletedAtRemote:
 		syncDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
-	case branch.SyncStatus == domain.SyncStatusOtherWorktree:
+	case branch.SyncStatus == syncdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
 		syncNonDeletedBranchProgram(args.program, branch, parentOtherWorktree, args)
@@ -249,8 +249,8 @@ func syncBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
 }
 
 type syncBranchProgramArgs struct {
-	branchInfos           domain.BranchInfos
-	branchTypes           domain.BranchTypes
+	branchInfos           undodomain.BranchInfos
+	branchTypes           syncdomain.BranchTypes
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
 	program               *program.Program
@@ -264,7 +264,7 @@ type syncBranchProgramArgs struct {
 }
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
-func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+func syncDeletedBranchProgram(list *program.Program, branch undodomain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
 	if args.branchTypes.IsFeatureBranch(branch.LocalName) {
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
 	} else {
@@ -274,13 +274,13 @@ func syncDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, p
 
 // syncDeletedFeatureBranchProgram syncs a feare branch whose remote has been deleted.
 // The parent branch must have been fully synced before calling this function.
-func syncDeletedFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+func syncDeletedFeatureBranchProgram(list *program.Program, branch undodomain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, args.syncFeatureStrategy)
 	list.Add(&opcode.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
 }
 
-func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncDeletedPerennialBranchProgram(list *program.Program, branch undodomain.BranchInfo, args syncBranchProgramArgs) {
 	removeBranchFromLineage(removeBranchFromLineageArgs{
 		program: list,
 		branch:  branch.LocalName,
@@ -297,7 +297,7 @@ func syncDeletedPerennialBranchProgram(list *program.Program, branch domain.Bran
 }
 
 // syncNonDeletedBranchProgram provides the opcode to sync a particular branch.
-func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
+func syncNonDeletedBranchProgram(list *program.Program, branch undodomain.BranchInfo, parentOtherWorktree bool, args syncBranchProgramArgs) {
 	isFeatureBranch := args.branchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -322,7 +322,7 @@ func syncNonDeletedBranchProgram(list *program.Program, branch domain.BranchInfo
 }
 
 // syncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
-func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
+func syncFeatureBranchProgram(list *program.Program, branch undodomain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
 	}
@@ -330,7 +330,7 @@ func syncFeatureBranchProgram(list *program.Program, branch domain.BranchInfo, p
 }
 
 // syncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
-func syncPerennialBranchProgram(branch domain.BranchInfo, args syncBranchProgramArgs) {
+func syncPerennialBranchProgram(branch undodomain.BranchInfo, args syncBranchProgramArgs) {
 	if branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchOpcode(args.program, branch.RemoteName, args.syncPerennialStrategy)
 	}

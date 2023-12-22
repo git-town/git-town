@@ -1,10 +1,12 @@
-package configdomain
+package execute
 
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -26,7 +28,7 @@ func (self *FailureCollector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (self *FailureCollector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
+func (self *FailureCollector) BranchesSyncStatus(value undodomain.BranchInfos, err error) undodomain.BranchInfos {
 	self.Check(err)
 	return value
 }
@@ -47,7 +49,7 @@ func (self *FailureCollector) Fail(format string, a ...any) {
 
 // Hosting provides the config.Hosting part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) Hosting(value Hosting, err error) Hosting {
+func (self *FailureCollector) Hosting(value configdomain.Hosting, err error) configdomain.Hosting {
 	self.Check(err)
 	return value
 }
@@ -59,7 +61,7 @@ func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdom
 	return value
 }
 
-func (self *FailureCollector) RepoStatus(value domain.RepoStatus, err error) domain.RepoStatus {
+func (self *FailureCollector) RepoStatus(value syncdomain.RepoStatus, err error) syncdomain.RepoStatus {
 	self.Check(err)
 	return value
 }

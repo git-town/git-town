@@ -1,11 +1,12 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes domain.InconsistentChanges, branchTypes domain.BranchTypes) (perennials, features domain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branchTypes syncdomain.BranchTypes) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
 		if branchTypes.IsFeatureBranch(change.Before.LocalName) {
 			features = append(features, change)
@@ -16,9 +17,9 @@ func CategorizeInconsistentChanges(changes domain.InconsistentChanges, branchTyp
 	return
 }
 
-func CategorizeLocalBranchChange(change domain.LocalBranchChange, branchTypes domain.BranchTypes) (changedPerennials, changedFeatures domain.LocalBranchChange) {
-	changedPerennials = domain.LocalBranchChange{}
-	changedFeatures = domain.LocalBranchChange{}
+func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchTypes syncdomain.BranchTypes) (changedPerennials, changedFeatures undodomain.LocalBranchChange) {
+	changedPerennials = undodomain.LocalBranchChange{}
+	changedFeatures = undodomain.LocalBranchChange{}
 	for branch, change := range change {
 		if branchTypes.IsFeatureBranch(branch) {
 			changedFeatures[branch] = change
@@ -29,7 +30,7 @@ func CategorizeLocalBranchChange(change domain.LocalBranchChange, branchTypes do
 	return
 }
 
-func CategorizeLocalBranchNames(branchNames gitdomain.LocalBranchNames, branchTypes domain.BranchTypes) (perennials, features gitdomain.LocalBranchNames) {
+func CategorizeLocalBranchNames(branchNames gitdomain.LocalBranchNames, branchTypes syncdomain.BranchTypes) (perennials, features gitdomain.LocalBranchNames) {
 	for _, branch := range branchNames {
 		if branchTypes.IsFeatureBranch(branch) {
 			features = append(features, branch)
@@ -40,9 +41,9 @@ func CategorizeLocalBranchNames(branchNames gitdomain.LocalBranchNames, branchTy
 	return
 }
 
-func CategorizeRemoteBranchChange(change domain.RemoteBranchChange, branchTypes domain.BranchTypes) (perennialChanges, featureChanges domain.RemoteBranchChange) {
-	perennialChanges = domain.RemoteBranchChange{}
-	featureChanges = domain.RemoteBranchChange{}
+func CategorizeRemoteBranchChange(change undodomain.RemoteBranchChange, branchTypes syncdomain.BranchTypes) (perennialChanges, featureChanges undodomain.RemoteBranchChange) {
+	perennialChanges = undodomain.RemoteBranchChange{}
+	featureChanges = undodomain.RemoteBranchChange{}
 	for branch, change := range change {
 		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
 			featureChanges[branch] = change
@@ -53,9 +54,9 @@ func CategorizeRemoteBranchChange(change domain.RemoteBranchChange, branchTypes 
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas domain.RemoteBranchesSHAs, branchTypes domain.BranchTypes) (perennials, features domain.RemoteBranchesSHAs) {
-	perennials = domain.RemoteBranchesSHAs{}
-	features = domain.RemoteBranchesSHAs{}
+func CategorizeRemoteBranchesSHAs(shas undodomain.RemoteBranchesSHAs, branchTypes syncdomain.BranchTypes) (perennials, features undodomain.RemoteBranchesSHAs) {
+	perennials = undodomain.RemoteBranchesSHAs{}
+	features = undodomain.RemoteBranchesSHAs{}
 	for branch, sha := range shas {
 		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
 			features[branch] = sha
