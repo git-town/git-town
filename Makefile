@@ -8,7 +8,7 @@ RELEASE_VERSION := "11.1.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
+	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
@@ -54,14 +54,16 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/rta@${RTA_VERSION}  # smoke tests for Go refactorings
-	tools/rta gofumpt -l -w . &
-	make --no-print-directory build &
-	tools/rta golangci-lint run &
-	go run tools/format_unittests/format.go test &
-	go run tools/format_self/format.go test &
+test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active development on Go code
+	@tools/rta gofumpt -l -w . &
+	@make --no-print-directory build &
+	@tools/rta golangci-lint run &
+	@go run tools/format_unittests/format.go test &
+	@go run tools/format_self/format.go test &
+	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	make --no-print-directory unit
+	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@make --no-print-directory unit
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
