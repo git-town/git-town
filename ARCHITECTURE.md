@@ -12,8 +12,13 @@ The major design goals of the Git Town codebase are:
 
 ### General structure
 
+The Git Town codebase separates functionality into subsystems for parsing
+configuration data, syncing branches, undoing changes, interacting with the CLI,
+etc. Each subsystem defines its own domain concepts, helpers, and business
+logic.
+
 To prevent cyclic package dependencies, the Git Town codebase defines concepts
-in dedicated `*domain` packages.
+and data types in dedicated `*domain` packages.
 
 ### Execution framework
 
