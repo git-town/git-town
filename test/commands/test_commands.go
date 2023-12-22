@@ -248,29 +248,6 @@ func (self *TestCommands) HasFile(name, content string) string {
 	return ""
 }
 
-// HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (self *TestCommands) HasGitTownConfigNow() bool {
-	output, err := self.Query("git", "config", "--local", "--get-regex", "git-town")
-	if err != nil {
-		return false
-	}
-	if output != "" {
-		fmt.Println("UNEXPECTED LOCAL CONFIGURATION")
-		fmt.Println(output)
-		return true
-	}
-	output, err = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
-	if err != nil {
-		return false
-	}
-	if output != "" {
-		fmt.Println("UNEXPECTED GLOBAL CONFIGURATION")
-		fmt.Println(output)
-		return true
-	}
-	return false
-}
-
 // LineageTable provides the currently configured lineage information as a DataTable.
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
@@ -409,4 +386,17 @@ func (self *TestCommands) UncommittedFiles() []string {
 
 func (self *TestCommands) UnstashOpenFiles() error {
 	return self.Run("git", "stash", "pop")
+}
+
+// HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
+func (self *TestCommands) VerifyNoGitTownConfiguration() error {
+	output, _ := self.Query("git", "config", "--local", "--get-regex", "git-town")
+	if output != "" {
+		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
+	}
+	output, _ = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
+	if output != "" {
+		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
+	}
+	return nil
 }
