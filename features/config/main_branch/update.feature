@@ -1,6 +1,11 @@
 Feature: configure the main branch
 
   Scenario: not configured
+    When I run "git-town config main-branch main"
+    Then it prints no output
+    And local Git Town setting "main-branch" is now "main"
+
+  Scenario: empty setting
     Given local Git Town setting "main-branch" is ""
     When I run "git-town config main-branch main"
     Then it prints no output
