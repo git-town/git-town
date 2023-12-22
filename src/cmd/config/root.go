@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -96,7 +95,7 @@ func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 }
 
 type RootConfig struct {
-	branchTypes           syncdomain.BranchTypes
+	branchTypes           configdomain.BranchTypes
 	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
 	giteaToken            configdomain.GiteaToken
 	githubToken           configdomain.GitHubToken

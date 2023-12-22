@@ -3,9 +3,9 @@ package validate
 import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
@@ -54,7 +54,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 type KnowsBranchAncestorsArgs struct {
 	AllBranches   gitdomain.BranchInfos
 	Backend       *git.BackendCommands
-	BranchTypes   syncdomain.BranchTypes
+	BranchTypes   configdomain.BranchTypes
 	DefaultBranch gitdomain.LocalBranchName
 	MainBranch    gitdomain.LocalBranchName
 }
@@ -86,7 +86,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 type KnowsBranchesAncestorsArgs struct {
 	AllBranches gitdomain.BranchInfos
 	Backend     *git.BackendCommands
-	BranchTypes syncdomain.BranchTypes
+	BranchTypes configdomain.BranchTypes
 	MainBranch  gitdomain.LocalBranchName
 }
 

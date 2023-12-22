@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -18,7 +17,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch added", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
 		}
@@ -95,7 +94,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch removed", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
 		}
@@ -152,7 +151,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch changed", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -249,7 +248,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch pushed to origin", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -333,7 +332,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("remote-only branch downloaded", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -419,7 +418,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch added", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -500,7 +499,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -596,7 +595,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch remote updated", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -687,7 +686,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -800,7 +799,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -899,7 +898,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -1019,7 +1018,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -1115,7 +1114,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pushed up", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -1205,7 +1204,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch deleted locally", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -1291,7 +1290,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
@@ -1376,7 +1375,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("sync with a new upstream remote", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
 		}

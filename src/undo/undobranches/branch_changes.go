@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -198,7 +197,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	Lineage                  configdomain.Lineage
-	BranchTypes              syncdomain.BranchTypes
+	BranchTypes              configdomain.BranchTypes
 	InitialBranch            gitdomain.LocalBranchName
 	FinalBranch              gitdomain.LocalBranchName
 	NoPushHook               configdomain.NoPushHook

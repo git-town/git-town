@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, branches syncdomain.Branches) (syncdomain.BranchTypes, error) {
+func IsConfigured(backend *git.BackendCommands, branches syncdomain.Branches) (configdomain.BranchTypes, error) {
 	mainBranch := backend.GitTown.MainBranch
 	if mainBranch.IsEmpty() {
 		fmt.Print("Git Town needs to be configured\n\n")

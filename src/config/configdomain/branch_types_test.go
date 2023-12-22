@@ -1,10 +1,10 @@
-package syncdomain_test
+package configdomain_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -13,7 +13,7 @@ func TestBranchTypes(t *testing.T) {
 
 	t.Run("IsFeatureBranch", func(t *testing.T) {
 		t.Parallel()
-		bt := syncdomain.BranchTypes{
+		bt := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -25,7 +25,7 @@ func TestBranchTypes(t *testing.T) {
 
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		bt := syncdomain.BranchTypes{
+		bt := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -37,7 +37,7 @@ func TestBranchTypes(t *testing.T) {
 
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		bt := syncdomain.BranchTypes{
+		bt := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -49,7 +49,7 @@ func TestBranchTypes(t *testing.T) {
 
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 		}

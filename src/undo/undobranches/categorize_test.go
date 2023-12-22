@@ -3,8 +3,8 @@ package undobranches_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undobranches"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
@@ -49,7 +49,7 @@ func TestCategorize(t *testing.T) {
 				},
 			},
 		}
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 		}
@@ -106,7 +106,7 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
@@ -139,7 +139,7 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
@@ -166,7 +166,7 @@ func TestCategorize(t *testing.T) {
 			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
-		branchTypes := syncdomain.BranchTypes{
+		branchTypes := configdomain.BranchTypes{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}

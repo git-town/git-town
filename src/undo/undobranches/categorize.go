@@ -1,11 +1,11 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branchTypes syncdomain.BranchTypes) (perennials, features undodomain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branchTypes configdomain.BranchTypes) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
 		if branchTypes.IsFeatureBranch(change.Before.LocalName) {
 			features = append(features, change)
@@ -16,7 +16,7 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branc
 	return
 }
 
-func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchTypes syncdomain.BranchTypes) (changedPerennials, changedFeatures undodomain.LocalBranchChange) {
+func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchTypes configdomain.BranchTypes) (changedPerennials, changedFeatures undodomain.LocalBranchChange) {
 	changedPerennials = undodomain.LocalBranchChange{}
 	changedFeatures = undodomain.LocalBranchChange{}
 	for branch, change := range change {
@@ -29,7 +29,7 @@ func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchType
 	return
 }
 
-func CategorizeRemoteBranchChange(change undodomain.RemoteBranchChange, branchTypes syncdomain.BranchTypes) (perennialChanges, featureChanges undodomain.RemoteBranchChange) {
+func CategorizeRemoteBranchChange(change undodomain.RemoteBranchChange, branchTypes configdomain.BranchTypes) (perennialChanges, featureChanges undodomain.RemoteBranchChange) {
 	perennialChanges = undodomain.RemoteBranchChange{}
 	featureChanges = undodomain.RemoteBranchChange{}
 	for branch, change := range change {
@@ -42,7 +42,7 @@ func CategorizeRemoteBranchChange(change undodomain.RemoteBranchChange, branchTy
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas undodomain.RemoteBranchesSHAs, branchTypes syncdomain.BranchTypes) (perennials, features undodomain.RemoteBranchesSHAs) {
+func CategorizeRemoteBranchesSHAs(shas undodomain.RemoteBranchesSHAs, branchTypes configdomain.BranchTypes) (perennials, features undodomain.RemoteBranchesSHAs) {
 	perennials = undodomain.RemoteBranchesSHAs{}
 	features = undodomain.RemoteBranchesSHAs{}
 	for branch, sha := range shas {

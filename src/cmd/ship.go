@@ -278,7 +278,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes syncdomain.BranchTypes, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes configdomain.BranchTypes, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)

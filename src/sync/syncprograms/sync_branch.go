@@ -3,7 +3,6 @@ package syncprograms
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -24,7 +23,7 @@ func SyncBranchProgram(branch gitdomain.BranchInfo, args SyncBranchProgramArgs) 
 
 type SyncBranchProgramArgs struct {
 	BranchInfos           gitdomain.BranchInfos
-	BranchTypes           syncdomain.BranchTypes
+	BranchTypes           configdomain.BranchTypes
 	IsOnline              configdomain.Online
 	Lineage               configdomain.Lineage
 	Program               *program.Program
