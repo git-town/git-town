@@ -93,17 +93,21 @@ func TestGitea(t *testing.T) {
 		must.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
 	})
 
-	t.Run("RepositoryURL", func(t *testing.T) {
-		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: configdomain.HostingGitea,
-			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
-			APIToken:       "",
-			Log:            log.Silent{},
-		})
-		must.NoError(t, err)
-		have := connector.RepositoryURL()
-		must.EqOp(t, "https://gitea.com/git-town/docs", have)
-	})
+	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
+	// WHICH MAKES IT SLOW AND FLAKY.
+	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
+	//
+	// t.Run("RepositoryURL", func(t *testing.T) {
+	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
+	// 		HostingService: configdomain.HostingGitea,
+	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+	// 		APIToken:       "",
+	// 		Log:            log.Silent{},
+	// 	})
+	// 	must.NoError(t, err)
+	// 	have := connector.RepositoryURL()
+	// 	must.EqOp(t, "https://gitea.com/git-town/docs", have)
+	// })
 }
 
 func TestNewGiteaConnector(t *testing.T) {
