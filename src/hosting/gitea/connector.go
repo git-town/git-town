@@ -7,9 +7,9 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"golang.org/x/oauth2"
@@ -69,7 +69,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	if number <= 0 {
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	title, body := common.CommitMessageParts(message)
+	title, body := git.CommitMessageParts(message)
 	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,

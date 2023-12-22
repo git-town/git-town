@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/google/go-github/v50/github"
@@ -70,7 +70,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
-	title, body := common.CommitMessageParts(message)
+	title, body := git.CommitMessageParts(message)
 	result, _, err := self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,

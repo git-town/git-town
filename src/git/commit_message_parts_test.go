@@ -1,9 +1,9 @@
-package common_test
+package git_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/shoenig/test/must"
 )
 
@@ -35,7 +35,7 @@ func TestParseCommitMessage(t *testing.T) {
 		},
 	}
 	for give, want := range tests {
-		haveTitle, haveBody := common.CommitMessageParts(give)
+		haveTitle, haveBody := git.CommitMessageParts(give)
 		must.EqOp(t, want.title, haveTitle)
 		must.EqOp(t, want.body, haveBody)
 	}
