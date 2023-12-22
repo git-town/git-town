@@ -6,8 +6,8 @@ import (
 )
 
 // SingleCacheDiff provides a diff of the two given SingleCache instances.
-func SingleCacheDiff(before, after configdomain.SingleCache) undodomain.ConfigDiff {
-	result := undodomain.ConfigDiff{
+func SingleCacheDiff(before, after configdomain.SingleCache) ConfigDiff {
+	result := ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},
 		Changed: map[configdomain.Key]undodomain.Change[string]{},

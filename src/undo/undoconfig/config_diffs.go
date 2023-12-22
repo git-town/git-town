@@ -1,22 +1,21 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
 // ConfigDiffs describes the changes made to the local and global Git configuration.
 type ConfigDiffs struct {
-	Global undodomain.ConfigDiff
-	Local  undodomain.ConfigDiff
+	Global ConfigDiff
+	Local  ConfigDiff
 }
 
 func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
 	globalCacheDiff := SingleCacheDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache)
 	localCacheDiff := SingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache)
-	globalConfigDiff := undodomain.PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)
-	localConfigDiff := undodomain.PartialConfigDiff(before.GitConfig.LocalConfig, after.GitConfig.LocalConfig)
+	globalConfigDiff := PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)
+	localConfigDiff := PartialConfigDiff(before.GitConfig.LocalConfig, after.GitConfig.LocalConfig)
 	globalConfigDiff.Merge(&globalCacheDiff)
 	localConfigDiff.Merge(&localCacheDiff)
 	return ConfigDiffs{

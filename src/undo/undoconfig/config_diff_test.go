@@ -1,10 +1,11 @@
-package undodomain_test
+package undoconfig_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
@@ -16,51 +17,51 @@ func TestConfigdiff(t *testing.T) {
 		t.Parallel()
 		t.Run("nothing changed", func(t *testing.T) {
 			t.Parallel()
-			have := undodomain.ConfigDiff{ //nolint:exhaustruct
+			have := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
 					configdomain.KeyGithubToken,
 				},
 			}
-			other := undodomain.ConfigDiff{ //nolint:exhaustruct
+			other := undoconfig.ConfigDiff{ //nolint:exhaustruct
 			}
 			have.Merge(&other)
-			want := undodomain.ConfigDiff{ //nolint:exhaustruct
+			want := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{configdomain.KeyGithubToken},
 			}
 			must.Eq(t, want, have)
 		})
 		t.Run("added entries", func(t *testing.T) {
 			t.Parallel()
-			have := undodomain.ConfigDiff{ //nolint:exhaustruct
+			have := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
 					configdomain.KeyGiteaToken,
 				},
 			}
-			other := undodomain.ConfigDiff{ //nolint:exhaustruct
+			other := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{
 					configdomain.KeyGithubToken,
 				},
 			}
 			have.Merge(&other)
-			want := undodomain.ConfigDiff{ //nolint:exhaustruct
+			want := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Added: []configdomain.Key{configdomain.KeyGiteaToken, configdomain.KeyGithubToken},
 			}
 			must.Eq(t, want, have)
 		})
 		t.Run("removed entries", func(t *testing.T) {
 			t.Parallel()
-			have := undodomain.ConfigDiff{ //nolint:exhaustruct
+			have := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
 					configdomain.KeyGiteaToken: "gitea",
 				},
 			}
-			other := undodomain.ConfigDiff{ //nolint:exhaustruct
+			other := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
 					configdomain.KeyGithubToken: "github",
 				},
 			}
 			have.Merge(&other)
-			want := undodomain.ConfigDiff{ //nolint:exhaustruct
+			want := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Removed: map[configdomain.Key]string{
 					configdomain.KeyGiteaToken:  "gitea",
 					configdomain.KeyGithubToken: "github",
@@ -70,7 +71,7 @@ func TestConfigdiff(t *testing.T) {
 		})
 		t.Run("changed entries", func(t *testing.T) {
 			t.Parallel()
-			have := undodomain.ConfigDiff{ //nolint:exhaustruct
+			have := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyGiteaToken: {
 						Before: "giteaBefore",
@@ -78,7 +79,7 @@ func TestConfigdiff(t *testing.T) {
 					},
 				},
 			}
-			other := undodomain.ConfigDiff{ //nolint:exhaustruct
+			other := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyGithubToken: {
 						Before: "githubBefore",
@@ -87,7 +88,7 @@ func TestConfigdiff(t *testing.T) {
 				},
 			}
 			have.Merge(&other)
-			want := undodomain.ConfigDiff{ //nolint:exhaustruct
+			want := undoconfig.ConfigDiff{ //nolint:exhaustruct
 				Changed: map[configdomain.Key]undodomain.Change[string]{
 					configdomain.KeyGiteaToken: {
 						Before: "giteaBefore",
@@ -109,9 +110,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := gitdomain.LocalBranchName("main")
 			after := gitdomain.LocalBranchName("main")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -121,9 +122,9 @@ func TestConfigdiff(t *testing.T) {
 		t.Run("added", func(t *testing.T) {
 			t.Parallel()
 			after := configdomain.GitHubToken("token")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, nil, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, nil, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -133,9 +134,9 @@ func TestConfigdiff(t *testing.T) {
 		t.Run("removed", func(t *testing.T) {
 			t.Parallel()
 			before := configdomain.GitHubToken("token")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, nil)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, &before, nil)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -146,9 +147,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := configdomain.GitHubToken("token1")
 			after := configdomain.GitHubToken("token2")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
@@ -164,9 +165,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := configdomain.GitHubToken("")
 			after := configdomain.GitHubToken("token")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
@@ -182,9 +183,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := configdomain.GitHubToken("token")
 			after := configdomain.GitHubToken("")
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
@@ -204,9 +205,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "main"
 			after := "main"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffString(&have, configdomain.KeyGithubToken, before, after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffString(&have, configdomain.KeyGithubToken, before, after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -217,9 +218,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := ""
 			after := "token"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffString(&have, configdomain.KeyGithubToken, before, after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffString(&have, configdomain.KeyGithubToken, before, after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -230,9 +231,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "token"
 			after := ""
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffString(&have, configdomain.KeyGithubToken, before, after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffString(&have, configdomain.KeyGithubToken, before, after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -243,9 +244,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "token1"
 			after := "token2"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffString(&have, configdomain.KeyGithubToken, before, after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffString(&have, configdomain.KeyGithubToken, before, after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{
@@ -265,9 +266,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "main"
 			after := "main"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -277,9 +278,9 @@ func TestConfigdiff(t *testing.T) {
 		t.Run("added to nil", func(t *testing.T) {
 			t.Parallel()
 			after := "token"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, nil, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, nil, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -290,9 +291,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := ""
 			after := "token"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{configdomain.KeyGithubToken},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -302,9 +303,9 @@ func TestConfigdiff(t *testing.T) {
 		t.Run("removed to nil", func(t *testing.T) {
 			t.Parallel()
 			before := "token"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, nil)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, nil)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -315,9 +316,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "token"
 			after := ""
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{configdomain.KeyGithubToken: "token"},
 				Changed: map[configdomain.Key]undodomain.Change[string]{},
@@ -328,9 +329,9 @@ func TestConfigdiff(t *testing.T) {
 			t.Parallel()
 			before := "token1"
 			after := "token2"
-			have := undodomain.EmptyConfigDiff()
-			undodomain.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
-			want := undodomain.ConfigDiff{
+			have := undoconfig.EmptyConfigDiff()
+			undoconfig.DiffStringPtr(&have, configdomain.KeyGithubToken, &before, &after)
+			want := undoconfig.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
 				Changed: map[configdomain.Key]undodomain.Change[string]{

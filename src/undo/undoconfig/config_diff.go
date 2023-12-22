@@ -1,10 +1,11 @@
-package undodomain
+package undoconfig
 
 import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -12,7 +13,7 @@ import (
 type ConfigDiff struct {
 	Added   []configdomain.Key
 	Removed map[configdomain.Key]string
-	Changed map[configdomain.Key]Change[string]
+	Changed map[configdomain.Key]undodomain.Change[string]
 }
 
 // Merge merges the given ConfigDiff into this ConfigDiff, overwriting values that exist in both.
@@ -39,7 +40,7 @@ func DiffLocalBranchNames(diff *ConfigDiff, key configdomain.Key, beforeValue *g
 	if afterValue == nil || len(*afterValue) == 0 {
 		diff.Removed[key] = beforeValue.String()
 	}
-	diff.Changed[key] = Change[string]{
+	diff.Changed[key] = undodomain.Change[string]{
 		Before: beforeValue.String(),
 		After:  afterValue.String(),
 	}
@@ -65,7 +66,7 @@ func DiffPtr[T diffArg](diff *ConfigDiff, key configdomain.Key, before *T, after
 	if *before == *after {
 		return
 	}
-	diff.Changed[key] = Change[string]{
+	diff.Changed[key] = undodomain.Change[string]{
 		Before: (*before).String(),
 		After:  (*after).String(),
 	}
@@ -83,7 +84,7 @@ func DiffString(diff *ConfigDiff, key configdomain.Key, before string, after str
 		diff.Removed[key] = before
 		return
 	}
-	diff.Changed[key] = Change[string]{
+	diff.Changed[key] = undodomain.Change[string]{
 		Before: before,
 		After:  after,
 	}
@@ -105,7 +106,7 @@ func EmptyConfigDiff() ConfigDiff {
 	return ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},
-		Changed: map[configdomain.Key]Change[string]{},
+		Changed: map[configdomain.Key]undodomain.Change[string]{},
 	}
 }
 
@@ -114,7 +115,7 @@ func PartialConfigDiff(before, after configdomain.PartialConfig) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []configdomain.Key{},
 		Removed: map[configdomain.Key]string{},
-		Changed: map[configdomain.Key]Change[string]{},
+		Changed: map[configdomain.Key]undodomain.Change[string]{},
 	}
 	DiffPtr(&result, configdomain.KeyCodeHostingOriginHostname, before.CodeHostingOriginHostname, after.CodeHostingOriginHostname)
 	DiffPtr(&result, configdomain.KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
