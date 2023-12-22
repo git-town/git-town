@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
-// Wrap prepends and appends housekeeping activities to the given program.
+// Wrap makes the given program perform housekeeping before and after it executes.
 // TODO: only wrap if the program actually contains any opcodes.
 func Wrap(program *program.Program, options WrapOptions) {
 	program.Add(&opcode.PreserveCheckoutHistory{
