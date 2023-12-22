@@ -53,7 +53,7 @@ type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
 	Verboe                  bool
 	Lineage                 configdomain.Lineage
-	InitialBranchesSnapshot undodomain.BranchesSnapshot
+	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	PushHook                configdomain.PushHook

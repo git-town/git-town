@@ -8,7 +8,7 @@ import (
 // BranchSpans describes how a Git Town command has modified the branches in a Git repository.
 type BranchSpans []BranchSpan
 
-func NewBranchSpans(beforeSnapshot, afterSnapshot undodomain.BranchesSnapshot) BranchSpans {
+func NewBranchSpans(beforeSnapshot, afterSnapshot gitdomain.BranchesStatus) BranchSpans {
 	result := BranchSpans{}
 	for _, before := range beforeSnapshot.Branches {
 		after := afterSnapshot.Branches.FindMatchingRecord(before)

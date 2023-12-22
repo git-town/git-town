@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/sync"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -109,7 +108,7 @@ type proposeConfig struct {
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

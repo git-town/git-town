@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/sync"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -141,7 +140,7 @@ type shipConfig struct {
 	syncBeforeShip           configdomain.SyncBeforeShip
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{

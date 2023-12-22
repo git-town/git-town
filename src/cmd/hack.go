@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -76,7 +75,7 @@ func executeHack(args []string, verbose bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, undodomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook

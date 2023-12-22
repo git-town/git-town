@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
 type BackendRunner interface {
@@ -90,16 +89,16 @@ func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBran
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *BackendCommands) BranchesSnapshot() (undodomain.BranchesSnapshot, error) { //nolint:nonamedreturns
+func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesStatus, error) { //nolint:nonamedreturns
 	output, err := self.Query("git", "branch", "-vva")
 	if err != nil {
-		return undodomain.EmptyBranchesSnapshot(), err
+		return gitdomain.EmptyBranchesSnapshot(), err
 	}
 	branches, currentBranch := ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return undodomain.BranchesSnapshot{
+	return gitdomain.BranchesStatus{
 		Branches: branches,
 		Active:   currentBranch,
 	}, nil
@@ -527,7 +526,6 @@ func (self *BackendCommands) ShouldPushBranch(branch gitdomain.LocalBranchName, 
 }
 
 // StashSize provides the number of stashes in this repository.
-// TODO: return a low-level data structure here, like an int, not something from the undodomain.
 func (self *BackendCommands) StashSize() (gitdomain.StashSize, error) {
 	output, err := self.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err

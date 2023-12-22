@@ -43,7 +43,7 @@ type ExecuteArgs struct {
 	Connector               hostingdomain.Connector
 	Verbose                 bool
 	RootDir                 gitdomain.RepoRootDir
-	InitialBranchesSnapshot undodomain.BranchesSnapshot
+	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undodomain.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	Lineage                 configdomain.Lineage

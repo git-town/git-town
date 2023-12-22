@@ -24,11 +24,11 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
@@ -99,7 +99,7 @@ func TestChanges(t *testing.T) {
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
 		}
 		lineage := configdomain.Lineage{}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
@@ -111,7 +111,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("branch-1"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
@@ -158,7 +158,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -178,7 +178,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -255,7 +255,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -274,7 +274,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -339,7 +339,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
@@ -358,7 +358,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -425,11 +425,11 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -506,7 +506,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -525,7 +525,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -602,7 +602,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -621,7 +621,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -693,7 +693,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -719,7 +719,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -806,7 +806,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -832,7 +832,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -905,7 +905,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -924,7 +924,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1025,7 +1025,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1044,7 +1044,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1121,7 +1121,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1140,7 +1140,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1211,7 +1211,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1230,7 +1230,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
@@ -1297,7 +1297,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1316,7 +1316,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1382,7 +1382,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		before := undodomain.BranchesSnapshot{
+		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -1394,7 +1394,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		after := undodomain.BranchesSnapshot{
+		after := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
