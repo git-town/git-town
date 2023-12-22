@@ -7,7 +7,7 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/commitmessage"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
@@ -69,11 +69,11 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	if number <= 0 {
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	title, body := git.CommitMessageParts(message)
+	commitMessageParts := commitmessage.Split(message)
 	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
-		Title:   title,
-		Message: body,
+		Title:   commitMessageParts.Title,
+		Message: commitMessageParts.Body,
 	})
 	if err != nil {
 		return gitdomain.EmptySHA(), err
