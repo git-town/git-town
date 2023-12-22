@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
@@ -108,5 +109,5 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 }
 
 type repoConfig struct {
-	connector hosting.Connector
+	connector hostingdomain.Connector
 }

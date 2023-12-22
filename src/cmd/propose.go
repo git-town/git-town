@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -93,7 +94,7 @@ func executePropose(verbose bool) error {
 type proposeConfig struct {
 	branches              undodomain.Branches
 	branchesToSync        undodomain.BranchInfos
-	connector             hosting.Connector
+	connector             hostingdomain.Connector
 	hasOpenChanges        bool
 	remotes               gitdomain.Remotes
 	isOnline              configdomain.Online

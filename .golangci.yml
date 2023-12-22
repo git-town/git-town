@@ -60,7 +60,7 @@ issues:
       text: "do not define dynamic errors"
     - linters:
         - ireturn
-      text: github.com/git-town/git-town/v11/src/hosting(/common)?.Connector
+      text: github.com/git-town/git-town/v11/src/(hosting/hostingdomain.Connector|hosting.Connector)
     - path: src/gohacks/cache/cache.go
       linters:
         - ireturn

@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -119,7 +120,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 }
 
 type continueConfig struct {
-	connector hosting.Connector
+	connector hostingdomain.Connector
 	lineage   configdomain.Lineage
 	pushHook  configdomain.PushHook
 }

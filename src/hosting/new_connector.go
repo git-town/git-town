@@ -12,7 +12,7 @@ import (
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (Connector, error) {
+func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 		HostingService: args.HostingService,
 		APIToken:       args.GithubAPIToken,
@@ -49,7 +49,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	if giteaConnector != nil || err != nil {
 		return giteaConnector, err
 	}
-	return nil, nil //nolint:nilnil
+	return nil, nil
 }
 
 type NewConnectorArgs struct {

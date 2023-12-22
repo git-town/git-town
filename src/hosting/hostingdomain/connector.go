@@ -1,8 +1,7 @@
-package hosting
+package hostingdomain
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 )
 
 // Connector describes the activities that Git Town can perform on code hosting platforms.
@@ -10,11 +9,11 @@ import (
 type Connector interface {
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective hosting platform is prepopulated with.
-	DefaultProposalMessage(proposal hostingdomain.Proposal) string
+	DefaultProposalMessage(proposal Proposal) string
 
 	// FindProposal provides details about the proposal for the given branch into the given target branch.
 	// Returns nil if no proposal exists.
-	FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error)
+	FindProposal(branch, target gitdomain.LocalBranchName) (*Proposal, error)
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.

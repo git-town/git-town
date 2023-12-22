@@ -118,7 +118,7 @@ func executeShip(args []string, message string, verbose bool) error {
 type shipConfig struct {
 	branches                 undodomain.Branches
 	branchToShip             undodomain.BranchInfo
-	connector                hosting.Connector
+	connector                hostingdomain.Connector
 	targetBranch             undodomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames

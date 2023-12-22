@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
-	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/shared"
@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	RunState                *runstate.RunState
 	Run                     *git.ProdRunner
-	Connector               hosting.Connector
+	Connector               hostingdomain.Connector
 	Verbose                 bool
 	RootDir                 gitdomain.RepoRootDir
 	InitialBranchesSnapshot undodomain.BranchesSnapshot
