@@ -6,11 +6,11 @@ import (
 	giteasdk "code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -71,7 +71,7 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		give := domain.Proposal{ //nolint:exhaustruct
+		give := hostingdomain.Proposal{ //nolint:exhaustruct
 			Number: 1,
 			Title:  "my title",
 		}

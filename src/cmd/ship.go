@@ -6,13 +6,13 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
@@ -131,8 +131,8 @@ type shipConfig struct {
 	lineage                  configdomain.Lineage
 	mainBranch               gitdomain.LocalBranchName
 	previousBranch           gitdomain.LocalBranchName
-	proposal                 *domain.Proposal
-	proposalsOfChildBranches []domain.Proposal
+	proposal                 *hostingdomain.Proposal
+	proposalsOfChildBranches []hostingdomain.Proposal
 	syncPerennialStrategy    configdomain.SyncPerennialStrategy
 	pushHook                 configdomain.PushHook
 	syncUpstream             configdomain.SyncUpstream
@@ -207,9 +207,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
-	var proposal *domain.Proposal
+	var proposal *hostingdomain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
-	proposalsOfChildBranches := []domain.Proposal{}
+	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	pushHook = repo.Runner.GitTown.PushHook
 	originURL := repo.Runner.GitTown.OriginURL()
 	hostingService, err := repo.Runner.GitTown.HostingService()

@@ -6,10 +6,10 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -41,11 +41,11 @@ type NewConnectorArgs struct {
 	GetSHAForBranch common.SHAForBranchFunc
 }
 
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 

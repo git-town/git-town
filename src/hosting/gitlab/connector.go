@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/xanzy/go-gitlab"
 )
@@ -21,7 +21,7 @@ type Connector struct {
 	log common.Log
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.Ptr("opened"),
 		SourceBranch: gitlab.Ptr(branch.String()),
@@ -109,8 +109,8 @@ type NewConnectorArgs struct {
 	Log            common.Log
 }
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) domain.Proposal {
-	return domain.Proposal{
+func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {
+	return hostingdomain.Proposal{
 		Number:       mergeRequest.IID,
 		Target:       gitdomain.NewLocalBranchName(mergeRequest.TargetBranch),
 		Title:        mergeRequest.Title,

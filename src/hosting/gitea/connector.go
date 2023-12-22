@@ -7,10 +7,10 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"golang.org/x/oauth2"
 )
@@ -22,11 +22,11 @@ type Connector struct {
 	log common.Log
 }
 
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	openPullRequests, _, err := self.client.ListRepoPullRequests(self.Organization, self.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -44,7 +44,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
-	return &domain.Proposal{
+	return &hostingdomain.Proposal{
 		MergeWithAPI: pullRequest.Mergeable,
 		Number:       int(pullRequest.Index),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.Ref),

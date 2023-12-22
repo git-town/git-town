@@ -1,4 +1,4 @@
-package domain
+package hostingdomain
 
 import "github.com/git-town/git-town/v11/src/git/gitdomain"
 

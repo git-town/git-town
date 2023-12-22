@@ -7,10 +7,10 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/common"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
@@ -26,11 +26,11 @@ type Connector struct {
 	log        common.Log
 }
 
-func (self *Connector) DefaultProposalMessage(proposal domain.Proposal) string {
+func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*domain.Proposal, error) {
+func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
 	pullRequests, _, err := self.client.PullRequests.List(context.Background(), self.Organization, self.Repository, &github.PullRequestListOptions{
 		Head:  self.Organization + ":" + branch.String(),
 		Base:  target.String(),
@@ -147,8 +147,8 @@ type NewConnectorArgs struct {
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
-func parsePullRequest(pullRequest *github.PullRequest) domain.Proposal {
-	return domain.Proposal{
+func parsePullRequest(pullRequest *github.PullRequest) hostingdomain.Proposal {
+	return hostingdomain.Proposal{
 		Number:       pullRequest.GetNumber(),
 		Target:       gitdomain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:        pullRequest.GetTitle(),
