@@ -12,15 +12,9 @@ type ConfigDiffs struct {
 }
 
 func NewConfigDiffs(before, after ConfigSnapshot) ConfigDiffs {
-	globalCacheDiff := SingleCacheDiff(before.GitConfig.GlobalCache, after.GitConfig.GlobalCache)
-	localCacheDiff := SingleCacheDiff(before.GitConfig.LocalCache, after.GitConfig.LocalCache)
-	globalConfigDiff := PartialConfigDiff(before.GitConfig.GlobalConfig, after.GitConfig.GlobalConfig)
-	localConfigDiff := PartialConfigDiff(before.GitConfig.LocalConfig, after.GitConfig.LocalConfig)
-	globalConfigDiff.Merge(&globalCacheDiff)
-	localConfigDiff.Merge(&localCacheDiff)
 	return ConfigDiffs{
-		Global: globalConfigDiff,
-		Local:  localConfigDiff,
+		Global: SingleCacheDiff(before.Global, after.Global),
+		Local:  SingleCacheDiff(before.Local, after.Local),
 	}
 }
 

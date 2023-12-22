@@ -47,13 +47,12 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
+		cache[*configKey] = value
 		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
 			err := config.Add(*configKey, value)
 			if err != nil {
 				return cache, config, err
 			}
-		} else {
-			cache[*configKey] = value
 		}
 	}
 	return cache, config, nil
@@ -65,7 +64,8 @@ func (self *Access) RemoveGlobalConfigValue(key Key) error {
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key Key) error {
-	return self.Run("git", "config", "--unset", key.String())
+	_ = self.Run("git", "config", "--unset", key.String())
+	return nil
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
