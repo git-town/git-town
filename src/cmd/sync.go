@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -72,8 +72,8 @@ func executeSync(all, dryRun, verbose bool) error {
 		return err
 	}
 	runProgram := program.Program{}
-	syncprograms.SyncBranchesProgram(syncprograms.SyncBranchesProgramArgs{
-		SyncBranchProgramArgs: syncprograms.SyncBranchProgramArgs{
+	sync.BranchesProgram(sync.BranchesProgramArgs{
+		BranchProgramArgs: sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			Remotes:               config.remotes,

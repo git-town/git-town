@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -293,7 +293,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	prog := program.Program{}
 	if config.syncBeforeShip {
 		// sync the parent branch
-		syncprograms.SyncBranchProgram(config.targetBranch, syncprograms.SyncBranchProgramArgs{
+		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			Remotes:               config.remotes,
@@ -308,7 +308,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 		// sync the branch to ship (local sync only)
-		syncprograms.SyncBranchProgram(config.branchToShip, syncprograms.SyncBranchProgramArgs{
+		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			Remotes:               config.remotes,

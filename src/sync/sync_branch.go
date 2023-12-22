@@ -1,4 +1,4 @@
-package syncprograms
+package sync
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -7,8 +7,8 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
-// SyncBranchProgram syncs the given branch.
-func SyncBranchProgram(branch gitdomain.BranchInfo, args SyncBranchProgramArgs) {
+// BranchProgram syncs the given branch.
+func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Lineage.Parent(branch.LocalName))
 	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	switch {
@@ -17,11 +17,11 @@ func SyncBranchProgram(branch gitdomain.BranchInfo, args SyncBranchProgramArgs) 
 	case branch.SyncStatus == gitdomain.SyncStatusOtherWorktree:
 		// Git Town doesn't sync branches that are active in another worktree
 	default:
-		SyncExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
+		ExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
 	}
 }
 
-type SyncBranchProgramArgs struct {
+type BranchProgramArgs struct {
 	BranchInfos           gitdomain.BranchInfos
 	BranchTypes           configdomain.BranchTypes
 	IsOnline              configdomain.Online
@@ -36,8 +36,8 @@ type SyncBranchProgramArgs struct {
 	SyncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
-// SyncExistingBranchProgram provides the opcode to sync a particular branch.
-func SyncExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args SyncBranchProgramArgs) {
+// ExistingBranchProgram provides the opcode to sync a particular branch.
+func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	isFeatureBranch := args.BranchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
@@ -45,9 +45,9 @@ func SyncExistingBranchProgram(list *program.Program, branch gitdomain.BranchInf
 	}
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	if isFeatureBranch {
-		SyncFeatureBranchProgram(list, branch, parentOtherWorktree, args.SyncFeatureStrategy)
+		FeatureBranchProgram(list, branch, parentOtherWorktree, args.SyncFeatureStrategy)
 	} else {
-		SyncPerennialBranchProgram(branch, args)
+		PerennialBranchProgram(branch, args)
 	}
 	if args.PushBranch && args.Remotes.HasOrigin() && args.IsOnline.Bool() {
 		switch {

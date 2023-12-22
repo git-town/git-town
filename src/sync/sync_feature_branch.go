@@ -1,4 +1,4 @@
-package syncprograms
+package sync
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
-// SyncFeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
-func SyncFeatureBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
+// FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
+func FeatureBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
 	if branch.HasTrackingBranch() {
 		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
 	}

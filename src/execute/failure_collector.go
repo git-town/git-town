@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -60,7 +59,7 @@ func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdom
 	return value
 }
 
-func (self *FailureCollector) RepoStatus(value syncdomain.RepoStatus, err error) syncdomain.RepoStatus {
+func (self *FailureCollector) RepoStatus(value gitdomain.RepoStatus, err error) gitdomain.RepoStatus {
 	self.Check(err)
 	return value
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -172,7 +172,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncprograms.SyncBranchProgram(branch, syncprograms.SyncBranchProgramArgs{
+		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			IsOnline:              config.isOnline,

@@ -1,12 +1,12 @@
-package syncprograms
+package sync
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 )
 
-// SyncPerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
-func SyncPerennialBranchProgram(branch gitdomain.BranchInfo, args SyncBranchProgramArgs) {
+// PerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
+func PerennialBranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	if branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchOpcode(args.Program, branch.RemoteName, args.SyncPerennialStrategy)
 	}

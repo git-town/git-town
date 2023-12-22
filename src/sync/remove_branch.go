@@ -1,4 +1,4 @@
-package syncprograms
+package sync
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"

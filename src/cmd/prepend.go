@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -176,7 +176,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
-		syncprograms.SyncBranchProgram(branchToSync, syncprograms.SyncBranchProgramArgs{
+		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			IsOnline:              config.isOnline,

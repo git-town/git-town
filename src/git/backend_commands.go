@@ -13,7 +13,6 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
@@ -481,16 +480,16 @@ func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches gitdomain.B
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (self *BackendCommands) RepoStatus() (syncdomain.RepoStatus, error) {
+func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 	output, err := self.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
-		return syncdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
+		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
 	hasConflicts := strings.Contains(output, "Unmerged paths")
 	hasOpenChanges := outputIndicatesOpenChanges(output)
 	hasUntrackedChanges := outputIndicatesUntrackedChanges(output)
 	rebaseInProgress := outputIndicatesRebaseInProgress(output)
-	return syncdomain.RepoStatus{
+	return gitdomain.RepoStatus{
 		Conflicts:        hasConflicts,
 		OpenChanges:      hasOpenChanges,
 		RebaseInProgress: rebaseInProgress,

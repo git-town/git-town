@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -189,7 +189,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
-	syncprograms.RemoveBranchFromLineage(syncprograms.RemoveBranchFromLineageArgs{
+	sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 		Branch:  config.branchToKill.LocalName,
 		Lineage: config.lineage,
 		Program: prog,

@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncprograms"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -192,7 +192,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncprograms.SyncBranchProgram(branch, syncprograms.SyncBranchProgramArgs{
+		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			Remotes:               config.remotes,

@@ -1,4 +1,4 @@
-package syncprograms
+package sync
 
 import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -6,10 +6,10 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 )
 
-// SyncBranchesProgram syncs all given branches.
-func SyncBranchesProgram(args SyncBranchesProgramArgs) {
+// BranchesProgram syncs all given branches.
+func BranchesProgram(args BranchesProgramArgs) {
 	for _, branch := range args.BranchesToSync {
-		SyncBranchProgram(branch, args.SyncBranchProgramArgs)
+		BranchProgram(branch, args.BranchProgramArgs)
 	}
 	args.Program.Add(&opcode.CheckoutIfExists{Branch: args.InitialBranch})
 	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.IsOnline.Bool() {
@@ -22,8 +22,8 @@ func SyncBranchesProgram(args SyncBranchesProgramArgs) {
 	})
 }
 
-type SyncBranchesProgramArgs struct {
-	SyncBranchProgramArgs
+type BranchesProgramArgs struct {
+	BranchProgramArgs
 	BranchesToSync gitdomain.BranchInfos
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName
