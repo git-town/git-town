@@ -10,6 +10,11 @@ The major design goals of the Git Town codebase are:
    environment that Git Town executes in.
 3. Reliably undo anything that Git Town has done upon request.
 
+### General structure
+
+To prevent cyclic package dependencies, the Git Town codebase defines concepts
+in dedicated `*domain` packages.
+
 ### Execution framework
 
 Git Town addresses requirements 1 and 2 via an
