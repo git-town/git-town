@@ -1,9 +1,7 @@
 // Package cmd defines the Git Town commands.
 package cmd
 
-import (
-	"github.com/git-town/git-town/v11/src/cmd/configcmds"
-)
+import "github.com/git-town/git-town/v11/src/cmd/config"
 
 // Execute runs the Cobra stack.
 func Execute() error {
@@ -11,7 +9,7 @@ func Execute() error {
 	rootCmd.AddCommand(aliasesCommand())
 	rootCmd.AddCommand(appendCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(configcmds.ConfigCmd())
+	rootCmd.AddCommand(config.RootCmd())
 	rootCmd.AddCommand(continueCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())

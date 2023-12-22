@@ -1,4 +1,4 @@
-package configcmds
+package config
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 
 const configDesc = "Displays your Git Town configuration"
 
-func ConfigCmd() *cobra.Command {
+func RootCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	configCmd := cobra.Command{
 		Use:     "config",
@@ -61,7 +61,7 @@ func executeConfig(verbose bool) error {
 	return nil
 }
 
-func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
+func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 	fc := execute.FailureCollector{}
 	branchTypes := run.GitTown.BranchTypes()
 	deleteTrackingBranch := run.GitTown.ShipDeleteTrackingBranch
@@ -77,7 +77,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	syncUpstream := run.GitTown.SyncUpstream
 	syncFeatureStrategy := run.GitTown.SyncFeatureStrategy
 	syncBeforeShip := run.GitTown.SyncBeforeShip
-	return ConfigConfig{
+	return RootConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteTrackingBranch,
 		hosting:               hosting,
@@ -95,7 +95,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	}, fc.Err
 }
 
-type ConfigConfig struct {
+type RootConfig struct {
 	branchTypes           syncdomain.BranchTypes
 	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
 	giteaToken            configdomain.GiteaToken
@@ -112,7 +112,7 @@ type ConfigConfig struct {
 	syncBeforeShip        configdomain.SyncBeforeShip
 }
 
-func printConfig(config ConfigConfig) {
+func printConfig(config RootConfig) {
 	fmt.Println()
 	print.Header("Branches")
 	print.Entry("main branch", format.StringSetting(config.branchTypes.MainBranch.String()))

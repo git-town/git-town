@@ -1,4 +1,4 @@
-package configcmds
+package config
 
 import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
