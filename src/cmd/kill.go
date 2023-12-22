@@ -82,7 +82,7 @@ func executeKill(args []string, verbose bool) error {
 }
 
 type killConfig struct {
-	branchToKill   undodomain.BranchInfo
+	branchToKill   syncdomain.BranchInfo
 	branchWhenDone gitdomain.LocalBranchName
 	hasOpenChanges bool
 	initialBranch  gitdomain.LocalBranchName

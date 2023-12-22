@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
 // FailureCollector helps avoid excessive error checking
@@ -28,7 +27,7 @@ func (self *FailureCollector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (self *FailureCollector) BranchesSyncStatus(value undodomain.BranchInfos, err error) undodomain.BranchInfos {
+func (self *FailureCollector) BranchesSyncStatus(value syncdomain.BranchInfos, err error) syncdomain.BranchInfos {
 	self.Check(err)
 	return value
 }

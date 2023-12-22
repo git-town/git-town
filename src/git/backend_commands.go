@@ -174,8 +174,8 @@ func IsRemoteGone(branchName, remoteText string) (bool, gitdomain.RemoteBranchNa
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseVerboseBranchesOutput(output string) (undodomain.BranchInfos, gitdomain.LocalBranchName) {
-	result := undodomain.BranchInfos{}
+func ParseVerboseBranchesOutput(output string) (syncdomain.BranchInfos, gitdomain.LocalBranchName) {
+	result := syncdomain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
 	lines := stringslice.Lines(output)
 	checkedoutBranch := gitdomain.EmptyLocalBranchName()
@@ -215,7 +215,7 @@ func ParseVerboseBranchesOutput(output string) (undodomain.BranchInfos, gitdomai
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		switch {
 		case line[0] == '+':
-			result = append(result, undodomain.BranchInfo{
+			result = append(result, syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
 				SyncStatus: syncdomain.SyncStatusOtherWorktree,
@@ -223,7 +223,7 @@ func ParseVerboseBranchesOutput(output string) (undodomain.BranchInfos, gitdomai
 				RemoteSHA:  gitdomain.EmptySHA(),
 			})
 		case isLocalBranchName(branchName):
-			result = append(result, undodomain.BranchInfo{
+			result = append(result, syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName(branchName),
 				LocalSHA:   sha,
 				SyncStatus: syncStatus,
@@ -236,7 +236,7 @@ func ParseVerboseBranchesOutput(output string) (undodomain.BranchInfos, gitdomai
 			if existingBranchWithTracking != nil {
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
-				result = append(result, undodomain.BranchInfo{
+				result = append(result, syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -469,7 +469,7 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches undodomain.BranchInfos) error {
+func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches syncdomain.BranchInfos) error {
 	for child, parent := range self.GitTown.Lineage(self.GitTown.RemoveLocalConfigValue) {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)

@@ -1,11 +1,11 @@
 package undobranches
 
-import "github.com/git-town/git-town/v11/src/undo/undodomain"
+import "github.com/git-town/git-town/v11/src/sync/syncdomain"
 
 // BranchSpan represents changes of a branch over time.
 type BranchSpan struct {
-	Before undodomain.BranchInfo // the status of the branch before Git Town ran
-	After  undodomain.BranchInfo // the status of the branch after Git Town ran
+	Before syncdomain.BranchInfo // the status of the branch before Git Town ran
+	After  syncdomain.BranchInfo // the status of the branch after Git Town ran
 }
 
 func (self BranchSpan) IsInconsistentChange() bool {

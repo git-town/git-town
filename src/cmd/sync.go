@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -113,8 +114,8 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	branches              undodomain.Branches
-	branchesToSync        undodomain.BranchInfos
+	branches              syncdomain.Branches
+	branchesToSync        syncdomain.BranchInfos
 	hasOpenChanges        bool
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage

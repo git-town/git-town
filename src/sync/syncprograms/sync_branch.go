@@ -4,13 +4,12 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
 // SyncBranchProgram syncs the given branch.
-func SyncBranchProgram(branch undodomain.BranchInfo, args SyncBranchProgramArgs) {
+func SyncBranchProgram(branch syncdomain.BranchInfo, args SyncBranchProgramArgs) {
 	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Lineage.Parent(branch.LocalName))
 	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == syncdomain.SyncStatusOtherWorktree
 	switch {
@@ -24,7 +23,7 @@ func SyncBranchProgram(branch undodomain.BranchInfo, args SyncBranchProgramArgs)
 }
 
 type SyncBranchProgramArgs struct {
-	BranchInfos           undodomain.BranchInfos
+	BranchInfos           syncdomain.BranchInfos
 	BranchTypes           syncdomain.BranchTypes
 	IsOnline              configdomain.Online
 	Lineage               configdomain.Lineage
@@ -39,7 +38,7 @@ type SyncBranchProgramArgs struct {
 }
 
 // SyncExistingBranchProgram provides the opcode to sync a particular branch.
-func SyncExistingBranchProgram(list *program.Program, branch undodomain.BranchInfo, parentOtherWorktree bool, args SyncBranchProgramArgs) {
+func SyncExistingBranchProgram(list *program.Program, branch syncdomain.BranchInfo, parentOtherWorktree bool, args SyncBranchProgramArgs) {
 	isFeatureBranch := args.BranchTypes.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced

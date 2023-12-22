@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -42,7 +41,7 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			syncStatuses := undodomain.BranchInfos{
+			syncStatuses := syncdomain.BranchInfos{
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch1"),
 					LocalSHA:   gitdomain.EmptySHA(),

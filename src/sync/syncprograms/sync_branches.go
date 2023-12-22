@@ -3,7 +3,7 @@ package syncprograms
 import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 )
 
@@ -25,7 +25,7 @@ func SyncBranchesProgram(args SyncBranchesProgramArgs) {
 
 type SyncBranchesProgramArgs struct {
 	SyncBranchProgramArgs
-	BranchesToSync undodomain.BranchInfos
+	BranchesToSync syncdomain.BranchInfos
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName
 	PreviousBranch gitdomain.LocalBranchName

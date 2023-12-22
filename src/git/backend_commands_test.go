@@ -470,8 +470,8 @@ func TestBackendCommands(t *testing.T) {
 					give := `
   branch-1                     111111 [origin/branch-1: ahead 1] Commit message 1a
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-					want := undodomain.BranchInfos{
-						undodomain.BranchInfo{
+					want := syncdomain.BranchInfos{
+						syncdomain.BranchInfo{
 							LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 							LocalSHA:   gitdomain.NewSHA("111111"),
 							SyncStatus: syncdomain.SyncStatusNotInSync,
@@ -489,8 +489,8 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1: behind 2] Commit message 1
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := undodomain.BranchInfos{
-					undodomain.BranchInfo{
+				want := syncdomain.BranchInfos{
+					syncdomain.BranchInfo{
 						LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 						LocalSHA:   gitdomain.NewSHA("111111"),
 						SyncStatus: syncdomain.SyncStatusNotInSync,
@@ -507,8 +507,8 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := undodomain.BranchInfos{
-					undodomain.BranchInfo{
+				want := syncdomain.BranchInfos{
+					syncdomain.BranchInfo{
 						LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 						LocalSHA:   gitdomain.NewSHA("111111"),
 						SyncStatus: syncdomain.SyncStatusNotInSync,
@@ -535,8 +535,8 @@ func TestBackendCommands(t *testing.T) {
 					give := `
   branch-1                     111111 [origin/branch-1] Commit message 1
   remotes/origin/branch-1      111111 Commit message 1`[1:]
-					want := undodomain.BranchInfos{
-						undodomain.BranchInfo{
+					want := syncdomain.BranchInfos{
+						syncdomain.BranchInfo{
 							LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 							LocalSHA:   gitdomain.NewSHA("111111"),
 							SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -553,8 +553,8 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				give := `
   remotes/origin/branch-1    222222 Commit message 2`[1:]
-				want := undodomain.BranchInfos{
-					undodomain.BranchInfo{
+				want := syncdomain.BranchInfos{
+					syncdomain.BranchInfo{
 						LocalName:  gitdomain.EmptyLocalBranchName(),
 						LocalSHA:   gitdomain.EmptySHA(),
 						SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -569,8 +569,8 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("local-only branch", func(t *testing.T) {
 				t.Parallel()
 				give := `  branch-1                     01a7eded Commit message 1`
-				want := undodomain.BranchInfos{
-					undodomain.BranchInfo{
+				want := syncdomain.BranchInfos{
+					syncdomain.BranchInfo{
 						LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 						LocalSHA:   gitdomain.NewSHA("01a7eded"),
 						SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -609,8 +609,8 @@ func TestBackendCommands(t *testing.T) {
 				t.Run("branch is active in another worktree", func(t *testing.T) {
 					t.Parallel()
 					give := `+ branch-1    3d0c4c13 (/path/to/other/worktree) [origin/branch-1] commit message`
-					want := undodomain.BranchInfos{
-						undodomain.BranchInfo{
+					want := syncdomain.BranchInfos{
+						syncdomain.BranchInfo{
 							LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 							LocalSHA:   gitdomain.NewSHA("3d0c4c13"),
 							SyncStatus: syncdomain.SyncStatusOtherWorktree,
@@ -625,8 +625,8 @@ func TestBackendCommands(t *testing.T) {
 				t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 					t.Parallel()
 					give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
-					want := undodomain.BranchInfos{
-						undodomain.BranchInfo{
+					want := syncdomain.BranchInfos{
+						syncdomain.BranchInfo{
 							LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 							LocalSHA:   gitdomain.NewSHA("01a7eded"),
 							SyncStatus: syncdomain.SyncStatusDeletedAtRemote,
@@ -647,22 +647,22 @@ func TestBackendCommands(t *testing.T) {
   branch-2                 222222 ️[origin/branch-2] [ci skip]
   remotes/origin/branch-2  222222 [ci skip]
   remotes/origin/branch-3  333333 [ci skip]`[1:]
-			want := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			want := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-2"),
 					LocalSHA:   gitdomain.NewSHA("222222"),
 					SyncStatus: syncdomain.SyncStatusUpToDate,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/branch-2"),
 					RemoteSHA:  gitdomain.NewSHA("222222"),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -689,43 +689,43 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
-			want := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			want := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("01a7eded"),
 					SyncStatus: syncdomain.SyncStatusNotInSync,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  gitdomain.NewSHA("307a7bf4"),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-2"),
 					LocalSHA:   gitdomain.NewSHA("da796a69"),
 					SyncStatus: syncdomain.SyncStatusUpToDate,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/branch-2"),
 					RemoteSHA:  gitdomain.NewSHA("da796a69"),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-3"),
 					LocalSHA:   gitdomain.NewSHA("f4ebec0a"),
 					SyncStatus: syncdomain.SyncStatusNotInSync,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/branch-3"),
 					RemoteSHA:  gitdomain.NewSHA("bc39378a"),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
 					LocalSHA:   gitdomain.NewSHA("024df944"),
 					SyncStatus: syncdomain.SyncStatusUpToDate,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/main"),
 					RemoteSHA:  gitdomain.NewSHA("024df944"),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-4"),
 					LocalSHA:   gitdomain.NewSHA("e4d6bc09"),
 					SyncStatus: syncdomain.SyncStatusDeletedAtRemote,
 					RemoteName: gitdomain.NewRemoteBranchName("origin/branch-4"),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-5"),
 					LocalSHA:   gitdomain.NewSHA("55555555"),
 					SyncStatus: syncdomain.SyncStatusOtherWorktree,

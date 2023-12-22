@@ -1,14 +1,13 @@
-package undodomain
+package syncdomain
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // TODO: this struct doesn't really belong here. Do we even need it in the new world where most config information is available via a single variable?
 type Branches struct {
 	All     BranchInfos
-	Types   syncdomain.BranchTypes
+	Types   BranchTypes
 	Initial gitdomain.LocalBranchName
 }
 
@@ -16,7 +15,7 @@ type Branches struct {
 func EmptyBranches() Branches {
 	return Branches{
 		All:     BranchInfos{},
-		Types:   syncdomain.EmptyBranchTypes(),
+		Types:   EmptyBranchTypes(),
 		Initial: gitdomain.EmptyLocalBranchName(),
 	}
 }

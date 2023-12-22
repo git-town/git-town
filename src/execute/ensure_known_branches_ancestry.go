@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -34,7 +33,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (syncdoma
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
-	AllBranches undodomain.BranchInfos
+	AllBranches syncdomain.BranchInfos
 	BranchTypes syncdomain.BranchTypes
 	Lineage     configdomain.Lineage
 	MainBranch  gitdomain.LocalBranchName

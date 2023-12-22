@@ -91,13 +91,13 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	branches       undodomain.Branches
+	branches       syncdomain.Branches
 	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     gitdomain.LocalBranchName
 	newBranch      gitdomain.LocalBranchName
 	noPushHook     configdomain.NoPushHook
-	oldBranch      undodomain.BranchInfo
+	oldBranch      syncdomain.BranchInfo
 	previousBranch gitdomain.LocalBranchName
 }
 

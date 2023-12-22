@@ -1,7 +1,6 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
@@ -25,17 +24,6 @@ func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchType
 			changedFeatures[branch] = change
 		} else {
 			changedPerennials[branch] = change
-		}
-	}
-	return
-}
-
-func CategorizeLocalBranchNames(branchNames gitdomain.LocalBranchNames, branchTypes syncdomain.BranchTypes) (perennials, features gitdomain.LocalBranchNames) {
-	for _, branch := range branchNames {
-		if branchTypes.IsFeatureBranch(branch) {
-			features = append(features, branch)
-		} else {
-			perennials = append(perennials, branch)
 		}
 	}
 	return

@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -82,8 +83,8 @@ func executeAppend(arg string, verbose bool) error {
 }
 
 type appendConfig struct {
-	branches                  undodomain.Branches
-	branchesToSync            undodomain.BranchInfos
+	branches                  syncdomain.Branches
+	branchesToSync            syncdomain.BranchInfos
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online

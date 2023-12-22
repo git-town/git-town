@@ -1,11 +1,10 @@
-package undodomain_test
+package syncdomain_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,7 +15,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -27,7 +26,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -38,7 +37,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -49,7 +48,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -64,7 +63,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -75,7 +74,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -86,7 +85,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -97,7 +96,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -112,7 +111,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -123,7 +122,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -134,7 +133,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -145,7 +144,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -160,7 +159,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("has only a remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -171,7 +170,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -182,7 +181,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has only a local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -193,7 +192,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -208,7 +207,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("has both branches", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -219,7 +218,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -230,7 +229,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -241,7 +240,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -256,7 +255,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -267,7 +266,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has local branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -278,7 +277,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("has remote branch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -293,7 +292,7 @@ func TestBranchInfo(t *testing.T) {
 		t.Parallel()
 		t.Run("is an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -304,7 +303,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("not an omnibranch", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -315,7 +314,7 @@ func TestBranchInfo(t *testing.T) {
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusUpToDate,

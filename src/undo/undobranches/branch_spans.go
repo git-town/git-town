@@ -2,6 +2,7 @@ package undobranches
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
@@ -20,7 +21,7 @@ func NewBranchSpans(beforeSnapshot, afterSnapshot undodomain.BranchesSnapshot) B
 	for _, after := range afterSnapshot.Branches {
 		if beforeSnapshot.Branches.FindMatchingRecord(after).IsEmpty() {
 			result = append(result, BranchSpan{
-				Before: undodomain.EmptyBranchInfo(),
+				Before: syncdomain.EmptyBranchInfo(),
 				After:  after,
 			})
 		}

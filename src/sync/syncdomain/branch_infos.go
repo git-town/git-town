@@ -1,11 +1,10 @@
-package undodomain
+package syncdomain
 
 import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 )
 
 // BranchInfos contains the BranchInfos for all branches in a repo.
@@ -76,7 +75,7 @@ func (self BranchInfos) LocalBranches() BranchInfos {
 func (self BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 	result := BranchInfos{}
 	for _, bi := range self {
-		if bi.SyncStatus == syncdomain.SyncStatusDeletedAtRemote {
+		if bi.SyncStatus == SyncStatusDeletedAtRemote {
 			result = append(result, bi)
 		}
 	}

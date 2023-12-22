@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
+	"github.com/git-town/git-town/v11/src/sync/syncdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -69,7 +69,7 @@ func executeSwitch(verbose bool) error {
 }
 
 type switchConfig struct {
-	branches undodomain.Branches
+	branches syncdomain.Branches
 	lineage  configdomain.Lineage
 }
 

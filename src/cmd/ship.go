@@ -118,10 +118,10 @@ func executeShip(args []string, message string, verbose bool) error {
 }
 
 type shipConfig struct {
-	branches                 undodomain.Branches
-	branchToShip             undodomain.BranchInfo
+	branches                 syncdomain.Branches
+	branchToShip             syncdomain.BranchInfo
 	connector                hostingdomain.Connector
-	targetBranch             undodomain.BranchInfo
+	targetBranch             syncdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
 	proposalMessage          string

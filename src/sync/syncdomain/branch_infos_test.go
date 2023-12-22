@@ -1,11 +1,10 @@
-package undodomain_test
+package syncdomain_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
-	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -16,8 +15,8 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("has matching local name", func(t *testing.T) {
 			t.Parallel()
-			bis := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bis := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 					LocalSHA:   gitdomain.NewSHA("111111"),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -25,7 +24,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("branch-1"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -38,8 +37,8 @@ func TestBranchInfos(t *testing.T) {
 		})
 		t.Run("has matching remote name", func(t *testing.T) {
 			t.Parallel()
-			bis := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bis := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -47,7 +46,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.NewSHA("111111"),
 				},
 			}
-			give := undodomain.BranchInfo{
+			give := syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -64,8 +63,8 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("has a matching local branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("one"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -77,8 +76,8 @@ func TestBranchInfos(t *testing.T) {
 		})
 		t.Run("has a remote branch with that name", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -90,8 +89,8 @@ func TestBranchInfos(t *testing.T) {
 		})
 		t.Run("has a local branch with a matching tracking branch", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("two"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -107,8 +106,8 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch with a matching remote", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("two"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusUpToDate,
@@ -120,8 +119,8 @@ func TestBranchInfos(t *testing.T) {
 		})
 		t.Run("has a remote-only branch with that name", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -133,8 +132,8 @@ func TestBranchInfos(t *testing.T) {
 		})
 		t.Run("has a local branch with a matching name", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("one"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -148,43 +147,43 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("LocalBranches", func(t *testing.T) {
 		t.Parallel()
-		bs := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		bs := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("up-to-date"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/up-to-date"),
 				RemoteSHA:  gitdomain.NewSHA("111111"),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("ahead"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusNotInSync,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/ahead"),
 				RemoteSHA:  gitdomain.NewSHA("222222"),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("behind"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusNotInSync,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/behind"),
 				RemoteSHA:  gitdomain.NewSHA("222222"),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("local-only"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusRemoteOnly,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/remote-only"),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("deleted-at-remote"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusDeletedAtRemote,
@@ -199,43 +198,43 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("LocalBranchesWithDeletedTrackingBranches", func(t *testing.T) {
 		t.Parallel()
-		bs := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		bs := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("up-to-date"),
 				LocalSHA:   gitdomain.NewSHA("111111"),
 				SyncStatus: syncdomain.SyncStatusUpToDate,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/up-to-date"),
 				RemoteSHA:  gitdomain.NewSHA("111111"),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("ahead"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusNotInSync,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("behind"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusNotInSync,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("local-only"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("remote-only"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusRemoteOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("deleted-at-remote"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusDeletedAtRemote,
@@ -252,8 +251,8 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch with matching name", func(t *testing.T) {
 			branchOne := gitdomain.NewLocalBranchName("one")
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  branchOne,
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -264,8 +263,8 @@ func TestBranchInfos(t *testing.T) {
 			must.EqOp(t, branchOne, bs.FindByLocalName(branchOne).LocalName)
 		})
 		t.Run("remote branch with matching name", func(t *testing.T) {
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -282,20 +281,20 @@ func TestBranchInfos(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
 			t.Parallel()
-			branch := undodomain.BranchInfo{
+			branch := syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.NewRemoteBranchName("origin/two"),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			}
-			bs := undodomain.BranchInfos{branch}
+			bs := syncdomain.BranchInfos{branch}
 			have := bs.FindByRemoteName(gitdomain.NewRemoteBranchName("origin/two"))
 			must.EqOp(t, branch, *have)
 		})
 		t.Run("has a local branch with the given name", func(t *testing.T) {
 			t.Parallel()
-			bs := undodomain.BranchInfos{undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("kg/one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -309,22 +308,22 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("Names", func(t *testing.T) {
 		t.Parallel()
-		bs := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		bs := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("two"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.EmptyLocalBranchName(),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusRemoteOnly,
@@ -340,15 +339,15 @@ func TestBranchInfos(t *testing.T) {
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the removed element", func(t *testing.T) {
-			bs := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			bs := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("one"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
 					RemoteName: gitdomain.EmptyRemoteBranchName(),
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
-				undodomain.BranchInfo{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("two"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -357,8 +356,8 @@ func TestBranchInfos(t *testing.T) {
 				},
 			}
 			have := bs.Remove(gitdomain.NewLocalBranchName("two"))
-			want := undodomain.BranchInfos{
-				undodomain.BranchInfo{
+			want := syncdomain.BranchInfos{
+				syncdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("one"),
 					LocalSHA:   gitdomain.EmptySHA(),
 					SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -372,15 +371,15 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("does not contain the removed element", func(t *testing.T) {
 		t.Parallel()
-		bs := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		bs := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("two"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -389,15 +388,15 @@ func TestBranchInfos(t *testing.T) {
 			},
 		}
 		have := bs.Remove(gitdomain.NewLocalBranchName("zonk"))
-		want := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		want := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("two"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -410,29 +409,29 @@ func TestBranchInfos(t *testing.T) {
 
 	t.Run("Select", func(t *testing.T) {
 		t.Parallel()
-		bs := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		bs := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("two"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("three"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("four"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
@@ -441,15 +440,15 @@ func TestBranchInfos(t *testing.T) {
 			},
 		}
 		have, err := bs.Select(gitdomain.LocalBranchNames{gitdomain.NewLocalBranchName("one"), gitdomain.NewLocalBranchName("three")})
-		want := undodomain.BranchInfos{
-			undodomain.BranchInfo{
+		want := syncdomain.BranchInfos{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("one"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
 				RemoteName: gitdomain.EmptyRemoteBranchName(),
 				RemoteSHA:  gitdomain.EmptySHA(),
 			},
-			undodomain.BranchInfo{
+			syncdomain.BranchInfo{
 				LocalName:  gitdomain.NewLocalBranchName("three"),
 				LocalSHA:   gitdomain.EmptySHA(),
 				SyncStatus: syncdomain.SyncStatusLocalOnly,
