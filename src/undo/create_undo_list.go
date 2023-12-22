@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/undo/undobranches"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
@@ -62,7 +63,7 @@ func determineUndoConfigProgram(initialConfigSnapshot undodomain.ConfigSnapshot,
 	finalConfigSnapshot := undodomain.ConfigSnapshot{
 		GitConfig: fullCache,
 	}
-	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
+	configDiff := undoconfig.NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil
 }
 

@@ -1,4 +1,4 @@
-package undo_test
+package undoconfig_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -39,8 +39,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeySyncPerennialStrategy,
@@ -81,8 +81,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeyPerennialBranches,
@@ -125,8 +125,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.PartialConfig{}, //nolint:exhaustruct
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added: []configdomain.Key{},
 				Removed: map[configdomain.Key]string{
@@ -173,8 +173,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig:  configdomain.EmptyPartialConfig(),
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -225,8 +225,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.EmptyConfigDiff(),
 			Local: undodomain.ConfigDiff{
 				Added: []configdomain.Key{
@@ -269,8 +269,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -317,8 +317,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added:   []configdomain.Key{},
 				Removed: map[configdomain.Key]string{},
@@ -376,8 +376,8 @@ func TestConfigUndo(t *testing.T) {
 				LocalConfig: configdomain.EmptyPartialConfig(),
 			},
 		}
-		haveDiff := undo.NewConfigDiffs(before, after)
-		wantDiff := undo.ConfigDiffs{
+		haveDiff := undoconfig.NewConfigDiffs(before, after)
+		wantDiff := undoconfig.ConfigDiffs{
 			Global: undodomain.ConfigDiff{
 				Added: []configdomain.Key{
 					configdomain.KeySyncPerennialStrategy,
