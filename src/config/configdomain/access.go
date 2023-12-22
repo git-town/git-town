@@ -54,14 +54,10 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
-
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "git-town-branch.") || strings.HasPrefix(configKey.String(), "alias.") {
-			err := config.Add(*configKey, value)
-			if err != nil {
-				return cache, config, err
-			}
-		} else {
-			cache[*configKey] = value
+		cache[*configKey] = value
+		err := config.Add(*configKey, value)
+		if err != nil {
+			return cache, config, err
 		}
 	}
 	return cache, config, nil
