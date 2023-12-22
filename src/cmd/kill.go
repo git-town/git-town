@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -189,25 +190,10 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
-	removeBranchFromLineage(removeBranchFromLineageArgs{
-		branch:  config.branchToKill.LocalName,
-		lineage: config.lineage,
-		program: prog,
-		parent:  config.branchToKillParent(),
+	syncprograms.RemoveBranchFromLineage(syncprograms.RemoveBranchFromLineageArgs{
+		Branch:  config.branchToKill.LocalName,
+		Lineage: config.lineage,
+		Program: prog,
+		Parent:  config.branchToKillParent(),
 	})
-}
-
-func removeBranchFromLineage(args removeBranchFromLineageArgs) {
-	childBranches := args.lineage.Children(args.branch)
-	for _, child := range childBranches {
-		args.program.Add(&opcode.ChangeParent{Branch: child, Parent: args.parent})
-	}
-	args.program.Add(&opcode.DeleteParentBranch{Branch: args.branch})
-}
-
-type removeBranchFromLineageArgs struct {
-	branch  gitdomain.LocalBranchName
-	lineage configdomain.Lineage
-	program *program.Program
-	parent  gitdomain.LocalBranchName
 }

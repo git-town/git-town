@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/sync/syncdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -293,34 +294,34 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	prog := program.Program{}
 	if config.syncBeforeShip {
 		// sync the parent branch
-		syncBranchProgram(config.targetBranch, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			remotes:               config.remotes,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            true,
-			pushHook:              config.pushHook,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		syncprograms.SyncBranchProgram(config.targetBranch, syncprograms.SyncBranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			Remotes:               config.remotes,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            true,
+			PushHook:              config.pushHook,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 		// sync the branch to ship (local sync only)
-		syncBranchProgram(config.branchToShip, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			remotes:               config.remotes,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            false,
-			pushHook:              config.pushHook,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		syncprograms.SyncBranchProgram(config.branchToShip, syncprograms.SyncBranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			Remotes:               config.remotes,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            false,
+			PushHook:              config.pushHook,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.mainBranch})

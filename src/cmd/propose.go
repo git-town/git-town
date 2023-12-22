@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -191,19 +192,19 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			remotes:               config.remotes,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            true,
-			pushHook:              config.pushHook,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		syncprograms.SyncBranchProgram(branch, syncprograms.SyncBranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			Remotes:               config.remotes,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            true,
+			PushHook:              config.pushHook,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

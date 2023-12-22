@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync/syncprograms"
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -175,19 +176,19 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
-		syncBranchProgram(branchToSync, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            true,
-			pushHook:              config.pushHook,
-			remotes:               config.remotes,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		syncprograms.SyncBranchProgram(branchToSync, syncprograms.SyncBranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            true,
+			PushHook:              config.pushHook,
+			Remotes:               config.remotes,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{
