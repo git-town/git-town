@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	prodgit "github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/test/asserts"
@@ -25,7 +25,7 @@ type TestCommands struct {
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
-func (self *TestCommands) AddRemote(name domain.Remote, url string) {
+func (self *TestCommands) AddRemote(name gitdomain.Remote, url string) {
 	self.MustRun("git", "remote", "add", name.String(), url)
 	self.RemotesCache.Invalidate()
 }
@@ -36,23 +36,23 @@ func (self *TestCommands) AddSubmodule(url string) {
 	self.MustRun("git", "commit", "-m", "added submodule")
 }
 
-func (self *TestCommands) AddWorktree(path string, branch domain.LocalBranchName) {
+func (self *TestCommands) AddWorktree(path string, branch gitdomain.LocalBranchName) {
 	self.MustRun("git", "worktree", "add", path, branch.String())
 }
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
-func (self *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
+func (self *TestCommands) CheckoutBranch(branch gitdomain.LocalBranchName) {
 	asserts.NoError(self.BackendCommands.CheckoutBranch(branch))
 }
 
-func (self *TestCommands) CommitSHAs() map[string]domain.SHA {
-	result := map[string]domain.SHA{}
+func (self *TestCommands) CommitSHAs() map[string]gitdomain.SHA {
+	result := map[string]gitdomain.SHA{}
 	output := self.MustQuery("git", "log", "--all", "--pretty=format:%h %s")
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, " ", 2)
 		sha := parts[0]
 		commitMessage := parts[1]
-		result[commitMessage] = domain.NewSHA(sha)
+		result[commitMessage] = gitdomain.NewSHA(sha)
 	}
 	return result
 }
@@ -63,7 +63,7 @@ func (self *TestCommands) CommitStagedChanges(message string) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
+func (self *TestCommands) Commits(fields []string, mainBranch gitdomain.LocalBranchName) []git.Commit {
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
@@ -78,12 +78,12 @@ func (self *TestCommands) Commits(fields []string, mainBranch domain.LocalBranch
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (self *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
+func (self *TestCommands) CommitsInBranch(branch gitdomain.LocalBranchName, fields []string) []git.Commit {
 	output := self.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: domain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
+		commit := git.Commit{Branch: branch, SHA: gitdomain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
@@ -102,20 +102,20 @@ func (self *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields 
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (self *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
+func (self *TestCommands) ConnectTrackingBranch(name gitdomain.LocalBranchName) {
 	self.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (self *TestCommands) CreateBranch(name, parent domain.LocalBranchName) {
+func (self *TestCommands) CreateBranch(name, parent gitdomain.LocalBranchName) {
 	self.MustRun("git", "branch", name.String(), parent.String())
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (self *TestCommands) CreateChildFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) {
+func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(branch, parent)
 	asserts.NoError(self.GitTown.SetParent(branch, parent))
 }
@@ -142,9 +142,9 @@ func (self *TestCommands) CreateFile(name, content string) {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (self *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
+func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranchName) {
 	for _, name := range names {
-		self.CreateBranch(name, domain.NewLocalBranchName("main"))
+		self.CreateBranch(name, gitdomain.NewLocalBranchName("main"))
 	}
 	asserts.NoError(self.GitTown.AddToPerennialBranches(names...))
 }
@@ -178,7 +178,7 @@ func (self *TestCommands) FileContent(filename string) string {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (self *TestCommands) FileContentInCommit(location domain.Location, filename string) string {
+func (self *TestCommands) FileContentInCommit(location gitdomain.Location, filename string) string {
 	output := self.MustQuery("git", "show", location.String()+":"+filename)
 	if strings.HasPrefix(output, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
@@ -188,7 +188,7 @@ func (self *TestCommands) FileContentInCommit(location domain.Location, filename
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (self *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string {
+func (self *TestCommands) FilesInBranch(branch gitdomain.LocalBranchName) []string {
 	output := self.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
@@ -201,12 +201,12 @@ func (self *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string 
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (self *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datatable.DataTable {
+func (self *TestCommands) FilesInBranches(mainBranch gitdomain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := self.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	lastBranch := domain.EmptyLocalBranchName()
+	lastBranch := gitdomain.EmptyLocalBranchName()
 	for _, branch := range branches {
 		files := self.FilesInBranch(branch)
 		for _, file := range files {
@@ -223,7 +223,7 @@ func (self *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) dat
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (self *TestCommands) FilesInCommit(sha domain.SHA) []string {
+func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	output := self.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
 	return strings.Split(output, "\n")
 }
@@ -281,31 +281,31 @@ func (self *TestCommands) LineageTable() datatable.DataTable {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (self *TestCommands) LocalBranches() (domain.LocalBranchNames, error) {
+func (self *TestCommands) LocalBranches() (gitdomain.LocalBranchNames, error) {
 	output, err := self.QueryTrim("git", "branch")
 	if err != nil {
-		return domain.LocalBranchNames{}, err
+		return gitdomain.LocalBranchNames{}, err
 	}
-	result := domain.LocalBranchNames{}
+	result := gitdomain.LocalBranchNames{}
 	for _, line := range stringslice.Lines(output) {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
-		result = append(result, domain.NewLocalBranchName(line))
+		result = append(result, gitdomain.NewLocalBranchName(line))
 	}
 	return result, nil
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (self *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
+func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, error) {
 	branches, err := self.LocalBranches()
 	if err != nil {
-		return domain.LocalBranchNames{}, err
+		return gitdomain.LocalBranchNames{}, err
 	}
 	slice.Hoist(&branches, mainBranch)
 	return branches, nil
 }
 
-func (self *TestCommands) MergeBranch(branch domain.LocalBranchName) error {
+func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
 	return self.Run("git", "merge", branch.String())
 }
 
@@ -313,16 +313,16 @@ func (self *TestCommands) PushBranch() {
 	self.MustRun("git", "push")
 }
 
-func (self *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote domain.Remote) {
+func (self *TestCommands) PushBranchToRemote(branch gitdomain.LocalBranchName, remote gitdomain.Remote) {
 	self.MustRun("git", "push", "-u", remote.String(), branch.String())
 }
 
-func (self *TestCommands) RebaseAgainstBranch(branch domain.LocalBranchName) error {
+func (self *TestCommands) RebaseAgainstBranch(branch gitdomain.LocalBranchName) error {
 	return self.Run("git", "rebase", branch.String())
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
-func (self *TestCommands) RemoveBranch(name domain.LocalBranchName) {
+func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 	self.MustRun("git", "branch", "-D", name.String())
 }
 
@@ -337,7 +337,7 @@ func (self *TestCommands) RemovePerennialBranchConfiguration() error {
 }
 
 // RemoveRemote deletes the Git remote with the given name.
-func (self *TestCommands) RemoveRemote(name domain.Remote) {
+func (self *TestCommands) RemoveRemote(name gitdomain.Remote) {
 	self.RemotesCache.Invalidate()
 	self.MustRun("git", "remote", "rm", name.String())
 }
@@ -351,7 +351,7 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 }
 
 // SHAForCommit provides the SHA for the commit with the given name.
-// TODO: return a domain.SHA here.
+// TODO: return a gitdomain.SHA here.
 func (self *TestCommands) SHAForCommit(name string) string {
 	output := self.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
 	if output == "" {

@@ -2,17 +2,17 @@ package hosting
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/gitlab"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 )
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(args NewConnectorArgs) (Connector, error) {
+func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 		HostingService: args.HostingService,
 		APIToken:       args.GithubAPIToken,
@@ -49,16 +49,16 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	if giteaConnector != nil || err != nil {
 		return giteaConnector, err
 	}
-	return nil, nil //nolint:nilnil
+	return nil, nil
 }
 
 type NewConnectorArgs struct {
 	HostingService  configdomain.Hosting
 	OriginURL       *giturl.Parts
-	GetSHAForBranch common.SHAForBranchFunc
+	GetSHAForBranch hostingdomain.SHAForBranchFunc
 	GiteaAPIToken   configdomain.GiteaToken
 	GithubAPIToken  configdomain.GitHubToken
 	GitlabAPIToken  configdomain.GitLabToken
-	MainBranch      domain.LocalBranchName
-	Log             common.Log
+	MainBranch      gitdomain.LocalBranchName
+	Log             hostingdomain.Log
 }

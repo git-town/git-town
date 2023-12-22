@@ -5,11 +5,13 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
@@ -26,7 +28,7 @@ func continueCmd() *cobra.Command {
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   continueDesc,
-		Long:    long(continueDesc),
+		Long:    cmdhelpers.Long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeContinue(readVerboseFlag(cmd))
 		},
@@ -69,7 +71,7 @@ func executeContinue(verbose bool) error {
 	})
 }
 
-func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
 	pushHook := repo.Runner.GitTown.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -119,7 +121,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 }
 
 type continueConfig struct {
-	connector hosting.Connector
+	connector hostingdomain.Connector
 	lineage   configdomain.Lineage
 	pushHook  configdomain.PushHook
 }

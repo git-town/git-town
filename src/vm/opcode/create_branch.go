@@ -1,14 +1,14 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CreateBranch creates a new branch but leaves the current branch unchanged.
 type CreateBranch struct {
-	Branch        domain.LocalBranchName
-	StartingPoint domain.Location
+	Branch        gitdomain.LocalBranchName
+	StartingPoint gitdomain.Location
 	undeclaredOpcodeMethods
 }
 

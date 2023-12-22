@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -21,9 +21,9 @@ type FrontendRunner struct {
 	CommandsCounter  *gohacks.Counter
 }
 
-type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
+type GetCurrentBranchFunc func() (gitdomain.LocalBranchName, error)
 
-func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
+func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
 	var result string
 	if executable == "git" && !omitBranch {
 		result = "[" + currentBranch.String() + "] git "
@@ -45,7 +45,7 @@ func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, execut
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch domain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
+func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
 	header := FormatCommand(branch, omitBranch, cmd, args...)
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
@@ -57,7 +57,7 @@ func PrintCommand(branch domain.LocalBranchName, omitBranch bool, cmd string, ar
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	self.CommandsCounter.Register()
-	var branchName domain.LocalBranchName
+	var branchName gitdomain.LocalBranchName
 	if !self.OmitBranchNames {
 		branchName, err = self.GetCurrentBranch()
 		if err != nil {

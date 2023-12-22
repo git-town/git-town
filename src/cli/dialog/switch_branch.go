@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 func NewBuilder(lineage configdomain.Lineage) Builder {
@@ -16,20 +16,20 @@ func NewBuilder(lineage configdomain.Lineage) Builder {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Indicates via `validSelection` whether the user made a valid selection.
-func SwitchBranch(roots domain.LocalBranchNames, selected domain.LocalBranchName, lineage configdomain.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
+func SwitchBranch(roots gitdomain.LocalBranchNames, selected gitdomain.LocalBranchName, lineage configdomain.Lineage) (selection gitdomain.LocalBranchName, validSelection bool, err error) {
 	builder := NewBuilder(lineage)
 	err = builder.CreateEntries(roots, selected)
 	if err != nil {
-		return domain.EmptyLocalBranchName(), false, err
+		return gitdomain.EmptyLocalBranchName(), false, err
 	}
 	choice, err := ModalSelect(builder.Entries, selected.String())
 	if err != nil {
-		return domain.EmptyLocalBranchName(), false, err
+		return gitdomain.EmptyLocalBranchName(), false, err
 	}
 	if choice == nil {
-		return domain.EmptyLocalBranchName(), false, nil
+		return gitdomain.EmptyLocalBranchName(), false, nil
 	}
-	return domain.NewLocalBranchName(*choice), true, nil
+	return gitdomain.NewLocalBranchName(*choice), true, nil
 }
 
 // Builder builds up the switch-branch dialog entries.
@@ -39,7 +39,7 @@ type Builder struct {
 }
 
 // AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent int) error {
+func (self *Builder) AddEntryAndChildren(branch gitdomain.LocalBranchName, indent int) error {
 	self.Entries = append(self.Entries, ModalSelectEntry{
 		Text:  strings.Repeat("  ", indent) + branch.String(),
 		Value: branch.String(),
@@ -55,7 +55,7 @@ func (self *Builder) AddEntryAndChildren(branch domain.LocalBranchName, indent i
 }
 
 // createEntries provides all the entries for the branch dialog.
-func (self *Builder) CreateEntries(roots domain.LocalBranchNames, selected domain.LocalBranchName) error {
+func (self *Builder) CreateEntries(roots gitdomain.LocalBranchNames, selected gitdomain.LocalBranchName) error {
 	var err error
 	for _, root := range roots {
 		err = self.AddEntryAndChildren(root, 0)

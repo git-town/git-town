@@ -6,15 +6,14 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/subshell"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -39,7 +38,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	configGitAccess := gitconfig.Access{Runner: backendRunner}
+	configGitAccess := confconfigdomain.Access{Runner: backendRunner}
 	configSnapshot := undo.ConfigSnapshot{
 		GitConfig: fullCache,
 	}
@@ -114,9 +113,9 @@ type OpenRepoArgs struct {
 
 type OpenRepoResult struct {
 	Runner         *git.ProdRunner
-	RootDir        domain.RepoRootDir
+	RootDir        gitdomain.RepoRootDir
 	IsOffline      configdomain.Offline
-	ConfigSnapshot undo.ConfigSnapshot
+	ConfigSnapshot undoconfig.ConfigSnapshot
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

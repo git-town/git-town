@@ -3,7 +3,7 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -11,9 +11,9 @@ import (
 // ResetRemoteBranchToSHA sets the given remote branch to the given SHA,
 // but only if it currently has a particular SHA.
 type ResetRemoteBranchToSHA struct {
-	Branch      domain.RemoteBranchName
-	MustHaveSHA domain.SHA
-	SetToSHA    domain.SHA
+	Branch      gitdomain.RemoteBranchName
+	MustHaveSHA gitdomain.SHA
+	SetToSHA    gitdomain.SHA
 	undeclaredOpcodeMethods
 }
 

@@ -3,7 +3,7 @@ package slice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/shoenig/test/must"
 )
@@ -40,10 +40,10 @@ func TestAppendAllMissing(t *testing.T) {
 
 	t.Run("aliased slice type", func(t *testing.T) {
 		t.Parallel()
-		list := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222")}
-		give := domain.SHAs{domain.NewSHA("333333"), domain.NewSHA("444444")}
+		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222")}
+		give := gitdomain.SHAs{gitdomain.NewSHA("333333"), gitdomain.NewSHA("444444")}
 		slice.AppendAllMissing(&list, give)
-		want := domain.SHAs{domain.NewSHA("111111"), domain.NewSHA("222222"), domain.NewSHA("333333"), domain.NewSHA("444444")}
+		want := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333"), gitdomain.NewSHA("444444")}
 		must.Eq(t, want, list)
 	})
 }

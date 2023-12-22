@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/test/testruntime"
 	"github.com/shoenig/test/must"
@@ -17,13 +17,13 @@ func TestGitTown(t *testing.T) {
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature1")))
-		must.NoError(t, repo.CreateFeatureBranch(domain.NewLocalBranchName("feature2")))
+		must.NoError(t, repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1")))
+		must.NoError(t, repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2")))
 		repo.GitTown.Reload()
 		have := repo.GitTown.Lineage(repo.GitTown.RemoveLocalConfigValue)
 		want := configdomain.Lineage{}
-		want[domain.NewLocalBranchName("feature1")] = domain.NewLocalBranchName("main")
-		want[domain.NewLocalBranchName("feature2")] = domain.NewLocalBranchName("main")
+		want[gitdomain.NewLocalBranchName("feature1")] = gitdomain.NewLocalBranchName("main")
+		want[gitdomain.NewLocalBranchName("feature2")] = gitdomain.NewLocalBranchName("main")
 		must.Eq(t, want, have)
 	})
 

@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
@@ -50,7 +51,7 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		Args:                  cobra.ExactArgs(1),
 		DisableFlagsInUseLine: true,
 		Short:                 completionsDesc,
-		Long:                  long(completionsDesc, completionsHelp),
+		Long:                  cmdhelpers.Long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeCompletions(args, completionsNoDescFlag, rootCmd)
 		},

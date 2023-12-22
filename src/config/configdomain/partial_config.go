@@ -3,8 +3,7 @@ package configdomain
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
@@ -15,10 +14,10 @@ type PartialConfig struct {
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
-	MainBranch                *domain.LocalBranchName
+	MainBranch                *gitdomain.LocalBranchName
 	NewBranchPush             *NewBranchPush
 	Offline                   *Offline
-	PerennialBranches         *domain.LocalBranchNames
+	PerennialBranches         *gitdomain.LocalBranchNames
 	PushHook                  *PushHook
 	ShipDeleteTrackingBranch  *ShipDeleteTrackingBranch
 	SyncBeforeShip            *SyncBeforeShip
@@ -45,11 +44,11 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	case KeyGitlabToken:
 		self.GitLabToken = NewGitLabTokenRef(value)
 	case KeyMainBranch:
-		self.MainBranch = domain.NewLocalBranchNameRefAllowEmpty(value)
+		self.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyOffline:
 		self.Offline, err = NewOfflineRef(value)
 	case KeyPerennialBranches:
-		self.PerennialBranches = domain.ParseLocalBranchNamesRef(value)
+		self.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
 	case KeyPushHook:
 		self.PushHook, err = NewPushHookRef(value)
 	case KeyPushNewBranches:
@@ -74,43 +73,4 @@ func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{ //nolint:exhaustruct
 		Aliases: map[Key]string{},
 	}
-}
-
-func NewPartialConfig(snapshot gitconfig.SingleCache) PartialConfig {
-	result := PartialConfig{}
-	for key, value := range snapshot {
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
-			err := config.Add(*configKey, value)
-			if err != nil {
-				return cache, config, err
-			}
-		} else {
-			cache[*configKey] = value
-		}
-	}
-	return cache, config, nil
-}
-
-// PartialConfigDiff diffs the given PartialConfig instances.
-func PartialConfigDiff(before, after PartialConfig) ConfigDiff {
-	result := ConfigDiff{
-		Added:   []Key{},
-		Removed: map[Key]string{},
-		Changed: map[Key]domain.Change[string]{},
-	}
-	DiffPtr(&result, KeyCodeHostingOriginHostname, before.CodeHostingOriginHostname, after.CodeHostingOriginHostname)
-	DiffPtr(&result, KeyCodeHostingPlatform, before.CodeHostingPlatformName, after.CodeHostingPlatformName)
-	DiffPtr(&result, KeyGiteaToken, before.GiteaToken, after.GiteaToken)
-	DiffPtr(&result, KeyGithubToken, before.GitHubToken, after.GitHubToken)
-	DiffPtr(&result, KeyGitlabToken, before.GitLabToken, after.GitLabToken)
-	DiffPtr(&result, KeyMainBranch, before.MainBranch, after.MainBranch)
-	DiffPtr(&result, KeyOffline, before.Offline, after.Offline)
-	DiffLocalBranchNames(&result, KeyPerennialBranches, before.PerennialBranches, after.PerennialBranches)
-	DiffPtr(&result, KeyPushHook, before.PushHook, after.PushHook)
-	DiffPtr(&result, KeyPushNewBranches, before.NewBranchPush, after.NewBranchPush)
-	DiffPtr(&result, KeyShipDeleteTrackingBranch, before.ShipDeleteTrackingBranch, after.ShipDeleteTrackingBranch)
-	DiffPtr(&result, KeySyncFeatureStrategy, before.SyncFeatureStrategy, after.SyncFeatureStrategy)
-	DiffPtr(&result, KeySyncPerennialStrategy, before.SyncPerennialStrategy, after.SyncPerennialStrategy)
-	DiffPtr(&result, KeySyncUpstream, before.SyncUpstream, after.SyncUpstream)
-	return result
 }

@@ -2,11 +2,11 @@ package interpreter
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
-	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/undo"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -40,12 +40,12 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	RunState                *runstate.RunState
 	Run                     *git.ProdRunner
-	Connector               hosting.Connector
+	Connector               hostingdomain.Connector
 	Verbose                 bool
-	RootDir                 domain.RepoRootDir
-	InitialBranchesSnapshot domain.BranchesSnapshot
-	InitialConfigSnapshot   undo.ConfigSnapshot
-	InitialStashSnapshot    domain.StashSnapshot
+	RootDir                 gitdomain.RepoRootDir
+	InitialBranchesSnapshot gitdomain.BranchesStatus
+	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialStashSnapshot    gitdomain.StashSize
 	Lineage                 configdomain.Lineage
 	NoPushHook              configdomain.NoPushHook
 }

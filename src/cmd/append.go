@@ -4,10 +4,12 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -34,7 +36,7 @@ func appendCmd() *cobra.Command {
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
 		Short:   appendDesc,
-		Long:    long(appendDesc, appendHelp),
+		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeAppend(args[0], readVerboseFlag(cmd))
 		},
@@ -55,7 +57,7 @@ func executeAppend(arg string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -79,27 +81,27 @@ func executeAppend(arg string, verbose bool) error {
 }
 
 type appendConfig struct {
-	branches                  domain.Branches
-	branchesToSync            domain.BranchInfos
+	branches                  configdomain.Branches
+	branchesToSync            gitdomain.BranchInfos
 	hasOpenChanges            bool
-	remotes                   domain.Remotes
+	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
 	lineage                   configdomain.Lineage
-	mainBranch                domain.LocalBranchName
-	newBranchParentCandidates domain.LocalBranchNames
+	mainBranch                gitdomain.LocalBranchName
+	newBranchParentCandidates gitdomain.LocalBranchNames
 	pushHook                  configdomain.PushHook
-	parentBranch              domain.LocalBranchName
-	previousBranch            domain.LocalBranchName
+	parentBranch              gitdomain.LocalBranchName
+	previousBranch            gitdomain.LocalBranchName
 	syncPerennialStrategy     configdomain.SyncPerennialStrategy
 	shouldNewBranchPush       configdomain.NewBranchPush
 	syncUpstream              configdomain.SyncUpstream
 	syncFeatureStrategy       configdomain.SyncFeatureStrategy
-	targetBranch              domain.LocalBranchName
+	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, domain.BranchesSnapshot, domain.StashSnapshot, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage(repo.Runner.Backend.GitTown.RemoveLocalConfigValue)
-	fc := configdomain.FailureCollector{}
+	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
@@ -169,19 +171,19 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.Op
 func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			remotes:               config.remotes,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            true,
-			pushHook:              config.pushHook,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		sync.BranchProgram(branch, sync.BranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			Remotes:               config.remotes,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            true,
+			PushHook:              config.pushHook,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{
@@ -198,10 +200,10 @@ func appendProgram(config *appendConfig) program.Program {
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && config.isOnline.Bool() {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
-	wrap(&prog, wrapOptions{
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.branches.Initial, config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.branches.Initial, config.previousBranch},
 	})
 	return prog
 }

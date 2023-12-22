@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,10 +15,10 @@ func TestBuilder(t *testing.T) {
 	t.Run("AddEntryAndChildren", func(t *testing.T) {
 		t.Parallel()
 		t.Run("add an entry with children to an empty list", func(t *testing.T) {
-			main := domain.NewLocalBranchName("main")
-			feature1 := domain.NewLocalBranchName("feature-1")
-			feature2 := domain.NewLocalBranchName("feature-2")
-			featureA := domain.NewLocalBranchName("feature-A")
+			main := gitdomain.NewLocalBranchName("main")
+			feature1 := gitdomain.NewLocalBranchName("feature-1")
+			feature2 := gitdomain.NewLocalBranchName("feature-2")
+			featureA := gitdomain.NewLocalBranchName("feature-A")
 			lineage := configdomain.Lineage{
 				feature1: main,
 				feature2: feature1,
@@ -55,15 +55,15 @@ func TestBuilder(t *testing.T) {
 
 	t.Run("CreateEntries", func(t *testing.T) {
 		t.Parallel()
-		mainBranch := domain.NewLocalBranchName("main")
-		feature1 := domain.NewLocalBranchName("feature-1")
-		feature2 := domain.NewLocalBranchName("feature-2")
+		mainBranch := gitdomain.NewLocalBranchName("main")
+		feature1 := gitdomain.NewLocalBranchName("feature-1")
+		feature2 := gitdomain.NewLocalBranchName("feature-2")
 		lineage := configdomain.Lineage{
 			feature1: mainBranch,
 			feature2: feature1,
 		}
 		builder := dialog.NewBuilder(lineage)
-		roots := domain.LocalBranchNames{mainBranch}
+		roots := gitdomain.LocalBranchNames{mainBranch}
 		err := builder.CreateEntries(roots, feature1)
 		must.NoError(t, err)
 		want := dialog.ModalSelectEntries{

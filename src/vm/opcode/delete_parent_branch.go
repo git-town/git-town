@@ -1,13 +1,13 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // DeleteParentBranch removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranch struct {
-	Branch domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 
