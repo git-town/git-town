@@ -44,9 +44,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configSnapshot := undoconfig.ConfigSnapshot{
-		GitConfig: fullCache,
+		GlobalCache: fullCache.GlobalCache.Clone(),
+		LocalCache:  fullCache.LocalCache.Clone(),
 	}
-	gitTown, err := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
+	gitTown, err := config.NewGitTown(fullCache, backendRunner, false)
 	if err != nil {
 		return nil, err
 	}

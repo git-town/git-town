@@ -11,7 +11,8 @@ func DetermineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit 
 		return program.Program{}, err
 	}
 	finalConfigSnapshot := ConfigSnapshot{
-		GitConfig: fullCache,
+		GlobalCache: fullCache.GlobalCache,
+		LocalCache:  fullCache.LocalCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil
