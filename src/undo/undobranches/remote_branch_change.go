@@ -1,11 +1,12 @@
-package undodomain
+package undobranches
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
 	"golang.org/x/exp/maps"
 )
 
-type RemoteBranchChange map[gitdomain.RemoteBranchName]Change[gitdomain.SHA]
+type RemoteBranchChange map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]
 
 func (self RemoteBranchChange) BranchNames() gitdomain.RemoteBranchNames {
 	result := gitdomain.RemoteBranchNames(maps.Keys(self))

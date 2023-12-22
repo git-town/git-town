@@ -29,9 +29,9 @@ func CategorizeLocalBranchChange(change LocalBranchChange, branchTypes configdom
 	return
 }
 
-func CategorizeRemoteBranchChange(change undodomain.RemoteBranchChange, branchTypes configdomain.BranchTypes) (perennialChanges, featureChanges undodomain.RemoteBranchChange) {
-	perennialChanges = undodomain.RemoteBranchChange{}
-	featureChanges = undodomain.RemoteBranchChange{}
+func CategorizeRemoteBranchChange(change RemoteBranchChange, branchTypes configdomain.BranchTypes) (perennialChanges, featureChanges RemoteBranchChange) {
+	perennialChanges = RemoteBranchChange{}
+	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
 		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
 			featureChanges[branch] = change
