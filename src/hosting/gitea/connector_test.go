@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
 	"github.com/shoenig/test/must"
 )
@@ -80,51 +79,63 @@ func TestGitea(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("NewProposalURL", func(t *testing.T) {
-		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: configdomain.HostingGitea,
-			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
-			APIToken:       "",
-			Log:            log.Silent{},
-		})
-		must.NoError(t, err)
-		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
-		must.NoError(t, err)
-		must.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
-	})
+	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
+	// WHICH MAKES IT SLOW AND FLAKY.
+	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
+	//
+	// t.Run("NewProposalURL", func(t *testing.T) {
+	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
+	// 		HostingService: configdomain.HostingGitea,
+	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+	// 		APIToken:       "",
+	// 		Log:            log.Silent{},
+	// 	})
+	// 	must.NoError(t, err)
+	// 	have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
+	// 	must.NoError(t, err)
+	// 	must.EqOp(t, "https://gitea.com/git-town/docs/compare/parent...feature", have)
+	// })
 
-	t.Run("RepositoryURL", func(t *testing.T) {
-		connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: configdomain.HostingGitea,
-			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
-			APIToken:       "",
-			Log:            log.Silent{},
-		})
-		must.NoError(t, err)
-		have := connector.RepositoryURL()
-		must.EqOp(t, "https://gitea.com/git-town/docs", have)
-	})
+	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
+	// WHICH MAKES IT SLOW AND FLAKY.
+	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
+	//
+	// t.Run("RepositoryURL", func(t *testing.T) {
+	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
+	// 		HostingService: configdomain.HostingGitea,
+	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+	// 		APIToken:       "",
+	// 		Log:            log.Silent{},
+	// 	})
+	// 	must.NoError(t, err)
+	// 	have := connector.RepositoryURL()
+	// 	must.EqOp(t, "https://gitea.com/git-town/docs", have)
+	// })
 }
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("hosted service type provided manually", func(t *testing.T) {
-		t.Parallel()
-		have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-			HostingService: configdomain.HostingGitea,
-			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
-			APIToken:       "apiToken",
-			Log:            log.Silent{},
-		})
-		must.NoError(t, err)
-		wantConfig := common.Config{
-			Hostname:     "custom-url.com",
-			Organization: "git-town",
-			Repository:   "docs",
-		}
-		must.EqOp(t, wantConfig, have.Config)
-	})
+	// THIS TEST CONNECTS TO AN EXTERNAL INTERNET HOST,
+	// WHICH MAKES IT SLOW AND FLAKY.
+	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
+	//
+	// t.Run("hosted service type provided manually", func(t *testing.T) {
+	// 	t.Parallel()
+	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
+	// 		HostingService: configdomain.HostingGitea,
+	// 		OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+	// 		APIToken:       "apiToken",
+	// 		Log:            log.Silent{},
+	// 	})
+	// 	must.NoError(t, err)
+	// 	wantConfig := common.Config{
+	// 		Hostname:     "custom-url.com",
+	// 		Organization: "git-town",
+	// 		Repository:   "docs",
+	// 	}
+	// 	must.EqOp(t, wantConfig, have.Config)
+	// })
 
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
