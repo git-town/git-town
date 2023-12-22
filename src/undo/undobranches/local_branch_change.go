@@ -1,13 +1,11 @@
-package undodomain
+package undobranches
 
-import "github.com/git-town/git-town/v11/src/git/gitdomain"
+import (
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/undo/undodomain"
+)
 
-type Change[T any] struct {
-	Before T
-	After  T
-}
-
-type LocalBranchChange map[gitdomain.LocalBranchName]Change[gitdomain.SHA]
+type LocalBranchChange map[gitdomain.LocalBranchName]undodomain.Change[gitdomain.SHA]
 
 func (self LocalBranchChange) BranchNames() gitdomain.LocalBranchNames {
 	result := make(gitdomain.LocalBranchNames, 0, len(self))

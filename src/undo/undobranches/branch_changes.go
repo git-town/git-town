@@ -15,15 +15,15 @@ import (
 // Various types of changes are distinguished.
 type BranchChanges struct {
 	LocalAdded    gitdomain.LocalBranchNames
-	LocalRemoved  undodomain.LocalBranchesSHAs
-	LocalChanged  undodomain.LocalBranchChange
+	LocalRemoved  LocalBranchesSHAs
+	LocalChanged  LocalBranchChange
 	RemoteAdded   gitdomain.RemoteBranchNames
 	RemoteRemoved undodomain.RemoteBranchesSHAs
 	RemoteChanged undodomain.RemoteBranchChange
 	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
-	OmniRemoved undodomain.LocalBranchesSHAs
+	OmniRemoved LocalBranchesSHAs
 	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
-	OmniChanged undodomain.LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
+	OmniChanged LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch
 	// don't have the same SHA before or after.
 	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
@@ -34,13 +34,13 @@ type BranchChanges struct {
 func EmptyBranchChanges() BranchChanges {
 	return BranchChanges{
 		LocalAdded:            gitdomain.LocalBranchNames{},
-		LocalRemoved:          undodomain.LocalBranchesSHAs{},
-		LocalChanged:          undodomain.LocalBranchChange{},
+		LocalRemoved:          LocalBranchesSHAs{},
+		LocalChanged:          LocalBranchChange{},
 		RemoteAdded:           gitdomain.RemoteBranchNames{},
 		RemoteRemoved:         map[gitdomain.RemoteBranchName]gitdomain.SHA{},
 		RemoteChanged:         map[gitdomain.RemoteBranchName]undodomain.Change[gitdomain.SHA]{},
-		OmniRemoved:           undodomain.LocalBranchesSHAs{},
-		OmniChanged:           undodomain.LocalBranchChange{},
+		OmniRemoved:           LocalBranchesSHAs{},
+		OmniChanged:           LocalBranchChange{},
 		InconsistentlyChanged: undodomain.InconsistentChanges{},
 	}
 }

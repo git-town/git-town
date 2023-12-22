@@ -16,9 +16,9 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branc
 	return
 }
 
-func CategorizeLocalBranchChange(change undodomain.LocalBranchChange, branchTypes configdomain.BranchTypes) (changedPerennials, changedFeatures undodomain.LocalBranchChange) {
-	changedPerennials = undodomain.LocalBranchChange{}
-	changedFeatures = undodomain.LocalBranchChange{}
+func CategorizeLocalBranchChange(change LocalBranchChange, branchTypes configdomain.BranchTypes) (changedPerennials, changedFeatures LocalBranchChange) {
+	changedPerennials = LocalBranchChange{}
+	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
 		if branchTypes.IsFeatureBranch(branch) {
 			changedFeatures[branch] = change

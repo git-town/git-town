@@ -96,7 +96,7 @@ func TestCategorize(t *testing.T) {
 
 	t.Run("CategorizeLocalBranchChange", func(t *testing.T) {
 		t.Parallel()
-		give := undodomain.LocalBranchChange{
+		give := undobranches.LocalBranchChange{
 			gitdomain.NewLocalBranchName("branch-1"): {
 				Before: gitdomain.NewSHA("111111"),
 				After:  gitdomain.NewSHA("222222"),
@@ -111,14 +111,14 @@ func TestCategorize(t *testing.T) {
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, branchTypes)
-		wantPerennials := undodomain.LocalBranchChange{
+		wantPerennials := undobranches.LocalBranchChange{
 			gitdomain.NewLocalBranchName("dev"): {
 				Before: gitdomain.NewSHA("333333"),
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
 		must.Eq(t, wantPerennials, havePerennials)
-		wantFeatures := undodomain.LocalBranchChange{
+		wantFeatures := undobranches.LocalBranchChange{
 			gitdomain.NewLocalBranchName("branch-1"): {
 				Before: gitdomain.NewSHA("111111"),
 				After:  gitdomain.NewSHA("222222"),
