@@ -25,7 +25,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) (configdo
 	}
 	if updated {
 		args.Runner.GitTown.Reload()
-		args.Lineage = args.Runner.GitTown.Lineage(args.Runner.Backend.GitTown.RemoveLocalConfigValue) // reload after ancestry change
+		args.Lineage = args.Runner.GitTown.Lineage // reload after ancestry change
 		args.BranchTypes = args.Runner.GitTown.BranchTypes()
 	}
 	return args.BranchTypes, args.Lineage, nil
