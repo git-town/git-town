@@ -14,6 +14,7 @@ type PartialConfig struct {
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
+	Lineage                   *Lineage
 	MainBranch                *gitdomain.LocalBranchName
 	NewBranchPush             *NewBranchPush
 	Offline                   *Offline
@@ -29,6 +30,15 @@ type PartialConfig struct {
 func (self *PartialConfig) Add(key Key, value string) error {
 	if strings.HasPrefix(key.name, "alias.") {
 		self.Aliases[key] = value
+		return nil
+	}
+	if strings.HasPrefix(key.name, "git-town-branch.") {
+		if self.Lineage == nil {
+			self.Lineage = &Lineage{}
+		}
+		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		parent := gitdomain.NewLocalBranchName(value)
+		(*self.Lineage)[child] = parent
 		return nil
 	}
 	var err error

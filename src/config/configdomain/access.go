@@ -42,6 +42,11 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 		if configKey == nil {
 			continue
 		}
+		if value == "" {
+			_ = self.RemoveLocalConfigValue(*configKey)
+			fmt.Printf("\nNOTICE: deleted empty configuration entry %q\n", key)
+			continue
+		}
 		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
 		if keyIsDeprecated {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
