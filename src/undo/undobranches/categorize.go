@@ -42,9 +42,9 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, branchTypes configd
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas undodomain.RemoteBranchesSHAs, branchTypes configdomain.BranchTypes) (perennials, features undodomain.RemoteBranchesSHAs) {
-	perennials = undodomain.RemoteBranchesSHAs{}
-	features = undodomain.RemoteBranchesSHAs{}
+func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, branchTypes configdomain.BranchTypes) (perennials, features RemoteBranchesSHAs) {
+	perennials = RemoteBranchesSHAs{}
+	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
 		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
 			features[branch] = sha

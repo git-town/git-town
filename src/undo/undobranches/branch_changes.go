@@ -18,7 +18,7 @@ type BranchChanges struct {
 	LocalRemoved  LocalBranchesSHAs
 	LocalChanged  LocalBranchChange
 	RemoteAdded   gitdomain.RemoteBranchNames
-	RemoteRemoved undodomain.RemoteBranchesSHAs
+	RemoteRemoved RemoteBranchesSHAs
 	RemoteChanged RemoteBranchChange
 	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
 	OmniRemoved LocalBranchesSHAs

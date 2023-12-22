@@ -162,7 +162,7 @@ func TestCategorize(t *testing.T) {
 
 	t.Run("CategorizeRemoteBranchesSHAs", func(t *testing.T) {
 		t.Parallel()
-		give := undodomain.RemoteBranchesSHAs{
+		give := undobranches.RemoteBranchesSHAs{
 			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
@@ -171,11 +171,11 @@ func TestCategorize(t *testing.T) {
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
 		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, branchTypes)
-		wantPerennials := undodomain.RemoteBranchesSHAs{
+		wantPerennials := undobranches.RemoteBranchesSHAs{
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
 		must.Eq(t, wantPerennials, havePerennials)
-		wantFeatures := undodomain.RemoteBranchesSHAs{
+		wantFeatures := undobranches.RemoteBranchesSHAs{
 			gitdomain.NewRemoteBranchName("origin/feature-branch"): gitdomain.NewSHA("111111"),
 		}
 		must.Eq(t, wantFeatures, haveFeatures)
