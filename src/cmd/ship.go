@@ -365,7 +365,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if !config.isShippingInitialBranch {
 		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
 	}
-	wrap(&prog, wrapOptions{
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         !config.isShippingInitialBranch && config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},

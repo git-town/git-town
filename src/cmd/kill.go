@@ -164,7 +164,7 @@ func (self killConfig) branchToKillParent() gitdomain.LocalBranchName {
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
-	wrap(&prog, wrapOptions{
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.initialBranch},

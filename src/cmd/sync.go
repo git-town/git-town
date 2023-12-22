@@ -220,7 +220,7 @@ func syncBranchesProgram(args syncBranchesProgramArgs) {
 	if args.remotes.HasOrigin() && args.shouldPushTags && args.isOnline.Bool() {
 		args.program.Add(&opcode.PushTags{})
 	}
-	wrap(args.program, wrapOptions{
+	cmdhelpers.Wrap(args.program, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.previousBranch},

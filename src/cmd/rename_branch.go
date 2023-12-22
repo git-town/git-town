@@ -186,7 +186,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
 	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
-	wrap(&result, wrapOptions{
+	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.newBranch},

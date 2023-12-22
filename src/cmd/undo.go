@@ -148,7 +148,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	} else {
 		undoRunState = runState.CreateUndoRunState()
 	}
-	wrap(&undoRunState.RunProgram, wrapOptions{
+	cmdhelpers.Wrap(&undoRunState.RunProgram, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},

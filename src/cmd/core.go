@@ -3,9 +3,6 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v11/src/cmd/configcmds"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/opcode"
-	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
 // Execute runs the Cobra stack.
@@ -32,23 +29,4 @@ func Execute() error {
 	rootCmd.AddCommand(syncCmd())
 	rootCmd.AddCommand(undoCmd())
 	return rootCmd.Execute()
-}
-
-// wrap wraps the given list with opcodes that change the Git root directory or stash away open changes.
-// TODO: only wrap if the list actually contains any opcodes.
-func wrap(program *program.Program, options wrapOptions) {
-	program.Add(&opcode.PreserveCheckoutHistory{
-		PreviousBranchCandidates: options.PreviousBranchCandidates,
-	})
-	if options.StashOpenChanges {
-		program.Prepend(&opcode.StashOpenChanges{})
-		program.Add(&opcode.RestoreOpenChanges{})
-	}
-}
-
-// wrapOptions represents the options given to Wrap.
-type wrapOptions struct {
-	RunInGitRoot             bool
-	StashOpenChanges         bool
-	PreviousBranchCandidates gitdomain.LocalBranchNames
 }

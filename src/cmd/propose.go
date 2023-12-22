@@ -206,7 +206,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 			syncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
-	wrap(&prog, wrapOptions{
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
