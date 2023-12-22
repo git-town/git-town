@@ -2,7 +2,7 @@ package commitmessage
 
 import "strings"
 
-// Split splits the given commit message into its header and body parts.
+// Split separates the parts of the given commit message.
 func Split(message string) Parts {
 	parts := strings.SplitN(message, "\n", 2)
 	title := parts[0]
