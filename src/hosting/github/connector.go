@@ -23,7 +23,7 @@ type Connector struct {
 	hostingdomain.Config
 	APIToken   configdomain.GitHubToken
 	MainBranch gitdomain.LocalBranchName
-	log        common.Log
+	log        hostingdomain.Log
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -143,7 +143,7 @@ type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	APIToken       configdomain.GitHubToken
 	MainBranch     gitdomain.LocalBranchName
-	Log            common.Log
+	Log            hostingdomain.Log
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

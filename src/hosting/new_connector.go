@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
 	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/gitlab"
@@ -61,5 +60,5 @@ type NewConnectorArgs struct {
 	GithubAPIToken  configdomain.GitHubToken
 	GitlabAPIToken  configdomain.GitLabToken
 	MainBranch      gitdomain.LocalBranchName
-	Log             common.Log
+	Log             hostingdomain.Log
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/common"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/xanzy/go-gitlab"
@@ -18,7 +17,7 @@ import (
 type Connector struct {
 	client *gitlab.Client
 	Config
-	log common.Log
+	log hostingdomain.Log
 }
 
 func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
@@ -106,7 +105,7 @@ type NewConnectorArgs struct {
 	HostingService configdomain.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       configdomain.GitLabToken
-	Log            common.Log
+	Log            hostingdomain.Log
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

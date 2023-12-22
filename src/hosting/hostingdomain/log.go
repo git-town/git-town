@@ -1,4 +1,4 @@
-package common
+package hostingdomain
 
 // Log allows hosting adapters to print network operations to the CLI.
 // TODO: target the respective struct in the CLI package directly?

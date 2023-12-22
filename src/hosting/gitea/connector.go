@@ -19,7 +19,7 @@ type Connector struct {
 	client   *gitea.Client
 	APIToken configdomain.GiteaToken
 	hostingdomain.Config
-	log common.Log
+	log hostingdomain.Log
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -134,5 +134,5 @@ type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	HostingService configdomain.Hosting
 	APIToken       configdomain.GiteaToken
-	Log            common.Log
+	Log            hostingdomain.Log
 }
