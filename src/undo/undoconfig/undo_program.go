@@ -5,12 +5,12 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/program"
 )
 
-func DetermineUndoConfigProgram(initialConfigSnapshot configdomain.ConfigSnapshot, configGit *configdomain.Access) (program.Program, error) {
+func DetermineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *configdomain.Access) (program.Program, error) {
 	fullCache, err := configdomain.LoadFullCache(configGit)
 	if err != nil {
 		return program.Program{}, err
 	}
-	finalConfigSnapshot := configdomain.ConfigSnapshot{
+	finalConfigSnapshot := ConfigSnapshot{
 		GitConfig: fullCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)

@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -43,7 +44,7 @@ type ExecuteArgs struct {
 	Verbose                 bool
 	RootDir                 gitdomain.RepoRootDir
 	InitialBranchesSnapshot gitdomain.BranchesStatus
-	InitialConfigSnapshot   configdomain.ConfigSnapshot
+	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	Lineage                 configdomain.Lineage
 	NoPushHook              configdomain.NoPushHook

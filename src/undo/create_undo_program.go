@@ -31,7 +31,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 type CreateUndoProgramArgs struct {
 	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  gitdomain.BranchesStatus
-	InitialConfigSnapshot    configdomain.ConfigSnapshot
+	InitialConfigSnapshot    undoconfig.ConfigSnapshot
 	InitialStashSnapshot     gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook
 	UndoablePerennialCommits []gitdomain.SHA

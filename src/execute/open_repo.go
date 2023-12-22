@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/subshell"
+	"github.com/git-town/git-town/v11/src/undo/undoconfig"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
@@ -42,7 +43,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	configSnapshot := configdomain.ConfigSnapshot{
+	configSnapshot := undoconfig.ConfigSnapshot{
 		GitConfig: fullCache,
 	}
 	gitTown, err := config.NewGitTown(configSnapshot.GitConfig.Clone(), backendRunner, false)
@@ -113,7 +114,7 @@ type OpenRepoResult struct {
 	Runner         *git.ProdRunner
 	RootDir        gitdomain.RepoRootDir
 	IsOffline      configdomain.Offline
-	ConfigSnapshot configdomain.ConfigSnapshot
+	ConfigSnapshot undoconfig.ConfigSnapshot
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
