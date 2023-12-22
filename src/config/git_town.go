@@ -78,6 +78,10 @@ func (self *GitTown) OriginURLString() string {
 	return strings.TrimSpace(output)
 }
 
+func (self *GitTown) Reload() {
+	self.CachedAccess.Reload()
+}
+
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *GitTown) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	slice.Remove(&self.Config.PerennialBranches, branch)
