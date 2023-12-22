@@ -78,8 +78,9 @@ func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 		}
 		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		err = self.Run("git", "config", "--unset", key.String())
+	for child := range *self.LocalConfig.Lineage {
+		key := fmt.Sprintf("git-town-branch.%s.parent", child)
+		err = self.Run("git", "config", "--unset", key)
 		if err != nil {
 			return fmt.Errorf(messages.ConfigRemoveError, err)
 		}
