@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/runstate"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repoDir domain.RepoRootDir) (*runstate.RunState, error) {
+func Load(repoDir gitdomain.RepoRootDir) (*runstate.RunState, error) {
 	filename, err := FilePath(repoDir)
 	if err != nil {
 		return nil, err

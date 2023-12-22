@@ -3,25 +3,25 @@ package git
 import (
 	"log"
 
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // Commit describes a Git commit.
 type Commit struct {
 	Author      string `exhaustruct:"optional"`
-	Branch      domain.LocalBranchName
+	Branch      gitdomain.LocalBranchName
 	FileContent string   `exhaustruct:"optional"`
 	FileName    string   `exhaustruct:"optional"`
 	Locations   []string `exhaustruct:"optional"`
 	Message     string
-	SHA         domain.SHA `exhaustruct:"optional"`
+	SHA         gitdomain.SHA `exhaustruct:"optional"`
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.
 func (self *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
-		self.Branch = domain.NewLocalBranchName(value)
+		self.Branch = gitdomain.NewLocalBranchName(value)
 	case "LOCATION":
 		self.Locations = []string{value}
 	case "MESSAGE":

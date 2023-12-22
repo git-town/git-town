@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -17,7 +18,7 @@ func resetRunstateCommand() *cobra.Command {
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: statusResetDesc,
-		Long:  long(statusResetDesc),
+		Long:  cmdhelpers.Long(statusResetDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeStatusReset(readVerboseFlag(cmd))
 		},

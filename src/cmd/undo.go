@@ -5,11 +5,13 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
@@ -27,7 +29,7 @@ func undoCmd() *cobra.Command {
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   undoDesc,
-		Long:    long(undoDesc),
+		Long:    cmdhelpers.Long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeUndo(readVerboseFlag(cmd))
 		},
@@ -71,12 +73,12 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
-	connector               hosting.Connector
+	connector               hostingdomain.Connector
 	hasOpenChanges          bool
-	initialBranchesSnapshot domain.BranchesSnapshot
-	mainBranch              domain.LocalBranchName
+	initialBranchesSnapshot gitdomain.BranchesStatus
+	mainBranch              gitdomain.LocalBranchName
 	lineage                 configdomain.Lineage
-	previousBranch          domain.LocalBranchName
+	previousBranch          gitdomain.LocalBranchName
 	pushHook                configdomain.PushHook
 }
 
@@ -145,10 +147,10 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	} else {
 		undoRunState = runState.CreateUndoRunState()
 	}
-	wrap(&undoRunState.RunProgram, wrapOptions{
+	cmdhelpers.Wrap(&undoRunState.RunProgram, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	// If the command to undo failed and was continued,
 	// there might be opcodes in the undo stack that became obsolete

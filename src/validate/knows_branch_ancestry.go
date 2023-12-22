@@ -3,12 +3,13 @@ package validate
 import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/io"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
+func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
 	if !args.BranchTypes.IsFeatureBranch(branch) {
@@ -51,11 +52,11 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 }
 
 type KnowsBranchAncestorsArgs struct {
-	AllBranches   domain.BranchInfos
+	AllBranches   gitdomain.BranchInfos
 	Backend       *git.BackendCommands
-	BranchTypes   domain.BranchTypes
-	DefaultBranch domain.LocalBranchName
-	MainBranch    domain.LocalBranchName
+	BranchTypes   configdomain.BranchTypes
+	DefaultBranch gitdomain.LocalBranchName
+	MainBranch    gitdomain.LocalBranchName
 }
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
@@ -83,13 +84,13 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	AllBranches domain.BranchInfos
+	AllBranches gitdomain.BranchInfos
 	Backend     *git.BackendCommands
-	BranchTypes domain.BranchTypes
-	MainBranch  domain.LocalBranchName
+	BranchTypes configdomain.BranchTypes
+	MainBranch  gitdomain.LocalBranchName
 }
 
-func printParentBranchHeader(mainBranch domain.LocalBranchName) {
+func printParentBranchHeader(mainBranch gitdomain.LocalBranchName) {
 	io.Printf(parentBranchHeaderTemplate, mainBranch)
 }
 

@@ -7,11 +7,12 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,7 @@ func repoCommand() *cobra.Command {
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
+		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeRepo(readVerboseFlag(cmd))
 		},
@@ -71,7 +72,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	branchTypes := repo.Runner.GitTown.BranchTypes()
-	branches := domain.Branches{
+	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
@@ -100,7 +101,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	if connector == nil {
-		return nil, hosting.UnsupportedServiceError()
+		return nil, hostingdomain.UnsupportedServiceError()
 	}
 	return &repoConfig{
 		connector: connector,
@@ -108,5 +109,5 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 }
 
 type repoConfig struct {
-	connector hosting.Connector
+	connector hostingdomain.Connector
 }

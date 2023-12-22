@@ -1,15 +1,15 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // SetParentIfBranchExists sets the given parent branch as the parent of the given branch,
 // but only the latter exists.
 type SetParentIfBranchExists struct {
-	Branch domain.LocalBranchName
-	Parent domain.LocalBranchName
+	Branch gitdomain.LocalBranchName
+	Parent gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

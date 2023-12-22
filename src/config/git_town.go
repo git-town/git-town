@@ -7,8 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
@@ -25,12 +24,12 @@ type GitTown struct {
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (self *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
+func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-func (self *GitTown) BranchTypes() domain.BranchTypes {
-	return domain.BranchTypes{
+func (self *GitTown) BranchTypes() configdomain.BranchTypes {
+	return configdomain.BranchTypes{
 		MainBranch:        self.Config.MainBranch,
 		PerennialBranches: self.Config.PerennialBranches,
 	}
@@ -44,7 +43,7 @@ func (self *GitTown) HostingService() (configdomain.Hosting, error) {
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
+func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
 }
 
@@ -66,7 +65,7 @@ func (self *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := self.Query("git", "remote", "get-url", domain.OriginRemote.String())
+	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
 	return strings.TrimSpace(output)
 }
 
@@ -76,14 +75,14 @@ func (self *GitTown) Reload() {
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (self *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
+func (self *GitTown) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	slice.Remove(&self.Config.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (self *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
+func (self *GitTown) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.MainBranch = branch
 	self.LocalConfig.MainBranch = &branch
 	return self.SetLocalConfigValue(configdomain.KeyMainBranch, branch.String())
@@ -110,12 +109,12 @@ func (self *GitTown) SetOffline(value configdomain.Offline) error {
 
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (self *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) error {
+func (self *GitTown) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
 	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
-func (self *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
+func (self *GitTown) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
 	return self.SetLocalConfigValue(configdomain.KeyPerennialBranches, branches.Join(" "))
 }
@@ -168,7 +167,7 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache gitconfig.FullCache, runner gitconfig.Runner, dryrun bool) (*GitTown, error) {
+func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner, dryrun bool) (*GitTown, error) {
 	configFile, err := configdomain.LoadConfigFile()
 	if err != nil {
 		return nil, err

@@ -1,7 +1,7 @@
 package configdomain
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // Config is the merged configuration to be used by Git Town commands.
@@ -16,7 +16,7 @@ type Config struct {
 	MainBranch                domain.LocalBranchName
 	NewBranchPush             NewBranchPush
 	Offline                   Offline
-	PerennialBranches         domain.LocalBranchNames
+	PerennialBranches         gitdomain.LocalBranchNames
 	PushHook                  PushHook
 	ShipDeleteTrackingBranch  ShipDeleteTrackingBranch
 	SyncBeforeShip            SyncBeforeShip
@@ -93,7 +93,7 @@ func DefaultConfig() Config {
 		MainBranch:                domain.EmptyLocalBranchName(),
 		NewBranchPush:             false,
 		Offline:                   false,
-		PerennialBranches:         domain.NewLocalBranchNames(),
+		PerennialBranches:         gitdomain.NewLocalBranchNames(),
 		PushHook:                  true,
 		ShipDeleteTrackingBranch:  true,
 		SyncBeforeShip:            false,

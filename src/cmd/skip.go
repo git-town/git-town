@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -20,7 +21,7 @@ func skipCmd() *cobra.Command {
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   skipDesc,
-		Long:    long(skipDesc),
+		Long:    cmdhelpers.Long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeSkip(readVerboseFlag(cmd))
 		},

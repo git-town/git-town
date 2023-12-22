@@ -5,11 +5,14 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/git-town/git-town/v11/src/hosting/github"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
 	"github.com/git-town/git-town/v11/src/vm/opcode"
 	"github.com/git-town/git-town/v11/src/vm/program"
@@ -42,7 +45,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePropose(readVerboseFlag(cmd))
 		},
@@ -90,15 +93,15 @@ func executePropose(verbose bool) error {
 }
 
 type proposeConfig struct {
-	branches              domain.Branches
-	branchesToSync        domain.BranchInfos
-	connector             hosting.Connector
+	branches              configdomain.Branches
+	branchesToSync        gitdomain.BranchInfos
+	connector             hostingdomain.Connector
 	hasOpenChanges        bool
-	remotes               domain.Remotes
+	remotes               gitdomain.Remotes
 	isOnline              configdomain.Online
 	lineage               configdomain.Lineage
-	mainBranch            domain.LocalBranchName
-	previousBranch        domain.LocalBranchName
+	mainBranch            gitdomain.LocalBranchName
+	previousBranch        gitdomain.LocalBranchName
 	syncPerennialStrategy configdomain.SyncPerennialStrategy
 	pushHook              configdomain.PushHook
 	syncUpstream          configdomain.SyncUpstream
@@ -164,7 +167,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	if connector == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, hosting.UnsupportedServiceError()
+		return nil, branchesSnapshot, stashSnapshot, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
@@ -188,25 +191,25 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
-		syncBranchProgram(branch, syncBranchProgramArgs{
-			branchInfos:           config.branches.All,
-			branchTypes:           config.branches.Types,
-			remotes:               config.remotes,
-			isOnline:              config.isOnline,
-			lineage:               config.lineage,
-			program:               &prog,
-			mainBranch:            config.mainBranch,
-			syncPerennialStrategy: config.syncPerennialStrategy,
-			pushBranch:            true,
-			pushHook:              config.pushHook,
-			syncUpstream:          config.syncUpstream,
-			syncFeatureStrategy:   config.syncFeatureStrategy,
+		sync.BranchProgram(branch, sync.BranchProgramArgs{
+			BranchInfos:           config.branches.All,
+			BranchTypes:           config.branches.Types,
+			Remotes:               config.remotes,
+			IsOnline:              config.isOnline,
+			Lineage:               config.lineage,
+			Program:               &prog,
+			MainBranch:            config.mainBranch,
+			SyncPerennialStrategy: config.syncPerennialStrategy,
+			PushBranch:            true,
+			PushHook:              config.pushHook,
+			SyncUpstream:          config.syncUpstream,
+			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		})
 	}
-	wrap(&prog, wrapOptions{
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: domain.LocalBranchNames{config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
 	prog.Add(&opcode.CreateProposal{Branch: config.branches.Initial})
 	return prog

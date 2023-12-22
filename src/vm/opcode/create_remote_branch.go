@@ -2,15 +2,15 @@ package opcode
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CreateRemoteBranch pushes the given local branch up to origin.
 type CreateRemoteBranch struct {
-	Branch     domain.LocalBranchName
+	Branch     gitdomain.LocalBranchName
 	NoPushHook configdomain.NoPushHook
-	SHA        domain.SHA
+	SHA        gitdomain.SHA
 	undeclaredOpcodeMethods
 }
 

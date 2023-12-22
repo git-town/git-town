@@ -4,16 +4,16 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // SquashMerge squash merges the branch with the given name into the current branch.
 type SquashMerge struct {
-	Branch        domain.LocalBranchName
+	Branch        gitdomain.LocalBranchName
 	CommitMessage string
-	Parent        domain.LocalBranchName
+	Parent        gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

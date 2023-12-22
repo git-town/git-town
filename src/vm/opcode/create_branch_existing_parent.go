@@ -1,15 +1,15 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/domain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // CreateBranchExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
 type CreateBranchExistingParent struct {
-	Branch     domain.LocalBranchName
-	MainBranch domain.LocalBranchName
-	Ancestors  domain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
+	Branch     gitdomain.LocalBranchName
+	MainBranch gitdomain.LocalBranchName
+	Ancestors  gitdomain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
 	undeclaredOpcodeMethods
 }
 
