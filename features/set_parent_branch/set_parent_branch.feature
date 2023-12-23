@@ -6,9 +6,7 @@ Feature: update the parent of a feature branch
     And a feature branch "child" as a child of "parent"
     And the current branch is "child"
 
-  @debug @this
   Scenario: select the default branch (current parent)
-    And inspect the repo
     When I run "git-town set-parent" and answer the prompts:
       | PROMPT                                      | ANSWER  |
       | Please specify the parent branch of 'child' | [ENTER] |
