@@ -57,3 +57,67 @@ To undo a previously run Git Town command (requirement 3), Git Town:
 - determines the changes that the Git Town command made to the repo
 - creates a program that reverses these changes
 - starts the interpreter to execute this program
+
+### Custom code style
+
+The Git Town codebase deviates in some areas from the recommended Go coding
+style. These decisions weren't easy. Here is some background why we did them.
+
+#### Favor descriptive naming over brevity
+
+Many Go codebases, including Go's standard library, use heavily abbreviated
+identifier names. Git Town's code base favors self-describing identifier names
+over short ones because that's often quicker, less ambiguous, and leads to
+better readable and understandable code with fewer bugs. This is especially true
+for an open-source codebase that many readers aren't familiar with.
+
+Code with descriptive identifier names is easier to work with because it doesn't
+require keeping the mapping of several concepts to their abbreviations in one's
+head while thinking about the code. See
+https://michaelwhatcott.com/familiarity-admits-brevity for more background.
+
+#### Use `self` for method receivers
+
+The
+[Go code review comments wiki page](https://go.dev/wiki/CodeReviewComments#receiver-names)
+recommends avoiding generic names like `this` or `self` for method receivers and
+instead use short one or two letter names. After doing this for many years we
+find this approach unhelpful in practice. Git Town uses `self` for method
+receivers and enforces this using a linter. This decision, while costly in terms
+of going against a pretty widespread convention, has been worthwile because it
+made an entire array of inconveniences and headaches disappear.
+
+The Go review comments wiki page is incorrect that the method receiver is just
+another function argument. The method receiver gets defined separate from the
+other arguments. It is the central data element in the method, otherwise that
+method shouldn't be a method but a function. The method receiver is the only
+argument of which one can safely access private properties without violating
+abstraction and encapsulation boundaries.
+
+Go doesn't provide a clear convention for exactly how to name the method
+receiver. A number of alternatives exist, each with their distinct pros and
+cons, and none working for all cases. This leads to time and energy wasted
+figuring out the right method receiver name and justifying it in code reviews.
+The only option that works in all cases without any bikeshedding is `self`.
+
+The Go recommendation leads to excessive churn. Renaming a type now also
+requires renaming the receiver in all its methods. This leads to changes on
+dozens more lines for simple rename refactors. This isn't tool supported because
+of the lack of a convention, so has to be done manually and reviewed with some
+level of care.
+
+This makes refactoring unnecessarily costly, noisy, and thereby sometimes not
+worth the effort. It is critical that code smells and drift get cleaned up
+regularly without one having to justify it because refactoring is essential for
+maintaining code health. A healthy codebase is the most important asset in the
+21st century because it enables product and business agility and thereby
+success.
+
+`self` is pretty short, it's only four characters.
+
+The names of the other function arguments also shouldn't be abbreviated. All
+identifiers need to be descriptive.
+
+https://michaelwhatcott.com/receiver-names-in-go and
+https://dev.to/codypotter/the-case-for-self-receivers-in-go-3h7f provide more
+background.
