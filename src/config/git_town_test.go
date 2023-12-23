@@ -58,7 +58,7 @@ func TestGitTown(t *testing.T) {
 			want := configdomain.Lineage{
 				branch: gitdomain.NewLocalBranchName("main"),
 			}
-			must.Eq(t, want, repo.Lineage(repo.GitTown.RemoveLocalConfigValue))
+			must.Eq(t, want, repo.Lineage)
 		})
 	})
 
