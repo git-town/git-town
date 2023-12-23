@@ -12,9 +12,7 @@ import (
 func EnterParent(branch, defaultParent gitdomain.LocalBranchName, lineage configdomain.Lineage, branches gitdomain.BranchInfos) (gitdomain.LocalBranchName, error) {
 	choices := branches.LocalBranches().Names()
 	slice.Hoist(&choices, defaultParent)
-	fmt.Println("CHOICES:", choices)
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)
-	fmt.Println("FILTERED CHOICES:", filteredChoices)
 	choice, err := Select(SelectArgs{
 		Options: append([]string{PerennialBranchOption}, filteredChoices.Strings()...),
 		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),
