@@ -21,7 +21,7 @@ const (
 	CacheUnitialized                   = "using a cached value before initialization"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
-	ConfigurationEmptyEntryDeleted     = "\nNOTICE: deleted empty configuration entry %q"
+	ConfigurationEmptyEntryDeleted     = "\nNOTICE: cleaned up empty configuration entry %q"
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
