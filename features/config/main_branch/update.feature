@@ -10,7 +10,7 @@ Feature: configure the main branch
     When I run "git-town config main-branch main"
     Then it prints:
       """
-      NOTICE: deleted empty configuration entry "git-town.main-branch"
+      NOTICE: cleaned up empty configuration entry "git-town.main-branch"
       """
     And local Git Town setting "main-branch" is now "main"
 
