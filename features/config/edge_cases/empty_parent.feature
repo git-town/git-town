@@ -5,5 +5,5 @@ Feature: ignore empty parent branch setting
     When I run "git-town config"
     Then it prints:
       """
-      NOTICE: deleted empty configuration entry "foo"
+      NOTICE: cleaned up empty configuration entry "foo"
       """
