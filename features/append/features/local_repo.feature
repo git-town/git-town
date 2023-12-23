@@ -29,7 +29,6 @@ Feature: in a local repo
 
   Scenario: undo
     When I run "git town undo"
-    And inspect the repo
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | new      | git add -A            |
