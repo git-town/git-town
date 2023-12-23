@@ -47,6 +47,21 @@ func TestGitTown(t *testing.T) {
 		}
 	})
 
+	t.Run("Reload", func(t *testing.T) {
+		t.Parallel()
+		t.Run("lineage changed", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			branch := gitdomain.NewLocalBranchName("branch-1")
+			must.NoError(t, repo.CreateFeatureBranch(branch))
+			repo.Reload()
+			want := configdomain.Lineage{
+				branch: gitdomain.NewLocalBranchName("main"),
+			}
+			must.Eq(t, want, repo.Lineage(repo.GitTown.RemoveLocalConfigValue))
+		})
+	})
+
 	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
