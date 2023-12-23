@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
@@ -64,11 +63,11 @@ func executeSetParent(verbose bool) error {
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.GitTown.RemoveParent(branches.Initial)
+		repo.Runner.GitTown.Reload()
 	} else {
 		existingParent = repo.Runner.GitTown.MainBranch
 	}
 	mainBranch := repo.Runner.GitTown.MainBranch
-	fmt.Println("EXISTING PARENT:", existingParent)
 	branches.Types, _, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
@@ -77,7 +76,6 @@ func executeSetParent(verbose bool) error {
 		MainBranch:    mainBranch,
 		Runner:        repo.Runner,
 	})
-	fmt.Println("1111111111111111", err)
 	if err != nil {
 		return err
 	}
