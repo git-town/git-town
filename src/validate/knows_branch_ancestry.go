@@ -1,8 +1,6 @@
 package validate
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -15,27 +13,22 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 	headerShown := false
 	currentBranch := branch
 	if !args.BranchTypes.IsFeatureBranch(branch) {
-		fmt.Println("NOT A FEATURE BRANCH")
 		return false, nil
 	}
 	updated := false
 	for {
 		lineage := args.Backend.GitTown.Lineage // need to load a fresh lineage here because ancestry data was changed
 		parent, hasParent := lineage[currentBranch]
-		fmt.Println("PARENT:", parent)
-		fmt.Println("HAS PARENT:", hasParent)
 		var err error
 		if !hasParent { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(args.MainBranch)
 				headerShown = true
 			}
-			fmt.Println("222222222222222222")
 			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
 			if err != nil {
 				return false, err
 			}
-			fmt.Println("333333333333333", parent)
 			if parent.String() == dialog.PerennialBranchOption {
 				err = args.Backend.GitTown.AddToPerennialBranches(currentBranch)
 				if err != nil {
