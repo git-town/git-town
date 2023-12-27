@@ -552,7 +552,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		configKey := configdomain.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
 		if newValue != nil {
-			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
+			return fmt.Errorf("should not have local %q anymore but has value %q", name, *newValue)
 		}
 		return nil
 	})

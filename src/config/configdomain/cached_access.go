@@ -31,11 +31,6 @@ func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
 }
 
-func (self *CachedAccess) RemoveGlobalConfigValue(key Key) error {
-	delete(self.GlobalCache, key)
-	return self.Access.RemoveGlobalConfigValue(key)
-}
-
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *CachedAccess) RemoveLocalConfigValue(key Key) error {
 	delete(self.LocalCache, key)
