@@ -30,22 +30,8 @@ func (self CachedAccess) GlobalConfigValue(key Key) string {
 	return self.GlobalCache[key]
 }
 
-func (self CachedAccess) LocalConfigKeysMatching(pattern string) []Key {
-	return self.LocalCache.KeysMatching(pattern)
-}
-
 func (self CachedAccess) LocalConfigValue(key Key) string {
 	return self.LocalCache[key]
-}
-
-// LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
-// Local configuration takes precedence.
-func (self CachedAccess) LocalOrGlobalConfigValue(key Key) string {
-	local := self.LocalConfigValue(key)
-	if local != "" {
-		return local
-	}
-	return self.GlobalConfigValue(key)
 }
 
 // Reload refreshes the cached configuration information.
