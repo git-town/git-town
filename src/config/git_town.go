@@ -84,8 +84,8 @@ func (self *GitTown) Reload() {
 	self.Config = configdomain.DefaultConfig()
 	// TODO: merge this code with the similar code in NewGitTown.
 	self.Config.Merge(self.configFile)
-	self.Config.Merge(self.CachedAccess.FullCache.GlobalConfig)
-	self.Config.Merge(self.CachedAccess.FullCache.LocalConfig)
+	self.Config.Merge(self.GlobalConfig)
+	self.Config.Merge(self.LocalConfig)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
