@@ -30,12 +30,3 @@ func LoadFullCache(access *Access) (FullCache, error) {
 		LocalConfig:  localConfig,
 	}, err
 }
-
-func (self FullCache) Clone() FullCache {
-	return FullCache{
-		GlobalCache:  self.GlobalCache.Clone(),
-		GlobalConfig: self.GlobalConfig,
-		LocalCache:   self.LocalCache.Clone(),
-		LocalConfig:  self.LocalConfig,
-	}
-}
