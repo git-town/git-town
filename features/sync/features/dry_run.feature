@@ -10,6 +10,7 @@ Feature: dry run
       |         | origin   | origin feature commit |
     When I run "git-town sync --dry-run"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -23,6 +24,7 @@ Feature: dry run
       |         | git push                           |
     And the current branch is still "feature"
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
