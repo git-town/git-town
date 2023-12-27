@@ -31,12 +31,6 @@ func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
 }
 
-// removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (self *CachedAccess) RemoveLocalConfigValue(key Key) error {
-	delete(self.LocalCache, key)
-	return self.Access.RemoveLocalConfigValue(key)
-}
-
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (self *CachedAccess) RemoveLocalGitConfiguration() error {
 	err := self.Run("git", "config", "--remove-section", "git-town")
