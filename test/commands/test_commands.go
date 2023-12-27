@@ -228,6 +228,14 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
+func (self *TestCommands) GlobalGitConfig(name configdomain.Key) *string {
+	output, err := self.Query("git", "config", "--global", "--get", name.String())
+	if err != nil {
+		return nil
+	}
+	return &output
+}
+
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
 func (self *TestCommands) HasBranchesOutOfSync() bool {
 	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
@@ -284,6 +292,14 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	}
 	slice.Hoist(&branches, mainBranch)
 	return branches, nil
+}
+
+func (self *TestCommands) LocalGitConfig(name configdomain.Key) *string {
+	output, err := self.Query("git", "config", "--local", "--get", name.String())
+	if err != nil {
+		return nil
+	}
+	return &output
 }
 
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
