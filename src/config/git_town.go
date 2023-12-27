@@ -124,6 +124,7 @@ func (self *GitTown) SetOffline(value configdomain.Offline) error {
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *GitTown) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
+	self.Lineage[branch] = parentBranch
 	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
 
