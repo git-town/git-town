@@ -1,8 +1,10 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -464,6 +466,30 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 		return gitdomain.Remotes{}, nil
 	}
 	return gitdomain.NewRemotes(stringslice.Lines(out)...), nil
+}
+
+// RemoveLocalGitConfiguration removes all Git Town configuration.
+func (self *BackendCommands) RemoveLocalGitConfiguration() error {
+	err := self.Run("git", "config", "--remove-section", "git-town")
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			if exitErr.ExitCode() == 128 {
+				// Git returns exit code 128 when trying to delete a non-existing config section.
+				// This is not an error condition in this workflow so we can ignore it here.
+				return nil
+			}
+		}
+		return fmt.Errorf(messages.ConfigRemoveError, err)
+	}
+	for child := range *self.LocalConfig.Lineage {
+		key := fmt.Sprintf("git-town-branch.%s.parent", child)
+		err = self.Run("git", "config", "--unset", key)
+		if err != nil {
+			return fmt.Errorf(messages.ConfigRemoveError, err)
+		}
+	}
+	return nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.

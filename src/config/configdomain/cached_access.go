@@ -1,12 +1,7 @@
 package configdomain
 
 import (
-	"errors"
-	"fmt"
-	"os/exec"
-
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // CachedAccess provides access to the local and global configuration data stored in Git metadata
@@ -29,30 +24,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 // Reload refreshes the cached configuration information.
 func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
-}
-
-// RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *CachedAccess) RemoveLocalGitConfiguration() error {
-	err := self.Run("git", "config", "--remove-section", "git-town")
-	if err != nil {
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
-			if exitErr.ExitCode() == 128 {
-				// Git returns exit code 128 when trying to delete a non-existing config section.
-				// This is not an error condition in this workflow so we can ignore it here.
-				return nil
-			}
-		}
-		return fmt.Errorf(messages.ConfigRemoveError, err)
-	}
-	for child := range *self.LocalConfig.Lineage {
-		key := fmt.Sprintf("git-town-branch.%s.parent", child)
-		err = self.Run("git", "config", "--unset", key)
-		if err != nil {
-			return fmt.Errorf(messages.ConfigRemoveError, err)
-		}
-	}
-	return nil
 }
 
 // RemoveParent removes the parent branch entry for the given branch
