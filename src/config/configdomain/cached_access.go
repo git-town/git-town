@@ -22,12 +22,6 @@ func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
 }
 
-// SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (self *CachedAccess) SetGlobalConfigValue(key Key, value string) error {
-	self.GlobalCache[key] = value
-	return self.Access.SetGlobalConfigValue(key, value)
-}
-
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (self *CachedAccess) SetLocalConfigValue(key Key, value string) error {
 	self.LocalCache[key] = value
