@@ -26,10 +26,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) LocalConfigValue(key Key) string {
-	return self.LocalCache[key]
-}
-
 // Reload refreshes the cached configuration information.
 func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)

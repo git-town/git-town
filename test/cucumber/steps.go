@@ -257,7 +257,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
+		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
 		if newValue != nil {
 			return fmt.Errorf("should not have global %q anymore but has value %q", name, *newValue)
 		}
@@ -550,11 +550,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		newValue := state.fixture.DevRepo.GitTown.LocalConfigValue(*configKey)
-		if newValue == "" {
-			return nil
+		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
+		if newValue != nil {
+			return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 		}
-		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
+		return nil
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
