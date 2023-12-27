@@ -21,9 +21,3 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
 }
-
-// SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (self *CachedAccess) SetLocalConfigValue(key Key, value string) error {
-	self.LocalCache[key] = value
-	return self.Access.SetLocalConfigValue(key, value)
-}
