@@ -94,6 +94,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	})
 	runState := runstate.RunState{
 		Command:             "sync",
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          runProgram,
 	}

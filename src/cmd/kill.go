@@ -61,6 +61,7 @@ func executeKill(args []string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
+		DryRun:              false,
 		RunProgram:          steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		FinalUndoProgram:    finalUndoProgram,

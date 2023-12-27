@@ -20,7 +20,7 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !args.Runner.GitTown.DryRun {
+	if !shouldPush {
 		return nil
 	}
 	return args.Runner.Frontend.ForcePushBranch(self.NoPushHook)

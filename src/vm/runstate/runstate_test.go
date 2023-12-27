@@ -18,6 +18,7 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			Command: "sync",
+			DryRun:  true,
 			AbortProgram: program.Program{
 				&opcode.ResetCurrentBranchToSHA{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
@@ -47,6 +48,7 @@ func TestRunState(t *testing.T) {
 		want := `
 {
   "Command": "sync",
+  "DryRun": true,
   "IsUndo": false,
   "AbortProgram": [
     {

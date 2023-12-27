@@ -63,6 +63,7 @@ func executeAppend(arg string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "append",
+		DryRun:              false,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          appendProgram(config),
 	}

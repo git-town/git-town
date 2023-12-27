@@ -18,7 +18,6 @@ type GitTown struct {
 	configdomain.CachedAccess // access to the Git configuration settings
 	configdomain.Config       // the merged configuration data
 	configFile                configdomain.PartialConfig
-	DryRun                    bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache            configdomain.OriginURLCache
 }
 
@@ -183,7 +182,7 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner, dryrun bool) (*GitTown, error) {
+func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner) (*GitTown, error) {
 	configFile, err := configdomain.LoadConfigFile()
 	if err != nil {
 		return nil, err
@@ -196,7 +195,6 @@ func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner, dr
 		CachedAccess:   configdomain.NewCachedAccess(fullCache, runner),
 		Config:         config,
 		configFile:     configFile,
-		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
 	}, nil
 }

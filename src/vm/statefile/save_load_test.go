@@ -38,6 +38,7 @@ func TestLoadSave(t *testing.T) {
 			Command:      "command",
 			IsUndo:       true,
 			AbortProgram: program.Program{},
+			DryRun:       true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -172,6 +173,7 @@ func TestLoadSave(t *testing.T) {
 		wantJSON := `
 {
   "Command": "command",
+  "DryRun": true,
   "IsUndo": true,
   "AbortProgram": [],
   "RunProgram": [
