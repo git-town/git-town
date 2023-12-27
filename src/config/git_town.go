@@ -94,6 +94,12 @@ func (self *GitTown) RemoveFromPerennialBranches(branch gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(self.Config.PerennialBranches)
 }
 
+// RemoveParent removes the parent branch entry for the given branch from the Git configuration.
+func (self *GitTown) RemoveParent(branch gitdomain.LocalBranchName) {
+	self.LocalConfig.Lineage.RemoveBranch(branch)
+	_ = self.RemoveLocalConfigValue(configdomain.NewParentKey(branch))
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *GitTown) SetMainBranch(branch gitdomain.LocalBranchName) error {

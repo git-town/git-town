@@ -1,9 +1,5 @@
 package configdomain
 
-import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-)
-
 // CachedAccess provides access to the local and global configuration data stored in Git metadata
 // made efficient through an in-memory cache.
 type CachedAccess struct {
@@ -24,14 +20,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 // Reload refreshes the cached configuration information.
 func (self *CachedAccess) Reload() {
 	self.FullCache, _ = LoadFullCache(&self.Access)
-}
-
-// RemoveParent removes the parent branch entry for the given branch
-// from the Git configuration.
-func (self *CachedAccess) RemoveParent(branch gitdomain.LocalBranchName) {
-	self.LocalConfig.Lineage.RemoveBranch(branch)
-	// ignoring errors here because the entry might not exist
-	_ = self.RemoveLocalConfigValue(NewParentKey(branch))
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
