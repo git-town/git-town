@@ -8,7 +8,10 @@ Feature: configure the main branch
   Scenario: empty setting
     Given local Git Town setting "main-branch" is ""
     When I run "git-town config main-branch main"
-    Then it prints no output
+    Then it prints:
+      """
+      NOTICE: cleaned up empty configuration entry "git-town.main-branch"
+      """
     And local Git Town setting "main-branch" is now "main"
 
   Scenario: previously configured

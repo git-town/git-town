@@ -201,7 +201,7 @@ func TestBackendCommands(t *testing.T) {
 		must.NoError(t, err)
 		runtime.GitTown.Reload()
 		must.True(t, runtime.GitTown.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
-		lineageHave := runtime.GitTown.Lineage(runtime.GitTown.RemoveLocalConfigValue)
+		lineageHave := runtime.GitTown.Lineage
 		lineageWant := configdomain.Lineage{}
 		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
 		must.Eq(t, lineageWant, lineageHave)

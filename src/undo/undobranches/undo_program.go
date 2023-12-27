@@ -15,7 +15,7 @@ func DetermineUndoBranchesProgram(initialBranchesSnapshot gitdomain.BranchesStat
 	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
-		Lineage:                  runner.GitTown.Lineage(runner.GitTown.RemoveLocalConfigValue),
+		Lineage:                  runner.GitTown.Lineage,
 		BranchTypes:              runner.GitTown.BranchTypes(),
 		InitialBranch:            initialBranchesSnapshot.Active,
 		FinalBranch:              finalBranchesSnapshot.Active,

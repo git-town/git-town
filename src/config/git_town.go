@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -11,14 +10,14 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	configdomain.CachedAccess      // access to the Git configuration settings
-	configdomain.Config            // the merged configuration data
+	configdomain.CachedAccess // access to the Git configuration settings
+	configdomain.Config       // the merged configuration data
+	configFile                configdomain.PartialConfig
 	DryRun                    bool // single source of truth for whether to dry-run Git commands in this repo
 	originURLCache            configdomain.OriginURLCache
 }
@@ -58,23 +57,6 @@ func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.Config.MainBranch
 }
 
-// Lineage provides the configured ancestry information for this Git repo.
-func (self *GitTown) Lineage(deleteEntry func(configdomain.Key) error) configdomain.Lineage {
-	lineage := configdomain.Lineage{}
-	for _, key := range self.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
-		parentName := self.LocalConfigValue(key)
-		if parentName == "" {
-			_ = deleteEntry(key)
-			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, child)
-		} else {
-			parent := gitdomain.NewLocalBranchName(parentName)
-			lineage[child] = parent
-		}
-	}
-	return lineage
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.
@@ -95,6 +77,15 @@ func (self *GitTown) OriginURLString() string {
 	}
 	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
 	return strings.TrimSpace(output)
+}
+
+func (self *GitTown) Reload() {
+	self.CachedAccess.Reload()
+	self.Config = configdomain.DefaultConfig()
+	// TODO: merge this code with the similar code in NewGitTown.
+	self.Config.Merge(self.configFile)
+	self.Config.Merge(self.GlobalConfig)
+	self.Config.Merge(self.LocalConfig)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -133,6 +124,7 @@ func (self *GitTown) SetOffline(value configdomain.Offline) error {
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *GitTown) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
+	self.Lineage[branch] = parentBranch
 	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
 
@@ -202,6 +194,7 @@ func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner, dr
 	return &GitTown{
 		CachedAccess:   configdomain.NewCachedAccess(fullCache, runner),
 		Config:         config,
+		configFile:     configFile,
 		DryRun:         dryrun,
 		originURLCache: configdomain.OriginURLCache{},
 	}, nil

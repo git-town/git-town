@@ -252,7 +252,7 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	self.GitTown.Reload()
-	lineage := self.GitTown.Lineage(self.GitTown.RemoveLocalConfigValue)
+	lineage := self.GitTown.Lineage
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())

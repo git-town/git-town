@@ -3,6 +3,8 @@ package configdomain
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 type Runner interface {
@@ -47,12 +49,15 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
 			configKey = &newKey
 		}
+		if key != KeyPerennialBranches.String() && value == "" {
+			_ = self.RemoveLocalConfigValue(*configKey)
+			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
+			continue
+		}
 		cache[*configKey] = value
-		if strings.HasPrefix(configKey.String(), "git-town.") || strings.HasPrefix(configKey.String(), "alias.") {
-			err := config.Add(*configKey, value)
-			if err != nil {
-				return cache, config, err
-			}
+		err := config.Add(*configKey, value)
+		if err != nil {
+			return cache, config, err
 		}
 	}
 	return cache, config, nil
@@ -64,8 +69,7 @@ func (self *Access) RemoveGlobalConfigValue(key Key) error {
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key Key) error {
-	_ = self.Run("git", "config", "--unset", key.String())
-	return nil
+	return self.Run("git", "config", "--unset", key.String())
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
