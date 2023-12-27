@@ -37,12 +37,7 @@ func (self *GitTown) BranchTypes() configdomain.BranchTypes {
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
-	for key := range self.LocalCache {
-		if strings.HasPrefix(key.String(), "git-town-branch.") {
-			return true
-		}
-	}
-	return false
+	return len(self.Config.Lineage) == 0
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
