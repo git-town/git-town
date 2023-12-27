@@ -26,10 +26,6 @@ func NewCachedAccess(fullCache FullCache, runner Runner) CachedAccess {
 	}
 }
 
-func (self CachedAccess) GlobalConfigValue(key Key) string {
-	return self.GlobalCache[key]
-}
-
 func (self CachedAccess) LocalConfigValue(key Key) string {
 	return self.LocalCache[key]
 }

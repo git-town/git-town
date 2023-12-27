@@ -286,6 +286,14 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	return branches, nil
 }
 
+func (self *TestCommands) LocalGitConfig(name configdomain.Key) *string {
+	output, err := self.Query("git", "config", "--local", "--get", name.String())
+	if err != nil {
+		return nil
+	}
+	return &output
+}
+
 func (self *TestCommands) MergeBranch(branch gitdomain.LocalBranchName) error {
 	return self.Run("git", "merge", branch.String())
 }
