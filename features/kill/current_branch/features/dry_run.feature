@@ -27,11 +27,7 @@ Feature: dry-run deleting the current feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH  | COMMAND       |
-      | current | git add -A    |
-      |         | git stash     |
-      |         | git stash pop |
+    Then it runs no commands
     And the current branch is now "current"
     And the uncommitted file still exists
     And the initial commits exist
