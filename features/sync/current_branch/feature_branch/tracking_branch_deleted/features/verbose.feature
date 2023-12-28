@@ -68,13 +68,9 @@ Feature: display all executed Git commands
       | main   | frontend | git branch old {{ sha 'initial commit' }}  |
       |        | frontend | git checkout old                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/  |
-      |        | backend  | git config -lz --global                    |
-      |        | backend  | git config -lz --local                     |
-      |        | backend  | git branch -vva                            |
-      |        | backend  | git stash list                             |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and lineage exist
