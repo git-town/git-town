@@ -48,6 +48,15 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in al
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
+lint:  # runs only the linters
+	@git diff --check &
+	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
+	@tools/rta actionlint &
+	@tools/ensure_no_files_with_dashes.sh &
+	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
+	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@tools/rta golangci-lint run
+
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc
 
