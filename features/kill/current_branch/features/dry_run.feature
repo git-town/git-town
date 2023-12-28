@@ -25,7 +25,6 @@ Feature: dry-run deleting the current feature branch
     And the initial commits exist
     And the initial branches and lineage exist
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
