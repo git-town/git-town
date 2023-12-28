@@ -27,13 +27,10 @@ Feature: dry-run prepending a branch to a feature branch
     And the initial commits exist
     And the initial branches and lineage exist
 
+  @this
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND       |
-      | old    | git add -A    |
-      |        | git stash     |
-      |        | git stash pop |
+    Then it runs no commands
     And the current branch is now "old"
     And the uncommitted file still exists
     And the initial commits exist
