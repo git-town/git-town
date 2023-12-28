@@ -357,9 +357,6 @@ func (self *BackendCommands) CreateFeatureBranch(name gitdomain.LocalBranchName)
 
 // CurrentBranch provides the name of the currently checked out branch.
 func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) {
-	// if self.DryRun {
-	// 	return self.CurrentBranchCache.Value(), nil
-	// }
 	if !self.CurrentBranchCache.Initialized() {
 		currentBranch, err := self.CurrentBranchUncached()
 		if err != nil {
