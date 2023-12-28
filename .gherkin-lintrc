@@ -19,7 +19,7 @@
       "scenario tag": 2
     }
   ],
-  "keywords-in-logical-order": "on",
+  "keywords-in-logical-order": "off",
   "new-line-at-eof": [ "on", "yes" ],
   "no-background-only-scenario": "off",
   "no-dupe-scenario-names": [ "on", "in-feature" ],
