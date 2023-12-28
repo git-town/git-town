@@ -58,6 +58,7 @@ func executeHack(args []string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "hack",
+		DryRun:              false,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          appendProgram(config),
 	}

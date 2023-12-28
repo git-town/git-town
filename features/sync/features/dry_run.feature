@@ -23,6 +23,7 @@ Feature: dry run
       |         | git push                           |
     And the current branch is still "feature"
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"

@@ -82,12 +82,13 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	if err != nil {
 		panic(err)
 	}
-	gitTown, err := config.NewGitTown(gitConfig, &runner, false)
+	gitTown, err := config.NewGitTown(gitConfig, &runner)
 	if err != nil {
 		panic(err)
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
+		DryRun:             false,
 		GitTown:            gitTown,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},

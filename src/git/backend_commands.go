@@ -28,7 +28,8 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	BackendRunner                                     // executes shell commands in the directory of the Git repo
+	BackendRunner      // executes shell commands in the directory of the Git repo
+	DryRun             bool
 	*config.GitTown                                   // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	RemotesCache       *cache.Remotes                 // caches Git remotes
@@ -108,7 +109,7 @@ func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesStatus, error
 
 // CheckoutBranch checks out the Git branch with the given name.
 func (self *BackendCommands) CheckoutBranch(name gitdomain.LocalBranchName) error {
-	if !self.GitTown.DryRun {
+	if !self.DryRun {
 		err := self.CheckoutBranchUncached(name)
 		if err != nil {
 			return err
@@ -355,7 +356,7 @@ func (self *BackendCommands) CreateFeatureBranch(name gitdomain.LocalBranchName)
 
 // CurrentBranch provides the name of the currently checked out branch.
 func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) {
-	if self.GitTown.DryRun {
+	if self.DryRun {
 		return self.CurrentBranchCache.Value(), nil
 	}
 	if !self.CurrentBranchCache.Initialized() {

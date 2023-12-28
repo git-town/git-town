@@ -776,6 +776,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			cmds := git.BackendCommands{
 				BackendRunner:      runner,
+				DryRun:             false,
 				GitTown:            nil,
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 				RemotesCache:       &cache.Remotes{},

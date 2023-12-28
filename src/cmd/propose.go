@@ -75,6 +75,7 @@ func executePropose(verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "propose",
+		DryRun:              false,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          proposeProgram(config),
 	}

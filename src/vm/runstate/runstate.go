@@ -17,6 +17,7 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	Command                  string
+	DryRun                   bool
 	IsUndo                   bool            `exhaustruct:"optional"`
 	AbortProgram             program.Program `exhaustruct:"optional"`
 	RunProgram               program.Program
@@ -60,6 +61,7 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
 		Command:             self.Command,
+		DryRun:              self.DryRun,
 		IsUndo:              true,
 		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          abortProgram,
@@ -71,6 +73,7 @@ func (self *RunState) CreateAbortRunState() RunState {
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
 		Command:             self.Command,
+		DryRun:              self.DryRun,
 		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          self.AbortProgram,
 	}
@@ -99,6 +102,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
 		Command:                  self.Command,
+		DryRun:                   self.DryRun,
 		InitialActiveBranch:      self.InitialActiveBranch,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,

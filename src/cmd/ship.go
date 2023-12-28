@@ -98,6 +98,7 @@ func executeShip(args []string, message string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "ship",
+		DryRun:              false,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          shipProgram(config, message),
 	}

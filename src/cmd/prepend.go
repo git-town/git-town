@@ -65,6 +65,7 @@ func executePrepend(args []string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "prepend",
+		DryRun:              false,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          prependProgram(config),
 	}
