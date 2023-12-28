@@ -26,20 +26,22 @@ Does not delete perennial branches nor the main branch.`
 
 func killCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: killDesc,
 		Long:  cmdhelpers.Long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeKill(args, readVerboseFlag(cmd))
+			return executeKill(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeKill(args []string, verbose bool) error {
+func executeKill(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -51,7 +53,7 @@ func executeKill(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -83,6 +85,7 @@ func executeKill(args []string, verbose bool) error {
 type killConfig struct {
 	branchToKill   gitdomain.BranchInfo
 	branchWhenDone gitdomain.LocalBranchName
+	dryRun         bool
 	hasOpenChanges bool
 	initialBranch  gitdomain.LocalBranchName
 	isOnline       configdomain.Online
@@ -92,7 +95,7 @@ type killConfig struct {
 	previousBranch gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -147,6 +150,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	return &killConfig{
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
+		dryRun:         dryRun,
 		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
 		isOnline:       repo.IsOffline.ToOnline(),
@@ -165,6 +169,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 	prog := program.Program{}
 	killFeatureBranch(&prog, &finalUndoProgram, *config)
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.initialBranch},

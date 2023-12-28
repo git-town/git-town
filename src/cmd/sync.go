@@ -87,6 +87,7 @@ func executeSync(all, dryRun, verbose bool) error {
 			SyncFeatureStrategy:   config.syncFeatureStrategy,
 		},
 		BranchesToSync: config.branchesToSync,
+		DryRun:         dryRun,
 		HasOpenChanges: config.hasOpenChanges,
 		InitialBranch:  config.branches.Initial,
 		PreviousBranch: config.previousBranch,

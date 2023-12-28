@@ -12,6 +12,7 @@ import (
 
 func newPullRequestCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -21,11 +22,12 @@ func newPullRequestCommand() *cobra.Command {
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printDeprecationNotice()
-			result := executePropose(readVerboseFlag(cmd))
+			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
 			printDeprecationNotice()
 			return result
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
