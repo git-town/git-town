@@ -37,6 +37,12 @@ func (self *Config) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
+// HostingService provides the type-safe name of the code hosting connector to use.
+// This function caches its result and can be queried repeatedly.
+func (self *Config) HostingService() (Hosting, error) {
+	return NewHosting(self.CodeHostingPlatformName)
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {

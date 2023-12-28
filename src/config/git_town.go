@@ -28,12 +28,6 @@ func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-// HostingService provides the type-safe name of the code hosting connector to use.
-// This function caches its result and can be queried repeatedly.
-func (self *GitTown) HostingService() (configdomain.Hosting, error) {
-	return configdomain.NewHosting(self.Config.CodeHostingPlatformName)
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
