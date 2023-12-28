@@ -28,11 +28,6 @@ func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *GitTown) ContainsLineage() bool {
-	return len(self.Config.Lineage) > 0
-}
-
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *GitTown) HostingService() (configdomain.Hosting, error) {

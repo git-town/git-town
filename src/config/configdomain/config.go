@@ -32,6 +32,11 @@ func (self *Config) BranchTypes() BranchTypes {
 	}
 }
 
+// ContainsLineage indicates whether this configuration contains any lineage entries.
+func (self *Config) ContainsLineage() bool {
+	return len(self.Lineage) > 0
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
