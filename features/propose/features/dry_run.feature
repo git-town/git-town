@@ -1,8 +1,8 @@
 Feature: dry-run proposing changes
 
   Scenario: proposing changes
-    Given the current branch is a feature branch "feature"
-    And tool "open" is installed
+    Given tool "open" is installed
+    And the current branch is a feature branch "feature"
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose --dry-run"
     Then it runs the commands
