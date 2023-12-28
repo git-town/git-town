@@ -29,7 +29,11 @@ Feature: dry run appending a new feature branch to an existing feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH   | COMMAND       |
+      | existing | git add -A    |
+      |          | git stash     |
+      |          | git stash pop |
     And the current branch is still "existing"
     And the uncommitted file still exists
     And the initial commits exist
