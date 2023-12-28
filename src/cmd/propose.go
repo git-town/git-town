@@ -59,7 +59,7 @@ func proposeCommand() *cobra.Command {
 func executePropose(dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: true,
@@ -77,7 +77,7 @@ func executePropose(dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "propose",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          proposeProgram(config),
 	}
