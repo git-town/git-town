@@ -1,0 +1,42 @@
+Feature: dry-run hacking a new feature branch
+
+  Background:
+    Given the current branch is a feature branch "existing"
+    And the commits
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | origin   | main commit     |
+      | existing | local    | existing commit |
+    And an uncommitted file
+    When I run "git-town hack new --dry-run"
+
+  @debug @this
+  Scenario: result
+    Then it runs the commands
+      | BRANCH   | COMMAND                  |
+      | existing | git fetch --prune --tags |
+      |          | git add -A               |
+      |          | git stash                |
+      |          | git checkout main        |
+      | main     | git rebase origin/main   |
+      |          | git branch new main      |
+      |          | git checkout new         |
+      | new      | git stash pop            |
+    And the current branch is still "existing"
+    And the uncommitted file still exists
+    And the initial commits exist
+    And the initial branches and lineage exist
+
+  Scenario: undo
+    When I run "git town undo"
+    Then it runs the commands
+      | BRANCH   | COMMAND                                     |
+      | new      | git add -A                                  |
+      |          | git stash                                   |
+      |          | git checkout main                           |
+      | main     | git reset --hard {{ sha 'initial commit' }} |
+      |          | git checkout existing                       |
+      | existing | git branch -D new                           |
+      |          | git stash pop                               |
+    And the current branch is now "existing"
+    And the initial commits exist
+    And the initial branches and lineage exist

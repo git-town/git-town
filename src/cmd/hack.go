@@ -45,7 +45,7 @@ func hackCmd() *cobra.Command {
 func executeHack(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -60,7 +60,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "hack",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          appendProgram(config),
 	}

@@ -36,11 +36,11 @@ func (self *FrontendCommands) AbortRebase() error {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName) error {
+	self.SetCachedCurrentBranch(name)
 	err := self.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
-	self.SetCachedCurrentBranch(name)
 	return nil
 }
 
