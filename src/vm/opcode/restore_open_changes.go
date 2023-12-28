@@ -9,10 +9,14 @@ import (
 
 // RestoreOpenChanges restores stashed away changes into the workspace.
 type RestoreOpenChanges struct {
+	DryRun bool
 	undeclaredOpcodeMethods
 }
 
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
+	if self.DryRun {
+		return args.Runner.Frontend.PopStash()
+	}
 	stashSize, err := args.Runner.Backend.StashSize()
 	if err != nil {
 		return err

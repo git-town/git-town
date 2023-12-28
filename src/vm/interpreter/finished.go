@@ -13,6 +13,7 @@ import (
 func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
+		DryRun:                   args.RunState.DryRun,
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,

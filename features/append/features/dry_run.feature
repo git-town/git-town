@@ -21,6 +21,7 @@ Feature: dry run appending a new feature branch to an existing feature branch
       |          | git merge --no-edit main            |
       |          | git branch new existing             |
       |          | git checkout new                    |
+      | new      | git stash pop                       |
     And the current branch is still "existing"
     And the uncommitted file still exists
     And the initial commits exist

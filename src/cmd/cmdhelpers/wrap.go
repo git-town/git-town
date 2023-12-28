@@ -9,15 +9,12 @@ import (
 // Wrap makes the given program perform housekeeping before and after it executes.
 // TODO: only wrap if the program actually contains any opcodes.
 func Wrap(program *program.Program, options WrapOptions) {
-	if options.DryRun {
-		return
-	}
 	program.Add(&opcode.PreserveCheckoutHistory{
 		PreviousBranchCandidates: options.PreviousBranchCandidates,
 	})
 	if options.StashOpenChanges {
 		program.Prepend(&opcode.StashOpenChanges{})
-		program.Add(&opcode.RestoreOpenChanges{})
+		program.Add(&opcode.RestoreOpenChanges{DryRun: options.DryRun})
 	}
 }
 

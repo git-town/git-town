@@ -128,7 +128,7 @@ func TestLoadSave(t *testing.T) {
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
-				&opcode.RestoreOpenChanges{},
+				&opcode.RestoreOpenChanges{DryRun: true},
 				&opcode.RevertCommit{
 					SHA: gitdomain.NewSHA("123456"),
 				},
@@ -377,7 +377,9 @@ func TestLoadSave(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     },
     {
-      "data": {},
+      "data": {
+        "DryRun": true
+      },
       "type": "RestoreOpenChanges"
     },
     {

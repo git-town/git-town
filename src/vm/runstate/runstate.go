@@ -92,7 +92,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(opcode)
 		}
 	}
-	result.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{})
+	result.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{DryRun: self.DryRun})
 	return result
 }
 

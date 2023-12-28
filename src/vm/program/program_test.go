@@ -115,14 +115,14 @@ func TestProgram(t *testing.T) {
 			t.Parallel()
 			have := program.Program{
 				&opcode.AbortMerge{},
-				&opcode.RestoreOpenChanges{},
+				&opcode.RestoreOpenChanges{DryRun: false},
 				&opcode.AbortRebase{},
 			}
-			have.MoveToEnd(&opcode.RestoreOpenChanges{})
+			have.MoveToEnd(&opcode.RestoreOpenChanges{DryRun: false})
 			want := []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
-				&opcode.RestoreOpenChanges{},
+				&opcode.RestoreOpenChanges{DryRun: false},
 			}
 			must.Eq(t, want, have)
 		})
@@ -238,9 +238,9 @@ func TestProgram(t *testing.T) {
 		t.Run("prepend a populated list", func(t *testing.T) {
 			t.Parallel()
 			give := program.Program{&opcode.AbortMerge{}}
-			other := program.Program{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{}}
+			other := program.Program{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{DryRun: false}}
 			give.PrependProgram(other)
-			want := []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{}, &opcode.AbortMerge{}}
+			want := []shared.Opcode{&opcode.StashOpenChanges{}, &opcode.RestoreOpenChanges{DryRun: false}, &opcode.AbortMerge{}}
 			must.Eq(t, want, give)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {
