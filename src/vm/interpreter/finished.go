@@ -12,12 +12,7 @@ import (
 // finished is called when executing all steps has successfully finished.
 func finished(args ExecuteArgs) error {
 	if args.RunState.IsUndo {
-		err := statefile.Delete(args.RootDir)
-		if err != nil {
-			return fmt.Errorf(messages.RunstateDeleteProblem, err)
-		}
-		print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
-		return nil
+		return finishedUndoCommand(args)
 	}
 	args.RunState.MarkAsFinished()
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
@@ -36,6 +31,15 @@ func finished(args ExecuteArgs) error {
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
+	}
+	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	return nil
+}
+
+func finishedUndoCommand(args ExecuteArgs) error {
+	err := statefile.Delete(args.RootDir)
+	if err != nil {
+		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}
 	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	return nil
