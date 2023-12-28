@@ -1,10 +1,8 @@
 Feature: dry-run proposing changes
 
-  Background:
-    Given tool "open" is installed
-
-  Scenario: normal origin
+  Scenario: proposing changes
     Given the current branch is a feature branch "feature"
+    And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose --dry-run"
     Then it runs the commands
@@ -17,3 +15,4 @@ Feature: dry-run proposing changes
       |         | git merge --no-edit main                                           |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And the current branch is still "feature"
+    And the initial branches and lineage exist
