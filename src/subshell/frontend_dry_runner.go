@@ -3,6 +3,7 @@ package subshell
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -18,9 +19,15 @@ type FrontendDryRunner struct {
 
 // Run runs the given command in this ShellRunner's directory.
 func (self *FrontendDryRunner) Run(executable string, args ...string) error {
-	currentBranch, err := self.GetCurrentBranch()
-	if err != nil {
-		return err
+	var currentBranch gitdomain.LocalBranchName
+	if self.OmitBranchNames {
+		currentBranch = gitdomain.EmptyLocalBranchName()
+	} else {
+		var err error
+		currentBranch, err = self.GetCurrentBranch()
+		if err != nil {
+			return err
+		}
 	}
 	if self.PrintCommands {
 		PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)

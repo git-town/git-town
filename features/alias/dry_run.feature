@@ -1,6 +1,5 @@
 Feature: dry-run shortening Git Town commands
 
-  # @this
   Scenario: inside a Git repo
     When I run "git-town aliases add --dry-run"
     Then it runs the commands
@@ -18,5 +17,5 @@ Feature: dry-run shortening Git Town commands
 
   Scenario: outside a Git repo
     Given I am outside a Git repo
-    When I run "git-town aliases add"
+    When I run "git-town aliases add --dry-run"
     Then it does not print "not a git repository"
