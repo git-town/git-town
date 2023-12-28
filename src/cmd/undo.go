@@ -163,7 +163,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		// When we run undo now, it still wants to pop the stack even though that was already done.
 		// This seems to apply only to popping the stack and switching back to the initial branch.
 		// Hence we consolidate these opcode types here.
-		undoRunState.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{DryRun: runState.DryRun})
+		undoRunState.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{})
 		undoRunState.RunProgram.RemoveAllButLast("*opcode.CheckoutIfExists")
 	}
 	return undoRunState, err

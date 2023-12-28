@@ -16,7 +16,7 @@ func Wrap(program *program.Program, options WrapOptions) {
 	}
 	if options.StashOpenChanges {
 		program.Prepend(&opcode.StashOpenChanges{})
-		program.Add(&opcode.RestoreOpenChanges{DryRun: options.DryRun})
+		program.Add(&opcode.RestoreOpenChanges{})
 	}
 }
 

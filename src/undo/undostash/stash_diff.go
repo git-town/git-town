@@ -18,10 +18,10 @@ func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
 	}
 }
 
-func (self StashDiff) Program(dryRun bool) program.Program {
+func (self StashDiff) Program() program.Program {
 	result := program.Program{}
 	for ; self.EntriesAdded > 0; self.EntriesAdded-- {
-		result.Add(&opcode.RestoreOpenChanges{DryRun: dryRun})
+		result.Add(&opcode.RestoreOpenChanges{})
 	}
 	return result
 }

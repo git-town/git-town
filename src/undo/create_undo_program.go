@@ -19,7 +19,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.InitialStashSnapshot, args.DryRun, &args.Run.Backend)
+	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.InitialStashSnapshot, &args.Run.Backend)
 	if err != nil {
 		return program.Program{}, err
 	}
