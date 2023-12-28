@@ -21,6 +21,7 @@ func finished(args ExecuteArgs) error {
 		NoPushHook:               args.NoPushHook,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
+
 	if err != nil {
 		return err
 	}

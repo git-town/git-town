@@ -9,6 +9,7 @@ Feature: dry-run hacking a new feature branch
     And an uncommitted file
     When I run "git-town hack new --dry-run"
 
+  # @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |

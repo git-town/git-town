@@ -44,7 +44,7 @@ func killCommand() *cobra.Command {
 func executeKill(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -63,7 +63,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "kill",
-		DryRun:              false,
+		DryRun:              dryRun,
 		RunProgram:          steps,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		FinalUndoProgram:    finalUndoProgram,
@@ -194,10 +194,12 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
-	sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
-		Branch:  config.branchToKill.LocalName,
-		Lineage: config.lineage,
-		Program: prog,
-		Parent:  config.branchToKillParent(),
-	})
+	if !config.dryRun {
+		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
+			Branch:  config.branchToKill.LocalName,
+			Lineage: config.lineage,
+			Program: prog,
+			Parent:  config.branchToKillParent(),
+		})
+	}
 }
