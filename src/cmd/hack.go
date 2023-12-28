@@ -26,6 +26,7 @@ See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
@@ -33,14 +34,15 @@ func hackCmd() *cobra.Command {
 		Short:   hackDesc,
 		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeHack(args, readVerboseFlag(cmd))
+			return executeHack(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeHack(args []string, verbose bool) error {
+func executeHack(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -52,7 +54,7 @@ func executeHack(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -76,7 +78,7 @@ func executeHack(args []string, verbose bool) error {
 	})
 }
 
-func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
@@ -114,6 +116,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		dryRun:                    dryRun,
 		targetBranch:              targetBranch,
 		parentBranch:              mainBranch,
 		hasOpenChanges:            repoStatus.OpenChanges,

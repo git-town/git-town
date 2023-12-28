@@ -59,7 +59,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -86,6 +86,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 type appendConfig struct {
 	branches                  configdomain.Branches
 	branchesToSync            gitdomain.BranchInfos
+	dryRun                    bool
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
@@ -102,7 +103,7 @@ type appendConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
@@ -154,6 +155,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
 		isOnline:                  repo.IsOffline.ToOnline(),
@@ -204,6 +206,7 @@ func appendProgram(config *appendConfig) program.Program {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.branches.Initial, config.previousBranch},

@@ -16,6 +16,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 		args.Program.Add(&opcode.PushTags{})
 	}
 	cmdhelpers.Wrap(args.Program, cmdhelpers.WrapOptions{
+		DryRun:                   args.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.HasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
@@ -25,6 +26,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 type BranchesProgramArgs struct {
 	BranchProgramArgs
 	BranchesToSync gitdomain.BranchInfos
+	DryRun         bool
 	HasOpenChanges bool
 	InitialBranch  gitdomain.LocalBranchName
 	PreviousBranch gitdomain.LocalBranchName
