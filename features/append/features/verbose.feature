@@ -48,8 +48,28 @@ Feature: display all executed Git commands
   Scenario: undo
     Given I ran "git-town append new"
     When I run "git-town undo --verbose"
-    Then it prints:
+    Then it runs the commands
+      | BRANCH   | TYPE     | COMMAND                                       |
+      |          | backend  | git version                                   |
+      |          | backend  | git config -lz --global                       |
+      |          | backend  | git config -lz --local                        |
+      |          | backend  | git rev-parse --show-toplevel                 |
+      |          | backend  | git stash list                                |
+      |          | backend  | git branch -vva                               |
+      |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
+      |          | backend  | git status --long --ignore-submodules         |
+      |          | backend  | git remote get-url origin                     |
+      |          | backend  | git config --unset git-town-branch.new.parent |
+      | new      | frontend | git checkout existing                         |
+      | existing | frontend | git branch -D new                             |
+      |          | backend  | git config -lz --global                       |
+      |          | backend  | git config -lz --local                        |
+      |          | backend  | git branch -vva                               |
+      |          | backend  | git stash list                                |
+    And it prints:
       """
       Ran 12 shell commands.
       """
-    And the current branch is now "existing"
+    And the current branch is still "existing"
+    And the initial commits exist
+    And the initial branches and lineage exist
