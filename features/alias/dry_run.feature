@@ -14,8 +14,28 @@ Feature: dry-run shortening Git Town commands
       | git config --global alias.repo "town repo"                   |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
+    And global Git setting "alias.append" is still ""
+    And global Git setting "alias.diff-parent" is still ""
+    And global Git setting "alias.hack" is still ""
+    And global Git setting "alias.kill" is still ""
+    And global Git setting "alias.prepend" is still ""
+    And global Git setting "alias.propose" is still ""
+    And global Git setting "alias.rename-branch" is still ""
+    And global Git setting "alias.repo" is still ""
+    And global Git setting "alias.ship" is still ""
+    And global Git setting "alias.sync" is still ""
 
   Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town aliases add --dry-run"
     Then it does not print "not a git repository"
+    And global Git setting "alias.append" is still ""
+    And global Git setting "alias.diff-parent" is still ""
+    And global Git setting "alias.hack" is still ""
+    And global Git setting "alias.kill" is still ""
+    And global Git setting "alias.prepend" is still ""
+    And global Git setting "alias.propose" is still ""
+    And global Git setting "alias.rename-branch" is still ""
+    And global Git setting "alias.repo" is still ""
+    And global Git setting "alias.ship" is still ""
+    And global Git setting "alias.sync" is still ""

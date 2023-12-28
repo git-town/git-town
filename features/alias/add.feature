@@ -14,8 +14,28 @@ Feature: shorten Git Town commands
       | git config --global alias.repo "town repo"                   |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
+    And global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.diff-parent" is now "town diff-parent"
+    And global Git setting "alias.hack" is now "town hack"
+    And global Git setting "alias.kill" is now "town kill"
+    And global Git setting "alias.prepend" is now "town prepend"
+    And global Git setting "alias.propose" is now "town propose"
+    And global Git setting "alias.rename-branch" is now "town rename-branch"
+    And global Git setting "alias.repo" is now "town repo"
+    And global Git setting "alias.ship" is now "town ship"
+    And global Git setting "alias.sync" is now "town sync"
 
   Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town aliases add"
     Then it does not print "not a git repository"
+    And global Git setting "alias.append" is now "town append"
+    And global Git setting "alias.diff-parent" is now "town diff-parent"
+    And global Git setting "alias.hack" is now "town hack"
+    And global Git setting "alias.kill" is now "town kill"
+    And global Git setting "alias.prepend" is now "town prepend"
+    And global Git setting "alias.propose" is now "town propose"
+    And global Git setting "alias.rename-branch" is now "town rename-branch"
+    And global Git setting "alias.repo" is now "town repo"
+    And global Git setting "alias.ship" is now "town ship"
+    And global Git setting "alias.sync" is now "town sync"

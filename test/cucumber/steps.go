@@ -264,6 +264,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
+		key := configdomain.NewKey(name)
+		have := state.fixture.DevRepo.GlobalCache[key]
+		if have != want {
+			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.GitTown.GlobalConfig.CodeHostingPlatformName
 		if have.String() != want {
