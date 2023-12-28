@@ -44,7 +44,6 @@ Feature: display all executed Git commands
       """
     And the current branch is now "new"
 
-  @this
   Scenario: undo
     Given I ran "git-town append new"
     When I run "git-town undo --verbose"
@@ -62,10 +61,6 @@ Feature: display all executed Git commands
       |          | backend  | git config --unset git-town-branch.new.parent |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
-      |          | backend  | git config -lz --global                       |
-      |          | backend  | git config -lz --local                        |
-      |          | backend  | git branch -vva                               |
-      |          | backend  | git stash list                                |
     And it prints:
       """
       Ran 12 shell commands.
