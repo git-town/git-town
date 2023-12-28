@@ -39,24 +39,26 @@ When run on a perennial branch
 func renameBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch", flags.FlagTypeNonPersistent)
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
 		Short: renameBranchDesc,
 		Long:  cmdhelpers.Long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeRenameBranch(args, readForceFlag(cmd), readVerboseFlag(cmd))
+			return executeRenameBranch(args, readDryRunFlag(cmd), readForceFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addForceFlag(&cmd)
 	return &cmd
 }
 
-func executeRenameBranch(args []string, force, verbose bool) error {
+func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -65,13 +67,13 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "rename-branch",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          renameBranchProgram(config),
 	}
@@ -91,6 +93,7 @@ func executeRenameBranch(args []string, force, verbose bool) error {
 
 type renameBranchConfig struct {
 	branches       configdomain.Branches
+	dryRun         bool
 	isOnline       configdomain.Online
 	lineage        configdomain.Lineage
 	mainBranch     gitdomain.LocalBranchName
@@ -100,7 +103,7 @@ type renameBranchConfig struct {
 	previousBranch gitdomain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, verbose bool) (*renameBranchConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -153,6 +156,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	return &renameBranchConfig{
 		branches:       branches,
+		dryRun:         dryRun,
 		isOnline:       repo.IsOffline.ToOnline(),
 		lineage:        lineage,
 		mainBranch:     mainBranch,
@@ -169,13 +173,15 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Add(&opcode.Checkout{Branch: config.newBranch})
 	}
-	if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
-		result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
-		result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
-	} else {
-		lineage := config.lineage
-		result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-		result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
+	if !config.dryRun {
+		if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
+			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
+		} else {
+			lineage := config.lineage
+			result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
+		}
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
@@ -186,6 +192,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	}
 	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             false,
 		StashOpenChanges:         false,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.newBranch},

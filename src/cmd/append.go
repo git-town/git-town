@@ -31,6 +31,7 @@ See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
@@ -38,17 +39,18 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAppend(args[0], readVerboseFlag(cmd))
+			return executeAppend(args[0], readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAppend(arg string, verbose bool) error {
+func executeAppend(arg string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -57,13 +59,13 @@ func executeAppend(arg string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "append",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          appendProgram(config),
 	}
@@ -84,6 +86,7 @@ func executeAppend(arg string, verbose bool) error {
 type appendConfig struct {
 	branches                  configdomain.Branches
 	branchesToSync            gitdomain.BranchInfos
+	dryRun                    bool
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
@@ -100,7 +103,7 @@ type appendConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
@@ -152,6 +155,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
 		isOnline:                  repo.IsOffline.ToOnline(),
@@ -202,6 +206,7 @@ func appendProgram(config *appendConfig) program.Program {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.branches.Initial, config.previousBranch},

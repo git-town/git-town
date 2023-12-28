@@ -40,6 +40,7 @@ where hostname matches what is in your ssh config file.`
 
 func proposeCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "propose",
 		GroupID: "basic",
@@ -47,17 +48,18 @@ func proposeCommand() *cobra.Command {
 		Short:   proposeDesc,
 		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, configdomain.KeyCodeHostingPlatform, configdomain.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePropose(readVerboseFlag(cmd))
+			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePropose(verbose bool) error {
+func executePropose(dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: true,
@@ -66,7 +68,7 @@ func executePropose(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineProposeConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineProposeConfig(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -75,7 +77,7 @@ func executePropose(verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "propose",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          proposeProgram(config),
 	}
@@ -97,6 +99,7 @@ type proposeConfig struct {
 	branches              configdomain.Branches
 	branchesToSync        gitdomain.BranchInfos
 	connector             hostingdomain.Connector
+	dryRun                bool
 	hasOpenChanges        bool
 	remotes               gitdomain.Remotes
 	isOnline              configdomain.Online
@@ -109,7 +112,7 @@ type proposeConfig struct {
 	syncFeatureStrategy   configdomain.SyncFeatureStrategy
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -176,6 +179,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, verbose bool) (*propos
 		branches:              branches,
 		branchesToSync:        branchesToSync,
 		connector:             connector,
+		dryRun:                dryRun,
 		hasOpenChanges:        repoStatus.OpenChanges,
 		remotes:               remotes,
 		isOnline:              repo.IsOffline.ToOnline(),
@@ -208,6 +212,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},

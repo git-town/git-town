@@ -42,7 +42,7 @@ func (self *Program) MoveToEnd(op shared.Opcode) {
 	result := make(Program, 0, len(*self))
 	hasOp := false
 	for _, element := range *self {
-		if element == op {
+		if reflect.DeepEqual(element, op) {
 			hasOp = true
 		} else {
 			result = append(result, element)

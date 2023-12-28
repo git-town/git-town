@@ -25,6 +25,7 @@ This can conflict with other tools that also define Git aliases.`
 
 func aliasesCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
@@ -32,17 +33,18 @@ func aliasesCommand() *cobra.Command {
 		Short:   aliasesDesc,
 		Long:    cmdhelpers.Long(aliasesDesc, aliasesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAliases(args[0], readVerboseFlag(cmd))
+			return executeAliases(args[0], readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAliases(arg string, verbose bool) error {
+func executeAliases(arg string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  true,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -62,6 +64,10 @@ func executeAliases(arg string, verbose bool) error {
 
 func addAliases(run *git.ProdRunner) error {
 	for _, alias := range configdomain.AliasableCommands() {
+		existingAlias := run.Config.Aliases[alias.Key()]
+		if existingAlias != "" {
+			continue
+		}
 		err := run.Frontend.SetGitAlias(alias)
 		if err != nil {
 			return err

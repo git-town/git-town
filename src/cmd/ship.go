@@ -55,6 +55,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "ship",
 		GroupID: "basic",
@@ -62,18 +63,19 @@ func shipCmd() *cobra.Command {
 		Short:   shipDesc,
 		Long:    cmdhelpers.Long(shipDesc, fmt.Sprintf(shipHelp, configdomain.KeyGithubToken, configdomain.KeyShipDeleteTrackingBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeShip(args, readMessageFlag(cmd), readVerboseFlag(cmd))
+			return executeShip(args, readMessageFlag(cmd), readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	addMessageFlag(&cmd)
 	return &cmd
 }
 
-func executeShip(args []string, message string, verbose bool) error {
+func executeShip(args []string, message string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -82,7 +84,7 @@ func executeShip(args []string, message string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -98,7 +100,7 @@ func executeShip(args []string, message string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "ship",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          shipProgram(config, message),
 	}
@@ -120,6 +122,7 @@ type shipConfig struct {
 	branches                 configdomain.Branches
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
+	dryRun                   bool
 	targetBranch             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
@@ -141,7 +144,7 @@ type shipConfig struct {
 	syncBeforeShip           configdomain.SyncBeforeShip
 }
 
-func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	pushHook := repo.Runner.GitTown.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
@@ -254,6 +257,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	return &shipConfig{
 		branches:                 branches,
 		connector:                connector,
+		dryRun:                   dryRun,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -358,7 +362,9 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		}
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
-	prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+	if !config.dryRun {
+		prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+	}
 	for _, child := range config.childBranches {
 		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
@@ -366,6 +372,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         !config.isShippingInitialBranch && config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},

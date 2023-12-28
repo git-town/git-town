@@ -44,8 +44,10 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	if err != nil {
 		return fmt.Errorf(messages.GitUserProblem, err)
 	}
-	if err = args.Runner.Backend.CommentOutSquashCommitMessage(""); err != nil {
-		return fmt.Errorf(messages.SquashMessageProblem, err)
+	if !args.Runner.DryRun {
+		if err = args.Runner.Backend.CommentOutSquashCommitMessage(""); err != nil {
+			return fmt.Errorf(messages.SquashMessageProblem, err)
+		}
 	}
 	if repoAuthor == author {
 		author = ""

@@ -82,7 +82,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	if err != nil {
 		panic(err)
 	}
-	gitTown, err := config.NewGitTown(gitConfig, &runner)
+	gitTown, err := config.NewGitTown(gitConfig, false, &runner)
 	if err != nil {
 		panic(err)
 	}

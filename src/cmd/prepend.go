@@ -33,6 +33,7 @@ See "sync" for upstream remote options.
 
 func prependCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
@@ -40,17 +41,18 @@ func prependCommand() *cobra.Command {
 		Short:   prependDesc,
 		Long:    cmdhelpers.Long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePrepend(args, readVerboseFlag(cmd))
+			return executePrepend(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executePrepend(args []string, verbose bool) error {
+func executePrepend(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -59,13 +61,13 @@ func executePrepend(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determinePrependConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
 	runState := runstate.RunState{
 		Command:             "prepend",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          prependProgram(config),
 	}
@@ -86,6 +88,7 @@ func executePrepend(args []string, verbose bool) error {
 type prependConfig struct {
 	branches                  configdomain.Branches
 	branchesToSync            gitdomain.BranchInfos
+	dryRun                    bool
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
 	isOnline                  configdomain.Online
@@ -102,7 +105,7 @@ type prependConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*prependConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.GitTown.Lineage
 	fc := execute.FailureCollector{}
 	pushHook := repo.Runner.GitTown.PushHook
@@ -156,6 +159,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, verbose
 	return &prependConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
 		isOnline:                  repo.IsOffline.ToOnline(),
@@ -212,6 +216,7 @@ func prependProgram(config *prependConfig) program.Program {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},

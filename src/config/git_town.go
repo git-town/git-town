@@ -18,6 +18,7 @@ type GitTown struct {
 	configdomain.CachedAccess // access to the Git configuration settings
 	configdomain.Config       // the merged configuration data
 	configFile                configdomain.PartialConfig
+	DryRun                    bool
 	originURLCache            configdomain.OriginURLCache
 }
 
@@ -124,6 +125,9 @@ func (self *GitTown) SetOffline(value configdomain.Offline) error {
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *GitTown) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {
+	if self.DryRun {
+		return nil
+	}
 	self.Lineage[branch] = parentBranch
 	return self.SetLocalConfigValue(configdomain.NewParentKey(branch), parentBranch.String())
 }
@@ -182,7 +186,7 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner) (*GitTown, error) {
+func NewGitTown(fullCache configdomain.FullCache, dryRun bool, runner configdomain.Runner) (*GitTown, error) {
 	configFile, err := configdomain.LoadConfigFile()
 	if err != nil {
 		return nil, err
@@ -195,6 +199,7 @@ func NewGitTown(fullCache configdomain.FullCache, runner configdomain.Runner) (*
 		CachedAccess:   configdomain.NewCachedAccess(fullCache, runner),
 		Config:         config,
 		configFile:     configFile,
+		DryRun:         dryRun,
 		originURLCache: configdomain.OriginURLCache{},
 	}, nil
 }

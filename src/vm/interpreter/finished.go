@@ -14,8 +14,12 @@ func finished(args ExecuteArgs) error {
 	if args.RunState.IsUndo {
 		return finishedUndoCommand(args)
 	}
+	if args.RunState.DryRun {
+		return finishedDryRunCommand(args)
+	}
 	args.RunState.MarkAsFinished()
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
+		DryRun:                   args.RunState.DryRun,
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
@@ -29,6 +33,16 @@ func finished(args ExecuteArgs) error {
 	args.RunState.UndoProgram.AddProgram(undoProgram)
 	args.RunState.UndoProgram.AddProgram(args.RunState.FinalUndoProgram)
 	err = statefile.Save(args.RunState, args.RootDir)
+	if err != nil {
+		return fmt.Errorf(messages.RunstateSaveProblem, err)
+	}
+	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
+	return nil
+}
+
+func finishedDryRunCommand(args ExecuteArgs) error {
+	args.RunState.MarkAsFinished()
+	err := statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
 	}
