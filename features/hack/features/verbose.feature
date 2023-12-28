@@ -58,12 +58,8 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
-      |        | backend  | git config -lz --global                       |
-      |        | backend  | git config -lz --local                        |
-      |        | backend  | git branch -vva                               |
-      |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 18 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "main"
