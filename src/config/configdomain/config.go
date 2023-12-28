@@ -43,6 +43,12 @@ func (self *Config) HostingService() (Hosting, error) {
 	return NewHosting(self.CodeHostingPlatformName)
 }
 
+// IsMainBranch indicates whether the branch with the given name
+// is the main branch of the repository.
+func (self *Config) IsMainBranch(branch gitdomain.LocalBranchName) bool {
+	return branch == self.MainBranch
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
