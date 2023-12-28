@@ -61,13 +61,9 @@ Feature: display all executed Git commands
       |          | backend  | git config --unset git-town-branch.new.parent |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
-      |          | backend  | git config -lz --global                       |
-      |          | backend  | git config -lz --local                        |
-      |          | backend  | git branch -vva                               |
-      |          | backend  | git stash list                                |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is still "existing"
     And the initial commits exist

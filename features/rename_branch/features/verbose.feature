@@ -66,12 +66,8 @@ Feature: display all executed Git commands
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout old                              |
-      |        | backend  | git config -lz --global                       |
-      |        | backend  | git config -lz --local                        |
-      |        | backend  | git branch -vva                               |
-      |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 19 shell commands.
       """
     And the current branch is now "old"
