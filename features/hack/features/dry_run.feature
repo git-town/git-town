@@ -9,7 +9,6 @@ Feature: dry-run hacking a new feature branch
     And an uncommitted file
     When I run "git-town hack new --dry-run"
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                  |
@@ -29,14 +28,10 @@ Feature: dry-run hacking a new feature branch
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                                     |
-      | new      | git add -A                                  |
-      |          | git stash                                   |
-      |          | git checkout main                           |
-      | main     | git reset --hard {{ sha 'initial commit' }} |
-      |          | git checkout existing                       |
-      | existing | git branch -D new                           |
-      |          | git stash pop                               |
-    And the current branch is now "existing"
+      | BRANCH   | COMMAND       |
+      | existing | git add -A    |
+      |          | git stash     |
+      |          | git stash pop |
+    And the current branch is still "existing"
     And the initial commits exist
     And the initial branches and lineage exist
