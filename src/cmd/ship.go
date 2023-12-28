@@ -75,7 +75,7 @@ func shipCmd() *cobra.Command {
 func executeShip(args []string, message string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -100,7 +100,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "ship",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          shipProgram(config, message),
 	}
@@ -362,7 +362,9 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		}
 	}
 	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
-	prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+	if !config.dryRun {
+		prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+	}
 	for _, child := range config.childBranches {
 		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
