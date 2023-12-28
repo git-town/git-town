@@ -58,7 +58,7 @@ func renameBranchCommand() *cobra.Command {
 func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -73,7 +73,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "rename-branch",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          renameBranchProgram(config),
 	}
@@ -173,13 +173,15 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 	if config.branches.Initial == config.oldBranch.LocalName {
 		result.Add(&opcode.Checkout{Branch: config.newBranch})
 	}
-	if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
-		result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
-		result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
-	} else {
-		lineage := config.lineage
-		result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-		result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
+	if !config.dryRun {
+		if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
+			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
+		} else {
+			lineage := config.lineage
+			result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
+		}
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
