@@ -31,6 +31,7 @@ See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
@@ -38,17 +39,18 @@ func appendCmd() *cobra.Command {
 		Short:   appendDesc,
 		Long:    cmdhelpers.Long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeAppend(args[0], readVerboseFlag(cmd))
+			return executeAppend(args[0], readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
+	addDryRunFlag(&cmd)
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeAppend(arg string, verbose bool) error {
+func executeAppend(arg string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
-		DryRun:           false,
+		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
 		ValidateIsOnline: false,
@@ -63,7 +65,7 @@ func executeAppend(arg string, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		Command:             "append",
-		DryRun:              false,
+		DryRun:              dryRun,
 		InitialActiveBranch: initialBranchesSnapshot.Active,
 		RunProgram:          appendProgram(config),
 	}

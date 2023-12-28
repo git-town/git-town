@@ -24,6 +24,7 @@ func (self *FrontendDryRunner) Run(executable string, args ...string) error {
 	}
 	if self.PrintCommands {
 		PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)
+		fmt.Println("(dry run)")
 	}
 	return nil
 }
