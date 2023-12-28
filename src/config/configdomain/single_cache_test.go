@@ -26,19 +26,4 @@ func TestSingleCache(t *testing.T) {
 		must.EqOp(t, "A", original[alpha])
 		must.EqOp(t, "B", original[beta])
 	})
-
-	t.Run("KeysMatching", func(t *testing.T) {
-		t.Parallel()
-		cache := configdomain.SingleCache{
-			configdomain.NewKey("key1"):  "A",
-			configdomain.NewKey("key2"):  "B",
-			configdomain.NewKey("other"): "other",
-		}
-		have := cache.KeysMatching("key")
-		want := []configdomain.Key{
-			configdomain.NewKey("key1"),
-			configdomain.NewKey("key2"),
-		}
-		must.Eq(t, want, have)
-	})
 }
