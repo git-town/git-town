@@ -1,4 +1,4 @@
-Feature: dry-run shortening Git Town commands
+Feature: dry-run prints the commands but does not add or remove aliases
 
   Scenario: dry-run adding aliases
     When I run "git-town aliases add --dry-run"
@@ -28,7 +28,18 @@ Feature: dry-run shortening Git Town commands
   Scenario: dry-run removing aliases
     Given I ran "git-town aliases add"
     When I run "git-town aliases remove --dry-run"
-    Then it does not print "not a git repository"
+    Then it runs the commands
+      | COMMAND                                         |
+      | git config --global --unset alias.append        |
+      | git config --global --unset alias.diff-parent   |
+      | git config --global --unset alias.hack          |
+      | git config --global --unset alias.kill          |
+      | git config --global --unset alias.prepend       |
+      | git config --global --unset alias.propose       |
+      | git config --global --unset alias.rename-branch |
+      | git config --global --unset alias.repo          |
+      | git config --global --unset alias.ship          |
+      | git config --global --unset alias.sync          |
     And global Git setting "alias.append" is still "town append"
     And global Git setting "alias.diff-parent" is still "town diff-parent"
     And global Git setting "alias.hack" is still "town hack"
