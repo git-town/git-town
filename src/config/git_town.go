@@ -28,13 +28,6 @@ func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-func (self *GitTown) BranchTypes() configdomain.BranchTypes {
-	return configdomain.BranchTypes{
-		MainBranch:        self.Config.MainBranch,
-		PerennialBranches: self.Config.PerennialBranches,
-	}
-}
-
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *GitTown) ContainsLineage() bool {
 	return len(self.Config.Lineage) > 0

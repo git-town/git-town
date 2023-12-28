@@ -25,6 +25,13 @@ type Config struct {
 	SyncUpstream              SyncUpstream
 }
 
+func (self *Config) BranchTypes() BranchTypes {
+	return BranchTypes{
+		MainBranch:        self.MainBranch,
+		PerennialBranches: self.PerennialBranches,
+	}
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
