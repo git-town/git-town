@@ -79,12 +79,8 @@ Feature: display all executed Git commands
       |        | frontend | git push -u origin feature                     |
       |        | frontend | git checkout feature                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/      |
-      |        | backend  | git config -lz --global                        |
-      |        | backend  | git config -lz --local                         |
-      |        | backend  | git branch -vva                                |
-      |        | backend  | git stash list                                 |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 18 shell commands.
       """
     And the current branch is now "feature"

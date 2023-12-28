@@ -65,12 +65,8 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
-      |        | backend  | git config -lz --global                          |
-      |        | backend  | git config -lz --local                           |
-      |        | backend  | git branch -vva                                  |
-      |        | backend  | git stash list                                   |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is now "old"
