@@ -1,6 +1,7 @@
-Feature: shorten Git Town commands
+Feature: setting global aliases outside a Git repo
 
-  Scenario: inside a Git repo
+  Scenario: outside a Git repo
+    Given I am outside a Git repo
     When I run "git-town aliases add"
     Then it runs the commands
       | COMMAND                                                      |
@@ -14,6 +15,7 @@ Feature: shorten Git Town commands
       | git config --global alias.repo "town repo"                   |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
+    And it does not print "not a git repository"
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -25,17 +27,27 @@ Feature: shorten Git Town commands
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
 
-  Scenario: outside a Git repo
-    Given I am outside a Git repo
-    When I run "git-town aliases add"
-    Then it does not print "not a git repository"
-    And global Git setting "alias.append" is now "town append"
-    And global Git setting "alias.diff-parent" is now "town diff-parent"
-    And global Git setting "alias.hack" is now "town hack"
-    And global Git setting "alias.kill" is now "town kill"
-    And global Git setting "alias.prepend" is now "town prepend"
-    And global Git setting "alias.propose" is now "town propose"
-    And global Git setting "alias.rename-branch" is now "town rename-branch"
-    And global Git setting "alias.repo" is now "town repo"
-    And global Git setting "alias.ship" is now "town ship"
-    And global Git setting "alias.sync" is now "town sync"
+    When I run "git-town aliases remove"
+    Then it runs the commands
+      | COMMAND                                         |
+      | git config --global --unset alias.append        |
+      | git config --global --unset alias.diff-parent   |
+      | git config --global --unset alias.hack          |
+      | git config --global --unset alias.kill          |
+      | git config --global --unset alias.prepend       |
+      | git config --global --unset alias.propose       |
+      | git config --global --unset alias.rename-branch |
+      | git config --global --unset alias.repo          |
+      | git config --global --unset alias.ship          |
+      | git config --global --unset alias.sync          |
+    And it does not print "not a git repository"
+    And global Git setting "alias.append" is now ""
+    And global Git setting "alias.diff-parent" is now ""
+    And global Git setting "alias.hack" is now ""
+    And global Git setting "alias.kill" is now ""
+    And global Git setting "alias.prepend" is now ""
+    And global Git setting "alias.propose" is now ""
+    And global Git setting "alias.rename-branch" is now ""
+    And global Git setting "alias.repo" is now ""
+    And global Git setting "alias.ship" is now ""
+    And global Git setting "alias.sync" is now ""

@@ -268,7 +268,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		key := configdomain.NewKey(name)
 		have := state.fixture.DevRepo.GlobalCache[key]
 		if have != want {
-			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, have)
+			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
 		return nil
 	})
