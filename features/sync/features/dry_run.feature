@@ -10,7 +10,6 @@ Feature: dry run
       |         | origin   | origin feature commit |
     When I run "git-town sync --dry-run"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
