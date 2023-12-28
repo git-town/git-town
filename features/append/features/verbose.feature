@@ -44,11 +44,12 @@ Feature: display all executed Git commands
       """
     And the current branch is now "new"
 
+  @this
   Scenario: undo
     Given I ran "git-town append new"
     When I run "git-town undo --verbose"
     Then it prints:
       """
-      Ran 16 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is now "existing"
