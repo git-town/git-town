@@ -48,7 +48,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Global: fullCache.GlobalCache.Clone(),
 		Local:  fullCache.LocalCache.Clone(),
 	}
-	gitTown, err := config.NewGitTown(fullCache, backendRunner)
+	gitTown, err := config.NewGitTown(fullCache, args.DryRun, backendRunner)
 	if err != nil {
 		return nil, err
 	}

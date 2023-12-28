@@ -54,7 +54,6 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
-		fmt.Println("11111111111111111", key, value)
 		cache[*configKey] = value
 		err := config.Add(*configKey, value)
 		if err != nil {

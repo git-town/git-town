@@ -343,6 +343,7 @@ func (self *BackendCommands) CommitsInPerennialBranch() (gitdomain.SHAs, error) 
 }
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
+// TODO: move to TestCommands.
 func (self *BackendCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) error {
 	err := self.RunMany([][]string{
 		{"git", "branch", name.String(), "main"},
