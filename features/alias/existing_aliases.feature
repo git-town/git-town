@@ -37,7 +37,7 @@ Feature: add Git Town aliases to existing Git aliases
       | git config --global --unset alias.repo          |
       | git config --global --unset alias.ship          |
       | git config --global --unset alias.sync          |
-    And global Git setting "alias.append" is now ""
+    And global Git setting "alias.append" is still ""
     And global Git setting "alias.diff-parent" is now ""
     And global Git setting "alias.hack" is still "checkout"
     And global Git setting "alias.kill" is now ""

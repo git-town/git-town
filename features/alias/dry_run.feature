@@ -1,6 +1,6 @@
 Feature: dry-run shortening Git Town commands
 
-  Scenario: inside a Git repo
+  Scenario: dry-run adding aliases
     When I run "git-town aliases add --dry-run"
     Then it runs the commands
       | COMMAND                                                      |
@@ -25,17 +25,17 @@ Feature: dry-run shortening Git Town commands
     And global Git setting "alias.ship" is still ""
     And global Git setting "alias.sync" is still ""
 
-  Scenario: outside a Git repo
-    Given I am outside a Git repo
-    When I run "git-town aliases add --dry-run"
+  Scenario: dry-run removing aliases
+    Given I ran "git-town aliases add"
+    When I run "git-town aliases remove --dry-run"
     Then it does not print "not a git repository"
-    And global Git setting "alias.append" is still ""
-    And global Git setting "alias.diff-parent" is still ""
-    And global Git setting "alias.hack" is still ""
-    And global Git setting "alias.kill" is still ""
-    And global Git setting "alias.prepend" is still ""
-    And global Git setting "alias.propose" is still ""
-    And global Git setting "alias.rename-branch" is still ""
-    And global Git setting "alias.repo" is still ""
-    And global Git setting "alias.ship" is still ""
-    And global Git setting "alias.sync" is still ""
+    And global Git setting "alias.append" is still "town append"
+    And global Git setting "alias.diff-parent" is still "town diff-parent"
+    And global Git setting "alias.hack" is still "town hack"
+    And global Git setting "alias.kill" is still "town kill"
+    And global Git setting "alias.prepend" is still "town prepend"
+    And global Git setting "alias.propose" is still "town propose"
+    And global Git setting "alias.rename-branch" is still "town rename-branch"
+    And global Git setting "alias.repo" is still "town repo"
+    And global Git setting "alias.ship" is still "town ship"
+    And global Git setting "alias.sync" is still "town sync"
