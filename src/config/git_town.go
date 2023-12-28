@@ -28,30 +28,6 @@ func (self *GitTown) AddToPerennialBranches(branches ...gitdomain.LocalBranchNam
 	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
 }
 
-func (self *GitTown) BranchTypes() configdomain.BranchTypes {
-	return configdomain.BranchTypes{
-		MainBranch:        self.Config.MainBranch,
-		PerennialBranches: self.Config.PerennialBranches,
-	}
-}
-
-// ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *GitTown) ContainsLineage() bool {
-	return len(self.Config.Lineage) > 0
-}
-
-// HostingService provides the type-safe name of the code hosting connector to use.
-// This function caches its result and can be queried repeatedly.
-func (self *GitTown) HostingService() (configdomain.Hosting, error) {
-	return configdomain.NewHosting(self.Config.CodeHostingPlatformName)
-}
-
-// IsMainBranch indicates whether the branch with the given name
-// is the main branch of the repository.
-func (self *GitTown) IsMainBranch(branch gitdomain.LocalBranchName) bool {
-	return branch == self.Config.MainBranch
-}
-
 // OriginURL provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 // Caches its result so can be called repeatedly.

@@ -25,6 +25,30 @@ type Config struct {
 	SyncUpstream              SyncUpstream
 }
 
+func (self *Config) BranchTypes() BranchTypes {
+	return BranchTypes{
+		MainBranch:        self.MainBranch,
+		PerennialBranches: self.PerennialBranches,
+	}
+}
+
+// ContainsLineage indicates whether this configuration contains any lineage entries.
+func (self *Config) ContainsLineage() bool {
+	return len(self.Lineage) > 0
+}
+
+// HostingService provides the type-safe name of the code hosting connector to use.
+// This function caches its result and can be queried repeatedly.
+func (self *Config) HostingService() (Hosting, error) {
+	return NewHosting(self.CodeHostingPlatformName)
+}
+
+// IsMainBranch indicates whether the branch with the given name
+// is the main branch of the repository.
+func (self *Config) IsMainBranch(branch gitdomain.LocalBranchName) bool {
+	return branch == self.MainBranch
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *Config) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
