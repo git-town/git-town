@@ -41,15 +41,13 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -59,7 +57,7 @@ func executeSetParent(verbose bool) error {
 	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := lineage.Parent(branches.Initial)
+	existingParent := repo.Runner.Lineage.Parent(branches.Initial)
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.Config.RemoveParent(branches.Initial)
@@ -72,7 +70,7 @@ func executeSetParent(verbose bool) error {
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: existingParent,
-		Lineage:       lineage,
+		Lineage:       repo.Runner.Lineage,
 		MainBranch:    mainBranch,
 		Runner:        repo.Runner,
 	})
