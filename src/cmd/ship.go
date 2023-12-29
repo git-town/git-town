@@ -119,7 +119,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 }
 
 type shipConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branches                 configdomain.Branches
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
@@ -239,7 +239,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		FullConfig:               repo.Runner.FullConfig,
+		FullConfig:               &repo.Runner.FullConfig,
 		branches:                 branches,
 		connector:                connector,
 		dryRun:                   dryRun,
@@ -275,33 +275,23 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			Remotes:               config.remotes,
-			IsOnline:              config.isOnline,
-			Lineage:               config.Lineage,
-			Program:               &prog,
-			MainBranch:            config.MainBranch,
-			SyncPerennialStrategy: config.SyncPerennialStrategy,
-			PushBranch:            true,
-			PushHook:              config.PushHook,
-			SyncUpstream:          config.SyncUpstream,
-			SyncFeatureStrategy:   config.SyncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			Remotes:     config.remotes,
+			IsOnline:    config.isOnline,
+			Program:     &prog,
+			PushBranch:  true,
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			Remotes:               config.remotes,
-			IsOnline:              config.isOnline,
-			Lineage:               config.Lineage,
-			Program:               &prog,
-			MainBranch:            config.MainBranch,
-			SyncPerennialStrategy: config.SyncPerennialStrategy,
-			PushBranch:            false,
-			PushHook:              config.PushHook,
-			SyncUpstream:          config.SyncUpstream,
-			SyncFeatureStrategy:   config.SyncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			Remotes:     config.remotes,
+			IsOnline:    config.isOnline,
+			Program:     &prog,
+			PushBranch:  false,
 		})
 	}
 	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})

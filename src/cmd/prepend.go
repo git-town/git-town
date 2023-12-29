@@ -86,7 +86,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 }
 
 type prependConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branches                  configdomain.Branches
 	branchesToSync            gitdomain.BranchInfos
 	dryRun                    bool
@@ -143,7 +143,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	parentAndAncestors := repo.Runner.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
-		FullConfig:                repo.Runner.FullConfig,
+		FullConfig:                &repo.Runner.FullConfig,
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
 		dryRun:                    dryRun,
@@ -160,18 +160,13 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			IsOnline:              config.Online(),
-			Lineage:               config.Lineage,
-			Program:               &prog,
-			MainBranch:            config.MainBranch,
-			SyncPerennialStrategy: config.SyncPerennialStrategy,
-			PushBranch:            true,
-			PushHook:              config.PushHook,
-			Remotes:               config.remotes,
-			SyncUpstream:          config.SyncUpstream,
-			SyncFeatureStrategy:   config.SyncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			IsOnline:    config.Online(),
+			Program:     &prog,
+			PushBranch:  true,
+			Remotes:     config.remotes,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{

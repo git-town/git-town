@@ -68,7 +68,7 @@ func executeSwitch(verbose bool) error {
 }
 
 type switchConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branches configdomain.Branches
 }
 
@@ -84,7 +84,7 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 		ValidateNoOpenChanges: false,
 	})
 	return &switchConfig{
-		FullConfig: repo.Runner.FullConfig,
+		FullConfig: &repo.Runner.FullConfig,
 		branches:   branches,
 	}, exit, err
 }

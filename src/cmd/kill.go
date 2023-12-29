@@ -83,7 +83,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 }
 
 type killConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branchToKill   gitdomain.BranchInfo
 	branchWhenDone gitdomain.LocalBranchName
 	dryRun         bool
@@ -142,7 +142,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone = branches.Initial
 	}
 	return &killConfig{
-		FullConfig:     repo.Runner.FullConfig,
+		FullConfig:     &repo.Runner.FullConfig,
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
 		dryRun:         dryRun,

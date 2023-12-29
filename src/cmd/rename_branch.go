@@ -92,7 +92,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branches       configdomain.Branches
 	dryRun         bool
 	newBranch      gitdomain.LocalBranchName
@@ -149,7 +149,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:     repo.Runner.FullConfig,
+		FullConfig:     &repo.Runner.FullConfig,
 		branches:       branches,
 		dryRun:         dryRun,
 		newBranch:      newBranchName,

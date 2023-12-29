@@ -22,18 +22,13 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 }
 
 type BranchProgramArgs struct {
-	BranchInfos           gitdomain.BranchInfos
-	BranchTypes           configdomain.BranchTypes
-	IsOnline              configdomain.Online
-	Lineage               configdomain.Lineage
-	Program               *program.Program
-	MainBranch            gitdomain.LocalBranchName
-	SyncPerennialStrategy configdomain.SyncPerennialStrategy
-	PushBranch            bool
-	PushHook              configdomain.PushHook
-	Remotes               gitdomain.Remotes
-	SyncUpstream          configdomain.SyncUpstream
-	SyncFeatureStrategy   configdomain.SyncFeatureStrategy
+	*configdomain.FullConfig
+	BranchInfos gitdomain.BranchInfos
+	BranchTypes configdomain.BranchTypes
+	IsOnline    configdomain.Online
+	Program     *program.Program
+	PushBranch  bool
+	Remotes     gitdomain.Remotes
 }
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.

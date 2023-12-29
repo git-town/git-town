@@ -115,13 +115,13 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	})
 	return &continueConfig{
 		connector:  connector,
-		FullConfig: repo.Runner.FullConfig,
+		FullConfig: &repo.Runner.FullConfig,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
 
 type continueConfig struct {
 	connector hostingdomain.Connector
-	configdomain.FullConfig
+	*configdomain.FullConfig
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {

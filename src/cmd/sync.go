@@ -73,18 +73,13 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			Remotes:               config.remotes,
-			IsOnline:              config.Online(),
-			Lineage:               config.Lineage,
-			Program:               &runProgram,
-			MainBranch:            config.MainBranch,
-			SyncPerennialStrategy: config.SyncPerennialStrategy,
-			PushBranch:            true,
-			PushHook:              config.PushHook,
-			SyncUpstream:          config.SyncUpstream,
-			SyncFeatureStrategy:   config.SyncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			Remotes:     config.remotes,
+			IsOnline:    config.Online(),
+			Program:     &runProgram,
+			PushBranch:  true,
 		},
 		BranchesToSync: config.branchesToSync,
 		DryRun:         dryRun,
@@ -114,7 +109,7 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	configdomain.FullConfig
+	*configdomain.FullConfig
 	branches       configdomain.Branches
 	branchesToSync gitdomain.BranchInfos
 	hasOpenChanges bool
@@ -180,7 +175,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		FullConfig:     repo.Runner.FullConfig,
+		FullConfig:     &repo.Runner.FullConfig,
 		branches:       branches,
 		branchesToSync: branchesToSync,
 		hasOpenChanges: repoStatus.OpenChanges,

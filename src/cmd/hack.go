@@ -108,7 +108,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
-		FullConfig:                repo.Runner.FullConfig,
+		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		targetBranch:              targetBranch,
 		parentBranch:              repo.Runner.MainBranch,
