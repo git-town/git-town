@@ -14,12 +14,11 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
-	// TODO: extract into en.go.
-	io.Printf("Multiple people authored the %q branch.", branch)
+	io.Printf(messages.BranchAuthorMultiple, branch)
 	fmt.Println()
 	result := ""
 	prompt := &survey.Select{
-		Message: "Please choose an author for the squash commit:",
+		Message: messages.SquashCommitAuthorQuery,
 		Options: authors,
 	}
 	err := survey.AskOne(prompt, &result, nil)

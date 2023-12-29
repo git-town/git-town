@@ -6,7 +6,6 @@ Feature: display all executed Git commands
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
 
-  # TODO: eliminate redundant "git rev-parse --short HEAD"
   Scenario: result
     When I run "git-town prepend parent --verbose"
     Then it runs the commands

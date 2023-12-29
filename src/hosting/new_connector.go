@@ -32,9 +32,8 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 		return gitlabConnector, err
 	}
 	bitbucketConnector, err := bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-		OriginURL:       args.OriginURL,
-		HostingService:  args.HostingService,
-		GetSHAForBranch: args.GetSHAForBranch,
+		OriginURL:      args.OriginURL,
+		HostingService: args.HostingService,
 	})
 	if bitbucketConnector != nil || err != nil {
 		return bitbucketConnector, err
@@ -53,8 +52,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 
 type NewConnectorArgs struct {
 	*configdomain.FullConfig
-	HostingService  configdomain.Hosting
-	OriginURL       *giturl.Parts
-	GetSHAForBranch hostingdomain.SHAForBranchFunc
-	Log             hostingdomain.Log
+	HostingService configdomain.Hosting
+	OriginURL      *giturl.Parts
+	Log            hostingdomain.Log
 }

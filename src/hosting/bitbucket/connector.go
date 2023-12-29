@@ -15,7 +15,6 @@ import (
 // Connector provides access to the API of Bitbucket installations.
 type Connector struct {
 	hostingdomain.Config
-	getSHAForBranch hostingdomain.SHAForBranchFunc
 }
 
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
@@ -30,14 +29,12 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		getSHAForBranch: args.GetSHAForBranch,
 	}, nil
 }
 
 type NewConnectorArgs struct {
-	OriginURL       *giturl.Parts
-	HostingService  configdomain.Hosting
-	GetSHAForBranch hostingdomain.SHAForBranchFunc
+	OriginURL      *giturl.Parts
+	HostingService configdomain.Hosting
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
