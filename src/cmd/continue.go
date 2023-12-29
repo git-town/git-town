@@ -62,12 +62,12 @@ func executeContinue(verbose bool) error {
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
+		Lineage:                 config.Lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              config.pushHook.Negate(),
+		NoPushHook:              config.NoPushHook(),
 	})
 }
 
@@ -114,16 +114,14 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		Log:             log.Printing{},
 	})
 	return &continueConfig{
-		connector: connector,
-		lineage:   lineage,
-		pushHook:  pushHook,
+		connector:  connector,
+		FullConfig: repo.Runner.FullConfig,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
 
 type continueConfig struct {
 	connector hostingdomain.Connector
-	lineage   configdomain.Lineage
-	pushHook  configdomain.PushHook
+	configdomain.FullConfig
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
