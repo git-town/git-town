@@ -50,7 +50,9 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo, verbose)
+	var config *undoConfig
+	var initialStashSnaphot gitdomain.StashSize
+	config, initialStashSnaphot, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -59,12 +61,11 @@ func executeUndo(verbose bool) error {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &undoRunState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 lineage,
-		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -73,13 +74,11 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
+	*configdomain.FullConfig
 	connector               hostingdomain.Connector
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesStatus
-	mainBranch              gitdomain.LocalBranchName
-	lineage                 configdomain.Lineage
 	previousBranch          gitdomain.LocalBranchName
-	pushHook                configdomain.PushHook
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
@@ -119,13 +118,11 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	return &undoConfig{
+		FullConfig:              &repo.Runner.FullConfig,
 		connector:               connector,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
-		lineage:                 repo.Runner.Lineage,
-		mainBranch:              repo.Runner.MainBranch,
 		previousBranch:          previousBranch,
-		pushHook:                repo.Runner.PushHook,
 	}, initialStashSnapshot, repo.Runner.Lineage, nil
 }
 

@@ -66,15 +66,14 @@ func executeSkip(verbose bool) error {
 	}
 	skipRunState := runState.CreateSkipRunState()
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              &repo.Runner.FullConfig,
 		RunState:                &skipRunState,
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 repo.Runner.Lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              repo.Runner.NoPushHook(),
 	})
 }

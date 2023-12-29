@@ -65,12 +65,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.Lineage,
-		NoPushHook:              config.NoPushHook(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

@@ -69,16 +69,15 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		FinalUndoProgram:    finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.Lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              config.NoPushHook(),
 	})
 }
 

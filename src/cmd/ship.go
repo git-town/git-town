@@ -105,12 +105,11 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		RunProgram:          shipProgram(config, message),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 config.Lineage,
-		NoPushHook:              config.NoPushHook(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,

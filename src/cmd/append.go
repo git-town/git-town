@@ -70,6 +70,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
@@ -78,8 +79,6 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		Lineage:                 config.Lineage,
-		NoPushHook:              config.NoPushHook(),
 	})
 }
 

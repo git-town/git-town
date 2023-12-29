@@ -19,7 +19,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSnapshot:     args.InitialStashSnapshot,
-		NoPushHook:               args.NoPushHook,
+		NoPushHook:               args.NoPushHook(),
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	if err != nil {

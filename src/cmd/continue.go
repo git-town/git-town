@@ -58,16 +58,15 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 config.Lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              config.NoPushHook(),
 	})
 }
 
