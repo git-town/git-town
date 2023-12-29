@@ -71,7 +71,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	branchTypes := repo.Runner.Config.BranchTypes()
+	branchTypes := repo.Runner.BranchTypes()
 	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
@@ -81,8 +81,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
+	hostingService, err := repo.Runner.HostingService()
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +89,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
-		OriginURL:       originURL,
+		OriginURL:       repo.Runner.OriginURL(),
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
