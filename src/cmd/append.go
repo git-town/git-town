@@ -163,9 +163,8 @@ func appendProgram(config *appendConfig) program.Program {
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{
-		Ancestors:  config.newBranchParentCandidates,
-		Branch:     config.targetBranch,
-		MainBranch: config.MainBranch,
+		Ancestors: config.newBranchParentCandidates,
+		Branch:    config.targetBranch,
 	})
 	prog.Add(&opcode.SetExistingParent{
 		Branch:     config.targetBranch,
