@@ -97,6 +97,7 @@ const (
 	ShipAbortedMergeError              = "aborted because commit exited with error"
 	ShipBranchOtherWorktree            = "branch %q is active in another worktree"
 	ShipBranchNothingToDo              = "the branch %q has no shippable changes"
+	ShipChildBranch                    = "shipping this branch would ship %s as well,\nplease ship %q first"
 	ShipNoFeatureBranch                = "the branch %q is not a feature branch. Only feature branches can be shipped"
 	ShipOpenChanges                    = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShippableChangesProblem            = "cannot determine whether branch %q has shippable changes: %w"
