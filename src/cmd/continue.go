@@ -98,11 +98,10 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
-		HostingService:  hostingService,
-		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
-		OriginURL:       originURL,
-		Log:             log.Printing{},
+		FullConfig:     &repo.Runner.FullConfig,
+		HostingService: hostingService,
+		OriginURL:      originURL,
+		Log:            log.Printing{},
 	})
 	return &continueConfig{
 		connector:  connector,
