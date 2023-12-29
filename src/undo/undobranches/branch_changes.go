@@ -97,7 +97,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
 		result.Add(&opcode.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
-		result.Add(&opcode.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
+		result.Add(&opcode.CreateTrackingBranch{Branch: branch})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.BranchTypes)

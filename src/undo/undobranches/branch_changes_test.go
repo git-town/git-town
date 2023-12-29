@@ -889,7 +889,7 @@ func TestChanges(t *testing.T) {
 			&opcode.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main"), NoPushHook: true},
 			// re-create the feature branch
 			&opcode.CreateBranch{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},
-			&opcode.CreateTrackingBranch{Branch: gitdomain.NewLocalBranchName("feature-branch"), NoPushHook: true},
+			&opcode.CreateTrackingBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			// check out the initial branch
 			&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 		}

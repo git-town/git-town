@@ -172,7 +172,7 @@ func appendProgram(config *appendConfig) program.Program {
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldNewBranchPush() && config.IsOnline() {
-		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.NoPushHook()})
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,

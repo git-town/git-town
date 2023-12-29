@@ -47,7 +47,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	if args.PushBranch && args.Remotes.HasOrigin() && args.IsOnline.Bool() {
 		switch {
 		case !branch.HasTrackingBranch():
-			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName, NoPushHook: args.PushHook.Negate()})
+			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName})
 		case !isFeatureBranch:
 			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: args.PushHook.Negate()})
 		default:
