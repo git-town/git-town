@@ -31,7 +31,7 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 `[1:]
-			have, err := configfile.ParseTOML(give)
+			have, err := configfile.Parse(give)
 			must.NoError(t, err)
 			github := "github"
 			githubCom := "github.com"
@@ -67,7 +67,7 @@ perennial-branches = "rebase"
 [branches]
 main = "main"
 `[1:]
-			have, err := configfile.ParseTOML(give)
+			have, err := configfile.Parse(give)
 			must.NoError(t, err)
 			main := "main"
 			want := configfile.Data{

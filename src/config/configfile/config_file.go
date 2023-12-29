@@ -75,7 +75,7 @@ func (self Data) Validate() (configdomain.PartialConfig, error) {
 	return result, err
 }
 
-func LoadConfigFile() (configdomain.PartialConfig, error) {
+func Load() (configdomain.PartialConfig, error) {
 	file, err := os.Open(FileName)
 	if err != nil {
 		return configdomain.EmptyPartialConfig(), nil //nolint:nilerr
@@ -85,14 +85,14 @@ func LoadConfigFile() (configdomain.PartialConfig, error) {
 	if err != nil {
 		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	configFileData, err := ParseTOML(string(bytes))
+	configFileData, err := Parse(string(bytes))
 	if err != nil {
 		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return configFileData.Validate()
 }
 
-func ParseTOML(text string) (*Data, error) {
+func Parse(text string) (*Data, error) {
 	var result Data
 	_, err := toml.Decode(text, &result)
 	return &result, err

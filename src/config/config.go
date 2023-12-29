@@ -171,7 +171,7 @@ func (self *Config) SetTestOrigin(value string) error {
 }
 
 func NewGitTown(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner configdomain.Runner) (*Config, error) {
-	configFile, err := configfile.LoadConfigFile()
+	configFile, err := configfile.Load()
 	if err != nil {
 		return nil, err
 	}
