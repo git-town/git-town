@@ -254,8 +254,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName,
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		return fmt.Errorf(`shipping this branch would ship %s as well,
-please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
+		return fmt.Errorf(messages.ShipChildBranch, stringslice.Connect(ancestorsWithoutMainOrPerennial.Strings()), oldestAncestor)
 	}
 	return nil
 }
