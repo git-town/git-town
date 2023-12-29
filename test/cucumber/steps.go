@@ -255,7 +255,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if key == nil {
 			return fmt.Errorf("key not found")
 		}
-		have := state.fixture.DevRepo.GitTown.Config.Aliases[*key]
+		have := state.fixture.DevRepo.GitTown.FullConfig.Aliases[*key]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}

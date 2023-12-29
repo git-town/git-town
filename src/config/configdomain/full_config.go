@@ -4,8 +4,8 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-// Config is the merged configuration to be used by Git Town commands.
-type Config struct {
+// FullConfig is the merged configuration to be used by Git Town commands.
+type FullConfig struct {
 	Aliases                   map[Key]string
 	CodeHostingOriginHostname CodeHostingOriginHostname
 	CodeHostingPlatformName   CodeHostingPlatformName
@@ -25,7 +25,7 @@ type Config struct {
 	SyncUpstream              SyncUpstream
 }
 
-func (self *Config) BranchTypes() BranchTypes {
+func (self *FullConfig) BranchTypes() BranchTypes {
 	return BranchTypes{
 		MainBranch:        self.MainBranch,
 		PerennialBranches: self.PerennialBranches,
@@ -33,24 +33,24 @@ func (self *Config) BranchTypes() BranchTypes {
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
-func (self *Config) ContainsLineage() bool {
+func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
-func (self *Config) HostingService() (Hosting, error) {
+func (self *FullConfig) HostingService() (Hosting, error) {
 	return NewHosting(self.CodeHostingPlatformName)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *Config) IsMainBranch(branch gitdomain.LocalBranchName) bool {
+func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
 // Merges the given PartialConfig into this configuration object.
-func (self *Config) Merge(other PartialConfig) {
+func (self *FullConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
 		self.Aliases[key] = value
 	}
@@ -107,8 +107,8 @@ func (self *Config) Merge(other PartialConfig) {
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
-func DefaultConfig() Config {
-	return Config{
+func DefaultConfig() FullConfig {
+	return FullConfig{
 		Aliases:                   map[Key]string{},
 		CodeHostingOriginHostname: "",
 		CodeHostingPlatformName:   "",
