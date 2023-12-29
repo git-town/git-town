@@ -333,7 +333,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		// TODO: use NewBranchPushRef here and remove the manual bool parsing above
 		want := configdomain.NewBranchPush(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
