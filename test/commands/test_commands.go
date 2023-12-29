@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/test/asserts"
 	"github.com/git-town/git-town/v11/test/datatable"
 	"github.com/git-town/git-town/v11/test/git"
@@ -130,6 +131,19 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 		commands = append(commands, "--author="+commit.Author)
 	}
 	self.MustRun("git", commands...)
+}
+
+// CreateFeatureBranch creates a feature branch with the given name in this repository.
+// TODO: move to TestCommands.
+func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) error {
+	err := self.RunMany([][]string{
+		{"git", "branch", name.String(), "main"},
+		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
+	})
+	if err != nil {
+		return fmt.Errorf(messages.BranchFeatureCannotCreate, name, err)
+	}
+	return nil
 }
 
 // CreateFile creates a file with the given name and content in this repository.

@@ -338,19 +338,6 @@ func (self *BackendCommands) CommitsInPerennialBranch() (gitdomain.SHAs, error) 
 	return result, nil
 }
 
-// CreateFeatureBranch creates a feature branch with the given name in this repository.
-// TODO: move to TestCommands.
-func (self *BackendCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) error {
-	err := self.RunMany([][]string{
-		{"git", "branch", name.String(), "main"},
-		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
-	})
-	if err != nil {
-		return fmt.Errorf(messages.BranchFeatureCannotCreate, name, err)
-	}
-	return nil
-}
-
 // CurrentBranch provides the name of the currently checked out branch.
 func (self *BackendCommands) CurrentBranch() (gitdomain.LocalBranchName, error) {
 	if !self.CurrentBranchCache.Initialized() {

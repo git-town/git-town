@@ -3,7 +3,6 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -192,19 +191,6 @@ func TestBackendCommands(t *testing.T) {
 			must.NoError(t, err)
 			must.EqOp(t, 1, len(commits)) // the initial commit
 		})
-	})
-
-	t.Run("CreateFeatureBranch", func(t *testing.T) {
-		t.Parallel()
-		runtime := testruntime.CreateGitTown(t)
-		err := runtime.Backend.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
-		must.NoError(t, err)
-		runtime.Config.Reload()
-		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
-		lineageHave := runtime.Config.Lineage
-		lineageWant := configdomain.Lineage{}
-		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
-		must.Eq(t, lineageWant, lineageHave)
 	})
 
 	t.Run("CurrentBranch", func(t *testing.T) {

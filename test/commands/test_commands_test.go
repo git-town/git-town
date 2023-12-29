@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/acarl005/stripansi"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/test/filesystem"
 	"github.com/git-town/git-town/v11/test/fixture"
@@ -150,6 +151,19 @@ func TestTestCommands(t *testing.T) {
 			must.EqOp(t, gitdomain.NewLocalBranchName("initial"), commits[0].Branch)
 			must.EqOp(t, "developer <developer@example.com>", commits[0].Author)
 		})
+	})
+
+	t.Run("CreateFeatureBranch", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.CreateGitTown(t)
+		err := runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
+		must.NoError(t, err)
+		runtime.Config.Reload()
+		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
+		lineageHave := runtime.Config.Lineage
+		lineageWant := configdomain.Lineage{}
+		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
+		must.Eq(t, lineageWant, lineageHave)
 	})
 
 	t.Run("CreateFile", func(t *testing.T) {
