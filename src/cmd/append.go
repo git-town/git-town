@@ -99,14 +99,13 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		Lineage:               lineage,
 		HandleUnfinishedState: true,
-		PushHook:              pushHook,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -115,7 +114,6 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.Config.MainBranch
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
@@ -129,9 +127,9 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
-		DefaultBranch: mainBranch,
+		DefaultBranch: repo.Runner.MainBranch,
 		Lineage:       lineage,
-		MainBranch:    mainBranch,
+		MainBranch:    repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {

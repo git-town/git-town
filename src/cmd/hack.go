@@ -79,16 +79,14 @@ func executeHack(args []string, dryRun, verbose bool) error {
 }
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -98,7 +96,6 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
-	mainBranch := repo.Runner.Config.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -106,7 +103,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{mainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	return &appendConfig{
 		branches:                  branches,
@@ -114,10 +111,10 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		FullConfig:                repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		targetBranch:              targetBranch,
-		parentBranch:              mainBranch,
+		parentBranch:              repo.Runner.MainBranch,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{mainBranch},
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.MainBranch},
 		previousBranch:            previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
