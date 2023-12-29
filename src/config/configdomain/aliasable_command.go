@@ -6,7 +6,6 @@ import (
 )
 
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
-// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type AliasableCommand string
 
 func (self AliasableCommand) Key() Key {
