@@ -157,11 +157,10 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = true
 	} else {
 		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+			FullConfig:    &repo.Runner.FullConfig,
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: repo.Runner.MainBranch,
-			Lineage:       repo.Runner.Lineage,
-			MainBranch:    repo.Runner.MainBranch,
 			Runner:        repo.Runner,
 		})
 		if err != nil {

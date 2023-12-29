@@ -173,11 +173,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
+		FullConfig:    &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
-		Lineage:       repo.Runner.Lineage,
-		MainBranch:    repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
