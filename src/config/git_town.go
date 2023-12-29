@@ -15,11 +15,13 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	configdomain.CachedAccess // access to the Git configuration settings
-	configdomain.Config       // the merged configuration data
-	configFile                configdomain.PartialConfig
-	DryRun                    bool
-	originURLCache            configdomain.OriginURLCache
+	configdomain.Access // access to the Git configuration settings
+	configdomain.Config // the merged configuration data
+	configFile          configdomain.PartialConfig
+	GlobalConfig        configdomain.PartialConfig
+	LocalConfig         configdomain.PartialConfig
+	DryRun              bool
+	originURLCache      configdomain.OriginURLCache
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -51,7 +53,8 @@ func (self *GitTown) OriginURLString() string {
 }
 
 func (self *GitTown) Reload() {
-	self.CachedAccess.Reload()
+	_, self.GlobalConfig, _ = self.LoadCache(true)
+	_, self.LocalConfig, _ = self.LoadCache(false)
 	self.Config = configdomain.DefaultConfig()
 	// TODO: merge this code with the similar code in NewGitTown.
 	self.Config.Merge(self.configFile)
@@ -162,19 +165,21 @@ func (self *GitTown) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(fullCache configdomain.FullCache, dryRun bool, runner configdomain.Runner) (*GitTown, error) {
+func NewGitTown(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner configdomain.Runner) (*GitTown, error) {
 	configFile, err := configdomain.LoadConfigFile()
 	if err != nil {
 		return nil, err
 	}
 	config := configdomain.DefaultConfig()
 	config.Merge(configFile)
-	config.Merge(fullCache.GlobalConfig)
-	config.Merge(fullCache.LocalConfig)
+	config.Merge(globalConfig)
+	config.Merge(localConfig)
 	return &GitTown{
-		CachedAccess:   configdomain.NewCachedAccess(fullCache, runner),
+		Access:         configdomain.Access{Runner: runner},
 		Config:         config,
 		configFile:     configFile,
+		GlobalConfig:   globalConfig,
+		LocalConfig:    localConfig,
 		DryRun:         dryRun,
 		originURLCache: configdomain.OriginURLCache{},
 	}, nil

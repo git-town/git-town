@@ -40,15 +40,19 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := configdomain.Access{Runner: backendRunner}
-	fullCache, err := configdomain.LoadFullCache(&configGitAccess)
+	globalCache, globalConfig, err := configGitAccess.LoadCache(true)
+	if err != nil {
+		return nil, err
+	}
+	localCache, localConfig, err := configGitAccess.LoadCache(false)
 	if err != nil {
 		return nil, err
 	}
 	configSnapshot := undoconfig.ConfigSnapshot{
-		Global: fullCache.GlobalCache,
-		Local:  fullCache.LocalCache,
+		Global: globalCache,
+		Local:  localCache,
 	}
-	gitTown, err := config.NewGitTown(fullCache, args.DryRun, backendRunner)
+	gitTown, err := config.NewGitTown(globalConfig, localConfig, args.DryRun, backendRunner)
 	if err != nil {
 		return nil, err
 	}
