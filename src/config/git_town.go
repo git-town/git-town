@@ -53,8 +53,8 @@ func (self *GitTown) OriginURLString() string {
 }
 
 func (self *GitTown) Reload() {
-	_, self.GlobalConfig, _ = self.LoadCache(true)
-	_, self.LocalConfig, _ = self.LoadCache(false)
+	_, self.GlobalConfig, _ = self.LoadCache(true) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
+	_, self.LocalConfig, _ = self.LoadCache(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	self.Config = configdomain.DefaultConfig()
 	// TODO: merge this code with the similar code in NewGitTown.
 	self.Config.Merge(self.configFile)
