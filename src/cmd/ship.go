@@ -129,7 +129,6 @@ type shipConfig struct {
 	hasOpenChanges           bool
 	remotes                  gitdomain.Remotes
 	isShippingInitialBranch  bool
-	isOnline                 configdomain.Online
 	previousBranch           gitdomain.LocalBranchName
 	proposal                 *hostingdomain.Proposal
 	proposalsOfChildBranches []hostingdomain.Proposal
@@ -190,8 +189,6 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	canShipViaAPI := false
-	proposalMessage := ""
 	var proposal *hostingdomain.Proposal
 	childBranches := repo.Runner.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
@@ -210,6 +207,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
+	canShipViaAPI := false
+	proposalMessage := ""
 	if !repo.IsOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
@@ -243,7 +242,6 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		proposalMessage:          proposalMessage,
 		hasOpenChanges:           repoStatus.OpenChanges,
 		remotes:                  remotes,
-		isOnline:                 repo.IsOffline.ToOnline(),
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposal,
@@ -253,6 +251,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 
 func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes configdomain.BranchTypes, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
+	// TODO: use branchTypes.IsFeatureBranch here
 	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
@@ -295,7 +294,6 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
-		// push
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName})
 		prog.Add(&opcode.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
@@ -307,14 +305,14 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	} else {
 		prog.Add(&opcode.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
-	if config.remotes.HasOrigin() && config.isOnline.Bool() {
+	if config.remotes.HasOrigin() && config.IsOnline() {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.isOnline.Bool()) {
+	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.IsOnline()) {
 		if config.ShipDeleteTrackingBranch {
 			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
