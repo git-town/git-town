@@ -1,7 +1,9 @@
 package configdomain
 
 import (
+	"errors"
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/messages"
@@ -70,6 +72,30 @@ func (self *Access) RemoveGlobalConfigValue(key Key) error {
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (self *Access) RemoveLocalConfigValue(key Key) error {
 	return self.Run("git", "config", "--unset", key.String())
+}
+
+// RemoveLocalGitConfiguration removes all Git Town configuration.
+func (self *Access) RemoveLocalGitConfiguration(lineage Lineage) error {
+	err := self.Run("git", "config", "--remove-section", "git-town")
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			if exitErr.ExitCode() == 128 {
+				// Git returns exit code 128 when trying to delete a non-existing config section.
+				// This is not an error condition in this workflow so we can ignore it here.
+				return nil
+			}
+		}
+		return fmt.Errorf(messages.ConfigRemoveError, err)
+	}
+	for child := range lineage {
+		key := fmt.Sprintf("git-town-branch.%s.parent", child)
+		err = self.Run("git", "config", "--unset", key)
+		if err != nil {
+			return fmt.Errorf(messages.ConfigRemoveError, err)
+		}
+	}
+	return nil
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
