@@ -85,7 +85,6 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
@@ -93,7 +92,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
+		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {
