@@ -113,8 +113,8 @@ type proposeConfig struct {
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
-	pushHook := repo.Runner.GitTown.PushHook
+	lineage := repo.Runner.Config.Lineage
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -137,7 +137,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch
+	mainBranch := repo.Runner.Config.MainBranch
 	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
@@ -149,11 +149,11 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
-	syncUpstream := repo.Runner.GitTown.SyncUpstream
-	originURL := repo.Runner.GitTown.OriginURL()
-	hostingService, err := repo.Runner.GitTown.HostingService()
+	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
+	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
+	syncUpstream := repo.Runner.Config.SyncUpstream
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -161,9 +161,9 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

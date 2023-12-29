@@ -14,15 +14,15 @@ func (self *RemoveBranchFromLineage) Run(args shared.RunArgs) error {
 	parent := args.Lineage.Parent(self.Branch)
 	for _, child := range args.Lineage.Children(self.Branch) {
 		if parent.IsEmpty() {
-			args.Runner.Backend.GitTown.RemoveParent(child)
+			args.Runner.Backend.Config.RemoveParent(child)
 		} else {
-			err := args.Runner.Backend.GitTown.SetParent(child, parent)
+			err := args.Runner.Backend.Config.SetParent(child, parent)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	args.Runner.Backend.GitTown.RemoveParent(self.Branch)
+	args.Runner.Backend.Config.RemoveParent(self.Branch)
 	args.Lineage.RemoveBranch(self.Branch)
 	return nil
 }

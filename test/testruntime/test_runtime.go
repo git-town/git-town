@@ -50,9 +50,9 @@ func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
 	repo.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewLocalBranchName("initial"))
-	err := repo.GitTown.SetMainBranch(gitdomain.NewLocalBranchName("main"))
+	err := repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main"))
 	must.NoError(t, err)
-	err = repo.GitTown.SetPerennialBranches(gitdomain.LocalBranchNames{})
+	err = repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{})
 	must.NoError(t, err)
 	return repo
 }
@@ -93,7 +93,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
 		DryRun:             false,
-		GitTown:            gitTown,
+		Config:             gitTown,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}

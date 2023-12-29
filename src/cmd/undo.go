@@ -83,8 +83,8 @@ type undoConfig struct {
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
-	lineage := repo.Runner.GitTown.Lineage
-	pushHook := repo.Runner.GitTown.PushHook
+	lineage := repo.Runner.Config.Lineage
+	pushHook := repo.Runner.Config.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -98,24 +98,24 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	mainBranch := repo.Runner.Backend.GitTown.MainBranch
+	mainBranch := repo.Runner.Backend.Config.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	hostingService, err := repo.Runner.GitTown.HostingService()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
 		return nil, initialStashSnapshot, lineage, err
 	}
-	originURL := repo.Runner.GitTown.OriginURL()
+	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})

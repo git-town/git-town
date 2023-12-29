@@ -73,8 +73,8 @@ type switchConfig struct {
 }
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
-	pushHook := repo.Runner.GitTown.PushHook
+	lineage := repo.Runner.Config.Lineage
+	pushHook := repo.Runner.Config.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,

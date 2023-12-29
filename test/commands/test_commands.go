@@ -117,7 +117,7 @@ func (self *TestCommands) CreateBranch(name, parent gitdomain.LocalBranchName) {
 // The parent branch must already exist.
 func (self *TestCommands) CreateChildFeatureBranch(branch gitdomain.LocalBranchName, parent gitdomain.LocalBranchName) {
 	self.CreateBranch(branch, parent)
-	asserts.NoError(self.GitTown.SetParent(branch, parent))
+	asserts.NoError(self.Config.SetParent(branch, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -146,7 +146,7 @@ func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranch
 	for _, name := range names {
 		self.CreateBranch(name, gitdomain.NewLocalBranchName("main"))
 	}
-	asserts.NoError(self.GitTown.AddToPerennialBranches(names...))
+	asserts.NoError(self.Config.AddToPerennialBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -259,8 +259,8 @@ func (self *TestCommands) HasFile(name, content string) string {
 // LineageTable provides the currently configured lineage information as a DataTable.
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
-	self.GitTown.Reload()
-	lineage := self.GitTown.Lineage
+	self.Config.Reload()
+	lineage := self.Config.Lineage
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())

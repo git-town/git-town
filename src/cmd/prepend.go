@@ -106,9 +106,9 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
+	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.GitTown.PushHook
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -125,11 +125,11 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
-	mainBranch := repo.Runner.GitTown.MainBranch
-	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
-	syncUpstream := repo.Runner.GitTown.SyncUpstream
+	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
+	mainBranch := repo.Runner.Config.MainBranch
+	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
+	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
+	syncUpstream := repo.Runner.Config.SyncUpstream
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)

@@ -96,8 +96,8 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
-	pushHook := repo.Runner.GitTown.PushHook
+	lineage := repo.Runner.Config.Lineage
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -111,7 +111,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	mainBranch := repo.Runner.GitTown.MainBranch
+	mainBranch := repo.Runner.Config.MainBranch
 	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToKill := branches.All.FindByLocalName(branchNameToKill)
 	if branchToKill == nil {

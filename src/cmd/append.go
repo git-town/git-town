@@ -104,9 +104,9 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
+	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.GitTown.PushHook
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -122,10 +122,10 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.GitTown.MainBranch
-	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
+	mainBranch := repo.Runner.Config.MainBranch
+	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
+	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
@@ -148,8 +148,8 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncUpstream := repo.Runner.GitTown.SyncUpstream
+	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
+	syncUpstream := repo.Runner.Config.SyncUpstream
 	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{

@@ -19,7 +19,7 @@ func (self *CreateProposal) CreateContinueProgram() []shared.Opcode {
 }
 
 func (self *CreateProposal) Run(args shared.RunArgs) error {
-	parentBranch := args.Runner.GitTown.Lineage[self.Branch]
+	parentBranch := args.Runner.Config.Lineage[self.Branch]
 	prURL, err := args.Connector.NewProposalURL(self.Branch, parentBranch)
 	if err != nil {
 		return err

@@ -12,6 +12,6 @@ type DeleteParentBranch struct {
 }
 
 func (self *DeleteParentBranch) Run(args shared.RunArgs) error {
-	args.Runner.GitTown.RemoveParent(self.Branch)
+	args.Runner.Config.RemoveParent(self.Branch)
 	return nil
 }

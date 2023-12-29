@@ -58,9 +58,9 @@ func executeConfigPushHook(args []string, global, verbose bool) error {
 func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 	var setting *configdomain.PushHook
 	if globalFlag {
-		setting = run.GitTown.GlobalConfig.PushHook
+		setting = run.Config.GlobalGitConfig.PushHook
 	} else {
-		setting = run.GitTown.LocalConfig.PushHook
+		setting = run.Config.LocalGitConfig.PushHook
 	}
 	if setting == nil {
 		defaults := configdomain.DefaultConfig()
@@ -77,7 +77,7 @@ func setPushHook(text string, global bool, run *git.ProdRunner) error {
 	}
 	value := configdomain.PushHook(valueBool)
 	if global {
-		return run.GitTown.SetPushHookGlobally(value)
+		return run.Config.SetPushHookGlobally(value)
 	}
-	return run.GitTown.SetPushHookLocally(value)
+	return run.Config.SetPushHookLocally(value)
 }
