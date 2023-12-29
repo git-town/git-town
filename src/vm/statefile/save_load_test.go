@@ -90,9 +90,7 @@ func TestLoadSave(t *testing.T) {
 				&opcode.FetchUpstream{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.ForcePushCurrentBranch{
-					NoPushHook: true,
-				},
+				&opcode.ForcePushCurrentBranch{},
 				&opcode.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcode.MergeParent{
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
@@ -291,9 +289,7 @@ func TestLoadSave(t *testing.T) {
       "type": "FetchUpstream"
     },
     {
-      "data": {
-        "NoPushHook": true
-      },
+      "data": {},
       "type": "ForcePushCurrentBranch"
     },
     {

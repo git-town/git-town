@@ -1,13 +1,11 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
 // ForcePushCurrentBranch force-pushes the branch with the given name to the origin remote.
 type ForcePushCurrentBranch struct {
-	NoPushHook configdomain.NoPushHook
 	undeclaredOpcodeMethods
 }
 
@@ -23,5 +21,5 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Runner.Frontend.ForcePushBranch(self.NoPushHook)
+	return args.Runner.Frontend.ForcePushBranch(args.Runner.NoPushHook())
 }

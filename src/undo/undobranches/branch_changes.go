@@ -90,7 +90,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedFeatures[branch]
 		result.Add(&opcode.Checkout{Branch: branch})
 		result.Add(&opcode.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Add(&opcode.ForcePushCurrentBranch{NoPushHook: args.NoPushHook})
+		result.Add(&opcode.ForcePushCurrentBranch{})
 	}
 
 	// re-create removed omni-branches
