@@ -54,7 +54,7 @@ func executeConfigSyncFeatureStrategy(args []string, global, verbose bool) error
 func printSyncFeatureStrategy(globalFlag bool, run *git.ProdRunner) error {
 	var strategy *configdomain.SyncFeatureStrategy
 	if globalFlag {
-		strategy = run.GitTown.GlobalConfig.SyncFeatureStrategy
+		strategy = run.GitTown.GlobalGitConfig.SyncFeatureStrategy
 	} else {
 		strategy = &run.GitTown.SyncFeatureStrategy
 	}
