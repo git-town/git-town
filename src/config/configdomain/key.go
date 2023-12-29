@@ -60,6 +60,8 @@ var (
 	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                     //nolint:gochecknoglobals
 	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                     //nolint:gochecknoglobals
 	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}                //nolint:gochecknoglobals
+	KeyGitUserEmail                   = Key{"user.email"}                                 //nolint:gochecknoglobals
+	KeyGitUserName                    = Key{"user.name"}                                  //nolint:gochecknoglobals
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
@@ -75,6 +77,8 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyGiteaToken,
 	KeyGithubToken,
 	KeyGitlabToken,
+	KeyGitUserEmail,
+	KeyGitUserName,
 	KeyMainBranch,
 	KeyOffline,
 	KeyPerennialBranches,

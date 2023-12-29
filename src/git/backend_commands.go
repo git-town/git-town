@@ -37,14 +37,8 @@ type BackendCommands struct {
 func (self *BackendCommands) Author() (string, error) {
 	// TODO: read this from the config cache?
 	// If not possible, comment here why.
-	name, err := self.QueryTrim("git", "config", "user.name")
-	if err != nil {
-		return "", err
-	}
-	email, err := self.QueryTrim("git", "config", "user.email")
-	if err != nil {
-		return "", err
-	}
+	name := self.GitUserName
+	email := self.GitUserEmail
 	return name + " <" + email + ">", nil
 }
 

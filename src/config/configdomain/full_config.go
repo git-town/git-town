@@ -12,6 +12,8 @@ type FullConfig struct {
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
 	GitLabToken               GitLabToken
+	GitUserEmail              string
+	GitUserName               string
 	Lineage                   Lineage
 	MainBranch                gitdomain.LocalBranchName
 	NewBranchPush             NewBranchPush
@@ -78,6 +80,12 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.GitLabToken != nil {
 		self.GitLabToken = *other.GitLabToken
 	}
+	if other.GitUserEmail != nil {
+		self.GitUserEmail = *other.GitUserEmail
+	}
+	if other.GitUserName != nil {
+		self.GitUserName = *other.GitUserName
+	}
 	if other.MainBranch != nil {
 		self.MainBranch = *other.MainBranch
 	}
@@ -131,6 +139,8 @@ func DefaultConfig() FullConfig {
 		GiteaToken:                "",
 		GitLabToken:               "",
 		GitHubToken:               "",
+		GitUserEmail:              "",
+		GitUserName:               "",
 		Lineage:                   Lineage{},
 		MainBranch:                gitdomain.EmptyLocalBranchName(),
 		NewBranchPush:             false,
