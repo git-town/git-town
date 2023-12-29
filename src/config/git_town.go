@@ -15,11 +15,11 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	configdomain.Access // access to the Git configuration settings
-	configdomain.Config // the merged configuration data
-	configFile          configdomain.PartialConfig
-	GlobalGitConfig     configdomain.PartialConfig
-	LocalGitConfig      configdomain.PartialConfig
+	configdomain.Access                            // access to the Git configuration settings
+	Merged              configdomain.Config        // the merged configuration data
+	configFile          configdomain.PartialConfig // content of git-town.toml
+	GlobalGitConfig     configdomain.PartialConfig // content of the global Git configuration
+	LocalGitConfig      configdomain.PartialConfig // content of the local Git configuration
 	DryRun              bool
 	originURLCache      configdomain.OriginURLCache
 }
