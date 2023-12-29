@@ -7,9 +7,7 @@ import (
 
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
-type AliasableCommand struct {
-	name string
-}
+type AliasableCommand string
 
 func (self AliasableCommand) Key() Key {
 	switch self {
@@ -37,19 +35,19 @@ func (self AliasableCommand) Key() Key {
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", self))
 }
 
-func (self AliasableCommand) String() string { return self.name }
+func (self AliasableCommand) String() string { return string(self) }
 
-var (
-	AliasableCommandAppend       = AliasableCommand{"append"}        //nolint:gochecknoglobals
-	AliasableCommandDiffParent   = AliasableCommand{"diff-parent"}   //nolint:gochecknoglobals
-	AliasableCommandHack         = AliasableCommand{"hack"}          //nolint:gochecknoglobals
-	AliasableCommandKill         = AliasableCommand{"kill"}          //nolint:gochecknoglobals
-	AliasableCommandPrepend      = AliasableCommand{"prepend"}       //nolint:gochecknoglobals
-	AliasableCommandPropose      = AliasableCommand{"propose"}       //nolint:gochecknoglobals
-	AliasableCommandRenameBranch = AliasableCommand{"rename-branch"} //nolint:gochecknoglobals
-	AliasableCommandRepo         = AliasableCommand{"repo"}          //nolint:gochecknoglobals
-	AliasableCommandShip         = AliasableCommand{"ship"}          //nolint:gochecknoglobals
-	AliasableCommandSync         = AliasableCommand{"sync"}          //nolint:gochecknoglobals
+const (
+	AliasableCommandAppend       = AliasableCommand("append")
+	AliasableCommandDiffParent   = AliasableCommand("diff-parent")
+	AliasableCommandHack         = AliasableCommand("hack")
+	AliasableCommandKill         = AliasableCommand("kill")
+	AliasableCommandPrepend      = AliasableCommand("prepend")
+	AliasableCommandPropose      = AliasableCommand("propose")
+	AliasableCommandRenameBranch = AliasableCommand("rename-branch")
+	AliasableCommandRepo         = AliasableCommand("repo")
+	AliasableCommandShip         = AliasableCommand("ship")
+	AliasableCommandSync         = AliasableCommand("sync")
 )
 
 // AliasableCommands provides all AliasType values.
