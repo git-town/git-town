@@ -69,8 +69,8 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
-		NoPushHook:              config.pushHook.Negate(),
+		Lineage:                 config.Lineage,
+		NoPushHook:              config.NoPushHook(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -100,8 +100,6 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	mainBranch := repo.Runner.Config.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
-	isOffline := repo.Runner.Config.Offline
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -110,26 +108,16 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{mainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncUpstream := repo.Runner.Config.SyncUpstream
-	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
-	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		FullConfig:                repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		targetBranch:              targetBranch,
 		parentBranch:              mainBranch,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
-		lineage:                   lineage,
-		mainBranch:                mainBranch,
 		newBranchParentCandidates: gitdomain.LocalBranchNames{mainBranch},
-		shouldNewBranchPush:       shouldNewBranchPush,
 		previousBranch:            previousBranch,
-		syncPerennialStrategy:     syncPerennialStrategy,
-		pushHook:                  pushHook,
-		isOnline:                  isOffline.ToOnline(),
-		syncUpstream:              syncUpstream,
-		syncFeatureStrategy:       syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

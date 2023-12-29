@@ -106,6 +106,14 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 }
 
+func (self *FullConfig) NoPushHook() NoPushHook {
+	return self.PushHook.Negate()
+}
+
+func (self *FullConfig) Online() Online {
+	return self.Offline.ToOnline()
+}
+
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() FullConfig {
 	return FullConfig{
