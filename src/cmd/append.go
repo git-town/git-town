@@ -167,9 +167,8 @@ func appendProgram(config *appendConfig) program.Program {
 		Branch:    config.targetBranch,
 	})
 	prog.Add(&opcode.SetExistingParent{
-		Branch:     config.targetBranch,
-		Ancestors:  config.newBranchParentCandidates,
-		MainBranch: config.MainBranch,
+		Branch:    config.targetBranch,
+		Ancestors: config.newBranchParentCandidates,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldNewBranchPush() && config.IsOnline() {

@@ -172,9 +172,8 @@ func prependProgram(config *prependConfig) program.Program {
 	})
 	// set the parent of the newly created branch
 	prog.Add(&opcode.SetExistingParent{
-		Branch:     config.targetBranch,
-		Ancestors:  config.newBranchParentCandidates,
-		MainBranch: config.MainBranch,
+		Branch:    config.targetBranch,
+		Ancestors: config.newBranchParentCandidates,
 	})
 	// set the parent of the branch prepended to
 	prog.Add(&opcode.SetParentIfBranchExists{
