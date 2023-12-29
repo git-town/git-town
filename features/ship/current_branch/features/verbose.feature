@@ -35,8 +35,6 @@ Feature: display all executed Git commands
       | feature | frontend | git checkout main                                 |
       | main    | frontend | git merge --squash feature                        |
       |         | backend  | git shortlog -s -n -e main..feature               |
-      |         | backend  | git config user.name                              |
-      |         | backend  | git config user.email                             |
       | main    | frontend | git commit -m done                                |
       |         | backend  | git rev-parse --short main                        |
       |         | backend  | git rev-list --left-right main...origin/main      |
@@ -52,7 +50,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 39 shell commands.
+      Ran 37 shell commands.
       """
     And the current branch is now "main"
 

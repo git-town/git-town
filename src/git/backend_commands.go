@@ -35,15 +35,13 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (self *BackendCommands) Author() (string, error) {
-	// TODO: read this from the config cache?
-	// If not possible, comment here why.
-	name, err := self.QueryTrim("git", "config", "user.name")
-	if err != nil {
-		return "", err
+	email := self.GitUserEmail
+	if email == "" {
+		return "", fmt.Errorf(messages.GitUserEmailMissing)
 	}
-	email, err := self.QueryTrim("git", "config", "user.email")
-	if err != nil {
-		return "", err
+	name := self.GitUserName
+	if name == "" {
+		return "", fmt.Errorf(messages.GitUserEmailMissing)
 	}
 	return name + " <" + email + ">", nil
 }

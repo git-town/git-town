@@ -14,6 +14,8 @@ type PartialConfig struct {
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
+	GitUserEmail              *string
+	GitUserName               *string
 	Lineage                   *Lineage
 	MainBranch                *gitdomain.LocalBranchName
 	NewBranchPush             *NewBranchPush
@@ -53,6 +55,10 @@ func (self *PartialConfig) Add(key Key, value string) error {
 		self.GitHubToken = NewGitHubTokenRef(value)
 	case KeyGitlabToken:
 		self.GitLabToken = NewGitLabTokenRef(value)
+	case KeyGitUserEmail:
+		self.GitUserEmail = &value
+	case KeyGitUserName:
+		self.GitUserName = &value
 	case KeyMainBranch:
 		self.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
 	case KeyOffline:
