@@ -104,8 +104,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreateChildFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		err := runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
-		must.NoError(t, err)
+		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		runtime.CreateChildFeatureBranch(gitdomain.NewLocalBranchName("f1a"), gitdomain.NewLocalBranchName("f1"))
 		output, err := runtime.BackendRunner.QueryTrim("git-town", "config")
 		must.NoError(t, err)
@@ -156,8 +155,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run("CreateFeatureBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		err := runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
-		must.NoError(t, err)
+		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		runtime.Config.Reload()
 		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage
@@ -321,7 +319,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch lineage is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateBranch(gitdomain.NewLocalBranchName("main"), gitdomain.NewLocalBranchName("initial"))
-			must.NoError(t, runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("foo")))
+			runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("foo"))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 	})

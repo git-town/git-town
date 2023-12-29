@@ -112,7 +112,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		isLocal := localStr != ""
-		asserts.NoError(state.fixture.DevRepo.CreateFeatureBranch(branch))
+		state.fixture.DevRepo.CreateFeatureBranch(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialLineage.AddRow(branchText, "main")
 		if !isLocal {
@@ -812,17 +812,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
-		var err error
 		switch branchType {
 		case "feature":
-			err = state.fixture.DevRepo.CreateFeatureBranch(branch)
+			state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
-		}
-		if err != nil {
-			return err
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if branchType == "feature" {
@@ -919,10 +915,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2} {
 			branch := gitdomain.NewLocalBranchName(branchText)
-			err := state.fixture.DevRepo.CreateFeatureBranch(branch)
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateFeatureBranch(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {
@@ -937,10 +930,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		isLocal := localStr != ""
 		for _, branchText := range []string{branch1, branch2, branch3} {
 			branch := gitdomain.NewLocalBranchName(branchText)
-			err := state.fixture.DevRepo.CreateFeatureBranch(branch)
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateFeatureBranch(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialLineage.AddRow(branchText, "main")
 			if !isLocal {

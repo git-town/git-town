@@ -17,8 +17,8 @@ func TestGitTown(t *testing.T) {
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		must.NoError(t, repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1")))
-		must.NoError(t, repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2")))
+		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
+		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
 		repo.Reload()
 		have := repo.Lineage
 		want := configdomain.Lineage{
@@ -53,7 +53,7 @@ func TestGitTown(t *testing.T) {
 			t.Parallel()
 			repo := testruntime.CreateGitTown(t)
 			branch := gitdomain.NewLocalBranchName("branch-1")
-			must.NoError(t, repo.CreateFeatureBranch(branch))
+			repo.CreateFeatureBranch(branch)
 			repo.Reload()
 			want := configdomain.Lineage{
 				branch: gitdomain.NewLocalBranchName("main"),
