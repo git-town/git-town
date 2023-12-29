@@ -48,7 +48,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.SwitchBranch(config.branches.Types.MainAndPerennials(), config.branches.Initial, config.lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(config.branches.Types.MainAndPerennials(), config.branches.Initial, config.Lineage)
 	if err != nil {
 		return err
 	}
@@ -68,25 +68,23 @@ func executeSwitch(verbose bool) error {
 }
 
 type switchConfig struct {
+	configdomain.FullConfig
 	branches configdomain.Branches
-	lineage  configdomain.Lineage
 }
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	return &switchConfig{
-		branches: branches,
-		lineage:  lineage,
+		FullConfig: repo.Runner.FullConfig,
+		branches:   branches,
 	}, exit, err
 }
