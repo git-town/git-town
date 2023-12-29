@@ -1,9 +1,9 @@
-package configdomain_test
+package configfile_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/shoenig/test/must"
 )
 
@@ -31,7 +31,7 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 `[1:]
-			have, err := configdomain.ParseTOML(give)
+			have, err := configfile.Parse(give)
 			must.NoError(t, err)
 			github := "github"
 			githubCom := "github.com"
@@ -41,16 +41,16 @@ perennial-branches = "rebase"
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
 			syncUpstream := true
-			want := configdomain.ConfigFileData{
-				Branches: configdomain.ConfigFileBranches{
+			want := configfile.Data{
+				Branches: configfile.Branches{
 					Main:       &main,
 					Perennials: []string{"public", "release"},
 				},
-				CodeHosting: &configdomain.CodeHosting{
+				CodeHosting: &configfile.CodeHosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
 				},
-				SyncStrategy: &configdomain.SyncStrategy{
+				SyncStrategy: &configfile.SyncStrategy{
 					FeatureBranches:   &merge,
 					PerennialBranches: &rebase,
 				},
@@ -67,11 +67,11 @@ perennial-branches = "rebase"
 [branches]
 main = "main"
 `[1:]
-			have, err := configdomain.ParseTOML(give)
+			have, err := configfile.Parse(give)
 			must.NoError(t, err)
 			main := "main"
-			want := configdomain.ConfigFileData{
-				Branches: configdomain.ConfigFileBranches{
+			want := configfile.Data{
+				Branches: configfile.Branches{
 					Main:       &main,
 					Perennials: nil,
 				},

@@ -17,6 +17,7 @@ import (
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -763,7 +764,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(
-			configdomain.ConfigFileName,
+			configfile.FileName,
 			content.Content,
 		)
 		return nil

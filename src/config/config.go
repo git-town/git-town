@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
@@ -170,7 +171,7 @@ func (self *Config) SetTestOrigin(value string) error {
 }
 
 func NewGitTown(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner configdomain.Runner) (*Config, error) {
-	configFile, err := configdomain.LoadConfigFile()
+	configFile, err := configfile.Load()
 	if err != nil {
 		return nil, err
 	}
