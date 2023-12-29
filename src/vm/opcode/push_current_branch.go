@@ -1,7 +1,6 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
@@ -9,7 +8,6 @@ import (
 // PushCurrentBranch pushes the current branch to its existing tracking branch.
 type PushCurrentBranch struct {
 	CurrentBranch gitdomain.LocalBranchName
-	NoPushHook    configdomain.NoPushHook
 	undeclaredOpcodeMethods
 }
 
@@ -27,5 +25,5 @@ func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Runner.Frontend.PushCurrentBranch(self.NoPushHook)
+	return args.Runner.Frontend.PushCurrentBranch(args.Runner.NoPushHook())
 }

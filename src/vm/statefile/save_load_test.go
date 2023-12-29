@@ -104,7 +104,6 @@ func TestLoadSave(t *testing.T) {
 				&opcode.PullCurrentBranch{},
 				&opcode.PushCurrentBranch{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-					NoPushHook:    true,
 				},
 				&opcode.PushTags{},
 				&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
@@ -324,8 +323,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "NoPushHook": true
+        "CurrentBranch": "branch"
       },
       "type": "PushCurrentBranch"
     },

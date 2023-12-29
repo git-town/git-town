@@ -49,7 +49,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 		case !branch.HasTrackingBranch():
 			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName})
 		case !isFeatureBranch:
-			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName, NoPushHook: args.PushHook.Negate()})
+			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName})
 		default:
 			pushFeatureBranchProgram(list, branch.LocalName, args.SyncFeatureStrategy, args.PushHook)
 		}
@@ -79,7 +79,7 @@ func pullTrackingBranchOfCurrentFeatureBranchOpcode(list *program.Program, track
 func pushFeatureBranchProgram(list *program.Program, branch gitdomain.LocalBranchName, syncFeatureStrategy configdomain.SyncFeatureStrategy, pushHook configdomain.PushHook) {
 	switch syncFeatureStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: pushHook.Negate()})
+		list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch})
 	case configdomain.SyncFeatureStrategyRebase:
 		list.Add(&opcode.ForcePushCurrentBranch{NoPushHook: pushHook.Negate()})
 	}

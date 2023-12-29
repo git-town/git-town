@@ -81,7 +81,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcode.Checkout{Branch: branch})
 			result.Add(&opcode.RevertCommit{SHA: change.After})
-			result.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: args.NoPushHook})
+			result.Add(&opcode.PushCurrentBranch{CurrentBranch: branch})
 		}
 	}
 
@@ -108,7 +108,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
 				result.Add(&opcode.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
 				result.Add(&opcode.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
-				result.Add(&opcode.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})
+				result.Add(&opcode.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName})
 			}
 		}
 	}

@@ -786,7 +786,7 @@ func TestChanges(t *testing.T) {
 			// revert the commit on the perennial branch
 			&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcode.RevertCommit{SHA: gitdomain.NewSHA("444444")},
-			&opcode.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main"), NoPushHook: true},
+			&opcode.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// reset the feature branch to the previous SHA
 			&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 			&opcode.ResetCurrentBranchToSHA{MustHaveSHA: gitdomain.NewSHA("666666"), SetToSHA: gitdomain.NewSHA("333333"), Hard: true},
@@ -886,7 +886,7 @@ func TestChanges(t *testing.T) {
 			// revert the undoable commit on the main branch
 			&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("main")},
 			&opcode.RevertCommit{SHA: gitdomain.NewSHA("444444")},
-			&opcode.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main"), NoPushHook: true},
+			&opcode.PushCurrentBranch{CurrentBranch: gitdomain.NewLocalBranchName("main")},
 			// re-create the feature branch
 			&opcode.CreateBranch{Branch: gitdomain.NewLocalBranchName("feature-branch"), StartingPoint: gitdomain.NewSHA("222222").Location()},
 			&opcode.CreateTrackingBranch{Branch: gitdomain.NewLocalBranchName("feature-branch")},
