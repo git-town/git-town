@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -144,13 +143,10 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {

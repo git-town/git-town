@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/sync"
@@ -202,13 +201,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {

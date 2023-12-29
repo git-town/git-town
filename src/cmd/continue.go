@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -99,13 +98,10 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	return &continueConfig{

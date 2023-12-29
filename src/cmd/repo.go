@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
@@ -86,13 +85,10 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       repo.Runner.OriginURL(),
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {

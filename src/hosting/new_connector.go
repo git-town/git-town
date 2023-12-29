@@ -2,7 +2,6 @@ package hosting
 
 import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
 	"github.com/git-town/git-town/v11/src/hosting/gitea"
@@ -15,7 +14,7 @@ import (
 func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	githubConnector, err := github.NewConnector(github.NewConnectorArgs{
 		HostingService: args.HostingService,
-		APIToken:       args.GithubAPIToken,
+		APIToken:       github.GetAPIToken(args.GitHubToken),
 		MainBranch:     args.MainBranch,
 		OriginURL:      args.OriginURL,
 		Log:            args.Log,
@@ -26,7 +25,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	gitlabConnector, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 		HostingService: args.HostingService,
 		OriginURL:      args.OriginURL,
-		APIToken:       args.GitlabAPIToken,
+		APIToken:       args.GitLabToken,
 		Log:            args.Log,
 	})
 	if gitlabConnector != nil || err != nil {
@@ -43,7 +42,7 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	giteaConnector, err := gitea.NewConnector(gitea.NewConnectorArgs{
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
-		APIToken:       args.GiteaAPIToken,
+		APIToken:       args.GiteaToken,
 		Log:            args.Log,
 	})
 	if giteaConnector != nil || err != nil {
@@ -53,12 +52,9 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 }
 
 type NewConnectorArgs struct {
+	*configdomain.FullConfig
 	HostingService  configdomain.Hosting
 	OriginURL       *giturl.Parts
 	GetSHAForBranch hostingdomain.SHAForBranchFunc
-	GiteaAPIToken   configdomain.GiteaToken
-	GithubAPIToken  configdomain.GitHubToken
-	GitlabAPIToken  configdomain.GitLabToken
-	MainBranch      gitdomain.LocalBranchName
 	Log             hostingdomain.Log
 }
