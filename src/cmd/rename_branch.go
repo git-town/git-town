@@ -82,8 +82,8 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
-		NoPushHook:              config.noPushHook,
+		Lineage:                 config.Lineage,
+		NoPushHook:              config.NoPushHook(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -92,27 +92,22 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 }
 
 type renameBranchConfig struct {
+	configdomain.FullConfig
 	branches       configdomain.Branches
 	dryRun         bool
-	isOnline       configdomain.Online
-	lineage        configdomain.Lineage
-	mainBranch     gitdomain.LocalBranchName
 	newBranch      gitdomain.LocalBranchName
-	noPushHook     configdomain.NoPushHook
 	oldBranch      gitdomain.BranchInfo
 	previousBranch gitdomain.LocalBranchName
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -120,7 +115,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	mainBranch := repo.Runner.Config.MainBranch
 	var oldBranchName gitdomain.LocalBranchName
 	var newBranchName gitdomain.LocalBranchName
 	if len(args) == 1 {
@@ -130,7 +124,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
-	if repo.Runner.Config.IsMainBranch(oldBranchName) {
+	if repo.Runner.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
@@ -155,13 +149,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
+		FullConfig:     repo.Runner.FullConfig,
 		branches:       branches,
 		dryRun:         dryRun,
-		isOnline:       repo.IsOffline.ToOnline(),
-		lineage:        lineage,
-		mainBranch:     mainBranch,
 		newBranch:      newBranchName,
-		noPushHook:     pushHook.Negate(),
 		oldBranch:      *oldBranch,
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, err
@@ -178,16 +169,16 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
 			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
 		} else {
-			lineage := config.lineage
+			lineage := config.Lineage
 			result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
 			result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: lineage.Parent(config.oldBranch.LocalName)})
 		}
 	}
-	for _, child := range config.lineage.Children(config.oldBranch.LocalName) {
+	for _, child := range config.Lineage.Children(config.oldBranch.LocalName) {
 		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranch.HasTrackingBranch() && config.isOnline.Bool() {
-		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.noPushHook})
+	if config.oldBranch.HasTrackingBranch() && config.IsOnline() {
+		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch, NoPushHook: config.NoPushHook()})
 		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
 	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
