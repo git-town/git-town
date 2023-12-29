@@ -13,17 +13,17 @@ import (
 
 const ConfigFileName = ".git-branches.toml"
 
-// ConfigFileData is the unvalidated data as read by the TOML parser.
-type ConfigFileData struct {
-	Branches                 ConfigFileBranches `toml:"branches"`
-	CodeHosting              *CodeHosting       `toml:"code-hosting"`
-	SyncStrategy             *SyncStrategy      `toml:"sync-strategy"`
-	PushNewbranches          *bool              `toml:"push-new-branches"`
-	ShipDeleteTrackingBranch *bool              `toml:"ship-delete-remote-branch"`
-	SyncUpstream             *bool              `toml:"sync-upstream"`
+// Data is the unvalidated data as read by the TOML parser.
+type Data struct {
+	Branches                 Branches      `toml:"branches"`
+	CodeHosting              *CodeHosting  `toml:"code-hosting"`
+	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
+	PushNewbranches          *bool         `toml:"push-new-branches"`
+	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-remote-branch"`
+	SyncUpstream             *bool         `toml:"sync-upstream"`
 }
 
-type ConfigFileBranches struct {
+type Branches struct {
 	Main       *string  `toml:"main"`
 	Perennials []string `toml:"perennials"`
 }
@@ -38,7 +38,7 @@ type SyncStrategy struct {
 	PerennialBranches *string `toml:"perennial-branches"`
 }
 
-func (self ConfigFileData) Validate() (configdomain.PartialConfig, error) {
+func (self Data) Validate() (configdomain.PartialConfig, error) {
 	result := configdomain.PartialConfig{} //nolint:exhaustruct
 	var err error
 	if self.Branches.Main != nil {
@@ -92,8 +92,8 @@ func LoadConfigFile() (configdomain.PartialConfig, error) {
 	return configFileData.Validate()
 }
 
-func ParseTOML(text string) (*ConfigFileData, error) {
-	var result ConfigFileData
+func ParseTOML(text string) (*Data, error) {
+	var result Data
 	_, err := toml.Decode(text, &result)
 	return &result, err
 }

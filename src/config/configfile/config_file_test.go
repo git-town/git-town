@@ -41,8 +41,8 @@ perennial-branches = "rebase"
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
 			syncUpstream := true
-			want := configfile.ConfigFileData{
-				Branches: configfile.ConfigFileBranches{
+			want := configfile.Data{
+				Branches: configfile.Branches{
 					Main:       &main,
 					Perennials: []string{"public", "release"},
 				},
@@ -70,8 +70,8 @@ main = "main"
 			have, err := configfile.ParseTOML(give)
 			must.NoError(t, err)
 			main := "main"
-			want := configfile.ConfigFileData{
-				Branches: configfile.ConfigFileBranches{
+			want := configfile.Data{
+				Branches: configfile.Branches{
 					Main:       &main,
 					Perennials: nil,
 				},
