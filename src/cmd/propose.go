@@ -126,12 +126,11 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
 	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		FullConfig:    &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
-		DefaultBranch: mainBranch,
+		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
