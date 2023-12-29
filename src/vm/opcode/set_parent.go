@@ -14,5 +14,5 @@ type SetParent struct {
 }
 
 func (self *SetParent) Run(args shared.RunArgs) error {
-	return args.Runner.GitTown.SetParent(self.Branch, self.Parent)
+	return args.Runner.Config.SetParent(self.Branch, self.Parent)
 }

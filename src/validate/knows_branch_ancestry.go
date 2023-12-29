@@ -17,7 +17,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 	}
 	updated := false
 	for {
-		lineage := args.Backend.GitTown.Lineage
+		lineage := args.Backend.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
 		var err error
 		if !hasParent { //nolint:nestif
@@ -30,14 +30,14 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 				return false, err
 			}
 			if parent.String() == dialog.PerennialBranchOption {
-				err = args.Backend.GitTown.AddToPerennialBranches(currentBranch)
+				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
 				}
 				updated = true
 				break
 			}
-			err = args.Backend.GitTown.SetParent(currentBranch, parent)
+			err = args.Backend.Config.SetParent(currentBranch, parent)
 			if err != nil {
 				return false, err
 			}

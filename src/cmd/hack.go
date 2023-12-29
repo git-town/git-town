@@ -79,9 +79,9 @@ func executeHack(args []string, dryRun, verbose bool) error {
 }
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
+	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.GitTown.PushHook
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -98,10 +98,10 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
-	mainBranch := repo.Runner.GitTown.MainBranch
+	mainBranch := repo.Runner.Config.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := repo.Runner.GitTown.NewBranchPush
-	isOffline := repo.Runner.GitTown.Offline
+	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
+	isOffline := repo.Runner.Config.Offline
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
@@ -110,9 +110,9 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{mainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncUpstream := repo.Runner.GitTown.SyncUpstream
-	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
-	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
+	syncUpstream := repo.Runner.Config.SyncUpstream
+	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
+	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,

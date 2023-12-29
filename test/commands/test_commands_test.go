@@ -180,8 +180,8 @@ func TestTestCommands(t *testing.T) {
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("main", "initial", "p1", "p2")
 		must.Eq(t, want, branches)
-		runtime.GitTown.Reload()
-		branchTypes := runtime.GitTown.BranchTypes()
+		runtime.Config.Reload()
+		branchTypes := runtime.Config.BranchTypes()
 		must.True(t, branchTypes.IsPerennialBranch(gitdomain.NewLocalBranchName("p1")))
 		must.True(t, branchTypes.IsPerennialBranch(gitdomain.NewLocalBranchName("p2")))
 	})
@@ -296,12 +296,12 @@ func TestTestCommands(t *testing.T) {
 		})
 		t.Run("the main branch is configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
-			must.NoError(t, runtime.GitTown.SetMainBranch(gitdomain.NewLocalBranchName("main")))
+			must.NoError(t, runtime.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("the perennial branches are configured", func(t *testing.T) {
 			runtime := testruntime.Create(t)
-			must.NoError(t, runtime.GitTown.SetPerennialBranches(gitdomain.NewLocalBranchNames("qa")))
+			must.NoError(t, runtime.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames("qa")))
 			must.Error(t, runtime.VerifyNoGitTownConfiguration())
 		})
 		t.Run("branch lineage is configured", func(t *testing.T) {

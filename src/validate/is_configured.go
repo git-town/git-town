@@ -10,7 +10,7 @@ import (
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
 func IsConfigured(backend *git.BackendCommands, branches configdomain.Branches) (configdomain.BranchTypes, error) {
-	mainBranch := backend.GitTown.MainBranch
+	mainBranch := backend.Config.MainBranch
 	if mainBranch.IsEmpty() {
 		fmt.Print("Git Town needs to be configured\n\n")
 		newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), mainBranch, backend)

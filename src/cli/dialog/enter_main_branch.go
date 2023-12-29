@@ -20,7 +20,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		return gitdomain.EmptyLocalBranchName(), err
 	}
 	newMainBranch := gitdomain.NewLocalBranchName(newMainBranchName)
-	err = backend.GitTown.SetMainBranch(newMainBranch)
+	err = backend.Config.SetMainBranch(newMainBranch)
 	return newMainBranch, err
 }
 

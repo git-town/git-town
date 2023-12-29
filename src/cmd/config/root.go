@@ -62,20 +62,20 @@ func executeConfig(verbose bool) error {
 
 func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 	fc := execute.FailureCollector{}
-	branchTypes := run.GitTown.BranchTypes()
-	deleteTrackingBranch := run.GitTown.ShipDeleteTrackingBranch
-	giteaToken := run.GitTown.GiteaToken
-	githubToken := run.GitTown.GitHubToken
-	gitlabToken := run.GitTown.GitLabToken
-	hosting := fc.Hosting(run.GitTown.HostingService())
-	isOffline := run.GitTown.Offline
-	lineage := run.GitTown.Lineage
-	syncPerennialStrategy := run.GitTown.SyncPerennialStrategy
-	pushHook := run.GitTown.PushHook
-	pushNewBranches := run.GitTown.NewBranchPush
-	syncUpstream := run.GitTown.SyncUpstream
-	syncFeatureStrategy := run.GitTown.SyncFeatureStrategy
-	syncBeforeShip := run.GitTown.SyncBeforeShip
+	branchTypes := run.Config.BranchTypes()
+	deleteTrackingBranch := run.Config.ShipDeleteTrackingBranch
+	giteaToken := run.Config.GiteaToken
+	githubToken := run.Config.GitHubToken
+	gitlabToken := run.Config.GitLabToken
+	hosting := fc.Hosting(run.Config.HostingService())
+	isOffline := run.Config.Offline
+	lineage := run.Config.Lineage
+	syncPerennialStrategy := run.Config.SyncPerennialStrategy
+	pushHook := run.Config.PushHook
+	pushNewBranches := run.Config.NewBranchPush
+	syncUpstream := run.Config.SyncUpstream
+	syncFeatureStrategy := run.Config.SyncFeatureStrategy
+	syncBeforeShip := run.Config.SyncBeforeShip
 	return RootConfig{
 		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteTrackingBranch,

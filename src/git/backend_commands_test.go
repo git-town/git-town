@@ -199,9 +199,9 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		must.NoError(t, err)
-		runtime.GitTown.Reload()
-		must.True(t, runtime.GitTown.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
-		lineageHave := runtime.GitTown.Lineage
+		runtime.Config.Reload()
+		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
+		lineageHave := runtime.Config.Lineage
 		lineageWant := configdomain.Lineage{}
 		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
 		must.Eq(t, lineageWant, lineageHave)
@@ -777,7 +777,7 @@ func TestBackendCommands(t *testing.T) {
 			cmds := git.BackendCommands{
 				BackendRunner:      runner,
 				DryRun:             false,
-				GitTown:            nil,
+				Config:             nil,
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 				RemotesCache:       &cache.Remotes{},
 			}

@@ -26,9 +26,9 @@ func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnow
 	}
 	if updated {
 		// reload after ancestry change
-		args.Runner.GitTown.Reload()
-		args.Lineage = args.Runner.GitTown.Lineage
-		args.BranchTypes = args.Runner.GitTown.BranchTypes()
+		args.Runner.Config.Reload()
+		args.Lineage = args.Runner.Config.Lineage
+		args.BranchTypes = args.Runner.Config.BranchTypes()
 	}
 	return args.BranchTypes, args.Lineage, nil
 }

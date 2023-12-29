@@ -28,7 +28,7 @@ type BackendRunner interface {
 type BackendCommands struct {
 	BackendRunner      // executes shell commands in the directory of the Git repo
 	DryRun             bool
-	*config.GitTown                                   // the known state of the Git repository
+	*config.Config                                    // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	RemotesCache       *cache.Remotes                 // caches Git remotes
 }
@@ -467,11 +467,11 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *BackendCommands) RemoveOutdatedConfiguration(allBranches gitdomain.BranchInfos) error {
-	for child, parent := range self.GitTown.Lineage {
+	for child, parent := range self.Config.Lineage {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {
-			self.GitTown.RemoveParent(child)
+			self.Config.RemoveParent(child)
 		}
 	}
 	return nil

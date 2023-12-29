@@ -247,7 +247,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(branch, value string) error {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := configdomain.NewParentKey(branchName)
-		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(configKey, value)
+		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
@@ -255,7 +255,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if key == nil {
 			return fmt.Errorf("key not found")
 		}
-		have := state.fixture.DevRepo.GitTown.FullConfig.Aliases[*key]
+		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*key]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}
@@ -264,7 +264,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.GitTown.SetGlobalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
@@ -277,7 +277,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.CodeHostingPlatformName
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.CodeHostingPlatformName
 		if have.String() != want {
 			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, *have)
 		}
@@ -285,7 +285,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.MainBranch
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.MainBranch
 		want := gitdomain.LocalBranchName(wantStr)
 		if *have != want {
 			return fmt.Errorf(`expected global setting "main-branch" to be %q, but was %q`, want, *have)
@@ -294,7 +294,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "offline" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.Offline
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.Offline
 		wantBool, err := gohacks.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.Offline(wantBool)
@@ -305,7 +305,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "perennial-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.PerennialBranches
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.PerennialBranches
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
 		if cmp.Equal(*have, want) {
 			return nil
@@ -314,7 +314,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "push-hook" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.PushHook
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.PushHook
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.PushHook(wantBool)
@@ -325,7 +325,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.NewBranchPush
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		// TODO: use NewBranchPushRef here and remove the manual bool parsing above
@@ -337,7 +337,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "sync-feature-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.SyncFeatureStrategy
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
 		asserts.NoError(err)
 		if cmp.Equal(*have, want) {
@@ -347,7 +347,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "sync-perennial-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.GlobalGitConfig.SyncPerennialStrategy
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncPerennialStrategy
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
 		asserts.NoError(err)
 		if cmp.Equal(*have, want) {
@@ -392,14 +392,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -407,7 +407,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -415,7 +415,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -423,7 +423,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		updateInitialSHAs(state)
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -431,14 +431,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		updateInitialSHAs(state)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
-		state.fixture.DevRepo.GitTown.Reload()
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -571,11 +571,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.CodeHostingPlatformName
+		have := state.fixture.DevRepo.Config.LocalGitConfig.CodeHostingPlatformName
 		if have.String() != want {
 			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
 		}
@@ -583,7 +583,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.MainBranch
+		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
 		want := gitdomain.NewLocalBranchName(wantStr)
 		if *have != want {
 			return fmt.Errorf(`expected local setting "main-branch" to be %q, but was %q`, want, have)
@@ -592,7 +592,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "perennial-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.PerennialBranches
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		want := gitdomain.NewLocalBranchNames(strings.Split(wantStr, " ")...)
 		if cmp.Equal(*have, want) {
 			return nil
@@ -601,7 +601,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.PushHook
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.PushHook(wantBool)
@@ -612,7 +612,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.NewBranchPush
+		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
 		want := configdomain.NewBranchPush(wantBool)
@@ -623,7 +623,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.SyncFeatureStrategy
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
 		asserts.NoError(err)
 		if *have != want {
@@ -633,7 +633,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.GitTown.LocalGitConfig.SyncPerennialStrategy
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
 		asserts.NoError(err)
 		if *have != want {
@@ -656,8 +656,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
-		if state.fixture.DevRepo.GitTown.ContainsLineage() {
-			lineage := state.fixture.DevRepo.GitTown.Lineage
+		if state.fixture.DevRepo.Config.ContainsLineage() {
+			lineage := state.fixture.DevRepo.Config.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil
@@ -695,7 +695,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline := state.fixture.DevRepo.GitTown.Offline
+		isOffline := state.fixture.DevRepo.Config.Offline
 		if isOffline {
 			return fmt.Errorf("expected to not be offline but am")
 		}
@@ -703,7 +703,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is enabled$`, func() error {
-		return state.fixture.DevRepo.GitTown.SetOffline(true)
+		return state.fixture.DevRepo.Config.SetOffline(true)
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
@@ -785,7 +785,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.fixture.CoworkerRepo.GitTown.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
+		_ = state.fixture.CoworkerRepo.Config.SetParent(gitdomain.NewLocalBranchName(childBranch), gitdomain.NewLocalBranchName(parentBranch))
 		return nil
 	})
 
@@ -794,7 +794,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		_ = state.fixture.CoworkerRepo.GitTown.SetSyncFeatureStrategy(syncFeatureStrategy)
+		_ = state.fixture.CoworkerRepo.Config.SetSyncFeatureStrategy(syncFeatureStrategy)
 		return nil
 	})
 
@@ -980,11 +980,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.GitTown.SetMainBranch(gitdomain.NewLocalBranchName(name))
+		return state.fixture.DevRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(name))
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
-		have := state.fixture.DevRepo.GitTown.MainBranch
+		have := state.fixture.DevRepo.Config.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
@@ -997,11 +997,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.GitTown.AddToPerennialBranches(gitdomain.NewLocalBranchName(name))
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(gitdomain.NewLocalBranchName(name))
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		return state.fixture.DevRepo.GitTown.AddToPerennialBranches(gitdomain.NewLocalBranchName(branch1), gitdomain.NewLocalBranchName(branch2))
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(gitdomain.NewLocalBranchName(branch1), gitdomain.NewLocalBranchName(branch2))
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
@@ -1009,7 +1009,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
-		actual := state.fixture.DevRepo.GitTown.LocalGitConfig.PerennialBranches
+		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
@@ -1020,7 +1020,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		actual := state.fixture.DevRepo.GitTown.LocalGitConfig.PerennialBranches
+		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if len(*actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
@@ -1039,7 +1039,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
-		branches := state.fixture.DevRepo.GitTown.LocalGitConfig.PerennialBranches
+		branches := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if branches != nil && len(*branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}

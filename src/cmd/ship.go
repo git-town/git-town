@@ -145,8 +145,8 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.GitTown.Lineage
-	pushHook := repo.Runner.GitTown.PushHook
+	lineage := repo.Runner.Config.Lineage
+	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -169,18 +169,18 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	deleteTrackingBranch := repo.Runner.GitTown.ShipDeleteTrackingBranch
-	mainBranch := repo.Runner.GitTown.MainBranch
+	deleteTrackingBranch := repo.Runner.Config.ShipDeleteTrackingBranch
+	mainBranch := repo.Runner.Config.MainBranch
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	branchToShip := branches.All.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branches.Initial
-	syncFeatureStrategy := repo.Runner.GitTown.SyncFeatureStrategy
-	syncPerennialStrategy := repo.Runner.GitTown.SyncPerennialStrategy
-	syncUpstream := repo.Runner.GitTown.SyncUpstream
-	syncBeforeShip := repo.Runner.GitTown.SyncBeforeShip
+	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
+	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
+	syncUpstream := repo.Runner.Config.SyncUpstream
+	syncBeforeShip := repo.Runner.Config.SyncBeforeShip
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
@@ -214,9 +214,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	var proposal *hostingdomain.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
-	pushHook = repo.Runner.GitTown.PushHook
-	originURL := repo.Runner.GitTown.OriginURL()
-	hostingService, err := repo.Runner.GitTown.HostingService()
+	pushHook = repo.Runner.Config.PushHook
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -224,9 +224,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.GitTown.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.GitTown.GitHubToken),
-		GitlabAPIToken:  repo.Runner.GitTown.GitLabToken,
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
+		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
 		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})
