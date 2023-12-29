@@ -50,7 +50,8 @@ const (
 	FileReadProblem                    = "cannot read file %q: %w"
 	FileStatProblem                    = "cannot check file %q: %w"
 	FileWriteProblem                   = "cannot write file %q: %w"
-	GitUserProblem                     = "cannot determine repo author: %w"
+	GitUserEmailMissing                = `please set the user email in Git by running: git config --global user.email "<your email>"`
+	GitUserNameMissing                 = `please set the user name in Git by running: git config --global user.name "<your name>"`
 	GitVersionMajorNotNumber           = "cannot convert major version %q to int: %w"
 	GitVersionMinorNotNumber           = "cannot convert minor version %q to int: %w"
 	GitVersionProblem                  = "cannot determine Git version: %w"
