@@ -83,30 +83,27 @@ type undoConfig struct {
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
-	mainBranch := repo.Runner.Backend.Config.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -116,21 +113,21 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
+		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	return &undoConfig{
 		connector:               connector,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
-		lineage:                 lineage,
-		mainBranch:              mainBranch,
+		lineage:                 repo.Runner.Lineage,
+		mainBranch:              repo.Runner.MainBranch,
 		previousBranch:          previousBranch,
-		pushHook:                pushHook,
-	}, initialStashSnapshot, lineage, nil
+		pushHook:                repo.Runner.PushHook,
+	}, initialStashSnapshot, repo.Runner.Lineage, nil
 }
 
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
