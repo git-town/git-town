@@ -113,10 +113,11 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	aliasableCommand := LookupAliasableCommand(name)
-	if aliasableCommand != nil {
-		result := aliasableCommand.Key()
-		return &result
+	for _, aliasableCommand := range AliasableCommands() {
+		if aliasableCommand.String() == name {
+			result := aliasableCommand.Key()
+			return &result
+		}
 	}
 	return nil
 }

@@ -6,7 +6,7 @@ import (
 
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
-	Aliases                   map[Key]string
+	Aliases                   map[AliasableCommand]string
 	CodeHostingOriginHostname CodeHostingOriginHostname
 	CodeHostingPlatformName   CodeHostingPlatformName
 	GiteaToken                GiteaToken
@@ -133,7 +133,7 @@ func (self *FullConfig) ShouldNewBranchPush() bool {
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() FullConfig {
 	return FullConfig{
-		Aliases:                   map[Key]string{},
+		Aliases:                   map[AliasableCommand]string{},
 		CodeHostingOriginHostname: "",
 		CodeHostingPlatformName:   "",
 		GiteaToken:                "",

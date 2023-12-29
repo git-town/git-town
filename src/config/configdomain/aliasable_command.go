@@ -2,7 +2,6 @@ package configdomain
 
 import (
 	"fmt"
-	"strings"
 )
 
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
@@ -65,13 +64,10 @@ func AliasableCommands() []AliasableCommand {
 	}
 }
 
-func LookupAliasableCommand(key string) *AliasableCommand {
-	if !strings.HasPrefix(key, "alias.") {
-		return nil
-	}
+func LookupAliasableCommand(key Key) *AliasableCommand {
+	keyName := key.name
 	for _, aliasableCommand := range AliasableCommands() {
-		aliasKey := aliasableCommand.Key()
-		if key == aliasKey.name {
+		if aliasableCommand.String() == keyName {
 			return &aliasableCommand
 		}
 	}
