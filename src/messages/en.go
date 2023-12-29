@@ -12,7 +12,6 @@ const (
 	BranchDiffProblem                  = "cannot determine if branch %q has unmerged commits: %w"
 	BranchDoesntContainCommit          = "branch %q does not contain commit %q. Found commits %s"
 	BranchDoesntExist                  = "there is no branch %q"
-	BranchFeatureCannotCreate          = "cannot create feature branch %q: %w"
 	BranchHasWrongSHA                  = "cannot reset branch %q to %q because it received additional commits in the meantime. It should have SHA %q but has %q"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"

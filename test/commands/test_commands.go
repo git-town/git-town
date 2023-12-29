@@ -132,6 +132,17 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.MustRun("git", commands...)
 }
 
+// CreateFeatureBranch creates a feature branch with the given name in this repository.
+func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) {
+	err := self.RunMany([][]string{
+		{"git", "branch", name.String(), "main"},
+		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+
 // CreateFile creates a file with the given name and content in this repository.
 func (self *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(self.WorkingDir, name)
