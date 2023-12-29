@@ -77,11 +77,11 @@ func (self *DataTable) Expand(localRepo runner, remoteRepo runner, initialDevSHA
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
 					sha := localRepo.SHAForCommit(commitName)
-					cell = strings.Replace(cell, match, sha, 1)
+					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
 					sha := remoteRepo.SHAForCommit(commitName)
-					cell = strings.Replace(cell, match, sha, 1)
+					cell = strings.Replace(cell, match, sha.String(), 1)
 				case strings.HasPrefix(match, "{{ sha-before-run "):
 					commitName := match[19 : len(match)-4]
 					sha, found := initialDevSHAs[commitName]
