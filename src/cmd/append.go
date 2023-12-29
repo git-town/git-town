@@ -96,7 +96,6 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
@@ -122,20 +121,20 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
-		Lineage:       lineage,
+		Lineage:       repo.Runner.Lineage,
 		MainBranch:    repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
+	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
 		branches:                  branches,
