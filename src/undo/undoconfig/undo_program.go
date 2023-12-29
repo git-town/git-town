@@ -6,13 +6,17 @@ import (
 )
 
 func DetermineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *configdomain.Access) (program.Program, error) {
-	fullCache, err := configdomain.LoadFullCache(configGit)
+	globalCache, _, err := configGit.LoadCache(true)
+	if err != nil {
+		return program.Program{}, err
+	}
+	localCache, _, err := configGit.LoadCache(false)
 	if err != nil {
 		return program.Program{}, err
 	}
 	finalConfigSnapshot := ConfigSnapshot{
-		Global: fullCache.GlobalCache,
-		Local:  fullCache.LocalCache,
+		Global: globalCache,
+		Local:  localCache,
 	}
 	configDiff := NewConfigDiffs(initialConfigSnapshot, finalConfigSnapshot)
 	return configDiff.UndoProgram(), nil
