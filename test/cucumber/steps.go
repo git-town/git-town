@@ -250,6 +250,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.GitTown.SetLocalConfigValue(configKey, value)
 	})
 
+	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
+		key := configdomain.ParseKey("alias." + name)
+		if key == nil {
+			return fmt.Errorf("key not found")
+		}
+		have := state.fixture.DevRepo.GitTown.Config.Aliases[*key]
+		if have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.GitTown.SetGlobalConfigValue(*configKey, value)
@@ -260,15 +272,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
 		if newValue != nil {
 			return fmt.Errorf("should not have global %q anymore but has value %q", name, *newValue)
-		}
-		return nil
-	})
-
-	suite.Step(`^global Git setting "([^"]+)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		key := configdomain.NewKey(name)
-		have := state.fixture.DevRepo.GlobalCache[key]
-		if have != want {
-			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
 		return nil
 	})
