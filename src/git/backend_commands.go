@@ -34,12 +34,8 @@ type BackendCommands struct {
 }
 
 // Author provides the locally Git configured user.
-func (self *BackendCommands) Author() (string, error) {
-	// TODO: read this from the config cache?
-	// If not possible, comment here why.
-	name := self.GitUserName
-	email := self.GitUserEmail
-	return name + " <" + email + ">", nil
+func (self *BackendCommands) Author() string {
+	return self.GitUserName + " <" + self.GitUserEmail + ">"
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
