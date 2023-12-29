@@ -7,7 +7,6 @@ Feature: display all executed Git commands
       | feature | local, origin | feature commit |
     And Git Town setting "sync-before-ship" is "true"
 
-  @this
   Scenario: result
     When I run "git-town ship -m done --verbose"
     Then it runs the commands
