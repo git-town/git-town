@@ -764,7 +764,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		state.fixture.DevRepo.CreateFile(
-			configfile.ConfigFileName,
+			configfile.FileName,
 			content.Content,
 		)
 		return nil
