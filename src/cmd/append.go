@@ -182,7 +182,7 @@ func appendProgram(config *appendConfig) program.Program {
 		MainBranch: config.MainBranch,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.NewBranchPush.Bool() && config.Online().Bool() {
+	if config.remotes.HasOrigin() && config.ShouldNewBranchPush() && config.IsOnline() {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.NoPushHook()})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

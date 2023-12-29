@@ -73,37 +73,33 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
+		Lineage:                 config.Lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              config.noPushHook,
+		NoPushHook:              config.NoPushHook(),
 	})
 }
 
 type killConfig struct {
+	configdomain.FullConfig
 	branchToKill   gitdomain.BranchInfo
 	branchWhenDone gitdomain.LocalBranchName
 	dryRun         bool
 	hasOpenChanges bool
 	initialBranch  gitdomain.LocalBranchName
-	isOnline       configdomain.Online
-	lineage        configdomain.Lineage
-	mainBranch     gitdomain.LocalBranchName
-	noPushHook     configdomain.NoPushHook
 	previousBranch gitdomain.LocalBranchName
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
 	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
+		Lineage:               repo.Runner.Lineage,
 		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
@@ -121,11 +117,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
 	}
 	if branchToKill.IsLocal() {
-		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
+		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
-			Lineage:       lineage,
+			Lineage:       repo.Runner.Lineage,
 			MainBranch:    mainBranch,
 			Runner:        repo.Runner,
 		})
@@ -148,21 +144,18 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone = branches.Initial
 	}
 	return &killConfig{
+		FullConfig:     repo.Runner.FullConfig,
 		branchToKill:   *branchToKill,
 		branchWhenDone: branchWhenDone,
 		dryRun:         dryRun,
 		hasOpenChanges: repoStatus.OpenChanges,
 		initialBranch:  branches.Initial,
-		isOnline:       repo.IsOffline.ToOnline(),
-		lineage:        lineage,
-		mainBranch:     mainBranch,
-		noPushHook:     pushHook.Negate(),
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
 func (self killConfig) branchToKillParent() gitdomain.LocalBranchName {
-	return self.lineage.Parent(self.branchToKill.LocalName)
+	return self.Lineage.Parent(self.branchToKill.LocalName)
 }
 
 func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
@@ -179,7 +172,7 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
-	if config.branchToKill.HasTrackingBranch() && config.isOnline.Bool() {
+	if config.branchToKill.HasTrackingBranch() && config.IsOnline() {
 		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
 	}
 	if config.initialBranch == config.branchToKill.LocalName {
@@ -197,7 +190,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 	if !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchToKill.LocalName,
-			Lineage: config.lineage,
+			Lineage: config.Lineage,
 			Program: prog,
 			Parent:  config.branchToKillParent(),
 		})
