@@ -94,12 +94,11 @@ type killConfig struct {
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		Lineage:               repo.Runner.Lineage,
-		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})

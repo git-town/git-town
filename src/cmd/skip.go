@@ -43,12 +43,11 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		Lineage:               repo.Runner.Lineage,
-		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})

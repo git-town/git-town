@@ -100,12 +100,11 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
-		Lineage:               lineage,
 		HandleUnfinishedState: true,
-		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})

@@ -72,15 +72,12 @@ func executeContinue(verbose bool) error {
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -102,7 +99,6 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	if err != nil {
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
@@ -110,7 +106,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
 		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
 		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
+		MainBranch:      repo.Runner.MainBranch,
 		Log:             log.Printing{},
 	})
 	return &continueConfig{

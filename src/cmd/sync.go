@@ -120,12 +120,11 @@ type syncConfig struct {
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               repo.Runner.Lineage,
-		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
