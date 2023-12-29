@@ -76,15 +76,15 @@ func executeSync(all, dryRun, verbose bool) error {
 			BranchInfos:           config.branches.All,
 			BranchTypes:           config.branches.Types,
 			Remotes:               config.remotes,
-			IsOnline:              config.isOnline,
-			Lineage:               config.lineage,
+			IsOnline:              config.Online(),
+			Lineage:               config.Lineage,
 			Program:               &runProgram,
-			MainBranch:            config.mainBranch,
-			SyncPerennialStrategy: config.syncPerennialStrategy,
+			MainBranch:            config.MainBranch,
+			SyncPerennialStrategy: config.SyncPerennialStrategy,
 			PushBranch:            true,
-			PushHook:              config.pushHook,
-			SyncUpstream:          config.syncUpstream,
-			SyncFeatureStrategy:   config.syncFeatureStrategy,
+			PushHook:              config.PushHook,
+			SyncUpstream:          config.SyncUpstream,
+			SyncFeatureStrategy:   config.SyncFeatureStrategy,
 		},
 		BranchesToSync: config.branchesToSync,
 		DryRun:         dryRun,
@@ -104,8 +104,8 @@ func executeSync(all, dryRun, verbose bool) error {
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
-		NoPushHook:              config.pushHook.Negate(),
+		Lineage:                 config.Lineage,
+		NoPushHook:              config.NoPushHook(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -114,31 +114,23 @@ func executeSync(all, dryRun, verbose bool) error {
 }
 
 type syncConfig struct {
-	branches              configdomain.Branches
-	branchesToSync        gitdomain.BranchInfos
-	hasOpenChanges        bool
-	isOnline              configdomain.Online
-	lineage               configdomain.Lineage
-	mainBranch            gitdomain.LocalBranchName
-	previousBranch        gitdomain.LocalBranchName
-	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              configdomain.PushHook
-	remotes               gitdomain.Remotes
-	shouldPushTags        bool
-	syncUpstream          configdomain.SyncUpstream
-	syncFeatureStrategy   configdomain.SyncFeatureStrategy
+	configdomain.FullConfig
+	branches       configdomain.Branches
+	branchesToSync gitdomain.BranchInfos
+	hasOpenChanges bool
+	previousBranch gitdomain.LocalBranchName
+	remotes        gitdomain.Remotes
+	shouldPushTags bool
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
+		Lineage:               repo.Runner.Lineage,
+		PushHook:              repo.Runner.PushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -154,16 +146,15 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		branches.Types, lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			AllBranches: localBranches,
 			BranchTypes: branches.Types,
-			Lineage:     lineage,
-			MainBranch:  mainBranch,
+			Lineage:     repo.Runner.Lineage,
+			MainBranch:  repo.Runner.MainBranch,
 			Runner:      repo.Runner,
 		})
 		if err != nil {
@@ -172,40 +163,29 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
-			DefaultBranch: mainBranch,
-			Lineage:       lineage,
-			MainBranch:    mainBranch,
+			DefaultBranch: repo.Runner.MainBranch,
+			Lineage:       repo.Runner.Lineage,
+			MainBranch:    repo.Runner.MainBranch,
 			Runner:        repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
-	}
-	if !allFlag {
 		branchNamesToSync = gitdomain.LocalBranchNames{branches.Initial}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
-	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
-	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
-	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
-	syncUpstream := repo.Runner.Config.SyncUpstream
+	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branches:              branches,
-		branchesToSync:        branchesToSync,
-		hasOpenChanges:        repoStatus.OpenChanges,
-		remotes:               remotes,
-		isOnline:              repo.IsOffline.ToOnline(),
-		lineage:               lineage,
-		mainBranch:            mainBranch,
-		previousBranch:        previousBranch,
-		syncPerennialStrategy: syncPerennialStrategy,
-		pushHook:              pushHook,
-		shouldPushTags:        shouldPushTags,
-		syncUpstream:          syncUpstream,
-		syncFeatureStrategy:   syncFeatureStrategy,
+		FullConfig:     repo.Runner.FullConfig,
+		branches:       branches,
+		branchesToSync: branchesToSync,
+		hasOpenChanges: repoStatus.OpenChanges,
+		remotes:        remotes,
+		previousBranch: previousBranch,
+		shouldPushTags: shouldPushTags,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
