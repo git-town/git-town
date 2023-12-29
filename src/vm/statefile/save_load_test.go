@@ -63,9 +63,8 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcode.CreateProposal{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.CreateRemoteBranch{
-					Branch:     gitdomain.NewLocalBranchName("branch"),
-					NoPushHook: true,
-					SHA:        gitdomain.NewSHA("123456"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					SHA:    gitdomain.NewSHA("123456"),
 				},
 				&opcode.CreateTrackingBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
@@ -240,14 +239,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "NoPushHook": true,
         "SHA": "123456"
       },
       "type": "CreateRemoteBranch"
     },
     {
       "data": {
-        "Branch": "branch",
+        "Branch": "branch"
       },
       "type": "CreateTrackingBranch"
     },

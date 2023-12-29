@@ -1364,9 +1364,8 @@ func TestChanges(t *testing.T) {
 			// don't re-create the tracking branch for the perennial branch
 			// because those are protected
 			&opcode.CreateRemoteBranch{
-				Branch:     gitdomain.NewLocalBranchName("feature-branch"),
-				SHA:        gitdomain.NewSHA("222222"),
-				NoPushHook: true,
+				Branch: gitdomain.NewLocalBranchName("feature-branch"),
+				SHA:    gitdomain.NewSHA("222222"),
 			},
 			&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("feature-branch")},
 		}

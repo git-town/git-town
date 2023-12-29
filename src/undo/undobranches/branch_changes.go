@@ -142,9 +142,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
 		result.Add(&opcode.CreateRemoteBranch{
-			Branch:     branch.LocalBranchName(),
-			SHA:        sha,
-			NoPushHook: args.NoPushHook,
+			Branch: branch.LocalBranchName(),
+			SHA:    sha,
 		})
 	}
 
