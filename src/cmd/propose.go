@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/sync"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -82,46 +81,36 @@ func executePropose(dryRun, verbose bool) error {
 		RunProgram:          proposeProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		NoPushHook:              config.pushHook.Negate(),
 	})
 }
 
 type proposeConfig struct {
-	branches              configdomain.Branches
-	branchesToSync        gitdomain.BranchInfos
-	connector             hostingdomain.Connector
-	dryRun                bool
-	hasOpenChanges        bool
-	remotes               gitdomain.Remotes
-	isOnline              configdomain.Online
-	lineage               configdomain.Lineage
-	mainBranch            gitdomain.LocalBranchName
-	previousBranch        gitdomain.LocalBranchName
-	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              configdomain.PushHook
-	syncUpstream          configdomain.SyncUpstream
-	syncFeatureStrategy   configdomain.SyncFeatureStrategy
+	*configdomain.FullConfig
+	branches       configdomain.Branches
+	branchesToSync gitdomain.BranchInfos
+	connector      hostingdomain.Connector
+	dryRun         bool
+	hasOpenChanges bool
+	remotes        gitdomain.Remotes
+	previousBranch gitdomain.LocalBranchName
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -137,34 +126,26 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
-	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+		FullConfig:    &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
-		DefaultBranch: mainBranch,
-		Lineage:       lineage,
-		MainBranch:    mainBranch,
+		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
-	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
-	syncUpstream := repo.Runner.Config.SyncUpstream
 	originURL := repo.Runner.Config.OriginURL()
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {
@@ -173,23 +154,17 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if connector == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &proposeConfig{
-		branches:              branches,
-		branchesToSync:        branchesToSync,
-		connector:             connector,
-		dryRun:                dryRun,
-		hasOpenChanges:        repoStatus.OpenChanges,
-		remotes:               remotes,
-		isOnline:              repo.IsOffline.ToOnline(),
-		lineage:               lineage,
-		mainBranch:            mainBranch,
-		previousBranch:        previousBranch,
-		syncPerennialStrategy: syncPerennialStrategy,
-		pushHook:              pushHook,
-		syncUpstream:          syncUpstream,
-		syncFeatureStrategy:   syncFeatureStrategy,
+		FullConfig:     &repo.Runner.FullConfig,
+		branches:       branches,
+		branchesToSync: branchesToSync,
+		connector:      connector,
+		dryRun:         dryRun,
+		hasOpenChanges: repoStatus.OpenChanges,
+		remotes:        remotes,
+		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 
@@ -197,18 +172,12 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			Remotes:               config.remotes,
-			IsOnline:              config.isOnline,
-			Lineage:               config.lineage,
-			Program:               &prog,
-			MainBranch:            config.mainBranch,
-			SyncPerennialStrategy: config.syncPerennialStrategy,
-			PushBranch:            true,
-			PushHook:              config.pushHook,
-			SyncUpstream:          config.syncUpstream,
-			SyncFeatureStrategy:   config.syncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			Remotes:     config.remotes,
+			Program:     &prog,
+			PushBranch:  true,
 		})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

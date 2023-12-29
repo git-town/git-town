@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/interpreter"
@@ -50,7 +49,9 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSnaphot, lineage, err := determineUndoConfig(repo, verbose)
+	var config *undoConfig
+	var initialStashSnaphot gitdomain.StashSize
+	config, initialStashSnaphot, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -59,12 +60,11 @@ func executeUndo(verbose bool) error {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &undoRunState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
 		Verbose:                 verbose,
-		Lineage:                 lineage,
-		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -73,64 +73,53 @@ func executeUndo(verbose bool) error {
 }
 
 type undoConfig struct {
+	*configdomain.FullConfig
 	connector               hostingdomain.Connector
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesStatus
-	mainBranch              gitdomain.LocalBranchName
-	lineage                 configdomain.Lineage
 	previousBranch          gitdomain.LocalBranchName
-	pushHook                configdomain.PushHook
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	_, initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
-	mainBranch := repo.Runner.Backend.Config.MainBranch
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
 		Log:             log.Printing{},
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, lineage, err
+		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
 	return &undoConfig{
+		FullConfig:              &repo.Runner.FullConfig,
 		connector:               connector,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
-		lineage:                 lineage,
-		mainBranch:              mainBranch,
 		previousBranch:          previousBranch,
-		pushHook:                pushHook,
-	}, initialStashSnapshot, lineage, nil
+	}, initialStashSnapshot, repo.Runner.Lineage, nil
 }
 
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {

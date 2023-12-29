@@ -45,7 +45,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 			if err != nil {
 				return err
 			}
-			self.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch, NoPushHook: false})
+			self.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch})
 			self.RunProgram.PrependProgram(popped)
 			break
 		}

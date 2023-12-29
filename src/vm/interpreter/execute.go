@@ -38,6 +38,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
+	*configdomain.FullConfig
 	RunState                *runstate.RunState
 	Run                     *git.ProdRunner
 	Connector               hostingdomain.Connector
@@ -46,6 +47,4 @@ type ExecuteArgs struct {
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
-	Lineage                 configdomain.Lineage
-	NoPushHook              configdomain.NoPushHook
 }

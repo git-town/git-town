@@ -38,15 +38,12 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})

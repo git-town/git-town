@@ -70,6 +70,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
@@ -78,42 +79,30 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSnapshot:    initialStashSnapshot,
-		Lineage:                 config.lineage,
-		NoPushHook:              config.pushHook.Negate(),
 	})
 }
 
 type appendConfig struct {
+	*configdomain.FullConfig
 	branches                  configdomain.Branches
 	branchesToSync            gitdomain.BranchInfos
 	dryRun                    bool
 	hasOpenChanges            bool
 	remotes                   gitdomain.Remotes
-	isOnline                  configdomain.Online
-	lineage                   configdomain.Lineage
-	mainBranch                gitdomain.LocalBranchName
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	pushHook                  configdomain.PushHook
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
-	syncPerennialStrategy     configdomain.SyncPerennialStrategy
-	shouldNewBranchPush       configdomain.NewBranchPush
-	syncUpstream              configdomain.SyncUpstream
-	syncFeatureStrategy       configdomain.SyncFeatureStrategy
 	targetBranch              gitdomain.LocalBranchName
 }
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
-		Lineage:               lineage,
 		HandleUnfinishedState: true,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -122,10 +111,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	mainBranch := repo.Runner.Config.MainBranch
-	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
@@ -135,40 +121,30 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branches.Types, lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+		FullConfig:    &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
-		DefaultBranch: mainBranch,
-		Lineage:       lineage,
-		MainBranch:    mainBranch,
+		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
-	syncUpstream := repo.Runner.Config.SyncUpstream
-	initialAndAncestors := lineage.BranchAndAncestors(branches.Initial)
+	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
-		isOnline:                  repo.IsOffline.ToOnline(),
-		lineage:                   lineage,
-		mainBranch:                mainBranch,
 		newBranchParentCandidates: initialAndAncestors,
-		pushHook:                  pushHook,
 		parentBranch:              branches.Initial,
 		previousBranch:            previousBranch,
-		syncPerennialStrategy:     syncPerennialStrategy,
-		shouldNewBranchPush:       shouldNewBranchPush,
-		syncUpstream:              syncUpstream,
-		syncFeatureStrategy:       syncFeatureStrategy,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }
@@ -177,33 +153,25 @@ func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			BranchInfos:           config.branches.All,
-			BranchTypes:           config.branches.Types,
-			IsOnline:              config.isOnline,
-			Lineage:               config.lineage,
-			Program:               &prog,
-			Remotes:               config.remotes,
-			MainBranch:            config.mainBranch,
-			SyncPerennialStrategy: config.syncPerennialStrategy,
-			PushBranch:            true,
-			PushHook:              config.pushHook,
-			SyncUpstream:          config.syncUpstream,
-			SyncFeatureStrategy:   config.syncFeatureStrategy,
+			FullConfig:  config.FullConfig,
+			BranchInfos: config.branches.All,
+			BranchTypes: config.branches.Types,
+			Program:     &prog,
+			Remotes:     config.remotes,
+			PushBranch:  true,
 		})
 	}
 	prog.Add(&opcode.CreateBranchExistingParent{
-		Ancestors:  config.newBranchParentCandidates,
-		Branch:     config.targetBranch,
-		MainBranch: config.mainBranch,
+		Ancestors: config.newBranchParentCandidates,
+		Branch:    config.targetBranch,
 	})
 	prog.Add(&opcode.SetExistingParent{
-		Branch:     config.targetBranch,
-		Ancestors:  config.newBranchParentCandidates,
-		MainBranch: config.mainBranch,
+		Branch:    config.targetBranch,
+		Ancestors: config.newBranchParentCandidates,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.shouldNewBranchPush.Bool() && config.isOnline.Bool() {
-		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch, NoPushHook: config.pushHook.Negate()})
+	if config.remotes.HasOrigin() && config.ShouldNewBranchPush() && config.IsOnline() {
+		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,

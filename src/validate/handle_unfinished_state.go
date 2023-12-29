@@ -64,13 +64,12 @@ type UnfinishedStateArgs struct {
 func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		Verbose:                 args.Verboe,
-		Lineage:                 args.Lineage,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
-		NoPushHook:              args.PushHook.Negate(),
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &abortRunState,
@@ -86,13 +85,12 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		Verbose:                 args.Verboe,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
-		Lineage:                 args.Lineage,
-		NoPushHook:              args.PushHook.Negate(),
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                runState,
@@ -107,13 +105,12 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		Verbose:                 args.Verboe,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
-		Lineage:                 args.Lineage,
-		NoPushHook:              args.PushHook.Negate(),
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &skipRunState,

@@ -74,15 +74,12 @@ func updatePerennialBranches(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := repo.Runner.Config.Lineage
-	pushHook := repo.Runner.Config.PushHook
 	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Fetch:                 false,
 		Verbose:               verbose,
 		HandleUnfinishedState: false,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})

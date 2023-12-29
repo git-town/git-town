@@ -49,6 +49,10 @@ func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
+func (self *FullConfig) IsOnline() bool {
+	return self.Online().Bool()
+}
+
 // Merges the given PartialConfig into this configuration object.
 func (self *FullConfig) Merge(other PartialConfig) {
 	for key, value := range other.Aliases {
@@ -104,6 +108,18 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.SyncUpstream != nil {
 		self.SyncUpstream = *other.SyncUpstream
 	}
+}
+
+func (self *FullConfig) NoPushHook() NoPushHook {
+	return self.PushHook.Negate()
+}
+
+func (self *FullConfig) Online() Online {
+	return self.Offline.ToOnline()
+}
+
+func (self *FullConfig) ShouldNewBranchPush() bool {
+	return self.NewBranchPush.Bool()
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.

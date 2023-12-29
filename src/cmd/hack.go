@@ -65,12 +65,11 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
 		Verbose:                 verbose,
-		Lineage:                 config.lineage,
-		NoPushHook:              config.pushHook.Negate(),
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
@@ -79,16 +78,13 @@ func executeHack(args []string, dryRun, verbose bool) error {
 }
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	lineage := repo.Runner.Config.Lineage
 	fc := execute.FailureCollector{}
-	pushHook := repo.Runner.Config.PushHook
 	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		Lineage:               lineage,
-		PushHook:              pushHook,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
@@ -98,38 +94,25 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
-	mainBranch := repo.Runner.Config.MainBranch
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	shouldNewBranchPush := repo.Runner.Config.NewBranchPush
-	isOffline := repo.Runner.Config.Offline
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{mainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncUpstream := repo.Runner.Config.SyncUpstream
-	syncPerennialStrategy := repo.Runner.Config.SyncPerennialStrategy
-	syncFeatureStrategy := repo.Runner.Config.SyncFeatureStrategy
 	return &appendConfig{
 		branches:                  branches,
 		branchesToSync:            branchesToSync,
+		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		targetBranch:              targetBranch,
-		parentBranch:              mainBranch,
+		parentBranch:              repo.Runner.MainBranch,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		remotes:                   remotes,
-		lineage:                   lineage,
-		mainBranch:                mainBranch,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{mainBranch},
-		shouldNewBranchPush:       shouldNewBranchPush,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.MainBranch},
 		previousBranch:            previousBranch,
-		syncPerennialStrategy:     syncPerennialStrategy,
-		pushHook:                  pushHook,
-		isOnline:                  isOffline.ToOnline(),
-		syncUpstream:              syncUpstream,
-		syncFeatureStrategy:       syncFeatureStrategy,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

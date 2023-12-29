@@ -81,7 +81,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
 			result.Add(&opcode.Checkout{Branch: branch})
 			result.Add(&opcode.RevertCommit{SHA: change.After})
-			result.Add(&opcode.PushCurrentBranch{CurrentBranch: branch, NoPushHook: args.NoPushHook})
+			result.Add(&opcode.PushCurrentBranch{CurrentBranch: branch})
 		}
 	}
 
@@ -90,14 +90,14 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		change := omniChangedFeatures[branch]
 		result.Add(&opcode.Checkout{Branch: branch})
 		result.Add(&opcode.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Add(&opcode.ForcePushCurrentBranch{NoPushHook: args.NoPushHook})
+		result.Add(&opcode.ForcePushCurrentBranch{})
 	}
 
 	// re-create removed omni-branches
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
 		result.Add(&opcode.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
-		result.Add(&opcode.CreateTrackingBranch{Branch: branch, NoPushHook: args.NoPushHook})
+		result.Add(&opcode.CreateTrackingBranch{Branch: branch})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.BranchTypes)
@@ -108,7 +108,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
 				result.Add(&opcode.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
 				result.Add(&opcode.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
-				result.Add(&opcode.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName, NoPushHook: args.NoPushHook})
+				result.Add(&opcode.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName})
 			}
 		}
 	}
@@ -142,9 +142,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
 		result.Add(&opcode.CreateRemoteBranch{
-			Branch:     branch.LocalBranchName(),
-			SHA:        sha,
-			NoPushHook: args.NoPushHook,
+			Branch: branch.LocalBranchName(),
+			SHA:    sha,
 		})
 	}
 

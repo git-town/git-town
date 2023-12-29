@@ -11,7 +11,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/hosting"
-	"github.com/git-town/git-town/v11/src/hosting/github"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
@@ -71,7 +70,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	branchTypes := repo.Runner.Config.BranchTypes()
+	branchTypes := repo.Runner.BranchTypes()
 	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
 		Types:   branchTypes,
@@ -81,20 +80,15 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
+	hostingService, err := repo.Runner.HostingService()
 	if err != nil {
 		return nil, err
 	}
-	mainBranch := repo.Runner.Config.MainBranch
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:      &repo.Runner.FullConfig,
 		HostingService:  hostingService,
 		GetSHAForBranch: repo.Runner.Backend.SHAForBranch,
-		OriginURL:       originURL,
-		GiteaAPIToken:   repo.Runner.Config.GiteaToken,
-		GithubAPIToken:  github.GetAPIToken(repo.Runner.Config.GitHubToken),
-		GitlabAPIToken:  repo.Runner.Config.GitLabToken,
-		MainBranch:      mainBranch,
+		OriginURL:       repo.Runner.OriginURL(),
 		Log:             log.Printing{},
 	})
 	if err != nil {

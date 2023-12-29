@@ -63,13 +63,11 @@ func TestLoadSave(t *testing.T) {
 				},
 				&opcode.CreateProposal{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.CreateRemoteBranch{
-					Branch:     gitdomain.NewLocalBranchName("branch"),
-					NoPushHook: true,
-					SHA:        gitdomain.NewSHA("123456"),
+					Branch: gitdomain.NewLocalBranchName("branch"),
+					SHA:    gitdomain.NewSHA("123456"),
 				},
 				&opcode.CreateTrackingBranch{
-					Branch:     gitdomain.NewLocalBranchName("branch"),
-					NoPushHook: true,
+					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
 				&opcode.DeleteLocalBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
@@ -92,9 +90,7 @@ func TestLoadSave(t *testing.T) {
 				&opcode.FetchUpstream{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.ForcePushCurrentBranch{
-					NoPushHook: true,
-				},
+				&opcode.ForcePushCurrentBranch{},
 				&opcode.Merge{Branch: gitdomain.NewBranchName("branch")},
 				&opcode.MergeParent{
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
@@ -106,7 +102,6 @@ func TestLoadSave(t *testing.T) {
 				&opcode.PullCurrentBranch{},
 				&opcode.PushCurrentBranch{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
-					NoPushHook:    true,
 				},
 				&opcode.PushTags{},
 				&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
@@ -241,15 +236,13 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {
         "Branch": "branch",
-        "NoPushHook": true,
         "SHA": "123456"
       },
       "type": "CreateRemoteBranch"
     },
     {
       "data": {
-        "Branch": "branch",
-        "NoPushHook": true
+        "Branch": "branch"
       },
       "type": "CreateTrackingBranch"
     },
@@ -296,9 +289,7 @@ func TestLoadSave(t *testing.T) {
       "type": "FetchUpstream"
     },
     {
-      "data": {
-        "NoPushHook": true
-      },
+      "data": {},
       "type": "ForcePushCurrentBranch"
     },
     {
@@ -328,8 +319,7 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "CurrentBranch": "branch",
-        "NoPushHook": true
+        "CurrentBranch": "branch"
       },
       "type": "PushCurrentBranch"
     },

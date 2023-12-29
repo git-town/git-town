@@ -80,12 +80,11 @@ func LoadBranches(args LoadBranchesArgs) (configdomain.Branches, gitdomain.Branc
 }
 
 type LoadBranchesArgs struct {
+	*configdomain.FullConfig
 	Repo                  *OpenRepoResult
 	Fetch                 bool
 	Verbose               bool
 	HandleUnfinishedState bool
-	Lineage               configdomain.Lineage
-	PushHook              configdomain.PushHook
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 }
