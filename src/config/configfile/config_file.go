@@ -1,4 +1,4 @@
-package configdomain
+package configfile
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/BurntSushi/toml"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -37,8 +38,8 @@ type SyncStrategy struct {
 	PerennialBranches *string `toml:"perennial-branches"`
 }
 
-func (self ConfigFileData) Validate() (PartialConfig, error) {
-	result := PartialConfig{} //nolint:exhaustruct
+func (self ConfigFileData) Validate() (configdomain.PartialConfig, error) {
+	result := configdomain.PartialConfig{} //nolint:exhaustruct
 	var err error
 	if self.Branches.Main != nil {
 		result.MainBranch = gitdomain.NewLocalBranchNameRef(*self.Branches.Main)
@@ -48,45 +49,45 @@ func (self ConfigFileData) Validate() (PartialConfig, error) {
 	}
 	if self.CodeHosting != nil {
 		if self.CodeHosting.Platform != nil {
-			result.CodeHostingPlatformName = NewCodeHostingPlatformNameRef(*self.CodeHosting.Platform)
+			result.CodeHostingPlatformName = configdomain.NewCodeHostingPlatformNameRef(*self.CodeHosting.Platform)
 		}
 		if self.CodeHosting.OriginHostname != nil {
-			result.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(*self.CodeHosting.OriginHostname)
+			result.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(*self.CodeHosting.OriginHostname)
 		}
 	}
 	if self.SyncStrategy != nil {
 		if self.SyncStrategy.FeatureBranches != nil {
-			result.SyncFeatureStrategy, err = NewSyncFeatureStrategyRef(*self.SyncStrategy.FeatureBranches)
+			result.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyRef(*self.SyncStrategy.FeatureBranches)
 		}
 		if self.SyncStrategy.PerennialBranches != nil {
-			result.SyncPerennialStrategy, err = NewSyncPerennialStrategyRef(*self.SyncStrategy.PerennialBranches)
+			result.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(*self.SyncStrategy.PerennialBranches)
 		}
 	}
 	if self.PushNewbranches != nil {
-		result.NewBranchPush = NewNewBranchPushRef(*self.PushNewbranches)
+		result.NewBranchPush = configdomain.NewNewBranchPushRef(*self.PushNewbranches)
 	}
 	if self.ShipDeleteTrackingBranch != nil {
-		result.ShipDeleteTrackingBranch = NewShipDeleteTrackingBranchRef(*self.ShipDeleteTrackingBranch)
+		result.ShipDeleteTrackingBranch = configdomain.NewShipDeleteTrackingBranchRef(*self.ShipDeleteTrackingBranch)
 	}
 	if self.SyncUpstream != nil {
-		result.SyncUpstream = NewSyncUpstreamRef(*self.SyncUpstream)
+		result.SyncUpstream = configdomain.NewSyncUpstreamRef(*self.SyncUpstream)
 	}
 	return result, err
 }
 
-func LoadConfigFile() (PartialConfig, error) {
+func LoadConfigFile() (configdomain.PartialConfig, error) {
 	file, err := os.Open(ConfigFileName)
 	if err != nil {
-		return EmptyPartialConfig(), nil //nolint:nilerr
+		return configdomain.EmptyPartialConfig(), nil //nolint:nilerr
 	}
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
 	configFileData, err := ParseTOML(string(bytes))
 	if err != nil {
-		return EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
+		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return configFileData.Validate()
 }
