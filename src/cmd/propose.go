@@ -181,7 +181,6 @@ func proposeProgram(config *proposeConfig) program.Program {
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
-			IsOnline:    config.Online(),
 			Program:     &prog,
 			PushBranch:  true,
 		})

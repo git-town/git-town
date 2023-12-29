@@ -160,7 +160,6 @@ func prependProgram(config *prependConfig) program.Program {
 			FullConfig:  config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
-			IsOnline:    config.Online(),
 			Program:     &prog,
 			PushBranch:  true,
 			Remotes:     config.remotes,

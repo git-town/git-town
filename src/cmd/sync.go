@@ -77,7 +77,6 @@ func executeSync(all, dryRun, verbose bool) error {
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
-			IsOnline:    config.Online(),
 			Program:     &runProgram,
 			PushBranch:  true,
 		},

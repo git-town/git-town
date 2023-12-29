@@ -25,7 +25,6 @@ type BranchProgramArgs struct {
 	*configdomain.FullConfig
 	BranchInfos gitdomain.BranchInfos
 	BranchTypes configdomain.BranchTypes
-	IsOnline    configdomain.Online
 	Program     *program.Program
 	PushBranch  bool
 	Remotes     gitdomain.Remotes
@@ -44,7 +43,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	} else {
 		PerennialBranchProgram(branch, args)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.IsOnline.Bool() {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.IsOnline() {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName})

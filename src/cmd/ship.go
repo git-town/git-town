@@ -276,7 +276,6 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
-			IsOnline:    config.isOnline,
 			Program:     &prog,
 			PushBranch:  true,
 		})
@@ -286,7 +285,6 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
-			IsOnline:    config.isOnline,
 			Program:     &prog,
 			PushBranch:  false,
 		})

@@ -156,7 +156,6 @@ func appendProgram(config *appendConfig) program.Program {
 			FullConfig:  config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
-			IsOnline:    config.Online(),
 			Program:     &prog,
 			Remotes:     config.remotes,
 			PushBranch:  true,
