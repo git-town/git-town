@@ -6,9 +6,9 @@ import (
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
-// LoadBranches loads the typically used information about Git branches using a single Git command.
-// TODO: rename to LoadRepoStatus. Possibly return a single data structure called RepoStatus?
-func LoadBranches(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+// LoadRepoSnapshot loads the typically used information about Git branches using a single Git command.
+// TODO: Receive the ConfigSnapshot here and return a single data structure called RepoSnapshot that contains ConfigSnapshot, BranchesSnapshot, and StashSize.
+func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesStatus
 	var err error
 	stashSnapshot, err := args.Repo.Runner.Backend.StashSize()
