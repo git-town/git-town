@@ -28,13 +28,6 @@ type FullConfig struct {
 	SyncUpstream              SyncUpstream
 }
 
-func (self *FullConfig) BranchTypes() BranchTypes {
-	return BranchTypes{
-		MainBranch:        self.MainBranch,
-		PerennialBranches: self.PerennialBranches,
-	}
-}
-
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
