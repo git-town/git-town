@@ -6,20 +6,21 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, branches configdomain.Branches) error {
+func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, allBranches gitdomain.BranchInfos) error {
 	mainBranch := backend.Config.MainBranch
 	if mainBranch.IsEmpty() {
 		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
 		var err error
-		config.MainBranch, err = dialog.EnterMainBranch(branches.All.LocalBranches().Names(), mainBranch, backend)
+		config.MainBranch, err = dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch, backend)
 		if err != nil {
 			return err
 		}
-		return dialog.EnterPerennialBranches(backend, config, branches)
+		return dialog.EnterPerennialBranches(backend, config, allBranches)
 	}
-	return backend.RemoveOutdatedConfiguration(branches.All)
+	return backend.RemoveOutdatedConfiguration(allBranches)
 }

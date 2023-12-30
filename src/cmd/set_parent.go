@@ -41,7 +41,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -53,20 +53,20 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if !repo.Runner.IsFeatureBranch(branches.Initial) {
+	if !repo.Runner.IsFeatureBranch(branchesSnapshot.Active) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := repo.Runner.Lineage.Parent(branches.Initial)
+	existingParent := repo.Runner.Lineage.Parent(branchesSnapshot.Active)
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
-		repo.Runner.Config.RemoveParent(branches.Initial)
+		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
 		repo.Runner.Config.Reload()
 	} else {
 		existingParent = repo.Runner.Config.MainBranch
 	}
-	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branches.All,
+		AllBranches:   branchesSnapshot.Branches,
 		DefaultBranch: existingParent,
 		Runner:        repo.Runner,
 	})

@@ -79,7 +79,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -95,19 +95,20 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	if branches.All.HasLocalBranch(targetBranch) {
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
-	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
 	return &appendConfig{
-		branches:                  branches,
+		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
+		initialBranch:             branchesSnapshot.Active,
 		targetBranch:              targetBranch,
 		parentBranch:              repo.Runner.MainBranch,
 		hasOpenChanges:            repoStatus.OpenChanges,
