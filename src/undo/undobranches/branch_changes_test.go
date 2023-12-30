@@ -69,7 +69,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			PushHook:          false,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
@@ -126,7 +126,7 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           configdomain.Lineage{},
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
@@ -215,7 +215,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 			Lineage:           lineage,
@@ -305,7 +305,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -389,7 +389,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -463,7 +463,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -562,7 +562,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -658,7 +658,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -767,7 +767,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -867,7 +867,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -985,7 +985,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -1081,7 +1081,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -1177,7 +1177,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -1261,7 +1261,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -1347,7 +1347,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
@@ -1428,7 +1428,7 @@ func TestChanges(t *testing.T) {
 		lineage := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
 		}
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			Lineage:           lineage,
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames(),

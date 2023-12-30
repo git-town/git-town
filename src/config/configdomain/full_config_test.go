@@ -13,7 +13,7 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("IsFeatureBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -25,7 +25,7 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -37,7 +37,7 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -49,7 +49,7 @@ func TestFullConfig(t *testing.T) {
 
 	t.Run("MainAndPerennials", func(t *testing.T) {
 		t.Parallel()
-		config := configdomain.FullConfig{
+		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
 		}
