@@ -126,10 +126,9 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
@@ -173,7 +172,6 @@ func proposeProgram(config *proposeConfig) program.Program {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
 			Program:     &prog,
 			PushBranch:  true,

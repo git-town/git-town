@@ -75,7 +75,6 @@ func executeSync(all, dryRun, verbose bool) error {
 		BranchProgramArgs: sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
 			Program:     &runProgram,
 			PushBranch:  true,
@@ -142,10 +141,9 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	var shouldPushTags bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
+		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			Config:      &repo.Runner.FullConfig,
 			AllBranches: localBranches,
-			BranchTypes: branches.Types,
 			Runner:      repo.Runner,
 		})
 		if err != nil {
@@ -154,10 +152,9 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+		err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 			Config:        &repo.Runner.FullConfig,
 			AllBranches:   branches.All,
-			BranchTypes:   branches.Types,
 			DefaultBranch: repo.Runner.MainBranch,
 			Runner:        repo.Runner,
 		})
