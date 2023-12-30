@@ -7,7 +7,6 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-// TODO: Receive the ConfigSnapshot here and return a single data structure called RepoSnapshot that contains ConfigSnapshot, BranchesSnapshot, and StashSize.
 func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesStatus
 	var err error
