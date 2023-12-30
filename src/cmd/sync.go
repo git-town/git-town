@@ -74,7 +74,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
 			Config:      config.FullConfig,
-			BranchInfos: config.branches.All,
+			BranchInfos: config.allBranches,
 			Remotes:     config.remotes,
 			Program:     &runProgram,
 			PushBranch:  true,
@@ -82,7 +82,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		BranchesToSync: config.branchesToSync,
 		DryRun:         dryRun,
 		HasOpenChanges: config.hasOpenChanges,
-		InitialBranch:  config.branches.Initial,
+		InitialBranch:  config.initialBranch,
 		PreviousBranch: config.previousBranch,
 		ShouldPushTags: config.shouldPushTags,
 	})
@@ -107,16 +107,17 @@ func executeSync(all, dryRun, verbose bool) error {
 
 type syncConfig struct {
 	*configdomain.FullConfig
-	branches       configdomain.Branches
+	allBranches    gitdomain.BranchInfos
 	branchesToSync gitdomain.BranchInfos
 	hasOpenChanges bool
+	initialBranch  gitdomain.LocalBranchName
 	previousBranch gitdomain.LocalBranchName
 	remotes        gitdomain.Remotes
 	shouldPushTags bool
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -140,7 +141,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
 	if allFlag {
-		localBranches := branches.All.LocalBranches()
+		localBranches := branchesSnapshot.Branches.LocalBranches()
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			Config:      &repo.Runner.FullConfig,
 			AllBranches: localBranches,
@@ -152,25 +153,26 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
-		err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+		err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 			Config:        &repo.Runner.FullConfig,
-			AllBranches:   branches.All,
+			AllBranches:   branchesSnapshot.Branches,
 			DefaultBranch: repo.Runner.MainBranch,
 			Runner:        repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
-		branchNamesToSync = gitdomain.LocalBranchNames{branches.Initial}
-		shouldPushTags = !repo.Runner.IsFeatureBranch(branches.Initial)
+		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+		shouldPushTags = !repo.Runner.IsFeatureBranch(branchesSnapshot.Active)
 	}
 	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
-	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
+	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)
 	return &syncConfig{
 		FullConfig:     &repo.Runner.FullConfig,
-		branches:       branches,
+		allBranches:    branchesSnapshot.Branches,
 		branchesToSync: branchesToSync,
 		hasOpenChanges: repoStatus.OpenChanges,
+		initialBranch:  branchesSnapshot.Active,
 		remotes:        remotes,
 		previousBranch: previousBranch,
 		shouldPushTags: shouldPushTags,

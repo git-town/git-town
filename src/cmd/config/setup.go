@@ -37,7 +37,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -49,10 +49,10 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), repo.Runner.MainBranch, &repo.Runner.Backend)
+	newMainBranch, err := dialog.EnterMainBranch(branchesSnapshot.Branches.LocalBranches().Names(), repo.Runner.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
 	repo.Runner.MainBranch = newMainBranch
-	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
+	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
 }
