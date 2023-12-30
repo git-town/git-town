@@ -54,6 +54,5 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	repo.Runner.MainBranch = newMainBranch
-	err = dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
-	return err
+	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
 }
