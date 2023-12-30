@@ -64,10 +64,9 @@ func executeSetParent(verbose bool) error {
 	} else {
 		existingParent = repo.Runner.Config.MainBranch
 	}
-	branches.Types, _, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branches.Types,
 		DefaultBranch: existingParent,
 		Runner:        repo.Runner,
 	})

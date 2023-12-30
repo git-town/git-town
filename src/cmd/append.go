@@ -121,7 +121,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		DefaultBranch: repo.Runner.MainBranch,

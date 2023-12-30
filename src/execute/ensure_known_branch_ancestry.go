@@ -13,7 +13,7 @@ import (
 //
 // The purpose of this function is to implement proper cache invalidation.
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
-func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnownBranchAncestryArgs) (configdomain.Lineage, error) {
+func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnownBranchAncestryArgs) error {
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		AllBranches:   args.AllBranches,
 		Backend:       &args.Runner.Backend,
@@ -21,13 +21,13 @@ func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnow
 		DefaultBranch: args.DefaultBranch,
 	})
 	if err != nil {
-		return args.Config.Lineage, err
+		return err
 	}
 	if updated {
 		// reload after ancestry change
 		args.Runner.Config.Reload()
 	}
-	return args.Config.Lineage, nil
+	return nil
 }
 
 type EnsureKnownBranchAncestryArgs struct {

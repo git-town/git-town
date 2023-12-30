@@ -85,14 +85,12 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	branchTypes := repo.Runner.Config.BranchTypes()
 	if !repo.Runner.IsFeatureBranch(branch) {
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branchTypes,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
