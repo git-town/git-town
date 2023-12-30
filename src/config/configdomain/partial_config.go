@@ -8,7 +8,16 @@ import (
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
-	Aliases                   map[Key]string
+	AliasAppend               *string
+	AliasDiffParent           *string
+	AliasHack                 *string
+	AliasKill                 *string
+	AliasPrepend              *string
+	AliasPropose              *string
+	AliasRenameBranch         *string
+	AliasRepo                 *string
+	AliasShip                 *string
+	AliasSync                 *string
 	CodeHostingOriginHostname *CodeHostingOriginHostname
 	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
@@ -30,10 +39,6 @@ type PartialConfig struct {
 }
 
 func (self *PartialConfig) Add(key Key, value string) error {
-	if strings.HasPrefix(key.name, "alias.") {
-		self.Aliases[key] = value
-		return nil
-	}
 	if strings.HasPrefix(key.name, "git-town-branch.") {
 		if self.Lineage == nil {
 			self.Lineage = &Lineage{}
@@ -45,6 +50,26 @@ func (self *PartialConfig) Add(key Key, value string) error {
 	}
 	var err error
 	switch key {
+	case KeyAliasAppend:
+		self.AliasAppend = &value
+	case KeyAliasDiffParent:
+		self.AliasDiffParent = &value
+	case KeyAliasHack:
+		self.AliasHack = &value
+	case KeyAliasKill:
+		self.AliasKill = &value
+	case KeyAliasPrepend:
+		self.AliasPrepend = &value
+	case KeyAliasPropose:
+		self.AliasPropose = &value
+	case KeyAliasRenameBranch:
+		self.AliasRenameBranch = &value
+	case KeyAliasRepo:
+		self.AliasRepo = &value
+	case KeyAliasShip:
+		self.AliasShip = &value
+	case KeyAliasSync:
+		self.AliasSync = &value
 	case KeyCodeHostingOriginHostname:
 		self.CodeHostingOriginHostname = NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
@@ -86,7 +111,5 @@ func (self *PartialConfig) Add(key Key, value string) error {
 }
 
 func EmptyPartialConfig() PartialConfig {
-	return PartialConfig{ //nolint:exhaustruct
-		Aliases: map[Key]string{},
-	}
+	return PartialConfig{} //nolint:exhaustruct
 }

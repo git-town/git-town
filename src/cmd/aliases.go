@@ -63,30 +63,42 @@ func executeAliases(arg string, dryRun, verbose bool) error {
 }
 
 func addAliases(run *git.ProdRunner) error {
-	for _, alias := range configdomain.AliasableCommands() {
-		existingAlias := run.Aliases[alias.Key()]
-		if existingAlias != "" {
-			continue
-		}
-		err := run.Frontend.SetGitAlias(alias)
-		if err != nil {
-			return err
-		}
+	fc := execute.FailureCollector{}
+	fc.Check(addAlias(configdomain.KeyAliasAppend, run.AliasAppend, "town append", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasDiffParent, run.AliasDiffParent, "town diff-parent", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasHack, run.AliasHack, "town hack", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasKill, run.AliasKill, "town kill", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasPrepend, run.AliasPrepend, "town prepend", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasPropose, run.AliasPropose, "town propose", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasRenameBranch, run.AliasRenameBranch, "town rename-branch", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasRepo, run.AliasRepo, "town repo", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasShip, run.AliasShip, "town ship", &run.Frontend))
+	fc.Check(addAlias(configdomain.KeyAliasSync, run.AliasSync, "town sync", &run.Frontend))
+	if fc.Err == nil {
+		fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
 	}
-	fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
-	return nil
+	return fc.Err
+}
+
+func addAlias(key configdomain.Key, existingValue, newValue string, frontend *git.FrontendCommands) error {
+	if existingValue != "" {
+		return nil
+	}
+	return frontend.SetGitAlias(key, newValue)
 }
 
 func removeAliases(run *git.ProdRunner) error {
-	for _, aliasableCommand := range configdomain.AliasableCommands() {
-		existingAlias := run.Aliases[aliasableCommand.Key()]
-		if existingAlias == "town "+aliasableCommand.String() {
-			err := run.Frontend.RemoveGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-		}
+	fc := execute.FailureCollector{}
+	fc.Check(removeAlias(configdomain.KeyAliasAppend, run.AliasAppend, "town append", &run.Frontend))
+	if fc.Err == nil {
+		fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
 	}
-	fmt.Printf(messages.CommandsRun, run.CommandsCounter.Count())
-	return nil
+	return fc.Err
+}
+
+func removeAlias(key configdomain.Key, existingValue, expectedValue string, frontend *git.FrontendCommands) error {
+	if existingValue != expectedValue {
+		return nil
+	}
+	return frontend.RemoveGitAlias(key)
 }

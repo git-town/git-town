@@ -251,18 +251,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
 	})
 
-	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		key := configdomain.ParseKey("alias." + name)
-		if key == nil {
-			return fmt.Errorf("key not found")
-		}
-		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*key]
-		if have != want {
-			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
-		}
-		return nil
-	})
-
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := configdomain.ParseKey("git-town." + name)
 		return state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
@@ -273,6 +261,78 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
 		if newValue != nil {
 			return fmt.Errorf("should not have global %q anymore but has value %q", name, *newValue)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.append" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		return checkString(state.fixture.DevRepo.Config.GlobalGitConfig.AliasAppend, want, "alias.append")
+	})
+
+	suite.Step(`^global Git setting "alias\.diff-parent" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		return checkString(state.fixture.DevRepo.Config.GlobalGitConfig.AliasDiffParent, want, "alias.diff-parent")
+	})
+
+	suite.Step(`^global Git setting "alias\.hack" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasHack
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.Kill" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasKill
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.Prepend" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasPrepend
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.Propose" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasPropose
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.rename-branch" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasRenameBranch
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.repo" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasRepo
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.ship" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasShip
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git setting "alias\.sync" is (?:now|still) "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.AliasSync
+		if *have != want {
+			return fmt.Errorf("unexpected value for key %q: want %q have %q", configdomain.KeyAliasAppend, want, *have)
 		}
 		return nil
 	})

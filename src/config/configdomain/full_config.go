@@ -7,7 +7,16 @@ import (
 
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
-	Aliases                   map[Key]string
+	AliasAppend               string
+	AliasDiffParent           string
+	AliasHack                 string
+	AliasKill                 string
+	AliasPrepend              string
+	AliasPropose              string
+	AliasRenameBranch         string
+	AliasRepo                 string
+	AliasShip                 string
+	AliasSync                 string
 	CodeHostingOriginHostname CodeHostingOriginHostname
 	CodeHostingPlatformName   CodeHostingPlatformName
 	GiteaToken                GiteaToken
@@ -63,9 +72,37 @@ func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
 
 // Merges the given PartialConfig into this configuration object.
 func (self *FullConfig) Merge(other PartialConfig) {
-	for key, value := range other.Aliases {
-		self.Aliases[key] = value
+	if other.AliasAppend != nil {
+		self.AliasAppend = *other.AliasAppend
 	}
+	if other.AliasDiffParent != nil {
+		self.AliasDiffParent = *other.AliasDiffParent
+	}
+	if other.AliasHack != nil {
+		self.AliasHack = *other.AliasHack
+	}
+	if other.AliasKill != nil {
+		self.AliasKill = *other.AliasKill
+	}
+	if other.AliasPrepend != nil {
+		self.AliasPrepend = *other.AliasPrepend
+	}
+	if other.AliasPropose != nil {
+		self.AliasPropose = *other.AliasPropose
+	}
+	if other.AliasRenameBranch != nil {
+		self.AliasRenameBranch = *other.AliasRenameBranch
+	}
+	if other.AliasRepo != nil {
+		self.AliasRepo = *other.AliasRepo
+	}
+	if other.AliasShip != nil {
+		self.AliasShip = *other.AliasShip
+	}
+	if other.AliasSync != nil {
+		self.AliasSync = *other.AliasSync
+	}
+
 	if other.Lineage != nil {
 		for child, parent := range *other.Lineage {
 			self.Lineage[child] = parent
@@ -139,7 +176,16 @@ func (self *FullConfig) ShouldNewBranchPush() bool {
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() FullConfig {
 	return FullConfig{
-		Aliases:                   map[Key]string{},
+		AliasAppend:               "",
+		AliasDiffParent:           "",
+		AliasHack:                 "",
+		AliasKill:                 "",
+		AliasPrepend:              "",
+		AliasPropose:              "",
+		AliasRenameBranch:         "",
+		AliasRepo:                 "",
+		AliasShip:                 "",
+		AliasSync:                 "",
 		CodeHostingOriginHostname: "",
 		CodeHostingPlatformName:   "",
 		GiteaToken:                "",
