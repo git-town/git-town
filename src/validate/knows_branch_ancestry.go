@@ -12,7 +12,7 @@ import (
 func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
-	if !args.BranchTypes.IsFeatureBranch(branch) {
+	if !args.Config.IsFeatureBranch(branch) {
 		return false, nil
 	}
 	updated := false
@@ -22,7 +22,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		var err error
 		if !hasParent { //nolint:nestif
 			if !headerShown {
-				printParentBranchHeader(args.MainBranch)
+				printParentBranchHeader(args.Config.MainBranch)
 				headerShown = true
 			}
 			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
@@ -43,7 +43,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			}
 			updated = true
 		}
-		if !args.BranchTypes.IsFeatureBranch(parent) {
+		if !args.Config.IsFeatureBranch(parent) {
 			break
 		}
 		currentBranch = parent
@@ -54,9 +54,8 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 type KnowsBranchAncestorsArgs struct {
 	AllBranches   gitdomain.BranchInfos
 	Backend       *git.BackendCommands
-	BranchTypes   configdomain.BranchTypes
+	Config        *configdomain.FullConfig
 	DefaultBranch gitdomain.LocalBranchName
-	MainBranch    gitdomain.LocalBranchName
 }
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
@@ -67,11 +66,10 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			DefaultBranch: args.MainBranch,
+			DefaultBranch: args.Config.MainBranch,
 			Backend:       args.Backend,
 			AllBranches:   args.AllBranches,
-			BranchTypes:   args.BranchTypes,
-			MainBranch:    args.MainBranch,
+			Config:        args.Config,
 		})
 		if err != nil {
 			return updated, err
@@ -86,8 +84,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 type KnowsBranchesAncestorsArgs struct {
 	AllBranches gitdomain.BranchInfos
 	Backend     *git.BackendCommands
-	BranchTypes configdomain.BranchTypes
-	MainBranch  gitdomain.LocalBranchName
+	Config      *configdomain.FullConfig
 }
 
 func printParentBranchHeader(mainBranch gitdomain.LocalBranchName) {

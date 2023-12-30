@@ -17,24 +17,23 @@ func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnow
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		AllBranches:   args.AllBranches,
 		Backend:       &args.Runner.Backend,
-		BranchTypes:   args.BranchTypes,
+		Config:        args.Config,
 		DefaultBranch: args.DefaultBranch,
-		MainBranch:    args.MainBranch,
 	})
 	if err != nil {
-		return args.BranchTypes, args.Lineage, err
+		return args.BranchTypes, args.Config.Lineage, err
 	}
 	if updated {
 		// reload after ancestry change
 		args.Runner.Config.Reload()
-		args.Lineage = args.Runner.Config.Lineage
+		args.Config.Lineage = args.Runner.Config.Lineage
 		args.BranchTypes = args.Runner.Config.BranchTypes()
 	}
-	return args.BranchTypes, args.Lineage, nil
+	return args.BranchTypes, args.Config.Lineage, nil
 }
 
 type EnsureKnownBranchAncestryArgs struct {
-	*configdomain.FullConfig
+	Config        *configdomain.FullConfig
 	AllBranches   gitdomain.BranchInfos
 	BranchTypes   configdomain.BranchTypes
 	DefaultBranch gitdomain.LocalBranchName

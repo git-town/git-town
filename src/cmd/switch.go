@@ -48,7 +48,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.SwitchBranch(config.branches.Types.MainAndPerennials(), config.branches.Initial, config.Lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(config.MainAndPerennials(), config.branches.Initial, config.Lineage)
 	if err != nil {
 		return err
 	}

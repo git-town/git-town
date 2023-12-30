@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
 
 // FullConfig is the merged configuration to be used by Git Town commands.
@@ -45,6 +46,10 @@ func (self *FullConfig) HostingService() (Hosting, error) {
 	return NewHosting(self.CodeHostingPlatformName)
 }
 
+func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch)
+}
+
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
@@ -53,6 +58,14 @@ func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 
 func (self *FullConfig) IsOnline() bool {
 	return self.Online().Bool()
+}
+
+func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.PerennialBranches, branch)
+}
+
+func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
+	return append(gitdomain.LocalBranchNames{self.MainBranch}, self.PerennialBranches...)
 }
 
 // Merges the given PartialConfig into this configuration object.

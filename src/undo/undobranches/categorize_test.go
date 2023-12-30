@@ -49,11 +49,11 @@ func TestCategorize(t *testing.T) {
 				},
 			},
 		}
-		branchTypes := configdomain.BranchTypes{
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1"),
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeInconsistentChanges(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeInconsistentChanges(give, &config)
 		wantPerennials := undodomain.InconsistentChanges{
 			undodomain.InconsistentChange{
 				Before: gitdomain.BranchInfo{
@@ -106,11 +106,11 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		branchTypes := configdomain.BranchTypes{
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeLocalBranchChange(give, &config)
 		wantPerennials := undobranches.LocalBranchChange{
 			gitdomain.NewLocalBranchName("dev"): {
 				Before: gitdomain.NewSHA("333333"),
@@ -139,11 +139,11 @@ func TestCategorize(t *testing.T) {
 				After:  gitdomain.NewSHA("444444"),
 			},
 		}
-		branchTypes := configdomain.BranchTypes{
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("dev"),
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchChange(give, &config)
 		wantPerennials := undobranches.RemoteBranchChange{
 			gitdomain.NewRemoteBranchName("origin/dev"): {
 				Before: gitdomain.NewSHA("333333"),
@@ -166,11 +166,11 @@ func TestCategorize(t *testing.T) {
 			gitdomain.NewRemoteBranchName("origin/feature-branch"):   gitdomain.NewSHA("111111"),
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
-		branchTypes := configdomain.BranchTypes{
+		config := configdomain.FullConfig{
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
 		}
-		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, branchTypes)
+		havePerennials, haveFeatures := undobranches.CategorizeRemoteBranchesSHAs(give, &config)
 		wantPerennials := undobranches.RemoteBranchesSHAs{
 			gitdomain.NewRemoteBranchName("origin/perennial-branch"): gitdomain.NewSHA("222222"),
 		}
