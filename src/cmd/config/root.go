@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
-	"github.com/git-town/git-town/v11/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -52,33 +51,15 @@ func executeConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineConfigConfig(repo.Runner)
-	if err != nil {
-		return err
-	}
-	printConfig(config)
+	printConfig(&repo.Runner.FullConfig)
 	return nil
 }
 
-func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
-	fc := execute.FailureCollector{}
-	branchTypes := run.Config.BranchTypes()
-	return RootConfig{
-		FullConfig:  &run.FullConfig,
-		branchTypes: branchTypes,
-	}, fc.Err
-}
-
-type RootConfig struct {
-	*configdomain.FullConfig
-	branchTypes configdomain.BranchTypes
-}
-
-func printConfig(config RootConfig) {
+func printConfig(config *configdomain.FullConfig) {
 	fmt.Println()
 	print.Header("Branches")
-	print.Entry("main branch", format.StringSetting(config.branchTypes.MainBranch.String()))
-	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
+	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))
+	print.Entry("perennial branches", format.StringSetting((config.PerennialBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.Offline.Bool()))
@@ -96,7 +77,7 @@ func printConfig(config RootConfig) {
 	print.Entry("GitLab token", format.StringSetting(string(config.GitLabToken)))
 	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))
 	fmt.Println()
-	if !config.branchTypes.MainBranch.IsEmpty() {
+	if !config.MainBranch.IsEmpty() {
 		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
 	}
 }
