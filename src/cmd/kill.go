@@ -92,7 +92,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -104,8 +104,8 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToKill := branches.All.FindByLocalName(branchNameToKill)
+	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill)
 	if branchToKill == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
 	}
@@ -115,7 +115,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if branchToKill.IsLocal() {
 		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
 			Config:        &repo.Runner.FullConfig,
-			AllBranches:   branches.All,
+			AllBranches:   branchesSnapshot.Branches,
 			DefaultBranch: repo.Runner.MainBranch,
 			Runner:        repo.Runner,
 		})
@@ -132,10 +132,10 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	var branchWhenDone gitdomain.LocalBranchName
-	if branchNameToKill == branches.Initial {
+	if branchNameToKill == branchesSnapshot.Active {
 		branchWhenDone = previousBranch
 	} else {
-		branchWhenDone = branches.Initial
+		branchWhenDone = branchesSnapshot.Active
 	}
 	return &killConfig{
 		FullConfig:     &repo.Runner.FullConfig,
@@ -143,7 +143,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone: branchWhenDone,
 		dryRun:         dryRun,
 		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  branches.Initial,
+		initialBranch:  branchesSnapshot.Active,
 		previousBranch: previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }

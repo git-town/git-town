@@ -84,10 +84,11 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 
 type appendConfig struct {
 	*configdomain.FullConfig
-	branches                  configdomain.Branches
+	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	dryRun                    bool
 	hasOpenChanges            bool
+	initialBranch             gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	parentBranch              gitdomain.LocalBranchName
@@ -97,7 +98,7 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -115,34 +116,35 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	if fc.Err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
 	}
-	if branches.All.HasLocalBranch(targetBranch) {
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branches.All,
+		AllBranches:   branchesSnapshot.Branches,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
-	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
+	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
+	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
-		branches:                  branches,
+		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
+		initialBranch:             branchesSnapshot.Active,
 		remotes:                   remotes,
 		newBranchParentCandidates: initialAndAncestors,
-		parentBranch:              branches.Initial,
+		parentBranch:              branchesSnapshot.Active,
 		previousBranch:            previousBranch,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
@@ -153,7 +155,7 @@ func appendProgram(config *appendConfig) program.Program {
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
-			BranchInfos: config.branches.All,
+			BranchInfos: config.allBranches,
 			Program:     &prog,
 			Remotes:     config.remotes,
 			PushBranch:  true,
@@ -175,7 +177,7 @@ func appendProgram(config *appendConfig) program.Program {
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.branches.Initial, config.previousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.initialBranch, config.previousBranch},
 	})
 	return prog
 }

@@ -67,7 +67,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -79,9 +79,9 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	if branch != branches.Initial {
-		if !branches.All.HasLocalBranch(branch) {
+	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	if branch != branchesSnapshot.Active {
+		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
@@ -90,7 +90,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	}
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branches.All,
+		AllBranches:   branchesSnapshot.Branches,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
