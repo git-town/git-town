@@ -70,13 +70,11 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	branchTypes := repo.Runner.BranchTypes()
 	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
-		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
 	}
-	_, err = validate.IsConfigured(&repo.Runner.Backend, branches)
+	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
 	if err != nil {
 		return nil, err
 	}

@@ -121,10 +121,9 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
@@ -155,7 +154,6 @@ func appendProgram(config *appendConfig) program.Program {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Program:     &prog,
 			Remotes:     config.remotes,
 			PushBranch:  true,

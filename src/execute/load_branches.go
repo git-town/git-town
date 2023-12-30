@@ -67,14 +67,12 @@ func LoadBranches(args LoadBranchesArgs) (configdomain.Branches, gitdomain.Branc
 			return configdomain.EmptyBranches(), branchesSnapshot, stashSnapshot, false, err
 		}
 	}
-	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	branches := configdomain.Branches{
 		All:     branchesSnapshot.Branches,
-		Types:   branchTypes,
 		Initial: branchesSnapshot.Active,
 	}
 	if args.ValidateIsConfigured {
-		branches.Types, err = validate.IsConfigured(&args.Repo.Runner.Backend, branches)
+		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.FullConfig, branches)
 	}
 	return branches, branchesSnapshot, stashSnapshot, false, err
 }

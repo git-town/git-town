@@ -124,10 +124,9 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	if !repo.Runner.IsFeatureBranch(branches.Initial) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
-	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
@@ -159,7 +158,6 @@ func prependProgram(config *prependConfig) program.Program {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Program:     &prog,
 			PushBranch:  true,
 			Remotes:     config.remotes,

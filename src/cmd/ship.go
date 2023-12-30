@@ -170,10 +170,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if !repo.Runner.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
-		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
@@ -266,7 +265,6 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
 			Program:     &prog,
 			PushBranch:  true,
@@ -275,7 +273,6 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
-			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
 			Program:     &prog,
 			PushBranch:  false,

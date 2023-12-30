@@ -49,11 +49,10 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), branches.Types.MainBranch, &repo.Runner.Backend)
+	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), repo.Runner.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
-	branches.Types.MainBranch = newMainBranch
-	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches)
-	return err
+	repo.Runner.MainBranch = newMainBranch
+	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
 }
