@@ -62,7 +62,6 @@ func executeConfig(verbose bool) error {
 
 func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 	fc := execute.FailureCollector{}
-	branchTypes := run.Config.BranchTypes()
 	deleteTrackingBranch := run.Config.ShipDeleteTrackingBranch
 	giteaToken := run.Config.GiteaToken
 	githubToken := run.Config.GitHubToken
@@ -77,7 +76,6 @@ func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 	syncFeatureStrategy := run.Config.SyncFeatureStrategy
 	syncBeforeShip := run.Config.SyncBeforeShip
 	return RootConfig{
-		branchTypes:           branchTypes,
 		deleteTrackingBranch:  deleteTrackingBranch,
 		hosting:               hosting,
 		giteaToken:            giteaToken,
@@ -95,7 +93,6 @@ func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 }
 
 type RootConfig struct {
-	branchTypes           configdomain.BranchTypes
 	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
 	giteaToken            configdomain.GiteaToken
 	githubToken           configdomain.GitHubToken
@@ -114,7 +111,7 @@ type RootConfig struct {
 func printConfig(config RootConfig) {
 	fmt.Println()
 	print.Header("Branches")
-	print.Entry("main branch", format.StringSetting(config.branchTypes.MainBranch.String()))
+	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))
 	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
