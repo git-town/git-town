@@ -63,52 +63,15 @@ func executeConfig(verbose bool) error {
 func determineConfigConfig(run *git.ProdRunner) (RootConfig, error) {
 	fc := execute.FailureCollector{}
 	branchTypes := run.Config.BranchTypes()
-	deleteTrackingBranch := run.Config.ShipDeleteTrackingBranch
-	giteaToken := run.Config.GiteaToken
-	githubToken := run.Config.GitHubToken
-	gitlabToken := run.Config.GitLabToken
-	hosting := fc.Hosting(run.Config.HostingService())
-	isOffline := run.Config.Offline
-	lineage := run.Config.Lineage
-	syncPerennialStrategy := run.Config.SyncPerennialStrategy
-	pushHook := run.Config.PushHook
-	pushNewBranches := run.Config.NewBranchPush
-	syncUpstream := run.Config.SyncUpstream
-	syncFeatureStrategy := run.Config.SyncFeatureStrategy
-	syncBeforeShip := run.Config.SyncBeforeShip
 	return RootConfig{
-		branchTypes:           branchTypes,
-		deleteTrackingBranch:  deleteTrackingBranch,
-		hosting:               hosting,
-		giteaToken:            giteaToken,
-		githubToken:           githubToken,
-		gitlabToken:           gitlabToken,
-		isOffline:             isOffline,
-		lineage:               lineage,
-		syncPerennialStrategy: syncPerennialStrategy,
-		pushHook:              pushHook,
-		pushNewBranches:       pushNewBranches,
-		syncUpstream:          syncUpstream,
-		syncFeatureStrategy:   syncFeatureStrategy,
-		syncBeforeShip:        syncBeforeShip,
+		FullConfig:  &run.FullConfig,
+		branchTypes: branchTypes,
 	}, fc.Err
 }
 
 type RootConfig struct {
-	branchTypes           configdomain.BranchTypes
-	deleteTrackingBranch  configdomain.ShipDeleteTrackingBranch
-	giteaToken            configdomain.GiteaToken
-	githubToken           configdomain.GitHubToken
-	gitlabToken           configdomain.GitLabToken
-	hosting               configdomain.Hosting
-	isOffline             configdomain.Offline
-	lineage               configdomain.Lineage
-	syncPerennialStrategy configdomain.SyncPerennialStrategy
-	pushHook              configdomain.PushHook
-	pushNewBranches       configdomain.NewBranchPush
-	syncUpstream          configdomain.SyncUpstream
-	syncFeatureStrategy   configdomain.SyncFeatureStrategy
-	syncBeforeShip        configdomain.SyncBeforeShip
+	*configdomain.FullConfig
+	branchTypes configdomain.BranchTypes
 }
 
 func printConfig(config RootConfig) {
@@ -118,22 +81,22 @@ func printConfig(config RootConfig) {
 	print.Entry("perennial branches", format.StringSetting((config.branchTypes.PerennialBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
-	print.Entry("offline", format.Bool(config.isOffline.Bool()))
-	print.Entry("run pre-push hook", format.Bool(bool(config.pushHook)))
-	print.Entry("push new branches", format.Bool(config.pushNewBranches.Bool()))
-	print.Entry("ship deletes the tracking branch", format.Bool(config.deleteTrackingBranch.Bool()))
-	print.Entry("sync-feature strategy", config.syncFeatureStrategy.String())
-	print.Entry("sync-perennial strategy", config.syncPerennialStrategy.String())
-	print.Entry("sync with upstream", format.Bool(config.syncUpstream.Bool()))
-	print.Entry("sync before shipping", format.Bool(config.syncBeforeShip.Bool()))
+	print.Entry("offline", format.Bool(config.Offline.Bool()))
+	print.Entry("run pre-push hook", format.Bool(bool(config.PushHook)))
+	print.Entry("push new branches", format.Bool(config.ShouldNewBranchPush()))
+	print.Entry("ship deletes the tracking branch", format.Bool(config.ShipDeleteTrackingBranch.Bool()))
+	print.Entry("sync-feature strategy", config.SyncFeatureStrategy.String())
+	print.Entry("sync-perennial strategy", config.SyncPerennialStrategy.String())
+	print.Entry("sync with upstream", format.Bool(config.SyncUpstream.Bool()))
+	print.Entry("sync before shipping", format.Bool(config.SyncBeforeShip.Bool()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("hosting service override", format.StringSetting(config.hosting.String()))
-	print.Entry("GitHub token", format.StringSetting(string(config.githubToken)))
-	print.Entry("GitLab token", format.StringSetting(string(config.gitlabToken)))
-	print.Entry("Gitea token", format.StringSetting(string(config.giteaToken)))
+	print.Entry("hosting service override", format.StringSetting(config.CodeHostingPlatformName.String()))
+	print.Entry("GitHub token", format.StringSetting(string(config.GitHubToken)))
+	print.Entry("GitLab token", format.StringSetting(string(config.GitLabToken)))
+	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))
 	fmt.Println()
 	if !config.branchTypes.MainBranch.IsEmpty() {
-		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.lineage))
+		print.LabelAndValue("Branch Lineage", format.BranchLineage(config.Lineage))
 	}
 }
