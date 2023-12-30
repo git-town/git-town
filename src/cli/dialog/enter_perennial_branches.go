@@ -23,8 +23,7 @@ func EnterPerennialBranches(backend *git.BackendCommands, config *configdomain.F
 	}
 	newPerennialBranches := gitdomain.NewLocalBranchNames(newPerennialBranchNames...)
 	config.PerennialBranches = newPerennialBranches
-	err = backend.Config.SetPerennialBranches(newPerennialBranches)
-	return err
+	return backend.Config.SetPerennialBranches(newPerennialBranches)
 }
 
 func perennialBranchesPrompt(perennialBranches gitdomain.LocalBranchNames) string {
