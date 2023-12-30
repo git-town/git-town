@@ -126,7 +126,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if branches.Types.IsPerennialBranch(oldBranchName) {
+		if repo.Runner.IsPerennialBranch(oldBranchName) {
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -163,7 +163,7 @@ func renameBranchProgram(config *renameBranchConfig) program.Program {
 		result.Add(&opcode.Checkout{Branch: config.newBranch})
 	}
 	if !config.dryRun {
-		if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
+		if config.IsPerennialBranch(config.branches.Initial) {
 			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
 			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
 		} else {

@@ -17,13 +17,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch added", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
@@ -73,12 +66,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("branch-1"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			PushHook:          false,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames(),
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -94,11 +94,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch removed", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
-		}
-		lineage := configdomain.Lineage{}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -131,12 +126,16 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           configdomain.Lineage{},
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames(),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -151,13 +150,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch changed", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -220,12 +212,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			Lineage:           lineage,
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -248,13 +247,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch pushed to origin", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -310,12 +302,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -332,13 +331,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("remote-only branch downloaded", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -394,12 +386,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -418,13 +417,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch added", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
@@ -468,12 +460,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -499,13 +498,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -567,12 +559,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          true,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               false,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -595,13 +594,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch remote updated", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -663,12 +655,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          true,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               false,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -686,13 +685,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -772,12 +764,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:       lineage,
-			BranchTypes:   branchTypes,
+			Config:        &config,
 			InitialBranch: before.Active,
 			FinalBranch:   after.Active,
-			NoPushHook:    true,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -799,13 +798,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -872,12 +864,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:       lineage,
-			BranchTypes:   branchTypes,
+			Config:        &config,
 			InitialBranch: before.Active,
 			FinalBranch:   after.Active,
-			NoPushHook:    true,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -898,13 +897,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -990,12 +982,19 @@ func TestChanges(t *testing.T) {
 			},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1018,13 +1017,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1086,12 +1078,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1114,13 +1113,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pushed up", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1182,12 +1174,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1204,13 +1203,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch deleted locally", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1266,12 +1258,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1290,13 +1289,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1352,12 +1344,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-branch"),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1374,13 +1373,6 @@ func TestChanges(t *testing.T) {
 
 	t.Run("sync with a new upstream remote", func(t *testing.T) {
 		t.Parallel()
-		branchTypes := configdomain.BranchTypes{
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames(),
-		}
-		lineage := configdomain.Lineage{
-			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
-		}
 		before := gitdomain.BranchesStatus{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -1433,12 +1425,19 @@ func TestChanges(t *testing.T) {
 			InconsistentlyChanged: undodomain.InconsistentChanges{},
 		}
 		must.Eq(t, wantChanges, haveChanges)
+		lineage := configdomain.Lineage{
+			gitdomain.NewLocalBranchName("feature-branch"): gitdomain.NewLocalBranchName("main"),
+		}
+		config := configdomain.FullConfig{ //nolint:exhaustruct
+			Lineage:           lineage,
+			MainBranch:        gitdomain.NewLocalBranchName("main"),
+			PerennialBranches: gitdomain.NewLocalBranchNames(),
+			PushHook:          false,
+		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-			Lineage:                  lineage,
-			BranchTypes:              branchTypes,
+			Config:                   &config,
 			InitialBranch:            before.Active,
 			FinalBranch:              after.Active,
-			NoPushHook:               true,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{

@@ -127,7 +127,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
-		FullConfig:    &repo.Runner.FullConfig,
+		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
@@ -171,7 +171,7 @@ func proposeProgram(config *proposeConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			FullConfig:  config.FullConfig,
+			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,

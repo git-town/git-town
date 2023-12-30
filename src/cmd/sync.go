@@ -73,7 +73,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			FullConfig:  config.FullConfig,
+			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
@@ -143,7 +143,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-			FullConfig:  &repo.Runner.FullConfig,
+			Config:      &repo.Runner.FullConfig,
 			AllBranches: localBranches,
 			BranchTypes: branches.Types,
 			Runner:      repo.Runner,
@@ -155,7 +155,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = true
 	} else {
 		branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
-			FullConfig:    &repo.Runner.FullConfig,
+			Config:        &repo.Runner.FullConfig,
 			AllBranches:   branches.All,
 			BranchTypes:   branches.Types,
 			DefaultBranch: repo.Runner.MainBranch,
@@ -165,7 +165,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			return nil, branchesSnapshot, stashSnapshot, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branches.Initial}
-		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
+		shouldPushTags = !repo.Runner.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)

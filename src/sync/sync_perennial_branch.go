@@ -8,10 +8,10 @@ import (
 // PerennialBranchProgram adds the opcodes to sync the perennial branch with the given name.
 func PerennialBranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	if branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchOpcode(args.Program, branch.RemoteName, args.SyncPerennialStrategy)
+		updateCurrentPerennialBranchOpcode(args.Program, branch.RemoteName, args.Config.SyncPerennialStrategy)
 	}
-	if branch.LocalName == args.MainBranch && args.Remotes.HasUpstream() && args.SyncUpstream.Bool() {
-		args.Program.Add(&opcode.FetchUpstream{Branch: args.MainBranch})
-		args.Program.Add(&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("upstream/" + args.MainBranch.String())})
+	if branch.LocalName == args.Config.MainBranch && args.Remotes.HasUpstream() && args.Config.SyncUpstream.Bool() {
+		args.Program.Add(&opcode.FetchUpstream{Branch: args.Config.MainBranch})
+		args.Program.Add(&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("upstream/" + args.Config.MainBranch.String())})
 	}
 }

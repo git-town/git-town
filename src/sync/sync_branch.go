@@ -9,7 +9,7 @@ import (
 
 // BranchProgram syncs the given branch.
 func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
-	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Lineage.Parent(branch.LocalName))
+	parentBranchInfo := args.BranchInfos.FindByLocalName(args.Config.Lineage.Parent(branch.LocalName))
 	parentOtherWorktree := parentBranchInfo != nil && parentBranchInfo.SyncStatus == gitdomain.SyncStatusOtherWorktree
 	switch {
 	case branch.SyncStatus == gitdomain.SyncStatusDeletedAtRemote:
@@ -22,7 +22,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 }
 
 type BranchProgramArgs struct {
-	*configdomain.FullConfig
+	Config      *configdomain.FullConfig
 	BranchInfos gitdomain.BranchInfos
 	BranchTypes configdomain.BranchTypes
 	Program     *program.Program
@@ -32,25 +32,25 @@ type BranchProgramArgs struct {
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
 func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	isFeatureBranch := args.BranchTypes.IsFeatureBranch(branch.LocalName)
+	isFeatureBranch := args.Config.IsFeatureBranch(branch.LocalName)
 	if !isFeatureBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
 	if isFeatureBranch {
-		FeatureBranchProgram(list, branch, parentOtherWorktree, args.SyncFeatureStrategy)
+		FeatureBranchProgram(list, branch, parentOtherWorktree, args.Config.SyncFeatureStrategy)
 	} else {
 		PerennialBranchProgram(branch, args)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.IsOnline() {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcode.CreateTrackingBranch{Branch: branch.LocalName})
 		case !isFeatureBranch:
 			list.Add(&opcode.PushCurrentBranch{CurrentBranch: branch.LocalName})
 		default:
-			pushFeatureBranchProgram(list, branch.LocalName, args.SyncFeatureStrategy)
+			pushFeatureBranchProgram(list, branch.LocalName, args.Config.SyncFeatureStrategy)
 		}
 	}
 }
