@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
-// LoadRepoSnapshot loads the typically used information about Git branches using a single Git command.
+// LoadRepoSnapshot loads the initial snapshot of the Git repo.
 // TODO: Receive the ConfigSnapshot here and return a single data structure called RepoSnapshot that contains ConfigSnapshot, BranchesSnapshot, and StashSize.
 func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesStatus
