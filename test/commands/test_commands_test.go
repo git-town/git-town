@@ -157,7 +157,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		runtime.Config.Reload()
-		must.True(t, runtime.Config.BranchTypes().IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
+		must.True(t, runtime.Config.IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage
 		lineageWant := configdomain.Lineage{}
 		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
@@ -192,10 +192,9 @@ func TestTestCommands(t *testing.T) {
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("main", "initial", "p1", "p2")
 		must.Eq(t, want, branches)
-		runtime.Config.Reload()
-		branchTypes := runtime.Config.BranchTypes()
-		must.True(t, branchTypes.IsPerennialBranch(gitdomain.NewLocalBranchName("p1")))
-		must.True(t, branchTypes.IsPerennialBranch(gitdomain.NewLocalBranchName("p2")))
+		runtime.Reload()
+		must.True(t, runtime.IsPerennialBranch(gitdomain.NewLocalBranchName("p1")))
+		must.True(t, runtime.IsPerennialBranch(gitdomain.NewLocalBranchName("p2")))
 	})
 
 	t.Run("Fetch", func(t *testing.T) {

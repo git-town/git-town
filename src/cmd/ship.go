@@ -167,11 +167,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !branches.Types.IsFeatureBranch(branchNameToShip) {
+	if !repo.Runner.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	branches.Types, repo.Runner.Lineage, err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
-		FullConfig:    &repo.Runner.FullConfig,
+		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: repo.Runner.MainBranch,
@@ -180,7 +180,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Types, repo.Runner.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.FullConfig, repo.Runner.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
@@ -248,9 +248,9 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, branchTypes configdomain.BranchTypes, lineage configdomain.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if branchTypes.IsFeatureBranch(parentBranch) {
+	if config.IsFeatureBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
@@ -264,7 +264,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			FullConfig:  config.FullConfig,
+			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,
@@ -273,7 +273,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			FullConfig:  config.FullConfig,
+			Config:      config.FullConfig,
 			BranchInfos: config.branches.All,
 			BranchTypes: config.branches.Types,
 			Remotes:     config.remotes,

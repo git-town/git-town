@@ -11,7 +11,7 @@ import (
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
 func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	if args.BranchTypes.IsFeatureBranch(branch.LocalName) {
+	if args.Config.IsFeatureBranch(branch.LocalName) {
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
 	} else {
 		syncDeletedPerennialBranchProgram(list, branch, args)
@@ -22,7 +22,7 @@ func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	list.Add(&opcode.Checkout{Branch: branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, args.SyncFeatureStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, args.Config.SyncFeatureStrategy)
 	list.Add(&opcode.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
 }
 
@@ -30,11 +30,11 @@ func syncDeletedPerennialBranchProgram(list *program.Program, branch gitdomain.B
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
 		Program: list,
 		Branch:  branch.LocalName,
-		Parent:  args.MainBranch,
-		Lineage: args.Lineage,
+		Parent:  args.Config.MainBranch,
+		Lineage: args.Config.Lineage,
 	})
 	list.Add(&opcode.RemoveFromPerennialBranches{Branch: branch.LocalName})
-	list.Add(&opcode.Checkout{Branch: args.MainBranch})
+	list.Add(&opcode.Checkout{Branch: args.Config.MainBranch})
 	list.Add(&opcode.DeleteLocalBranch{
 		Branch: branch.LocalName,
 		Force:  false,
