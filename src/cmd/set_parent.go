@@ -53,7 +53,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if !branches.Types.IsFeatureBranch(branches.Initial) {
+	if !repo.Runner.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	existingParent := repo.Runner.Lineage.Parent(branches.Initial)
@@ -65,7 +65,7 @@ func executeSetParent(verbose bool) error {
 		existingParent = repo.Runner.Config.MainBranch
 	}
 	branches.Types, _, err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
-		FullConfig:    &repo.Runner.FullConfig,
+		Config:        &repo.Runner.FullConfig,
 		AllBranches:   branches.All,
 		BranchTypes:   branches.Types,
 		DefaultBranch: existingParent,

@@ -12,7 +12,7 @@ func BranchesProgram(args BranchesProgramArgs) {
 		BranchProgram(branch, args.BranchProgramArgs)
 	}
 	args.Program.Add(&opcode.CheckoutIfExists{Branch: args.InitialBranch})
-	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.IsOnline() {
+	if args.Remotes.HasOrigin() && args.ShouldPushTags && args.Config.IsOnline() {
 		args.Program.Add(&opcode.PushTags{})
 	}
 	cmdhelpers.Wrap(args.Program, cmdhelpers.WrapOptions{

@@ -5,9 +5,9 @@ import (
 	"github.com/git-town/git-town/v11/src/undo/undodomain"
 )
 
-func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branchTypes configdomain.BranchTypes) (perennials, features undodomain.InconsistentChanges) {
+func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		if branchTypes.IsFeatureBranch(change.Before.LocalName) {
+		if config.IsFeatureBranch(change.Before.LocalName) {
 			features = append(features, change)
 		} else {
 			perennials = append(perennials, change)
@@ -16,11 +16,11 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, branc
 	return
 }
 
-func CategorizeLocalBranchChange(change LocalBranchChange, branchTypes configdomain.BranchTypes) (changedPerennials, changedFeatures LocalBranchChange) {
+func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.FullConfig) (changedPerennials, changedFeatures LocalBranchChange) {
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
-		if branchTypes.IsFeatureBranch(branch) {
+		if config.IsFeatureBranch(branch) {
 			changedFeatures[branch] = change
 		} else {
 			changedPerennials[branch] = change
@@ -29,11 +29,11 @@ func CategorizeLocalBranchChange(change LocalBranchChange, branchTypes configdom
 	return
 }
 
-func CategorizeRemoteBranchChange(change RemoteBranchChange, branchTypes configdomain.BranchTypes) (perennialChanges, featureChanges RemoteBranchChange) {
+func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomain.FullConfig) (perennialChanges, featureChanges RemoteBranchChange) {
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
-		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
+		if config.IsFeatureBranch(branch.LocalBranchName()) {
 			featureChanges[branch] = change
 		} else {
 			perennialChanges[branch] = change
@@ -42,11 +42,11 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, branchTypes configd
 	return
 }
 
-func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, branchTypes configdomain.BranchTypes) (perennials, features RemoteBranchesSHAs) {
+func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.FullConfig) (perennials, features RemoteBranchesSHAs) {
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
-		if branchTypes.IsFeatureBranch(branch.LocalBranchName()) {
+		if config.IsFeatureBranch(branch.LocalBranchName()) {
 			features[branch] = sha
 		} else {
 			perennials[branch] = sha
