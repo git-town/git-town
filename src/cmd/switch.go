@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
@@ -48,11 +49,11 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.SwitchBranch(config.MainAndPerennials(), config.branches.Initial, config.Lineage)
+	newBranch, validChoice, err := dialog.SwitchBranch(config.MainAndPerennials(), config.initialBranch, config.Lineage)
 	if err != nil {
 		return err
 	}
-	if validChoice && newBranch != config.branches.Initial {
+	if validChoice && newBranch != config.initialBranch {
 		fmt.Println()
 		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
@@ -69,11 +70,11 @@ func executeSwitch(verbose bool) error {
 
 type switchConfig struct {
 	*configdomain.FullConfig
-	branches configdomain.Branches
+	initialBranch gitdomain.LocalBranchName
 }
 
 func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -83,7 +84,7 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 		ValidateNoOpenChanges: false,
 	})
 	return &switchConfig{
-		FullConfig: &repo.Runner.FullConfig,
-		branches:   branches,
+		FullConfig:    &repo.Runner.FullConfig,
+		initialBranch: branchesSnapshot.Active,
 	}, exit, err
 }

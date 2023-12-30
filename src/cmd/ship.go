@@ -87,7 +87,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if config.branchToShip.LocalName == config.branches.Initial {
+	if config.branchToShip.LocalName == config.initialBranch {
 		repoStatus, err := repo.Runner.Backend.RepoStatus()
 		if err != nil {
 			return err
@@ -118,10 +118,11 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 
 type shipConfig struct {
 	*configdomain.FullConfig
-	branches                 configdomain.Branches
+	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
 	dryRun                   bool
+	initialBranch            gitdomain.LocalBranchName
 	targetBranch             gitdomain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            gitdomain.LocalBranchNames
@@ -135,7 +136,7 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -156,12 +157,12 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToShip := branches.All.FindByLocalName(branchNameToShip)
+	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
-	isShippingInitialBranch := branchNameToShip == branches.Initial
+	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
 			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
@@ -172,7 +173,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branches.All,
+		AllBranches:   branchesSnapshot.Branches,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
@@ -184,7 +185,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	targetBranchName := repo.Runner.Lineage.Parent(branchNameToShip)
-	targetBranch := branches.All.FindByLocalName(targetBranchName)
+	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -230,9 +231,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	return &shipConfig{
 		FullConfig:               &repo.Runner.FullConfig,
-		branches:                 branches,
+		allBranches:              branchesSnapshot.Branches,
 		connector:                connector,
 		dryRun:                   dryRun,
+		initialBranch:            branchesSnapshot.Active,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -264,7 +266,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
-			BranchInfos: config.branches.All,
+			BranchInfos: config.allBranches,
 			Remotes:     config.remotes,
 			Program:     &prog,
 			PushBranch:  true,
@@ -272,7 +274,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
-			BranchInfos: config.branches.All,
+			BranchInfos: config.allBranches,
 			Remotes:     config.remotes,
 			Program:     &prog,
 			PushBranch:  false,
@@ -319,7 +321,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
 	if !config.isShippingInitialBranch {
-		prog.Add(&opcode.Checkout{Branch: config.branches.Initial})
+		prog.Add(&opcode.Checkout{Branch: config.initialBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,

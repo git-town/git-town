@@ -74,7 +74,7 @@ func updatePerennialBranches(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branches, _, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Fetch:                 false,
@@ -86,6 +86,6 @@ func updatePerennialBranches(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branches)
+	err = dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
 	return err
 }

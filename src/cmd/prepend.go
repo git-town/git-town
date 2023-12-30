@@ -86,10 +86,11 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 
 type prependConfig struct {
 	*configdomain.FullConfig
-	branches                  configdomain.Branches
+	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
 	dryRun                    bool
 	hasOpenChanges            bool
+	initialBranch             gitdomain.LocalBranchName
 	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	previousBranch            gitdomain.LocalBranchName
@@ -99,7 +100,7 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
-	branches, branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -115,35 +116,36 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
-	if branches.All.HasLocalBranch(targetBranch) {
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.HasMatchingTrackingBranchFor(targetBranch) {
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	if !repo.Runner.IsFeatureBranch(branches.Initial) {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
+	if !repo.Runner.IsFeatureBranch(branchesSnapshot.Active) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
-	err = execute.EnsureKnownBranchAncestry(branches.Initial, execute.EnsureKnownBranchAncestryArgs{
+	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branches.All,
+		AllBranches:   branchesSnapshot.Branches,
 		DefaultBranch: repo.Runner.MainBranch,
 		Runner:        repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
-	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branches.Initial)
-	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	parent := repo.Runner.Lineage.Parent(branches.Initial)
+	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
+	parent := repo.Runner.Lineage.Parent(branchesSnapshot.Active)
 	parentAndAncestors := repo.Runner.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
 		FullConfig:                &repo.Runner.FullConfig,
-		branches:                  branches,
+		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
+		initialBranch:             branchesSnapshot.Active,
 		remotes:                   remotes,
 		newBranchParentCandidates: parentAndAncestors,
 		previousBranch:            previousBranch,
@@ -157,7 +159,7 @@ func prependProgram(config *prependConfig) program.Program {
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
 			Config:      config.FullConfig,
-			BranchInfos: config.branches.All,
+			BranchInfos: config.allBranches,
 			Program:     &prog,
 			PushBranch:  true,
 			Remotes:     config.remotes,
@@ -174,7 +176,7 @@ func prependProgram(config *prependConfig) program.Program {
 	})
 	// set the parent of the branch prepended to
 	prog.Add(&opcode.SetParentIfBranchExists{
-		Branch: config.branches.Initial,
+		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
