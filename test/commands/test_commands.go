@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -239,7 +239,7 @@ func (self *TestCommands) FilesInCommit(sha gitdomain.SHA) []string {
 	return strings.Split(output, "\n")
 }
 
-func (self *TestCommands) GlobalGitConfig(name configdomain.Key) *string {
+func (self *TestCommands) GlobalGitConfig(name gitconfig.Key) *string {
 	output, err := self.Query("git", "config", "--global", "--get", name.String())
 	if err != nil {
 		return nil
@@ -305,7 +305,7 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	return branches, nil
 }
 
-func (self *TestCommands) LocalGitConfig(name configdomain.Key) *string {
+func (self *TestCommands) LocalGitConfig(name gitconfig.Key) *string {
 	output, err := self.Query("git", "config", "--local", "--get", name.String())
 	if err != nil {
 		return nil
@@ -336,12 +336,12 @@ func (self *TestCommands) RemoveBranch(name gitdomain.LocalBranchName) {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (self *TestCommands) RemoveMainBranchConfiguration() {
-	self.MustRun("git", "config", "--unset", configdomain.KeyMainBranch.String())
+	self.MustRun("git", "config", "--unset", gitconfig.KeyMainBranch.String())
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.RemoveLocalConfigValue(configdomain.KeyPerennialBranches)
+	return self.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.

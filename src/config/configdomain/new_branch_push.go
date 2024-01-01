@@ -24,10 +24,10 @@ func NewNewBranchPushRef(value bool) *NewBranchPush {
 	return &result
 }
 
-func ParseNewBranchPushRef(value string) (*NewBranchPush, error) {
+func ParseNewBranchPushRef(value, source string) (*NewBranchPush, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
 	token := NewBranchPush(parsed)
 	return &token, nil

@@ -24,10 +24,10 @@ func NewShipDeleteTrackingBranchRef(value bool) *ShipDeleteTrackingBranch {
 	return &result
 }
 
-func ParseShipDeleteTrackingBranchRef(value string) (*ShipDeleteTrackingBranch, error) {
+func ParseShipDeleteTrackingBranchRef(value, source string) (*ShipDeleteTrackingBranch, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyShipDeleteTrackingBranch, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
 	token := ShipDeleteTrackingBranch(parsed)
 	return &token, nil
