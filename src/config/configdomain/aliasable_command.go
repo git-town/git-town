@@ -67,7 +67,7 @@ func AliasableCommands() []AliasableCommand {
 func LookupAliasableCommand(key Key) *AliasableCommand {
 	keyName := key.name
 	for _, aliasableCommand := range AliasableCommands() {
-		if aliasableCommand.String() == keyName {
+		if aliasableCommand.Key().String() == keyName {
 			return &aliasableCommand
 		}
 	}

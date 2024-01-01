@@ -258,7 +258,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		aliasableCommand := configdomain.LookupAliasableCommand(*key)
 		if aliasableCommand == nil {
-			return fmt.Errorf("aliasableCommand not found")
+			return fmt.Errorf("aliasableCommand not found for key %q", *key)
 		}
 		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*aliasableCommand]
 		if have != want {

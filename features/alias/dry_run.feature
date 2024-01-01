@@ -1,6 +1,5 @@
 Feature: dry-run prints the commands but does not add or remove aliases
 
-  @debug @this
   Scenario: dry-run adding aliases
     When I run "git-town aliases add --dry-run"
     Then it runs the commands
