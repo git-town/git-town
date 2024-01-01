@@ -63,12 +63,12 @@ func executeAliases(arg string, dryRun, verbose bool) error {
 }
 
 func addAliases(run *git.ProdRunner) error {
-	for _, alias := range configdomain.AliasableCommands() {
-		existingAlias := run.Aliases[alias]
+	for _, aliasableCommand := range configdomain.AliasableCommands() {
+		existingAlias := run.Aliases[aliasableCommand]
 		if existingAlias != "" {
 			continue
 		}
-		err := run.Frontend.SetGitAlias(alias)
+		err := run.Frontend.SetGitAlias(aliasableCommand)
 		if err != nil {
 			return err
 		}

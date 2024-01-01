@@ -219,8 +219,7 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 
 // SetGitAlias sets the given Git alias.
 func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
-	aliasKey := aliasableCommand.Key()
-	return self.Run("git", "config", "--global", aliasKey.String(), "town "+aliasableCommand.String())
+	return self.Run("git", "config", "--global", aliasableCommand.Key().String(), "town "+aliasableCommand.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
