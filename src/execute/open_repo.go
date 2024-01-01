@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -39,7 +40,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	configGitAccess := configdomain.Access{Runner: backendRunner}
+	configGitAccess := gitconfig.Access{Runner: backendRunner}
 	globalCache, globalConfig, err := configGitAccess.LoadCache(true)
 	if err != nil {
 		return nil, err

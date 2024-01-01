@@ -1,4 +1,4 @@
-package configdomain
+package gitconfig
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -20,9 +21,9 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
+func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig, error) {
 	cache := SingleCache{}
-	config := EmptyPartialConfig()
+	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -75,7 +76,7 @@ func (self *Access) RemoveLocalConfigValue(key Key) error {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *Access) RemoveLocalGitConfiguration(lineage Lineage) error {
+func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) error {
 	err := self.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
