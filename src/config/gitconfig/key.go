@@ -94,10 +94,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func NewKey(name string) Key {
-	return Key{name}
-}
-
 func AliasableCommandToKey(aliasableCommand configdomain.AliasableCommand) Key {
 	switch aliasableCommand {
 	case configdomain.AliasableCommandAppend:
@@ -131,6 +127,10 @@ func KeyToAliasableCommand(key Key) *configdomain.AliasableCommand {
 		}
 	}
 	return nil
+}
+
+func NewKey(name string) Key {
+	return Key{name}
 }
 
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
