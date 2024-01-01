@@ -30,8 +30,8 @@ func AliasableCommands() []AliasableCommand {
 		AliasableCommandPropose,
 		AliasableCommandRenameBranch,
 		AliasableCommandRepo,
-		AliasableCommandShip,
 		AliasableCommandSetParent,
+		AliasableCommandShip,
 		AliasableCommandSync,
 	}
 }

@@ -51,6 +51,6 @@ Feature: dry-run prints the commands but does not add or remove aliases
     And global Git setting "alias.propose" is still "town propose"
     And global Git setting "alias.rename-branch" is still "town rename-branch"
     And global Git setting "alias.repo" is still "town repo"
-    And global Git setting "alias.set-parent" is still ""
+    And global Git setting "alias.set-parent" is still "town set-parent"
     And global Git setting "alias.ship" is still "town ship"
     And global Git setting "alias.sync" is still "town sync"
