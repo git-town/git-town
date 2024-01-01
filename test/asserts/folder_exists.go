@@ -4,11 +4,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 func FolderExists(t *testing.T, dir string) {
 	t.Helper()
 	_, err := os.Stat(dir)
-	assert.Falsef(t, os.IsNotExist(err), "directory %q not found", dir)
+	must.False(t, os.IsNotExist(err))
 }

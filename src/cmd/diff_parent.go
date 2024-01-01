@@ -3,10 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -18,80 +21,84 @@ Works on either the current branch or the branch name provided.
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`
 
 func diffParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   diffParentDesc,
-		Long:    long(diffParentDesc, diffParentHelp),
+		Long:    cmdhelpers.Long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return diffParent(args, readDebugFlag(cmd))
+			return executeDiffParent(args, readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func diffParent(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
+func executeDiffParent(args []string, verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
+	if err != nil {
+		return err
+	}
+	config, exit, err := determineDiffParentConfig(args, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &run)
+	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
 	if err != nil {
 		return err
 	}
-	err = run.Frontend.DiffParent(config.branch, config.parentBranch)
-	if err != nil {
-		return err
-	}
-	run.Stats.PrintAnalysis()
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
 type diffParentConfig struct {
-	branch       string
-	parentBranch string
+	branch       gitdomain.LocalBranchName
+	parentBranch gitdomain.LocalBranchName
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
+func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 false,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	var branch string
-	if len(args) > 0 {
-		branch = args[0]
-	} else {
-		branch = initialBranch
-	}
-	if initialBranch != branch {
-		hasBranch, err := run.Backend.HasLocalBranch(branch)
-		if err != nil {
-			return nil, err
+	branch := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	if branch != branchesSnapshot.Active {
+		if !branchesSnapshot.Branches.HasLocalBranch(branch) {
+			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
-		if !hasBranch {
-			return nil, fmt.Errorf("there is no local branch named %q", branch)
-		}
 	}
-	if !run.Config.IsFeatureBranch(branch) {
-		return nil, fmt.Errorf("you can only diff-parent feature branches")
+	if !repo.Runner.IsFeatureBranch(branch) {
+		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	err = validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
+	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
+		Config:        &repo.Runner.FullConfig,
+		AllBranches:   branchesSnapshot.Branches,
+		DefaultBranch: repo.Runner.MainBranch,
+		Runner:        repo.Runner,
+	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: run.Config.Lineage().Parent(branch),
-	}, nil
+		parentBranch: repo.Runner.Lineage.Parent(branch),
+	}, false, nil
 }

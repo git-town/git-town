@@ -189,6 +189,7 @@ type Settings struct {
 	HousekeepingFullRepackPeriod                          int               `json:"housekeeping_full_repack_period"`
 	HousekeepingGcPeriod                                  int               `json:"housekeeping_gc_period"`
 	HousekeepingIncrementalRepackPeriod                   int               `json:"housekeeping_incremental_repack_period"`
+	HousekeepingOptimizeRepositoryPeriod                  int               `json:"housekeeping_optimize_repository_period"`
 	ImportSources                                         []string          `json:"import_sources"`
 	InactiveProjectsDeleteAfterMonths                     int               `json:"inactive_projects_delete_after_months"`
 	InactiveProjectsMinSizeMB                             int               `json:"inactive_projects_min_size_mb"`
@@ -237,7 +238,7 @@ type Settings struct {
 	PasswordSymbolRequired                                bool              `json:"password_symbol_required"`
 	PasswordUppercaseRequired                             bool              `json:"password_uppercase_required"`
 	PasswordLowercaseRequired                             bool              `json:"password_lowercase_required"`
-	PerformanceBarAllowedGroupID                          string            `json:"performance_bar_allowed_group_id"`
+	PerformanceBarAllowedGroupID                          int               `json:"performance_bar_allowed_group_id"`
 	PerformanceBarAllowedGroupPath                        string            `json:"performance_bar_allowed_group_path"`
 	PerformanceBarEnabled                                 bool              `json:"performance_bar_enabled"`
 	PersonalAccessTokenPrefix                             string            `json:"personal_access_token_prefix"`
@@ -411,7 +412,7 @@ func (s *SettingsService) GetSettings(options ...RequestOptionFunc) (*Settings, 
 		return nil, resp, err
 	}
 
-	return as, resp, err
+	return as, resp, nil
 }
 
 // UpdateSettingsOptions represents the available UpdateSettings() options.
@@ -567,6 +568,7 @@ type UpdateSettingsOptions struct {
 	HousekeepingFullRepackPeriod                          *int               `url:"housekeeping_full_repack_period,omitempty" json:"housekeeping_full_repack_period,omitempty"`
 	HousekeepingGcPeriod                                  *int               `url:"housekeeping_gc_period,omitempty" json:"housekeeping_gc_period,omitempty"`
 	HousekeepingIncrementalRepackPeriod                   *int               `url:"housekeeping_incremental_repack_period,omitempty" json:"housekeeping_incremental_repack_period,omitempty"`
+	HousekeepingOptimizedepositoryPeriod                  *int               `url:"housekeeping_optimize_repository_period,omitempty" json:"housekeeping_optimize_repository_period,omitempty"`
 	ImportSources                                         *[]string          `url:"import_sources,omitempty" json:"import_sources,omitempty"`
 	InactiveProjectsDeleteAfterMonths                     *int               `url:"inactive_projects_delete_after_months,omitempty" json:"inactive_projects_delete_after_months,omitempty"`
 	InactiveProjectsMinSizeMB                             *int               `url:"inactive_projects_min_size_mb,omitempty" json:"inactive_projects_min_size_mb,omitempty"`
@@ -615,7 +617,7 @@ type UpdateSettingsOptions struct {
 	PasswordSymbolRequired                                *bool              `url:"password_symbol_required,omitempty" json:"password_symbol_required,omitempty"`
 	PasswordUppercaseRequired                             *bool              `url:"password_uppercase_required,omitempty" json:"password_uppercase_required,omitempty"`
 	PasswordLowercaseRequired                             *bool              `url:"password_lowercase_required,omitempty" json:"password_lowercase_required,omitempty"`
-	PerformanceBarAllowedGroupID                          *string            `url:"performance_bar_allowed_group_id,omitempty" json:"performance_bar_allowed_group_id,omitempty"`
+	PerformanceBarAllowedGroupID                          *int               `url:"performance_bar_allowed_group_id,omitempty" json:"performance_bar_allowed_group_id,omitempty"`
 	PerformanceBarAllowedGroupPath                        *string            `url:"performance_bar_allowed_group_path,omitempty" json:"performance_bar_allowed_group_path,omitempty"`
 	PerformanceBarEnabled                                 *bool              `url:"performance_bar_enabled,omitempty" json:"performance_bar_enabled,omitempty"`
 	PersonalAccessTokenPrefix                             *string            `url:"personal_access_token_prefix,omitempty" json:"personal_access_token_prefix,omitempty"`
@@ -773,5 +775,5 @@ func (s *SettingsService) UpdateSettings(opt *UpdateSettingsOptions, options ...
 		return nil, resp, err
 	}
 
-	return as, resp, err
+	return as, resp, nil
 }

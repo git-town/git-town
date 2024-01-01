@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -49,16 +51,16 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		Args:                  cobra.ExactArgs(1),
 		DisableFlagsInUseLine: true,
 		Short:                 completionsDesc,
-		Long:                  long(completionsDesc, completionsHelp),
+		Long:                  cmdhelpers.Long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return completions(args, completionsNoDescFlag, rootCmd)
+			return executeCompletions(args, completionsNoDescFlag, rootCmd)
 		},
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
 }
 
-func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
+func executeCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
 	completionType, err := NewCompletionType(args[0])
 	if err != nil {
 		return err
@@ -76,17 +78,22 @@ func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Comma
 	case CompletionTypePowershell:
 		return rootCmd.GenPowerShellCompletion(os.Stdout)
 	}
-	return fmt.Errorf("unknown argument: %q", args[0])
+	return fmt.Errorf(messages.ArgumentUnknown, args[0])
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.
-type CompletionType string
+// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
+type CompletionType struct {
+	name string
+}
 
-const (
-	CompletionTypeBash       CompletionType = "bash"
-	CompletionTypeZsh        CompletionType = "zsh"
-	CompletionTypeFish       CompletionType = "fish"
-	CompletionTypePowershell CompletionType = "powershell"
+func (self CompletionType) String() string { return self.name }
+
+var (
+	CompletionTypeBash       = CompletionType{"bash"}       //nolint:gochecknoglobals
+	CompletionTypeZsh        = CompletionType{"zsh"}        //nolint:gochecknoglobals
+	CompletionTypeFish       = CompletionType{"fish"}       //nolint:gochecknoglobals
+	CompletionTypePowershell = CompletionType{"powershell"} //nolint:gochecknoglobals
 )
 
 // completionTypes provides all CompletionType values.
@@ -102,9 +109,9 @@ func completionTypes() []CompletionType {
 func NewCompletionType(text string) (CompletionType, error) {
 	text = strings.ToLower(text)
 	for _, completionType := range completionTypes() {
-		if text == string(completionType) {
+		if text == completionType.name {
 			return completionType, nil
 		}
 	}
-	return CompletionTypeBash, fmt.Errorf("unknown completion type: %q", text)
+	return CompletionTypeBash, fmt.Errorf(messages.CompletionTypeUnknown, text)
 }

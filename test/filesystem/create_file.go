@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/shoenig/test/must"
 )
 
 // createFile creates a file with the given filename in the given directory.
@@ -13,8 +13,8 @@ func CreateFile(t *testing.T, dir, filename string) {
 	t.Helper()
 	filePath := filepath.Join(dir, filename)
 	err := os.MkdirAll(filepath.Dir(filePath), 0o744)
-	assert.NoError(t, err)
+	must.NoError(t, err)
 	//nolint:gosec // need permission 700 here for the tests to work
-	err = os.WriteFile(filePath, []byte(filename+" content"), 0x700)
-	assert.NoError(t, err)
+	err = os.WriteFile(filePath, []byte(filename+" content"), 0o700)
+	must.NoError(t, err)
 }

@@ -3,31 +3,47 @@ package subshell
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cache"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
 // but does not execute them.
 type FrontendDryRunner struct {
-	CurrentBranch   *cache.String
-	OmitBranchNames bool
-	Stats           Statistics
+	GetCurrentBranch GetCurrentBranchFunc
+	OmitBranchNames  bool
+	PrintCommands    bool
+	CommandsCounter  *gohacks.Counter
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r *FrontendDryRunner) Run(executable string, args ...string) error {
-	PrintCommand(r.CurrentBranch.Value(), r.OmitBranchNames, executable, args...)
+func (self *FrontendDryRunner) Run(executable string, args ...string) error {
+	var currentBranch gitdomain.LocalBranchName
+	if self.OmitBranchNames {
+		currentBranch = gitdomain.EmptyLocalBranchName()
+	} else {
+		var err error
+		currentBranch, err = self.GetCurrentBranch()
+		if err != nil {
+			return err
+		}
+	}
+	if self.PrintCommands {
+		PrintCommand(currentBranch, self.OmitBranchNames, executable, args...)
+		fmt.Println("(dry run)")
+	}
 	return nil
 }
 
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r *FrontendDryRunner) RunMany(commands [][]string) error {
+func (self *FrontendDryRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		err := r.Run(argv[0], argv[1:]...)
+		err := self.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
+			return fmt.Errorf(messages.RunCommandProblem, argv, err)
 		}
 	}
 	return nil

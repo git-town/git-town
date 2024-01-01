@@ -33,8 +33,8 @@ Feature: handle merge conflicts between feature branch and main branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is now "beta"
@@ -42,68 +42,60 @@ Feature: handle merge conflicts between feature branch and main branch
     And a merge is now in progress
 
   Scenario: abort
-    When I run "git-town abort"
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
-      |        | git reset --hard {{ sha 'local beta commit' }} |
       |        | git checkout alpha                             |
-      | alpha  | git checkout main                              |
-      | main   | git stash pop                                  |
-    And the current branch is now "main"
-    And the uncommitted file still exists
-    And no merge is in progress
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      |        |               | main commit                    |
-      |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | local beta commit              |
-      |        | origin        | origin beta commit             |
-      | gamma  | origin        | gamma commit                   |
-    And these committed files exist now
-      | BRANCH | NAME             | CONTENT            |
-      | main   | conflicting_file | main content       |
-      | alpha  | conflicting_file | main content       |
-      |        | feature1_file    | alpha content      |
-      | beta   | conflicting_file | local beta content |
-
-  Scenario: skip
-    When I run "git-town skip"
-    Then it runs the commands
-      | BRANCH | COMMAND                                        |
-      | beta   | git merge --abort                              |
-      |        | git reset --hard {{ sha 'local beta commit' }} |
-      |        | git checkout gamma                             |
-      | gamma  | git merge --no-edit origin/gamma               |
-      |        | git merge --no-edit main                       |
-      |        | git push                                       |
+      | alpha  | git reset --hard {{ sha 'alpha commit' }}      |
+      |        | git push --force-with-lease                    |
+      |        | git checkout beta                              |
+      | beta   | git reset --hard {{ sha 'local beta commit' }} |
       |        | git checkout main                              |
-      | main   | git push --tags                                |
+      | main   | git reset --hard {{ sha 'initial commit' }}    |
       |        | git stash pop                                  |
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, origin | main commit                    |
-      | alpha  | local, origin | alpha commit                   |
-      |        |               | main commit                    |
-      |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | local beta commit              |
-      |        | origin        | origin beta commit             |
-      | gamma  | local, origin | gamma commit                   |
-      |        |               | main commit                    |
-      |        |               | Merge branch 'main' into gamma |
+    And the initial commits exist
+    And the initial branches and lineage exist
+
+  Scenario: skip
+    When I run "git-town skip"
+    Then it runs the commands
+      | BRANCH | COMMAND                          |
+      | beta   | git merge --abort                |
+      |        | git checkout gamma               |
+      | gamma  | git merge --no-edit origin/gamma |
+      |        | git merge --no-edit main         |
+      |        | git push                         |
+      |        | git checkout main                |
+      | main   | git push --tags                  |
+      |        | git stash pop                    |
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no merge is in progress
+    And these commits exist now
+      | BRANCH | LOCATION      | MESSAGE                                              |
+      | main   | local, origin | main commit                                          |
+      | alpha  | local, origin | alpha commit                                         |
+      |        |               | main commit                                          |
+      |        |               | Merge branch 'main' into alpha                       |
+      | beta   | local         | local beta commit                                    |
+      |        | local, origin | origin beta commit                                   |
+      |        | local         | Merge remote-tracking branch 'origin/beta' into beta |
+      | gamma  | local, origin | gamma commit                                         |
+      |        |               | main commit                                          |
+      |        |               | Merge branch 'main' into gamma                       |
     And these committed files exist now
-      | BRANCH | NAME             | CONTENT            |
-      | main   | conflicting_file | main content       |
-      | alpha  | conflicting_file | main content       |
-      |        | feature1_file    | alpha content      |
-      | beta   | conflicting_file | local beta content |
-      | gamma  | conflicting_file | main content       |
-      |        | feature3_file    | gamma content      |
+      | BRANCH | NAME                 | CONTENT             |
+      | main   | conflicting_file     | main content        |
+      | alpha  | conflicting_file     | main content        |
+      |        | feature1_file        | alpha content       |
+      | beta   | conflicting_file     | local beta content  |
+      |        | feature2_origin_file | origin beta content |
+      | gamma  | conflicting_file     | main content        |
+      |        | feature3_file        | gamma content       |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

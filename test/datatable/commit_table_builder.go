@@ -1,11 +1,9 @@
 package datatable
 
 import (
-	"sort"
-	"strings"
-
-	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/test/git"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
@@ -16,87 +14,68 @@ type CommitTableBuilder struct {
 	// Structure:
 	//   commit 1 SHA:  commit 1
 	//   commit 2 SHA:  commit 2
-	commits map[string]git.Commit
+	commits map[gitdomain.SHA]git.Commit
 
 	// commitsInBranch stores which branches contain which commits.
 	//
 	// Structure:
 	//   branch 1 name: [commit 1 SHA, commit 2 SHA]
 	//   branch 2 name: [commit 1 SHA, commit 3 SHA]
-	commitsInBranch map[string]helpers.OrderedStringSet
+	commitsInBranch map[gitdomain.LocalBranchName]helpers.OrderedSet[gitdomain.SHA]
 
 	// locations stores which commits occur in which repositories.
 	//
 	// Structure:
 	//   commit 1 SHA + branch 1 name:  ["local"]
 	//   commit 1 SHA + branch 2 name:  ["local", "origin"]
-	locations map[string]helpers.OrderedStringSet
+	locations map[string]helpers.OrderedSet[string]
 }
 
 // NewCommitTableBuilder provides a fully initialized instance of CommitTableBuilder.
 func NewCommitTableBuilder() CommitTableBuilder {
 	result := CommitTableBuilder{
-		commits:         make(map[string]git.Commit),
-		commitsInBranch: make(map[string]helpers.OrderedStringSet),
-		locations:       make(map[string]helpers.OrderedStringSet),
+		commits:         make(map[gitdomain.SHA]git.Commit),
+		commitsInBranch: make(map[gitdomain.LocalBranchName]helpers.OrderedSet[gitdomain.SHA]),
+		locations:       make(map[string]helpers.OrderedSet[string]),
 	}
 	return result
 }
 
 // Add registers the given commit from the given location into this table.
-func (builder *CommitTableBuilder) Add(commit git.Commit, location string) {
-	builder.commits[commit.SHA] = commit
-	commitsInBranch, exists := builder.commitsInBranch[commit.Branch]
+func (self *CommitTableBuilder) Add(commit git.Commit, location string) {
+	self.commits[commit.SHA] = commit
+	commitsInBranch, exists := self.commitsInBranch[commit.Branch]
 	if exists {
-		builder.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
+		self.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
 	} else {
-		builder.commitsInBranch[commit.Branch] = helpers.NewOrderedStringSet(commit.SHA)
+		self.commitsInBranch[commit.Branch] = helpers.NewOrderedSet(commit.SHA)
 	}
-	locationKey := commit.SHA + commit.Branch
-	locations, exists := builder.locations[locationKey]
+	locationKey := commit.SHA.String() + commit.Branch.String()
+	locations, exists := self.locations[locationKey]
 	if exists {
-		builder.locations[locationKey] = locations.Add(location)
+		self.locations[locationKey] = locations.Add(location)
 	} else {
-		builder.locations[locationKey] = helpers.NewOrderedStringSet(location)
+		self.locations[locationKey] = helpers.NewOrderedSet(location)
 	}
 }
 
 // AddMany registers the given commits from the given location into this table.
-func (builder *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
+func (self *CommitTableBuilder) AddMany(commits []git.Commit, location string) {
 	for _, commit := range commits {
-		builder.Add(commit, location)
+		self.Add(commit, location)
 	}
-}
-
-// branches provides the names of the all branches known to this CommitTableBuilder,
-// sorted alphabetically, with the main branch first.
-func (builder *CommitTableBuilder) branches() []string {
-	result := make([]string, 0, len(builder.commitsInBranch))
-	hasMain := false
-	for branch := range builder.commitsInBranch {
-		if branch == "main" {
-			hasMain = true
-		} else {
-			result = append(result, branch)
-		}
-	}
-	sort.Strings(result)
-	if hasMain {
-		return append([]string{"main"}, result...)
-	}
-	return result
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (builder *CommitTableBuilder) Table(fields []string) DataTable {
+func (self *CommitTableBuilder) Table(fields []string) DataTable {
 	result := DataTable{}
 	result.AddRow(fields...)
-	lastBranch := ""
+	lastBranch := gitdomain.EmptyLocalBranchName()
 	lastLocation := ""
-	for _, branch := range builder.branches() {
-		SHAs := builder.commitsInBranch[branch]
-		for _, SHA := range SHAs.Slice() {
-			commit := builder.commits[SHA]
+	for _, branch := range self.branches() {
+		SHAs := self.commitsInBranch[branch]
+		for _, SHA := range SHAs.Elements() {
+			commit := self.commits[SHA]
 			row := []string{}
 			for _, field := range fields {
 				switch field {
@@ -104,10 +83,10 @@ func (builder *CommitTableBuilder) Table(fields []string) DataTable {
 					if branch == lastBranch {
 						row = append(row, "")
 					} else {
-						row = append(row, branch)
+						row = append(row, branch.String())
 					}
 				case "LOCATION":
-					locations := strings.Join(builder.locations[SHA+branch].Slice(), ", ")
+					locations := self.locations[SHA.String()+branch.String()].Join(", ")
 					if locations == lastLocation && branch == lastBranch {
 						row = append(row, "")
 					} else {
@@ -129,6 +108,25 @@ func (builder *CommitTableBuilder) Table(fields []string) DataTable {
 			result.AddRow(row...)
 			lastBranch = branch
 		}
+	}
+	return result
+}
+
+// branches provides the names of the all branches known to this CommitTableBuilder,
+// sorted alphabetically, with the main branch first.
+func (self *CommitTableBuilder) branches() gitdomain.LocalBranchNames {
+	result := make(gitdomain.LocalBranchNames, 0, len(self.commitsInBranch))
+	hasMain := false
+	for branch := range self.commitsInBranch {
+		if branch == gitdomain.NewLocalBranchName("main") {
+			hasMain = true
+		} else {
+			result = append(result, branch)
+		}
+	}
+	result.Sort()
+	if hasMain {
+		return append(gitdomain.NewLocalBranchNames("main"), result...)
 	}
 	return result
 }

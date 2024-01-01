@@ -7,35 +7,35 @@ but uses the native Git installation on your machine.
 
 ## macOS
 
-The easiest way to install Git Town on macOS is via Homebrew:
+You can install Git Town on macOS via
+[Homebrew](https://formulae.brew.sh/formula/git-town):
 
 ```
 brew install git-town
 ```
 
-Git Town is available via [MacPorts](https://ports.macports.org/port/git-town).
-You can also [install Git Town manually](#manual-installation) or
-[compile from source](#compile-from-source).
+Installation via [MacPorts](https://ports.macports.org/port/git-town) is also
+supported:
+
+```
+sudo port install git-town
+```
 
 ## Windows
 
-The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v9.0.0/git-town_9.0.0_windows_intel_64.msi)
-and run it. You can also install Git Town via [scoop](https://scoop.sh):
+You can install Git Town on Windows using:
 
-```
-scoop bucket add org https://github.com/git-town/scoop.git
-scoop install git-town
-```
-
-You can also [install Git Town manually](#manual-installation) or
-[compile from source](#compile-from-source).
+- [Chocolatey](https://community.chocolatey.org/packages/git-town):
+  `choco install git-town`
+- [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
+- the
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v11.1.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
 [git town repo](https://git-town.com/commands/repo.md) and
-[git town new-pull-request](https://git-town.com/commands/new-pull-request.md)
-to open a browser window for you.
+[git town propose](https://git-town.com/commands/propose.md) to open a browser
+window for you.
 
 ## Linux
 
@@ -44,7 +44,7 @@ On Debian-based systems,
 matching your CPU architecture and run:
 
 ```
-sudo apt-get install git-town_9.0.0_linux_intel_64.deb
+sudo apt-get install git-town_linux_intel_64.deb
 ```
 
 On RedHat-based systems
@@ -52,13 +52,18 @@ On RedHat-based systems
 matching your CPU architecture and run
 
 ```
-rpm -i git-town_9.0.0_linux_intel_64.rpm
+rpm -i git-town_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the
-[git-town](https://aur.archlinux.org/packages/git-town) package from the AUR.
+[git-town](https://aur.archlinux.org/packages/git-town) package from the AUR. Or
+download the matching `.pkg.tar.zst` file for your architecture and run:
 
-You can install Git Town via
+```
+sudo pacman -U <filename>
+```
+
+You can also install Git Town on Linux via
 [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
 
 ```
@@ -67,6 +72,12 @@ brew install git-town
 
 You can also [install Git Town manually](#manual-installation) or
 [compile from source](#compile-from-source).
+
+## BSD
+
+You can install Git Town on BSD via
+[freshports](https://www.freshports.org/devel/git-town) or by downloading the
+matching binaries from the GitHub release.
 
 ## manual installation
 

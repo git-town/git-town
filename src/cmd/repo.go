@@ -3,12 +3,16 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/browser"
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v11/src/browser"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -26,41 +30,71 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+		Long:  cmdhelpers.Long(repoDesc, fmt.Sprintf(repoHelp, gitconfig.KeyCodeHostingPlatform, gitconfig.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return repo(readDebugFlag(cmd))
+			return executeRepo(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func repo(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
-		ValidateIsOnline:      true,
+func executeRepo(verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: true,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
-		return err
-	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	if connector == nil {
-		return hosting.UnsupportedServiceError()
+	config, err := determineRepoConfig(repo)
+	if err != nil {
+		return err
 	}
-	browser.Open(connector.RepositoryURL(), run.Frontend.FrontendRunner, run.Backend.BackendRunner)
-	run.Stats.PrintAnalysis()
+	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
+}
+
+func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return nil, err
+	}
+	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
+	if err != nil {
+		return nil, err
+	}
+	hostingService, err := repo.Runner.HostingService()
+	if err != nil {
+		return nil, err
+	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:     &repo.Runner.FullConfig,
+		HostingService: hostingService,
+		OriginURL:      repo.Runner.OriginURL(),
+		Log:            log.Printing{},
+	})
+	if err != nil {
+		return nil, err
+	}
+	if connector == nil {
+		return nil, hostingdomain.UnsupportedServiceError()
+	}
+	return &repoConfig{
+		connector: connector,
+	}, err
+}
+
+type repoConfig struct {
+	connector hostingdomain.Connector
 }

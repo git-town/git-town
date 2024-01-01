@@ -1,7 +1,7 @@
 Feature: with upstream repo
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And an upstream repo
     And the current branch is a feature branch "feature"
     And the commits
@@ -25,8 +25,21 @@ Feature: with upstream repo
       |         | git push --force-with-lease |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE         |
       | main    | local, origin, upstream | upstream commit |
       | feature | local, origin           | upstream commit |
       |         |                         | local commit    |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                                               |
+      | feature | git reset --hard {{ sha-before-run 'local commit' }}                  |
+      |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION                | MESSAGE         |
+      | main    | local, origin, upstream | upstream commit |
+      | feature | local                   | local commit    |
+    And the initial branches and lineage exist

@@ -1,5 +1,7 @@
 package datatable
 
+import "github.com/git-town/git-town/v11/src/git/gitdomain"
+
 type runner interface {
-	ShaForCommit(string) string
+	SHAForCommit(name string) gitdomain.SHA
 }

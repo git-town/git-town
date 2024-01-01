@@ -4,16 +4,20 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/stringslice"
-	"github.com/git-town/git-town/v9/test/asserts"
-	"github.com/git-town/git-town/v9/test/datatable"
-	"github.com/git-town/git-town/v9/test/git"
-	"github.com/git-town/git-town/v9/test/helpers"
-	"github.com/git-town/git-town/v9/test/testruntime"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/cache"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/test/asserts"
+	"github.com/git-town/git-town/v11/test/commands"
+	"github.com/git-town/git-town/v11/test/datatable"
+	"github.com/git-town/git-town/v11/test/filesystem"
+	testgit "github.com/git-town/git-town/v11/test/git"
+	"github.com/git-town/git-town/v11/test/helpers"
+	"github.com/git-town/git-town/v11/test/subshell"
+	"github.com/git-town/git-town/v11/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -33,6 +37,10 @@ type Fixture struct {
 	// If this value is nil, the current test setup has no origin.
 	OriginRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 
+	// SecondWorktree is the directory that contains an additional workspace.
+	// If this value is nil, the current test setup has no additional workspace.
+	SecondWorktree *testruntime.TestRuntime `exhaustruct:"optional"`
+
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
 	SubmoduleRepo *testruntime.TestRuntime `exhaustruct:"optional"`
@@ -44,9 +52,9 @@ type Fixture struct {
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) Fixture {
-	helpers.CopyDirectory(original.Dir, dir)
+	filesystem.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
-	originDir := filepath.Join(dir, "origin")
+	originDir := filepath.Join(dir, gitdomain.OriginRemote.String())
 	originRepo := testruntime.New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
@@ -57,11 +65,11 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
-	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	result.DevRepo.MustRun("git", "remote", "remove", gitdomain.OriginRemote.String())
+	result.DevRepo.AddRemote(gitdomain.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
-	result.DevRepo.ConnectTrackingBranch("main")
+	result.DevRepo.ConnectTrackingBranch(gitdomain.NewLocalBranchName("main"))
 	return result
 }
 
@@ -84,7 +92,7 @@ func NewStandardFixture(dir string) Fixture {
 	// initialize the repo in the folder
 	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	err = originRepo.RunMany([][]string{
-		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 		{"git", "branch", "main", "initial"},
 	})
 	if err != nil {
@@ -99,56 +107,79 @@ func NewStandardFixture(dir string) Fixture {
 	return gitEnv
 }
 
-// AddSubmodule adds a submodule repository.
-func (env *Fixture) AddSubmoduleRepo() {
-	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
-	if err != nil {
-		log.Fatalf("cannot create directory %q: %v", env.submoduleRepoPath(), err)
+// AddCoworkerRepo adds a coworker repository.
+func (self *Fixture) AddCoworkerRepo() {
+	coworkerRepo := testruntime.Clone(self.OriginRepo.TestRunner, self.coworkerRepoPath())
+	self.CoworkerRepo = &coworkerRepo
+	self.initializeWorkspace(self.CoworkerRepo)
+	self.CoworkerRepo.Verbose = self.DevRepo.Verbose
+}
+
+func (self *Fixture) AddSecondWorktree(branch gitdomain.LocalBranchName) {
+	workTreePath := filepath.Join(self.Dir, "development_worktree")
+	self.DevRepo.AddWorktree(workTreePath, branch)
+	runner := subshell.TestRunner{
+		BinDir:     self.DevRepo.BinDir,
+		Verbose:    self.DevRepo.Verbose,
+		HomeDir:    self.DevRepo.HomeDir,
+		WorkingDir: workTreePath,
 	}
-	submoduleRepo := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
+	backendCommands := git.BackendCommands{
+		BackendRunner:      &runner,
+		DryRun:             false,
+		Config:             self.DevRepo.Config,
+		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
+		RemotesCache:       &cache.Remotes{},
+	}
+	self.SecondWorktree = &testruntime.TestRuntime{
+		TestCommands: commands.TestCommands{
+			TestRunner:      &runner,
+			BackendCommands: &backendCommands,
+		},
+		Backend: backendCommands,
+	}
+}
+
+// AddSubmodule adds a submodule repository.
+func (self *Fixture) AddSubmoduleRepo() {
+	err := os.MkdirAll(self.submoduleRepoPath(), 0o744)
+	if err != nil {
+		log.Fatalf("cannot create directory %q: %v", self.submoduleRepoPath(), err)
+	}
+	submoduleRepo := testruntime.Initialize(self.submoduleRepoPath(), self.Dir, self.binPath())
 	submoduleRepo.MustRunMany([][]string{
 		{"git", "config", "--global", "protocol.file.allow", "always"},
-		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
-	env.SubmoduleRepo = &submoduleRepo
+	self.SubmoduleRepo = &submoduleRepo
 }
 
 // AddUpstream adds an upstream repository.
-func (env *Fixture) AddUpstream() {
-	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
-	env.UpstreamRepo = &repo
-	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
-}
-
-// AddCoworkerRepo adds a coworker repository.
-func (env *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
-	env.CoworkerRepo = &coworkerRepo
-	env.initializeWorkspace(env.CoworkerRepo)
-}
-
-// binPath provides the full path of the folder containing the test tools for this Fixture.
-func (env *Fixture) binPath() string {
-	return filepath.Join(env.Dir, "bin")
+func (self *Fixture) AddUpstream() {
+	repo := testruntime.Clone(self.DevRepo.TestRunner, filepath.Join(self.Dir, gitdomain.UpstreamRemote.String()))
+	self.UpstreamRepo = &repo
+	self.DevRepo.AddRemote(gitdomain.UpstreamRemote, self.UpstreamRepo.WorkingDir)
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
-func (env *Fixture) Branches() datatable.DataTable {
+func (self *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	mainBranch := env.DevRepo.Config.MainBranch()
-	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
+	mainBranch := self.DevRepo.Config.MainBranch
+	localBranches, err := self.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	localBranches = stringslice.Remove(localBranches, "initial")
-	localBranchesJoined := strings.Join(localBranches, ", ")
-	if env.OriginRepo == nil {
+	localBranches = localBranches.RemoveWorkspaceMarkers().Hoist(self.DevRepo.Config.MainBranch)
+	initialBranch := gitdomain.NewLocalBranchName("initial")
+	slice.Remove(&localBranches, initialBranch)
+	localBranchesJoined := localBranches.Join(", ")
+	if self.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
-	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
+	originBranches, err := self.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	originBranches = stringslice.Remove(originBranches, "initial")
-	originBranchesJoined := strings.Join(originBranches, ", ")
+	slice.Remove(&originBranches, initialBranch)
+	originBranchesJoined := originBranches.Join(", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {
@@ -158,40 +189,64 @@ func (env *Fixture) Branches() datatable.DataTable {
 	return result
 }
 
+// CommitTable provides a table for all commits in this Git environment containing only the given fields.
+func (self Fixture) CommitTable(fields []string) datatable.DataTable {
+	builder := datatable.NewCommitTableBuilder()
+	localCommits := self.DevRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+	builder.AddMany(localCommits, "local")
+	if self.CoworkerRepo != nil {
+		coworkerCommits := self.CoworkerRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		builder.AddMany(coworkerCommits, "coworker")
+	}
+	if self.OriginRepo != nil {
+		originCommits := self.OriginRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		builder.AddMany(originCommits, gitdomain.OriginRemote.String())
+	}
+	if self.UpstreamRepo != nil {
+		upstreamCommits := self.UpstreamRepo.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		builder.AddMany(upstreamCommits, "upstream")
+	}
+	if self.SecondWorktree != nil {
+		secondWorktreeCommits := self.SecondWorktree.Commits(fields, gitdomain.NewLocalBranchName("main"))
+		builder.AddMany(secondWorktreeCommits, "worktree")
+	}
+	return builder.Table(fields)
+}
+
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *Fixture) CreateCommits(commits []git.Commit) {
+func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	for _, commit := range commits {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				env.CoworkerRepo.CreateCommit(commit)
+				self.CoworkerRepo.CreateCommit(commit)
 			case "local":
-				env.DevRepo.CreateCommit(commit)
+				self.DevRepo.CreateCommit(commit)
 			case "local, origin":
-				env.DevRepo.CreateCommit(commit)
-				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
+				self.DevRepo.CreateCommit(commit)
+				self.DevRepo.PushBranch()
 			case "origin":
-				env.OriginRepo.CreateCommit(commit)
+				self.OriginRepo.CreateCommit(commit)
 			case "upstream":
-				env.UpstreamRepo.CreateCommit(commit)
+				self.UpstreamRepo.CreateCommit(commit)
 			default:
 				log.Fatalf("unknown commit location %q", commit.Locations)
 			}
 		}
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
-	if env.OriginRepo != nil {
-		env.OriginRepo.CheckoutBranch("initial")
+	if self.OriginRepo != nil {
+		self.OriginRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
 	}
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (env Fixture) CreateOriginBranch(name, parent string) {
-	env.OriginRepo.CreateBranch(name, parent)
+func (self Fixture) CreateOriginBranch(name, parent string) {
+	self.OriginRepo.CreateBranch(gitdomain.NewLocalBranchName(name), gitdomain.NewLocalBranchName(parent))
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
+func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
 		log.Fatalf("tag table must have columns NAME and LOCATION")
@@ -201,50 +256,50 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 		location := row.Cells[1].Value
 		switch location {
 		case "local":
-			env.DevRepo.CreateTag(name)
+			self.DevRepo.CreateTag(name)
 		case "origin":
-			env.OriginRepo.CreateTag(name)
+			self.OriginRepo.CreateTag(name)
 		default:
 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
 	}
 }
 
-// CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env Fixture) CommitTable(fields []string) datatable.DataTable {
-	builder := datatable.NewCommitTableBuilder()
-	localCommits := env.DevRepo.Commits(fields, "main")
-	builder.AddMany(localCommits, "local")
-	if env.CoworkerRepo != nil {
-		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
-		builder.AddMany(coworkerCommits, "coworker")
-	}
-	if env.OriginRepo != nil {
-		originCommits := env.OriginRepo.Commits(fields, "main")
-		builder.AddMany(originCommits, config.OriginRemote)
-	}
-	if env.UpstreamRepo != nil {
-		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
-		builder.AddMany(upstreamCommits, "upstream")
-	}
-	return builder.Table(fields)
+// Remove deletes all files used by this Fixture from disk.
+func (self Fixture) Remove() {
+	asserts.NoError(os.RemoveAll(self.Dir))
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env Fixture) TagTable() datatable.DataTable {
+func (self Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
-	localTags := env.DevRepo.Tags()
+	localTags := self.DevRepo.Tags()
 	builder.AddMany(localTags, "local")
-	if env.OriginRepo != nil {
-		originTags := env.OriginRepo.Tags()
-		builder.AddMany(originTags, config.OriginRemote)
+	if self.OriginRepo != nil {
+		originTags := self.OriginRepo.Tags()
+		builder.AddMany(originTags, gitdomain.OriginRemote.String())
 	}
 	return builder.Table()
 }
 
-func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
-	asserts.NoError(repo.Config.SetMainBranch("main"))
-	asserts.NoError(repo.Config.SetPerennialBranches([]string{}))
+// binPath provides the full path of the folder containing the test tools for this Fixture.
+func (self *Fixture) binPath() string {
+	return filepath.Join(self.Dir, "bin")
+}
+
+// coworkerRepoPath provides the full path to the Git repository with the given name.
+func (self Fixture) coworkerRepoPath() string {
+	return filepath.Join(self.Dir, "coworker")
+}
+
+// developerRepoPath provides the full path to the Git repository with the given name.
+func (self Fixture) developerRepoPath() string {
+	return filepath.Join(self.Dir, "developer")
+}
+
+func (self Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
+	asserts.NoError(repo.Config.SetMainBranch(gitdomain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetPerennialBranches(gitdomain.LocalBranchNames{}))
 	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
@@ -253,27 +308,12 @@ func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
 	})
 }
 
-// coworkerRepoPath provides the full path to the Git repository with the given name.
-func (env Fixture) coworkerRepoPath() string {
-	return filepath.Join(env.Dir, "coworker")
-}
-
-// developerRepoPath provides the full path to the Git repository with the given name.
-func (env Fixture) developerRepoPath() string {
-	return filepath.Join(env.Dir, "developer")
-}
-
 // originRepoPath provides the full path to the Git repository with the given name.
-func (env Fixture) originRepoPath() string {
-	return filepath.Join(env.Dir, config.OriginRemote)
+func (self Fixture) originRepoPath() string {
+	return filepath.Join(self.Dir, gitdomain.OriginRemote.String())
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
-func (env Fixture) submoduleRepoPath() string {
-	return filepath.Join(env.Dir, "submodule")
-}
-
-// Remove deletes all files used by this Fixture from disk.
-func (env Fixture) Remove() {
-	asserts.NoError(os.RemoveAll(env.Dir))
+func (self Fixture) submoduleRepoPath() string {
+	return filepath.Join(self.Dir, "submodule")
 }

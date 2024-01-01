@@ -59,5 +59,5 @@ func (s *MetadataService) GetMetadata(options ...RequestOptionFunc) (*Metadata, 
 		return nil, resp, err
 	}
 
-	return v, resp, err
+	return v, resp, nil
 }

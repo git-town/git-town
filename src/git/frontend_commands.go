@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
 type FrontendRunner interface {
 	Run(executable string, args ...string) error
-	RunMany([][]string) error
+	RunMany(commands [][]string) error
 }
 
 // FrontendCommands are Git commands that Git Town executes for the user to change the user's repository.
@@ -17,59 +20,33 @@ type FrontendRunner interface {
 // Git Town only needs to know the exit code of frontend commands.
 type FrontendCommands struct {
 	FrontendRunner
-	Config *RepoConfig // the known state of the Git repository
+	SetCachedCurrentBranch SetCachedCurrentBranchFunc
 }
 
+type SetCachedCurrentBranchFunc func(gitdomain.LocalBranchName)
+
 // AbortMerge cancels a currently ongoing Git merge operation.
-func (fc *FrontendCommands) AbortMerge() error {
-	return fc.Run("git", "merge", "--abort")
+func (self *FrontendCommands) AbortMerge() error {
+	return self.Run("git", "merge", "--abort")
 }
 
 // AbortRebase cancels a currently ongoing Git rebase operation.
-func (fc *FrontendCommands) AbortRebase() error {
-	return fc.Run("git", "rebase", "--abort")
-}
-
-// AddGitAlias sets the given Git alias.
-func (fc *FrontendCommands) AddGitAlias(aliasType config.AliasType) error {
-	return fc.Run("git", "config", "--global", "alias."+string(aliasType), "town "+string(aliasType))
+func (self *FrontendCommands) AbortRebase() error {
+	return self.Run("git", "rebase", "--abort")
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (fc *FrontendCommands) CheckoutBranch(name string) error {
-	err := fc.Run("git", "checkout", name)
+func (self *FrontendCommands) CheckoutBranch(name gitdomain.LocalBranchName) error {
+	err := self.Run("git", "checkout", name.String())
+	self.SetCachedCurrentBranch(name)
 	if err != nil {
-		return fmt.Errorf("cannot check out branch %q: %w", name, err)
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
-	fc.Config.CurrentBranchCache.Set(name)
 	return nil
 }
 
-// CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
-	args := []string{"push"}
-	if noPushHook {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branch)
-	return fc.Run("git", args...)
-}
-
-// CommitNoEdit commits all staged files with the default commit message.
-func (fc *FrontendCommands) CommitNoEdit() error {
-	return fc.Run("git", "commit", "--no-edit")
-}
-
-// CommitStagedChanges commits the currently staged changes.
-func (fc *FrontendCommands) CommitStagedChanges(message string) error {
-	if message != "" {
-		return fc.Run("git", "commit", "-m", message)
-	}
-	return fc.Run("git", "commit", "--no-edit")
-}
-
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (fc *FrontendCommands) Commit(message, author string) error {
+func (self *FrontendCommands) Commit(message, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
 		gitArgs = append(gitArgs, "-m", message)
@@ -77,165 +54,199 @@ func (fc *FrontendCommands) Commit(message, author string) error {
 	if author != "" {
 		gitArgs = append(gitArgs, "--author", author)
 	}
-	return fc.Run("git", gitArgs...)
+	return self.Run("git", gitArgs...)
+}
+
+// CommitNoEdit commits all staged files with the default commit message.
+func (self *FrontendCommands) CommitNoEdit() error {
+	return self.Run("git", "commit", "--no-edit")
+}
+
+// CommitStagedChanges commits the currently staged changes.
+func (self *FrontendCommands) CommitStagedChanges(message string) error {
+	if message != "" {
+		return self.Run("git", "commit", "-m", message)
+	}
+	return self.Run("git", "commit", "--no-edit")
 }
 
 // ContinueRebase continues the currently ongoing rebase.
-func (fc *FrontendCommands) ContinueRebase() error {
-	return fc.Run("git", "rebase", "--continue")
+func (self *FrontendCommands) ContinueRebase() error {
+	return self.Run("git", "rebase", "--continue")
 }
 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (fc *FrontendCommands) CreateBranch(name, parent string) error {
-	return fc.Run("git", "branch", name, parent)
+func (self *FrontendCommands) CreateBranch(name gitdomain.LocalBranchName, parent gitdomain.Location) error {
+	return self.Run("git", "branch", name.String(), parent.String())
+}
+
+// CreateRemoteBranch creates a remote branch from the given local SHA.
+func (self *FrontendCommands) CreateRemoteBranch(localSHA gitdomain.SHA, branch gitdomain.LocalBranchName, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, gitdomain.OriginRemote.String(), localSHA.String()+":refs/heads/"+branch.String())
+	return self.Run("git", args...)
+}
+
+// PushBranch pushes the branch with the given name to origin.
+func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchName, remote gitdomain.Remote, noPushHook configdomain.NoPushHook) error {
+	args := []string{"push"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", remote.String())
+	args = append(args, branch.String())
+	return self.Run("git", args...)
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (fc *FrontendCommands) DeleteLastCommit() error {
-	return fc.Run("git", "reset", "--hard", "HEAD~1")
+func (self *FrontendCommands) DeleteLastCommit() error {
+	return self.Run("git", "reset", "--hard", "HEAD~1")
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (fc *FrontendCommands) DeleteLocalBranch(name string, force bool) error {
-	args := []string{"branch", "-d", name}
+func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, force bool) error {
+	args := []string{"branch", "-d", name.String()}
 	if force {
 		args[1] = "-D"
 	}
-	return fc.Run("git", args...)
+	return self.Run("git", args...)
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-func (fc *FrontendCommands) DeleteRemoteBranch(name string) error {
-	return fc.Run("git", "push", config.OriginRemote, ":"+name)
+func (self *FrontendCommands) DeleteRemoteBranch(name gitdomain.RemoteBranchName) error {
+	remote, localBranchName := name.Parts()
+	return self.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (fc *FrontendCommands) DiffParent(branch, parentBranch string) error {
-	return fc.Run("git", "diff", parentBranch+".."+branch)
+func (self *FrontendCommands) DiffParent(branch, parentBranch gitdomain.LocalBranchName) error {
+	return self.Run("git", "diff", parentBranch.String()+".."+branch.String())
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
-func (fc *FrontendCommands) DiscardOpenChanges() error {
-	return fc.Run("git", "reset", "--hard")
+func (self *FrontendCommands) DiscardOpenChanges() error {
+	return self.Run("git", "reset", "--hard")
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (fc *FrontendCommands) Fetch() error {
-	return fc.Run("git", "fetch", "--prune", "--tags")
+func (self *FrontendCommands) Fetch() error {
+	return self.Run("git", "fetch", "--prune", "--tags")
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (fc *FrontendCommands) FetchUpstream(branch string) error {
-	return fc.Run("git", "fetch", "upstream", branch)
+func (self *FrontendCommands) FetchUpstream(branch gitdomain.LocalBranchName) error {
+	return self.Run("git", "fetch", gitdomain.UpstreamRemote.String(), branch.String())
+}
+
+// PushBranch pushes the branch with the given name to origin.
+func (self *FrontendCommands) ForcePushBranch(noPushHook configdomain.NoPushHook) error {
+	args := []string{"push", "--force-with-lease"}
+	if noPushHook {
+		args = append(args, "--no-verify")
+	}
+	return self.Run("git", args...)
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (fc *FrontendCommands) MergeBranchNoEdit(branch string) error {
-	err := fc.Run("git", "merge", "--no-edit", branch)
-	return err
+func (self *FrontendCommands) MergeBranchNoEdit(branch gitdomain.BranchName) error {
+	return self.Run("git", "merge", "--no-edit", branch.String())
 }
 
 // NavigateToDir changes into the root directory of the current repository.
-func (fc *FrontendCommands) NavigateToDir(dir string) error {
-	return os.Chdir(dir)
+func (self *FrontendCommands) NavigateToDir(dir gitdomain.RepoRootDir) error {
+	return os.Chdir(dir.String())
 }
 
 // PopStash restores stashed-away changes into the workspace.
-func (fc *FrontendCommands) PopStash() error {
-	return fc.Run("git", "stash", "pop")
+func (self *FrontendCommands) PopStash() error {
+	return self.Run("git", "stash", "pop")
 }
 
 // Pull fetches updates from origin and updates the currently checked out branch.
-func (fc *FrontendCommands) Pull() error {
-	return fc.Run("git", "pull")
+func (self *FrontendCommands) Pull() error {
+	return self.Run("git", "pull")
 }
 
-type PushArgs struct {
-	Branch         string
-	ForceWithLease bool `exhaustruct:"optional"`
-	NoPushHook     bool `exhaustruct:"optional"`
-	Remote         string
-}
-
-// PushBranch pushes the branch with the given name to origin.
-func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	var option PushArgs
-	if len(options) > 0 {
-		option = options[0]
-	} else {
-		option = PushArgs{} //nolint:exhaustruct  // intentional zero-value object
-	}
+// PushCurrentBranch pushes the current branch to its tracking branch.
+func (self *FrontendCommands) PushCurrentBranch(noPushHook configdomain.NoPushHook) error {
 	args := []string{"push"}
-	provideBranch := false
-	if option.NoPushHook {
+	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	if option.ForceWithLease {
-		args = append(args, "--force-with-lease")
-	}
-	if option.Remote != "" {
-		args = append(args, "-u", option.Remote)
-		provideBranch = true
-	}
-	if option.Branch != "" && provideBranch {
-		args = append(args, option.Branch)
-	}
-	return fc.Run("git", args...)
+	return self.Run("git", args...)
 }
 
 // PushTags pushes new the Git tags to origin.
-func (fc *FrontendCommands) PushTags() error {
-	return fc.Run("git", "push", "--tags")
+func (self *FrontendCommands) PushTags() error {
+	return self.Run("git", "push", "--tags")
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (fc *FrontendCommands) Rebase(target string) error {
-	return fc.Run("git", "rebase", target)
+func (self *FrontendCommands) Rebase(target gitdomain.BranchName) error {
+	return self.Run("git", "rebase", target.String())
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (fc *FrontendCommands) RemoveGitAlias(aliasType config.AliasType) error {
-	return fc.Run("git", "config", "--global", "--unset", "alias."+string(aliasType))
+func (self *FrontendCommands) RemoveGitAlias(aliasableCommand configdomain.AliasableCommand) error {
+	aliasKey := gitconfig.KeyForAliasableCommand(aliasableCommand)
+	return self.Run("git", "config", "--global", "--unset", aliasKey.String())
 }
 
-// ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetToSha(sha string, hard bool) error {
+// ResetCurrentBranchToSHA undoes all commits on the current branch all the way until the given SHA.
+func (self *FrontendCommands) ResetCurrentBranchToSHA(sha gitdomain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
 	}
-	args = append(args, sha)
-	return fc.Run("git", args...)
+	args = append(args, sha.String())
+	return self.Run("git", args...)
+}
+
+// ResetRemoteBranchToSHA sets the given remote branch to the given SHA.
+func (self *FrontendCommands) ResetRemoteBranchToSHA(branch gitdomain.RemoteBranchName, sha gitdomain.SHA) error {
+	return self.Run("git", "push", "--force-with-lease", gitdomain.OriginRemote.String(), sha.String()+":"+branch.LocalBranchName().String())
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (fc *FrontendCommands) RevertCommit(sha string) error {
-	return fc.Run("git", "revert", sha)
+func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
+	return self.Run("git", "revert", sha.String())
+}
+
+// SetGitAlias sets the given Git alias.
+func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
+	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (fc *FrontendCommands) SquashMerge(branch string) error {
-	return fc.Run("git", "merge", "--squash", branch)
+func (self *FrontendCommands) SquashMerge(branch gitdomain.LocalBranchName) error {
+	return self.Run("git", "merge", "--squash", branch.String())
+}
+
+// StageFiles adds the file with the given name to the Git index.
+func (self *FrontendCommands) StageFiles(names ...string) error {
+	args := append([]string{"add"}, names...)
+	return self.Run("git", args...)
+}
+
+// StartCommit starts a commit and stops at asking the user for the commit message.
+func (self *FrontendCommands) StartCommit() error {
+	return self.Run("git", "commit")
 }
 
 // Stash adds the current files to the Git stash.
-func (fc *FrontendCommands) Stash() error {
-	return fc.RunMany([][]string{
+func (self *FrontendCommands) Stash() error {
+	return self.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
 	})
 }
 
-// StageFiles adds the file with the given name to the Git index.
-func (fc *FrontendCommands) StageFiles(names ...string) error {
-	args := append([]string{"add"}, names...)
-	return fc.Run("git", args...)
-}
-
-// StartCommit starts a commit and stops at asking the user for the commit message.
-func (fc *FrontendCommands) StartCommit() error {
-	return fc.Run("git", "commit")
+func (self *FrontendCommands) UndoLastCommit() error {
+	return self.Run("git", "reset", "--soft", "HEAD^")
 }

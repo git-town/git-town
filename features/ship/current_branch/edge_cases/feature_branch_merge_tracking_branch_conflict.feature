@@ -6,6 +6,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
+    And Git Town setting "sync-before-ship" is "true"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -22,23 +23,21 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
     And the current branch is still "feature"
     And a merge is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git merge --abort    |
-      |         | git checkout main    |
-      | main    | git checkout feature |
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
     And the current branch is still "feature"
     And no merge is in progress
-    And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,10 +56,10 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, origin | feature done | conflicting_file |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

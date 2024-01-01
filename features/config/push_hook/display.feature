@@ -13,7 +13,7 @@ Feature: display the push-hook setting
       |          |
 
   Scenario Outline: configured locally
-    Given local setting "push-hook" is "<VALUE>"
+    Given local Git Town setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook"
     Then it prints:
       """
@@ -33,7 +33,7 @@ Feature: display the push-hook setting
       | 0     | no     |
 
   Scenario Outline: configured globally
-    Given global setting "push-hook" is "<VALUE>"
+    Given global Git Town setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook --global"
     Then it prints:
       """
@@ -54,7 +54,7 @@ Feature: display the push-hook setting
       | 0     | no     |
 
   Scenario: global set, local not set
-    Given global setting "push-hook" is "true"
+    Given global Git Town setting "push-hook" is "true"
     When I run "git-town config push-hook"
     Then it prints:
       """
@@ -62,8 +62,8 @@ Feature: display the push-hook setting
       """
 
   Scenario Outline: global and local set to different values
-    Given global setting "push-hook" is "true"
-    And local setting "push-hook" is "false"
+    Given global Git Town setting "push-hook" is "true"
+    And local Git Town setting "push-hook" is "false"
     When I run "git-town config push-hook <FLAG>"
     Then it prints:
       """
@@ -76,9 +76,9 @@ Feature: display the push-hook setting
       |          | no     |
 
   Scenario: invalid value
-    Given local setting "push-hook" is "zonk"
+    Given local Git Town setting "push-hook" is "zonk"
     When I run "git-town config push-hook"
     Then it prints the error:
       """
-      Error: invalid value for git-town.push-hook: "zonk". Please provide either "true" or "false"
+      Error: invalid value for git-town.push-hook: "zonk". Please provide either "yes" or "no"
       """

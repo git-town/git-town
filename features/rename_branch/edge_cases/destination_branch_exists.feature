@@ -13,10 +13,10 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And it prints the error:
       """
-      a branch named "beta" already exists
+      there is already a branch "beta"
       """
     And the current branch is still "alpha"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist
 
   Scenario: destination branch exists in origin
     Given the current branch is a feature branch "alpha"
@@ -31,7 +31,7 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And it prints the error:
       """
-      a branch named "beta" already exists
+      there is already a branch "beta" at the "origin" remote
       """
     And the current branch is still "alpha"
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

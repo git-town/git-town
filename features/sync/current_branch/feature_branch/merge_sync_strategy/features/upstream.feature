@@ -24,9 +24,22 @@ Feature: with upstream repo
       |         | git push                           |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |
       | feature | local, origin           | local commit                     |
       |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                                               |
+      | feature | git reset --hard {{ sha 'local commit' }}                             |
+      |         | git push --force-with-lease origin {{ sha 'initial commit' }}:feature |
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION                | MESSAGE         |
+      | main    | local, origin, upstream | upstream commit |
+      | feature | local                   | local commit    |
+    And the initial branches and lineage exist

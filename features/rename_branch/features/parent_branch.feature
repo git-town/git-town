@@ -19,7 +19,7 @@ Feature: rename a parent branch
       |        | git push origin :parent  |
       |        | git branch -D parent     |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | new    | local, origin | parent commit |
@@ -38,5 +38,5 @@ Feature: rename a parent branch
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
     And the current branch is now "parent"
-    And now the initial commits exist
-    And the initial branches and hierarchy exist
+    And the initial commits exist
+    And the initial branches and lineage exist

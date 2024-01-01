@@ -14,8 +14,7 @@ _Commands to create, work on, and ship features._
 - [git sync](commands/sync.md) - update the current branch with all ongoing
   changes
 - [git switch](commands/switch.md) - switch between branches visually
-- [git new-pull-request](commands/new-pull-request.md) - create a new pull
-  request
+- [git propose](commands/propose.md) - propose to ship a branch
 - [git ship](commands/ship.md) - deliver a completed feature branch
 
 ### Additional workflow commands
@@ -23,7 +22,6 @@ _Commands to create, work on, and ship features._
 _Commands to deal with edge cases._
 
 - [git kill](commands/kill.md) - delete a feature branch
-- [git prune-branches](commands/prune-branches.md) - remove all merged branches
 - [git rename-branch](commands/rename-branch.md) - rename a branch
 - [git repo](commands/repo.md) - view the Git repository in the browser
 
@@ -47,7 +45,6 @@ _Commands to deal with merge conflicts._
 
 - [git continue](commands/continue.md) - continue after you resolved the merge
   conflict
-- [git abort](commands/abort.md) - abort and undo the currently failing command
 - [git skip](commands/skip.md) - when syncing all branches, ignore the current
   branch and continue with the next one
 - [git town status](commands/status.md) - display available commands
@@ -77,7 +74,7 @@ _Commands that help adapt Git Town's behavior to your preferences._
 - [git town offline](commands/config-offline.md) - enable/disable offline mode
 - [git town perennial-branches](commands/config-perennial-branches.md) - display
   or update the perennial branches for the current repo
-- [git town pull-branch-strategy](commands/config-pull-branch-strategy.md) -
+- [git town sync-perennial-strategy](commands/config-sync-perennial-strategy.md) -
   display or set the strategy to update perennial branches
-- [git town sync-strategy](commands/config-sync-strategy.md) - display or update
-  whether feature branches get rebased or merged
+- [git town sync-feature-strategy](commands/config-sync-feature-strategy.md) -
+  display or update whether feature branches get rebased or merged

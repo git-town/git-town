@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v9/test/cucumber"
+	"github.com/git-town/git-town/v11/test/cucumber"
 )
 
 func FeatureContext(suite *godog.Suite) {
@@ -25,14 +25,18 @@ func TestGodog(t *testing.T) {
 	if os.Getenv("cukethis") != "" {
 		tags = "@this"
 	}
+	var concurrency int
 	if runtime.GOOS == "windows" {
 		tags = "~@skipWindows"
+		concurrency = 1
+	} else {
+		concurrency = 4
 	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
 		Format:      "progress",
-		Concurrency: runtime.NumCPU() * 4,
+		Concurrency: runtime.NumCPU() * concurrency,
 		Strict:      true,
 		Paths:       []string{"features/"},
 		Tags:        tags,

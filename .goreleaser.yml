@@ -1,19 +1,22 @@
 archives:
-  - builds:
-    replacements:
-      darwin: macos
-      amd64: intel_64
-      arm64: arm_64
+  - files:
     format_overrides:
       - goos: windows
         format: zip
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- if eq .Os "darwin" }}macos
+      {{- else }}{{ .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
 
 builds:
   - env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/git-town/git-town/src/cmd.version={{.Tag}} -X
-        github.com/git-town/git-town/src/cmd.buildDate={{.Date}}
+      - -s -w -X github.com/git-town/git-town/v11/src/cmd.version={{.Env.VERSION}} -X
+        github.com/git-town/git-town/v11/src/cmd.buildDate={{.Env.TODAY}}
     goarch:
       - amd64
       - arm64
@@ -21,6 +24,8 @@ builds:
       - darwin
       - linux
       - windows
+      - freebsd
+      - netbsd
 
 changelog:
   skip: true
@@ -28,13 +33,37 @@ changelog:
 checksum:
   name_template: "checksums.txt"
 
+chocolateys:
+  - name: git-town
+    owners: Kevin Goslar
+    title: Git Town
+    authors: the Git Town authors
+    project_url: https://www.git-town.com
+    license_url: https://github.com/git-town/git-town/blob/main/LICENSE
+    require_license_acceptance: false
+    project_source_url: https://github.com/git-town/git-town
+    docs_url: https://www.git-town.com
+    bug_tracker_url: https://github.com/git-town/git-town/issues
+    tags: "git command-line workflow productivity"
+    summary: Git workflow automation to keep branches in sync and reduce merge conflicts.
+    description: |
+      Git Town reduces merge conflicts by keeping Git branches better in sync.
+      Compatible with all major Git workflows including Git Flow, GitHub Flow, GitLab Flow, and trunk-based development.
+    release_notes: "https://github.com/git-town/git-town/releases/tag/v{{ .Version }}"
+    url_template: "https://github.com/git-town/git-town/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    api_key: "{{ .Env.CHOCOLATEY_API_KEY }}"
+    source_repo: "https://push.chocolatey.org/"
+    skip_publish: false
+
 nfpms:
   - id: git-town
     package_name: git-town
-    replacements:
-      amd64: intel_64
-      darwin: macos
-      arm64: arm_64
+    file_name_template: >-
+      {{- .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}intel_64
+      {{- else if eq .Arch "arm64" }}arm_64
+      {{- else }}{{ .Arch }}{{ end }}
     vendor: the Git Town authors
     maintainer: the Git Town authors
     homepage: https://www.git-town.com
@@ -43,24 +72,12 @@ nfpms:
     formats:
       - deb
       - rpm
+      - archlinux
     dependencies:
       - git
 
 release:
   draft: true
-  ids:
-    - nothing
-
-scoop:
-  bucket:
-    owner: git-town
-    name: scoop
-  commit_author:
-    name: kevgo
-    email: kevin.goslar@gmail.com
-  description: "High-level CLI for Git"
-  homepage: https://www.git-town.com
-  license: MIT
-
-snapshot:
-  name_template: "{{ .Tag }}"
+  replace_existing_draft: true
+  extra_files:
+    - glob: ./git-town_windows_intel_64.msi

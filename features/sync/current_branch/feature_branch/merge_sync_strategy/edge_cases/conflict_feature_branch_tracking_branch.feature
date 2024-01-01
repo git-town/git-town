@@ -25,26 +25,25 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git merge --abort    |
-      |         | git checkout main    |
-      | main    | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH  | COMMAND           |
+      | feature | git merge --abort |
+      |         | git stash pop     |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
+    And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

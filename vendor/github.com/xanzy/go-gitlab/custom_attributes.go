@@ -73,7 +73,7 @@ func (s *CustomAttributesService) listCustomAttributes(resource string, id int, 
 	if err != nil {
 		return nil, resp, err
 	}
-	return cas, resp, err
+	return cas, resp, nil
 }
 
 // GetCustomUserAttribute returns the user attribute with a speciifc key.
@@ -112,7 +112,7 @@ func (s *CustomAttributesService) getCustomAttribute(resource string, id int, ke
 	if err != nil {
 		return nil, resp, err
 	}
-	return ca, resp, err
+	return ca, resp, nil
 }
 
 // SetCustomUserAttribute sets the custom attributes of the specified user.
@@ -151,7 +151,7 @@ func (s *CustomAttributesService) setCustomAttribute(resource string, id int, c 
 	if err != nil {
 		return nil, resp, err
 	}
-	return ca, resp, err
+	return ca, resp, nil
 }
 
 // DeleteCustomUserAttribute removes the custom attribute of the specified user.

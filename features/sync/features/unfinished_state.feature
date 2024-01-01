@@ -11,8 +11,8 @@ Feature: handle previously unfinished Git Town commands
     And I run "git-town sync"
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
 
   Scenario: quit a command that is blocked by a previously unfinished Git Town command
@@ -52,9 +52,9 @@ Feature: handle previously unfinished Git Town commands
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
-  # notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
+# notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
 
-  Scenario: run a command and abort the previously unfinished one
+  Scenario: run a command and undo the previously unfinished one
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
@@ -63,10 +63,10 @@ Feature: handle previously unfinished Git Town commands
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-    And now the initial commits exist
+    And the initial commits exist
 
-  Scenario: run a command, abort the previously finished one, and run another command
-    When I run "git-town abort"
+  Scenario: run a command, undo the previously finished one, and run another command
+    When I run "git-town undo"
     And I run "git-town diff-parent"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
 
@@ -89,14 +89,13 @@ Feature: handle previously unfinished Git Town commands
       | append foo        |
       | diff-parent       |
       | hack foo          |
-      | new-pull-request  |
+      | propose           |
       | prepend foo       |
-      | prune-branches    |
       | rename-branch foo |
       # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument
-      | ship              |
-      | switch            |
-      | sync              |
+      | ship   |
+      | switch |
+      | sync   |
 
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
@@ -106,18 +105,18 @@ Feature: handle previously unfinished Git Town commands
     Then it runs without error
 
     Examples:
-      | COMMAND                     |
-      | aliases add                 |
-      | config                      |
-      | config main-branch          |
-      | config offline              |
-      | config perennial-branches   |
-      | config pull-branch-strategy |
-      | config push-hook            |
-      | config push-new-branches    |
-      | config reset                |
-      | config sync-strategy        |
-      | kill                        |
-      | status reset                |
-      | status                      |
-      | version                     |
+      | COMMAND                        |
+      | aliases add                    |
+      | config                         |
+      | config main-branch             |
+      | config offline                 |
+      | config perennial-branches      |
+      | config sync-perennial-strategy |
+      | config push-hook               |
+      | config push-new-branches       |
+      | config reset                   |
+      | config sync-feature-strategy   |
+      | kill                           |
+      | status reset                   |
+      | status                         |
+      | --version                      |

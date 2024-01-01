@@ -4,7 +4,7 @@ Feature: does not ship empty feature branches
     Given the feature branches "empty" and "other"
     And the commits
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
-      | main   | origin   | main commit    | common_file | common content |
+      | main   | local    | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
     And the current branch is "other"
     And an uncommitted file
@@ -12,26 +12,19 @@ Feature: does not ship empty feature branches
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                                     |
-      | other  | git fetch --prune --tags                    |
-      |        | git add -A                                  |
-      |        | git stash                                   |
-      |        | git checkout main                           |
-      | main   | git rebase origin/main                      |
-      |        | git checkout empty                          |
-      | empty  | git merge --no-edit origin/empty            |
-      |        | git merge --no-edit main                    |
-      |        | git reset --hard {{ sha 'feature commit' }} |
-      |        | git checkout main                           |
-      | main   | git checkout other                          |
-      | other  | git stash pop                               |
+      | BRANCH | COMMAND                  |
+      | other  | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git stash pop            |
     And it prints the error:
       """
       the branch "empty" has no shippable changes
       """
     And the current branch is still "other"
     And the uncommitted file still exists
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,8 +34,5 @@ Feature: does not ship empty feature branches
       nothing to undo
       """
     And the current branch is still "other"
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, origin | main commit    |
-      | empty  | local         | feature commit |
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial branches and lineage exist

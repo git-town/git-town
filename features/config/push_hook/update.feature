@@ -2,7 +2,7 @@ Feature: update the push-hook setting
 
   Scenario Outline: changing the local setting
     When I run "git-town config push-hook <GIVE>"
-    Then local setting "push-hook" is now "<WANT>"
+    Then local Git Town setting "push-hook" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -19,7 +19,7 @@ Feature: update the push-hook setting
 
   Scenario Outline: changing the global setting
     When I run "git-town config push-hook <GIVE> --global"
-    Then global setting "push-hook" is now "<WANT>"
+    Then global Git Town setting "push-hook" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |

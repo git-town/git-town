@@ -11,43 +11,36 @@ Feature: ship hotfixes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                           |
-      | hotfix     | git fetch --prune --tags          |
-      |            | git checkout production           |
-      | production | git rebase origin/production      |
-      |            | git checkout hotfix               |
-      | hotfix     | git merge --no-edit origin/hotfix |
-      |            | git merge --no-edit production    |
-      |            | git checkout production           |
-      | production | git merge --squash hotfix         |
-      |            | git commit -m "hotfix done"       |
-      |            | git push                          |
-      |            | git push origin :hotfix           |
-      |            | git branch -D hotfix              |
+      | BRANCH     | COMMAND                     |
+      | hotfix     | git fetch --prune --tags    |
+      |            | git checkout production     |
+      | production | git merge --squash hotfix   |
+      |            | git commit -m "hotfix done" |
+      |            | git push                    |
+      |            | git push origin :hotfix     |
+      |            | git branch -D hotfix        |
     And the current branch is now "production"
     And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
-    And now these commits exist
+    And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, origin | hotfix done |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                                     |
-      | production | git branch hotfix {{ sha 'hotfix commit' }} |
-      |            | git push -u origin hotfix                   |
-      |            | git revert {{ sha 'hotfix done' }}          |
+      | production | git revert {{ sha 'hotfix done' }}          |
       |            | git push                                    |
+      |            | git branch hotfix {{ sha 'hotfix commit' }} |
+      |            | git push -u origin hotfix                   |
       |            | git checkout hotfix                         |
-      | hotfix     | git checkout production                     |
-      | production | git checkout hotfix                         |
     And the current branch is now "hotfix"
-    And now these commits exist
+    And these commits exist now
       | BRANCH     | LOCATION      | MESSAGE              |
       | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And the initial branches and hierarchy exist
+    And the initial branches and lineage exist

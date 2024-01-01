@@ -3,7 +3,8 @@ package fixture
 import (
 	"path/filepath"
 
-	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v11/test/filesystem"
+	"github.com/git-town/git-town/v11/test/helpers"
 )
 
 // Factory manages the Git setup for the entire test suite.
@@ -15,7 +16,7 @@ import (
 // Making copies of a fully set up Git repo is much faster than creating it from scratch.
 // End-to-end tests run multi-threaded, all threads share a global Factory instance.
 type Factory struct {
-	counter helpers.Counter
+	counter helpers.AtomicCounter
 
 	// path of the folder that this class operates in
 	dir string
@@ -27,15 +28,15 @@ type Factory struct {
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
 func NewFactory(dir string) Factory {
 	return Factory{
-		counter:  helpers.Counter{},
+		counter:  helpers.AtomicCounter{},
 		dir:      dir,
 		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
 	}
 }
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
-func (manager *Factory) CreateFixture(scenarioName string) Fixture {
-	envDirName := helpers.FolderName(scenarioName) + "_" + manager.counter.ToString()
-	envPath := filepath.Join(manager.dir, envDirName)
-	return CloneFixture(manager.memoized, envPath)
+func (self *Factory) CreateFixture(scenarioName string) Fixture {
+	envDirName := filesystem.FolderName(scenarioName) + "_" + self.counter.ToString()
+	envPath := filepath.Join(self.dir, envDirName)
+	return CloneFixture(self.memoized, envPath)
 }

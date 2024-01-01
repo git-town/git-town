@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
-    Given setting "sync-strategy" is "rebase"
+    Given Git Town setting "sync-feature-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -28,26 +28,24 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git rebase --abort   |
-      |         | git checkout main    |
-      | main    | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH  | COMMAND            |
+      | feature | git rebase --abort |
+      |         | git stash pop      |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |

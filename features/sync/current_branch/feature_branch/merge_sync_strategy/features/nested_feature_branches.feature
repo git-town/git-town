@@ -29,7 +29,7 @@ Feature: nested feature branches
       |        | git push                          |
     And all branches are now synchronized
     And the current branch is still "child"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
@@ -49,3 +49,11 @@ Feature: nested feature branches
       |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it prints the error:
+      """
+      nothing to undo
+      """
+    And it runs no commands

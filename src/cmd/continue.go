@@ -3,61 +3,125 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/hosting"
+	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
 const continueDesc = "Restarts the last run git-town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   continueDesc,
-		Long:    long(continueDesc),
+		Long:    cmdhelpers.Long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runContinue(readDebugFlag(cmd))
+			return executeContinue(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func runContinue(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
+func executeContinue(verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
+	if err != nil {
+		return err
+	}
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&run.Backend)
+	runState, exit, err := determineContinueRunstate(repo)
+	if err != nil || exit {
+		return err
+	}
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
+		RunState:                &runState,
+		Run:                     repo.Runner,
+		Connector:               config.connector,
+		Verbose:                 verbose,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+	})
+}
+
+func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, initialBranchesSnapshot, initialStashSnapshot, exit, err
+	}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return fmt.Errorf("cannot load previous run state: %w", err)
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
+	}
+	if repoStatus.Conflicts {
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+	}
+	if repoStatus.UntrackedChanges {
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUntrackedChanges)
+	}
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
+	if err != nil {
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
+	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		FullConfig:     &repo.Runner.FullConfig,
+		HostingService: hostingService,
+		OriginURL:      originURL,
+		Log:            log.Printing{},
+	})
+	return &continueConfig{
+		connector:  connector,
+		FullConfig: &repo.Runner.FullConfig,
+	}, initialBranchesSnapshot, initialStashSnapshot, false, err
+}
+
+type continueConfig struct {
+	connector hostingdomain.Connector
+	*configdomain.FullConfig
+}
+
+func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
+	runState, err := statefile.Load(repo.RootDir)
+	if err != nil {
+		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf("nothing to continue")
+		fmt.Println(messages.ContinueNothingToDo)
+		return runstate.EmptyRunState(), true, nil
 	}
-	hasConflicts, err := run.Backend.HasConflicts()
-	if err != nil {
-		return err
-	}
-	if hasConflicts {
-		return fmt.Errorf("you must resolve the conflicts before continuing")
-	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
-	if err != nil {
-		return err
-	}
-	return runstate.Execute(runState, &run, connector)
+	return *runState, false, nil
 }

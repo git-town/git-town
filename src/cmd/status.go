@@ -1,54 +1,56 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"time"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cli/print"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
+	"github.com/git-town/git-town/v11/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
 
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
 func statusCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   statusDesc,
-		Long:    long(statusDesc),
+		Long:    cmdhelpers.Long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return status(readDebugFlag(cmd))
+			return executeStatus(readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addVerboseFlag(&cmd)
 	cmd.AddCommand(resetRunstateCommand())
 	return &cmd
 }
 
-func status(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
+func executeStatus(verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := loadDisplayStatusConfig(&run)
+	config, err := loadDisplayStatusConfig(repo.RootDir)
 	if err != nil {
 		return err
 	}
 	displayStatus(*config)
-	run.Stats.PrintAnalysis()
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), print.NoFinalMessages)
 	return nil
 }
 
@@ -57,16 +59,14 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(run *git.ProdRunner) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilePath(&run.Backend)
+func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfig, error) {
+	filepath, err := statefile.FilePath(rootDir)
 	if err != nil {
-		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
+		return nil, err
 	}
-	state, err := runstate.Load(&run.Backend)
+	state, err := statefile.Load(rootDir)
 	if err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)
-		}
+		return nil, err
 	}
 	return &displayStatusConfig{
 		filepath: filepath,
@@ -89,20 +89,20 @@ func displayStatus(config displayStatusConfig) {
 func displayUnfinishedStatus(config displayStatusConfig) {
 	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
 	fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
-	if config.state.HasAbortSteps() {
-		fmt.Println("You can run \"git town abort\" to abort it.")
+	if config.state.HasAbortProgram() {
+		fmt.Println("You can run \"git town undo\" to go back to where you started.")
 	}
-	if config.state.HasRunSteps() {
+	if config.state.HasRunProgram() {
 		fmt.Println("You can run \"git town continue\" to finish it.")
 	}
 	if config.state.UnfinishedDetails.CanSkip {
-		fmt.Println("You can run \"git town skip\" to skip the currently failing step.")
+		fmt.Println("You can run \"git town skip\" to skip the currently failing operation.")
 	}
 }
 
 func displayFinishedStatus(config displayStatusConfig) {
 	fmt.Printf("The previous Git Town command (%s) finished successfully.\n", config.state.Command)
-	if config.state.HasUndoSteps() {
+	if config.state.HasUndoProgram() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
 	}
 }

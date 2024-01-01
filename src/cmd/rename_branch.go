@@ -3,11 +3,16 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/opcode"
+	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -28,162 +33,157 @@ When there is a tracking branch
 - deletes the old branch from the origin repository
 
 When run on a perennial branch
-- confirm with the "-f" option
+- confirm with the "--force"/"-f" option
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
-	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch", flags.FlagTypeNonPersistent)
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
 		Short: renameBranchDesc,
-		Long:  long(renameBranchDesc, renameBranchHelp),
+		Long:  cmdhelpers.Long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return renameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
+			return executeRenameBranch(args, readDryRunFlag(cmd), readForceFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addVerboseFlag(&cmd)
 	addForceFlag(&cmd)
 	return &cmd
 }
 
-func renameBranch(args []string, force, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
+func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           dryRun,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
+	if err != nil {
+		return err
+	}
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineRenameBranchConfig(args, force, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &run)
-	if err != nil {
-		return err
+	runState := runstate.RunState{
+		Command:             "rename-branch",
+		DryRun:              dryRun,
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunProgram:          renameBranchProgram(config),
 	}
-	stepList, err := renameBranchStepList(config, &run)
-	if err != nil {
-		return err
-	}
-	runState := runstate.New("rename-branch", stepList)
-	return runstate.Execute(runState, &run, nil)
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
+		RunState:                &runState,
+		Run:                     repo.Runner,
+		Connector:               nil,
+		Verbose:                 verbose,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+	})
 }
 
 type renameBranchConfig struct {
-	initialBranch              string
-	isInitialBranchPerennial   bool
-	isOffline                  bool
-	mainBranch                 string
-	newBranch                  string
-	noPushHook                 bool
-	oldBranchChildren          []string
-	oldBranchHasTrackingBranch bool
-	oldBranch                  string
+	*configdomain.FullConfig
+	dryRun         bool
+	initialBranch  gitdomain.LocalBranchName
+	newBranch      gitdomain.LocalBranchName
+	oldBranch      gitdomain.BranchInfo
+	previousBranch gitdomain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner) (*renameBranchConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
-	pushHook, err := run.Config.PushHook()
-	if err != nil {
-		return nil, err
-	}
-	mainBranch := run.Config.MainBranch()
-	var oldBranch string
-	var newBranch string
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	var oldBranchName gitdomain.LocalBranchName
+	var newBranchName gitdomain.LocalBranchName
 	if len(args) == 1 {
-		oldBranch = initialBranch
-		newBranch = args[0]
+		oldBranchName = branchesSnapshot.Active
+		newBranchName = gitdomain.NewLocalBranchName(args[0])
 	} else {
-		oldBranch = args[0]
-		newBranch = args[1]
+		oldBranchName = gitdomain.NewLocalBranchName(args[0])
+		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
-	if run.Config.IsMainBranch(oldBranch) {
-		return nil, fmt.Errorf("the main branch cannot be renamed")
+	if repo.Runner.IsMainBranch(oldBranchName) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if run.Config.IsPerennialBranch(oldBranch) {
-			return nil, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", oldBranch)
+		if repo.Runner.IsPerennialBranch(oldBranchName) {
+			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
-	if oldBranch == newBranch {
-		return nil, fmt.Errorf("cannot rename branch to current name")
+	if oldBranchName == newBranchName {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameToSameName)
 	}
-	if !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
+	oldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName)
+	if oldBranch == nil {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	hasOldBranch, err := run.Backend.HasLocalBranch(oldBranch)
-	if err != nil {
-		return nil, err
+	if oldBranch.SyncStatus != gitdomain.SyncStatusUpToDate && oldBranch.SyncStatus != gitdomain.SyncStatusLocalOnly {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
-	if !hasOldBranch {
-		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
+	if branchesSnapshot.Branches.HasLocalBranch(newBranchName) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	isBranchInSync, err := run.Backend.IsBranchInSync(oldBranch)
-	if err != nil {
-		return nil, err
-	}
-	if !isBranchInSync {
-		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
-	}
-	hasNewBranch, err := run.Backend.HasLocalOrOriginBranch(newBranch, mainBranch)
-	if err != nil {
-		return nil, err
-	}
-	if hasNewBranch {
-		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
-	}
-	oldBranchHasTrackingBranch, err := run.Backend.HasTrackingBranch(oldBranch)
-	if err != nil {
-		return nil, err
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		initialBranch:              initialBranch,
-		isInitialBranchPerennial:   run.Config.IsPerennialBranch(initialBranch),
-		isOffline:                  isOffline,
-		mainBranch:                 mainBranch,
-		newBranch:                  newBranch,
-		noPushHook:                 !pushHook,
-		oldBranch:                  oldBranch,
-		oldBranchChildren:          run.Config.Lineage().Children(oldBranch),
-		oldBranchHasTrackingBranch: oldBranchHasTrackingBranch,
-	}, err
+		FullConfig:     &repo.Runner.FullConfig,
+		dryRun:         dryRun,
+		initialBranch:  branchesSnapshot.Active,
+		newBranch:      newBranchName,
+		oldBranch:      *oldBranch,
+		previousBranch: previousBranch,
+	}, branchesSnapshot, stashSnapshot, false, err
 }
 
-func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runstate.StepList, error) {
-	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
-	if config.initialBranch == config.oldBranch {
-		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
+func renameBranchProgram(config *renameBranchConfig) program.Program {
+	result := program.Program{}
+	result.Add(&opcode.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
+	if config.initialBranch == config.oldBranch.LocalName {
+		result.Add(&opcode.Checkout{Branch: config.newBranch})
 	}
-	if config.isInitialBranchPerennial {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch})
-		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
-	} else {
-		lineage := run.Config.Lineage()
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Parent(config.oldBranch)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch)})
+	if !config.dryRun {
+		if config.IsPerennialBranch(config.initialBranch) {
+			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
+		} else {
+			result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+			result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: config.Lineage.Parent(config.oldBranch.LocalName)})
+		}
 	}
-	for _, child := range config.oldBranchChildren {
-		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
+	for _, child := range config.Lineage.Children(config.oldBranch.LocalName) {
+		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
 	}
-	if config.oldBranchHasTrackingBranch && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
+	if config.oldBranch.HasTrackingBranch() && config.IsOnline() {
+		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch})
+		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch)
-	return result, err
+	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
+	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
+		RunInGitRoot:             false,
+		StashOpenChanges:         false,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.newBranch},
+	})
+	return result
 }

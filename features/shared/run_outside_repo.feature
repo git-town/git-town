@@ -13,11 +13,9 @@ Feature: require a Git repository
       | git-town config                    |
       | git-town config main-branch        |
       | git-town config perennial-branches |
-      | git-town config sync-strategy      |
       | git-town hack feature              |
       | git-town kill                      |
-      | git-town new-pull-request          |
-      | git-town prune-branches            |
+      | git-town propose                   |
       | git-town repo                      |
       | git-town ship                      |
       | git-town sync                      |

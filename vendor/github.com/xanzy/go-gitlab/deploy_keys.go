@@ -99,7 +99,7 @@ func (s *DeployKeysService) ListAllDeployKeys(opt *ListInstanceDeployKeysOptions
 		return nil, resp, err
 	}
 
-	return ks, resp, err
+	return ks, resp, nil
 }
 
 // ListProjectDeployKeysOptions represents the available ListProjectDeployKeys()
@@ -131,7 +131,7 @@ func (s *DeployKeysService) ListProjectDeployKeys(pid interface{}, opt *ListProj
 		return nil, resp, err
 	}
 
-	return ks, resp, err
+	return ks, resp, nil
 }
 
 // GetDeployKey gets a single deploy key.
@@ -156,7 +156,7 @@ func (s *DeployKeysService) GetDeployKey(pid interface{}, deployKey int, options
 		return nil, resp, err
 	}
 
-	return k, resp, err
+	return k, resp, nil
 }
 
 // AddDeployKeyOptions represents the available ADDDeployKey() options.
@@ -193,7 +193,7 @@ func (s *DeployKeysService) AddDeployKey(pid interface{}, opt *AddDeployKeyOptio
 		return nil, resp, err
 	}
 
-	return k, resp, err
+	return k, resp, nil
 }
 
 // DeleteDeployKey deletes a deploy key from a project.
@@ -237,7 +237,7 @@ func (s *DeployKeysService) EnableDeployKey(pid interface{}, deployKey int, opti
 		return nil, resp, err
 	}
 
-	return k, resp, err
+	return k, resp, nil
 }
 
 // UpdateDeployKeyOptions represents the available UpdateDeployKey() options.
@@ -271,5 +271,5 @@ func (s *DeployKeysService) UpdateDeployKey(pid interface{}, deployKey int, opt 
 		return nil, resp, err
 	}
 
-	return k, resp, err
+	return k, resp, nil
 }

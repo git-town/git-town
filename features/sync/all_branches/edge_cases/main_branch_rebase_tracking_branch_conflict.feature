@@ -24,21 +24,21 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

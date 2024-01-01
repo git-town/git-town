@@ -72,7 +72,7 @@ func (s *timeStatsService) setTimeEstimate(pid interface{}, entity string, issue
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // resetTimeEstimate resets the time estimate for a single project issue.
@@ -96,7 +96,7 @@ func (s *timeStatsService) resetTimeEstimate(pid interface{}, entity string, iss
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // AddSpentTimeOptions represents the available AddSpentTime() options.
@@ -104,6 +104,7 @@ func (s *timeStatsService) resetTimeEstimate(pid interface{}, entity string, iss
 // GitLab docs: https://docs.gitlab.com/ee/workflow/time_tracking.html
 type AddSpentTimeOptions struct {
 	Duration *string `url:"duration,omitempty" json:"duration,omitempty"`
+	Summary  *string `url:"summary,omitempty" json:"summary,omitempty"`
 }
 
 // addSpentTime adds spent time for a single project issue.
@@ -127,7 +128,7 @@ func (s *timeStatsService) addSpentTime(pid interface{}, entity string, issue in
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // resetSpentTime resets the spent time for a single project issue.
@@ -151,7 +152,7 @@ func (s *timeStatsService) resetSpentTime(pid interface{}, entity string, issue 
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }
 
 // getTimeSpent gets the spent time for a single project issue.
@@ -175,5 +176,5 @@ func (s *timeStatsService) getTimeSpent(pid interface{}, entity string, issue in
 		return nil, resp, err
 	}
 
-	return t, resp, err
+	return t, resp, nil
 }

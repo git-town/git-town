@@ -90,6 +90,7 @@ type UserSystemEvent struct {
 	Username    string `json:"username"`
 	OldUsername string `json:"old_username,omitempty"`
 	Email       string `json:"email"`
+	State       string `json:"state,omitempty"`
 }
 
 // UserGroupSystemEvent represents a user group system event.

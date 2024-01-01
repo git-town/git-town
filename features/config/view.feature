@@ -1,6 +1,6 @@
 Feature: show the configuration
 
-  Scenario: all configured, no nested branches
+  Scenario: all configured in Git, no nested branches
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
     When I run "git-town config"
@@ -12,15 +12,109 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
-        sync strategy: merge
+        ship deletes the tracking branch: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
+      """
+
+  Scenario: all configured in config file
+    Given the configuration file:
+      """
+      push-new-branches = true
+      ship-delete-remote-branch = true
+      sync-upstream = true
+
+      [branches]
+      main = "main"
+      perennials = [ "public", "release" ]
+
+      [code-hosting]
+      platform = "github"
+      origin-hostname = "github.com"
+
+      [sync-strategy]
+      feature-branches = "rebase"
+      perennial-branches = "merge"
+      """
+    When I run "git-town config"
+    Then it prints:
+      """
+      Branches:
+        main branch: main
+        perennial branches: public, release
+
+      Configuration:
+        offline: no
+        run pre-push hook: yes
+        push new branches: yes
+        ship deletes the tracking branch: yes
+        sync-feature strategy: rebase
+        sync-perennial strategy: merge
+        sync with upstream: yes
+        sync before shipping: no
+
+      Hosting:
+        hosting service override: github
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
+      """
+
+  Scenario: configured in both Git and config file
+    Given the main branch is "git-main"
+    And the perennial branches are "git-perennial-1" and "git-perennial-2"
+    And Git Town setting "push-new-branches" is "false"
+    And Git Town setting "ship-delete-remote-branch" is "false"
+    And Git Town setting "sync-upstream" is "false"
+    And Git Town setting "sync-perennial-strategy" is "merge"
+    And Git Town setting "sync-feature-strategy" is "merge"
+    And the configuration file:
+      """
+      push-new-branches = true
+      ship-delete-remote-branch = true
+      sync-upstream = true
+
+      [branches]
+      main = "config-main"
+      perennials = [ "config-perennial-1", "config-perennial-2" ]
+
+      [code-hosting]
+      platform = "github"
+      origin-hostname = "github.com"
+
+      [sync-strategy]
+      feature-branches = "merge"
+      perennial-branches = "merge"
+      """
+    When I run "git-town config"
+    Then it prints:
+      """
+      Branches:
+        main branch: git-main
+        perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
+
+      Configuration:
+        offline: no
+        run pre-push hook: yes
+        push new branches: no
+        ship deletes the tracking branch: no
+        sync-feature strategy: merge
+        sync-perennial strategy: merge
+        sync with upstream: no
+        sync before shipping: no
+
+      Hosting:
+        hosting service override: github
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -40,12 +134,13 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
-        sync strategy: merge
+        ship deletes the tracking branch: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)
@@ -74,12 +169,13 @@ Feature: show the configuration
 
       Configuration:
         offline: no
-        pull branch strategy: rebase
         run pre-push hook: yes
         push new branches: no
-        ship removes the remote branch: yes
-        sync strategy: merge
+        ship deletes the tracking branch: yes
+        sync-feature strategy: merge
+        sync-perennial strategy: rebase
         sync with upstream: yes
+        sync before shipping: no
 
       Hosting:
         hosting service override: (not set)

@@ -32,11 +32,8 @@ To load autocompletions for Fish, run this command:
 git-town completions fish | source
 ```
 
-CAUTION: pending upstream issue breaks this:
-https://github.com/spf13/cobra/pull/1122
-
 To load completions for each session, add the above line to your
-`.config/fish/config.fish`.
+`~/.config/fish/config.fish`.
 
 ## Powershell
 

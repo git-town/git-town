@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -24,86 +25,95 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
-	addPromptFlag, readPromptFlag := flags.Bool("prompt", "p", "Prompt for the parent branch")
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
 		Short:   hackDesc,
-		Long:    long(hackDesc, hackHelp),
+		Long:    cmdhelpers.Long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return hack(args, readPromptFlag(cmd), readDebugFlag(cmd))
+			return executeHack(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
-	addPromptFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func hack(args []string, promptForParent, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
+func executeHack(args []string, dryRun, verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           dryRun,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
+	if err != nil {
+		return err
+	}
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineHackConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run)
-	if err != nil {
-		return err
+	runState := runstate.RunState{
+		Command:             "hack",
+		DryRun:              dryRun,
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		RunProgram:          appendProgram(config),
 	}
-	stepList, err := appendStepList(config, &run)
-	if err != nil {
-		return err
-	}
-	runState := runstate.New("hack", stepList)
-	return runstate.Execute(runState, &run, nil)
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
+		RunState:                &runState,
+		Run:                     repo.Runner,
+		Connector:               nil,
+		Verbose:                 verbose,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
-	fc := failure.Collector{}
-	targetBranch := args[0]
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
-	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
-	isOffline := fc.Bool(run.Config.IsOffline())
-	mainBranch := run.Config.MainBranch()
-	if fc.Err == nil && hasOrigin && !isOffline {
-		fc.Check(run.Frontend.Fetch())
+func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+	fc := execute.FailureCollector{}
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	hasBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
-	pushHook := fc.Bool(run.Config.PushHook())
-	if hasBranch {
-		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
+	targetBranch := gitdomain.NewLocalBranchName(args[0])
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
+	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
+	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
+	}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
+	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
 	return &appendConfig{
-		ancestorBranches:    []string{},
-		targetBranch:        targetBranch,
-		parentBranch:        parentBranch,
-		hasOrigin:           hasOrigin,
-		mainBranch:          mainBranch,
-		shouldNewBranchPush: shouldNewBranchPush,
-		noPushHook:          !pushHook,
-		isOffline:           isOffline,
-	}, fc.Err
-}
-
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
-	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
-		if err != nil {
-			return "", err
-		}
-		err = validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend)
-		if err != nil {
-			return "", err
-		}
-		return parentBranch, nil
-	}
-	return run.Config.MainBranch(), nil
+		allBranches:               branchesSnapshot.Branches,
+		branchesToSync:            branchesToSync,
+		FullConfig:                &repo.Runner.FullConfig,
+		dryRun:                    dryRun,
+		initialBranch:             branchesSnapshot.Active,
+		targetBranch:              targetBranch,
+		parentBranch:              repo.Runner.MainBranch,
+		hasOpenChanges:            repoStatus.OpenChanges,
+		remotes:                   remotes,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.MainBranch},
+		previousBranch:            previousBranch,
+	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

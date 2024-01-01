@@ -112,7 +112,7 @@ func (s *ProjectVulnerabilitiesService) ListProjectVulnerabilities(pid interface
 		return nil, resp, err
 	}
 
-	return p, resp, err
+	return p, resp, nil
 }
 
 // CreateVulnerabilityOptions represents the available CreateVulnerability()
@@ -146,5 +146,5 @@ func (s *ProjectVulnerabilitiesService) CreateVulnerability(pid interface{}, opt
 		return nil, resp, err
 	}
 
-	return p, resp, err
+	return p, resp, nil
 }

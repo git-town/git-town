@@ -1,4 +1,12 @@
-# Feature branch chains
+# Nested feature branches
+
+Nested feature branches are an alternative to having multiple commits in Git
+branches, with each commit performing one change, being reviewed in isolation,
+and then not squash-merging the commits when shipping. The advantage of using
+nested feature branches is that reviewing the different changes in the different
+commits can happen more naturally, and parts of a change that are already agreed
+on can get shipped separately from other parts that are still under review. This
+reduces merge conflicts and work in progress.
 
 The
 [single responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
@@ -53,8 +61,7 @@ git append 2-rename-foo
 ```
 
 [git append](commands/append.md) creates a new feature branch on top of the
-currently checked out branch (which is `1-refactor`). We now have this branch
-hierarchy:
+currently checked out branch (which is `1-refactor`). We now have this lineage:
 
 ```
 main
@@ -67,8 +74,8 @@ main
 Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
 Because we used `git append` to create the new branch, Git Town knows about the
-branch hierarchy and creates the pull request for branch `2-rename-foo` against
-branch `1-fix-typos`. This way, that the pull request for branch `2-rename-foo`
+lineage and creates the proposal (aka pull request) for branch `2-rename-foo`
+against branch `1-refactor`. This way, the proposal for branch `2-rename-foo`
 shows only the changes made in that branch (renaming the variable) and not the
 refactor made in branch 1.
 
@@ -84,7 +91,7 @@ change we made in step 2:
 git append 3-rename-bar
 ```
 
-The branch hierarchy is now:
+The lineage is now:
 
 ```
 main
@@ -130,8 +137,8 @@ git ship 1-refactor
 ```
 
 You have to use the [git ship](commands/ship.md) command here because it updates
-the branch hierarchy that Git Town keeps track of. With branch `1-refactor`
-shipped, our branch hierarchy now looks like this:
+the lineage that Git Town keeps track of. With branch `1-refactor` shipped, our
+lineage now looks like this:
 
 ```
 main

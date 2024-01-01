@@ -18,3 +18,13 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       |         | git merge --no-edit main           |
     And the current branch is still "feature"
     And the uncommitted file still exists
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE         |
+      | main    | local, origin | added submodule |
+      | feature | local, origin | added submodule |
+    And the initial branches and lineage exist

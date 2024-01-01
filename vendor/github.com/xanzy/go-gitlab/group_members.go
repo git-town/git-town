@@ -54,6 +54,7 @@ type GroupMember struct {
 	CreatedAt         *time.Time               `json:"created_at"`
 	ExpiresAt         *ISOTime                 `json:"expires_at"`
 	AccessLevel       AccessLevelValue         `json:"access_level"`
+	Email             string                   `json:"email,omitempty"`
 	GroupSAMLIdentity *GroupMemberSAMLIdentity `json:"group_saml_identity"`
 }
 
@@ -91,7 +92,7 @@ func (s *GroupsService) ListGroupMembers(gid interface{}, opt *ListGroupMembersO
 		return nil, resp, err
 	}
 
-	return gm, resp, err
+	return gm, resp, nil
 }
 
 // ListAllGroupMembers get a list of group members viewable by the authenticated
@@ -117,7 +118,7 @@ func (s *GroupsService) ListAllGroupMembers(gid interface{}, opt *ListGroupMembe
 		return nil, resp, err
 	}
 
-	return gm, resp, err
+	return gm, resp, nil
 }
 
 // AddGroupMemberOptions represents the available AddGroupMember() options.
@@ -152,7 +153,7 @@ func (s *GroupMembersService) GetGroupMember(gid interface{}, user int, options 
 		return nil, resp, err
 	}
 
-	return gm, resp, err
+	return gm, resp, nil
 }
 
 // BillableGroupMember represents a GitLab billable group member.
@@ -168,7 +169,7 @@ type BillableGroupMember struct {
 	Email          string     `json:"email"`
 	LastActivityOn *ISOTime   `json:"last_activity_on"`
 	MembershipType string     `json:"membership_type"`
-	Removeable     bool       `json:"removeable"`
+	Removable      bool       `json:"removable"`
 	CreatedAt      *time.Time `json:"created_at"`
 	IsLastOwner    bool       `json:"is_last_owner"`
 	LastLoginAt    *time.Time `json:"last_login_at"`
@@ -207,7 +208,7 @@ func (s *GroupsService) ListBillableGroupMembers(gid interface{}, opt *ListBilla
 		return nil, resp, err
 	}
 
-	return bgm, resp, err
+	return bgm, resp, nil
 }
 
 // RemoveBillableGroupMember removes a given group members that count as billable.
@@ -251,7 +252,7 @@ func (s *GroupMembersService) AddGroupMember(gid interface{}, opt *AddGroupMembe
 		return nil, resp, err
 	}
 
-	return gm, resp, err
+	return gm, resp, nil
 }
 
 // ShareWithGroup shares a group with the group.
@@ -276,7 +277,7 @@ func (s *GroupMembersService) ShareWithGroup(gid interface{}, opt *ShareWithGrou
 		return nil, resp, err
 	}
 
-	return g, resp, err
+	return g, resp, nil
 }
 
 // DeleteShareWithGroup allows to unshare a group from a group.
@@ -330,7 +331,7 @@ func (s *GroupMembersService) EditGroupMember(gid interface{}, user int, opt *Ed
 		return nil, resp, err
 	}
 
-	return gm, resp, err
+	return gm, resp, nil
 }
 
 // RemoveGroupMemberOptions represents the available options to remove a group member.

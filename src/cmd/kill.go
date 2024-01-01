@@ -3,12 +3,18 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v11/src/sync"
+	"github.com/git-town/git-town/v11/src/vm/interpreter"
+	"github.com/git-town/git-town/v11/src/vm/opcode"
+	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v11/src/vm/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -19,165 +25,168 @@ Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`
 
 func killCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: killDesc,
-		Long:  long(killDesc, killHelp),
+		Long:  cmdhelpers.Long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return kill(args, readDebugFlag(cmd))
+			return executeKill(args, readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},
 	}
-	addDebugFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func kill(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
+func executeKill(args []string, dryRun, verbose bool) error {
+	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
+		Verbose:          verbose,
+		DryRun:           dryRun,
+		OmitBranchNames:  false,
+		PrintCommands:    true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
+	if err != nil {
+		return err
+	}
+	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineKillConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineKillConfig(args, &run)
+	steps, finalUndoProgram := killProgram(config)
 	if err != nil {
 		return err
 	}
-	stepList, err := killStepList(config, &run)
-	if err != nil {
-		return err
+	runState := runstate.RunState{
+		Command:             "kill",
+		DryRun:              dryRun,
+		RunProgram:          steps,
+		InitialActiveBranch: initialBranchesSnapshot.Active,
+		FinalUndoProgram:    finalUndoProgram,
 	}
-	runState := runstate.New("kill", stepList)
-	return runstate.Execute(runState, &run, nil)
+	return interpreter.Execute(interpreter.ExecuteArgs{
+		FullConfig:              config.FullConfig,
+		RunState:                &runState,
+		Run:                     repo.Runner,
+		Connector:               nil,
+		Verbose:                 verbose,
+		RootDir:                 repo.RootDir,
+		InitialBranchesSnapshot: initialBranchesSnapshot,
+		InitialConfigSnapshot:   repo.ConfigSnapshot,
+		InitialStashSnapshot:    initialStashSnapshot,
+	})
 }
 
 type killConfig struct {
-	childBranches       []string
-	hasOpenChanges      bool
-	hasTrackingBranch   bool
-	initialBranch       string
-	isOffline           bool
-	isTargetBranchLocal bool
-	mainBranch          string
-	noPushHook          bool
-	previousBranch      string
-	targetBranchParent  string
-	targetBranch        string
+	*configdomain.FullConfig
+	branchToKill   gitdomain.BranchInfo
+	branchWhenDone gitdomain.LocalBranchName
+	dryRun         bool
+	hasOpenChanges bool
+	initialBranch  gitdomain.LocalBranchName
+	previousBranch gitdomain.LocalBranchName
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
+func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 true,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, branchesSnapshot, stashSnapshot, exit, err
 	}
-	mainBranch := run.Config.MainBranch()
-	var targetBranch string
-	if len(args) > 0 {
-		targetBranch = args[0]
+	branchNameToKill := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
+	branchToKill := branchesSnapshot.Branches.FindByLocalName(branchNameToKill)
+	if branchToKill == nil {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToKill)
+	}
+	if branchToKill.SyncStatus == gitdomain.SyncStatusOtherWorktree {
+		return nil, branchesSnapshot, stashSnapshot, exit, fmt.Errorf(messages.KillBranchOtherWorktree, branchNameToKill)
+	}
+	if branchToKill.IsLocal() {
+		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
+			Config:        &repo.Runner.FullConfig,
+			AllBranches:   branchesSnapshot.Branches,
+			DefaultBranch: repo.Runner.MainBranch,
+			Runner:        repo.Runner,
+		})
+		if err != nil {
+			return nil, branchesSnapshot, stashSnapshot, false, err
+		}
+	}
+	if !repo.Runner.IsFeatureBranch(branchToKill.LocalName) {
+		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
+	}
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, branchesSnapshot, stashSnapshot, false, err
+	}
+	var branchWhenDone gitdomain.LocalBranchName
+	if branchNameToKill == branchesSnapshot.Active {
+		branchWhenDone = previousBranch
 	} else {
-		targetBranch = initialBranch
+		branchWhenDone = branchesSnapshot.Active
 	}
-	if !run.Config.IsFeatureBranch(targetBranch) {
-		return nil, fmt.Errorf("you can only kill feature branches")
-	}
-	isTargetBranchLocal, err := run.Backend.HasLocalBranch(targetBranch)
-	if err != nil {
-		return nil, err
-	}
-	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestors(targetBranch, mainBranch, &run.Backend)
-		if err != nil {
-			return nil, err
-		}
-		run.Config.Reload()
-	}
-	hasOrigin, err := run.Backend.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
-	if initialBranch != targetBranch {
-		hasTargetBranch, err := run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
-		if err != nil {
-			return nil, err
-		}
-		if !hasTargetBranch {
-			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
-		}
-	}
-	hasTrackingBranch, err := run.Backend.HasTrackingBranch(targetBranch)
-	if err != nil {
-		return nil, err
-	}
-	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
-	if err != nil {
-		return nil, err
-	}
-	hasOpenChanges, err := run.Backend.HasOpenChanges()
-	if err != nil {
-		return nil, err
-	}
-	pushHook, err := run.Config.PushHook()
-	if err != nil {
-		return nil, err
-	}
-	lineage := run.Config.Lineage()
 	return &killConfig{
-		childBranches:       lineage.Children(targetBranch),
-		hasOpenChanges:      hasOpenChanges,
-		hasTrackingBranch:   hasTrackingBranch,
-		initialBranch:       initialBranch,
-		isOffline:           isOffline,
-		isTargetBranchLocal: isTargetBranchLocal,
-		mainBranch:          mainBranch,
-		noPushHook:          !pushHook,
-		previousBranch:      previousBranch,
-		targetBranch:        targetBranch,
-		targetBranchParent:  lineage.Parent(targetBranch),
-	}, nil
+		FullConfig:     &repo.Runner.FullConfig,
+		branchToKill:   *branchToKill,
+		branchWhenDone: branchWhenDone,
+		dryRun:         dryRun,
+		hasOpenChanges: repoStatus.OpenChanges,
+		initialBranch:  branchesSnapshot.Active,
+		previousBranch: previousBranch,
+	}, branchesSnapshot, stashSnapshot, false, nil
 }
 
-func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, error) {
-	result := runstate.StepList{}
-	switch {
-	case config.isTargetBranchLocal:
-		if config.hasTrackingBranch && !config.isOffline {
-			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
-		}
-		if config.initialBranch == config.targetBranch {
-			if config.hasOpenChanges {
-				result.Append(&steps.CommitOpenChangesStep{})
-			}
-			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
-		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Parent: config.mainBranch, Force: true})
-		for _, child := range config.childBranches {
-			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
-		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.Lineage().Parent(config.targetBranch)})
-	case !config.isOffline:
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
-	default:
-		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
+func (self killConfig) branchToKillParent() gitdomain.LocalBranchName {
+	return self.Lineage.Parent(self.branchToKill.LocalName)
+}
+
+func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Program) {
+	prog := program.Program{}
+	killFeatureBranch(&prog, &finalUndoProgram, *config)
+	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
+		DryRun:                   config.dryRun,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.initialBranch != config.branchToKill.LocalName && config.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch, config.initialBranch},
+	})
+	return prog, finalUndoProgram
+}
+
+// killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
+func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
+	if config.branchToKill.HasTrackingBranch() && config.IsOnline() {
+		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
 	}
-	err := result.Wrap(runstate.WrapOptions{
-		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
-	}, &run.Backend, config.mainBranch)
-	return result, err
+	if config.initialBranch == config.branchToKill.LocalName {
+		if config.hasOpenChanges {
+			prog.Add(&opcode.CommitOpenChanges{})
+			// update the registered initial SHA for this branch so that undo restores the just committed changes
+			prog.Add(&opcode.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
+			// when undoing, manually undo the just committed changes so that they are uncommitted again
+			finalUndoProgram.Add(&opcode.Checkout{Branch: config.branchToKill.LocalName})
+			finalUndoProgram.Add(&opcode.UndoLastCommit{})
+		}
+		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
+	}
+	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
+	if !config.dryRun {
+		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
+			Branch:  config.branchToKill.LocalName,
+			Lineage: config.Lineage,
+			Program: prog,
+			Parent:  config.branchToKillParent(),
+		})
+	}
 }

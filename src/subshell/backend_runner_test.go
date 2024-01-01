@@ -7,37 +7,38 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/gohacks"
+	"github.com/git-town/git-town/v11/src/subshell"
+	"github.com/shoenig/test/must"
 )
 
 func TestBackendRunner(t *testing.T) {
 	t.Parallel()
-	t.Run("Run", func(t *testing.T) {
+
+	t.Run("Query", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
-			output, err := runner.Query("echo", "hello", "world")
-			assert.NoError(t, err)
-			assert.Equal(t, "hello world", output)
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			output, err := runner.Query("echo", "hello", "world  ")
+			must.NoError(t, err)
+			must.EqOp(t, "hello world  \n", output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			err := runner.Run("zonk")
-			assert.Error(t, err)
+			must.Error(t, err)
 			var execError *exec.Error
-			assert.True(t, errors.As(err, &execError))
+			must.True(t, errors.As(err, &execError))
 		})
 
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
 			err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
@@ -50,23 +51,34 @@ hi
 
 OUTPUT END
 ----------------------------------------`
-			assert.Equal(t, expectedError, err.Error())
+			must.EqOp(t, expectedError, err.Error())
 		})
 	})
 
-	t.Run(".RunMany()", func(t *testing.T) {
+	t.Run("QueryTrim", func(t *testing.T) {
+		t.Parallel()
+		t.Run("trims whitespace", func(t *testing.T) {
+			tmpDir := t.TempDir()
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
+			output, err := runner.QueryTrim("echo", "hello", "world  ")
+			must.NoError(t, err)
+			must.EqOp(t, "hello world", output)
+		})
+	})
+
+	t.Run("RunMany", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, CommandsCounter: &gohacks.Counter{}}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
 		})
-		assert.NoError(t, err)
+		must.NoError(t, err)
 		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
-		assert.NoError(t, err)
-		assert.Equal(t, "first", entries[0].Name())
-		assert.Equal(t, "second", entries[1].Name())
+		must.NoError(t, err)
+		must.EqOp(t, "first", entries[0].Name())
+		must.EqOp(t, "second", entries[1].Name())
 	})
 }

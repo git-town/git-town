@@ -24,7 +24,7 @@ Feature: on a forked repo
       | new    | git stash pop            |
     And the current branch is now "new"
     And the uncommitted file still exists
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
       | new    | local                   | upstream commit |
@@ -39,7 +39,7 @@ Feature: on a forked repo
       | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And no branch hierarchy exists now
+    And no lineage exists now

@@ -2,7 +2,7 @@ Feature: change offline mode
 
   Scenario Outline: valid settings
     When I run "git-town config offline <GIVE>"
-    Then global setting "offline" is now "<WANT>"
+    Then global Git Town setting "offline" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -18,10 +18,10 @@ Feature: change offline mode
       | no    | false |
 
   Scenario: invalid value
-    Given global setting "offline" is "false"
+    Given global Git Town setting "offline" is "false"
     When I run "git-town config offline zonk"
     Then it prints the error:
       """
-      invalid argument: "zonk". Please provide either "yes" or "no"
+      invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
       """
-    And global setting "offline" is still "false"
+    And global Git Town setting "offline" is still "false"

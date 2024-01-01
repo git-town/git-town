@@ -1,14 +1,14 @@
 Feature: auto-push the new branch to origin without running Git push hooks
 
   Background:
-    Given setting "push-new-branches" is "true"
+    Given Git Town setting "push-new-branches" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
 
   Scenario: set to "false"
-    Given setting "push-hook" is "false"
+    Given Git Town setting "push-hook" is "false"
     When I run "git-town append new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -18,7 +18,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | main commit |
@@ -27,7 +27,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | new    | main   |
 
   Scenario: set to "true"
-    Given setting "push-hook" is "true"
+    Given Git Town setting "push-hook" is "true"
     When I run "git-town append new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -37,7 +37,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And the current branch is now "new"
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local, origin | main commit |

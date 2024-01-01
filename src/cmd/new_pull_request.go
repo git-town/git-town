@@ -2,123 +2,40 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/hosting"
-	"github.com/git-town/git-town/v9/src/runstate"
-	"github.com/git-town/git-town/v9/src/steps"
-	"github.com/git-town/git-town/v9/src/validate"
+	"github.com/git-town/git-town/v11/src/cli/flags"
+	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/spf13/cobra"
 )
 
-const newPullRequestDesc = "Creates a new pull request"
-
-const newPullRequestHelp = `
-Syncs the current branch
-and opens a browser window to the new pull request page of your repository.
-
-The form is pre-populated for the current branch
-so that the pull request only shows the changes made
-against the immediate parent branch.
-
-Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket.
-When using self-hosted versions this command needs to be configured with
-"git config %s <driver>"
-where driver is "github", "gitlab", "gitea", or "bitbucket".
-When using SSH identities, this command needs to be configured with
-"git config %s <hostname>"
-where hostname matches what is in your ssh config file.`
-
 func newPullRequestCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := flags.Debug()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
+		Hidden:  true,
 		Args:    cobra.NoArgs,
-		Short:   newPullRequestDesc,
-		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+		Short:   proposeDesc,
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyCodeHostingPlatform, gitconfig.KeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return newPullRequest(readDebugFlag(cmd))
+			printDeprecationNotice()
+			result := executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
+			printDeprecationNotice()
+			return result
 		},
 	}
-	addDebugFlag(&cmd)
+	addDryRunFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func newPullRequest(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsConfigured:  true,
-		ValidateIsOnline:      true,
-	})
-	if err != nil || exit {
-		return err
-	}
-	config, err := determineNewPullRequestConfig(&run)
-	if err != nil {
-		return err
-	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
-	if err != nil {
-		return err
-	}
-	if connector == nil {
-		return hosting.UnsupportedServiceError()
-	}
-	stepList, err := newPullRequestStepList(config, &run)
-	if err != nil {
-		return err
-	}
-	runState := runstate.New("new-pull-request", stepList)
-	return runstate.Execute(runState, &run, connector)
-}
-
-type newPullRequestConfig struct {
-	BranchesToSync []string
-	InitialBranch  string
-	mainBranch     string
-}
-
-func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, error) {
-	hasOrigin, err := run.Backend.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	if hasOrigin {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
-	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
-	if err != nil {
-		return nil, err
-	}
-	return &newPullRequestConfig{
-		InitialBranch:  initialBranch,
-		BranchesToSync: append(run.Config.Lineage().Ancestors(initialBranch), initialBranch),
-		mainBranch:     run.Config.MainBranch(),
-	}, nil
-}
-
-func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
-	list := runstate.StepListBuilder{}
-	for _, branch := range config.BranchesToSync {
-		updateBranchSteps(&list, branch, true, run)
-	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
-	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
-	return list.Result()
+func printDeprecationNotice() {
+	fmt.Println("DEPRECATION NOTICE")
+	fmt.Println("")
+	fmt.Println("This command has been renamed to \"git town propose\"")
+	fmt.Println("and will be removed in future versions of Git Town.")
+	time.Sleep(2000 * time.Millisecond)
 }

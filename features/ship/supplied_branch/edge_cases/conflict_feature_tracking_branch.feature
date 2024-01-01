@@ -6,6 +6,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
+    And Git Town setting "sync-before-ship" is "true"
     And the current branch is "other"
     And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
@@ -26,26 +27,25 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
     And the current branch is now "feature"
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND            |
       | feature | git merge --abort  |
-      |         | git checkout main  |
-      | main    | git checkout other |
+      |         | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
     And no merge is in progress
-    And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -67,7 +67,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
     And this branch lineage exists now
@@ -97,24 +97,21 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And I run "git-town continue"
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                                                   |
-      | other   | git add -A                                                                                |
-      |         | git stash                                                                                 |
-      |         | git checkout main                                                                         |
-      | main    | git branch feature {{ sha 'Merge remote-tracking branch 'origin/feature' into feature' }} |
-      |         | git push -u origin feature                                                                |
-      |         | git revert {{ sha 'feature done' }}                                                       |
-      |         | git push                                                                                  |
-      |         | git checkout feature                                                                      |
-      | feature | git checkout main                                                                         |
-      | main    | git checkout other                                                                        |
-      | other   | git stash pop                                                                             |
+      | BRANCH | COMMAND                                                                  |
+      | other  | git add -A                                                               |
+      |        | git stash                                                                |
+      |        | git checkout main                                                        |
+      | main   | git revert {{ sha 'feature done' }}                                      |
+      |        | git push                                                                 |
+      |        | git push origin {{ sha 'conflicting origin commit' }}:refs/heads/feature |
+      |        | git branch feature {{ sha 'conflicting local commit' }}                  |
+      |        | git checkout other                                                       |
+      | other  | git stash pop                                                            |
     And the current branch is now "other"
-    And now these commits exist
-      | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, origin | feature done                                               |
-      |         |               | Revert "feature done"                                      |
-      | feature | local, origin | conflicting local commit                                   |
-      |         |               | conflicting origin commit                                  |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-    And the initial branches and hierarchy exist
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE                   |
+      | main    | local, origin | feature done              |
+      |         |               | Revert "feature done"     |
+      | feature | local         | conflicting local commit  |
+      |         | origin        | conflicting origin commit |
+    And the initial branches and lineage exist

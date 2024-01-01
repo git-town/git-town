@@ -10,7 +10,7 @@ Feature: preserve the previous Git branch
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship -m 'feature done'"
     Then the current branch is now "main"
-    And the previous Git branch is still "previous"
+    And the previous Git branch is now "previous"
 
   Scenario: previous branch gone
     Given the commits
@@ -25,7 +25,7 @@ Feature: preserve the previous Git branch
     Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION |
-      | feature | origin   |
+      | feature | local    |
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship feature -m "feature done""
     Then the current branch is still "current"

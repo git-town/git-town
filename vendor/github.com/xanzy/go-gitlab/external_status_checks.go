@@ -61,7 +61,7 @@ func (s *ExternalStatusChecksService) ListMergeStatusChecks(pid interface{}, mr 
 		return nil, resp, err
 	}
 
-	return mscs, resp, err
+	return mscs, resp, nil
 }
 
 // SetExternalStatusCheckStatusOptions represents the available
@@ -116,7 +116,7 @@ func (s *ExternalStatusChecksService) ListProjectStatusChecks(pid interface{}, o
 		return nil, resp, err
 	}
 
-	return pscs, resp, err
+	return pscs, resp, nil
 }
 
 // CreateExternalStatusCheckOptions represents the available

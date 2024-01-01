@@ -3,17 +3,13 @@ package validate
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
-// HasGitVersion verifies that the system has Git of version 2.7 or newer installed.
-func HasGitVersion(backend *git.BackendCommands) error {
-	majorVersion, minorVersion, err := backend.Version()
-	if err != nil {
-		return err
-	}
+// HasAcceptableGitVersion verifies that the system has Git of version 2.7 or newer installed.
+func HasAcceptableGitVersion(majorVersion, minorVersion int) error {
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		return errors.New("this app requires Git 2.7.0 or higher")
+		return errors.New(messages.GitVersionTooLow)
 	}
 	return nil
 }

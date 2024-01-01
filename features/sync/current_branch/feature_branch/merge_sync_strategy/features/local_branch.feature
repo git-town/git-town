@@ -21,7 +21,7 @@ Feature: sync the current feature branch without a tracking branch
       |         | git push -u origin feature |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |
       |         |               | local main commit                |
@@ -32,3 +32,17 @@ Feature: sync the current feature branch without a tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                           |
+      | feature | git push origin :feature                          |
+      |         | git reset --hard {{ sha 'local feature commit' }} |
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE              |
+      | main    | local, origin | origin main commit   |
+      |         |               | local main commit    |
+      | feature | local         | local feature commit |
+    And the initial branches and lineage exist

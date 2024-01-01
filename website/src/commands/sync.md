@@ -1,22 +1,32 @@
 # git sync [--all]
 
-The _sync_ command ("synchronize this branch") updates the current branch and
-its remote and parent branches with all changes that happened in the repository.
-When run on the main or a perennial branch, it pulls and pushes updates and tags
-to the tracking branch. When run on a feature branch, it additionally updates
-all parent branches and merges the direct parent into the current branch.
+The _sync_ command ("synchronize this branch") updates the local Git workspace
+with what happened in the rest of the repository.
 
-If you prefer rebasing your branches instead, set the
-[sync-strategy](../preferences/sync-strategy.md) preference.
+- pulls new commits for the current branch from its tracking and ancestor
+  branches
+- downloads new Git tags
+- deletes the local branch if its tracking branch was deleted at the remote and
+  the local branch doesn't contain unshipped changes
+- local branches checked out in other Git worktrees don't get synced
 
-If the repository contains a remote called `upstream`, it also syncs the main
-branch with its upstream counterpart. You can control this behavior with the
-[sync-upstream](../preferences/sync-upstream.md) flag.
+### Arguments
 
-### Variations
-
-With the `--all` parameter this command syncs all local branches and not just
-the branch you are currently on.
+The `--all` parameter makes Git Town sync all local branches instead just the
+current one.
 
 The `--dry-run` parameter allows to test-drive this command. It prints the Git
 commands that would be run but doesn't execute them.
+
+### Configuration
+
+[sync-perennial-strategy](../preferences/sync-perennial-strategy.md) configures
+whether perennial branches merge their tracking branch or rebase against it.
+
+[sync-feature-strategy](../preferences/sync-feature-strategy.md) configures
+whether feature branches merge their parent and tracking branches or rebase
+against them.
+
+If the repository contains a Git remote called `upstream` and the
+[sync-upstream](../preferences/sync-upstream.md) setting is enabled, Git Town
+also downloads new commits from the upstream main branch.

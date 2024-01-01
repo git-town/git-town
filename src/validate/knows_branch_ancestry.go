@@ -1,64 +1,94 @@
 package validate
 
 import (
-	"github.com/git-town/git-town/v9/src/cli"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/io"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-// KnowsBranchesAncestors asserts that the entire lineage for all given branches
-// is known to Git Town.
-// Prompts missing lineage information from the user.
-func KnowsBranchesAncestors(branches []string, backend *git.BackendCommands) error {
-	mainBranch := backend.Config.MainBranch()
-	for _, branch := range branches {
-		err := KnowsBranchAncestors(branch, mainBranch, backend)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
+func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
-	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.Lineage().HasParents(branch) {
-		return nil
+	if !args.Config.IsFeatureBranch(branch) {
+		return false, nil
 	}
+	updated := false
 	for {
-		parent := backend.Config.Lineage().Parent(currentBranch)
-		if parent == "" { //nolint:nestif
+		lineage := args.Backend.Config.Lineage
+		parent, hasParent := lineage[currentBranch]
+		var err error
+		if !hasParent { //nolint:nestif
 			if !headerShown {
-				printParentBranchHeader(backend)
+				printParentBranchHeader(args.Config.MainBranch)
 				headerShown = true
 			}
-			parent, err = EnterParent(currentBranch, defaultBranch, backend)
+			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
 			if err != nil {
-				return
+				return false, err
 			}
-			if parent == perennialBranchOption {
-				err = backend.Config.AddToPerennialBranches(currentBranch)
+			if parent.String() == dialog.PerennialBranchOption {
+				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
-					return
+					return false, err
 				}
+				updated = true
 				break
 			}
-			err = backend.Config.SetParent(currentBranch, parent)
+			err = args.Backend.Config.SetParent(currentBranch, parent)
 			if err != nil {
-				return
+				return false, err
 			}
+			updated = true
 		}
-		if parent == backend.Config.MainBranch() || backend.Config.IsPerennialBranch(parent) {
+		if !args.Config.IsFeatureBranch(parent) {
 			break
 		}
 		currentBranch = parent
 	}
-	return
+	return updated, nil
 }
 
-func printParentBranchHeader(backend *git.BackendCommands) {
-	cli.Printf(parentBranchHeaderTemplate, backend.Config.MainBranch())
+type KnowsBranchAncestorsArgs struct {
+	AllBranches   gitdomain.BranchInfos
+	Backend       *git.BackendCommands
+	Config        *configdomain.FullConfig
+	DefaultBranch gitdomain.LocalBranchName
+}
+
+// KnowsBranchesAncestors asserts that the entire lineage for all given branches
+// is known to Git Town.
+// Prompts missing lineage information from the user.
+// Indicates if the user made any changes to the ancestry.
+func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
+	updated := false
+	for _, branch := range args.AllBranches {
+		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
+			DefaultBranch: args.Config.MainBranch,
+			Backend:       args.Backend,
+			AllBranches:   args.AllBranches,
+			Config:        args.Config,
+		})
+		if err != nil {
+			return updated, err
+		}
+		if branchUpdated {
+			updated = true
+		}
+	}
+	return updated, nil
+}
+
+type KnowsBranchesAncestorsArgs struct {
+	AllBranches gitdomain.BranchInfos
+	Backend     *git.BackendCommands
+	Config      *configdomain.FullConfig
+}
+
+func printParentBranchHeader(mainBranch gitdomain.LocalBranchName) {
+	io.Printf(parentBranchHeaderTemplate, mainBranch)
 }
 
 const parentBranchHeaderTemplate string = `

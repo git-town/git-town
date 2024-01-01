@@ -54,5 +54,5 @@ func (s *VersionService) GetVersion(options ...RequestOptionFunc) (*Version, *Re
 		return nil, resp, err
 	}
 
-	return v, resp, err
+	return v, resp, nil
 }

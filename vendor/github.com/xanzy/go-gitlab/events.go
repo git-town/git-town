@@ -102,7 +102,7 @@ func (s *UsersService) ListUserContributionEvents(uid interface{}, opt *ListCont
 		return nil, resp, err
 	}
 
-	return cs, resp, err
+	return cs, resp, nil
 }
 
 // ListCurrentUserContributionEvents gets a list currently authenticated user's events
@@ -120,13 +120,96 @@ func (s *EventsService) ListCurrentUserContributionEvents(opt *ListContributionE
 		return nil, resp, err
 	}
 
-	return cs, resp, err
+	return cs, resp, nil
 }
 
-// ListProjectVisibleEvents gets a list of visible events for a particular project
+// ProjectEvent represents a GitLab project event.
 //
-// GitLab API docs: https://docs.gitlab.com/ee/api/events.html#list-a-projects-visible-events
-func (s *EventsService) ListProjectVisibleEvents(pid interface{}, opt *ListContributionEventsOptions, options ...RequestOptionFunc) ([]*ContributionEvent, *Response, error) {
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/events.html#list-a-projects-visible-events
+type ProjectEvent struct {
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	ProjectID   int    `json:"project_id"`
+	ActionName  string `json:"action_name"`
+	TargetID    int    `json:"target_id"`
+	TargetIID   int    `json:"target_iid"`
+	TargetType  string `json:"target_type"`
+	AuthorID    int    `json:"author_id"`
+	TargetTitle string `json:"target_title"`
+	CreatedAt   string `json:"created_at"`
+	Author      struct {
+		Name      string `json:"name"`
+		Username  string `json:"username"`
+		ID        int    `json:"id"`
+		State     string `json:"state"`
+		AvatarURL string `json:"avatar_url"`
+		WebURL    string `json:"web_url"`
+	} `json:"author"`
+	AuthorUsername string `json:"author_username"`
+	Data           struct {
+		Before            string      `json:"before"`
+		After             string      `json:"after"`
+		Ref               string      `json:"ref"`
+		UserID            int         `json:"user_id"`
+		UserName          string      `json:"user_name"`
+		Repository        *Repository `json:"repository"`
+		Commits           []*Commit   `json:"commits"`
+		TotalCommitsCount int         `json:"total_commits_count"`
+	} `json:"data"`
+	Note struct {
+		ID         int    `json:"id"`
+		Body       string `json:"body"`
+		Attachment string `json:"attachment"`
+		Author     struct {
+			ID        int    `json:"id"`
+			Username  string `json:"username"`
+			Email     string `json:"email"`
+			Name      string `json:"name"`
+			State     string `json:"state"`
+			AvatarURL string `json:"avatar_url"`
+			WebURL    string `json:"web_url"`
+		} `json:"author"`
+		CreatedAt    *time.Time `json:"created_at"`
+		System       bool       `json:"system"`
+		NoteableID   int        `json:"noteable_id"`
+		NoteableType string     `json:"noteable_type"`
+		NoteableIID  int        `json:"noteable_iid"`
+	} `json:"note"`
+	PushData struct {
+		CommitCount int    `json:"commit_count"`
+		Action      string `json:"action"`
+		RefType     string `json:"ref_type"`
+		CommitFrom  string `json:"commit_from"`
+		CommitTo    string `json:"commit_to"`
+		Ref         string `json:"ref"`
+		CommitTitle string `json:"commit_title"`
+	} `json:"push_data"`
+}
+
+func (s ProjectEvent) String() string {
+	return Stringify(s)
+}
+
+// ListProjectVisibleEventsOptions represents the available
+// ListProjectVisibleEvents() options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/events.html#list-a-projects-visible-events
+type ListProjectVisibleEventsOptions struct {
+	ListOptions
+	Action     *EventTypeValue       `url:"action,omitempty" json:"action,omitempty"`
+	TargetType *EventTargetTypeValue `url:"target_type,omitempty" json:"target_type,omitempty"`
+	Before     *ISOTime              `url:"before,omitempty" json:"before,omitempty"`
+	After      *ISOTime              `url:"after,omitempty" json:"after,omitempty"`
+	Sort       *string               `url:"sort,omitempty" json:"sort,omitempty"`
+}
+
+// ListProjectVisibleEvents gets the events for the specified project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/events.html#list-a-projects-visible-events
+func (s *EventsService) ListProjectVisibleEvents(pid interface{}, opt *ListProjectVisibleEventsOptions, options ...RequestOptionFunc) ([]*ProjectEvent, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -138,11 +221,11 @@ func (s *EventsService) ListProjectVisibleEvents(pid interface{}, opt *ListContr
 		return nil, nil, err
 	}
 
-	var cs []*ContributionEvent
-	resp, err := s.client.Do(req, &cs)
+	var p []*ProjectEvent
+	resp, err := s.client.Do(req, &p)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return cs, resp, err
+	return p, resp, nil
 }

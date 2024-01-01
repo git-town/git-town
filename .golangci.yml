@@ -20,8 +20,10 @@ linters:
     - lll # we aren't enforcing a line length at this point
     - maligned # deprecated
     - maintidx # we keep complexity under check with code reviews
+    - musttag # we document JSON serialization via unit tests
     - nakedret # not useful
     - nestif # we keep complexity under check with code reviews
+    - nonamedreturns # they are useful in too many situations
     - nosnakecase # deprecated
     - nlreturn # this forces unnecessary empty lines in function bodies
     - scopelint # deprecated
@@ -37,8 +39,8 @@ linters-settings:
     allow:
       - error
       - stdlib
-      - github.com/git-town/git-town/v9/src/git.FrontendRunner
-      - github.com/git-town/git-town/v9/src/git.BackendRunner
+      - github.com/git-town/git-town/v11/src/git.FrontendRunner
+      - github.com/git-town/git-town/v11/src/git.BackendRunner
   tagliatelle:
     case:
       use-field-name: true
@@ -58,15 +60,34 @@ issues:
       text: "do not define dynamic errors"
     - linters:
         - ireturn
-      text: (github.com/git-town/git-town/v9/src/hosting.Connector|github.com/git-town/git-town/v9/src/steps.Step)
-    - text: (mockConfig|EmptyStep|Options|Cmd)
-      linters:
-        - exhaustruct
-    - path: src/cache/cache.go
+      text: github.com/git-town/git-town/v11/src/(hosting/hostingdomain.Connector|hosting.Connector)
+    - path: src/gohacks/cache/cache.go
       linters:
         - ireturn
+    - path: src/gohacks/cache/with_previous.go
+      linters:
+        - ireturn
+    - path: src/gohacks/slice/first_element_or.go
+      linters:
+        - ireturn
+    - text: receiver name should be a reflection of its identity
+      linters:
+        - stylecheck
+    - text: receiver name should be a reflection of its identity
+      linters:
+        - revive
+    - text: is missing field undeclaredOpcodeMethods
+      linters:
+        - exhaustruct
+    - path: src/vm/opcode/core.go # ignore all missing fields in json.go since those are intentional
+      text: is missing field
+      linters:
+        - exhaustruct
+    - text: (cobra.Command|subshell.Options|gitea.*Options|gitea.MergePullRequestOption|github.*Options|gitlab.*Options|godog.Options) is missing fields?
+      linters:
+        - exhaustruct
     - path: src/hosting/gitea
-      text: missing in (ListOptions|ListPullRequestsOptions|PRBranchInfo|Token)
+      text: missing in (List.*Options|PRBranchInfo|Token)
       linters:
         - exhaustruct
     - path: src/hosting/github.go
@@ -74,7 +95,7 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
+      text: missing in (.*Options|Client)
       linters:
         - exhaustruct
     - path: src/hosting/gitlab_test.go
@@ -85,3 +106,15 @@ issues:
       text: missing in (MultiSelect|Select)
       linters:
         - exhaustruct
+    - linters:
+        - exhaustruct
+      text: (survey.MultiSelect|survey.Select) is missing fields
+    - linters:
+        - exhaustruct
+      text: (gitea.PRBranchInfo|github.PullRequest|github.PullRequestBranch|oauth2.Token|http.Client) is missing fields
+    - linters:
+        - exhaustruct
+      text: gitdomain.LocalBranchName is missing field id
+    - linters:
+        - predeclared
+      text: package name print has same name as predeclared identifier

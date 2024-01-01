@@ -3,19 +3,24 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands) error {
-	mainBranch := backend.Config.MainBranch()
-	if mainBranch == "" {
+func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, allBranches gitdomain.BranchInfos) error {
+	mainBranch := backend.Config.MainBranch
+	if mainBranch.IsEmpty() {
+		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
-		mainBranch, err := EnterMainBranch(backend)
+		var err error
+		config.MainBranch, err = dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch, backend)
 		if err != nil {
 			return err
 		}
-		return EnterPerennialBranches(backend, mainBranch)
+		return dialog.EnterPerennialBranches(backend, config, allBranches)
 	}
-	return backend.RemoveOutdatedConfiguration()
+	return backend.RemoveOutdatedConfiguration(allBranches)
 }

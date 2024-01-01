@@ -3,12 +3,13 @@ package cmd_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/cmd"
-	"github.com/stretchr/testify/assert"
+	"github.com/git-town/git-town/v11/src/cmd"
+	"github.com/shoenig/test/must"
 )
 
 func TestNewCompletionType(t *testing.T) {
 	t.Parallel()
+
 	t.Run("recognizes shells", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]cmd.CompletionType{
@@ -19,8 +20,8 @@ func TestNewCompletionType(t *testing.T) {
 		}
 		for give, want := range tests {
 			have, err := cmd.NewCompletionType(give)
-			assert.Nil(t, err)
-			assert.Equal(t, want, have)
+			must.NoError(t, err)
+			must.EqOp(t, want, have)
 		}
 	})
 
@@ -28,14 +29,14 @@ func TestNewCompletionType(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"bash", "Bash", "BASH"} {
 			have, err := cmd.NewCompletionType(give)
-			assert.Nil(t, err)
-			assert.Equal(t, cmd.CompletionTypeBash, have)
+			must.NoError(t, err)
+			must.EqOp(t, cmd.CompletionTypeBash, have)
 		}
 	})
 
 	t.Run("invalid input", func(t *testing.T) {
 		t.Parallel()
 		_, err := cmd.NewCompletionType("zonk")
-		assert.Error(t, err)
+		must.Error(t, err)
 	})
 }

@@ -1,4 +1,4 @@
-Feature: sync the current feature branch with a tracking branch using the "merge" sync strategy
+Feature: sync the current feature branch with a tracking branch using the "merge" sync-feature strategy
 
   Background:
     Given the current branch is a feature branch "feature"
@@ -23,7 +23,7 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         | git push                           |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And now these commits exist
+    And these commits exist now
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |
@@ -33,3 +33,18 @@ Feature: sync the current feature branch with a tracking branch using the "merge
       |         |               | origin main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                                                      |
+      | feature | git reset --hard {{ sha 'local feature commit' }}                            |
+      |         | git push --force-with-lease origin {{ sha 'origin feature commit' }}:feature |
+    And the current branch is still "feature"
+    And these commits exist now
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, origin | origin main commit    |
+      |         |               | local main commit     |
+      | feature | local         | local feature commit  |
+      |         | origin        | origin feature commit |
+    And the initial branches and lineage exist

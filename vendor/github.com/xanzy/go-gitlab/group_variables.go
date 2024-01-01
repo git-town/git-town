@@ -78,7 +78,7 @@ func (s *GroupVariablesService) ListVariables(gid interface{}, opt *ListGroupVar
 		return nil, resp, err
 	}
 
-	return vs, resp, err
+	return vs, resp, nil
 }
 
 // GetVariable gets a variable.
@@ -103,7 +103,7 @@ func (s *GroupVariablesService) GetVariable(gid interface{}, key string, options
 		return nil, resp, err
 	}
 
-	return v, resp, err
+	return v, resp, nil
 }
 
 // CreateGroupVariableOptions represents the available CreateVariable()
@@ -143,7 +143,7 @@ func (s *GroupVariablesService) CreateVariable(gid interface{}, opt *CreateGroup
 		return nil, resp, err
 	}
 
-	return v, resp, err
+	return v, resp, nil
 }
 
 // UpdateGroupVariableOptions represents the available UpdateVariable()
@@ -183,7 +183,7 @@ func (s *GroupVariablesService) UpdateVariable(gid interface{}, key string, opt 
 		return nil, resp, err
 	}
 
-	return v, resp, err
+	return v, resp, nil
 }
 
 // RemoveVariable removes a group's variable.

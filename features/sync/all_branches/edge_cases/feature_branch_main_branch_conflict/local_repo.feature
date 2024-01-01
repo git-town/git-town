@@ -28,16 +28,16 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is now "beta"
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
       | beta   | git merge --abort                         |
@@ -47,7 +47,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | main   | git stash pop                             |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And now the initial commits exist
+    And the initial commits exist
     And no merge is in progress
 
   Scenario: skip
@@ -62,7 +62,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And the current branch is now "main"
     And the uncommitted file still exists
     And no merge is in progress
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION | MESSAGE                        |
       | main   | local    | main commit                    |
       | alpha  | local    | alpha commit                   |

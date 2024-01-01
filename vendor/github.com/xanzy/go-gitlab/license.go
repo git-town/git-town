@@ -83,7 +83,7 @@ func (s *LicenseService) GetLicense(options ...RequestOptionFunc) (*License, *Re
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // AddLicenseOptions represents the available AddLicense() options.
@@ -109,7 +109,7 @@ func (s *LicenseService) AddLicense(opt *AddLicenseOptions, options ...RequestOp
 		return nil, resp, err
 	}
 
-	return l, resp, err
+	return l, resp, nil
 }
 
 // DeleteLicense deletes an existing license.

@@ -7,6 +7,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
+    And Git Town setting "sync-before-ship" is "true"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -21,21 +22,21 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
     And it prints the error:
       """
-      To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
+      To go back to where you started, run "git-town undo".
       """
     And a rebase is now in progress
 
-  Scenario: abort
-    When I run "git-town abort"
+  Scenario: undo
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
     And the current branch is still "feature"
     And no rebase is in progress
-    And now the initial commits exist
-    And the initial branch hierarchy exists
+    And the initial commits exist
+    And the initial lineage exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,12 +58,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And now these commits exist
+    And these commits exist now
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And no branch hierarchy exists now
+    And no lineage exists now
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
