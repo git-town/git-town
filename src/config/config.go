@@ -170,7 +170,7 @@ func (self *Config) SetTestOrigin(value string) error {
 	return self.SetLocalConfigValue(configdomain.KeyTestingRemoteURL, value)
 }
 
-func NewGitTown(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner configdomain.Runner) (*Config, error) {
+func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner configdomain.Runner) (*Config, error) {
 	configFile, err := configfile.Load()
 	if err != nil {
 		return nil, err
