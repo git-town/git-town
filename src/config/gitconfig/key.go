@@ -94,6 +94,15 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
+func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
+	for _, aliasableCommand := range configdomain.AliasableCommands() {
+		if KeyForAliasableCommand(aliasableCommand) == key {
+			return &aliasableCommand
+		}
+	}
+	return nil
+}
+
 func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key {
 	switch aliasableCommand {
 	case configdomain.AliasableCommandAppend:
@@ -118,15 +127,6 @@ func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key 
 		return KeyAliasSync
 	}
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", &aliasableCommand))
-}
-
-func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
-	for _, aliasableCommand := range configdomain.AliasableCommands() {
-		if KeyForAliasableCommand(aliasableCommand) == key {
-			return &aliasableCommand
-		}
-	}
-	return nil
 }
 
 func NewKey(name string) Key {
