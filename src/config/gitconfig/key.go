@@ -36,7 +36,7 @@ var (
 	KeyAliasRenameBranch              = Key{"alias.rename-branch"}                   //nolint:gochecknoglobals
 	KeyAliasRepo                      = Key{"alias.repo"}                            //nolint:gochecknoglobals
 	KeyAliasShip                      = Key{"alias.ship"}                            //nolint:gochecknoglobals
-	KeyAliasSync                      = Key{"alias.sync"}                            //nolint:goc    hecknoglobals
+	KeyAliasSync                      = Key{"alias.sync"}                            //nolint:gochecknoglobals
 	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
 	KeyCodeHostingPlatform            = Key{"git-town.code-hosting-platform"}        //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver    = Key{"git-town.code-hosting-driver"}          //nolint:gochecknoglobals
