@@ -4,7 +4,7 @@ Feature: display all executed Git commands
     When I run "git-town aliases add --verbose"
     Then it prints:
       """
-      Ran 14 shell commands.
+      Ran 15 shell commands.
       """
 
   Scenario: removing aliases
@@ -12,5 +12,5 @@ Feature: display all executed Git commands
     When I run "git-town aliases remove --verbose"
     Then it prints:
       """
-      Ran 14 shell commands.
+      Ran 15 shell commands.
       """
