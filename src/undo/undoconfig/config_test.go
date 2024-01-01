@@ -17,17 +17,17 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("adding a value to the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline:               "0",
 				gitconfig.KeySyncPerennialStrategy: "1",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -53,17 +53,17 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("removing a value from the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline:               "0",
 				gitconfig.KeySyncPerennialStrategy: "1",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -94,16 +94,16 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("changing a value in the global cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline: "1",
 			},
-			Local: gitconfig.SingleCache{},
+			Local: gitconfig.Cache{},
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
@@ -137,14 +137,14 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("adding a value to the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline:               "0",
 				gitconfig.KeySyncPerennialStrategy: "1",
 			},
@@ -173,15 +173,15 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("removing a value from the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline:               "0",
 				gitconfig.KeySyncPerennialStrategy: "1",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
 		}
@@ -214,14 +214,14 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("changing a value in the local cache", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline: "0",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{},
-			Local: gitconfig.SingleCache{
+			Global: gitconfig.Cache{},
+			Local: gitconfig.Cache{
 				gitconfig.KeyOffline: "1",
 			},
 		}
@@ -257,21 +257,21 @@ func TestConfigUndo(t *testing.T) {
 	t.Run("complex example", func(t *testing.T) {
 		t.Parallel()
 		before := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline:  "0",
 				gitconfig.KeyPushHook: "0",
 			},
-			Local: gitconfig.SingleCache{
+			Local: gitconfig.Cache{
 				gitconfig.KeyPerennialBranches: "prod",
 				gitconfig.KeyGithubToken:       "token",
 			},
 		}
 		after := undoconfig.ConfigSnapshot{
-			Global: gitconfig.SingleCache{
+			Global: gitconfig.Cache{
 				gitconfig.KeyOffline:               "1",
 				gitconfig.KeySyncPerennialStrategy: "1",
 			},
-			Local: gitconfig.SingleCache{
+			Local: gitconfig.Cache{
 				gitconfig.KeyPerennialBranches: "prod qa",
 				gitconfig.KeyPushHook:          "1",
 			},

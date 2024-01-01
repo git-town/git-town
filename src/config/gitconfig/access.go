@@ -22,8 +22,8 @@ type Access struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (SingleCache, configdomain.PartialConfig, error) {
-	cache := SingleCache{}
+func (self *Access) LoadCache(global bool) (Cache, configdomain.PartialConfig, error) {
+	cache := Cache{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
