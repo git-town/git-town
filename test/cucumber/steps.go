@@ -256,7 +256,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if key == nil {
 			return fmt.Errorf("key not found")
 		}
-		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*key]
+		aliasableCommand := configdomain.LookupAliasableCommand(*key)
+		if aliasableCommand == nil {
+			return fmt.Errorf("aliasableCommand not found for key %q", *key)
+		}
+		have := state.fixture.DevRepo.Config.FullConfig.Aliases[*aliasableCommand]
 		if have != want {
 			return fmt.Errorf("unexpected value for key %q: want %q have %q", name, want, have)
 		}

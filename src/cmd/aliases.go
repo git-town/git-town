@@ -63,12 +63,12 @@ func executeAliases(arg string, dryRun, verbose bool) error {
 }
 
 func addAliases(run *git.ProdRunner) error {
-	for _, alias := range configdomain.AliasableCommands() {
-		existingAlias := run.Aliases[alias.Key()]
+	for _, aliasableCommand := range configdomain.AliasableCommands() {
+		existingAlias := run.Aliases[aliasableCommand]
 		if existingAlias != "" {
 			continue
 		}
-		err := run.Frontend.SetGitAlias(alias)
+		err := run.Frontend.SetGitAlias(aliasableCommand)
 		if err != nil {
 			return err
 		}
@@ -79,7 +79,7 @@ func addAliases(run *git.ProdRunner) error {
 
 func removeAliases(run *git.ProdRunner) error {
 	for _, aliasableCommand := range configdomain.AliasableCommands() {
-		existingAlias := run.Aliases[aliasableCommand.Key()]
+		existingAlias := run.Aliases[aliasableCommand]
 		if existingAlias == "town "+aliasableCommand.String() {
 			err := run.Frontend.RemoveGitAlias(aliasableCommand)
 			if err != nil {

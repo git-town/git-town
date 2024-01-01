@@ -2,11 +2,9 @@ package configdomain
 
 import (
 	"fmt"
-	"strings"
 )
 
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
-// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type AliasableCommand string
 
 func (self AliasableCommand) Key() Key {
@@ -66,13 +64,9 @@ func AliasableCommands() []AliasableCommand {
 	}
 }
 
-func LookupAliasableCommand(key string) *AliasableCommand {
-	if !strings.HasPrefix(key, "alias.") {
-		return nil
-	}
+func LookupAliasableCommand(key Key) *AliasableCommand {
 	for _, aliasableCommand := range AliasableCommands() {
-		aliasKey := aliasableCommand.Key()
-		if key == aliasKey.name {
+		if aliasableCommand.Key() == key {
 			return &aliasableCommand
 		}
 	}
