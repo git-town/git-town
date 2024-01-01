@@ -21,8 +21,9 @@ type Access struct {
 	Runner
 }
 
-// LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (Cache, configdomain.PartialConfig, error) {
+// Load reads the Git Town configuration from Git's metadata.
+// If the global flag is set, reads the global Git configuration, otherwise the local one.
+func (self *Access) Load(global bool) (Cache, configdomain.PartialConfig, error) {
 	cache := Cache{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}

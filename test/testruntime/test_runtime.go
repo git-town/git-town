@@ -78,11 +78,11 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BinDir:     binDir,
 	}
 	configGitAccess := gitconfig.Access{Runner: &runner}
-	_, globalConfig, err := configGitAccess.LoadCache(true)
+	_, globalConfig, err := configGitAccess.Load(true)
 	if err != nil {
 		panic(err)
 	}
-	_, localConfig, err := configGitAccess.LoadCache(false)
+	_, localConfig, err := configGitAccess.Load(false)
 	if err != nil {
 		panic(err)
 	}

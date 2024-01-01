@@ -41,11 +41,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	globalCache, globalConfig, err := configGitAccess.LoadCache(true)
+	globalCache, globalConfig, err := configGitAccess.Load(true)
 	if err != nil {
 		return nil, err
 	}
-	localCache, localConfig, err := configGitAccess.LoadCache(false)
+	localCache, localConfig, err := configGitAccess.Load(false)
 	if err != nil {
 		return nil, err
 	}

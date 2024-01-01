@@ -6,11 +6,11 @@ import (
 )
 
 func DetermineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {
-	globalCache, _, err := configGit.LoadCache(true)
+	globalCache, _, err := configGit.Load(true)
 	if err != nil {
 		return program.Program{}, err
 	}
-	localCache, _, err := configGit.LoadCache(false)
+	localCache, _, err := configGit.Load(false)
 	if err != nil {
 		return program.Program{}, err
 	}
