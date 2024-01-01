@@ -86,14 +86,14 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	if err != nil {
 		panic(err)
 	}
-	gitTown, err := config.NewGitTown(globalConfig, localConfig, false, &runner)
+	config, err := config.NewConfig(globalConfig, localConfig, false, &runner)
 	if err != nil {
 		panic(err)
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
 		DryRun:             false,
-		Config:             gitTown,
+		Config:             config,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
 		RemotesCache:       &cache.Remotes{},
 	}

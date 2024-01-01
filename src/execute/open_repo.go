@@ -53,13 +53,13 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Global: globalCache,
 		Local:  localCache,
 	}
-	gitTown, err := config.NewGitTown(globalConfig, localConfig, args.DryRun, backendRunner)
+	config, err := config.NewConfig(globalConfig, localConfig, args.DryRun, backendRunner)
 	if err != nil {
 		return nil, err
 	}
-	backendCommands.Config = gitTown
+	backendCommands.Config = config
 	prodRunner := git.ProdRunner{
-		Config:  gitTown,
+		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
@@ -81,7 +81,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 			return nil, err
 		}
 	}
-	isOffline := gitTown.FullConfig.Offline
+	isOffline := config.FullConfig.Offline
 	if args.ValidateIsOnline && isOffline.Bool() {
 		err = errors.New(messages.OfflineNotAllowed)
 		return nil, err

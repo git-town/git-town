@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-// Key contains all the keys used in Git Town configuration.
+// Key contains all the keys used in Git Town's Git metadata configuration.
 type Key struct {
 	name string
 }
