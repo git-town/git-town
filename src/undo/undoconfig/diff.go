@@ -6,7 +6,7 @@ import (
 )
 
 // SingleCacheDiff provides a diff of the two given SingleCache instances.
-func SingleCacheDiff(before, after gitconfig.Cache) ConfigDiff {
+func SingleCacheDiff(before, after gitconfig.SingleSnapshot) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []gitconfig.Key{},
 		Removed: map[gitconfig.Key]string{},

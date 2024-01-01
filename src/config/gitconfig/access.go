@@ -23,8 +23,8 @@ type Access struct {
 
 // Load reads the Git Town configuration from Git's metadata.
 // If the global flag is set, reads the global Git configuration, otherwise the local one.
-func (self *Access) Load(global bool) (Cache, configdomain.PartialConfig, error) {
-	cache := Cache{}
+func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	snapshot := SingleSnapshot{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -34,10 +34,10 @@ func (self *Access) Load(global bool) (Cache, configdomain.PartialConfig, error)
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return cache, config, nil //nolint:nilerr
+		return snapshot, config, nil //nolint:nilerr
 	}
 	if output == "" {
-		return cache, config, nil
+		return snapshot, config, nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -59,13 +59,13 @@ func (self *Access) Load(global bool) (Cache, configdomain.PartialConfig, error)
 			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
-		cache[*configKey] = value
+		snapshot[*configKey] = value
 		err := AddKeyToPartialConfig(*configKey, value, &config)
 		if err != nil {
-			return cache, config, err
+			return snapshot, config, err
 		}
 	}
-	return cache, config, nil
+	return snapshot, config, nil
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
