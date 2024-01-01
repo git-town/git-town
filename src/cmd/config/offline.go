@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -61,7 +62,7 @@ func displayOfflineStatus(run *git.ProdRunner) error {
 func setOfflineStatus(text string, run *git.ProdRunner) error {
 	value, err := gohacks.ParseBool(text)
 	if err != nil {
-		return fmt.Errorf(messages.ValueInvalid, configdomain.KeyOffline, text)
+		return fmt.Errorf(messages.ValueInvalid, gitconfig.KeyOffline, text)
 	}
 	return run.Config.SetOffline(configdomain.Offline(value))
 }

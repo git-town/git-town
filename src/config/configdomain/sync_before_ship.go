@@ -13,10 +13,10 @@ func (self SyncBeforeShip) Bool() bool {
 	return bool(self)
 }
 
-func NewSyncBeforeShipRef(value string) (*SyncBeforeShip, error) {
+func NewSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeySyncBeforeShip, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
 	token := SyncBeforeShip(parsed)
 	return &token, nil

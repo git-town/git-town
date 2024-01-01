@@ -1,4 +1,4 @@
-package configdomain
+package gitconfig
 
 import (
 	"errors"
@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
@@ -19,10 +21,11 @@ type Access struct {
 	Runner
 }
 
-// LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
-	cache := SingleCache{}
-	config := EmptyPartialConfig()
+// Load reads the Git Town configuration from Git's metadata.
+// If the global flag is set, reads the global Git configuration, otherwise the local one.
+func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	snapshot := SingleSnapshot{}
+	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -31,10 +34,10 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 	}
 	output, err := self.Runner.Query("git", cmdArgs...)
 	if err != nil {
-		return cache, config, nil //nolint:nilerr
+		return snapshot, config, nil //nolint:nilerr
 	}
 	if output == "" {
-		return cache, config, nil
+		return snapshot, config, nil
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -56,13 +59,72 @@ func (self *Access) LoadCache(global bool) (SingleCache, PartialConfig, error) {
 			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
-		cache[*configKey] = value
-		err := config.Add(*configKey, value)
+		snapshot[*configKey] = value
+		err := AddKeyToPartialConfig(*configKey, value, &config)
 		if err != nil {
-			return cache, config, err
+			return snapshot, config, err
 		}
 	}
-	return cache, config, nil
+	return snapshot, config, nil
+}
+
+func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
+	if strings.HasPrefix(key.name, "alias.") {
+		aliasableCommand := AliasableCommandForKey(key)
+		if aliasableCommand != nil {
+			config.Aliases[*aliasableCommand] = value
+		}
+		return nil
+	}
+	if strings.HasPrefix(key.name, "git-town-branch.") {
+		if config.Lineage == nil {
+			config.Lineage = &configdomain.Lineage{}
+		}
+		child := gitdomain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.String(), "git-town-branch."), ".parent"))
+		parent := gitdomain.NewLocalBranchName(value)
+		(*config.Lineage)[child] = parent
+		return nil
+	}
+	var err error
+	switch key {
+	case KeyCodeHostingOriginHostname:
+		config.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(value)
+	case KeyCodeHostingPlatform:
+		config.CodeHostingPlatformName = configdomain.NewCodeHostingPlatformNameRef(value)
+	case KeyGiteaToken:
+		config.GiteaToken = configdomain.NewGiteaTokenRef(value)
+	case KeyGithubToken:
+		config.GitHubToken = configdomain.NewGitHubTokenRef(value)
+	case KeyGitlabToken:
+		config.GitLabToken = configdomain.NewGitLabTokenRef(value)
+	case KeyGitUserEmail:
+		config.GitUserEmail = &value
+	case KeyGitUserName:
+		config.GitUserName = &value
+	case KeyMainBranch:
+		config.MainBranch = gitdomain.NewLocalBranchNameRefAllowEmpty(value)
+	case KeyOffline:
+		config.Offline, err = configdomain.NewOfflineRef(value, KeyOffline.String())
+	case KeyPerennialBranches:
+		config.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
+	case KeyPushHook:
+		config.PushHook, err = configdomain.NewPushHookRef(value, KeyPushHook.String())
+	case KeyPushNewBranches:
+		config.NewBranchPush, err = configdomain.ParseNewBranchPushRef(value, KeyPushNewBranches.String())
+	case KeyShipDeleteTrackingBranch:
+		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchRef(value, KeyShipDeleteTrackingBranch.String())
+	case KeySyncBeforeShip:
+		config.SyncBeforeShip, err = configdomain.NewSyncBeforeShipRef(value, KeySyncBeforeShip.String())
+	case KeySyncFeatureStrategy:
+		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyRef(value)
+	case KeySyncPerennialStrategy:
+		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(value)
+	case KeySyncUpstream:
+		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
+	default:
+		panic("unprocessed key: " + key.String())
+	}
+	return err
 }
 
 func (self *Access) RemoveGlobalConfigValue(key Key) error {
@@ -75,7 +137,7 @@ func (self *Access) RemoveLocalConfigValue(key Key) error {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
-func (self *Access) RemoveLocalGitConfiguration(lineage Lineage) error {
+func (self *Access) RemoveLocalGitConfiguration(lineage configdomain.Lineage) error {
 	err := self.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError

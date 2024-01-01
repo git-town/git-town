@@ -1,37 +1,7 @@
 package configdomain
 
-import (
-	"fmt"
-)
-
 // AliasableCommand defines Git Town commands that can shortened via Git aliases.
 type AliasableCommand string
-
-func (self AliasableCommand) Key() Key {
-	switch self {
-	case AliasableCommandAppend:
-		return KeyAliasAppend
-	case AliasableCommandDiffParent:
-		return KeyAliasDiffParent
-	case AliasableCommandHack:
-		return KeyAliasHack
-	case AliasableCommandKill:
-		return KeyAliasKill
-	case AliasableCommandPrepend:
-		return KeyAliasPrepend
-	case AliasableCommandPropose:
-		return KeyAliasPropose
-	case AliasableCommandRenameBranch:
-		return KeyAliasRenameBranch
-	case AliasableCommandRepo:
-		return KeyAliasRepo
-	case AliasableCommandShip:
-		return KeyAliasShip
-	case AliasableCommandSync:
-		return KeyAliasSync
-	}
-	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", self))
-}
 
 func (self AliasableCommand) String() string { return string(self) }
 
@@ -62,13 +32,4 @@ func AliasableCommands() []AliasableCommand {
 		AliasableCommandShip,
 		AliasableCommandSync,
 	}
-}
-
-func LookupAliasableCommand(key Key) *AliasableCommand {
-	for _, aliasableCommand := range AliasableCommands() {
-		if aliasableCommand.Key() == key {
-			return &aliasableCommand
-		}
-	}
-	return nil
 }

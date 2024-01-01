@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/config"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/cache"
@@ -77,12 +77,12 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	configGitAccess := configdomain.Access{Runner: &runner}
-	_, globalConfig, err := configGitAccess.LoadCache(true)
+	configGitAccess := gitconfig.Access{Runner: &runner}
+	_, globalConfig, err := configGitAccess.Load(true)
 	if err != nil {
 		panic(err)
 	}
-	_, localConfig, err := configGitAccess.LoadCache(false)
+	_, localConfig, err := configGitAccess.Load(false)
 	if err != nil {
 		panic(err)
 	}
