@@ -25,14 +25,16 @@ func TestGodog(t *testing.T) {
 	if os.Getenv("cukethis") != "" {
 		tags = "@this"
 	}
+	concurrency := 4
 	if runtime.GOOS == "windows" {
 		tags = "~@skipWindows"
+		concurrency = 1
 	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
 		Format:      "progress",
-		Concurrency: runtime.NumCPU() * 4,
+		Concurrency: runtime.NumCPU() * concurrency,
 		Strict:      true,
 		Paths:       []string{"features/"},
 		Tags:        tags,
