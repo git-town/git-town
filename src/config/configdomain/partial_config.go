@@ -8,7 +8,7 @@ import (
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
-	Aliases                   map[Key]string
+	Aliases                   map[AliasableCommand]string
 	CodeHostingOriginHostname *CodeHostingOriginHostname
 	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
@@ -31,7 +31,10 @@ type PartialConfig struct {
 
 func (self *PartialConfig) Add(key Key, value string) error {
 	if strings.HasPrefix(key.name, "alias.") {
-		self.Aliases[key] = value
+		aliasableCommand := LookupAliasableCommand(key)
+		if aliasableCommand != nil {
+			self.Aliases[*aliasableCommand] = value
+		}
 		return nil
 	}
 	if strings.HasPrefix(key.name, "git-town-branch.") {
@@ -87,6 +90,6 @@ func (self *PartialConfig) Add(key Key, value string) error {
 
 func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{ //nolint:exhaustruct
-		Aliases: map[Key]string{},
+		Aliases: map[AliasableCommand]string{},
 	}
 }

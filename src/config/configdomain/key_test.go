@@ -43,7 +43,9 @@ func TestKey(t *testing.T) {
 			t.Run("valid alias", func(t *testing.T) {
 				t.Parallel()
 				have := configdomain.ParseKey("alias.append")
+				must.NotNil(t, have)
 				want := &configdomain.KeyAliasAppend
+				must.NotNil(t, want)
 				must.EqOp(t, *want, *have)
 			})
 			t.Run("invalid alias", func(t *testing.T) {
