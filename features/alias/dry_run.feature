@@ -12,6 +12,7 @@ Feature: dry-run prints the commands but does not add or remove aliases
       | git config --global alias.propose "town propose"             |
       | git config --global alias.rename-branch "town rename-branch" |
       | git config --global alias.repo "town repo"                   |
+      | git config --global alias.set-parent "town set-parent"       |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
     And global Git setting "alias.append" is still ""
@@ -22,6 +23,7 @@ Feature: dry-run prints the commands but does not add or remove aliases
     And global Git setting "alias.propose" is still ""
     And global Git setting "alias.rename-branch" is still ""
     And global Git setting "alias.repo" is still ""
+    And global Git setting "alias.set-parent" is still ""
     And global Git setting "alias.ship" is still ""
     And global Git setting "alias.sync" is still ""
 
@@ -38,6 +40,7 @@ Feature: dry-run prints the commands but does not add or remove aliases
       | git config --global --unset alias.propose       |
       | git config --global --unset alias.rename-branch |
       | git config --global --unset alias.repo          |
+      | git config --global --unset alias.set-parent    |
       | git config --global --unset alias.ship          |
       | git config --global --unset alias.sync          |
     And global Git setting "alias.append" is still "town append"
@@ -48,5 +51,6 @@ Feature: dry-run prints the commands but does not add or remove aliases
     And global Git setting "alias.propose" is still "town propose"
     And global Git setting "alias.rename-branch" is still "town rename-branch"
     And global Git setting "alias.repo" is still "town repo"
+    And global Git setting "alias.set-parent" is still ""
     And global Git setting "alias.ship" is still "town ship"
     And global Git setting "alias.sync" is still "town sync"
