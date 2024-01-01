@@ -98,6 +98,41 @@ func NewKey(name string) Key {
 	return Key{name}
 }
 
+func AliasableCommandToKey(aliasableCommand configdomain.AliasableCommand) Key {
+	switch aliasableCommand {
+	case configdomain.AliasableCommandAppend:
+		return KeyAliasAppend
+	case configdomain.AliasableCommandDiffParent:
+		return KeyAliasDiffParent
+	case configdomain.AliasableCommandHack:
+		return KeyAliasHack
+	case configdomain.AliasableCommandKill:
+		return KeyAliasKill
+	case configdomain.AliasableCommandPrepend:
+		return KeyAliasPrepend
+	case configdomain.AliasableCommandPropose:
+		return KeyAliasPropose
+	case configdomain.AliasableCommandRenameBranch:
+		return KeyAliasRenameBranch
+	case configdomain.AliasableCommandRepo:
+		return KeyAliasRepo
+	case configdomain.AliasableCommandShip:
+		return KeyAliasShip
+	case configdomain.AliasableCommandSync:
+		return KeyAliasSync
+	}
+	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", &aliasableCommand))
+}
+
+func KeyToAliasableCommand(key Key) *configdomain.AliasableCommand {
+	for _, aliasableCommand := range configdomain.AliasableCommands() {
+		if AliasableCommandToKey(aliasableCommand) == key {
+			return &aliasableCommand
+		}
+	}
+	return nil
+}
+
 func NewParentKey(branch gitdomain.LocalBranchName) Key {
 	return Key{
 		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
@@ -115,7 +150,7 @@ func ParseKey(name string) *Key {
 		return lineageKey
 	}
 	for _, aliasableCommand := range configdomain.AliasableCommands() {
-		key := aliasableCommand.Key()
+		key := AliasableCommandToKey(aliasableCommand)
 		if key.String() == name {
 			return &key
 		}

@@ -257,7 +257,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if key == nil {
 			return fmt.Errorf("key not found")
 		}
-		aliasableCommand := configdomain.LookupAliasableCommand(*key)
+		aliasableCommand := gitconfig.KeyToAliasableCommand(*key)
 		if aliasableCommand == nil {
 			return fmt.Errorf("aliasableCommand not found for key %q", *key)
 		}

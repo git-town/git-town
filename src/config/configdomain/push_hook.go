@@ -24,10 +24,10 @@ func (pushHook PushHook) String() string {
 	return strconv.FormatBool(pushHook.Bool())
 }
 
-func NewPushHookRef(value string) (*PushHook, error) {
+func NewPushHookRef(value, source string) (*PushHook, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyPushHook, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
 	token := PushHook(parsed)
 	return &token, nil

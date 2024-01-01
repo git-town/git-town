@@ -23,10 +23,10 @@ func (offline Offline) ToOnline() Online {
 	return Online(!offline.Bool())
 }
 
-func NewOfflineRef(value string) (*Offline, error) {
+func NewOfflineRef(value, source string) (*Offline, error) {
 	boolValue, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, KeyOffline, value)
+		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
 	token := Offline(boolValue)
 	return &token, nil
