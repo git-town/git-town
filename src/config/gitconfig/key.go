@@ -35,6 +35,7 @@ var (
 	KeyAliasPropose                   = Key{"alias.propose"}                         //nolint:gochecknoglobals
 	KeyAliasRenameBranch              = Key{"alias.rename-branch"}                   //nolint:gochecknoglobals
 	KeyAliasRepo                      = Key{"alias.repo"}                            //nolint:gochecknoglobals
+	KeyAliasSetParent                 = Key{"alias.set-parent"}                      //nolint:gochecknoglobals
 	KeyAliasShip                      = Key{"alias.ship"}                            //nolint:gochecknoglobals
 	KeyAliasSync                      = Key{"alias.sync"}                            //nolint:gochecknoglobals
 	KeyCodeHostingOriginHostname      = Key{"git-town.code-hosting-origin-hostname"} //nolint:gochecknoglobals
@@ -121,6 +122,8 @@ func KeyForAliasableCommand(aliasableCommand configdomain.AliasableCommand) Key 
 		return KeyAliasRenameBranch
 	case configdomain.AliasableCommandRepo:
 		return KeyAliasRepo
+	case configdomain.AliasableCommandSetParent:
+		return KeyAliasSetParent
 	case configdomain.AliasableCommandShip:
 		return KeyAliasShip
 	case configdomain.AliasableCommandSync:

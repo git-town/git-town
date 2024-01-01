@@ -14,6 +14,7 @@ const (
 	AliasableCommandPropose      = AliasableCommand("propose")
 	AliasableCommandRenameBranch = AliasableCommand("rename-branch")
 	AliasableCommandRepo         = AliasableCommand("repo")
+	AliasableCommandSetParent    = AliasableCommand("set-parent")
 	AliasableCommandShip         = AliasableCommand("ship")
 	AliasableCommandSync         = AliasableCommand("sync")
 )
@@ -29,6 +30,7 @@ func AliasableCommands() []AliasableCommand {
 		AliasableCommandPropose,
 		AliasableCommandRenameBranch,
 		AliasableCommandRepo,
+		AliasableCommandSetParent,
 		AliasableCommandShip,
 		AliasableCommandSync,
 	}

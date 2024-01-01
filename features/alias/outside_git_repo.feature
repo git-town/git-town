@@ -13,6 +13,7 @@ Feature: setting global aliases outside a Git repo
       | git config --global alias.propose "town propose"             |
       | git config --global alias.rename-branch "town rename-branch" |
       | git config --global alias.repo "town repo"                   |
+      | git config --global alias.set-parent "town set-parent"       |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
     And it does not print "not a git repository"
@@ -24,6 +25,7 @@ Feature: setting global aliases outside a Git repo
     And global Git setting "alias.propose" is now "town propose"
     And global Git setting "alias.rename-branch" is now "town rename-branch"
     And global Git setting "alias.repo" is now "town repo"
+    And global Git setting "alias.set-parent" is now "town set-parent"
     And global Git setting "alias.ship" is now "town ship"
     And global Git setting "alias.sync" is now "town sync"
 
@@ -38,6 +40,7 @@ Feature: setting global aliases outside a Git repo
       | git config --global --unset alias.propose       |
       | git config --global --unset alias.rename-branch |
       | git config --global --unset alias.repo          |
+      | git config --global --unset alias.set-parent    |
       | git config --global --unset alias.ship          |
       | git config --global --unset alias.sync          |
     And it does not print "not a git repository"
@@ -49,5 +52,6 @@ Feature: setting global aliases outside a Git repo
     And global Git setting "alias.propose" is now ""
     And global Git setting "alias.rename-branch" is now ""
     And global Git setting "alias.repo" is now ""
+    And global Git setting "alias.set-parent" is now ""
     And global Git setting "alias.ship" is now ""
     And global Git setting "alias.sync" is now ""
