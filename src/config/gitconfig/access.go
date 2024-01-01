@@ -69,7 +69,7 @@ func (self *Access) LoadCache(global bool) (Cache, configdomain.PartialConfig, e
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.name, "alias.") {
-		aliasableCommand := KeyToAliasableCommand(key)
+		aliasableCommand := AliasableCommandForKey(key)
 		if aliasableCommand != nil {
 			config.Aliases[*aliasableCommand] = value
 		}
