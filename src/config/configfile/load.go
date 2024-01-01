@@ -30,12 +30,14 @@ func Load() (configdomain.PartialConfig, error) {
 	return Validate(*configFileData)
 }
 
+// Parse converts the given config file TOML source into Go data.
 func Parse(text string) (*Data, error) {
 	var result Data
 	_, err := toml.Decode(text, &result)
 	return &result, err
 }
 
+// Validate converts the given low-level configfile data into high-level config data.
 func Validate(data Data) (configdomain.PartialConfig, error) {
 	result := configdomain.PartialConfig{} //nolint:exhaustruct
 	var err error
