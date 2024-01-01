@@ -41,17 +41,17 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	configGitAccess := gitconfig.Access{Runner: backendRunner}
-	globalCache, globalConfig, err := configGitAccess.Load(true)
+	globalSnapshot, globalConfig, err := configGitAccess.Load(true)
 	if err != nil {
 		return nil, err
 	}
-	localCache, localConfig, err := configGitAccess.Load(false)
+	localSnapshot, localConfig, err := configGitAccess.Load(false)
 	if err != nil {
 		return nil, err
 	}
 	configSnapshot := undoconfig.ConfigSnapshot{
-		Global: globalCache,
-		Local:  localCache,
+		Global: globalSnapshot,
+		Local:  localSnapshot,
 	}
 	config, err := config.NewConfig(globalConfig, localConfig, args.DryRun, backendRunner)
 	if err != nil {
