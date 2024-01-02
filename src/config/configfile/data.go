@@ -1,6 +1,6 @@
 package configfile
 
-// Data is the unvalidated data as read by the TOML parser.
+// Data defines the Go equivalent of the TOML file content.
 type Data struct {
 	Branches                 Branches      `toml:"branches"`
 	CodeHosting              *CodeHosting  `toml:"code-hosting"`
