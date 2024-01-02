@@ -16,6 +16,9 @@ cuke: build   # runs all end-to-end tests
 cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
+cukethisps: build   # runs the end-to-end tests that have a @this tag on Windows
+	powershell -Command '{ $$env:cukethis="1" ; go test . -v -count=1 }'
+
 cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test

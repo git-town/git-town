@@ -32,6 +32,7 @@ Feature: the branch to kill has a deleted tracking branch
       | BRANCH | PARENT |
       | other  | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
