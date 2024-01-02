@@ -8,7 +8,7 @@ import (
 )
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
-type SyncPerennialStrategy struct {
+type SyncPerennialStrategy string {
 	Name string
 }
 
