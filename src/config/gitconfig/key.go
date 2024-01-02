@@ -61,7 +61,6 @@ var (
 	KeySyncPerennialStrategy          = Key{"git-town.sync-perennial-strategy"}      //nolint:gochecknoglobals
 	KeySyncStrategy                   = Key{"git-town.sync-strategy"}                //nolint:gochecknoglobals
 	KeySyncUpstream                   = Key{"git-town.sync-upstream"}                //nolint:gochecknoglobals
-	KeyTestingRemoteURL               = Key{"git-town.testing.remote-url"}           //nolint:gochecknoglobals
 	KeyGitUserEmail                   = Key{"user.email"}                            //nolint:gochecknoglobals
 	KeyGitUserName                    = Key{"user.name"}                             //nolint:gochecknoglobals
 )
@@ -92,7 +91,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncPerennialStrategy,
 	KeySyncStrategy,
 	KeySyncUpstream,
-	KeyTestingRemoteURL,
 }
 
 func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
