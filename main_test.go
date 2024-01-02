@@ -22,15 +22,15 @@ func FeatureContext(suite *godog.Suite) {
 //nolint:paralleltest
 func TestGodog(t *testing.T) {
 	tags := ""
-	if os.Getenv("cukethis") != "" {
-		tags = "@this"
-	}
 	var concurrency int
 	if runtime.GOOS == "windows" {
 		tags = "~@skipWindows"
 		concurrency = 1
 	} else {
 		concurrency = 4
+	}
+	if os.Getenv("cukethis") != "" {
+		tags = "@this"
 	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
