@@ -10,23 +10,21 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-type Response struct {
-	name string
-}
+type Response string
 
-func (self Response) String() string { return self.name }
+func (self Response) String() string { return string(self) }
 
-var (
+const (
 	// ResponseContinue stands for the user choosing to continue the unfinished run state.
-	ResponseContinue = Response{"continue"} //nolint:gochecknoglobals
+	ResponseContinue = Response("continue")
 	// ResponseDiscard stands for the user choosing to discard the unfinished run state.
-	ResponseDiscard = Response{"discard"} //nolint:gochecknoglobals
+	ResponseDiscard = Response("discard")
 	// ResponseQuit stands for the user choosing to quit the program.
-	ResponseQuit = Response{"quit"} //nolint:gochecknoglobals
+	ResponseQuit = Response("quit")
 	// ResponseSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
-	ResponseSkip = Response{"skip"} //nolint:gochecknoglobals
+	ResponseSkip = Response("skip")
 	// ResponseUndo stands for the user choosing to undo the unfinished run state.
-	ResponseUndo = Response{"undo"} //nolint:gochecknoglobals
+	ResponseUndo = Response("undo")
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
