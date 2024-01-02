@@ -69,13 +69,6 @@ func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfi
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
-	if strings.HasPrefix(key.String(), "alias.") {
-		aliasableCommand := AliasableCommandForKey(key)
-		if aliasableCommand != nil {
-			config.Aliases[*aliasableCommand] = value
-		}
-		return nil
-	}
 	if strings.HasPrefix(key.String(), "git-town-branch.") {
 		if config.Lineage == nil {
 			config.Lineage = &configdomain.Lineage{}
@@ -87,6 +80,28 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	}
 	var err error
 	switch key {
+	case KeyAliasAppend:
+		config.Aliases[configdomain.AliasableCommandAppend] = value
+	case KeyAliasDiffParent:
+		config.Aliases[configdomain.AliasableCommandDiffParent] = value
+	case KeyAliasHack:
+		config.Aliases[configdomain.AliasableCommandHack] = value
+	case KeyAliasKill:
+		config.Aliases[configdomain.AliasableCommandKill] = value
+	case KeyAliasPrepend:
+		config.Aliases[configdomain.AliasableCommandPrepend] = value
+	case KeyAliasPropose:
+		config.Aliases[configdomain.AliasableCommandPropose] = value
+	case KeyAliasRenameBranch:
+		config.Aliases[configdomain.AliasableCommandRenameBranch] = value
+	case KeyAliasRepo:
+		config.Aliases[configdomain.AliasableCommandRepo] = value
+	case KeyAliasSetParent:
+		config.Aliases[configdomain.AliasableCommandSetParent] = value
+	case KeyAliasShip:
+		config.Aliases[configdomain.AliasableCommandShip] = value
+	case KeyAliasSync:
+		config.Aliases[configdomain.AliasableCommandSync] = value
 	case KeyCodeHostingOriginHostname:
 		config.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
@@ -121,8 +136,15 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(value)
 	case KeySyncUpstream:
 		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
-	default:
-		panic("unprocessed key: " + key.String())
+	case KeyDeprecatedCodeHostingDriver,
+		KeyDeprecatedMainBranchName,
+		KeyDeprecatedNewBranchPushFlag,
+		KeyDeprecatedPerennialBranchNames,
+		KeyDeprecatedPullBranchStrategy,
+		KeyDeprecatedPushVerify,
+		KeyDeprecatedSyncStrategy:
+		// deprecated keys were handled before this is reached, here we simply do a check that the switch statement contains all keys
+		panic(fmt.Sprintf("unhandled deprecated config key %q", key))
 	}
 	return err
 }
