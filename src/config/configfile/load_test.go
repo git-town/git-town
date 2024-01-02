@@ -105,5 +105,30 @@ branches.main = "main"
 			}
 			must.Eq(t, want, *have)
 		})
+
+		t.Run("multi-line array", func(t *testing.T) {
+			t.Parallel()
+			give := `
+[branches]
+perennials = [
+	"one",
+	"two",
+]
+`[1:]
+			have, err := configfile.Parse(give)
+			must.NoError(t, err)
+			want := configfile.Data{
+				Branches: configfile.Branches{
+					Main:       nil,
+					Perennials: []string{"one", "two"},
+				},
+				CodeHosting:              nil,
+				SyncStrategy:             nil,
+				PushNewbranches:          nil,
+				ShipDeleteTrackingBranch: nil,
+				SyncUpstream:             nil,
+			}
+			must.Eq(t, want, *have)
+		})
 	})
 }
