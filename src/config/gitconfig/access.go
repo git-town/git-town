@@ -143,6 +143,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		KeyDeprecatedPullBranchStrategy,
 		KeyDeprecatedPushVerify,
 		KeyDeprecatedSyncStrategy:
+		// deprecated keys were handled before this is reached, here we simply do a check that the switch statement contains all keys
 		panic(fmt.Sprintf("unhandled deprecated config key %q", key))
 	}
 	return err
