@@ -62,7 +62,6 @@ const (
 	KeySyncPerennialStrategy          = Key("git-town.sync-perennial-strategy")
 	KeySyncStrategy                   = Key("git-town.sync-strategy")
 	KeySyncUpstream                   = Key("git-town.sync-upstream")
-	KeyTestingRemoteURL               = Key("git-town.testing.remote-url")
 	KeyGitUserEmail                   = Key("user.email")
 	KeyGitUserName                    = Key("user.name")
 )

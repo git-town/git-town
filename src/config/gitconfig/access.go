@@ -144,8 +144,6 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		KeyDeprecatedPushVerify,
 		KeyDeprecatedSyncStrategy:
 		panic(fmt.Sprintf("unhandled deprecated config key %q", key))
-	case KeyTestingRemoteURL:
-
 	}
 	return err
 }
