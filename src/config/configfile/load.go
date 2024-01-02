@@ -11,8 +11,6 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const FileName = ".git-branches.toml"
-
 func Load() (configdomain.PartialConfig, error) {
 	file, err := os.Open(FileName)
 	if err != nil {

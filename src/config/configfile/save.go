@@ -1,0 +1,5 @@
+package configfile
+
+//
+
+func Save() {}
