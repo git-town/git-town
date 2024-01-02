@@ -15,9 +15,17 @@ type Branches struct {
 	Perennials []string `toml:"perennials"`
 }
 
+func (self Branches) IsEmpty() bool {
+	return self.Main == nil && len(self.Perennials) == 0
+}
+
 type CodeHosting struct {
 	Platform       *string `toml:"platform"`
 	OriginHostname *string `toml:"origin-hostname"`
+}
+
+func (self CodeHosting) IsEmpty() bool {
+	return self.Platform == nil && self.OriginHostname == nil
 }
 
 type SyncStrategy struct {
