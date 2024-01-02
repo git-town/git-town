@@ -93,7 +93,6 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeySyncPerennialStrategy,
 	KeySyncStrategy,
 	KeySyncUpstream,
-	KeyTestingRemoteURL,
 }
 
 func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
