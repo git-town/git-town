@@ -69,14 +69,14 @@ func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfi
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
-	if strings.HasPrefix(key.name, "alias.") {
+	if strings.HasPrefix(key.String(), "alias.") {
 		aliasableCommand := AliasableCommandForKey(key)
 		if aliasableCommand != nil {
 			config.Aliases[*aliasableCommand] = value
 		}
 		return nil
 	}
-	if strings.HasPrefix(key.name, "git-town-branch.") {
+	if strings.HasPrefix(key.String(), "git-town-branch.") {
 		if config.Lineage == nil {
 			config.Lineage = &configdomain.Lineage{}
 		}

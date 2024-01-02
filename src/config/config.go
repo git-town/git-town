@@ -144,13 +144,13 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 func (self *Config) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.LocalGitConfig.SyncFeatureStrategy = &value
 	self.FullConfig.SyncFeatureStrategy = value
-	return self.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.Name)
+	return self.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
 func (self *Config) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureStrategy) error {
 	self.GlobalGitConfig.SyncFeatureStrategy = &value
 	self.FullConfig.SyncFeatureStrategy = value
-	return self.SetGlobalConfigValue(gitconfig.KeySyncFeatureStrategy, value.Name)
+	return self.SetGlobalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.

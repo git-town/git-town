@@ -68,7 +68,7 @@ func (self *modalSelect) Display() (*string, error) {
 	return &selectedValue, nil
 }
 
-func (self modalSelectStatus) String() string { return self.name }
+func (self modalSelectStatus) String() string { return string(self) }
 
 // handleInput waits for keyboard input and updates the dialog state.
 func (self *modalSelect) handleInput() error {
