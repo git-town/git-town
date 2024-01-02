@@ -165,11 +165,6 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream) error {
 	return self.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-// SetTestOrigin sets the origin to be used for testing.
-func (self *Config) SetTestOrigin(value string) error {
-	return self.SetLocalConfigValue(gitconfig.KeyTestingRemoteURL, value)
-}
-
 func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner gitconfig.Runner) (*Config, error) {
 	configFile, err := configfile.Load()
 	if err != nil {
