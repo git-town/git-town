@@ -16,13 +16,18 @@ cuke: build   # runs all end-to-end tests
 cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
-cukethisps: build   # runs the end-to-end tests that have a @this tag on Windows
-	powershell -Command '{ $$env:cukethis="1" ; go test . -v -count=1 }'
+cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
+	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
+
+cukewin:  # runs all end-to-end tests on Windows
+	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+	go test . -v -count=1
 
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
 	@tools/rta depth . | grep git-town
