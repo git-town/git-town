@@ -83,5 +83,27 @@ main = "main"
 			}
 			must.Eq(t, want, *have)
 		})
+
+		t.Run("dotted keys", func(t *testing.T) {
+			t.Parallel()
+			give := `
+branches.main = "main"
+`[1:]
+			have, err := configfile.Parse(give)
+			must.NoError(t, err)
+			main := "main"
+			want := configfile.Data{
+				Branches: configfile.Branches{
+					Main:       &main,
+					Perennials: nil,
+				},
+				CodeHosting:              nil,
+				SyncStrategy:             nil,
+				PushNewbranches:          nil,
+				ShipDeleteTrackingBranch: nil,
+				SyncUpstream:             nil,
+			}
+			must.Eq(t, want, *have)
+		})
 	})
 }
