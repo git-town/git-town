@@ -8,15 +8,13 @@ import (
 )
 
 // SyncPerennialStrategy defines legal values for the "sync-perennial-strategy" configuration setting.
-type SyncPerennialStrategy struct {
-	Name string
-}
+type SyncPerennialStrategy string
 
-func (self SyncPerennialStrategy) String() string { return self.Name }
+func (self SyncPerennialStrategy) String() string { return string(self) }
 
-var (
-	SyncPerennialStrategyMerge  = SyncPerennialStrategy{"merge"}  //nolint:gochecknoglobals
-	SyncPerennialStrategyRebase = SyncPerennialStrategy{"rebase"} //nolint:gochecknoglobals
+const (
+	SyncPerennialStrategyMerge  = SyncPerennialStrategy("merge")
+	SyncPerennialStrategyRebase = SyncPerennialStrategy("rebase")
 )
 
 func NewSyncPerennialStrategy(text string) (SyncPerennialStrategy, error) {

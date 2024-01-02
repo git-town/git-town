@@ -9,25 +9,23 @@ import (
 
 // Hosting defines legal values for the "git-town.code-hosting-platform" config setting.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
-type Hosting struct {
-	name string
-}
+type Hosting string
 
-func (self Hosting) String() string { return self.name }
+func (self Hosting) String() string { return string(self) }
 
-var (
-	HostingBitbucket = Hosting{"bitbucket"} //nolint:gochecknoglobals
-	HostingGitHub    = Hosting{"github"}    //nolint:gochecknoglobals
-	HostingGitLab    = Hosting{"gitlab"}    //nolint:gochecknoglobals
-	HostingGitea     = Hosting{"gitea"}     //nolint:gochecknoglobals
-	HostingNone      = Hosting{""}          //nolint:gochecknoglobals
+const (
+	HostingBitbucket = Hosting("bitbucket")
+	HostingGitHub    = Hosting("github")
+	HostingGitLab    = Hosting("gitlab")
+	HostingGitea     = Hosting("gitea")
+	HostingNone      = Hosting("")
 )
 
 // NewHosting provides the HostingService enum matching the given text.
 func NewHosting(platformName CodeHostingPlatformName) (Hosting, error) {
 	text := strings.ToLower(platformName.String())
 	for _, hostingService := range hostings() {
-		if hostingService.name == text {
+		if hostingService.String() == text {
 			return hostingService, nil
 		}
 	}

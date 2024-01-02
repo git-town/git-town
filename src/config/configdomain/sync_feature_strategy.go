@@ -7,15 +7,13 @@ import (
 )
 
 // SyncFeatureStrategy defines legal values for the "sync-feature-strategy" configuration setting.
-type SyncFeatureStrategy struct {
-	Name string
-}
+type SyncFeatureStrategy string
 
-func (self SyncFeatureStrategy) String() string { return self.Name }
+func (self SyncFeatureStrategy) String() string { return string(self) }
 
-var (
-	SyncFeatureStrategyMerge  = SyncFeatureStrategy{"merge"}  //nolint:gochecknoglobals
-	SyncFeatureStrategyRebase = SyncFeatureStrategy{"rebase"} //nolint:gochecknoglobals
+const (
+	SyncFeatureStrategyMerge  = SyncFeatureStrategy("merge")
+	SyncFeatureStrategyRebase = SyncFeatureStrategy("rebase")
 )
 
 func NewSyncFeatureStrategy(text string) (SyncFeatureStrategy, error) {
