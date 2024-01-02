@@ -83,5 +83,40 @@ main = "main"
 			}
 			must.Eq(t, want, *have)
 		})
+
+		t.Run("dotted keys", func(t *testing.T) {
+			t.Parallel()
+			give := `
+branches.main = "main"
+`[1:]
+			have, err := configfile.Parse(give)
+			must.NoError(t, err)
+			main := "main"
+			want := configfile.Data{ //nolint:exhaustruct
+				Branches: configfile.Branches{ //nolint:exhaustruct
+					Main: &main,
+				},
+			}
+			must.Eq(t, want, *have)
+		})
+
+		t.Run("multi-line array", func(t *testing.T) {
+			t.Parallel()
+			give := `
+[branches]
+perennials = [
+	"one",
+	"two",
+]
+`[1:]
+			have, err := configfile.Parse(give)
+			must.NoError(t, err)
+			want := configfile.Data{ //nolint:exhaustruct
+				Branches: configfile.Branches{ //nolint:exhaustruct
+					Perennials: []string{"one", "two"},
+				},
+			}
+			must.Eq(t, want, *have)
+		})
 	})
 }
