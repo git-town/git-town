@@ -92,16 +92,10 @@ branches.main = "main"
 			have, err := configfile.Parse(give)
 			must.NoError(t, err)
 			main := "main"
-			want := configfile.Data{
-				Branches: configfile.Branches{
-					Main:       &main,
-					Perennials: nil,
+			want := configfile.Data{ //nolint:exhaustruct
+				Branches: configfile.Branches{ //nolint:exhaustruct
+					Main: &main,
 				},
-				CodeHosting:              nil,
-				SyncStrategy:             nil,
-				PushNewbranches:          nil,
-				ShipDeleteTrackingBranch: nil,
-				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)
 		})
@@ -117,16 +111,10 @@ perennials = [
 `[1:]
 			have, err := configfile.Parse(give)
 			must.NoError(t, err)
-			want := configfile.Data{
-				Branches: configfile.Branches{
-					Main:       nil,
+			want := configfile.Data{ //nolint:exhaustruct
+				Branches: configfile.Branches{ //nolint:exhaustruct
 					Perennials: []string{"one", "two"},
 				},
-				CodeHosting:              nil,
-				SyncStrategy:             nil,
-				PushNewbranches:          nil,
-				ShipDeleteTrackingBranch: nil,
-				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)
 		})
