@@ -36,5 +36,5 @@ func executeConfigResetStatus(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	return repo.Runner.RemoveLocalGitConfiguration(repo.Runner.Lineage)
+	return repo.Runner.GitConfig.RemoveLocalGitConfiguration(repo.Runner.Lineage)
 }
