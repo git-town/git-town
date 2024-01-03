@@ -17,6 +17,7 @@ func TestConfigfile(t *testing.T) {
 			give := `
 push-new-branches = true
 ship-delete-remote-branch = false
+sync-before-ship = false
 sync-upstream = true
 
 [branches]
@@ -40,6 +41,7 @@ perennial-branches = "rebase"
 			newBranchPush := true
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
+			syncBeforeShip := false
 			syncUpstream := true
 			want := configfile.Data{
 				Branches: configfile.Branches{
@@ -56,6 +58,7 @@ perennial-branches = "rebase"
 				},
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
+				SyncBeforeShip:           &syncBeforeShip,
 				SyncUpstream:             &syncUpstream,
 			}
 			must.Eq(t, want, *have)
@@ -79,6 +82,7 @@ main = "main"
 				SyncStrategy:             nil,
 				PushNewbranches:          nil,
 				ShipDeleteTrackingBranch: nil,
+				SyncBeforeShip:           nil,
 				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)

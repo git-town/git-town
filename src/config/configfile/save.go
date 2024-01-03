@@ -14,18 +14,18 @@ import (
 // 	}
 // }
 
-func Encode(config *configdomain.PartialConfig) string {
+func Encode(config *configdomain.PartialConfig) (string, error) {
 	data := toData(config)
 	buffer := strings.Builder{}
 	encoder := toml.NewEncoder(&buffer)
-	encoder.Encode(data)
-	return buffer.String()
+	err := encoder.Encode(data)
+	return buffer.String(), err
 }
 
 func toData(config *configdomain.PartialConfig) Data {
-	result := Data{}
+	result := Data{} //nolint:exhaustruct
 	// branches
-	branches := Branches{}
+	branches := Branches{} //nolint:exhaustruct
 	if config.MainBranch != nil {
 		branches.Main = (*string)(config.MainBranch)
 	}
@@ -36,7 +36,7 @@ func toData(config *configdomain.PartialConfig) Data {
 		result.Branches = branches
 	}
 	// codehosting
-	codeHosting := CodeHosting{}
+	codeHosting := CodeHosting{} //nolint:exhaustruct
 	if config.CodeHostingOriginHostname != nil {
 		codeHosting.OriginHostname = (*string)(config.CodeHostingOriginHostname)
 	}
@@ -47,7 +47,7 @@ func toData(config *configdomain.PartialConfig) Data {
 		result.CodeHosting = &codeHosting
 	}
 	// sync-strategy
-	syncStrategy := SyncStrategy{}
+	syncStrategy := SyncStrategy{} //nolint:exhaustruct
 	if config.SyncFeatureStrategy != nil {
 		syncStrategy.FeatureBranches = config.SyncFeatureStrategy.StringRef()
 	}

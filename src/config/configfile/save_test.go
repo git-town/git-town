@@ -22,7 +22,7 @@ func TestSave(t *testing.T) {
 		syncFeatureStrategy := configdomain.SyncFeatureStrategyMerge
 		syncPerennialStrategy := configdomain.SyncPerennialStrategyRebase
 		syncUpstream := configdomain.SyncUpstream(true)
-		config := configdomain.PartialConfig{
+		config := configdomain.PartialConfig{ //nolint:exhaustruct
 			Aliases:                  map[configdomain.AliasableCommand]string{},
 			MainBranch:               &mainBranch,
 			NewBranchPush:            &newBranchPush,
@@ -34,7 +34,8 @@ func TestSave(t *testing.T) {
 			SyncPerennialStrategy:    &syncPerennialStrategy,
 			SyncUpstream:             &syncUpstream,
 		}
-		have := configfile.Encode(&config)
+		have, err := configfile.Encode(&config)
+		must.NoError(t, err)
 		want := `
 push-new-branches = false
 ship-delete-remote-branch = false

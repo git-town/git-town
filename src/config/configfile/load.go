@@ -11,6 +11,13 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
+// Decode converts the given config file TOML source into Go data.
+func Decode(text string) (*Data, error) {
+	var result Data
+	_, err := toml.Decode(text, &result)
+	return &result, err
+}
+
 func Load() (configdomain.PartialConfig, error) {
 	file, err := os.Open(FileName)
 	if err != nil {
@@ -26,13 +33,6 @@ func Load() (configdomain.PartialConfig, error) {
 		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return Validate(*configFileData)
-}
-
-// Decode converts the given config file TOML source into Go data.
-func Decode(text string) (*Data, error) {
-	var result Data
-	_, err := toml.Decode(text, &result)
-	return &result, err
 }
 
 // Validate converts the given low-level configfile data into high-level config data.
