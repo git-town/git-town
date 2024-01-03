@@ -32,3 +32,7 @@ type SyncStrategy struct {
 	FeatureBranches   *string `toml:"feature-branches"`
 	PerennialBranches *string `toml:"perennial-branches"`
 }
+
+func (self SyncStrategy) IsEmpty() bool {
+	return self.FeatureBranches == nil && self.PerennialBranches == nil
+}

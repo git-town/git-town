@@ -11,6 +11,11 @@ type SyncFeatureStrategy string
 
 func (self SyncFeatureStrategy) String() string { return string(self) }
 
+func (self SyncFeatureStrategy) StringRef() *string {
+	result := string(self)
+	return &result
+}
+
 const (
 	SyncFeatureStrategyMerge  = SyncFeatureStrategy("merge")
 	SyncFeatureStrategyRebase = SyncFeatureStrategy("rebase")

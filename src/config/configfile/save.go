@@ -1,11 +1,25 @@
 package configfile
 
-import "github.com/git-town/git-town/v11/src/config/configdomain"
+import (
+	"strings"
 
-//
+	"github.com/BurntSushi/toml"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
+)
 
-func Save(config *configdomain.PartialConfig) error {
+// func Save(config *configdomain.PartialConfig) error {
+// 	file, err := os.Create(FileName)
+// 	if err != nil {
+// 		return err
+// 	}
+// }
+
+func Encode(config *configdomain.PartialConfig) string {
 	data := toData(config)
+	buffer := strings.Builder{}
+	encoder := toml.NewEncoder(&buffer)
+	encoder.Encode(data)
+	return buffer.String()
 }
 
 func toData(config *configdomain.PartialConfig) Data {
@@ -35,30 +49,23 @@ func toData(config *configdomain.PartialConfig) Data {
 	// sync-strategy
 	syncStrategy := SyncStrategy{}
 	if config.SyncFeatureStrategy != nil {
-		syncStrategy.FeatureBranches = &config.SyncFeatureStrategy.Name
+		syncStrategy.FeatureBranches = config.SyncFeatureStrategy.StringRef()
 	}
 	if config.SyncPerennialStrategy != nil {
-		syncStrategy.PerennialBranches = &config.SyncPerennialStrategy.Name
+		syncStrategy.PerennialBranches = config.SyncPerennialStrategy.StringRef()
 	}
 	if !syncStrategy.IsEmpty() {
 		result.SyncStrategy = &syncStrategy
 	}
+	// top-level fields
 	if config.NewBranchPush != nil {
 		result.PushNewbranches = (*bool)(config.NewBranchPush)
 	}
-
-	return Data{
-		Branches: Branches{Main: (*string)(config.MainBranch.String(), Perennials, []string{}, BadExpr)},
-		CodeHosting: &CodeHosting{
-			Platform:       new(string),
-			OriginHostname: new(string),
-		},
-		SyncStrategy: &SyncStrategy{
-			FeatureBranches:   new(string),
-			PerennialBranches: new(string),
-		},
-		PushNewbranches:          new(bool),
-		ShipDeleteTrackingBranch: new(bool),
-		SyncUpstream:             new(bool),
+	if config.ShipDeleteTrackingBranch != nil {
+		result.ShipDeleteTrackingBranch = (*bool)(config.ShipDeleteTrackingBranch)
 	}
+	if config.SyncUpstream != nil {
+		result.SyncUpstream = (*bool)(config.SyncUpstream)
+	}
+	return result
 }

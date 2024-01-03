@@ -21,15 +21,15 @@ func Load() (configdomain.PartialConfig, error) {
 	if err != nil {
 		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	configFileData, err := Parse(string(bytes))
+	configFileData, err := Decode(string(bytes))
 	if err != nil {
 		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	return Validate(*configFileData)
 }
 
-// Parse converts the given config file TOML source into Go data.
-func Parse(text string) (*Data, error) {
+// Decode converts the given config file TOML source into Go data.
+func Decode(text string) (*Data, error) {
 	var result Data
 	_, err := toml.Decode(text, &result)
 	return &result, err
