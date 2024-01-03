@@ -19,11 +19,11 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
-	GitConfig               gitconfig.Access           // access to the Git configuration settings
-	configdomain.FullConfig                            // the merged configuration data
-	configFile              configdomain.PartialConfig // content of git-town.toml
-	GlobalGitConfig         configdomain.PartialConfig // content of the global Git configuration
-	LocalGitConfig          configdomain.PartialConfig // content of the local Git configuration
+	GitConfig               gitconfig.Access            // access to the Git configuration settings
+	configdomain.FullConfig                             // the merged configuration data
+	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
+	GlobalGitConfig         configdomain.PartialConfig  // content of the global Git configuration
+	LocalGitConfig          configdomain.PartialConfig  // content of the local Git configuration
 	DryRun                  bool
 	originURLCache          configdomain.OriginURLCache
 }
@@ -60,7 +60,9 @@ func (self *Config) Reload() {
 	_, self.LocalGitConfig, _ = self.GitConfig.Load(false) // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	self.FullConfig = configdomain.DefaultConfig()
 	// TODO: merge this code with the similar code in NewGitTown.
-	self.FullConfig.Merge(self.configFile)
+	if self.configFile != nil {
+		self.FullConfig.Merge(*self.configFile)
+	}
 	self.FullConfig.Merge(self.GlobalGitConfig)
 	self.FullConfig.Merge(self.LocalGitConfig)
 }
@@ -169,7 +171,9 @@ func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool
 		return nil, err
 	}
 	config := configdomain.DefaultConfig()
-	config.Merge(configFile)
+	if configFile != nil {
+		config.Merge(*configFile)
+	}
 	config.Merge(globalConfig)
 	config.Merge(localConfig)
 	return &Config{
