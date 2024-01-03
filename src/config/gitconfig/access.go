@@ -21,9 +21,17 @@ type Access struct {
 	Runner
 }
 
-// Load reads the Git Town configuration from Git's metadata.
-// If the global flag is set, reads the global Git configuration, otherwise the local one.
-func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+// LoadLocal reads the global Git Town configuration that applies to the entire machine.
+func (self *Access) LoadGlobal() (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(true)
+}
+
+// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
+func (self *Access) LoadLocal() (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(false)
+}
+
+func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
 	snapshot := SingleSnapshot{}
 	config := configdomain.EmptyPartialConfig()
 	cmdArgs := []string{"config", "-lz"}
