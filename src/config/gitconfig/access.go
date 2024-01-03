@@ -149,6 +149,11 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	return err
 }
 
+func (self *Access) OriginRemote() string {
+	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
+	return strings.TrimSpace(output)
+}
+
 func (self *Access) RemoveGlobalConfigValue(key Key) error {
 	return self.Run("git", "config", "--global", "--unset", key.String())
 }
