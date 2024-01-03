@@ -1,18 +1,26 @@
 package configfile
 
 import (
+	"os"
 	"strings"
 
 	"github.com/BurntSushi/toml"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-// func Save(config *configdomain.PartialConfig) error {
-// 	file, err := os.Create(FileName)
-// 	if err != nil {
-// 		return err
-// 	}
-// }
+func Save(config *configdomain.PartialConfig) error {
+	text, err := Encode(config)
+	if err != nil {
+		return err
+	}
+	file, err := os.Create(FileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = file.WriteString(text)
+	return err
+}
 
 func Encode(config *configdomain.PartialConfig) (string, error) {
 	data := toData(config)
