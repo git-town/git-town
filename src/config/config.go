@@ -6,7 +6,6 @@ package config
 import (
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
@@ -53,8 +52,7 @@ func (self *Config) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
-	return strings.TrimSpace(output)
+	return self.Access.OriginRemote()
 }
 
 func (self *Config) Reload() {
