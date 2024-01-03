@@ -341,7 +341,7 @@ func (self *TestCommands) RemoveMainBranchConfiguration() {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (self *TestCommands) RemovePerennialBranchConfiguration() error {
-	return self.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
+	return self.Access.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
 
 // RemoveRemote deletes the Git remote with the given name.
