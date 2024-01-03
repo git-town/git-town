@@ -31,51 +31,6 @@ func (self *Access) LoadLocal() (SingleSnapshot, configdomain.PartialConfig, err
 	return self.load(false)
 }
 
-func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	snapshot := SingleSnapshot{}
-	config := configdomain.EmptyPartialConfig()
-	cmdArgs := []string{"config", "-lz"}
-	if global {
-		cmdArgs = append(cmdArgs, "--global")
-	} else {
-		cmdArgs = append(cmdArgs, "--local")
-	}
-	output, err := self.Runner.Query("git", cmdArgs...)
-	if err != nil {
-		return snapshot, config, nil //nolint:nilerr
-	}
-	if output == "" {
-		return snapshot, config, nil
-	}
-	for _, line := range strings.Split(output, "\x00") {
-		if len(line) == 0 {
-			continue
-		}
-		parts := strings.SplitN(line, "\n", 2)
-		key, value := parts[0], parts[1]
-		configKey := ParseKey(key)
-		if configKey == nil {
-			continue
-		}
-		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
-		if keyIsDeprecated {
-			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
-			configKey = &newKey
-		}
-		if key != KeyPerennialBranches.String() && value == "" {
-			_ = self.RemoveLocalConfigValue(*configKey)
-			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
-			continue
-		}
-		snapshot[*configKey] = value
-		err := AddKeyToPartialConfig(*configKey, value, &config)
-		if err != nil {
-			return snapshot, config, err
-		}
-	}
-	return snapshot, config, nil
-}
-
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
 	if strings.HasPrefix(key.String(), "git-town-branch.") {
 		if config.Lineage == nil {
@@ -237,4 +192,49 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey Key, value string, gl
 	} else {
 		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
 	}
+}
+
+func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	snapshot := SingleSnapshot{}
+	config := configdomain.EmptyPartialConfig()
+	cmdArgs := []string{"config", "-lz"}
+	if global {
+		cmdArgs = append(cmdArgs, "--global")
+	} else {
+		cmdArgs = append(cmdArgs, "--local")
+	}
+	output, err := self.Runner.Query("git", cmdArgs...)
+	if err != nil {
+		return snapshot, config, nil //nolint:nilerr
+	}
+	if output == "" {
+		return snapshot, config, nil
+	}
+	for _, line := range strings.Split(output, "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
+		key, value := parts[0], parts[1]
+		configKey := ParseKey(key)
+		if configKey == nil {
+			continue
+		}
+		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
+		if keyIsDeprecated {
+			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
+			configKey = &newKey
+		}
+		if key != KeyPerennialBranches.String() && value == "" {
+			_ = self.RemoveLocalConfigValue(*configKey)
+			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
+			continue
+		}
+		snapshot[*configKey] = value
+		err := AddKeyToPartialConfig(*configKey, value, &config)
+		if err != nil {
+			return snapshot, config, err
+		}
+	}
+	return snapshot, config, nil
 }
