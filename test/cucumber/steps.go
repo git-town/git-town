@@ -249,7 +249,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(branch, value string) error {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := gitconfig.NewParentKey(branchName)
-		return state.fixture.DevRepo.Config.Access.SetLocalConfigValue(configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
@@ -270,7 +270,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.Access.SetGlobalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
@@ -576,7 +576,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.Access.SetLocalConfigValue(*configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
