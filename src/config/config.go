@@ -4,12 +4,12 @@
 package config
 
 import (
-	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
+	"github.com/git-town/git-town/v11/src/config/envconfig"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
@@ -48,9 +48,9 @@ func (self *Config) OriginURL() *giturl.Parts {
 // OriginURLString provides the URL for the "origin" remote.
 // Tests can stub this through the GIT_TOWN_REMOTE environment variable.
 func (self *Config) OriginURLString() string {
-	remote := os.Getenv("GIT_TOWN_REMOTE")
-	if remote != "" {
-		return remote
+	remoteOverride := envconfig.OriginURLOverride()
+	if remoteOverride != "" {
+		return remoteOverride
 	}
 	return self.Access.OriginRemote()
 }
