@@ -11,7 +11,7 @@ import (
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
-	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Config.Access)
+	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Config.GitConfig)
 	if err != nil {
 		return program.Program{}, err
 	}
