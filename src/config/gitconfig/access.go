@@ -129,7 +129,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyShipDeleteTrackingBranch:
 		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchRef(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
-		config.SyncBeforeShip, err = configdomain.NewSyncBeforeShipRef(value, KeySyncBeforeShip.String())
+		config.SyncBeforeShip, err = configdomain.ParseSyncBeforeShipRef(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
 		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyRef(value)
 	case KeySyncPerennialStrategy:
