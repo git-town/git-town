@@ -38,6 +38,7 @@ func TestSave(t *testing.T) {
 		want := `
 push-new-branches = false
 ship-delete-remote-branch = false
+sync-before-ship = false
 sync-upstream = true
 
 [branches]
