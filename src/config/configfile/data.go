@@ -7,6 +7,7 @@ type Data struct {
 	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-remote-branch"`
+	SyncBeforeShip           *bool         `toml:"sync-before-ship"`
 	SyncUpstream             *bool         `toml:"sync-upstream"`
 }
 

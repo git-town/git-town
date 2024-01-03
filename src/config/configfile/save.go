@@ -64,6 +64,9 @@ func toData(config *configdomain.PartialConfig) Data {
 	if config.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = (*bool)(config.ShipDeleteTrackingBranch)
 	}
+	if config.SyncBeforeShip != nil {
+		result.SyncBeforeShip = (*bool)(config.SyncBeforeShip)
+	}
 	if config.SyncUpstream != nil {
 		result.SyncUpstream = (*bool)(config.SyncUpstream)
 	}
