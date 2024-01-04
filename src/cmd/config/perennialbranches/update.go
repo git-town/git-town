@@ -12,7 +12,7 @@ const updateSummary = "Updates all perennial branches through a dialog"
 
 func updateCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
-	updateCmd := cobra.Command{
+	cmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,
 		Short: updateSummary,
@@ -21,8 +21,8 @@ func updateCmd() *cobra.Command {
 			return executeUpdate(readVerboseFlag(cmd))
 		},
 	}
-	addVerboseFlag(&updateCmd)
-	return &updateCmd
+	addVerboseFlag(&cmd)
+	return &cmd
 }
 
 func executeUpdate(verbose bool) error {
