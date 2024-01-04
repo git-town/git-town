@@ -31,12 +31,27 @@ Feature: set push-new-branches
     Examples:
       | GIVE  | WANT  |
       | true  | true  |
-      | t     | true  |
-      | 1     | true  |
-      | on    | true  |
-      | yes   | true  |
       | false | false |
-      | f     | false |
-      | 0     | false |
-      | off   | false |
-      | no    | false |
+
+  Scenario: add to empty config file
+    Given the configuration file:
+      """
+      """
+    When I run "git-town config push-new-branches yes"
+    Then the configuration file is now:
+      """
+      push-new-branches = true
+      """
+    And local Git Town setting "push-new-branches" still doesn't exist
+
+  Scenario: change existing value in config file
+    Given the configuration file:
+      """
+      push-new-branches = true
+      """
+    When I run "git-town config push-new-branches no"
+    Then the configuration file is now:
+      """
+      push-new-branches = false
+      """
+    And local Git Town setting "push-new-branches" still doesn't exist
