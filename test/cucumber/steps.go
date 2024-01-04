@@ -327,7 +327,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if cmp.Equal(*have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+		return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -784,7 +784,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the configuration file is now:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+	suite.Step(`^the configuration file is (?:now|still):$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err != nil {
 			return fmt.Errorf("no configuration file found")
@@ -1032,7 +1032,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.RemovePerennialBranchConfiguration()
 	})
 
-	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(name string) error {
 		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
