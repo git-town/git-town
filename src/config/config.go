@@ -123,6 +123,11 @@ func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) er
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
 	self.PerennialBranches = branches
+	if self.configFile != nil {
+		self.configFile.PerennialBranches = &branches
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.PerennialBranches = &branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
