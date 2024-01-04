@@ -565,13 +565,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
+	suite.Step(`^local Git Town setting "([^"]*)" (:?no longer exists|still doesn't exist)$`, func(name string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
 		if newValue != nil {
 			return fmt.Errorf("should not have local %q anymore but has value %q", name, *newValue)
 		}
 		return nil
+	})
+
+	suite.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(name string) error {
+		configKey := gitconfig.ParseKey("git-town." + name)
+		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(*configKey)
 	})
 
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
@@ -657,6 +662,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo has a Git submodule$`, func() error {
 		state.fixture.AddSubmoduleRepo()
 		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		return nil
+	})
+
+	suite.Step(`^still no configuration file exists$`, func() error {
+		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err == nil {
+			return fmt.Errorf("expected no configuration file but found one")
+		}
 		return nil
 	})
 
@@ -767,10 +780,26 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
-		state.fixture.DevRepo.CreateFile(
-			configfile.FileName,
-			content.Content,
-		)
+		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
+		return nil
+	})
+
+	suite.Step(`^the configuration file is now:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err != nil {
+			return fmt.Errorf("no configuration file found")
+		}
+		have = strings.TrimSpace(have)
+		want := strings.TrimSpace(content.Content)
+		if have != want {
+			fmt.Println("\n\nEXISTING CONFIG FILE:")
+			fmt.Println(have)
+			fmt.Println("EXPECTED CONFIG FILE:")
+			fmt.Println(want)
+			fmt.Println("EXPECTED CONFIG FILE END")
+			fmt.Println()
+			return fmt.Errorf("mismatching config file content")
+		}
 		return nil
 	})
 

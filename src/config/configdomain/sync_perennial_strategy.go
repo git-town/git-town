@@ -11,6 +11,10 @@ import (
 type SyncPerennialStrategy string
 
 func (self SyncPerennialStrategy) String() string { return string(self) }
+func (self SyncPerennialStrategy) StringRef() *string {
+	result := string(self)
+	return &result
+}
 
 const (
 	SyncPerennialStrategyMerge  = SyncPerennialStrategy("merge")

@@ -17,6 +17,7 @@ func TestConfigfile(t *testing.T) {
 			give := `
 push-new-branches = true
 ship-delete-remote-branch = false
+sync-before-ship = false
 sync-upstream = true
 
 [branches]
@@ -31,7 +32,7 @@ origin-hostname = "github.com"
 feature-branches = "merge"
 perennial-branches = "rebase"
 `[1:]
-			have, err := configfile.Parse(give)
+			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			github := "github"
 			githubCom := "github.com"
@@ -40,6 +41,7 @@ perennial-branches = "rebase"
 			newBranchPush := true
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
+			syncBeforeShip := false
 			syncUpstream := true
 			want := configfile.Data{
 				Branches: configfile.Branches{
@@ -56,6 +58,7 @@ perennial-branches = "rebase"
 				},
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
+				SyncBeforeShip:           &syncBeforeShip,
 				SyncUpstream:             &syncUpstream,
 			}
 			must.Eq(t, want, *have)
@@ -67,7 +70,7 @@ perennial-branches = "rebase"
 [branches]
 main = "main"
 `[1:]
-			have, err := configfile.Parse(give)
+			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			main := "main"
 			want := configfile.Data{
@@ -79,6 +82,7 @@ main = "main"
 				SyncStrategy:             nil,
 				PushNewbranches:          nil,
 				ShipDeleteTrackingBranch: nil,
+				SyncBeforeShip:           nil,
 				SyncUpstream:             nil,
 			}
 			must.Eq(t, want, *have)
@@ -89,7 +93,7 @@ main = "main"
 			give := `
 branches.main = "main"
 `[1:]
-			have, err := configfile.Parse(give)
+			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			main := "main"
 			want := configfile.Data{ //nolint:exhaustruct
@@ -109,7 +113,7 @@ perennials = [
 	"two",
 ]
 `[1:]
-			have, err := configfile.Parse(give)
+			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			want := configfile.Data{ //nolint:exhaustruct
 				Branches: configfile.Branches{ //nolint:exhaustruct

@@ -11,7 +11,12 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const FileName = ".git-branches.toml"
+// Decode converts the given config file TOML source into Go data.
+func Decode(text string) (*Data, error) {
+	var result Data
+	_, err := toml.Decode(text, &result)
+	return &result, err
+}
 
 func Load() (*configdomain.PartialConfig, error) {
 	file, err := os.Open(FileName)
@@ -23,18 +28,11 @@ func Load() (*configdomain.PartialConfig, error) {
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	configFileData, err := Parse(string(bytes))
+	configFileData, err := Decode(string(bytes))
 	if err != nil {
 		return nil, fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
 	result, err := Validate(*configFileData)
-	return &result, err
-}
-
-// Parse converts the given config file TOML source into Go data.
-func Parse(text string) (*Data, error) {
-	var result Data
-	_, err := toml.Decode(text, &result)
 	return &result, err
 }
 
@@ -69,6 +67,9 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	if data.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = configdomain.NewShipDeleteTrackingBranchRef(*data.ShipDeleteTrackingBranch)
+	}
+	if data.SyncBeforeShip != nil {
+		result.SyncBeforeShip = configdomain.NewSyncBeforeShipRef(*data.SyncBeforeShip)
 	}
 	if data.SyncUpstream != nil {
 		result.SyncUpstream = configdomain.NewSyncUpstreamRef(*data.SyncUpstream)
