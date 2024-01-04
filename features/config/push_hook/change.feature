@@ -26,11 +26,20 @@ Feature: update the push-hook setting
       | true  | true  |
       | false | false |
 
-  @this
-  Scenario Outline: changing the configuration file
-    And the configuration file:
+  Scenario: changing an existing entry in the configuration file
+    Given the configuration file:
+      """
+      push-hook = true
+      """
+    When I run "git-town config push-hook false"
+    Then the configuration file is now:
       """
       push-hook = false
+      """
+
+  Scenario: creating an entry in the configuration file
+    Given the configuration file:
+      """
       """
     When I run "git-town config push-hook true"
     Then the configuration file is now:
