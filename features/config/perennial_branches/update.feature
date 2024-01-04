@@ -49,3 +49,20 @@ Feature: change the perennial branches
         perennials = ["qa", "staging"]
       """
     And local Git Town setting "perennial-branches" still doesn't exist
+
+  Scenario: remove perennial branches from existing entries in the config file
+    Given local Git Town setting "perennial-branches" doesn't exist
+    And the configuration file:
+      """
+      [branches]
+        perennials = ["qa", "staging"]
+      """
+    When I run "git-town config perennial-branches update" and answer the prompts:
+      | PROMPT                            | ANSWER               |
+      | Please specify perennial branches | [DOWN][SPACE][ENTER] |
+    And the configuration file is now:
+      """
+      [branches]
+        perennials = ["qa"]
+      """
+    And local Git Town setting "perennial-branches" still doesn't exist
