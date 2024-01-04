@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updatePerennialSummary = "Prompts to update your perennial branches"
+const updateSummary = "Prompts to update the perennial branches"
 
 func updateCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,
-		Short: updatePerennialSummary,
-		Long:  cmdhelpers.Long(updatePerennialSummary),
+		Short: updateSummary,
+		Long:  cmdhelpers.Long(updateSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeUpdate(readVerboseFlag(cmd))
 		},
