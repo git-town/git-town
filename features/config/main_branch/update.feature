@@ -4,6 +4,7 @@ Feature: configure the main branch
     When I run "git-town config main-branch main"
     Then it prints no output
     And local Git Town setting "main-branch" is now "main"
+    And no configuration file exists
 
   Scenario: empty local Git setting
     Given local Git Town setting "main-branch" is ""
@@ -13,6 +14,7 @@ Feature: configure the main branch
       NOTICE: cleaned up empty configuration entry "git-town.main-branch"
       """
     And local Git Town setting "main-branch" is now "main"
+    And no configuration file exists
 
   Scenario: update existing local Git setting
     Given the branches "old" and "new"
@@ -20,6 +22,7 @@ Feature: configure the main branch
     When I run "git-town config main-branch new"
     Then it prints no output
     And local Git Town setting "main-branch" is now "new"
+    And no configuration file exists
 
   Scenario: update to non-existing branch
     When I run "git-town config main-branch non-existing"

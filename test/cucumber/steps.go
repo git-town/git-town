@@ -665,6 +665,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^no configuration file exists$`, func() error {
+		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err == nil {
+			return fmt.Errorf("expected no configuration file but found one")
+		}
+		return nil
+	})
+
 	suite.Step(`^no lineage exists now$`, func() error {
 		if state.fixture.DevRepo.Config.ContainsLineage() {
 			lineage := state.fixture.DevRepo.Config.Lineage
