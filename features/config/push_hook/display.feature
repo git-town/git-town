@@ -78,7 +78,7 @@ Feature: display the push-hook setting
       yes
       """
 
-  Scenario: not set in config file
+  Scenario: empty config file
     Given the configuration file:
       """
       """
