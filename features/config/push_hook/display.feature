@@ -12,7 +12,7 @@ Feature: display the push-hook setting
       | --global |
       |          |
 
-  Scenario Outline: configured locally
+  Scenario Outline: configured in local Git metadata
     Given local Git Town setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook"
     Then it prints:
@@ -32,7 +32,7 @@ Feature: display the push-hook setting
       | f     | no     |
       | 0     | no     |
 
-  Scenario Outline: configured globally
+  Scenario Outline: configured in global Git metadata
     Given global Git Town setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook --global"
     Then it prints:
@@ -43,15 +43,7 @@ Feature: display the push-hook setting
     Examples:
       | VALUE | OUTPUT |
       | yes   | yes    |
-      | on    | yes    |
-      | true  | yes    |
-      | t     | yes    |
-      | 1     | yes    |
       | no    | no     |
-      | off   | no     |
-      | false | no     |
-      | f     | no     |
-      | 0     | no     |
 
   Scenario: global set, local not set
     Given global Git Town setting "push-hook" is "true"
@@ -74,6 +66,27 @@ Feature: display the push-hook setting
       | FLAG     | OUTPUT |
       | --global | yes    |
       |          | no     |
+
+  Scenario: set in config file
+    Given the configuration file:
+      """
+      push-hook = true
+      """
+    When I run "git-town config push-hook"
+    Then it prints:
+      """
+      yes
+      """
+
+  Scenario: not set in config file
+    Given the configuration file:
+      """
+      """
+    When I run "git-town config push-hook"
+    Then it prints:
+      """
+      yes
+      """
 
   Scenario: invalid value
     Given local Git Town setting "push-hook" is "zonk"
