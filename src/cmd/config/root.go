@@ -30,7 +30,7 @@ func RootCmd() *cobra.Command {
 	addVerboseFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
-	configCmd.AddCommand(perennialbranches.DisplayCmd())
+	configCmd.AddCommand(perennialbranches.RootCmd())
 	configCmd.AddCommand(pushHookCommand())
 	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(resetConfigCommand())

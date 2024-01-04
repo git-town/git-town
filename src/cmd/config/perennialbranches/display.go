@@ -15,7 +15,7 @@ const displayHelp = `
 Perennial branches are long-lived branches.
 They cannot be shipped.`
 
-func DisplayCmd() *cobra.Command {
+func RootCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "perennial-branches",
