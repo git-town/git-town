@@ -33,4 +33,4 @@ Feature: configure the sync-feature-strategy
       [sync-strategy]
         feature-branches = "merge"
       """
-    And local Git Town setting "push-new-branches" still doesn't exist
+    And local Git Town setting "sync-feature-strategy" still doesn't exist
