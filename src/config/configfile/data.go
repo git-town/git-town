@@ -2,9 +2,10 @@ package configfile
 
 // Data defines the Go equivalent of the TOML file content.
 type Data struct {
-	Branches                 Branches      `toml:"branches"`
+	Branches                 *Branches     `toml:"branches"`
 	CodeHosting              *CodeHosting  `toml:"code-hosting"`
 	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
+	PushHook                 *bool         `toml:"push-hook"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-remote-branch"`
 	SyncBeforeShip           *bool         `toml:"sync-before-ship"`

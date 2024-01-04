@@ -40,11 +40,13 @@ func Load() (*configdomain.PartialConfig, error) {
 func Validate(data Data) (configdomain.PartialConfig, error) {
 	result := configdomain.PartialConfig{} //nolint:exhaustruct
 	var err error
-	if data.Branches.Main != nil {
-		result.MainBranch = gitdomain.NewLocalBranchNameRef(*data.Branches.Main)
-	}
-	if data.Branches.Perennials != nil {
-		result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(data.Branches.Perennials...)
+	if data.Branches != nil {
+		if data.Branches.Main != nil {
+			result.MainBranch = gitdomain.NewLocalBranchNameRef(*data.Branches.Main)
+		}
+		if data.Branches.Perennials != nil {
+			result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(data.Branches.Perennials...)
+		}
 	}
 	if data.CodeHosting != nil {
 		if data.CodeHosting.Platform != nil {

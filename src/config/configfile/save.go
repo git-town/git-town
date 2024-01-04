@@ -41,7 +41,7 @@ func toData(config *configdomain.PartialConfig) Data {
 		branches.Perennials = config.PerennialBranches.Strings()
 	}
 	if !branches.IsEmpty() {
-		result.Branches = branches
+		result.Branches = &branches
 	}
 	// codehosting
 	codeHosting := CodeHosting{} //nolint:exhaustruct
@@ -68,6 +68,9 @@ func toData(config *configdomain.PartialConfig) Data {
 	// top-level fields
 	if config.NewBranchPush != nil {
 		result.PushNewbranches = (*bool)(config.NewBranchPush)
+	}
+	if config.PushHook != nil {
+		result.PushHook = (*bool)(config.PushHook)
 	}
 	if config.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = (*bool)(config.ShipDeleteTrackingBranch)
