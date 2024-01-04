@@ -28,7 +28,6 @@ Feature: configure the main branch
       there is no branch "non-existing"
       """
 
-  @this
   Scenario: not configured, config file exists
     Given local Git Town setting "main-branch" doesn't exist
     And a branch "new"
@@ -40,10 +39,11 @@ Feature: configure the main branch
     And the configuration file is now:
       """
       [branches]
-        main = "new"
+        main = "new2"
       """
     And local Git Town setting "main-branch" still doesn't exist
 
+  @this
   Scenario: already configured, config file exists
     Given the configuration file:
       """
