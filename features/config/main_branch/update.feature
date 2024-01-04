@@ -39,22 +39,23 @@ Feature: configure the main branch
     And the configuration file is now:
       """
       [branches]
-        main = "new2"
+        main = "new"
       """
     And local Git Town setting "main-branch" still doesn't exist
 
-  @this
-  Scenario: already configured, config file exists
-    Given the configuration file:
+  Scenario: config file exists with entry
+    Given local Git Town setting "main-branch" doesn't exist
+    And a branch "new"
+    And the configuration file:
       """
       [branches]
         main = "old"
       """
-    When I run "git-town config main-branch main"
+    When I run "git-town config main-branch new"
     Then it prints no output
     And the configuration file is now:
       """
       [branches]
-        main = "main"
+        main = "new"
       """
-    And local Git Town setting "main-branch" is now "main"
+    And local Git Town setting "main-branch" still doesn't exist
