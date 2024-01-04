@@ -12,6 +12,7 @@ import (
 
 func TestSave(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Encode", func(t *testing.T) {
 		t.Parallel()
 		mainBranch := gitdomain.LocalBranchName("main")
