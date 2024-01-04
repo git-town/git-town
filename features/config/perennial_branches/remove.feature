@@ -48,10 +48,9 @@ Feature: make a branch non-perennial
     And local Git Town setting "perennial-branches" still doesn't exist
 
   Scenario: remove a non-existing branch
-    Given the perennial branches are "qa"
     When I run "git-town config perennial-branches remove zonk"
     Then it prints the error:
       """
       branch "zonk" does not exist
       """
-    And the perennial branches are still "qa"
+    And there are still no perennial branches
