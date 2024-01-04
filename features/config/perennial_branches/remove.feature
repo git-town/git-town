@@ -3,6 +3,15 @@ Feature: make a branch non-perennial
   Background:
     Given the branches "staging" and "qa"
 
+  Scenario: existing branch, non-existing configuration
+    Given local Git Town setting "perennial-branches" doesn't exist
+    When I run "git-town config perennial-branches remove staging"
+    Then it prints the error:
+      """
+      branch "staging" is not perennial
+      """
+    And local Git Town setting "perennial-branches" still doesn't exist
+
   Scenario: remove an existing branch from existing Git configuration
     Given the perennial branches are "qa" and "staging"
     When I run "git-town config perennial-branches remove staging"
@@ -46,12 +55,3 @@ Feature: make a branch non-perennial
       branch "zonk" does not exist
       """
     And the perennial branches are still "qa"
-
-  Scenario: existing branch, non-existing configuration
-    Given local Git Town setting "perennial-branches" doesn't exist
-    When I run "git-town config perennial-branches remove staging"
-    Then it prints the error:
-      """
-      branch "staging" is not perennial
-      """
-    And local Git Town setting "perennial-branches" still doesn't exist
