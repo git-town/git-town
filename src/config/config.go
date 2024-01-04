@@ -100,6 +100,10 @@ func (self *Config) SetNewBranchPush(value configdomain.NewBranchPush, global bo
 		self.GlobalGitConfig.NewBranchPush = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
 	}
+	if self.configFile != nil {
+		self.configFile.NewBranchPush = &value
+		return configfile.Save(self.configFile)
+	}
 	self.LocalGitConfig.NewBranchPush = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
 }
