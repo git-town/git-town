@@ -13,7 +13,12 @@ func (self SyncBeforeShip) Bool() bool {
 	return bool(self)
 }
 
-func NewSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
+func NewSyncBeforeShipRef(value bool) *SyncBeforeShip {
+	result := SyncBeforeShip(value)
+	return &result
+}
+
+func ParseSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
 		return nil, fmt.Errorf(messages.ValueInvalid, source, value)

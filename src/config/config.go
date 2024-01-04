@@ -83,6 +83,10 @@ func (self *Config) RemoveParent(branch gitdomain.LocalBranchName) {
 // in the Git Town configuration.
 func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.MainBranch = branch
+	if self.configFile != nil {
+		self.configFile.MainBranch = &branch
+		return configfile.Save(self.configFile)
+	}
 	self.LocalGitConfig.MainBranch = &branch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
