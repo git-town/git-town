@@ -8,6 +8,14 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+func Encode(config *configdomain.PartialConfig) (string, error) {
+	data := toData(config)
+	buffer := strings.Builder{}
+	encoder := toml.NewEncoder(&buffer)
+	err := encoder.Encode(data)
+	return buffer.String(), err
+}
+
 func Save(config *configdomain.PartialConfig) error {
 	text, err := Encode(config)
 	if err != nil {
@@ -20,14 +28,6 @@ func Save(config *configdomain.PartialConfig) error {
 	defer file.Close()
 	_, err = file.WriteString(text)
 	return err
-}
-
-func Encode(config *configdomain.PartialConfig) (string, error) {
-	data := toData(config)
-	buffer := strings.Builder{}
-	encoder := toml.NewEncoder(&buffer)
-	err := encoder.Encode(data)
-	return buffer.String(), err
 }
 
 func toData(config *configdomain.PartialConfig) Data {
