@@ -26,7 +26,7 @@ Feature: make a branch perennial
       """
     And local Git Town setting "perennial-branches" still doesn't exist
 
-  Scenario: add an existing branch to existing perennial branches in the config file
+  Scenario: add an existing branch to the perennial branches in the config file
     Given local Git Town setting "perennial-branches" doesn't exist
     And the configuration file:
       """
