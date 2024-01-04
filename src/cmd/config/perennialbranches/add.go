@@ -56,7 +56,7 @@ func addPerennialBranch(branchStr string, verbose bool) error {
 	if !repo.Runner.Backend.HasLocalBranch(branchName) {
 		return fmt.Errorf("branch %q does not exist", branchName)
 	}
-	newPerennialBranches := append(repo.Runner.PerennialBranches, branchName)
+	newPerennialBranches := append(repo.Runner.PerennialBranches, branchName) //nolint:gocritic
 	newPerennialBranches.Sort()
 	return repo.Runner.Config.SetPerennialBranches(newPerennialBranches)
 }

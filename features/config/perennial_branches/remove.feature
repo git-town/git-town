@@ -54,4 +54,4 @@ Feature: make a branch non-perennial
       """
       branch "zonk" does not exist
       """
-    Then the perennial branches are still "qa"
+    And the perennial branches are still "qa"
