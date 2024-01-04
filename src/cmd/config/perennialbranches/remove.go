@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const removePerennialSummary = "Removes the given branch from the list of perennial branches"
+const removePerennialSummary = "Makes the given branch non-perennial"
 
 func removeCmd() *cobra.Command {
 	addRemoveVerboseFlag, readRemoveVerboseFlag := flags.Verbose()
