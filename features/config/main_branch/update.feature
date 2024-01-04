@@ -1,7 +1,6 @@
-@this
 Feature: configure the main branch
 
-  Scenario: not configured
+  Scenario: not configured, no config file
     When I run "git-town config main-branch main"
     Then it prints no output
     And local Git Town setting "main-branch" is now "main"
@@ -28,3 +27,17 @@ Feature: configure the main branch
       """
       there is no branch "non-existing"
       """
+
+  @this
+  Scenario: not configured, config file exists
+    Given the configuration file:
+      """
+      """
+    When I run "git-town config main-branch main"
+    Then it prints no output
+    And the configuration file is now:
+      """
+      [branches]
+      main = "main"
+      """
+    And local Git Town setting "main-branch" is now "main"

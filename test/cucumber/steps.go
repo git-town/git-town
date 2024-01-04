@@ -767,10 +767,25 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
-		state.fixture.DevRepo.CreateFile(
-			configfile.FileName,
-			content.Content,
-		)
+		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
+		return nil
+	})
+
+	suite.Step(`^the configuration file is now:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err != nil {
+			panic("no configuration file found")
+		}
+		want := content.Content
+		if have != want {
+			fmt.Println("\n\nEXISTING CONFIG FILE:")
+			fmt.Println(have)
+			fmt.Println("EXPECTED CONFIG FILE:")
+			fmt.Println(want)
+			fmt.Println("EXPECTED CONFIG FILE END")
+			fmt.Println()
+			panic("mismatching config file content")
+		}
 		return nil
 	})
 
