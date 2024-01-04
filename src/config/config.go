@@ -160,8 +160,12 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 }
 
 func (self *Config) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
-	self.LocalGitConfig.SyncFeatureStrategy = &value
 	self.FullConfig.SyncFeatureStrategy = value
+	if self.configFile != nil {
+		self.configFile.SyncFeatureStrategy = &value
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.SyncFeatureStrategy = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
 }
 
