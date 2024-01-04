@@ -1,4 +1,4 @@
-Feature: add perennial branches
+Feature: make a branch perennial
 
   Background:
     Given the branches "staging" and "qa"

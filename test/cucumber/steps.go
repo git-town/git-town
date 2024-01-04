@@ -784,7 +784,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the configuration file is now:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+	suite.Step(`^the configuration file is (?:now|still):$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err != nil {
 			return fmt.Errorf("no configuration file found")
