@@ -46,7 +46,7 @@ Feature: configure the main branch
       """
     And local Git Town setting "main-branch" still doesn't exist
 
-  Scenario: config file exists with entry
+  Scenario: existing entry in config file
     Given local Git Town setting "main-branch" doesn't exist
     And a branch "new"
     And the configuration file:
