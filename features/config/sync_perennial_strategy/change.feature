@@ -1,4 +1,4 @@
-Feature: configure the sync_perennial_strategy
+Feature: configure the sync-perennial-strategy
 
   Scenario Outline:
     When I run "git-town config sync-perennial-strategy <VALUE>"
