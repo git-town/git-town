@@ -3,8 +3,17 @@ Feature: add perennial branches
   Background:
     Given the branches "staging" and "qa"
 
-  @this
-  Scenario: add a perennial branch to existing Git configuration
+  Scenario: add an existing branch to missing Git configuration
+    Given the perennial branches are "qa"
+    When I run "git-town config perennial-branches add staging"
+    Then the perennial branches are now "qa" and "staging"
+
+  Scenario: add an existing branch to an existing Git configuration
+    Given the perennial branches are "qa"
+    When I run "git-town config perennial-branches add staging"
+    Then the perennial branches are now "qa" and "staging"
+
+  Scenario: add a non-existing branch to an existing Git configuration
     Given the perennial branches are "qa"
     When I run "git-town config perennial-branches add staging"
     Then the perennial branches are now "qa" and "staging"

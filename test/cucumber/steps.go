@@ -327,7 +327,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if cmp.Equal(*have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+		return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
