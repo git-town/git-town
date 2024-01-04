@@ -1032,7 +1032,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.RemovePerennialBranchConfiguration()
 	})
 
-	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(name string) error {
 		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
