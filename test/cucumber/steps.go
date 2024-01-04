@@ -665,7 +665,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^no configuration file exists$`, func() error {
+	suite.Step(`^still no configuration file exists$`, func() error {
 		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err == nil {
 			return fmt.Errorf("expected no configuration file but found one")
