@@ -19,7 +19,7 @@ Feature: make a branch perennial
       """
       """
     When I run "git-town config perennial-branches add staging"
-    And the configuration file is now:
+    Then the configuration file is now:
       """
       [branches]
         perennials = ["staging"]
@@ -34,7 +34,7 @@ Feature: make a branch perennial
         perennials = ["staging"]
       """
     When I run "git-town config perennial-branches add qa"
-    And the configuration file is now:
+    Then the configuration file is now:
       """
       [branches]
         perennials = ["qa", "staging"]
