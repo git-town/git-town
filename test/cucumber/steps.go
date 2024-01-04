@@ -776,7 +776,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			panic("no configuration file found")
 		}
-		want := content.Content
+		have = strings.TrimSpace(have)
+		want := strings.TrimSpace(content.Content)
 		if have != want {
 			fmt.Println("\n\nEXISTING CONFIG FILE:")
 			fmt.Println(have)

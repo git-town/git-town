@@ -38,6 +38,6 @@ Feature: configure the main branch
     And the configuration file is now:
       """
       [branches]
-      main = "main"
+        main = "main"
       """
     And local Git Town setting "main-branch" is now "main"
