@@ -39,6 +39,7 @@ func TestSave(t *testing.T) {
 		have, err := configfile.Encode(&config)
 		must.NoError(t, err)
 		want := `
+push-hook = true
 push-new-branches = false
 ship-delete-remote-branch = false
 sync-before-ship = false
@@ -85,6 +86,7 @@ sync-upstream = true
 		must.NoError(t, err)
 		have := string(bytes)
 		want := `
+push-hook = true
 push-new-branches = false
 ship-delete-remote-branch = false
 sync-before-ship = false
