@@ -46,3 +46,37 @@ Feature: display the currently configured sync-feature-strategy
       | FLAG     | OUTPUT |
       | --global | merge  |
       |          | rebase |
+
+  Scenario: empty config file
+    Given the configuration file:
+      """
+      """
+    When I run "git-town config sync-feature-strategy"
+    Then it prints:
+      """
+      merge
+      """
+
+  Scenario: set in config file
+    Given the configuration file:
+      """
+      [sync-strategy]
+        feature-branches = "rebase"
+      """
+    When I run "git-town config sync-feature-strategy"
+    Then it prints:
+      """
+      rebase
+      """
+
+  Scenario: illegal setting in config file
+    Given the configuration file:
+      """
+      [sync-strategy]
+        feature-branches = "zonk"
+      """
+    When I run "git-town config sync-feature-strategy"
+    Then it prints the error:
+      """
+      unknown sync-feature strategy: "zonk"
+      """
