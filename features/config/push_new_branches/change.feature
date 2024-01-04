@@ -42,6 +42,7 @@ Feature: set push-new-branches
       """
       push-new-branches = true
       """
+    And local Git Town setting "push-new-branches" still doesn't exist
 
   Scenario: change existing value in config file
     Given the configuration file:
@@ -53,3 +54,4 @@ Feature: set push-new-branches
       """
       push-new-branches = false
       """
+    And local Git Town setting "push-new-branches" still doesn't exist
