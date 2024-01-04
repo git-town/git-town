@@ -30,8 +30,24 @@ Feature: configure the main branch
 
   @this
   Scenario: not configured, config file exists
+    Given a branch "new"
+    And the configuration file:
+      """
+      """
+    When I run "git-town config main-branch new"
+    Then it prints no output
+    And the configuration file is now:
+      """
+      [branches]
+        main = "new"
+      """
+    And local Git Town setting "main-branch" is now "main"
+
+  Scenario: already configured, config file exists
     Given the configuration file:
       """
+      [branches]
+        main = "old"
       """
     When I run "git-town config main-branch main"
     Then it prints no output
