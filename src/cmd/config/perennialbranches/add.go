@@ -2,6 +2,7 @@ package perennialbranches
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -51,10 +52,12 @@ func addPerennialBranch(branchStr string, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	// check if branch exists
 	branchName := gitdomain.NewLocalBranchName(branchStr)
 	if !repo.Runner.Backend.HasLocalBranch(branchName) {
 		return fmt.Errorf("branch %q does not exist", branchName)
+	}
+	if slices.Contains(repo.Runner.PerennialBranches, branchName) {
+		return fmt.Errorf("branch %q is already perennial", branchName)
 	}
 	newPerennialBranches := append(repo.Runner.PerennialBranches, branchName) //nolint:gocritic
 	newPerennialBranches.Sort()

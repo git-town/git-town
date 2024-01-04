@@ -8,10 +8,19 @@ Feature: make a branch perennial
     When I run "git-town config perennial-branches add staging"
     Then the perennial branches are now "staging"
 
-  Scenario: add an existing branch to existing Git configuration
+  Scenario: add a non-perennial branch to existing Git configuration
     Given the perennial branches are "qa"
     When I run "git-town config perennial-branches add staging"
     Then the perennial branches are now "qa" and "staging"
+
+  Scenario: add an already perennial branch to existing Git configuration
+    Given the perennial branches are "qa"
+    When I run "git-town config perennial-branches add qa"
+    Then it prints the error:
+      """
+      branch "qa" is already perennial
+      """
+    Then the perennial branches are still "qa"
 
   Scenario: add an existing branch to an empty config file
     Given local Git Town setting "perennial-branches" doesn't exist

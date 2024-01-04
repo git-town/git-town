@@ -52,12 +52,10 @@ func removePerennialBranch(branchStr string, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	// check if branch exists
 	branchName := gitdomain.NewLocalBranchName(branchStr)
 	if !repo.Runner.Backend.HasLocalBranch(branchName) {
 		return fmt.Errorf("branch %q does not exist", branchName)
 	}
-	// check if branch is perennial branch
 	if !slices.Contains(repo.Runner.PerennialBranches, branchName) {
 		return fmt.Errorf("branch %q is not perennial", branchName)
 	}
