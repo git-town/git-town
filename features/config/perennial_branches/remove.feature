@@ -32,7 +32,7 @@ Feature: make a branch non-perennial
       """
     And local Git Town setting "perennial-branches" still doesn't exist
 
-  Scenario: remove an existing perennial branch from the config file
+  Scenario: remove a perennial branch from the config file
     Given local Git Town setting "perennial-branches" doesn't exist
     And the configuration file:
       """
