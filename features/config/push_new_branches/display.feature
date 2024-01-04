@@ -12,7 +12,7 @@ Feature: display the push-new-branches setting
       |          |
       | --global |
 
-  Scenario Outline: configured locally
+  Scenario Outline: configured in local Git metadata
     Given local Git Town setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches"
     Then it prints:
@@ -32,7 +32,7 @@ Feature: display the push-new-branches setting
       | f     | no     |
       | 0     | no     |
 
-  Scenario Outline: configured globally
+  Scenario Outline: configured in global Git metadata
     Given global Git Town setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches --global"
     Then it prints:
@@ -43,23 +43,7 @@ Feature: display the push-new-branches setting
     Examples:
       | VALUE | OUTPUT |
       | yes   | yes    |
-      | on    | yes    |
-      | true  | yes    |
-      | 1     | yes    |
-      | t     | yes    |
       | no    | no     |
-      | off   | no     |
-      | false | no     |
-      | f     | no     |
-      | 0     | no     |
-
-  Scenario: global set, local not set
-    Given global Git Town setting "push-new-branches" is "true"
-    When I run "git-town config push-new-branches"
-    Then it prints:
-      """
-      yes
-      """
 
   Scenario Outline: global and local set to different values
     Given global Git Town setting "push-new-branches" is "true"
@@ -75,10 +59,42 @@ Feature: display the push-new-branches setting
       | --global | yes    |
       |          | no     |
 
-  Scenario: invalid value
+  Scenario: empty config file
+    Given the configuration file:
+      """
+      """
+    When I run "git-town config push-new-branches"
+    Then it prints:
+      """
+      no
+      """
+
+  Scenario: set in config file
+    Given the configuration file:
+      """
+      push-new-branches = true
+      """
+    When I run "git-town config push-new-branches"
+    Then it prints:
+      """
+      yes
+      """
+
+  Scenario: invalid value in Git config
     Given Git Town setting "push-new-branches" is "zonk"
     When I run "git-town config push-new-branches"
     Then it prints the error:
       """
-      Error: invalid value for git-town.push-new-branches: "zonk". Please provide either "yes" or "no"
+      invalid value for git-town.push-new-branches: "zonk". Please provide either "yes" or "no"
+      """
+
+  Scenario: invalid value in config file
+    Given the configuration file:
+      """
+      push-new-branches = zonk
+      """
+    When I run "git-town config push-new-branches"
+    Then it prints the error:
+      """
+      the configuration file ".git-branches.yml" does not contain TOML-formatted content: toml: line 1 (last key "push-new-branches"): expected value but found "zonk" instead
       """

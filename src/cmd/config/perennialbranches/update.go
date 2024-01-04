@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updateSummary = "Updates all perennial branches through a dialog"
+const updateSummary = "Updates all perennial branches through a visual dialog"
 
 func updateCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
