@@ -1,0 +1,12 @@
+push-new-branches = false
+ship-delete-remote-branch = false
+sync-before-ship = false
+sync-upstream = true
+
+[branches]
+  main = "main"
+  perennials = ["one", "two"]
+
+[sync-strategy]
+  feature-branches = "merge"
+  perennial-branches = "rebase"

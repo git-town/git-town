@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/format"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/cmd/config/perennialbranches"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
@@ -29,7 +30,7 @@ func RootCmd() *cobra.Command {
 	addVerboseFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
-	configCmd.AddCommand(perennialBranchesCmd())
+	configCmd.AddCommand(perennialbranches.DisplayCmd())
 	configCmd.AddCommand(pushHookCommand())
 	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(resetConfigCommand())
