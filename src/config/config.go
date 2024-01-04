@@ -142,6 +142,11 @@ func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	self.LocalGitConfig.PushHook = &value
 	self.PushHook = value
+	if self.configFile != nil {
+		self.configFile.PushHook = &value
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 

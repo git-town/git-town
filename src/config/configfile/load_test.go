@@ -15,6 +15,7 @@ func TestConfigfile(t *testing.T) {
 		t.Run("complete content", func(t *testing.T) {
 			t.Parallel()
 			give := `
+push-hook = true
 push-new-branches = true
 ship-delete-remote-branch = false
 sync-before-ship = false
@@ -39,12 +40,13 @@ perennial-branches = "rebase"
 			main := "main"
 			merge := "merge"
 			newBranchPush := true
+			pushHook := true
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
 			syncBeforeShip := false
 			syncUpstream := true
 			want := configfile.Data{
-				Branches: configfile.Branches{
+				Branches: &configfile.Branches{
 					Main:       &main,
 					Perennials: []string{"public", "release"},
 				},
@@ -56,6 +58,7 @@ perennial-branches = "rebase"
 					FeatureBranches:   &merge,
 					PerennialBranches: &rebase,
 				},
+				PushHook:                 &pushHook,
 				PushNewbranches:          &newBranchPush,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
 				SyncBeforeShip:           &syncBeforeShip,
@@ -74,13 +77,14 @@ main = "main"
 			must.NoError(t, err)
 			main := "main"
 			want := configfile.Data{
-				Branches: configfile.Branches{
+				Branches: &configfile.Branches{
 					Main:       &main,
 					Perennials: nil,
 				},
 				CodeHosting:              nil,
 				SyncStrategy:             nil,
 				PushNewbranches:          nil,
+				PushHook:                 nil,
 				ShipDeleteTrackingBranch: nil,
 				SyncBeforeShip:           nil,
 				SyncUpstream:             nil,
@@ -97,7 +101,7 @@ branches.main = "main"
 			must.NoError(t, err)
 			main := "main"
 			want := configfile.Data{ //nolint:exhaustruct
-				Branches: configfile.Branches{ //nolint:exhaustruct
+				Branches: &configfile.Branches{ //nolint:exhaustruct
 					Main: &main,
 				},
 			}
@@ -116,7 +120,7 @@ perennials = [
 			have, err := configfile.Decode(give)
 			must.NoError(t, err)
 			want := configfile.Data{ //nolint:exhaustruct
-				Branches: configfile.Branches{ //nolint:exhaustruct
+				Branches: &configfile.Branches{ //nolint:exhaustruct
 					Perennials: []string{"one", "two"},
 				},
 			}
