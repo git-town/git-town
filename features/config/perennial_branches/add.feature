@@ -20,7 +20,7 @@ Feature: make a branch perennial
       """
       branch "qa" is already perennial
       """
-    Then the perennial branches are still "qa"
+    And the perennial branches are still "qa"
 
   Scenario: add an existing branch to an empty config file
     Given local Git Town setting "perennial-branches" doesn't exist
