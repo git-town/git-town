@@ -25,3 +25,17 @@ Feature: display the perennial branches
       qa
       production
       """
+
+  Scenario: configured in config file
+    Given local Git Town setting "perennial-branches" doesn't exist
+    And the configuration file:
+      """
+      [branches]
+        perennials = ["qa", "production"]
+      """
+    When I run "git-town config perennial-branches"
+    Then it prints:
+      """
+      qa
+      production
+      """
