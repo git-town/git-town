@@ -27,6 +27,8 @@ func RootCmd() *cobra.Command {
 		},
 	}
 	addVerboseFlag(&cmd)
+	cmd.AddCommand(addCmd())
+	cmd.AddCommand(removeCmd())
 	cmd.AddCommand(updateCmd())
 	return &cmd
 }

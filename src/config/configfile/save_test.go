@@ -79,6 +79,7 @@ sync-upstream = true
 			SyncUpstream:             &syncUpstream,
 		}
 		err := configfile.Save(&config)
+		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
 		bytes, err := os.ReadFile(configfile.FileName)
 		must.NoError(t, err)
