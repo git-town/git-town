@@ -14,17 +14,17 @@ import (
 const removePerennialSummary = "Makes the given branch non-perennial"
 
 func removeCmd() *cobra.Command {
-	addRemoveVerboseFlag, readRemoveVerboseFlag := flags.Verbose()
+	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "remove",
 		Args:  cobra.ExactArgs(1),
 		Short: removePerennialSummary,
 		Long:  cmdhelpers.Long(removePerennialSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return removePerennialBranch(args[0], readRemoveVerboseFlag(cmd))
+			return removePerennialBranch(args[0], readVerboseFlag(cmd))
 		},
 	}
-	addRemoveVerboseFlag(&cmd)
+	addVerboseFlag(&cmd)
 	return &cmd
 }
 
