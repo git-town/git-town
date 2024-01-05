@@ -41,7 +41,7 @@ func TestSave(t *testing.T) {
 		want := `
 push-hook = true
 push-new-branches = false
-ship-delete-remote-branch = false
+ship-delete-tracking-branch = false
 sync-before-ship = false
 sync-upstream = true
 
@@ -88,7 +88,7 @@ sync-upstream = true
 		want := `
 push-hook = true
 push-new-branches = false
-ship-delete-remote-branch = false
+ship-delete-tracking-branch = false
 sync-before-ship = false
 sync-upstream = true
 
