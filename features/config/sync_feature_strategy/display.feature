@@ -20,7 +20,7 @@ Feature: display the currently configured sync-feature-strategy
       | rebase |
       | merge  |
 
-  Scenario Outline: global setting in Git metadata
+  Scenario Outline: configured in global Git metadata
     Given global Git Town setting "sync-feature-strategy" is "<VALUE>"
     When I run "git-town config sync-feature-strategy"
     Then it prints:

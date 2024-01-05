@@ -24,7 +24,7 @@ Feature: set sync-before-ship
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
-  Scenario Outline: global setting in Git metadata
+  Scenario Outline: configured in global Git metadata
     When I run "git-town config sync-before-ship --global <GIVE>"
     Then global Git Town setting "sync-before-ship" is now "<WANT>"
 
