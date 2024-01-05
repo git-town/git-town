@@ -19,20 +19,19 @@ import (
 const renameBranchDesc = "Renames a branch both locally and remotely"
 
 const renameBranchHelp = `
-Renames the given branch in the local and origin repository.
-Aborts if the new branch name already exists or the tracking branch is out of sync.
+Renames the given branch in the local and origin repository. Aborts if the new branch name already exists or the tracking branch is out of sync.
 
 - creates a branch with the new name
 - deletes the old branch
 
-When there is an origin repository
+When there is an origin repository:
 - syncs the repository
 
-When there is a tracking branch
+When there is a tracking branch:
 - pushes the new branch to the origin repository
 - deletes the old branch from the origin repository
 
-When run on a perennial branch
+When run on a perennial branch:
 - confirm with the "--force"/"-f" option
 - registers the new perennial branch name in the local Git Town configuration`
 
