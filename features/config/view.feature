@@ -31,7 +31,7 @@ Feature: show the configuration
     Given the configuration file:
       """
       push-new-branches = true
-      ship-delete-remote-branch = true
+      ship-delete-tracking-branch = true
       sync-upstream = true
 
       [branches]
@@ -74,14 +74,14 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And the perennial branches are "git-perennial-1" and "git-perennial-2"
     And Git Town setting "push-new-branches" is "false"
-    And Git Town setting "ship-delete-remote-branch" is "false"
+    And Git Town setting "ship-delete-tracking-branch" is "false"
     And Git Town setting "sync-upstream" is "false"
     And Git Town setting "sync-perennial-strategy" is "merge"
     And Git Town setting "sync-feature-strategy" is "merge"
     And the configuration file:
       """
       push-new-branches = true
-      ship-delete-remote-branch = true
+      ship-tracking-remote-branch = true
       sync-upstream = true
 
       [branches]

@@ -29,4 +29,4 @@ Git workspace.
 If your origin server deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
-[disable deleting remote branches](../preferences/ship-delete-remote-branch.md).
+[disable deleting remote branches](../preferences/ship-delete-tracking-branch.md).

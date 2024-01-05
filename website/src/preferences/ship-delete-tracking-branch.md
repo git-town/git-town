@@ -1,7 +1,7 @@
-# ship-delete-remote-branch
+# ship-delete-tracking-branch
 
 ```
-git-town.ship-delete-remote-branch=<true|false>
+git-town.ship-delete-tracking-branch=<true|false>
 ```
 
 If set to `true` (default value), [git ship](../commands/ship.md) deletes the
