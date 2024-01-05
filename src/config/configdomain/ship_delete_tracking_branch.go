@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-// ShipDeleteTrackingBranch contains the configuration setting about whether to delete the remote branch when shipping.
+// ShipDeleteTrackingBranch contains the configuration setting about whether to delete the tracking branch when shipping.
 type ShipDeleteTrackingBranch bool
 
 func (self ShipDeleteTrackingBranch) Bool() bool {
