@@ -386,6 +386,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, *have)
 	})
 
+	suite.Step(`^global Git Town setting "sync-upstream" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncUpstream
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncUpstream(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but was %v`, want, *have)
+	})
+
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
 		state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName(branch),
@@ -698,6 +709,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		asserts.NoError(err)
 		if *have != want {
 			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncUpstream(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but was %v`, want, have)
 		}
 		return nil
 	})
