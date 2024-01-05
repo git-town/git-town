@@ -21,15 +21,9 @@ import (
 const prependDesc = "Creates a new feature branch as the parent of the current branch"
 
 const prependHelp = `
-Syncs the parent branch,
-cuts a new feature branch with the given name off the parent branch,
-makes the new branch the parent of the current branch,
-pushes the new feature branch to the origin repository
-(if "push-new-branches" is true),
-and brings over all uncommitted changes to the new feature branch.
+Syncs the parent branch, cuts a new feature branch with the given name off the parent branch, makes the new branch the parent of the current branch, pushes the new feature branch to the origin repository (if "push-new-branches" is true), and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for upstream remote options.
-`
+See "sync" for upstream remote options.`
 
 func prependCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
