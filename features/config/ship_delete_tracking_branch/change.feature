@@ -1,6 +1,6 @@
 Feature: set ship-delete-tracking-branch
 
-  Scenario Outline: local setting in Git metadata
+  Scenario Outline: configured in local Git metadata
     When I run "git-town config ship-delete-tracking-branch <GIVE>"
     Then local Git Town setting "ship-delete-tracking-branch" is now "<WANT>"
 

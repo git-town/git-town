@@ -7,7 +7,7 @@ Feature: display the currently configured sync-feature-strategy
       merge
       """
 
-  Scenario Outline: local setting in Git metadata
+  Scenario Outline: configured in local Git metadata
     Given local Git Town setting "sync-feature-strategy" is "<VALUE>"
     When I run "git-town config sync-feature-strategy"
     Then it prints:

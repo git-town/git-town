@@ -1,6 +1,6 @@
 Feature: set push-new-branches
 
-  Scenario Outline: local setting in Git metadata
+  Scenario Outline: configured in local Git metadata
     When I run "git-town config push-new-branches <GIVE>"
     Then local Git Town setting "push-new-branches" is now "<WANT>"
 
