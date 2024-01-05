@@ -211,7 +211,16 @@ func (self *Config) SetSyncPerennialStrategy(strategy configdomain.SyncPerennial
 }
 
 // SetSyncUpstream updates the configured sync-upstream strategy.
-func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream) error {
+func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool) error {
+	self.FullConfig.SyncUpstream = value
+	if global {
+		self.GlobalGitConfig.SyncUpstream = &value
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
+	}
+	if self.configFile != nil {
+		self.configFile.SyncUpstream = &value
+		return configfile.Save(self.configFile)
+	}
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
