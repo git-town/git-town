@@ -13,8 +13,7 @@ import (
 const syncFeatureStrategyDesc = "Displays or sets your sync-feature strategy"
 
 const syncFeatureStrategyHelp = `
-The sync-feature strategy specifies what strategy to use
-when merging remote tracking branches into local feature branches.`
+The sync-feature strategy specifies what strategy to use when merging remote tracking branches into local feature branches.`
 
 func syncFeatureStrategyCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

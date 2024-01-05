@@ -19,15 +19,9 @@ import (
 const repoDesc = "Opens the repository homepage"
 
 const repoHelp = `
-Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
-Derives the Git provider from the "origin" remote.
-You can override this detection with
-"git config %s <DRIVER>"
-where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
+Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket. Derives the Git provider from the "origin" remote. You can override this detection with "git config %s <DRIVER>" where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
-When using SSH identities, run
-"git config %s <HOSTNAME>"
-where HOSTNAME matches what is in your ssh config file.`
+When using SSH identities, run "git config %s <HOSTNAME>" where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

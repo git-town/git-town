@@ -18,8 +18,7 @@ import (
 const shipDeleteTrackingBranchDesc = `Displays or changes whether "git ship" deletes tracking branches`
 
 const shipDeleteTrackingBranchHelp = `
-If "ship-delete-tracking-branches" is enabled, the "git ship" command
-deletes the tracking branch of the branch it ships.`
+If "ship-delete-tracking-branches" is enabled, the "git ship" command deletes the tracking branch of the branch it ships.`
 
 func shipDeleteTrackingBranchCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
