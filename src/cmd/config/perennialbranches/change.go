@@ -13,7 +13,7 @@ const updateSummary = "Updates all perennial branches through a visual dialog"
 func updateCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "update",
+		Use:   "change",
 		Args:  cobra.NoArgs,
 		Short: updateSummary,
 		Long:  cmdhelpers.Long(updateSummary),
