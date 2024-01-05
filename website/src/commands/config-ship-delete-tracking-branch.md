@@ -1,6 +1,6 @@
 # git town config ship-delete-tracking-branch [(yes|no)]
 
-The _push-new-branches_ configuration command displays or updates the
+The _ship-delete-tracking-branch_ configuration command displays or updates the
 ship-delete-tracking-branch configuration setting. If set to `yes`,
 [ship](ship.md) deletes the tracking branch of shipped branches. Disable this if
 your code hosting service deletes shipped branches on its end.
