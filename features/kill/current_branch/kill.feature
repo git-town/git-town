@@ -40,7 +40,7 @@ Feature: delete the current feature branch
       |         | git branch current {{ sha 'WIP on current' }}                 |
       |         | git checkout current                                          |
       | current | git reset --soft HEAD~1                                       |
-    d the current branch is now "current"
+    And the current branch is now "current"
     And the uncommitted file still exists
     And the initial commits exist
     And the initial branches and lineage exist
