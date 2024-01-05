@@ -35,6 +35,8 @@
     - [main-branch](commands/config-main-branch.md)
     - [offline](commands/config-offline.md)
     - [perennial-branches](commands/config-perennial-branches.md)
+    - [ship-delete-tracking-branch](commands/config-ship-delete-tracking-branch.md)
+    - [sync-before-ship](commands/config-sync-before-ship.md)
     - [sync-perennial-strategy](commands/config-sync-perennial-strategy.md)
     - [sync-feature-strategy](commands/config-sync-feature-strategy.md)
 - [Preferences](preferences.md)
