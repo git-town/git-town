@@ -1,6 +1,6 @@
 Feature: change offline mode
 
-  Scenario Outline: configured in local Git metadata
+  Scenario Outline: writing to local Git metadata
     When I run "git-town config offline <GIVE>"
     Then global Git Town setting "offline" is now "<WANT>"
 
