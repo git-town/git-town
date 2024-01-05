@@ -1,6 +1,6 @@
 Feature: change offline mode
 
-  Scenario Outline: valid settings
+  Scenario Outline: valid settings in Git metadata
     When I run "git-town config offline <GIVE>"
     Then global Git Town setting "offline" is now "<WANT>"
 
@@ -17,7 +17,7 @@ Feature: change offline mode
       | off   | false |
       | no    | false |
 
-  Scenario: invalid value
+  Scenario: invalid value in Git metadata
     Given global Git Town setting "offline" is "false"
     When I run "git-town config offline zonk"
     Then it prints the error:

@@ -7,7 +7,7 @@ Feature: display the current offline status
       no
       """
 
-  Scenario Outline: valid settings
+  Scenario Outline: valid settings in Git metadata
     Given global Git Town setting "offline" is "<VALUE>"
     When I run "git-town config offline"
     Then it prints:
@@ -27,7 +27,7 @@ Feature: display the current offline status
       | f     | no     |
       | 0     | no     |
 
-  Scenario: invalid value
+  Scenario: invalid value in Git metadata
     Given global Git Town setting "offline" is "zonk"
     When I run "git-town config offline"
     Then it prints the error:
