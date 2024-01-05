@@ -81,7 +81,7 @@ Feature: show the configuration
     And the configuration file:
       """
       push-new-branches = true
-      ship-tracking-remote-branch = true
+      ship-delete-tracking-branch = true
       sync-upstream = true
 
       [branches]
