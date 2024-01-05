@@ -38,7 +38,7 @@ It can interfere with Git Town's attempts to also delete this branch after
 shipping it. To make Git Town play along, run:
 
 ```
-git config git-town.ship-delete-remote-branch false
+git config git-town.ship-delete-tracking-branch false
 ```
 
 ## Shell autocompletion

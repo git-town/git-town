@@ -47,7 +47,7 @@
   - [push-new-branches](preferences/push-new-branches.md)
   - [parent](preferences/parent.md)
   - [pererennial-branches](preferences/perennial-branches.md)
-  - [ship-delete-remote-branch](preferences/ship-delete-remote-branch.md)
+  - [ship-delete-tracking-branch](preferences/ship-delete-tracking-branch.md)
   - [sync-feature-strategy](preferences/sync-feature-strategy.md)
   - [sync-perennial-strategy](preferences/sync-perennial-strategy.md)
   - [sync-upstream](preferences/sync-upstream.md)

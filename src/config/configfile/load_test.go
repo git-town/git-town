@@ -17,7 +17,7 @@ func TestConfigfile(t *testing.T) {
 			give := `
 push-hook = true
 push-new-branches = true
-ship-delete-remote-branch = false
+ship-delete-tracking-branch = false
 sync-before-ship = false
 sync-upstream = true
 
