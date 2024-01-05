@@ -10,7 +10,7 @@ import (
 
 const updateSummary = "Updates all perennial branches through a visual dialog"
 
-func updateCmd() *cobra.Command {
+func changeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "change",
