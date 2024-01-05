@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
   Scenario Outline:
     Given <LOCATION> Git Town setting "ship-delete-remote-branch" is "true"
     When I run "git-town <COMMAND>"
