@@ -1,3 +1,4 @@
+@skipWindows
 Feature: enter the commit message interactively via the editor
 
   Background:
