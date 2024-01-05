@@ -169,6 +169,20 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 
+func (self *Config) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global bool) error {
+	self.FullConfig.SyncBeforeShip = value
+	if global {
+		self.GlobalGitConfig.SyncBeforeShip = &value
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
+	}
+	if self.configFile != nil {
+		self.configFile.SyncBeforeShip = &value
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.SyncBeforeShip = &value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
+}
+
 func (self *Config) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.FullConfig.SyncFeatureStrategy = value
 	if self.configFile != nil {

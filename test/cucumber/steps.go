@@ -355,6 +355,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but was %v`, want, *have)
 	})
 
+	suite.Step(`^global Git Town setting "sync-before-ship" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncBeforeShip
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncBeforeShip(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-before-ship" to be %v, but was %v`, want, *have)
+	})
+
 	suite.Step(`^global Git Town setting "sync-feature-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
@@ -656,6 +667,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := configdomain.ShipDeleteTrackingBranch(wantBool)
 		if *have != want {
 			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-before-ship" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncBeforeShip
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncBeforeShip(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-before-ship" to be %v, but was %v`, want, have)
 		}
 		return nil
 	})
