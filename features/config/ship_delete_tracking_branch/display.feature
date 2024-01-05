@@ -1,6 +1,6 @@
 Feature: display the ship-delete-tracking-branch setting
 
-  Scenario Outline: default setting
+  Scenario Outline: default value
     When I run "git-town config ship-delete-tracking-branch <FLAG>"
     Then it prints:
       """
