@@ -18,7 +18,7 @@ import (
 const syncUpstreamDesc = `Displays or changes whether "git sync" pulls main branch updates from the "upstream" remote`
 
 const syncUpstreamHelp = `
-If "sync-upstream" is enabled, and your Git repository has an "upstream" remote, "git sync" will also pull updates from the main branch at that upstream remote.`
+If "sync-upstream" is enabled, and your Git repository has a Git remote named "upstream", "git sync" will also pull updates from the main branch at that upstream remote.`
 
 func syncUpstreamCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
