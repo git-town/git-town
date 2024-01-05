@@ -2,6 +2,7 @@ package configdomain
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -11,6 +12,10 @@ type SyncBeforeShip bool
 
 func (self SyncBeforeShip) Bool() bool {
 	return bool(self)
+}
+
+func (self SyncBeforeShip) String() string {
+	return strconv.FormatBool(self.Bool())
 }
 
 func NewSyncBeforeShipRef(value bool) *SyncBeforeShip {
