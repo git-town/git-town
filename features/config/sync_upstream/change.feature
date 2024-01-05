@@ -1,6 +1,6 @@
 Feature: set sync-upstream
 
-  Scenario Outline: configured in local Git metadata
+  Scenario Outline: write to local Git metadata
     When I run "git-town config sync-upstream <GIVE>"
     Then local Git Town setting "sync-upstream" is now "<WANT>"
 
@@ -24,7 +24,7 @@ Feature: set sync-upstream
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
-  Scenario Outline: configured in global Git metadata
+  Scenario Outline: write to global Git metadata
     When I run "git-town config sync-upstream --global <GIVE>"
     Then global Git Town setting "sync-upstream" is now "<WANT>"
 
