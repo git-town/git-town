@@ -35,7 +35,7 @@ Feature: in a local repo
       | BRANCH  | COMMAND                                       |
       | main    | git branch feature {{ sha 'WIP on feature' }} |
       |         | git checkout feature                          |
-      | feature | git reset --soft HEAD^                        |
+      | feature | git reset --soft HEAD~1                       |
     And the current branch is now "feature"
     And the uncommitted file still exists
     And the initial commits exist
