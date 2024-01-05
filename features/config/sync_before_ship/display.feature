@@ -1,11 +1,10 @@
-@this
 Feature: display the sync-before-ship setting
 
   Scenario Outline: default setting
     When I run "git-town config sync-before-ship <FLAG>"
     Then it prints:
       """
-      yes
+      no
       """
 
     Examples:
@@ -67,18 +66,18 @@ Feature: display the sync-before-ship setting
     When I run "git-town config sync-before-ship"
     Then it prints:
       """
-      yes
+      no
       """
 
   Scenario: set in config file
     Given the configuration file:
       """
-      sync-before-ship = false
+      sync-before-ship = true
       """
     When I run "git-town config sync-before-ship"
     Then it prints:
       """
-      no
+      yes
       """
 
   Scenario: invalid value in Git config
