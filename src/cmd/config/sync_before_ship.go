@@ -20,8 +20,10 @@ const syncBeforeShipDesc = `Displays or changes whether "git ship" syncs the bra
 const syncBeforeShipHelp = `
 If "sync-before-ship" is enabled, the "git ship" command
 executes "git sync" before shipping a branch.
-This allows you to deal with breakage from resolving merge conflicts on the feature branch instead of the main branch.
-The downside is that this will trigger another CI run.`
+This allows you to deal with breakage from resolving merge conflicts
+on the feature branch instead of the main branch.
+The downside is that this will trigger another CI run,
+which might prevent the ship until it is finished.`
 
 func syncBeforeShipCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
