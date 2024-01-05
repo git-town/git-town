@@ -8,7 +8,7 @@ Feature: display the main branch configuration
       (not set)
       """
 
-  Scenario: configured locally in Git metadata
+  Scenario: configured in local Git metadata
     Given local Git Town setting "main-branch" is "main"
     When I run "git-town config main-branch"
     Then it prints:
@@ -16,7 +16,7 @@ Feature: display the main branch configuration
       main
       """
 
-  Scenario: configured globally in Git metadata
+  Scenario: configured in global Git metadata
     Given global Git Town setting "main-branch" is "main"
     When I run "git-town config main-branch"
     Then it prints:
