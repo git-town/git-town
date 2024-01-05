@@ -45,7 +45,7 @@ Feature: display the sync-upstream setting
       | yes   | yes    |
       | no    | no     |
 
-  Scenario Outline: global and local set to different values
+  Scenario Outline: global and local Git metadata set to different values
     Given global Git Town setting "sync-upstream" is "true"
     And local Git Town setting "sync-upstream" is "false"
     When I run "git-town config sync-upstream <FLAG>"
