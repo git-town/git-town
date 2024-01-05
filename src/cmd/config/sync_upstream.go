@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const syncUpstreamDesc = `Displays or changes whether "git sync" pulls updates from the "upstream" remote`
+const syncUpstreamDesc = `Displays or changes whether "git sync" pulls main branch updates from the "upstream" remote`
 
 const syncUpstreamHelp = `
 If "sync-upstream" is enabled, and your Git repository has an "upstream" remote, "git sync" will also pull updates from the main branch at that upstream remote.`
