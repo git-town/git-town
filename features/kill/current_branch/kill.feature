@@ -32,7 +32,6 @@ Feature: delete the current feature branch
       | BRANCH | PARENT |
       | other  | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
