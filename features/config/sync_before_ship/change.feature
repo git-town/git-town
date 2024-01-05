@@ -1,6 +1,6 @@
 Feature: set sync-before-ship
 
-  Scenario Outline: configured in local Git metadata
+  Scenario Outline: writing to local Git metadata
     When I run "git-town config sync-before-ship <GIVE>"
     Then local Git Town setting "sync-before-ship" is now "<WANT>"
 
