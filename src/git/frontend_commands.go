@@ -248,5 +248,5 @@ func (self *FrontendCommands) Stash() error {
 }
 
 func (self *FrontendCommands) UndoLastCommit() error {
-	return self.Run("git", "reset", "--soft", "HEAD^")
+	return self.Run("git", "reset", "--soft", "HEAD~1")
 }

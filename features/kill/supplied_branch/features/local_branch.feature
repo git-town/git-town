@@ -36,7 +36,7 @@ Feature: local branch
       | BRANCH | COMMAND                                 |
       | main   | git branch dead {{ sha 'WIP on dead' }} |
       |        | git checkout dead                       |
-      | dead   | git reset --soft HEAD^                  |
+      | dead   | git reset --soft HEAD~1                 |
     And the current branch is now "dead"
     And the uncommitted file still exists
     And the initial commits exist

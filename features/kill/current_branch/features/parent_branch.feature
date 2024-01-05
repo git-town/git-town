@@ -47,7 +47,7 @@ Feature: delete a branch within a branch chain
       | alpha  | git push origin {{ sha 'beta commit' }}:refs/heads/beta |
       |        | git branch beta {{ sha 'WIP on beta' }}                 |
       |        | git checkout beta                                       |
-      | beta   | git reset --soft HEAD^                                  |
+      | beta   | git reset --soft HEAD~1                                 |
     And the current branch is now "beta"
     And the uncommitted file still exists
     And the initial commits exist

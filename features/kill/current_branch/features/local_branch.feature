@@ -32,7 +32,7 @@ Feature: delete a local branch
       | BRANCH  | COMMAND                                       |
       | other   | git branch current {{ sha 'WIP on current' }} |
       |         | git checkout current                          |
-      | current | git reset --soft HEAD^                        |
+      | current | git reset --soft HEAD~1                       |
     And the current branch is now "current"
     And the uncommitted file still exists
     And the initial commits exist
