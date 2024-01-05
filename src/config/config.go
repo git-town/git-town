@@ -155,7 +155,13 @@ func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
-func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch) error {
+func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch, global bool) error {
+	self.FullConfig.ShipDeleteTrackingBranch = value
+	if global {
+		self.GlobalGitConfig.ShipDeleteTrackingBranch = &value
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
+	}
+	self.LocalGitConfig.ShipDeleteTrackingBranch = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }
 
