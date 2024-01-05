@@ -50,7 +50,7 @@ It will also update the base branch for any pull requests against that branch.
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`
+and Git Town will leave it up to your origin server to delete the tracking branch of the branch you are shipping.`
 
 func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -305,7 +305,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.remotes.HasOrigin() && config.IsOnline() {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
 	}
-	// NOTE: when shipping via API, we can always delete the remote branch because:
+	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
