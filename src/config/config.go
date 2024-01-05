@@ -161,6 +161,10 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 		self.GlobalGitConfig.ShipDeleteTrackingBranch = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
+	if self.configFile != nil {
+		self.configFile.ShipDeleteTrackingBranch = &value
+		return configfile.Save(self.configFile)
+	}
 	self.LocalGitConfig.ShipDeleteTrackingBranch = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }

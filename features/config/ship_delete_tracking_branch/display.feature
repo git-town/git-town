@@ -1,6 +1,5 @@
 Feature: display the ship-delete-tracking-branch setting
 
-  @this
   Scenario Outline: default setting
     When I run "git-town config ship-delete-tracking-branch <FLAG>"
     Then it prints:
@@ -97,5 +96,5 @@ Feature: display the ship-delete-tracking-branch setting
     When I run "git-town config ship-delete-tracking-branch"
     Then it prints the error:
       """
-      the configuration file ".git-branches.yml" does not contain TOML-formatted content: toml: line 1 (last key "ship-delete-tracking-branch"): expected value but found "zonk" instead
+      the configuration file ".git-branches.yml" does not contain TOML-formatted content: toml: line 1 (last key "ship-delete-tracking-branch"): incompatible types: TOML value has type string; destination has type boolean
       """
