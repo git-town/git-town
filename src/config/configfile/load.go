@@ -11,29 +11,28 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const FileName = ".git-branches.toml"
+// Decode converts the given config file TOML source into Go data.
+func Decode(text string) (*Data, error) {
+	var result Data
+	_, err := toml.Decode(text, &result)
+	return &result, err
+}
 
-func Load() (configdomain.PartialConfig, error) {
+func Load() (*configdomain.PartialConfig, error) {
 	file, err := os.Open(FileName)
 	if err != nil {
-		return configdomain.EmptyPartialConfig(), nil //nolint:nilerr
+		return nil, nil //nolint:nilerr,nilnil
 	}
 	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
-		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
+		return nil, fmt.Errorf(messages.ConfigFileCannotRead, ".git-branches.yml", err)
 	}
-	configFileData, err := Parse(string(bytes))
+	configFileData, err := Decode(string(bytes))
 	if err != nil {
-		return configdomain.EmptyPartialConfig(), fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
+		return nil, fmt.Errorf(messages.ConfigFileInvalidData, ".git-branches.yml", err)
 	}
-	return Validate(*configFileData)
-}
-
-// Parse converts the given config file TOML source into Go data.
-func Parse(text string) (*Data, error) {
-	var result Data
-	_, err := toml.Decode(text, &result)
+	result, err := Validate(*configFileData)
 	return &result, err
 }
 
@@ -41,11 +40,13 @@ func Parse(text string) (*Data, error) {
 func Validate(data Data) (configdomain.PartialConfig, error) {
 	result := configdomain.PartialConfig{} //nolint:exhaustruct
 	var err error
-	if data.Branches.Main != nil {
-		result.MainBranch = gitdomain.NewLocalBranchNameRef(*data.Branches.Main)
-	}
-	if data.Branches.Perennials != nil {
-		result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(data.Branches.Perennials...)
+	if data.Branches != nil {
+		if data.Branches.Main != nil {
+			result.MainBranch = gitdomain.NewLocalBranchNameRef(*data.Branches.Main)
+		}
+		if data.Branches.Perennials != nil {
+			result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(data.Branches.Perennials...)
+		}
 	}
 	if data.CodeHosting != nil {
 		if data.CodeHosting.Platform != nil {
@@ -68,6 +69,9 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	if data.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = configdomain.NewShipDeleteTrackingBranchRef(*data.ShipDeleteTrackingBranch)
+	}
+	if data.SyncBeforeShip != nil {
+		result.SyncBeforeShip = configdomain.NewSyncBeforeShipRef(*data.SyncBeforeShip)
 	}
 	if data.SyncUpstream != nil {
 		result.SyncUpstream = configdomain.NewSyncUpstreamRef(*data.SyncUpstream)

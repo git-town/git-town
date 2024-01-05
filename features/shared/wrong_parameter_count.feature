@@ -20,7 +20,7 @@ Feature: too few or many parameters
       | config push-new-branches arg1 arg2       | accepts at most 1 arg(s), received 2                                   |
       | config offline arg1 arg2                 | accepts at most 1 arg(s), received 2                                   |
       | config perennial-branches arg1           | unknown command "arg1" for "git-town config perennial-branches"        |
-      | config perennial-branches update arg1    | unknown command "arg1" for "git-town config perennial-branches update" |
+      | config perennial-branches change arg1    | unknown command "arg1" for "git-town config perennial-branches change" |
       | config sync-feature-strategy invalid     | unknown sync-feature strategy: "invalid"                               |
       | config sync-perennial-strategy arg1 arg2 | accepts at most 1 arg(s), received 2                                   |
       | config sync-perennial-strategy invalid   | unknown sync-perennial strategy: "invalid"                             |

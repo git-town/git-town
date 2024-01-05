@@ -249,7 +249,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town parent setting for branch "([^"]*)" is "([^"]*)"$`, func(branch, value string) error {
 		branchName := gitdomain.NewLocalBranchName(branch)
 		configKey := gitconfig.NewParentKey(branchName)
-		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
@@ -270,7 +270,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
+		if configKey == nil {
+			return fmt.Errorf("unknown configuration key: %q", name)
+		}
+		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^global Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
@@ -327,7 +330,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if cmp.Equal(*have, want) {
 			return nil
 		}
-		return fmt.Errorf(`expected global setting "perennial-branches" to be %v, but was %v`, want, *have)
+		return fmt.Errorf(`expected global setting "push-hook" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -339,6 +342,28 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected global setting "push-new-branches" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "ship-delete-tracking-branch" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.ShipDeleteTrackingBranch
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.ShipDeleteTrackingBranch(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "ship-delete-tracking-branch" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "sync-before-ship" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncBeforeShip
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncBeforeShip(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-before-ship" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^global Git Town setting "sync-feature-strategy" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
@@ -359,6 +384,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected global setting "sync-perennial-strategy" to be %v, but was %v`, want, *have)
+	})
+
+	suite.Step(`^global Git Town setting "sync-upstream" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.SyncUpstream
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncUpstream(wantBool)
+		if cmp.Equal(*have, want) {
+			return nil
+		}
+		return fmt.Errorf(`expected global setting "sync-upstream" to be %v, but was %v`, want, *have)
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
@@ -565,7 +601,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "([^"]*)" no longer exists$`, func(name string) error {
+	suite.Step(`^local Git Town setting "([^"]*)" (:?no longer exists|still doesn't exist)$`, func(name string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.TestCommands.LocalGitConfig(*configKey)
 		if newValue != nil {
@@ -574,9 +610,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^(?:local )?Git Town setting "([^"]*)" doesn't exist$`, func(name string) error {
+		configKey := gitconfig.ParseKey("git-town." + name)
+		return state.fixture.DevRepo.Config.GitConfig.RemoveLocalConfigValue(*configKey)
+	})
+
 	suite.Step(`^(?:local )?Git Town setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
-		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
+		if configKey == nil {
+			return fmt.Errorf("unknown config key: %q", name)
+		}
+		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
@@ -627,6 +671,28 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.ShipDeleteTrackingBranch(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-before-ship" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncBeforeShip
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncBeforeShip(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-before-ship" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
@@ -647,6 +713,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
+		wantBool, err := strconv.ParseBool(wantStr)
+		asserts.NoError(err)
+		want := configdomain.SyncUpstream(wantBool)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "sync-upstream" to be %v, but was %v`, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo does not have an origin$`, func() error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.OriginRemote)
 		state.initialRemoteBranches = gitdomain.LocalBranchNames{}
@@ -657,6 +734,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo has a Git submodule$`, func() error {
 		state.fixture.AddSubmoduleRepo()
 		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		return nil
+	})
+
+	suite.Step(`^still no configuration file exists$`, func() error {
+		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err == nil {
+			return fmt.Errorf("expected no configuration file but found one")
+		}
 		return nil
 	})
 
@@ -767,10 +852,26 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the configuration file:$`, func(content *messages.PickleStepArgument_PickleDocString) error {
-		state.fixture.DevRepo.CreateFile(
-			configfile.FileName,
-			content.Content,
-		)
+		state.fixture.DevRepo.CreateFile(configfile.FileName, content.Content)
+		return nil
+	})
+
+	suite.Step(`^the configuration file is (?:now|still):$`, func(content *messages.PickleStepArgument_PickleDocString) error {
+		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
+		if err != nil {
+			return fmt.Errorf("no configuration file found")
+		}
+		have = strings.TrimSpace(have)
+		want := strings.TrimSpace(content.Content)
+		if have != want {
+			fmt.Println("\n\nEXISTING CONFIG FILE:")
+			fmt.Println(have)
+			fmt.Println("EXPECTED CONFIG FILE:")
+			fmt.Println(want)
+			fmt.Println("EXPECTED CONFIG FILE END")
+			fmt.Println()
+			return fmt.Errorf("mismatching config file content")
+		}
 		return nil
 	})
 
@@ -1003,7 +1104,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.RemovePerennialBranchConfiguration()
 	})
 
-	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are (?:now|still) "([^"]+)"$`, func(name string) error {
 		actual := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if len(*actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)

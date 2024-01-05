@@ -21,62 +21,18 @@ type Access struct {
 	Runner
 }
 
-// Load reads the Git Town configuration from Git's metadata.
-// If the global flag is set, reads the global Git configuration, otherwise the local one.
-func (self *Access) Load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
-	snapshot := SingleSnapshot{}
-	config := configdomain.EmptyPartialConfig()
-	cmdArgs := []string{"config", "-lz"}
-	if global {
-		cmdArgs = append(cmdArgs, "--global")
-	} else {
-		cmdArgs = append(cmdArgs, "--local")
-	}
-	output, err := self.Runner.Query("git", cmdArgs...)
-	if err != nil {
-		return snapshot, config, nil //nolint:nilerr
-	}
-	if output == "" {
-		return snapshot, config, nil
-	}
-	for _, line := range strings.Split(output, "\x00") {
-		if len(line) == 0 {
-			continue
-		}
-		parts := strings.SplitN(line, "\n", 2)
-		key, value := parts[0], parts[1]
-		configKey := ParseKey(key)
-		if configKey == nil {
-			continue
-		}
-		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
-		if keyIsDeprecated {
-			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
-			configKey = &newKey
-		}
-		if key != KeyPerennialBranches.String() && value == "" {
-			_ = self.RemoveLocalConfigValue(*configKey)
-			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
-			continue
-		}
-		snapshot[*configKey] = value
-		err := AddKeyToPartialConfig(*configKey, value, &config)
-		if err != nil {
-			return snapshot, config, err
-		}
-	}
-	return snapshot, config, nil
+// LoadLocal reads the global Git Town configuration that applies to the entire machine.
+func (self *Access) LoadGlobal() (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(true)
+}
+
+// LoadLocal reads the Git Town configuration from the local Git's metadata for the current repository.
+func (self *Access) LoadLocal() (SingleSnapshot, configdomain.PartialConfig, error) {
+	return self.load(false)
 }
 
 func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialConfig) error {
-	if strings.HasPrefix(key.name, "alias.") {
-		aliasableCommand := AliasableCommandForKey(key)
-		if aliasableCommand != nil {
-			config.Aliases[*aliasableCommand] = value
-		}
-		return nil
-	}
-	if strings.HasPrefix(key.name, "git-town-branch.") {
+	if strings.HasPrefix(key.String(), "git-town-branch.") {
 		if config.Lineage == nil {
 			config.Lineage = &configdomain.Lineage{}
 		}
@@ -87,6 +43,28 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	}
 	var err error
 	switch key {
+	case KeyAliasAppend:
+		config.Aliases[configdomain.AliasableCommandAppend] = value
+	case KeyAliasDiffParent:
+		config.Aliases[configdomain.AliasableCommandDiffParent] = value
+	case KeyAliasHack:
+		config.Aliases[configdomain.AliasableCommandHack] = value
+	case KeyAliasKill:
+		config.Aliases[configdomain.AliasableCommandKill] = value
+	case KeyAliasPrepend:
+		config.Aliases[configdomain.AliasableCommandPrepend] = value
+	case KeyAliasPropose:
+		config.Aliases[configdomain.AliasableCommandPropose] = value
+	case KeyAliasRenameBranch:
+		config.Aliases[configdomain.AliasableCommandRenameBranch] = value
+	case KeyAliasRepo:
+		config.Aliases[configdomain.AliasableCommandRepo] = value
+	case KeyAliasSetParent:
+		config.Aliases[configdomain.AliasableCommandSetParent] = value
+	case KeyAliasShip:
+		config.Aliases[configdomain.AliasableCommandShip] = value
+	case KeyAliasSync:
+		config.Aliases[configdomain.AliasableCommandSync] = value
 	case KeyCodeHostingOriginHostname:
 		config.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
@@ -114,17 +92,30 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyShipDeleteTrackingBranch:
 		config.ShipDeleteTrackingBranch, err = configdomain.ParseShipDeleteTrackingBranchRef(value, KeyShipDeleteTrackingBranch.String())
 	case KeySyncBeforeShip:
-		config.SyncBeforeShip, err = configdomain.NewSyncBeforeShipRef(value, KeySyncBeforeShip.String())
+		config.SyncBeforeShip, err = configdomain.ParseSyncBeforeShipRef(value, KeySyncBeforeShip.String())
 	case KeySyncFeatureStrategy:
 		config.SyncFeatureStrategy, err = configdomain.NewSyncFeatureStrategyRef(value)
 	case KeySyncPerennialStrategy:
 		config.SyncPerennialStrategy, err = configdomain.NewSyncPerennialStrategyRef(value)
 	case KeySyncUpstream:
 		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
-	default:
-		panic("unprocessed key: " + key.String())
+	case KeyDeprecatedCodeHostingDriver,
+		KeyDeprecatedMainBranchName,
+		KeyDeprecatedNewBranchPushFlag,
+		KeyDeprecatedPerennialBranchNames,
+		KeyDeprecatedPullBranchStrategy,
+		KeyDeprecatedPushVerify,
+		KeyDeprecatedShipDeleteRemoteBranch,
+		KeyDeprecatedSyncStrategy:
+		// deprecated keys were handled before this is reached, here we simply do a check that the switch statement contains all keys
+		panic(fmt.Sprintf("unhandled deprecated config key %q", key))
 	}
 	return err
+}
+
+func (self *Access) OriginRemote() string {
+	output, _ := self.Query("git", "remote", "get-url", gitdomain.OriginRemote.String())
+	return strings.TrimSpace(output)
 }
 
 func (self *Access) RemoveGlobalConfigValue(key Key) error {
@@ -202,4 +193,49 @@ func (self *Access) UpdateDeprecatedSetting(oldKey, newKey Key, value string, gl
 	} else {
 		self.UpdateDeprecatedLocalSetting(oldKey, newKey, value)
 	}
+}
+
+func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfig, error) {
+	snapshot := SingleSnapshot{}
+	config := configdomain.EmptyPartialConfig()
+	cmdArgs := []string{"config", "-lz"}
+	if global {
+		cmdArgs = append(cmdArgs, "--global")
+	} else {
+		cmdArgs = append(cmdArgs, "--local")
+	}
+	output, err := self.Runner.Query("git", cmdArgs...)
+	if err != nil {
+		return snapshot, config, nil //nolint:nilerr
+	}
+	if output == "" {
+		return snapshot, config, nil
+	}
+	for _, line := range strings.Split(output, "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
+		key, value := parts[0], parts[1]
+		configKey := ParseKey(key)
+		if configKey == nil {
+			continue
+		}
+		newKey, keyIsDeprecated := DeprecatedKeys[*configKey]
+		if keyIsDeprecated {
+			self.UpdateDeprecatedSetting(*configKey, newKey, value, global)
+			configKey = &newKey
+		}
+		if key != KeyPerennialBranches.String() && value == "" {
+			_ = self.RemoveLocalConfigValue(*configKey)
+			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
+			continue
+		}
+		snapshot[*configKey] = value
+		err := AddKeyToPartialConfig(*configKey, value, &config)
+		if err != nil {
+			return snapshot, config, err
+		}
+	}
+	return snapshot, config, nil
 }

@@ -13,9 +13,7 @@ import (
 const pullBranchDesc = "Displays or sets your sync-perennial strategy"
 
 const pullBranchHelp = `
-The sync-perennial strategy specifies what strategy to use
-when merging remote tracking branches into local branches
-for the main branch and perennial branches.`
+The sync-perennial strategy specifies what strategy to use when merging remote tracking branches into local branches for the main branch and perennial branches.`
 
 func syncPerennialStrategyCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()

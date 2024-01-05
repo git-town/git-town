@@ -15,8 +15,8 @@ func TestKey(t *testing.T) {
 		t.Run("normal config key", func(t *testing.T) {
 			t.Parallel()
 			have := gitconfig.ParseKey("git-town.offline")
-			want := &gitconfig.KeyOffline
-			must.EqOp(t, *want, *have)
+			want := gitconfig.KeyOffline
+			must.EqOp(t, want, *have)
 		})
 		t.Run("lineage keys", func(t *testing.T) {
 			t.Parallel()
@@ -24,7 +24,7 @@ func TestKey(t *testing.T) {
 				t.Parallel()
 				give := "git-town-branch.branch-1.parent"
 				have := gitconfig.ParseKey(give)
-				want := gitconfig.NewKey(give)
+				want := gitconfig.Key(give)
 				must.EqOp(t, want, *have)
 			})
 			t.Run("lineage key without suffix", func(t *testing.T) {
@@ -44,9 +44,9 @@ func TestKey(t *testing.T) {
 				t.Parallel()
 				have := gitconfig.ParseKey("alias.append")
 				must.NotNil(t, have)
-				want := &gitconfig.KeyAliasAppend
+				want := gitconfig.KeyAliasAppend
 				must.NotNil(t, want)
-				must.EqOp(t, *want, *have)
+				must.EqOp(t, want, *have)
 			})
 			t.Run("invalid alias", func(t *testing.T) {
 				t.Parallel()
