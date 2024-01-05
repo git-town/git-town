@@ -154,7 +154,7 @@ func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
-// SetShipDeleteTrackingBranch updates the configured delete-remote-branch strategy.
+// SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
 func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTrackingBranch) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 }

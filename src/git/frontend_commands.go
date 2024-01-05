@@ -117,8 +117,8 @@ func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, 
 	return self.Run("git", args...)
 }
 
-// DeleteRemoteBranch removes the remote branch of the given local branch.
-func (self *FrontendCommands) DeleteRemoteBranch(name gitdomain.RemoteBranchName) error {
+// DeleteTrackingBranch removes the tracking branch of the given local branch.
+func (self *FrontendCommands) DeleteTrackingBranch(name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
 	return self.Run("git", "push", remote.String(), ":"+localBranchName.String())
 }
