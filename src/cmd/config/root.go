@@ -35,6 +35,7 @@ func RootCmd() *cobra.Command {
 	configCmd.AddCommand(pushNewBranchesCommand())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
+	configCmd.AddCommand(shipDeleteTrackingBranchCommand())
 	configCmd.AddCommand(syncFeatureStrategyCommand())
 	configCmd.AddCommand(syncPerennialStrategyCommand())
 	return &configCmd
