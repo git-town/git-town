@@ -1,6 +1,6 @@
 Feature: set ship-delete-tracking-branch
 
-  Scenario Outline: local setting
+  Scenario Outline: configured in local Git metadata
     When I run "git-town config ship-delete-tracking-branch <GIVE>"
     Then local Git Town setting "ship-delete-tracking-branch" is now "<WANT>"
 
@@ -17,14 +17,14 @@ Feature: set ship-delete-tracking-branch
       | off   | false |
       | no    | false |
 
-  Scenario: invalid value
+  Scenario: invalid value in Git metadata
     When I run "git-town config ship-delete-tracking-branch zonk"
     Then it prints the error:
       """
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
-  Scenario Outline: global setting
+  Scenario Outline: configured in global Git metadata
     When I run "git-town config ship-delete-tracking-branch --global <GIVE>"
     Then global Git Town setting "ship-delete-tracking-branch" is now "<WANT>"
 
