@@ -7,7 +7,7 @@ Feature: display the current offline status
       no
       """
 
-  Scenario Outline: valid settings in Git metadata
+  Scenario Outline: configured in local Git metadata
     Given global Git Town setting "offline" is "<VALUE>"
     When I run "git-town config offline"
     Then it prints:
