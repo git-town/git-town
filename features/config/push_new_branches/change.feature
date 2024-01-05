@@ -24,7 +24,7 @@ Feature: set push-new-branches
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
-  Scenario Outline: configured in global Git metadata
+  Scenario Outline: write to global Git metadata
     When I run "git-town config push-new-branches --global <GIVE>"
     Then global Git Town setting "push-new-branches" is now "<WANT>"
 
