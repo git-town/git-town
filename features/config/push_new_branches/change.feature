@@ -1,6 +1,6 @@
 Feature: set push-new-branches
 
-  Scenario Outline: local setting
+  Scenario Outline: configured in local Git metadata
     When I run "git-town config push-new-branches <GIVE>"
     Then local Git Town setting "push-new-branches" is now "<WANT>"
 
@@ -17,14 +17,14 @@ Feature: set push-new-branches
       | off   | false |
       | no    | false |
 
-  Scenario: invalid value
+  Scenario: invalid value in Git metadata
     When I run "git-town config push-new-branches zonk"
     Then it prints the error:
       """
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
-  Scenario Outline: global setting
+  Scenario Outline: configured in global Git metadata
     When I run "git-town config push-new-branches --global <GIVE>"
     Then global Git Town setting "push-new-branches" is now "<WANT>"
 
