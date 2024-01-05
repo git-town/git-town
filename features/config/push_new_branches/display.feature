@@ -1,6 +1,6 @@
 Feature: display the push-new-branches setting
 
-  Scenario Outline: default setting in Git metadata
+  Scenario Outline: default value
     When I run "git-town config push-new-branches <FLAG>"
     Then it prints:
       """

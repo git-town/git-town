@@ -1,6 +1,6 @@
 Feature: display the sync-before-ship setting
 
-  Scenario Outline: default setting in Git metadata
+  Scenario Outline: default value
     When I run "git-town config sync-before-ship <FLAG>"
     Then it prints:
       """
