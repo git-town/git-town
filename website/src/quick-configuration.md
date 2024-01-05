@@ -29,7 +29,7 @@ Provide the token to Git Town as an environment variable with name
   git config --add git-town.gitlab-token <your api token>
   ```
 
-## Delete remote branches
+## Delete tracking branches
 
 Some code hosting providers
 [automatically delete feature branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
@@ -38,7 +38,7 @@ It can interfere with Git Town's attempts to also delete this branch after
 shipping it. To make Git Town play along, run:
 
 ```
-git config git-town.ship-delete-remote-branch false
+git config git-town.ship-delete-tracking-branch false
 ```
 
 ## Shell autocompletion

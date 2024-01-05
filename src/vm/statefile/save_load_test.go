@@ -73,9 +73,6 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Force:  false,
 				},
-				&opcode.DeleteRemoteBranch{
-					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
-				},
 				&opcode.DeleteParentBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
@@ -252,12 +249,6 @@ func TestLoadSave(t *testing.T) {
         "Force": false
       },
       "type": "DeleteLocalBranch"
-    },
-    {
-      "data": {
-        "Branch": "origin/branch"
-      },
-      "type": "DeleteRemoteBranch"
     },
     {
       "data": {

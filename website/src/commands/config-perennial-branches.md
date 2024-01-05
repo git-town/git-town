@@ -1,11 +1,11 @@
 # git town config perennial-branches [subcommand]
 
 The _perennial-branches_ configuration command displays your perennial branches.
-Perennial branches are long-lived branches that are never shipped. Examples for
-perennial branches are `master`, `main`, `development`, `production`, or
+Perennial branches are long-lived branches that are never shipped. Typical
+perennial branches are `main`, `master`, `development`, `production`, and
 `staging`.
 
 ### Arguments
 
 - without a subcommand, displays the currently configured perennial branches
-- the `update` subcommand displays UI to set the perennial branches
+- the `change` subcommand displays a visual dialog to set the perennial branches

@@ -27,8 +27,7 @@ import (
 const shipDesc = "Deliver a completed feature branch"
 
 const shipHelp = `
-Squash-merges the current branch, or <branch_name> if given,
-into the main branch, resulting in linear history on the main branch.
+Squash-merges the current branch, or <branch_name> if given, into the main branch, resulting in linear history on the main branch.
 
 - syncs the main branch
 - pulls updates for <branch_name>
@@ -38,19 +37,16 @@ into the main branch, resulting in linear history on the main branch.
 - pushes the main branch to the origin repository
 - deletes <branch_name> from the local and origin repositories
 
-Ships direct children of the main branch.
-To ship a nested child branch, ship or kill all ancestor branches first.
+Ships direct children of the main branch. To ship a nested child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
+
 1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config %s <token>' (optionally add the '--global' flag)
-Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
-It will also update the base branch for any pull requests against that branch.
 
-If your origin server deletes shipped branches, for example
-GitHub's feature to automatically delete head branches,
-run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`
+Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API. It will also update the base branch for any pull requests against that branch.
+
+If your origin server deletes shipped branches, for example GitHub's feature to automatically delete head branches, run "git config %s false" and Git Town will leave it up to your origin server to delete the tracking branch of the branch you are shipping.`
 
 func shipCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
@@ -305,7 +301,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.remotes.HasOrigin() && config.IsOnline() {
 		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
 	}
-	// NOTE: when shipping via API, we can always delete the remote branch because:
+	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
