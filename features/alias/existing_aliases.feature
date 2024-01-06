@@ -1,3 +1,4 @@
+@smoke
 Feature: add Git Town aliases to existing Git aliases
 
   Scenario: existing alias for "git append"

@@ -1,3 +1,4 @@
+@smoke
 Feature: on the main branch
 
   Background:

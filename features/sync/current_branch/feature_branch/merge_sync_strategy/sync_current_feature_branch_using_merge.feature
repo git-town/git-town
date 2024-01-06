@@ -1,3 +1,4 @@
+@smoke
 Feature: sync the current feature branch with a tracking branch using the "merge" sync-feature strategy
 
   Background:

@@ -1,3 +1,4 @@
+@smoke
 Feature: delete another than the current branch
 
   Background:

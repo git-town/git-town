@@ -1,3 +1,4 @@
+@smoke
 Feature: show the configuration
 
   Scenario: all configured in Git, no nested branches

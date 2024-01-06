@@ -1,3 +1,4 @@
+@smoke
 Feature: delete the current feature branch
 
   Background:

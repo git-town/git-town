@@ -1,3 +1,4 @@
+@smoke
 Feature: rename the current branch
 
   Background:

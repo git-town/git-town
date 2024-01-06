@@ -10,6 +10,9 @@ GO_BUILD_ARGS = LANG=C GOGC=off
 build:  # builds for the current platform
 	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
 
+buildwin:  # builds the binary on Windows
+	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
@@ -25,8 +28,7 @@ cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-cukewin:  # runs all end-to-end tests on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+cukewin: buildwin  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
@@ -64,6 +66,12 @@ lint: tools/rta@${RTA_VERSION}  # runs only the linters
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@tools/rta deadcode -test github.com/git-town/git-town/... &
 	@tools/rta golangci-lint run
+
+smoke: build  # run the smoke tests
+	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
+
+smokewin: buildwin  # runs the Windows smoke tests
+	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc

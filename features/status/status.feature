@@ -1,3 +1,4 @@
+@smoke
 Feature: describe the status of the current/last Git Town command
 
   Scenario: Git Town command ran successfully

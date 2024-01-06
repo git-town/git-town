@@ -1,3 +1,4 @@
+@smoke
 Feature: ship the current feature branch with a tracking branch
 
   Background:

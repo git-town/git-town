@@ -1,3 +1,4 @@
+@smoke
 Feature: show the version of the current Git Town installation
 
   Scenario: outside a Git repository

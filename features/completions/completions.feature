@@ -1,3 +1,4 @@
+@smoke
 Feature: shell autocompletion
 
   Scenario Outline:

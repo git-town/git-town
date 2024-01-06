@@ -29,6 +29,9 @@ func TestGodog(t *testing.T) {
 	} else {
 		concurrency = 4
 	}
+	if os.Getenv("smoke") != "" {
+		tags = "@smoke"
+	}
 	if os.Getenv("cukethis") != "" {
 		tags = "@this"
 	}

@@ -1,3 +1,4 @@
+@smoke
 Feature: view changes made on another branch
 
   Background:
