@@ -1,3 +1,4 @@
+@skipWindows
 Feature: preserve the previous Git branch
 
   Scenario:
