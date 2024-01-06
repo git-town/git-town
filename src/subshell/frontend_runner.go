@@ -67,7 +67,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	if self.PrintCommands {
 		PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
 	}
-	if runtime.GOOS == "windows" && args[0] == "start" {
+	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
 		cmd = "cmd"
 	}
