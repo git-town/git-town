@@ -1,3 +1,4 @@
+@skipWindows
 Feature: merge conflict
 
   Background:
@@ -49,7 +50,6 @@ Feature: merge conflict
     And the current branch is still "feature"
     And a merge is now in progress
 
-  @skipWindows
   Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
@@ -74,7 +74,6 @@ Feature: merge conflict
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-  @skipWindows
   Scenario: resolve, commit, and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
