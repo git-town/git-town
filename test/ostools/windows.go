@@ -22,12 +22,12 @@ func CreateInputTool(toolPath string) {
 set /p i1=""
 set /p i2=""
 echo You entered %i1% and %i2%
-`), 0o744)) //nolint:gosec
+`), 0o744))
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
 func CreateLsTool(toolPath string) {
-	asserts.NoError(os.WriteFile(ScriptName(toolPath), []byte("@dir /B"), 0o744)) //nolint:gosec
+	asserts.NoError(os.WriteFile(ScriptName(toolPath), []byte("@dir /B"), 0o744))
 }
 
 // ScriptName provides the name of the given script file on the Windows.
