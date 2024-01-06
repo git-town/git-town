@@ -67,10 +67,7 @@ func (self *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	if self.PrintCommands {
 		PrintCommand(branchName, self.OmitBranchNames, cmd, args...)
 	}
-	// Windows commands run inside CMD
-	// because opening browsers is done via "start"
-	// TODO: do this only when actually running the "start" command
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == "windows" && cmd == "start" {
 		args = append([]string{"/C", cmd}, args...)
 		cmd = "cmd"
 	}
