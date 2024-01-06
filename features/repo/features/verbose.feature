@@ -1,7 +1,6 @@
 @skipWindows
 Feature: display all executed Git commands
 
-  @skipWindows
   Scenario:
     Given the origin is "git@github.com:git-town/git-town.git"
     And tool "open" is installed

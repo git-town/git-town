@@ -1,7 +1,6 @@
 @skipWindows
 Feature: dry-run proposing changes
 
-  @skipWindows
   Scenario: proposing changes
     Given tool "open" is installed
     And the current branch is a feature branch "feature"
