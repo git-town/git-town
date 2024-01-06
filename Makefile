@@ -29,6 +29,10 @@ cukewin:  # runs all end-to-end tests on Windows
 	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
 	go test . -v -count=1
 
+cukewinsmoke:  # runs only a few selected end-to-end tests on Windows
+	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+	@env smoke=1 go test . -v -count=1
+
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
 	@tools/rta depth . | grep git-town
 
