@@ -56,7 +56,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in al
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint:  # runs only the linters
+lint: tools/rta@${RTA_VERSION}  # runs only the linters
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta actionlint &
