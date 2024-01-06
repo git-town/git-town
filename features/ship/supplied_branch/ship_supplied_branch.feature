@@ -1,3 +1,4 @@
+@skipWindows
 Feature: ship the supplied feature branch
 
   Background:

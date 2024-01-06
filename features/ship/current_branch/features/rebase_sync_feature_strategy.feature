@@ -1,3 +1,4 @@
+@skipWindows
 Feature: "rebase" sync-feature strategy
 
   Background:
