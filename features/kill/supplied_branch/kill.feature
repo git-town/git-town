@@ -1,7 +1,6 @@
 @smoke
 Feature: delete another than the current branch
 
-
   Background:
     Given the feature branches "good" and "dead"
     And the commits
