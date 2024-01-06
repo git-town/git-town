@@ -1,3 +1,4 @@
+@smoke
 Feature: prepend a branch to a feature branch
 
   Background:

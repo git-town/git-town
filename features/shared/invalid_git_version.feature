@@ -1,3 +1,4 @@
+@smoke
 Feature: require minimum Git version
 
   Scenario Outline: using an unsupported Git Version

@@ -1,3 +1,4 @@
+@smoke
 Feature: help for commands
 
   Scenario Outline: known commands

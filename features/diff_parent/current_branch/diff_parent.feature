@@ -1,3 +1,4 @@
+@smoke
 Feature: view changes made on the current feature branch
 
   Scenario: feature branch

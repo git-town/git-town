@@ -1,3 +1,4 @@
+@smoke
 Feature: append a new feature branch to an existing feature branch
 
   Background:
