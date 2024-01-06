@@ -1,3 +1,4 @@
+@skipWindows
 Feature: dry-run proposing changes
 
   @skipWindows

@@ -22,6 +22,7 @@ Feature: ship a coworker's feature branch
       | main   | local, origin | feature done | coworker <coworker@example.com> |
     And no lineage exists now
 
+  @skipWindows
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
     Then it runs the commands

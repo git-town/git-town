@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -368,7 +367,7 @@ func (self *TestCommands) RemoveUnnecessaryFiles() {
 func (self *TestCommands) SHAForCommit(name string) gitdomain.SHA {
 	output := self.MustQuery("git", "log", "--reflog", "--format=%h", "--grep=^"+name+"$")
 	if output == "" {
-		log.Fatalf("cannot find the SHA of commit %q", name)
+		panic(fmt.Sprintf("cannot find the SHA of commit %q", name))
 	}
 	return gitdomain.NewSHA(strings.Split(output, "\n")[0])
 }

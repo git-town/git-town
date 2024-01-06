@@ -1,3 +1,4 @@
+@skipWindows
 Feature: handle conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:

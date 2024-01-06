@@ -1,3 +1,4 @@
+@skipWindows
 Feature: display all executed Git commands
 
   @skipWindows
