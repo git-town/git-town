@@ -51,20 +51,18 @@ func executeSwitch(verbose bool) error {
 	}
 
 	p := tea.NewProgram(dialog.Model{
-		Cursor:        0,
 		Branches:      []string{"main", "feature-1", "feature-2"},
 		CurrentBranch: "feature-1",
+		Cursor:        0,
 	})
-	if _, err := p.Run(); err != nil {
-		fmt.Printf("Alas, there's been an error: %v", err)
-		os.Exit(1)
-	}
-
-	newBranch, validChoice, err := dialog.SwitchBranch(config.MainAndPerennials(), config.initialBranch, config.Lineage)
+	newBranch, err := p.Run()
 	if err != nil {
 		return err
 	}
-	if validChoice && newBranch != config.initialBranch {
+	if newBranch == nil {
+		return nil
+	}
+	if *newBranch != config.initialBranch {
 		fmt.Println()
 		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
 		if err != nil {
