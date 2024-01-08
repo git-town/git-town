@@ -37,7 +37,6 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 	s.Background(output.Color("3"))
 	s.Bold()
 	fmt.Println(s)
-	panic("end")
 
 	return SwitchModel{
 		activeColor:        color.New(color.FgCyan),
@@ -124,7 +123,7 @@ func (m SwitchModel) View() string {
 	s.WriteString("\n\n")
 	s.WriteString("  ")
 	// up
-	s.WriteString(m.helpHighlightColor.Sprint("↑"))
+	s.WriteString(termenv.String("↑").Faint().Bold().String())
 	s.WriteString(m.helpColor.Sprint("/"))
 	s.WriteString(m.helpHighlightColor.Sprint("k"))
 	s.WriteString(m.helpColor.Sprint(" up   "))
