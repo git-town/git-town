@@ -50,7 +50,19 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	dialogModel := dialog.NewSwitchModel(config.FullConfig.Lineage.BranchNames().Strings(), config.initialBranch.String())
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return err
+	}
+	dialogModel := dialog.NewSwitchModel(branchesSnapshot.Branches.Names().Strings(), config.initialBranch.String())
 	p := tea.NewProgram(dialogModel, tea.WithOutput(os.Stderr))
 	dialogResult, err := p.Run()
 	if err != nil {
