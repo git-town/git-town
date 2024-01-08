@@ -9,10 +9,12 @@ import (
 )
 
 type SwitchModel struct {
-	Branches       []string // names of all branches
+	activeColor    *color.Color
+	branches       []string // names of all branches
 	cursor         int      // 0-based number of the selected row
-	InitialBranch  string   // name of the currently checked out branch
-	SelectedBranch string   // name of the currently selected branch
+	initialBranch  string   // name of the currently checked out branch
+	initialColor   *color.Color
+	SelectedBranch string // name of the currently selected branch
 }
 
 func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
@@ -21,9 +23,11 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 		cursor = 0
 	}
 	return SwitchModel{
-		Branches:       branches,
+		activeColor:    color.New(color.FgCyan),
+		branches:       branches,
 		cursor:         cursor,
-		InitialBranch:  initialBranch,
+		initialBranch:  initialBranch,
+		initialColor:   color.New(color.FgGreen),
 		SelectedBranch: initialBranch,
 	}
 }
@@ -41,10 +45,10 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyDown, tea.KeyTab:
 			return m.MoveCursorDown(), nil
 		case tea.KeyEnter:
-			m.SelectedBranch = m.Branches[m.cursor]
+			m.SelectedBranch = m.branches[m.cursor]
 			return m, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
-			m.SelectedBranch = m.InitialBranch
+			m.SelectedBranch = m.initialBranch
 			return m, tea.Quit
 		case tea.KeyRunes:
 			switch string(msg.Runes) {
@@ -53,7 +57,7 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "j":
 				return m.MoveCursorDown(), nil
 			case "o":
-				m.SelectedBranch = m.Branches[m.cursor]
+				m.SelectedBranch = m.branches[m.cursor]
 				return m, tea.Quit
 			}
 		}
@@ -65,13 +69,13 @@ func (m SwitchModel) MoveCursorUp() SwitchModel {
 	if m.cursor > 0 {
 		m.cursor--
 	} else {
-		m.cursor = len(m.Branches) - 1
+		m.cursor = len(m.branches) - 1
 	}
 	return m
 }
 
 func (m SwitchModel) MoveCursorDown() SwitchModel {
-	if m.cursor < len(m.Branches)-1 {
+	if m.cursor < len(m.branches)-1 {
 		m.cursor++
 	} else {
 		m.cursor = 0
@@ -81,22 +85,20 @@ func (m SwitchModel) MoveCursorDown() SwitchModel {
 
 func (m SwitchModel) View() string {
 	s := strings.Builder{}
-	activeColor := color.New(color.FgCyan)
-	initialColor := color.New(color.FgGreen)
-	for i, branch := range m.Branches {
+	for i, branch := range m.branches {
 		if i == m.cursor {
-			s.WriteString(activeColor.Sprint("> "))
-			s.WriteString(activeColor.Sprint(branch))
-		} else if branch == m.InitialBranch {
-			s.WriteString(initialColor.Sprint("* "))
-			s.WriteString(initialColor.Sprint(branch))
+			s.WriteString(m.activeColor.Sprint("> "))
+			s.WriteString(m.activeColor.Sprint(branch))
+		} else if branch == m.initialBranch {
+			s.WriteString(m.initialColor.Sprint("* "))
+			s.WriteString(m.initialColor.Sprint(branch))
 		} else {
 			s.WriteString("  ")
 			s.WriteString(branch)
 		}
 		s.WriteRune('\n')
 	}
-
+	s.WriteString("\n\n")
 	s.WriteString("Press Ctrl-C to quit")
 	return s.String()
 }
