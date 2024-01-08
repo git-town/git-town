@@ -50,17 +50,13 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	dialogModel := dialog.Model{
-		Branches:       config.FullConfig.Lineage.BranchNames().Strings(),
-		InitialBranch:  config.initialBranch.String(),
-		SelectedBranch: config.initialBranch.String(),
-	}
+	dialogModel := dialog.NewSwitchModel(config.FullConfig.Lineage.BranchNames().Strings(), config.initialBranch.String())
 	p := tea.NewProgram(dialogModel, tea.WithOutput(os.Stderr))
 	dialogResult, err := p.Run()
 	if err != nil {
 		return err
 	}
-	result := dialogResult.(dialog.Model)
+	result := dialogResult.(dialog.SwitchModel)
 	if result.SelectedBranch != config.initialBranch.String() {
 		fmt.Println()
 		err = repo.Runner.Frontend.CheckoutBranch(gitdomain.LocalBranchName(result.SelectedBranch))

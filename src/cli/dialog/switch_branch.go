@@ -1,24 +1,38 @@
 package dialog
 
 import (
+	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fatih/color"
 )
 
-type Model struct {
+type SwitchModel struct {
 	Branches       []string // names of all branches
 	cursor         int      // 0-based number of the selected row
 	InitialBranch  string   // name of the currently checked out branch
 	SelectedBranch string   // name of the currently selected branch
 }
 
-func (m Model) Init() tea.Cmd {
+func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
+	cursor := slices.Index(branches, initialBranch)
+	if cursor == -1 {
+		cursor = 0
+	}
+	return SwitchModel{
+		Branches:       branches,
+		cursor:         cursor,
+		InitialBranch:  initialBranch,
+		SelectedBranch: initialBranch,
+	}
+}
+
+func (m SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
@@ -47,7 +61,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m Model) MoveCursorUp() Model {
+func (m SwitchModel) MoveCursorUp() SwitchModel {
 	if m.cursor > 0 {
 		m.cursor--
 	} else {
@@ -56,7 +70,7 @@ func (m Model) MoveCursorUp() Model {
 	return m
 }
 
-func (m Model) MoveCursorDown() Model {
+func (m SwitchModel) MoveCursorDown() SwitchModel {
 	if m.cursor < len(m.Branches)-1 {
 		m.cursor++
 	} else {
@@ -65,7 +79,7 @@ func (m Model) MoveCursorDown() Model {
 	return m
 }
 
-func (m Model) View() string {
+func (m SwitchModel) View() string {
 	s := strings.Builder{}
 	activeColor := color.New(color.FgCyan)
 	initialColor := color.New(color.FgGreen)
