@@ -20,7 +20,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		entries: localBranches.Strings(),
 		colors:  createColors(),
 		cursor:  cursor,
-		abort:   false,
+		aborted: false,
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
@@ -30,14 +30,14 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	result := dialogResult.(mainBranchModel) //nolint:forcetypeassert
 	selectedBranchName := result.selectedEntry()
 	selectedBranch = gitdomain.LocalBranchName(selectedBranchName)
-	return selectedBranch, result.abort, nil
+	return selectedBranch, result.aborted, nil
 }
 
 type mainBranchModel struct {
 	entries []string
 	colors  dialogColors
 	cursor  int
-	abort   bool
+	aborted bool
 }
 
 func (self mainBranchModel) Init() tea.Cmd {
@@ -57,7 +57,7 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	case tea.KeyEnter:
 		return self, tea.Quit
 	case tea.KeyCtrlC:
-		self.abort = true
+		self.aborted = true
 		return self, tea.Quit
 	case tea.KeyRunes:
 		switch string(keyMsg.Runes) {
@@ -68,7 +68,7 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 		case "o":
 			return self, tea.Quit
 		case "q":
-			self.abort = true
+			self.aborted = true
 			return self, tea.Quit
 		}
 	}
