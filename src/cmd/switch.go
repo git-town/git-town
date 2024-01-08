@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -49,16 +48,13 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	dialogData := dialog.NewSwitchModel(config.branchNames.Strings(), config.initialBranch.String())
-	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
-	dialogResult, err := dialogProcess.Run()
+	branchNameToCheckout, err := dialog.SwitchBranchesDialog(config.branchNames.Strings(), config.initialBranch.String())
 	if err != nil {
 		return err
 	}
-	result := dialogResult.(dialog.SwitchModel) //nolint:forcetypeassert
-	if result.SelectedBranch != config.initialBranch.String() {
+	if branchNameToCheckout != config.initialBranch.String() {
 		fmt.Println()
-		branchToCheckout := gitdomain.LocalBranchName(result.SelectedBranch)
+		branchToCheckout := gitdomain.LocalBranchName(branchNameToCheckout)
 		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
 		if err != nil {
 			exitCode := 1

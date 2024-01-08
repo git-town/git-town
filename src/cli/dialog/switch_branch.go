@@ -1,12 +1,37 @@
 package dialog
 
 import (
+	"os"
 	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/muesli/termenv"
 )
+
+func SwitchBranchesDialog(branchNames []string, initialBranch string) (string, error) {
+	cursor := slices.Index(branchNames, initialBranch)
+	if cursor < 0 {
+		cursor = 0
+	}
+	dialogData := SwitchModel{
+		branches:       branchNames,
+		cursor:         cursor,
+		helpColor:      termenv.String().Faint(),
+		helpKeyColor:   termenv.String().Faint().Bold(),
+		initialBranch:  initialBranch,
+		initialColor:   termenv.String().Foreground(termenv.ANSIGreen),
+		SelectedBranch: initialBranch,
+		selectionColor: termenv.String().Foreground(termenv.ANSICyan),
+	}
+	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
+	dialogResult, err := dialogProcess.Run()
+	if err != nil {
+		return "", err
+	}
+	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	return result.SelectedBranch, nil
+}
 
 type SwitchModel struct {
 	branches       []string      // names of all branches
@@ -17,23 +42,6 @@ type SwitchModel struct {
 	initialColor   termenv.Style // color for the row containing the currently checked out branch
 	SelectedBranch string        // name of the currently selected branch
 	selectionColor termenv.Style // color for the currently selected entry
-}
-
-func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
-	cursor := slices.Index(branches, initialBranch)
-	if cursor < 0 {
-		cursor = 0
-	}
-	return SwitchModel{
-		branches:       branches,
-		cursor:         cursor,
-		helpColor:      termenv.String().Faint(),
-		helpKeyColor:   termenv.String().Faint().Bold(),
-		initialBranch:  initialBranch,
-		initialColor:   termenv.String().Foreground(termenv.ANSIGreen),
-		SelectedBranch: initialBranch,
-		selectionColor: termenv.String().Foreground(termenv.ANSICyan),
-	}
 }
 
 func (m SwitchModel) Init() tea.Cmd {
