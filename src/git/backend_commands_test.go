@@ -723,6 +723,34 @@ func TestBackendCommands(t *testing.T) {
 		})
 	})
 
+	t.Run("ParseLocalBranchesOutput", func(t *testing.T) {
+		t.Parallel()
+		t.Run("normal output", func(t *testing.T) {
+			t.Parallel()
+			give := `
+  feature-1
+  feature-2
+* feature-3
+  main`[1:]
+			haveNames, haveCurrent := git.ParseLocalBranchesOutput(give)
+			wantNames := gitdomain.NewLocalBranchNames("feature-1", "feature-2", "feature-3", "main")
+			must.Eq(t, wantNames, haveNames)
+			wantCurrent := gitdomain.NewLocalBranchName("feature-3")
+			must.EqOp(t, wantCurrent, haveCurrent)
+		})
+
+		t.Run("main only", func(t *testing.T) {
+			t.Parallel()
+			give := `
+* main`[1:]
+			haveNames, haveCurrent := git.ParseLocalBranchesOutput(give)
+			wantNames := gitdomain.NewLocalBranchNames("main")
+			must.Eq(t, wantNames, haveNames)
+			wantCurrent := gitdomain.NewLocalBranchName("main")
+			must.EqOp(t, wantCurrent, haveCurrent)
+		})
+	})
+
 	t.Run("PreviouslyCheckedOutBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)

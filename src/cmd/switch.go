@@ -50,11 +50,11 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	branchNames, current, err := repo.Runner.Backend.LocalBranchNames()
 	if err != nil {
 		return err
 	}
-	dialogData := dialog.NewSwitchModel(branchesSnapshot.Branches.Names().Strings(), config.initialBranch.String())
+	dialogData := dialog.NewSwitchModel(branchNames.Strings(), current.String())
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
