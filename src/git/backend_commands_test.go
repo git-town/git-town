@@ -738,7 +738,6 @@ func TestBackendCommands(t *testing.T) {
 			wantCurrent := gitdomain.NewLocalBranchName("feature-3")
 			must.EqOp(t, wantCurrent, haveCurrent)
 		})
-
 		t.Run("main only", func(t *testing.T) {
 			t.Parallel()
 			give := `
