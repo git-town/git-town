@@ -1,6 +1,3 @@
-# atomicgo.dev/cursor v0.2.0
-## explicit; go 1.15
-atomicgo.dev/cursor
 # code.gitea.io/sdk/gitea v0.17.0
 ## explicit; go 1.13
 code.gitea.io/sdk/gitea
@@ -73,9 +70,6 @@ github.com/davidmz/go-pageant
 # github.com/dustin/go-humanize v1.0.1
 ## explicit; go 1.16
 github.com/dustin/go-humanize
-# github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
-## explicit; go 1.18
-github.com/eiannone/keyboard
 # github.com/fatih/color v1.15.0
 ## explicit; go 1.17
 github.com/fatih/color

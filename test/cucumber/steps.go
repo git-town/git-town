@@ -1,6 +1,7 @@
 package cucumber
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"log"
@@ -14,7 +15,6 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
@@ -485,10 +485,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Printf("\nThe workspace is at %s\n", state.fixture.DevRepo.WorkingDir)
-		_, _, err := keyboard.GetSingleKey()
-		if err != nil {
-			return fmt.Errorf("cannot read from os.Stdin: %w", err)
-		}
+		_ = bufio.NewScanner(os.Stdin)
 		return nil
 	})
 
