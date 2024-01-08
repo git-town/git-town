@@ -51,9 +51,9 @@ func executeSwitch(verbose bool) error {
 		return err
 	}
 	dialogModel := dialog.Model{
-		Branches:       []string{"main", "feature-1", "feature-2"},
-		InitialBranch:  "feature-1",
-		SelectedBranch: "feature-1",
+		Branches:       config.FullConfig.Lineage.BranchNames().Strings(),
+		InitialBranch:  config.initialBranch.String(),
+		SelectedBranch: config.initialBranch.String(),
 	}
 	p := tea.NewProgram(dialogModel, tea.WithOutput(os.Stderr))
 	dialogResult, err := p.Run()
