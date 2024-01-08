@@ -9,7 +9,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-func SwitchBranchesDialog(branchNames []string, initialBranch string) (string, error) {
+func SwitchBranch(branchNames []string, initialBranch string) (string, error) {
 	cursor := slices.Index(branchNames, initialBranch)
 	if cursor < 0 {
 		cursor = 0

@@ -47,7 +47,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branchNameToCheckout, err := dialog.SwitchBranchesDialog(config.branchNames.Strings(), config.initialBranch.String())
+	branchNameToCheckout, err := dialog.SwitchBranch(config.branchNames.Strings(), config.initialBranch.String())
 	if err != nil {
 		return err
 	}
