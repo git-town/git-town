@@ -40,10 +40,10 @@ func (m SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.Type {
+func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	if isKeyMsg {
+		switch keyMsg.Type { //nolint:exhaustive
 		case tea.KeyUp, tea.KeyShiftTab:
 			return m.MoveCursorUp(), nil
 		case tea.KeyDown, tea.KeyTab:
@@ -55,7 +55,7 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.SelectedBranch = m.initialBranch
 			return m, tea.Quit
 		case tea.KeyRunes:
-			switch string(msg.Runes) {
+			switch string(keyMsg.Runes) {
 			case "k":
 				return m.MoveCursorUp(), nil
 			case "j":
