@@ -12,8 +12,10 @@ type SwitchModel struct {
 	activeColor    *color.Color
 	branches       []string // names of all branches
 	cursor         int      // 0-based number of the selected row
-	initialBranch  string   // name of the currently checked out branch
+	dimColor       *color.Color
+	initialBranch  string // name of the currently checked out branch
 	initialColor   *color.Color
+	showHelp       bool
 	SelectedBranch string // name of the currently selected branch
 }
 
@@ -26,9 +28,11 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 		activeColor:    color.New(color.FgCyan),
 		branches:       branches,
 		cursor:         cursor,
+		dimColor:       color.New(color.Faint),
 		initialBranch:  initialBranch,
 		initialColor:   color.New(color.FgGreen),
 		SelectedBranch: initialBranch,
+		showHelp:       false,
 	}
 }
 
@@ -52,12 +56,18 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case tea.KeyRunes:
 			switch string(msg.Runes) {
+			case "h":
+				m.showHelp = !m.showHelp
+				return m, nil
 			case "k":
 				return m.MoveCursorUp(), nil
 			case "j":
 				return m.MoveCursorDown(), nil
 			case "o":
 				m.SelectedBranch = m.branches[m.cursor]
+				return m, tea.Quit
+			case "q":
+				m.SelectedBranch = m.initialBranch
 				return m, tea.Quit
 			}
 		}
@@ -99,6 +109,14 @@ func (m SwitchModel) View() string {
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n")
-	s.WriteString("Press Ctrl-C to quit")
+	if m.showHelp {
+		s.WriteString(m.dimColor.Sprint("[down] or j: select the next branch\n"))
+		s.WriteString(m.dimColor.Sprint("[up] or k: select the previous branch\n"))
+		s.WriteString(m.dimColor.Sprint("[enter] or o: finish and check out the selected branch\n"))
+		s.WriteString(m.dimColor.Sprint("[esc] or [ctrl-c] or q: quit without changing the branch\n"))
+		s.WriteString(m.dimColor.Sprint("h: toggle this help message\n"))
+	} else {
+		s.WriteString(m.dimColor.Sprint("Press h for help\n"))
+	}
 	return s.String()
 }
