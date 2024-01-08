@@ -104,8 +104,7 @@ func (m SwitchModel) View() string {
 		}
 		s.WriteRune('\n')
 	}
-	s.WriteString("\n\n")
-	s.WriteString("  ")
+	s.WriteString("\n\n  ")
 	// up
 	s.WriteString(m.helpKeyColor.Styled("↑"))
 	s.WriteString(m.helpColor.Styled("/"))

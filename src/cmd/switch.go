@@ -71,7 +71,8 @@ func executeSwitch(verbose bool) error {
 	result := dialogResult.(dialog.SwitchModel) //nolint:forcetypeassert
 	if result.SelectedBranch != config.initialBranch.String() {
 		fmt.Println()
-		err = repo.Runner.Frontend.CheckoutBranch(gitdomain.LocalBranchName(result.SelectedBranch))
+		branchToCheckout := gitdomain.LocalBranchName(result.SelectedBranch)
+		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
 		if err != nil {
 			exitCode := 1
 			var exitErr *exec.ExitError
