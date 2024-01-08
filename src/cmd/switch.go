@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 
@@ -52,18 +51,18 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if branchNameToCheckout != config.initialBranch.String() {
-		fmt.Println()
-		branchToCheckout := gitdomain.LocalBranchName(branchNameToCheckout)
-		err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
-		if err != nil {
-			exitCode := 1
-			var exitErr *exec.ExitError
-			if errors.As(err, &exitErr) {
-				exitCode = exitErr.ExitCode()
-			}
-			os.Exit(exitCode)
+	if branchNameToCheckout == config.initialBranch.String() {
+		return nil
+	}
+	branchToCheckout := gitdomain.LocalBranchName(branchNameToCheckout)
+	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
+	if err != nil {
+		exitCode := 1
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			exitCode = exitErr.ExitCode()
 		}
+		os.Exit(exitCode)
 	}
 	return nil
 }
