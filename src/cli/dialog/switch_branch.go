@@ -40,6 +40,24 @@ func (m SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
+func (m SwitchModel) MoveCursorDown() SwitchModel {
+	if m.cursor < len(m.branches)-1 {
+		m.cursor++
+	} else {
+		m.cursor = 0
+	}
+	return m
+}
+
+func (m SwitchModel) MoveCursorUp() SwitchModel {
+	if m.cursor > 0 {
+		m.cursor--
+	} else {
+		m.cursor = len(m.branches) - 1
+	}
+	return m
+}
+
 func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if isKeyMsg {
@@ -70,24 +88,6 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 		}
 	}
 	return m, nil
-}
-
-func (m SwitchModel) MoveCursorUp() SwitchModel {
-	if m.cursor > 0 {
-		m.cursor--
-	} else {
-		m.cursor = len(m.branches) - 1
-	}
-	return m
-}
-
-func (m SwitchModel) MoveCursorDown() SwitchModel {
-	if m.cursor < len(m.branches)-1 {
-		m.cursor++
-	} else {
-		m.cursor = 0
-	}
-	return m
 }
 
 func (m SwitchModel) View() string {
