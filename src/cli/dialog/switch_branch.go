@@ -16,7 +16,6 @@ type SwitchModel struct {
 	helpHighlightColor *color.Color
 	initialBranch      string // name of the currently checked out branch
 	initialColor       *color.Color
-	showHelp           bool
 	SelectedBranch     string // name of the currently selected branch
 }
 
@@ -34,7 +33,6 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 		initialBranch:      initialBranch,
 		initialColor:       color.New(color.FgGreen),
 		SelectedBranch:     initialBranch,
-		showHelp:           false,
 	}
 }
 
@@ -58,9 +56,6 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case tea.KeyRunes:
 			switch string(msg.Runes) {
-			case "h", "?":
-				m.showHelp = !m.showHelp
-				return m, nil
 			case "k":
 				return m.MoveCursorUp(), nil
 			case "j":
@@ -111,23 +106,26 @@ func (m SwitchModel) View() string {
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n")
-	if m.showHelp {
-		s.WriteString(m.helpColor.Sprint("[down] or \"j\"             select the next branch\n"))
-		s.WriteString(m.helpHighlightColor.Sprint("[up] or \"k\"               select the previous branch\n"))
-		s.WriteString(m.helpColor.Sprint("[enter] or \"o\"            finish and check out the selected branch\n"))
-		s.WriteString(m.helpColor.Sprint("[esc] or [ctrl-c] or \"q\"  quit without changing the branch\n"))
-		s.WriteString(m.helpColor.Sprint("\"h\"                       toggle this help message\n"))
-	} else {
-		s.WriteString("  ")
-		s.WriteString(m.helpHighlightColor.Sprint("↑"))
-		s.WriteString(m.helpColor.Sprint("/"))
-		s.WriteString(m.helpHighlightColor.Sprint("k"))
-		s.WriteString(m.helpColor.Sprint(" up   "))
-		s.WriteString(m.helpHighlightColor.Sprint("↓"))
-		s.WriteString(m.helpColor.Sprint("/"))
-		s.WriteString(m.helpHighlightColor.Sprint("j"))
-		s.WriteString(m.helpColor.Sprint(" down  "))
-
-	}
+	s.WriteString("  ")
+	// up
+	s.WriteString(m.helpHighlightColor.Sprint("↑"))
+	s.WriteString(m.helpColor.Sprint("/"))
+	s.WriteString(m.helpHighlightColor.Sprint("k"))
+	s.WriteString(m.helpColor.Sprint(" up   "))
+	// down
+	s.WriteString(m.helpHighlightColor.Sprint("↓"))
+	s.WriteString(m.helpColor.Sprint("/"))
+	s.WriteString(m.helpHighlightColor.Sprint("j"))
+	s.WriteString(m.helpColor.Sprint(" down   "))
+	// accept
+	s.WriteString(m.helpHighlightColor.Sprint("enter"))
+	s.WriteString(m.helpColor.Sprint("/"))
+	s.WriteString(m.helpHighlightColor.Sprint("o"))
+	s.WriteString(m.helpColor.Sprint(" accept   "))
+	// abort
+	s.WriteString(m.helpHighlightColor.Sprint("esc"))
+	s.WriteString(m.helpColor.Sprint("/"))
+	s.WriteString(m.helpHighlightColor.Sprint("q"))
+	s.WriteString(m.helpColor.Sprint(" abort"))
 	return s.String()
 }
