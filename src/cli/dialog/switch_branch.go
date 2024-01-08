@@ -79,7 +79,7 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	case tea.KeyEnter:
 		m.SelectedBranch = m.branches[m.cursor]
 		return m, tea.Quit
-	case tea.KeyCtrlC, tea.KeyEsc:
+	case tea.KeyCtrlC:
 		m.SelectedBranch = m.initialBranch
 		return m, tea.Quit
 	case tea.KeyRunes:
