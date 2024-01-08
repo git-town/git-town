@@ -1,11 +1,72 @@
 package dialog
 
 import (
+	"fmt"
 	"strings"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
+
+type Model struct {
+	Cursor        int
+	Branches      []string
+	CurrentBranch string
+}
+
+func (m Model) Init() tea.Cmd {
+	return tea.SetWindowTitle("Grocery List")
+}
+
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
+			return m, tea.Quit
+		case "up", "k":
+			if m.cursor > 0 {
+				m.cursor--
+			}
+		case "down", "j":
+			if m.cursor < len(m.choices)-1 {
+				m.cursor++
+			}
+		case "enter", " ":
+			_, ok := m.selected[m.cursor]
+			if ok {
+				delete(m.selected, m.cursor)
+			} else {
+				m.selected[m.cursor] = struct{}{}
+			}
+		}
+	}
+
+	return m, nil
+}
+
+func (m Model) View() string {
+	s := "What should we buy at the market?\n\n"
+
+	for i, choice := range m.choices {
+		cursor := " "
+		if m.cursor == i {
+			cursor = ">"
+		}
+
+		checked := " "
+		if _, ok := m.selected[i]; ok {
+			checked = "x"
+		}
+
+		s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, choice)
+	}
+
+	s += "\nPress q to quit.\n"
+
+	return s
+}
 
 func NewBuilder(lineage configdomain.Lineage) Builder {
 	return Builder{
@@ -34,8 +95,6 @@ func SwitchBranch(roots gitdomain.LocalBranchNames, selected gitdomain.LocalBran
 
 // Builder builds up the switch-branch dialog entries.
 type Builder struct {
-	Entries ModalSelectEntries
-	Lineage configdomain.Lineage
 }
 
 // AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
