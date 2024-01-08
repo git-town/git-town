@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -46,15 +45,11 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineSwitchConfig(repo, verbose)
-	if err != nil || exit {
-		return err
-	}
-	branchNames, current, err := repo.Runner.Backend.LocalBranchNames()
+	config, err := determineSwitchConfig(repo)
 	if err != nil {
 		return err
 	}
-	dialogData := dialog.NewSwitchModel(branchNames.Strings(), current.String())
+	dialogData := dialog.NewSwitchModel(config.branchNames.Strings(), config.initialBranch.String())
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
@@ -78,22 +73,17 @@ func executeSwitch(verbose bool) error {
 }
 
 type switchConfig struct {
-	*configdomain.FullConfig
+	branchNames   gitdomain.LocalBranchNames
 	initialBranch gitdomain.LocalBranchName
 }
 
-func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 false,
-		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
+func determineSwitchConfig(repo *execute.OpenRepoResult) (*switchConfig, error) {
+	branchNames, current, err := repo.Runner.Backend.LocalBranchNames()
+	if err != nil {
+		return nil, err
+	}
 	return &switchConfig{
-		FullConfig:    &repo.Runner.FullConfig,
-		initialBranch: branchesSnapshot.Active,
-	}, exit, err
+		branchNames:   branchNames,
+		initialBranch: current,
+	}, err
 }
