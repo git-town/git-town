@@ -43,8 +43,8 @@ func executeSwitch(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineSwitchConfig(repo)
-	if err != nil {
+	config, exit, err := determineSwitchConfig(repo, verbose)
+	if err != nil || exit {
 		return err
 	}
 	branchNameToCheckout, err := dialog.SwitchBranch(config.branchNames.Strings(), config.initialBranch.String())
@@ -72,13 +72,21 @@ type switchConfig struct {
 	initialBranch gitdomain.LocalBranchName
 }
 
-func determineSwitchConfig(repo *execute.OpenRepoResult) (*switchConfig, error) {
-	branchNames, current, err := repo.Runner.Backend.LocalBranchNames()
-	if err != nil {
-		return nil, err
+func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchConfig, bool, error) {
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		FullConfig:            &repo.Runner.FullConfig,
+		Repo:                  repo,
+		Verbose:               verbose,
+		Fetch:                 false,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return nil, exit, err
 	}
 	return &switchConfig{
-		branchNames:   branchNames,
-		initialBranch: current,
-	}, err
+		branchNames:   branchesSnapshot.Branches.Names(),
+		initialBranch: branchesSnapshot.Active,
+	}, false, err
 }

@@ -306,18 +306,6 @@ func (self *BackendCommands) LastCommitMessage() (string, error) {
 	return out, nil
 }
 
-func (self *BackendCommands) LocalBranchNames() (gitdomain.LocalBranchNames, gitdomain.LocalBranchName, error) {
-	output, err := self.Query("git", "branch")
-	if err != nil {
-		return gitdomain.LocalBranchNames{}, "", err
-	}
-	branches, currentBranch := ParseLocalBranchesOutput(output)
-	if !currentBranch.IsEmpty() {
-		self.CurrentBranchCache.Set(currentBranch)
-	}
-	return branches, currentBranch, nil
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
 	output, err := self.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -453,24 +441,6 @@ func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchN
 	}
 	content := strings.TrimSpace(string(rawContent))
 	return gitdomain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
-}
-
-// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseLocalBranchesOutput(output string) (gitdomain.LocalBranchNames, gitdomain.LocalBranchName) {
-	lines := stringslice.Lines(output)
-	branchNames := make(gitdomain.LocalBranchNames, 0, len(lines))
-	checkedoutBranch := gitdomain.EmptyLocalBranchName()
-	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		branchName := gitdomain.NewLocalBranchName(line[2:])
-		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = branchName
-		}
-		branchNames = append(branchNames, branchName)
-	}
-	return branchNames, checkedoutBranch
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
