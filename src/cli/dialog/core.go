@@ -4,6 +4,7 @@ package dialog
 import (
 	"runtime"
 
+	"github.com/muesli/termenv"
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
@@ -13,5 +14,29 @@ func Initialize() {
 		surveyCore.SelectFocusIcon = ">"
 		surveyCore.MarkedOptionIcon = "[x]"
 		surveyCore.UnmarkedOptionIcon = "[ ]"
+	}
+}
+
+type dialogMode int
+
+const (
+	dialogModeSelecting = 0
+	dialogModeSuccess   = 1
+	dialogModeAbort     = 2
+)
+
+type dialogColors struct {
+	help      termenv.Style // color of help text
+	helpKey   termenv.Style // color of key names in help text
+	initial   termenv.Style // color for the row containing the currently checked out branch
+	selection termenv.Style // color for the currently selected entry
+}
+
+func createColors() dialogColors {
+	return dialogColors{
+		help:      termenv.String().Faint(),
+		helpKey:   termenv.String().Faint().Bold(),
+		initial:   termenv.String().Foreground(termenv.ANSIGreen),
+		selection: termenv.String().Foreground(termenv.ANSICyan),
 	}
 }

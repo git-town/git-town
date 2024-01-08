@@ -16,9 +16,15 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
 		var err error
-		config.MainBranch, err = dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch, backend)
+		newMainBranch, abort, err := dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch)
 		if err != nil {
 			return err
+		}
+		if abort {
+			return nil
+		}
+		if newMainBranch != config.MainBranch {
+			backend.SetMainBranch(config.MainBranch)
 		}
 		return dialog.EnterPerennialBranches(backend, config, allBranches)
 	}
