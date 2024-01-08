@@ -93,13 +93,14 @@ func (m SwitchModel) MoveCursorDown() SwitchModel {
 func (m SwitchModel) View() string {
 	s := strings.Builder{}
 	for i, branch := range m.branches {
-		if i == m.cursor {
+		switch {
+		case i == m.cursor:
 			s.WriteString(m.activeColor.Sprint("> "))
 			s.WriteString(m.activeColor.Sprint(branch))
-		} else if branch == m.initialBranch {
+		case branch == m.initialBranch:
 			s.WriteString(m.initialColor.Sprint("* "))
 			s.WriteString(m.initialColor.Sprint(branch))
-		} else {
+		default:
 			s.WriteString("  ")
 			s.WriteString(branch)
 		}
