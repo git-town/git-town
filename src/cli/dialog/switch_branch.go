@@ -84,9 +84,9 @@ func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 		return m, tea.Quit
 	case tea.KeyRunes:
 		switch string(keyMsg.Runes) {
-		case "k":
+		case "k", "A", "Z":
 			return m.MoveCursorUp(), nil
-		case "j":
+		case "j", "B":
 			return m.MoveCursorDown(), nil
 		case "o":
 			m.SelectedBranch = m.branches[m.cursor]
