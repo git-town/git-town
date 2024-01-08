@@ -44,69 +44,69 @@ type SwitchModel struct {
 	selectionColor termenv.Style // color for the currently selected entry
 }
 
-func (m SwitchModel) Init() tea.Cmd {
+func (self SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m SwitchModel) MoveCursorDown() SwitchModel {
-	if m.cursor < len(m.branches)-1 {
-		m.cursor++
+func (self SwitchModel) MoveCursorDown() SwitchModel {
+	if self.cursor < len(self.branches)-1 {
+		self.cursor++
 	} else {
-		m.cursor = 0
+		self.cursor = 0
 	}
-	return m
+	return self
 }
 
-func (m SwitchModel) MoveCursorUp() SwitchModel {
-	if m.cursor > 0 {
-		m.cursor--
+func (self SwitchModel) MoveCursorUp() SwitchModel {
+	if self.cursor > 0 {
+		self.cursor--
 	} else {
-		m.cursor = len(m.branches) - 1
+		self.cursor = len(self.branches) - 1
 	}
-	return m
+	return self
 }
 
-func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
-		return m, nil
+		return self, nil
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
-		return m.MoveCursorUp(), nil
+		return self.MoveCursorUp(), nil
 	case tea.KeyDown, tea.KeyTab:
-		return m.MoveCursorDown(), nil
+		return self.MoveCursorDown(), nil
 	case tea.KeyEnter:
-		m.SelectedBranch = m.branches[m.cursor]
-		return m, tea.Quit
+		self.SelectedBranch = self.branches[self.cursor]
+		return self, tea.Quit
 	case tea.KeyCtrlC:
-		m.SelectedBranch = m.initialBranch
-		return m, tea.Quit
+		self.SelectedBranch = self.initialBranch
+		return self, tea.Quit
 	case tea.KeyRunes:
 		switch string(keyMsg.Runes) {
 		case "k", "A", "Z":
-			return m.MoveCursorUp(), nil
+			return self.MoveCursorUp(), nil
 		case "j", "B":
-			return m.MoveCursorDown(), nil
+			return self.MoveCursorDown(), nil
 		case "o":
-			m.SelectedBranch = m.branches[m.cursor]
-			return m, tea.Quit
+			self.SelectedBranch = self.branches[self.cursor]
+			return self, tea.Quit
 		case "q":
-			m.SelectedBranch = m.initialBranch
-			return m, tea.Quit
+			self.SelectedBranch = self.initialBranch
+			return self, tea.Quit
 		}
 	}
-	return m, nil
+	return self, nil
 }
 
-func (m SwitchModel) View() string {
+func (self SwitchModel) View() string {
 	s := strings.Builder{}
-	for i, branch := range m.branches {
+	for i, branch := range self.branches {
 		switch {
-		case i == m.cursor:
-			s.WriteString(m.selectionColor.Styled("> " + branch))
-		case branch == m.initialBranch:
-			s.WriteString(m.initialColor.Styled("* " + branch))
+		case i == self.cursor:
+			s.WriteString(self.selectionColor.Styled("> " + branch))
+		case branch == self.initialBranch:
+			s.WriteString(self.initialColor.Styled("* " + branch))
 		default:
 			s.WriteString("  " + branch)
 		}
@@ -114,24 +114,24 @@ func (m SwitchModel) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(m.helpKeyColor.Styled("↑"))
-	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpKeyColor.Styled("k"))
-	s.WriteString(m.helpColor.Styled(" up   "))
+	s.WriteString(self.helpKeyColor.Styled("↑"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("k"))
+	s.WriteString(self.helpColor.Styled(" up   "))
 	// down
-	s.WriteString(m.helpKeyColor.Styled("↓"))
-	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpKeyColor.Styled("j"))
-	s.WriteString(m.helpColor.Styled(" down   "))
+	s.WriteString(self.helpKeyColor.Styled("↓"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("j"))
+	s.WriteString(self.helpColor.Styled(" down   "))
 	// accept
-	s.WriteString(m.helpKeyColor.Styled("enter"))
-	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpKeyColor.Styled("o"))
-	s.WriteString(m.helpColor.Styled(" accept   "))
+	s.WriteString(self.helpKeyColor.Styled("enter"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("o"))
+	s.WriteString(self.helpColor.Styled(" accept   "))
 	// abort
-	s.WriteString(m.helpKeyColor.Styled("esc"))
-	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpKeyColor.Styled("q"))
-	s.WriteString(m.helpColor.Styled(" abort"))
+	s.WriteString(self.helpKeyColor.Styled("esc"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("q"))
+	s.WriteString(self.helpColor.Styled(" abort"))
 	return s.String()
 }
