@@ -1,51 +1,37 @@
 package dialog
 
 import (
-	"fmt"
-	"os"
 	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/fatih/color"
 	"github.com/muesli/termenv"
 )
 
 type SwitchModel struct {
-	activeColor        *color.Color
+	activeColor        termenv.Style
 	branches           []string // names of all branches
 	cursor             int      // 0-based number of the selected row
-	helpColor          *color.Color
-	helpHighlightColor *color.Color
+	helpColor          termenv.Style
+	helpHighlightColor termenv.Style
 	initialBranch      string // name of the currently checked out branch
-	initialColor       *color.Color
+	initialColor       termenv.Style
 	SelectedBranch     string // name of the currently selected branch
 }
 
 func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 	cursor := slices.Index(branches, initialBranch)
-	if cursor == -1 {
+	if cursor < 0 {
 		cursor = 0
 	}
-	output := termenv.NewOutput(os.Stderr)
-	darkTheme := output.HasDarkBackground()
-	fmt.Println(termenv.String("11111111111111").Foreground(termenv.ANSIBlue))
-	s := output.String("Hello World")
-	fmt.Println("DARK THEME:", darkTheme)
-	fmt.Println("FOREGROUND:", output.ForegroundColor())
-	fmt.Println("BACKGROUND:", output.BackgroundColor())
-	s.Background(output.Color("3"))
-	s.Bold()
-	fmt.Println(s)
-
 	return SwitchModel{
-		activeColor:        color.New(color.FgCyan),
+		activeColor:        termenv.String().Foreground(termenv.ANSICyan),
 		branches:           branches,
 		cursor:             cursor,
-		helpColor:          color.New(color.Faint),
-		helpHighlightColor: color.New(color.Faint).Add(color.Bold),
+		helpColor:          termenv.String().Faint(),
+		helpHighlightColor: termenv.String().Faint().Bold(),
 		initialBranch:      initialBranch,
-		initialColor:       color.New(color.FgGreen),
+		initialColor:       termenv.String().Foreground(termenv.ANSIGreen),
 		SelectedBranch:     initialBranch,
 	}
 }
@@ -109,11 +95,11 @@ func (m SwitchModel) View() string {
 	for i, branch := range m.branches {
 		switch {
 		case i == m.cursor:
-			s.WriteString(m.activeColor.Sprint("> "))
-			s.WriteString(m.activeColor.Sprint(branch))
+			s.WriteString(m.activeColor.Styled("> "))
+			s.WriteString(m.activeColor.Styled(branch))
 		case branch == m.initialBranch:
-			s.WriteString(m.initialColor.Sprint("* "))
-			s.WriteString(m.initialColor.Sprint(branch))
+			s.WriteString(m.initialColor.Styled("* "))
+			s.WriteString(m.initialColor.Styled(branch))
 		default:
 			s.WriteString("  ")
 			s.WriteString(branch)
@@ -123,24 +109,24 @@ func (m SwitchModel) View() string {
 	s.WriteString("\n\n")
 	s.WriteString("  ")
 	// up
-	s.WriteString(termenv.String("↑").Faint().Bold().String())
-	s.WriteString(m.helpColor.Sprint("/"))
-	s.WriteString(m.helpHighlightColor.Sprint("k"))
-	s.WriteString(m.helpColor.Sprint(" up   "))
+	s.WriteString(m.helpHighlightColor.Styled("↑"))
+	s.WriteString(m.helpColor.Styled("/"))
+	s.WriteString(m.helpHighlightColor.Styled("k"))
+	s.WriteString(m.helpColor.Styled(" up   "))
 	// down
-	s.WriteString(m.helpHighlightColor.Sprint("↓"))
-	s.WriteString(m.helpColor.Sprint("/"))
-	s.WriteString(m.helpHighlightColor.Sprint("j"))
-	s.WriteString(m.helpColor.Sprint(" down   "))
+	s.WriteString(m.helpHighlightColor.Styled("↓"))
+	s.WriteString(m.helpColor.Styled("/"))
+	s.WriteString(m.helpHighlightColor.Styled("j"))
+	s.WriteString(m.helpColor.Styled(" down   "))
 	// accept
-	s.WriteString(m.helpHighlightColor.Sprint("enter"))
-	s.WriteString(m.helpColor.Sprint("/"))
-	s.WriteString(m.helpHighlightColor.Sprint("o"))
-	s.WriteString(m.helpColor.Sprint(" accept   "))
+	s.WriteString(m.helpHighlightColor.Styled("enter"))
+	s.WriteString(m.helpColor.Styled("/"))
+	s.WriteString(m.helpHighlightColor.Styled("o"))
+	s.WriteString(m.helpColor.Styled(" accept   "))
 	// abort
-	s.WriteString(m.helpHighlightColor.Sprint("esc"))
-	s.WriteString(m.helpColor.Sprint("/"))
-	s.WriteString(m.helpHighlightColor.Sprint("q"))
-	s.WriteString(m.helpColor.Sprint(" abort"))
+	s.WriteString(m.helpHighlightColor.Styled("esc"))
+	s.WriteString(m.helpColor.Styled("/"))
+	s.WriteString(m.helpHighlightColor.Styled("q"))
+	s.WriteString(m.helpColor.Styled(" abort"))
 	return s.String()
 }
