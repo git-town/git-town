@@ -60,31 +60,32 @@ func (m SwitchModel) MoveCursorUp() SwitchModel {
 
 func (m SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
-	if isKeyMsg {
-		switch keyMsg.Type { //nolint:exhaustive
-		case tea.KeyUp, tea.KeyShiftTab:
+	if !isKeyMsg {
+		return m, nil
+	}
+	switch keyMsg.Type { //nolint:exhaustive
+	case tea.KeyUp, tea.KeyShiftTab:
+		return m.MoveCursorUp(), nil
+	case tea.KeyDown, tea.KeyTab:
+		return m.MoveCursorDown(), nil
+	case tea.KeyEnter:
+		m.SelectedBranch = m.branches[m.cursor]
+		return m, tea.Quit
+	case tea.KeyCtrlC, tea.KeyEsc:
+		m.SelectedBranch = m.initialBranch
+		return m, tea.Quit
+	case tea.KeyRunes:
+		switch string(keyMsg.Runes) {
+		case "k":
 			return m.MoveCursorUp(), nil
-		case tea.KeyDown, tea.KeyTab:
+		case "j":
 			return m.MoveCursorDown(), nil
-		case tea.KeyEnter:
+		case "o":
 			m.SelectedBranch = m.branches[m.cursor]
 			return m, tea.Quit
-		case tea.KeyCtrlC, tea.KeyEsc:
+		case "q":
 			m.SelectedBranch = m.initialBranch
 			return m, tea.Quit
-		case tea.KeyRunes:
-			switch string(keyMsg.Runes) {
-			case "k":
-				return m.MoveCursorUp(), nil
-			case "j":
-				return m.MoveCursorDown(), nil
-			case "o":
-				m.SelectedBranch = m.branches[m.cursor]
-				return m, tea.Quit
-			case "q":
-				m.SelectedBranch = m.initialBranch
-				return m, tea.Quit
-			}
 		}
 	}
 	return m, nil
