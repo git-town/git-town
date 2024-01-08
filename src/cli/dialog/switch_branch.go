@@ -10,46 +10,63 @@ import (
 )
 
 type Model struct {
-	Cursor        int
-	Branches      []string
-	CurrentBranch string
+	Branches       []string // names of all branches
+	cursor         int      // 0-based number of the selected row
+	InitialBranch  string   // name of the currently checked out branch
+	SelectedBranch string   // name of the currently selected branch
 }
 
 func (m Model) Init() tea.Cmd {
-	return tea.SetWindowTitle("Grocery List")
+	return nil
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
+		switch msg.Type {
+		case tea.KeyUp:
+			m.MoveCursorUp()
+		case tea.KeyDown:
+			m.MoveCursorDown()
+		case tea.KeyEnter:
+			m.SelectedBranch = m.Branches[m.cursor]
 			return m, tea.Quit
-		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
-			}
-		case "down", "j":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
-			}
-		case "enter", " ":
-			_, ok := m.selected[m.cursor]
-			if ok {
-				delete(m.selected, m.cursor)
-			} else {
-				m.selected[m.cursor] = struct{}{}
+		case tea.KeyCtrlC:
+			return m, tea.Quit
+		case tea.KeyRunes:
+			switch string(msg.Runes) {
+			case "k":
+				m.MoveCursorUp()
+			case "j":
+				m.MoveCursorDown()
+			case "o":
+				m.SelectedBranch = m.Branches[m.cursor]
+				return m, tea.Quit
 			}
 		}
 	}
-
 	return m, nil
 }
 
-func (m Model) View() string {
-	s := "What should we buy at the market?\n\n"
+func (m *Model) MoveCursorUp() {
+	if m.cursor > 0 {
+		m.cursor--
+	} else {
+		m.cursor = len(m.Branches) - 1
+	}
+}
 
-	for i, choice := range m.choices {
+func (m *Model) MoveCursorDown() {
+	if m.cursor < len(m.Branches)-1 {
+		m.cursor++
+	} else {
+		m.cursor = 0
+	}
+}
+
+func (m Model) View() string {
+	s := strings.Builder{}
+	for _, branch := range m.Branches {
 		cursor := " "
 		if m.cursor == i {
 			cursor = ">"

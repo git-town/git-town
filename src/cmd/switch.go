@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -49,22 +50,20 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-
-	p := tea.NewProgram(dialog.Model{
-		Branches:      []string{"main", "feature-1", "feature-2"},
-		CurrentBranch: "feature-1",
-		Cursor:        0,
-	})
-	newBranch, err := p.Run()
+	dialogModel := dialog.Model{
+		Branches:       []string{"main", "feature-1", "feature-2"},
+		InitialBranch:  "feature-1",
+		SelectedBranch: "feature-1",
+	}
+	p := tea.NewProgram(dialogModel, tea.WithOutput(os.Stderr))
+	dialogResult, err := p.Run()
 	if err != nil {
 		return err
 	}
-	if newBranch == nil {
-		return nil
-	}
-	if *newBranch != config.initialBranch {
+	result := dialogResult.(dialog.Model)
+	if result.SelectedBranch != config.initialBranch.String() {
 		fmt.Println()
-		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
+		err = repo.Runner.Frontend.CheckoutBranch(gitdomain.LocalBranchName(result.SelectedBranch))
 		if err != nil {
 			exitCode := 1
 			var exitErr *exec.ExitError
