@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/fatih/color"
 )
 
 type Model struct {
@@ -66,13 +67,15 @@ func (m Model) MoveCursorDown() Model {
 
 func (m Model) View() string {
 	s := strings.Builder{}
+	activeColor := color.New(color.FgCyan)
+	initialColor := color.New(color.FgGreen)
 	for i, branch := range m.Branches {
-		if branch == m.InitialBranch {
-			s.WriteString("> ")
-			s.WriteString(branch)
+		if branch == m.InitialBranch && i == m.cursor {
+			s.WriteString(activeColor.Sprint("> "))
+			s.WriteString(activeColor.Sprint(branch))
 		} else if i == m.cursor {
-			s.WriteString("* ")
-			s.WriteString(branch)
+			s.WriteString(initialColor.Sprint("* "))
+			s.WriteString(initialColor.Sprint(branch))
 		} else {
 			s.WriteString("  ")
 			s.WriteString(branch)
