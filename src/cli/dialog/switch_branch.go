@@ -95,14 +95,11 @@ func (m SwitchModel) View() string {
 	for i, branch := range m.branches {
 		switch {
 		case i == m.cursor:
-			s.WriteString(m.selectionColor.Styled("> "))
-			s.WriteString(m.selectionColor.Styled(branch))
+			s.WriteString(m.selectionColor.Styled("> " + branch))
 		case branch == m.initialBranch:
-			s.WriteString(m.initialColor.Styled("* "))
-			s.WriteString(m.initialColor.Styled(branch))
+			s.WriteString(m.initialColor.Styled("* " + branch))
 		default:
-			s.WriteString("  ")
-			s.WriteString(branch)
+			s.WriteString("  " + branch)
 		}
 		s.WriteRune('\n')
 	}
