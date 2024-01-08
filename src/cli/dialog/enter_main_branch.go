@@ -25,7 +25,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
-		return "", false, err
+		return gitdomain.EmptyLocalBranchName(), false, err
 	}
 	result := dialogResult.(mainBranchModel) //nolint:forcetypeassert
 	selectedBranchName := result.selectedEntry()
