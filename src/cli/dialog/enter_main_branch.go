@@ -28,8 +28,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		return gitdomain.EmptyLocalBranchName(), false, err
 	}
 	result := dialogResult.(mainBranchModel) //nolint:forcetypeassert
-	selectedBranchName := result.selectedEntry()
-	selectedBranch = gitdomain.LocalBranchName(selectedBranchName)
+	selectedBranch = gitdomain.LocalBranchName(result.selectedEntry())
 	return selectedBranch, result.aborted, nil
 }
 
