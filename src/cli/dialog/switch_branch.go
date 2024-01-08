@@ -28,7 +28,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyEnter:
 			m.SelectedBranch = m.Branches[m.cursor]
 			return m, tea.Quit
-		case tea.KeyCtrlC:
+		case tea.KeyCtrlC, tea.KeyEsc:
 			m.SelectedBranch = m.InitialBranch
 			return m, tea.Quit
 		case tea.KeyRunes:
@@ -66,11 +66,11 @@ func (m Model) MoveCursorDown() Model {
 
 func (m Model) View() string {
 	s := strings.Builder{}
-	for _, branch := range m.Branches {
+	for i, branch := range m.Branches {
 		if branch == m.InitialBranch {
 			s.WriteString("> ")
 			s.WriteString(branch)
-		} else if branch == m.SelectedBranch {
+		} else if i == m.cursor {
 			s.WriteString("* ")
 			s.WriteString(branch)
 		} else {
