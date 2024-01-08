@@ -170,114 +170,6 @@ func IsRemoteGone(branchName, remoteText string) (bool, gitdomain.RemoteBranchNa
 	return false, gitdomain.EmptyRemoteBranchName()
 }
 
-// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain.LocalBranchName) {
-	result := gitdomain.BranchInfos{}
-	spaceRE := regexp.MustCompile(" +")
-	lines := stringslice.Lines(output)
-	checkedoutBranch := gitdomain.EmptyLocalBranchName()
-	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		parts := spaceRE.Split(line[2:], 3)
-		if parts[0] == "remotes/origin/HEAD" {
-			continue
-		}
-		if len(parts) < 2 {
-			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
-			fmt.Println("ERROR: Encountered irregular Git output")
-			fmt.Println()
-			fmt.Println("PLEASE REPORT THE OUTPUT BELOW AT https://github.com/git-town/git-town/issues/new")
-			fmt.Println()
-			fmt.Printf("Problematic line: %q\n", line)
-			fmt.Println()
-			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva'")
-			fmt.Println(output)
-			fmt.Println("END OUTPUT FROM 'git branch -vva'")
-			os.Exit(1)
-		}
-		branchName := parts[0]
-		var sha gitdomain.SHA
-		if parts[1] == "branch," {
-			// we are rebasing and don't need the SHA
-			sha = gitdomain.EmptySHA()
-		} else {
-			sha = gitdomain.NewSHA(parts[1])
-		}
-		remoteText := parts[2]
-		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = gitdomain.NewLocalBranchName(branchName)
-		}
-		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		switch {
-		case line[0] == '+':
-			result = append(result, gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName(branchName),
-				LocalSHA:   sha,
-				SyncStatus: gitdomain.SyncStatusOtherWorktree,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  gitdomain.EmptySHA(),
-			})
-		case isLocalBranchName(branchName):
-			result = append(result, gitdomain.BranchInfo{
-				LocalName:  gitdomain.NewLocalBranchName(branchName),
-				LocalSHA:   sha,
-				SyncStatus: syncStatus,
-				RemoteName: trackingBranchName,
-				RemoteSHA:  gitdomain.EmptySHA(), // will be added later
-			})
-		default:
-			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
-			if existingBranchWithTracking != nil {
-				existingBranchWithTracking.RemoteSHA = sha
-			} else {
-				result = append(result, gitdomain.BranchInfo{
-					LocalName:  gitdomain.EmptyLocalBranchName(),
-					LocalSHA:   gitdomain.EmptySHA(),
-					SyncStatus: gitdomain.SyncStatusRemoteOnly,
-					RemoteName: remoteBranchName,
-					RemoteSHA:  sha,
-				})
-			}
-		}
-	}
-	return result, checkedoutBranch
-}
-
-func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName gitdomain.RemoteBranchName) {
-	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
-	if isInSync {
-		return gitdomain.SyncStatusUpToDate, trackingBranchName
-	}
-	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
-	if isGone {
-		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
-	}
-	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
-	if IsAhead {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
-	}
-	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
-	if IsBehind {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
-	}
-	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
-	if IsAheadAndBehind {
-		return gitdomain.SyncStatusNotInSync, trackingBranchName
-	}
-	if strings.HasPrefix(branchName, "remotes/") {
-		return gitdomain.SyncStatusRemoteOnly, gitdomain.EmptyRemoteBranchName()
-	}
-	return gitdomain.SyncStatusLocalOnly, gitdomain.EmptyRemoteBranchName()
-}
-
-// isLocalBranchName indicates whether the branch with the given Git ref is local or remote.
-func isLocalBranchName(branch string) bool {
-	return !strings.HasPrefix(branch, "remotes/")
-}
-
 // CheckoutBranch checks out the Git branch with the given name.
 func (self *BackendCommands) CheckoutBranchUncached(name gitdomain.LocalBranchName) error {
 	err := self.Run("git", "checkout", name.String())
@@ -426,24 +318,6 @@ func (self *BackendCommands) LocalBranchNames() (gitdomain.LocalBranchNames, git
 	return branches, currentBranch, nil
 }
 
-// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseLocalBranchesOutput(output string) (gitdomain.LocalBranchNames, gitdomain.LocalBranchName) {
-	lines := stringslice.Lines(output)
-	branchNames := make(gitdomain.LocalBranchNames, 0, len(lines))
-	checkedoutBranch := gitdomain.EmptyLocalBranchName()
-	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		branchName := gitdomain.NewLocalBranchName(line[2:])
-		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
-			checkedoutBranch = branchName
-		}
-		branchNames = append(branchNames, branchName)
-	}
-	return branchNames, checkedoutBranch
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
 	output, err := self.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -579,6 +453,132 @@ func (self *BackendCommands) currentBranchDuringRebase() (gitdomain.LocalBranchN
 	}
 	content := strings.TrimSpace(string(rawContent))
 	return gitdomain.NewLocalBranchName(strings.ReplaceAll(content, "refs/heads/", "")), nil
+}
+
+// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
+func ParseLocalBranchesOutput(output string) (gitdomain.LocalBranchNames, gitdomain.LocalBranchName) {
+	lines := stringslice.Lines(output)
+	branchNames := make(gitdomain.LocalBranchNames, 0, len(lines))
+	checkedoutBranch := gitdomain.EmptyLocalBranchName()
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		branchName := gitdomain.NewLocalBranchName(line[2:])
+		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
+			checkedoutBranch = branchName
+		}
+		branchNames = append(branchNames, branchName)
+	}
+	return branchNames, checkedoutBranch
+}
+
+// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
+func ParseVerboseBranchesOutput(output string) (gitdomain.BranchInfos, gitdomain.LocalBranchName) {
+	result := gitdomain.BranchInfos{}
+	spaceRE := regexp.MustCompile(" +")
+	lines := stringslice.Lines(output)
+	checkedoutBranch := gitdomain.EmptyLocalBranchName()
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		parts := spaceRE.Split(line[2:], 3)
+		if parts[0] == "remotes/origin/HEAD" {
+			continue
+		}
+		if len(parts) < 2 {
+			// This shouldn't happen, but did happen in https://github.com/git-town/git-town/issues/2562.
+			fmt.Println("ERROR: Encountered irregular Git output")
+			fmt.Println()
+			fmt.Println("PLEASE REPORT THE OUTPUT BELOW AT https://github.com/git-town/git-town/issues/new")
+			fmt.Println()
+			fmt.Printf("Problematic line: %q\n", line)
+			fmt.Println()
+			fmt.Println("BEGIN OUTPUT FROM 'git branch -vva'")
+			fmt.Println(output)
+			fmt.Println("END OUTPUT FROM 'git branch -vva'")
+			os.Exit(1)
+		}
+		branchName := parts[0]
+		var sha gitdomain.SHA
+		if parts[1] == "branch," {
+			// we are rebasing and don't need the SHA
+			sha = gitdomain.EmptySHA()
+		} else {
+			sha = gitdomain.NewSHA(parts[1])
+		}
+		remoteText := parts[2]
+		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
+			checkedoutBranch = gitdomain.NewLocalBranchName(branchName)
+		}
+		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
+		switch {
+		case line[0] == '+':
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  gitdomain.NewLocalBranchName(branchName),
+				LocalSHA:   sha,
+				SyncStatus: gitdomain.SyncStatusOtherWorktree,
+				RemoteName: trackingBranchName,
+				RemoteSHA:  gitdomain.EmptySHA(),
+			})
+		case isLocalBranchName(branchName):
+			result = append(result, gitdomain.BranchInfo{
+				LocalName:  gitdomain.NewLocalBranchName(branchName),
+				LocalSHA:   sha,
+				SyncStatus: syncStatus,
+				RemoteName: trackingBranchName,
+				RemoteSHA:  gitdomain.EmptySHA(), // will be added later
+			})
+		default:
+			remoteBranchName := gitdomain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
+			existingBranchWithTracking := result.FindByRemoteName(remoteBranchName)
+			if existingBranchWithTracking != nil {
+				existingBranchWithTracking.RemoteSHA = sha
+			} else {
+				result = append(result, gitdomain.BranchInfo{
+					LocalName:  gitdomain.EmptyLocalBranchName(),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
+					RemoteName: remoteBranchName,
+					RemoteSHA:  sha,
+				})
+			}
+		}
+	}
+	return result, checkedoutBranch
+}
+
+func determineSyncStatus(branchName, remoteText string) (syncStatus gitdomain.SyncStatus, trackingBranchName gitdomain.RemoteBranchName) {
+	isInSync, trackingBranchName := IsInSync(branchName, remoteText)
+	if isInSync {
+		return gitdomain.SyncStatusUpToDate, trackingBranchName
+	}
+	isGone, trackingBranchName := IsRemoteGone(branchName, remoteText)
+	if isGone {
+		return gitdomain.SyncStatusDeletedAtRemote, trackingBranchName
+	}
+	IsAhead, trackingBranchName := IsAhead(branchName, remoteText)
+	if IsAhead {
+		return gitdomain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsBehind, trackingBranchName := IsBehind(branchName, remoteText)
+	if IsBehind {
+		return gitdomain.SyncStatusNotInSync, trackingBranchName
+	}
+	IsAheadAndBehind, trackingBranchName := IsAheadAndBehind(branchName, remoteText)
+	if IsAheadAndBehind {
+		return gitdomain.SyncStatusNotInSync, trackingBranchName
+	}
+	if strings.HasPrefix(branchName, "remotes/") {
+		return gitdomain.SyncStatusRemoteOnly, gitdomain.EmptyRemoteBranchName()
+	}
+	return gitdomain.SyncStatusLocalOnly, gitdomain.EmptyRemoteBranchName()
+}
+
+// isLocalBranchName indicates whether the branch with the given Git ref is local or remote.
+func isLocalBranchName(branch string) bool {
+	return !strings.HasPrefix(branch, "remotes/")
 }
 
 func outputIndicatesMergeInProgress(output string) bool {
