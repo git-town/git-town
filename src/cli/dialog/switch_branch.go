@@ -70,10 +70,10 @@ func (m Model) View() string {
 	activeColor := color.New(color.FgCyan)
 	initialColor := color.New(color.FgGreen)
 	for i, branch := range m.Branches {
-		if branch == m.InitialBranch && i == m.cursor {
+		if i == m.cursor {
 			s.WriteString(activeColor.Sprint("> "))
 			s.WriteString(activeColor.Sprint(branch))
-		} else if i == m.cursor {
+		} else if branch == m.InitialBranch {
 			s.WriteString(initialColor.Sprint("* "))
 			s.WriteString(initialColor.Sprint(branch))
 		} else {
