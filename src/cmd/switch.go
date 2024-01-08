@@ -50,16 +50,8 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
 		return err
 	}
 	dialogData := dialog.NewSwitchModel(branchesSnapshot.Branches.Names().Strings(), config.initialBranch.String())
