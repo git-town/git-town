@@ -62,9 +62,9 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	dialogModel := dialog.NewSwitchModel(branchesSnapshot.Branches.Names().Strings(), config.initialBranch.String())
-	p := tea.NewProgram(dialogModel, tea.WithOutput(os.Stderr))
-	dialogResult, err := p.Run()
+	dialogData := dialog.NewSwitchModel(branchesSnapshot.Branches.Names().Strings(), config.initialBranch.String())
+	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
+	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return err
 	}

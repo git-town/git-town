@@ -1,11 +1,14 @@
 package dialog
 
 import (
+	"fmt"
+	"os"
 	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fatih/color"
+	"github.com/muesli/termenv"
 )
 
 type SwitchModel struct {
@@ -24,6 +27,18 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 	if cursor == -1 {
 		cursor = 0
 	}
+	output := termenv.NewOutput(os.Stderr)
+	darkTheme := output.HasDarkBackground()
+	fmt.Println(termenv.String("11111111111111").Foreground(termenv.ANSIBlue))
+	s := output.String("Hello World")
+	fmt.Println("DARK THEME:", darkTheme)
+	fmt.Println("FOREGROUND:", output.ForegroundColor())
+	fmt.Println("BACKGROUND:", output.BackgroundColor())
+	s.Background(output.Color("3"))
+	s.Bold()
+	fmt.Println(s)
+	panic("end")
+
 	return SwitchModel{
 		activeColor:        color.New(color.FgCyan),
 		branches:           branches,
