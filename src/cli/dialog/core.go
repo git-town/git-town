@@ -17,14 +17,6 @@ func Initialize() {
 	}
 }
 
-type dialogMode int
-
-const (
-	dialogModeSelecting = 0
-	dialogModeSuccess   = 1
-	dialogModeAbort     = 2
-)
-
 type dialogColors struct {
 	help      termenv.Style // color of help text
 	helpKey   termenv.Style // color of key names in help text

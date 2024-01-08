@@ -24,7 +24,10 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			return nil
 		}
 		if newMainBranch != config.MainBranch {
-			backend.SetMainBranch(config.MainBranch)
+			err := backend.SetMainBranch(config.MainBranch)
+			if err != nil {
+				return err
+			}
 		}
 		return dialog.EnterPerennialBranches(backend, config, allBranches)
 	}

@@ -39,28 +39,6 @@ func (self switchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self switchModel) moveCursorDown() switchModel {
-	if self.cursor < len(self.branches)-1 {
-		self.cursor++
-	} else {
-		self.cursor = 0
-	}
-	return self
-}
-
-func (self switchModel) moveCursorUp() switchModel {
-	if self.cursor > 0 {
-		self.cursor--
-	} else {
-		self.cursor = len(self.branches) - 1
-	}
-	return self
-}
-
-func (self switchModel) selectedBranch() string {
-	return self.branches[self.cursor]
-}
-
 func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
@@ -125,4 +103,26 @@ func (self switchModel) View() string {
 	s.WriteString(self.colors.helpKey.Styled("q"))
 	s.WriteString(self.colors.help.Styled(" abort"))
 	return s.String()
+}
+
+func (self switchModel) moveCursorDown() switchModel {
+	if self.cursor < len(self.branches)-1 {
+		self.cursor++
+	} else {
+		self.cursor = 0
+	}
+	return self
+}
+
+func (self switchModel) moveCursorUp() switchModel {
+	if self.cursor > 0 {
+		self.cursor--
+	} else {
+		self.cursor = len(self.branches) - 1
+	}
+	return self
+}
+
+func (self switchModel) selectedBranch() string {
+	return self.branches[self.cursor]
 }

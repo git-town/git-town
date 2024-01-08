@@ -1,20 +1,27 @@
 package dialog
 
 import (
-	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/fatih/color"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/muesli/termenv"
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (selectedBranch gitdomain.LocalBranchName, abort bool, err error) {
-	dialogData := mainBranchModel{}
+	cursor := slices.Index(localBranches, oldMainBranch)
+	if cursor < 0 {
+		cursor = 0
+	}
+	dialogData := mainBranchModel{
+		entries: localBranches.Strings(),
+		colors:  createColors(),
+		cursor:  cursor,
+		abort:   false,
+	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
@@ -27,40 +34,17 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 }
 
 type mainBranchModel struct {
-	entries        []string
-	colors         dialogColors
-	cursor         int
-	abort          bool
-	selectionColor termenv.Style // color for the currently selected entry
+	entries []string
+	colors  dialogColors
+	cursor  int
+	abort   bool
 }
 
 func (self mainBranchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self mainBranchModel) moveCursorDown() mainBranchModel {
-	if self.cursor < len(self.entries)-1 {
-		self.cursor++
-	} else {
-		self.cursor = 0
-	}
-	return self
-}
-
-func (self mainBranchModel) moveCursorUp() mainBranchModel {
-	if self.cursor > 0 {
-		self.cursor--
-	} else {
-		self.cursor = len(self.entries) - 1
-	}
-	return self
-}
-
-func (self mainBranchModel) selectedEntry() string {
-	return self.entries[self.cursor]
-}
-
-func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -95,7 +79,7 @@ func (self mainBranchModel) View() string {
 	s := strings.Builder{}
 	for i, branch := range self.entries {
 		if i == self.cursor {
-			s.WriteString(self.selectionColor.Styled("> " + branch))
+			s.WriteString(self.colors.selection.Styled("> " + branch))
 		} else {
 			s.WriteString("  " + branch)
 		}
@@ -125,11 +109,24 @@ func (self mainBranchModel) View() string {
 	return s.String()
 }
 
-func mainBranchPrompt(mainBranch gitdomain.LocalBranchName) string {
-	result := "Please specify the main development branch:"
-	if !mainBranch.IsEmpty() {
-		coloredBranch := color.New(color.Bold).Add(color.FgCyan).Sprintf(mainBranch.String())
-		result += fmt.Sprintf(" (current value: %s)", coloredBranch)
+func (self mainBranchModel) moveCursorDown() mainBranchModel {
+	if self.cursor < len(self.entries)-1 {
+		self.cursor++
+	} else {
+		self.cursor = 0
 	}
-	return result
+	return self
+}
+
+func (self mainBranchModel) moveCursorUp() mainBranchModel {
+	if self.cursor > 0 {
+		self.cursor--
+	} else {
+		self.cursor = len(self.entries) - 1
+	}
+	return self
+}
+
+func (self mainBranchModel) selectedEntry() string {
+	return self.entries[self.cursor]
 }

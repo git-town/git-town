@@ -49,8 +49,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newMainBranch, exit, err := dialog.EnterMainBranch(branchesSnapshot.Branches.LocalBranches().Names(), repo.Runner.MainBranch)
-	if err != nil {
+	newMainBranch, abort, err := dialog.EnterMainBranch(branchesSnapshot.Branches.LocalBranches().Names(), repo.Runner.MainBranch)
+	if err != nil || abort {
 		return err
 	}
 	repo.Runner.MainBranch = newMainBranch
