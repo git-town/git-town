@@ -9,14 +9,14 @@ import (
 )
 
 type SwitchModel struct {
-	activeColor        termenv.Style
-	branches           []string // names of all branches
-	cursor             int      // 0-based number of the selected row
-	helpColor          termenv.Style
-	helpHighlightColor termenv.Style
-	initialBranch      string // name of the currently checked out branch
-	initialColor       termenv.Style
-	SelectedBranch     string // name of the currently selected branch
+	branches       []string      // names of all branches
+	cursor         int           // index of the currently selected row
+	helpColor      termenv.Style // color of help text
+	helpKeyColor   termenv.Style // color of key names in help text
+	initialBranch  string        // name of the currently checked out branch
+	initialColor   termenv.Style // color for the row containing the currently checked out branch
+	SelectedBranch string        // name of the currently selected branch
+	selectionColor termenv.Style // color for the currently selected entry
 }
 
 func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
@@ -25,14 +25,14 @@ func NewSwitchModel(branches []string, initialBranch string) SwitchModel {
 		cursor = 0
 	}
 	return SwitchModel{
-		activeColor:        termenv.String().Foreground(termenv.ANSICyan),
-		branches:           branches,
-		cursor:             cursor,
-		helpColor:          termenv.String().Faint(),
-		helpHighlightColor: termenv.String().Faint().Bold(),
-		initialBranch:      initialBranch,
-		initialColor:       termenv.String().Foreground(termenv.ANSIGreen),
-		SelectedBranch:     initialBranch,
+		branches:       branches,
+		cursor:         cursor,
+		helpColor:      termenv.String().Faint(),
+		helpKeyColor:   termenv.String().Faint().Bold(),
+		initialBranch:  initialBranch,
+		initialColor:   termenv.String().Foreground(termenv.ANSIGreen),
+		SelectedBranch: initialBranch,
+		selectionColor: termenv.String().Foreground(termenv.ANSICyan),
 	}
 }
 
@@ -95,8 +95,8 @@ func (m SwitchModel) View() string {
 	for i, branch := range m.branches {
 		switch {
 		case i == m.cursor:
-			s.WriteString(m.activeColor.Styled("> "))
-			s.WriteString(m.activeColor.Styled(branch))
+			s.WriteString(m.selectionColor.Styled("> "))
+			s.WriteString(m.selectionColor.Styled(branch))
 		case branch == m.initialBranch:
 			s.WriteString(m.initialColor.Styled("* "))
 			s.WriteString(m.initialColor.Styled(branch))
@@ -109,24 +109,24 @@ func (m SwitchModel) View() string {
 	s.WriteString("\n\n")
 	s.WriteString("  ")
 	// up
-	s.WriteString(m.helpHighlightColor.Styled("↑"))
+	s.WriteString(m.helpKeyColor.Styled("↑"))
 	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpHighlightColor.Styled("k"))
+	s.WriteString(m.helpKeyColor.Styled("k"))
 	s.WriteString(m.helpColor.Styled(" up   "))
 	// down
-	s.WriteString(m.helpHighlightColor.Styled("↓"))
+	s.WriteString(m.helpKeyColor.Styled("↓"))
 	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpHighlightColor.Styled("j"))
+	s.WriteString(m.helpKeyColor.Styled("j"))
 	s.WriteString(m.helpColor.Styled(" down   "))
 	// accept
-	s.WriteString(m.helpHighlightColor.Styled("enter"))
+	s.WriteString(m.helpKeyColor.Styled("enter"))
 	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpHighlightColor.Styled("o"))
+	s.WriteString(m.helpKeyColor.Styled("o"))
 	s.WriteString(m.helpColor.Styled(" accept   "))
 	// abort
-	s.WriteString(m.helpHighlightColor.Styled("esc"))
+	s.WriteString(m.helpKeyColor.Styled("esc"))
 	s.WriteString(m.helpColor.Styled("/"))
-	s.WriteString(m.helpHighlightColor.Styled("q"))
+	s.WriteString(m.helpKeyColor.Styled("q"))
 	s.WriteString(m.helpColor.Styled(" abort"))
 	return s.String()
 }
