@@ -1,73 +1,137 @@
 package dialog
 
 import (
+	"os"
+	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/muesli/termenv"
 )
 
-func NewBuilder(lineage configdomain.Lineage) Builder {
-	return Builder{
-		Entries: ModalSelectEntries{},
-		Lineage: lineage,
+func SwitchBranch(branchNames []string, initialBranch string) (string, error) {
+	cursor := slices.Index(branchNames, initialBranch)
+	if cursor < 0 {
+		cursor = 0
 	}
-}
-
-// queryBranch lets the user select a new branch via a visual dialog.
-// Indicates via `validSelection` whether the user made a valid selection.
-func SwitchBranch(roots gitdomain.LocalBranchNames, selected gitdomain.LocalBranchName, lineage configdomain.Lineage) (selection gitdomain.LocalBranchName, validSelection bool, err error) {
-	builder := NewBuilder(lineage)
-	err = builder.CreateEntries(roots, selected)
+	dialogData := SwitchModel{
+		branches:       branchNames,
+		cursor:         cursor,
+		helpColor:      termenv.String().Faint(),
+		helpKeyColor:   termenv.String().Faint().Bold(),
+		initialBranch:  initialBranch,
+		initialColor:   termenv.String().Foreground(termenv.ANSIGreen),
+		SelectedBranch: initialBranch,
+		selectionColor: termenv.String().Foreground(termenv.ANSICyan),
+	}
+	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
+	dialogResult, err := dialogProcess.Run()
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), false, err
+		return "", err
 	}
-	choice, err := ModalSelect(builder.Entries, selected.String())
-	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), false, err
-	}
-	if choice == nil {
-		return gitdomain.EmptyLocalBranchName(), false, nil
-	}
-	return gitdomain.NewLocalBranchName(*choice), true, nil
+	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	return result.SelectedBranch, nil
 }
 
-// Builder builds up the switch-branch dialog entries.
-type Builder struct {
-	Entries ModalSelectEntries
-	Lineage configdomain.Lineage
+type SwitchModel struct {
+	branches       []string      // names of all branches
+	cursor         int           // index of the currently selected row
+	helpColor      termenv.Style // color of help text
+	helpKeyColor   termenv.Style // color of key names in help text
+	initialBranch  string        // name of the currently checked out branch
+	initialColor   termenv.Style // color for the row containing the currently checked out branch
+	SelectedBranch string        // name of the currently selected branch
+	selectionColor termenv.Style // color for the currently selected entry
 }
 
-// AddEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func (self *Builder) AddEntryAndChildren(branch gitdomain.LocalBranchName, indent int) error {
-	self.Entries = append(self.Entries, ModalSelectEntry{
-		Text:  strings.Repeat("  ", indent) + branch.String(),
-		Value: branch.String(),
-	})
-	var err error
-	for _, child := range self.Lineage.Children(branch) {
-		err = self.AddEntryAndChildren(child, indent+1)
-		if err != nil {
-			return err
-		}
-	}
+func (self SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-// createEntries provides all the entries for the branch dialog.
-func (self *Builder) CreateEntries(roots gitdomain.LocalBranchNames, selected gitdomain.LocalBranchName) error {
-	var err error
-	for _, root := range roots {
-		err = self.AddEntryAndChildren(root, 0)
-		if err != nil {
-			return err
+func (self SwitchModel) MoveCursorDown() SwitchModel {
+	if self.cursor < len(self.branches)-1 {
+		self.cursor++
+	} else {
+		self.cursor = 0
+	}
+	return self
+}
+
+func (self SwitchModel) MoveCursorUp() SwitchModel {
+	if self.cursor > 0 {
+		self.cursor--
+	} else {
+		self.cursor = len(self.branches) - 1
+	}
+	return self
+}
+
+func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	if !isKeyMsg {
+		return self, nil
+	}
+	switch keyMsg.Type { //nolint:exhaustive
+	case tea.KeyUp, tea.KeyShiftTab:
+		return self.MoveCursorUp(), nil
+	case tea.KeyDown, tea.KeyTab:
+		return self.MoveCursorDown(), nil
+	case tea.KeyEnter:
+		self.SelectedBranch = self.branches[self.cursor]
+		return self, tea.Quit
+	case tea.KeyCtrlC:
+		self.SelectedBranch = self.initialBranch
+		return self, tea.Quit
+	case tea.KeyRunes:
+		switch string(keyMsg.Runes) {
+		case "k", "A", "Z":
+			return self.MoveCursorUp(), nil
+		case "j", "B":
+			return self.MoveCursorDown(), nil
+		case "o":
+			self.SelectedBranch = self.branches[self.cursor]
+			return self, tea.Quit
+		case "q":
+			self.SelectedBranch = self.initialBranch
+			return self, tea.Quit
 		}
 	}
-	if len(self.Entries) == 0 {
-		self.Entries = append(self.Entries, ModalSelectEntry{
-			Text:  string(selected),
-			Value: string(selected),
-		})
+	return self, nil
+}
+
+func (self SwitchModel) View() string {
+	s := strings.Builder{}
+	for i, branch := range self.branches {
+		switch {
+		case i == self.cursor:
+			s.WriteString(self.selectionColor.Styled("> " + branch))
+		case branch == self.initialBranch:
+			s.WriteString(self.initialColor.Styled("* " + branch))
+		default:
+			s.WriteString("  " + branch)
+		}
+		s.WriteRune('\n')
 	}
-	return nil
+	s.WriteString("\n\n  ")
+	// up
+	s.WriteString(self.helpKeyColor.Styled("↑"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("k"))
+	s.WriteString(self.helpColor.Styled(" up   "))
+	// down
+	s.WriteString(self.helpKeyColor.Styled("↓"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("j"))
+	s.WriteString(self.helpColor.Styled(" down   "))
+	// accept
+	s.WriteString(self.helpKeyColor.Styled("enter"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("o"))
+	s.WriteString(self.helpColor.Styled(" accept   "))
+	// abort
+	s.WriteString(self.helpKeyColor.Styled("esc"))
+	s.WriteString(self.helpColor.Styled("/"))
+	s.WriteString(self.helpKeyColor.Styled("q"))
+	s.WriteString(self.helpColor.Styled(" abort"))
+	return s.String()
 }

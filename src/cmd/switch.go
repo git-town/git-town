@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -49,27 +47,28 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newBranch, validChoice, err := dialog.SwitchBranch(config.MainAndPerennials(), config.initialBranch, config.Lineage)
+	branchNameToCheckout, err := dialog.SwitchBranch(config.branchNames.Strings(), config.initialBranch.String())
 	if err != nil {
 		return err
 	}
-	if validChoice && newBranch != config.initialBranch {
-		fmt.Println()
-		err = repo.Runner.Frontend.CheckoutBranch(newBranch)
-		if err != nil {
-			exitCode := 1
-			var exitErr *exec.ExitError
-			if errors.As(err, &exitErr) {
-				exitCode = exitErr.ExitCode()
-			}
-			os.Exit(exitCode)
+	if branchNameToCheckout == config.initialBranch.String() {
+		return nil
+	}
+	branchToCheckout := gitdomain.LocalBranchName(branchNameToCheckout)
+	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
+	if err != nil {
+		exitCode := 1
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			exitCode = exitErr.ExitCode()
 		}
+		os.Exit(exitCode)
 	}
 	return nil
 }
 
 type switchConfig struct {
-	*configdomain.FullConfig
+	branchNames   gitdomain.LocalBranchNames
 	initialBranch gitdomain.LocalBranchName
 }
 
@@ -83,8 +82,11 @@ func determineSwitchConfig(repo *execute.OpenRepoResult, verbose bool) (*switchC
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
 	})
+	if err != nil || exit {
+		return nil, exit, err
+	}
 	return &switchConfig{
-		FullConfig:    &repo.Runner.FullConfig,
+		branchNames:   branchesSnapshot.Branches.Names(),
 		initialBranch: branchesSnapshot.Active,
-	}, exit, err
+	}, false, err
 }
