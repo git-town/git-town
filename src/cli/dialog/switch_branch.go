@@ -22,9 +22,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.Type {
 		case tea.KeyUp, tea.KeyShiftTab:
-			m.MoveCursorUp()
+			return m.MoveCursorUp(), nil
 		case tea.KeyDown, tea.KeyTab:
-			m.MoveCursorDown()
+			return m.MoveCursorDown(), nil
 		case tea.KeyEnter:
 			m.SelectedBranch = m.Branches[m.cursor]
 			return m, tea.Quit
@@ -34,9 +34,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyRunes:
 			switch string(msg.Runes) {
 			case "k":
-				m.MoveCursorUp()
+				return m.MoveCursorUp(), nil
 			case "j":
-				m.MoveCursorDown()
+				return m.MoveCursorDown(), nil
 			case "o":
 				m.SelectedBranch = m.Branches[m.cursor]
 				return m, tea.Quit
@@ -46,20 +46,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *Model) MoveCursorUp() {
+func (m Model) MoveCursorUp() Model {
 	if m.cursor > 0 {
 		m.cursor--
 	} else {
 		m.cursor = len(m.Branches) - 1
 	}
+	return m
 }
 
-func (m *Model) MoveCursorDown() {
+func (m Model) MoveCursorDown() Model {
 	if m.cursor < len(m.Branches)-1 {
 		m.cursor++
 	} else {
 		m.cursor = 0
 	}
+	return m
 }
 
 func (m Model) View() string {
