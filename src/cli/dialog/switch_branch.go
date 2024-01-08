@@ -6,18 +6,19 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-func SwitchBranch(branchNames []string, initialBranch string) (string, error) {
-	cursor := slices.Index(branchNames, initialBranch)
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, error) {
+	cursor := slices.Index(localBranches, initialBranch)
 	if cursor < 0 {
 		cursor = 0
 	}
 	dialogData := switchModel{
-		branches:      branchNames,
+		branches:      localBranches.Strings(),
 		cursor:        cursor,
 		colors:        createColors(),
-		initialBranch: initialBranch,
+		initialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
@@ -25,7 +26,8 @@ func SwitchBranch(branchNames []string, initialBranch string) (string, error) {
 		return "", err
 	}
 	result := dialogResult.(switchModel) //nolint:forcetypeassert
-	return result.selectedBranch(), nil
+	selectedBranch := gitdomain.NewLocalBranchName(result.selectedBranch())
+	return selectedBranch, nil
 }
 
 type switchModel struct {
