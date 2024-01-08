@@ -54,9 +54,9 @@ func executeSwitch(verbose bool) error {
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
