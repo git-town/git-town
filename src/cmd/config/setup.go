@@ -50,7 +50,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, config.localBranches)
+	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, config.localBranches.Names())
 }
 
 type setupConfig struct {

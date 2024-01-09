@@ -18,6 +18,14 @@ func TestLocalBranchNames(t *testing.T) {
 		must.EqOp(t, want, have)
 	})
 
+	t.Run("Contains", func(t *testing.T) {
+		t.Parallel()
+		branches := gitdomain.NewLocalBranchNames("one", "two")
+		must.True(t, branches.Contains("one"))
+		must.True(t, branches.Contains("two"))
+		must.False(t, branches.Contains("three"))
+	})
+
 	t.Run("Hoist", func(t *testing.T) {
 		t.Parallel()
 		t.Run("haystack contains needle", func(t *testing.T) {

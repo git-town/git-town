@@ -49,6 +49,6 @@ func executeUpdate(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
+	err = dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names())
 	return err
 }

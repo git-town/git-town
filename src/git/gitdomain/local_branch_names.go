@@ -1,6 +1,7 @@
 package gitdomain
 
 import (
+	"slices"
 	"sort"
 	"strings"
 )
@@ -29,6 +30,10 @@ func ParseLocalBranchNamesRef(names string) *LocalBranchNames {
 	}
 	result := NewLocalBranchNames(branchNames...)
 	return &result
+}
+
+func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
+	return slices.Contains(self, branch)
 }
 
 // Hoist moves the given needle to the front of the list.
