@@ -5,12 +5,13 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
 
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
-func setupConfigCommand() *cobra.Command {
+func setupCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
@@ -37,6 +38,26 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	config, exit, err := loadSetupConfig(repo, verbose)
+	if err != nil || exit {
+		return err
+	}
+	newMainBranch, abort, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch)
+	if err != nil || abort {
+		return err
+	}
+	err = repo.Runner.SetMainBranch(newMainBranch)
+	if err != nil {
+		return err
+	}
+	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, config.localBranches)
+}
+
+type setupConfig struct {
+	localBranches gitdomain.BranchInfos
+}
+
+func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -46,13 +67,7 @@ func executeConfigSetup(verbose bool) error {
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
-		return err
-	}
-	newMainBranch, abort, err := dialog.EnterMainBranch(branchesSnapshot.Branches.LocalBranches().Names(), repo.Runner.MainBranch)
-	if err != nil || abort {
-		return err
-	}
-	repo.Runner.MainBranch = newMainBranch
-	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
+	return setupConfig{
+		localBranches: branchesSnapshot.Branches,
+	}, exit, err
 }
