@@ -58,4 +58,12 @@ func TestRemoveAt(t *testing.T) {
 		want := []int{1, 2, 3}
 		must.Eq(t, want, have)
 	})
+
+	t.Run("index is out of bounds", func(t *testing.T) {
+		t.Parallel()
+		list := []int{1, 2}
+		have := slice.RemoveAt(list, 20)
+		want := []int{1, 2}
+		must.Eq(t, want, have)
+	})
 }
