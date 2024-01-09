@@ -63,7 +63,7 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 func (self perennialBranchesModel) View() string {
 	s := strings.Builder{}
 	s.WriteString("Let's configure the perennial branches.\n")
-	s.WriteString("These are long-lived branches, they are never shipped.\n")
+	s.WriteString("These are long-lived branches without ancestors and are never shipped.\n")
 	s.WriteString("Typically, perennial branches have names like \"development\", \"staging\", \"qa\", \"production\", etc.\n\n")
 	for i, branch := range self.entries {
 		selected := self.cursor == i
