@@ -10,7 +10,6 @@ import (
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
-	headerShown := false
 	currentBranch := branch
 	if !args.Config.IsFeatureBranch(branch) {
 		return false, nil
@@ -19,14 +18,9 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 	for {
 		lineage := args.Backend.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
-		var err error
 		if !hasParent { //nolint:nestif
-			if !headerShown {
-				printParentBranchHeader(args.Config.MainBranch)
-				headerShown = true
-			}
-			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
-			if err != nil {
+			newParent, aborted, err := dialog.EnterParent(currentBranch, args.AllBranches.Names(), args.DefaultBranch)
+			if err != nil || aborted {
 				return false, err
 			}
 			if parent.String() == dialog.PerennialBranchOption {

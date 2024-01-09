@@ -1,41 +1,92 @@
 package dialog
 
 import (
-	"fmt"
+	"strings"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
 
-// EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent gitdomain.LocalBranchName, lineage configdomain.Lineage, branches gitdomain.BranchInfos) (gitdomain.LocalBranchName, error) {
-	choices := branches.LocalBranches().Names()
-	choices = slice.Hoist(choices, defaultParent)
-	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)
-	choice, err := Select(SelectArgs{
-		Options: append([]string{PerennialBranchOption}, filteredChoices.Strings()...),
-		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),
-		Default: defaultParent.String(),
-	})
+// EnterMainBranch lets the user select a new main branch for this repo.
+// This includes asking the user and updating the respective setting.
+func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
+	branchDescendants := lineage.Children(branch)
+	parentCandidates := localBranches.Remove(branch).Remove()
+	dialogData := enterParentModel{
+		bubbleList: newBubbleList(localBranches.Strings(), mainBranch.String()),
+	}
+	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), err
+		return gitdomain.EmptyLocalBranchName(), false, err
 	}
-	return gitdomain.NewLocalBranchName(choice), nil
+	result := dialogResult.(enterParentModel) //nolint:forcetypeassert
+	selectedBranch := gitdomain.LocalBranchName(result.selectedEntry())
+	return selectedBranch, result.aborted, nil
 }
 
-func filterOutSelfAndDescendants(branch gitdomain.LocalBranchName, choices gitdomain.LocalBranchNames, lineage configdomain.Lineage) gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames{}
-	for _, choice := range choices {
-		if choice == branch || lineage.IsAncestor(branch, choice) {
-			continue
+type enterParentModel struct {
+	bubbleList
+	branch     string
+	mainBranch string
+}
+
+func (self enterParentModel) Init() tea.Cmd {
+	return nil
+}
+
+func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	if !isKeyMsg {
+		return self, nil
+	}
+	if handled, cmd := self.bubbleList.handleKey(keyMsg); handled {
+		return self, cmd
+	}
+	if keyMsg.Type == tea.KeyEnter {
+		return self, tea.Quit
+	}
+	if keyMsg.String() == "o" {
+		return self, tea.Quit
+	}
+	return self, nil
+}
+
+func (self enterParentModel) View() string {
+	s := strings.Builder{}
+	s.WriteString("To sync branch \"" + self.branch + "\", Git Town needs to know its parent branch.\n")
+	s.WriteString("Typically this is the main branch (" + self.mainBranch + ").")
+	s.WriteString("If you develop using nested feature branches, it can also be another feature branch.")
+	s.WriteString("You can find more information around nesting branches at https://www.git-town.com/nested-feature-branches.")
+	s.WriteString("Hotfixes are sometimes cut from a perennial branch.")
+	for i, branch := range self.entries {
+		if i == self.cursor {
+			s.WriteString(self.colors.selection.Styled("> " + branch))
+		} else {
+			s.WriteString("  " + branch)
 		}
-		result = append(result, choice)
+		s.WriteRune('\n')
 	}
-	return result
+	s.WriteString("\n\n  ")
+	// up
+	s.WriteString(self.colors.helpKey.Styled("↑"))
+	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.helpKey.Styled("k"))
+	s.WriteString(self.colors.help.Styled(" up   "))
+	// down
+	s.WriteString(self.colors.helpKey.Styled("↓"))
+	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.helpKey.Styled("j"))
+	s.WriteString(self.colors.help.Styled(" down   "))
+	// accept
+	s.WriteString(self.colors.helpKey.Styled("enter"))
+	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.helpKey.Styled("o"))
+	s.WriteString(self.colors.help.Styled(" accept   "))
+	// abort
+	s.WriteString(self.colors.helpKey.Styled("esc"))
+	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.helpKey.Styled("q"))
+	s.WriteString(self.colors.help.Styled(" abort"))
+	return s.String()
 }
-
-const (
-	parentBranchPromptTemplate = "Please specify the parent branch of %q:"
-	PerennialBranchOption      = "<none> (perennial branch)"
-)
