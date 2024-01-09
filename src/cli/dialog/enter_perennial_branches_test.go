@@ -86,4 +86,22 @@ func TestPerennialBranchesModel(t *testing.T) {
 		want := []string{"one", "three"}
 		must.Eq(t, want, have)
 	})
+
+	t.Run("toggleCurrentEntry", func(t *testing.T) {
+		t.Parallel()
+		model := perennialBranchesModel{ //nolint:exhaustruct
+			bubbleList: bubbleList{ //nolint:exhaustruct
+				cursor: 2,
+			},
+			selections: []int{1, 3},
+		}
+		// enable the selected entry
+		model.toggleCurrentEntry()
+		wantSelections := []int{1, 3, 2}
+		must.Eq(t, wantSelections, model.selections)
+		// disable the selected entry
+		model.toggleCurrentEntry()
+		wantSelections = []int{1, 3}
+		must.Eq(t, wantSelections, model.selections)
+	})
 }
