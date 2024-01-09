@@ -69,7 +69,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("selected row is checked", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{
+				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 2,
 				},
 				selections: []int{2},
@@ -79,7 +79,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("selected row is not checked", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{
+				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 1,
 				},
 				selections: []int{2},
