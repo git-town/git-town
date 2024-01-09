@@ -1,6 +1,7 @@
 @skipWindows
 Feature: ask for missing configuration
 
+  @debug @this
   Scenario: run unconfigured
     Given Git Town is not configured
     And the origin is "https://github.com/git-town/git-town.git"
