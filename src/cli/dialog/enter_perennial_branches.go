@@ -48,7 +48,11 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
 		return self, code
 	}
-	if keyMsg.Type == tea.KeyEnter {
+	switch keyMsg.Type {
+	case tea.KeySpace:
+		self.toggleCurrentEntry()
+		return self, nil
+	case tea.KeyEnter:
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
@@ -68,13 +72,13 @@ func (self perennialBranchesModel) View() string {
 		checked := self.isRowChecked(i)
 		switch {
 		case selected && checked:
-			s.WriteString(self.colors.selection.Styled("[x] " + branch))
+			s.WriteString(self.colors.selection.Styled("> [x] " + branch))
 		case selected && !checked:
-			s.WriteString(self.colors.selection.Styled("[ ] " + branch))
+			s.WriteString(self.colors.selection.Styled("> [ ] " + branch))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("[x] " + branch))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch))
 		case !selected && !checked:
-			s.WriteString("[x] " + branch)
+			s.WriteString("  [ ] " + branch)
 		}
 		s.WriteRune('\n')
 	}
