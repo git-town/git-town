@@ -114,6 +114,13 @@ func TestLocalBranchNames(t *testing.T) {
 			want := gitdomain.NewLocalBranchNames("one", "two")
 			must.Eq(t, want, have)
 		})
+		t.Run("removing multiple elements", func(t *testing.T) {
+			t.Parallel()
+			branches := gitdomain.NewLocalBranchNames("one", "two", "three", "four")
+			have := branches.Remove("two", "four", "zonk")
+			want := gitdomain.NewLocalBranchNames("one", "three")
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("RemoveMarkers", func(t *testing.T) {
