@@ -47,14 +47,13 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchNameToCheckout, err := dialog.SwitchBranch(config.branchNames, config.initialBranch)
+	branchToCheckout, err := dialog.SwitchBranch(config.branchNames, config.initialBranch)
 	if err != nil {
 		return err
 	}
-	if branchNameToCheckout == config.initialBranch {
+	if branchToCheckout == config.initialBranch {
 		return nil
 	}
-	branchToCheckout := gitdomain.LocalBranchName(branchNameToCheckout)
 	err = repo.Runner.Frontend.CheckoutBranch(branchToCheckout)
 	if err != nil {
 		exitCode := 1

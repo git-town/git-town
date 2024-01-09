@@ -17,7 +17,7 @@ func Initialize() {
 	}
 }
 
-// Typical colors used in BubbleTea dialogs
+// Typical colors used in BubbleTea dialogs.
 type dialogColors struct {
 	help      termenv.Style // color of help text
 	helpKey   termenv.Style // color of key names in help text
