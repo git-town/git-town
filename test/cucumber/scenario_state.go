@@ -65,9 +65,9 @@ func (self *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	self.initialLocalBranches.Sort()
-	slice.Hoist(&self.initialLocalBranches, gitdomain.NewLocalBranchName("main"))
+	self.initialLocalBranches = slice.Hoist(self.initialLocalBranches, gitdomain.NewLocalBranchName("main"))
 	self.initialRemoteBranches.Sort()
-	slice.Hoist(&self.initialRemoteBranches, gitdomain.NewLocalBranchName("main"))
+	self.initialRemoteBranches = slice.Hoist(self.initialRemoteBranches, gitdomain.NewLocalBranchName("main"))
 	localBranchesJoined := self.initialLocalBranches.Join(", ")
 	remoteBranchesJoined := self.initialRemoteBranches.Join(", ")
 	if localBranchesJoined == remoteBranchesJoined {
