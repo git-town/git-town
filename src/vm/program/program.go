@@ -37,11 +37,11 @@ func (self Program) MarshalJSON() ([]byte, error) {
 	return json.Marshal(jsonOpcodes)
 }
 
-// MoveToEnd moves all occurrences of the given opcode in this program to the end of this program.
-func (self *Program) MoveToEnd(op shared.Opcode) {
-	result := make(Program, 0, len(*self))
+// MoveToEnd provides a program with all occurrences of the given opcode moved to the end.
+func (self Program) MoveToEnd(op shared.Opcode) Program {
+	result := make(Program, 0, len(self))
 	hasOp := false
-	for _, element := range *self {
+	for _, element := range self {
 		if reflect.DeepEqual(element, op) {
 			hasOp = true
 		} else {
@@ -51,7 +51,7 @@ func (self *Program) MoveToEnd(op shared.Opcode) {
 	if hasOp {
 		result = append(result, op)
 	}
-	*self = result
+	return result
 }
 
 // OpcodeTypes provides the names of the types of the opcodes in this program.
@@ -98,10 +98,10 @@ func (self *Program) PrependProgram(otherProgram Program) {
 }
 
 // TODO: return the modified program here.
-func (self *Program) RemoveAllButLast(removeType string) {
+func (self Program) RemoveAllButLast(removeType string) Program {
 	allIndexes := slice.FindAll(self.OpcodeTypes(), removeType)
 	indexesToRemove := slice.TruncateLast(allIndexes)
-	*self = slice.RemoveAt(*self, indexesToRemove...)
+	return slice.RemoveAt(self, indexesToRemove...)
 }
 
 // RemoveDuplicateCheckout removes checkout opcodes that immediately follow each other from this program.
