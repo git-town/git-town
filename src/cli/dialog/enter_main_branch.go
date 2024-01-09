@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"os"
 	"slices"
 	"strings"
 
@@ -22,7 +21,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		cursor:  cursor,
 		aborted: false,
 	}
-	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
+	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), false, err
