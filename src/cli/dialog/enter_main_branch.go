@@ -16,10 +16,10 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		cursor = 0
 	}
 	dialogData := mainBranchModel{
+		aborted: false,
 		entries: localBranches.Strings(),
 		colors:  createColors(),
 		cursor:  cursor,
-		aborted: false,
 	}
 	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
@@ -32,10 +32,10 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 }
 
 type mainBranchModel struct {
-	entries []string
+	aborted bool
 	colors  dialogColors
 	cursor  int
-	aborted bool
+	entries []string
 }
 
 func (self mainBranchModel) Init() tea.Cmd {
