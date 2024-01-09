@@ -57,18 +57,17 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	case tea.KeyCtrlC:
 		self.aborted = true
 		return self, tea.Quit
-	case tea.KeyRunes:
-		switch string(keyMsg.Runes) {
-		case "k", "A", "Z":
-			return self.moveCursorUp(), nil
-		case "j", "B":
-			return self.moveCursorDown(), nil
-		case "o":
-			return self, tea.Quit
-		case "q":
-			self.aborted = true
-			return self, tea.Quit
-		}
+	}
+	switch string(keyMsg.Runes) {
+	case "k", "A", "Z":
+		return self.moveCursorUp(), nil
+	case "j", "B":
+		return self.moveCursorDown(), nil
+	case "o":
+		return self, tea.Quit
+	case "q":
+		self.aborted = true
+		return self, tea.Quit
 	}
 	return self, nil
 }
