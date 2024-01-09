@@ -64,7 +64,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches)
+	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names())
 	if err != nil {
 		return nil, err
 	}

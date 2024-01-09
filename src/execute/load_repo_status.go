@@ -68,7 +68,7 @@ func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomai
 		}
 	}
 	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.FullConfig, branchesSnapshot.Branches)
+		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.FullConfig, branchesSnapshot.Branches.LocalBranches().Names())
 	}
 	return branchesSnapshot, stashSnapshot, false, err
 }
