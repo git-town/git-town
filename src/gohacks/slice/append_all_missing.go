@@ -1,6 +1,6 @@
 package slice
 
-// AppendAllMissing appends all elements of `additional` that aren't contained in `existing` to `existing`.
+// AppendAllMissing provides the given list with all missing elements of `additional` appended.
 func AppendAllMissing[S ~[]C, C comparable](existing S, additional S) S { //nolint:ireturn
 	result := existing
 	for a := range additional {
