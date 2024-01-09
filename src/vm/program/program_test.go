@@ -99,11 +99,11 @@ func TestProgram(t *testing.T) {
 
 		t.Run("program contains opcode at the last position", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
 			}
-			have.MoveToEnd(&opcode.AbortRebase{})
+			have := give.MoveToEnd(&opcode.AbortRebase{})
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -113,12 +113,12 @@ func TestProgram(t *testing.T) {
 
 		t.Run("program contains element in the middle", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.RestoreOpenChanges{},
 				&opcode.AbortRebase{},
 			}
-			have.MoveToEnd(&opcode.RestoreOpenChanges{})
+			have := give.MoveToEnd(&opcode.RestoreOpenChanges{})
 			want := []shared.Opcode{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -129,10 +129,10 @@ func TestProgram(t *testing.T) {
 
 		t.Run("program does not contain the element", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 			}
-			have.MoveToEnd(&opcode.ContinueMerge{})
+			have := give.MoveToEnd(&opcode.ContinueMerge{})
 			want := program.Program{
 				&opcode.AbortMerge{},
 			}
@@ -141,14 +141,14 @@ func TestProgram(t *testing.T) {
 
 		t.Run("multiple occurrences of the opcode to move", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.ContinueMerge{},
 				&opcode.AbortMerge{},
 				&opcode.ContinueMerge{},
 				&opcode.AbortRebase{},
 				&opcode.ContinueMerge{},
 			}
-			have.MoveToEnd(&opcode.ContinueMerge{})
+			have := give.MoveToEnd(&opcode.ContinueMerge{})
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -257,11 +257,11 @@ func TestProgram(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the given type at the end", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 			}
-			have.RemoveAllButLast("*opcode.CheckoutIfExists")
+			have := give.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -270,12 +270,12 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("contains the given type in the middle", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
 				&opcode.AbortRebase{},
 			}
-			have.RemoveAllButLast("*opcode.CheckoutIfExists")
+			have := give.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch")},
@@ -285,7 +285,7 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("contains the given type multiple times", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-1")},
 				&opcode.AbortRebase{},
@@ -293,7 +293,7 @@ func TestProgram(t *testing.T) {
 				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 				&opcode.CheckoutIfExists{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
-			have.RemoveAllButLast("*opcode.CheckoutIfExists")
+			have := give.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -304,12 +304,12 @@ func TestProgram(t *testing.T) {
 		})
 		t.Run("does not contain the given type", func(t *testing.T) {
 			t.Parallel()
-			have := program.Program{
+			give := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
 				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 			}
-			have.RemoveAllButLast("*opcode.CheckoutIfExists")
+			have := give.RemoveAllButLast("*opcode.CheckoutIfExists")
 			want := program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
