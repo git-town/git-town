@@ -55,17 +55,16 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, tea.Quit
 	case tea.KeyCtrlC:
 		return self, tea.Quit
-	case tea.KeyRunes:
-		switch string(keyMsg.Runes) {
-		case "k", "A", "Z":
-			return self.moveCursorUp(), nil
-		case "j", "B":
-			return self.moveCursorDown(), nil
-		case "o":
-			return self, tea.Quit
-		case "q":
-			return self, tea.Quit
-		}
+	}
+	switch keyMsg.String() {
+	case "k", "A", "Z":
+		return self.moveCursorUp(), nil
+	case "j", "B":
+		return self.moveCursorDown(), nil
+	case "o":
+		return self, tea.Quit
+	case "q":
+		return self, tea.Quit
 	}
 	return self, nil
 }
