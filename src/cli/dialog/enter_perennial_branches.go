@@ -24,7 +24,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		return gitdomain.LocalBranchNames{}, false, err
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := gitdomain.NewLocalBranchNames(result.selectedEntries()...)
+	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
 	return selectedBranches, result.aborted, nil
 }
 
@@ -107,6 +107,7 @@ func (self perennialBranchesModel) View() string {
 	return s.String()
 }
 
+// disableCurrentEntry unchecks the currently selected list entry.
 func (self *perennialBranchesModel) disableCurrentEntry() {
 	selectionIndex := slices.Index(self.selections, self.cursor)
 	if selectionIndex != -1 {
@@ -114,6 +115,7 @@ func (self *perennialBranchesModel) disableCurrentEntry() {
 	}
 }
 
+// enableCurrentEntry checks the currently selected list entry.
 func (self *perennialBranchesModel) enableCurrentEntry() {
 	selectionIndex := slices.Index(self.selections, self.cursor)
 	if selectionIndex == -1 {
@@ -121,11 +123,13 @@ func (self *perennialBranchesModel) enableCurrentEntry() {
 	}
 }
 
+// isRowChecked indicates whether the currently selected list entry is checked or not.
 func (self *perennialBranchesModel) isRowChecked(row int) bool {
 	return slices.Contains(self.selections, row)
 }
 
-func (self *perennialBranchesModel) selectedEntries() []string {
+// checkedEntries provides all checked list entries.
+func (self *perennialBranchesModel) checkedEntries() []string {
 	result := []string{}
 	for e, entry := range self.entries {
 		if self.isRowChecked(e) {
@@ -135,6 +139,8 @@ func (self *perennialBranchesModel) selectedEntries() []string {
 	return result
 }
 
+// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
+// and checks it if it is unchecked.
 func (self *perennialBranchesModel) toggleCurrentEntry() {
 	if self.isRowChecked(self.cursor) {
 		self.disableCurrentEntry()
