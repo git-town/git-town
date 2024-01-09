@@ -35,10 +35,11 @@ func createColors() dialogColors {
 	}
 }
 
+// bubbleList contains common elements of BubbleTea list implementations.
 type bubbleList struct {
-	colors  dialogColors
-	cursor  int
-	entries []string
+	colors  dialogColors // colors to use for help text
+	cursor  int          // index of the currently selected row
+	entries []string     // the entries to select from
 }
 
 func (self *bubbleList) moveCursorDown() {
