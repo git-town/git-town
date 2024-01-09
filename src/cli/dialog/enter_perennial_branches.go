@@ -128,7 +128,12 @@ func (self *perennialBranchesModel) enableCurrentEntry() {
 	self.selections = slice.AppendAllMissing(self.selections, self.cursor)
 }
 
-// isRowChecked indicates whether the currently selected list entry is checked or not.
+// isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
+func (self *perennialBranchesModel) isSelectedRowChecked() bool {
+	return self.isRowChecked(self.cursor)
+}
+
+// isRowChecked indicates whether the row with the given number is checked or not.
 func (self *perennialBranchesModel) isRowChecked(row int) bool {
 	return slices.Contains(self.selections, row)
 }
