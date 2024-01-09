@@ -63,4 +63,14 @@ func TestPerennialBranchesModel(t *testing.T) {
 			must.Eq(t, wantSelections, model.selections)
 		})
 	})
+
+	t.Run("isRowChecked", func(t *testing.T) {
+		t.Parallel()
+		model := perennialBranchesModel{ //nolint:exhaustruct
+			selections: []int{2},
+		}
+		must.False(t, model.isRowChecked(1))
+		must.True(t, model.isRowChecked(2))
+		must.False(t, model.isRowChecked(3))
+	})
 }
