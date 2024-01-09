@@ -101,6 +101,7 @@ func (self *Program) RemoveAllButLast(removeType string) {
 	opcodeTypes := self.OpcodeTypes()
 	occurrences := slice.FindAll(opcodeTypes, removeType)
 	occurrences = slice.TruncateLast(occurrences)
+	// TODO: call slice.RemoveElements here.
 	for o := len(occurrences) - 1; o >= 0; o-- {
 		*self = slice.RemoveAt(*self, occurrences[o])
 	}
