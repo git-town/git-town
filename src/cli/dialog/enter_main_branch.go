@@ -58,7 +58,7 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 		self.aborted = true
 		return self, tea.Quit
 	}
-	switch string(keyMsg.Runes) {
+	switch keyMsg.String() {
 	case "k", "A", "Z":
 		return self.moveCursorUp(), nil
 	case "j", "B":
