@@ -16,7 +16,6 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		cursor = 0
 	}
 	dialogData := mainBranchModel{
-		aborted: false,
 		bubbleList: bubbleList{
 			entries: localBranches.Strings(),
 			colors:  createColors(),
@@ -35,7 +34,6 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 
 type mainBranchModel struct {
 	bubbleList
-	aborted bool
 }
 
 func (self mainBranchModel) Init() tea.Cmd {

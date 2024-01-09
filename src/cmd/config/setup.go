@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -42,14 +44,11 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	// abort := setupdialog.Welcome()
-	// if abort {
-	// 	return nil
-	// }
-	newMainBranch, abort, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch)
-	if err != nil || abort {
+	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch)
+	if err != nil || aborted {
 		return err
 	}
+	fmt.Println("111111111111", aborted)
 	err = repo.Runner.SetMainBranch(newMainBranch)
 	if err != nil {
 		return err
