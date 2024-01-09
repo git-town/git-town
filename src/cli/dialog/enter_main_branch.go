@@ -76,6 +76,10 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 
 func (self mainBranchModel) View() string {
 	s := strings.Builder{}
+	s.WriteString("Let's start by setting up the main development branch.\n")
+	s.WriteString("This is the branch from which you mostly cut new feature branches,\n")
+	s.WriteString("and into which you ship feature branches when they are done.\n")
+	s.WriteString("In most repositories, this branch is called \"main\", \"master\", or \"development\".\n\n")
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled("> " + branch))

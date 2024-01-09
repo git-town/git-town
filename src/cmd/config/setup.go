@@ -42,6 +42,10 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	// abort := setupdialog.Welcome()
+	// if abort {
+	// 	return nil
+	// }
 	newMainBranch, abort, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch)
 	if err != nil || abort {
 		return err
