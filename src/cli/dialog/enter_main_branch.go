@@ -47,13 +47,10 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	if !isKeyMsg {
 		return self, nil
 	}
+	if self.bubbleList.handleKey(keyMsg) {
+		return self, nil
+	}
 	switch keyMsg.Type { //nolint:exhaustive
-	case tea.KeyUp, tea.KeyShiftTab:
-		self.moveCursorUp()
-		return self, nil
-	case tea.KeyDown, tea.KeyTab:
-		self.moveCursorDown()
-		return self, nil
 	case tea.KeyEnter:
 		return self, tea.Quit
 	case tea.KeyCtrlC:
@@ -61,12 +58,6 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
-	case "k", "A", "Z":
-		self.moveCursorUp()
-		return self, nil
-	case "j", "B":
-		self.moveCursorDown()
-		return self, nil
 	case "o":
 		return self, tea.Quit
 	case "q":

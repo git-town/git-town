@@ -4,6 +4,7 @@ package dialog
 import (
 	"runtime"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/muesli/termenv"
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
@@ -58,4 +59,24 @@ func (self *bubbleList) moveCursorUp() {
 
 func (self bubbleList) selectedEntry() string {
 	return self.entries[self.cursor]
+}
+
+func (self *bubbleList) handleKey(key tea.KeyMsg) bool {
+	switch key.Type {
+	case tea.KeyUp, tea.KeyShiftTab:
+		self.moveCursorUp()
+		return true
+	case tea.KeyDown, tea.KeyTab:
+		self.moveCursorDown()
+		return true
+	}
+	switch key.String() {
+	case "k", "A", "Z":
+		self.moveCursorUp()
+		return true
+	case "j", "B":
+		self.moveCursorDown()
+		return true
+	}
+	return false
 }
