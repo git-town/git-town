@@ -37,6 +37,7 @@ func createColors() dialogColors {
 
 // bubbleList contains common elements of BubbleTea list implementations.
 type bubbleList struct {
+	aborted bool         // whether the user has aborted this dialog
 	colors  dialogColors // colors to use for help text
 	cursor  int          // index of the currently selected row
 	entries []string     // the entries to select from
@@ -50,6 +51,8 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	case tea.KeyDown, tea.KeyTab:
 		self.moveCursorDown()
 		return true, nil
+	case tea.KeyCtrlC:
+		return true, tea.Quit
 	}
 	switch key.String() {
 	case "k", "A", "Z":
@@ -58,6 +61,9 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	case "j", "B":
 		self.moveCursorDown()
 		return true, nil
+	case "q":
+		self.aborted = true
+		return true, tea.Quit
 	}
 	return false, nil
 }

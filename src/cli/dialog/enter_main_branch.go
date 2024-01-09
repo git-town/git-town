@@ -53,15 +53,9 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyEnter:
 		return self, tea.Quit
-	case tea.KeyCtrlC:
-		self.aborted = true
-		return self, tea.Quit
 	}
 	switch keyMsg.String() {
 	case "o":
-		return self, tea.Quit
-	case "q":
-		self.aborted = true
 		return self, tea.Quit
 	}
 	return self, nil

@@ -52,13 +52,9 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyEnter:
 		return self, tea.Quit
-	case tea.KeyCtrlC:
-		return self, tea.Quit
 	}
 	switch keyMsg.String() {
 	case "o":
-		return self, tea.Quit
-	case "q":
 		return self, tea.Quit
 	}
 	return self, nil
