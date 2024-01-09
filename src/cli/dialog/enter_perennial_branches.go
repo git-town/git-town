@@ -6,6 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/muesli/termenv"
 )
 
@@ -13,6 +14,7 @@ import (
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, bool, error) {
 	localBranchesWithoutMain := localBranches.Remove(mainBranch)
+	perennialCandidates := slice.AppendAllMissing(localBranchesWithoutMain, oldPerennialBranches)
 	dialogData := perennialBranchesModel{
 		bubbleList: newBubbleList(localBranchesWithoutMain.Strings(), ""),
 	}

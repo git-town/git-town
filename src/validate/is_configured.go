@@ -33,7 +33,10 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			return err
 		}
 		if slices.Compare(newPerennialBranches, config.PerennialBranches) != 0 {
-			backend.SetPerennialBranches(newPerennialBranches)
+			err := backend.SetPerennialBranches(newPerennialBranches)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return backend.RemoveOutdatedConfiguration(localBranches)
