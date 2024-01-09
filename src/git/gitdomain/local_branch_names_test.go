@@ -10,6 +10,24 @@ import (
 func TestLocalBranchNames(t *testing.T) {
 	t.Parallel()
 
+	t.Run("AppendAllMissing", func(t *testing.T) {
+		t.Parallel()
+		t.Run("append some new elements", func(t *testing.T) {
+			t.Parallel()
+			give := gitdomain.NewLocalBranchNames("one", "two")
+			have := give.AppendAllMissing("two", "three", "four")
+			want := gitdomain.NewLocalBranchNames("one", "two", "three", "four")
+			must.Eq(t, want, have)
+		})
+		t.Run("append no new elements", func(t *testing.T) {
+			t.Parallel()
+			give := gitdomain.NewLocalBranchNames("one", "two")
+			have := give.AppendAllMissing("one", "two")
+			want := gitdomain.NewLocalBranchNames("one", "two")
+			must.Eq(t, want, have)
+		})
+	})
+
 	t.Run("AtRemote", func(t *testing.T) {
 		t.Parallel()
 		branch := gitdomain.NewLocalBranchName("branch")

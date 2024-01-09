@@ -13,8 +13,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	dialogData := mainBranchModel{
 		bubbleList: newBubbleList(localBranches.Strings(), oldMainBranch.String()),
 	}
-	dialogProcess := tea.NewProgram(dialogData)
-	dialogResult, err := dialogProcess.Run()
+	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), false, err
 	}
@@ -36,8 +35,8 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
-		return self, code
+	if handled, cmd := self.bubbleList.handleKey(keyMsg); handled {
+		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
 		return self, tea.Quit

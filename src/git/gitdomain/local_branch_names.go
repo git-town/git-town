@@ -4,6 +4,8 @@ import (
 	"slices"
 	"sort"
 	"strings"
+
+	"github.com/git-town/git-town/v11/src/gohacks/slice"
 )
 
 type LocalBranchNames []LocalBranchName
@@ -30,6 +32,11 @@ func ParseLocalBranchNamesRef(names string) *LocalBranchNames {
 	}
 	result := NewLocalBranchNames(branchNames...)
 	return &result
+}
+
+// AppendAllMissing provides a LocalBranchNames list consisting of the sum of this and elements of other list that aren't in this list.
+func (self LocalBranchNames) AppendAllMissing(others ...LocalBranchName) LocalBranchNames {
+	return slice.AppendAllMissing(self, others...)
 }
 
 // Contains indicates whether this collection contains the given branch.
