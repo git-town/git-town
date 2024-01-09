@@ -66,11 +66,11 @@ func (self LocalBranchNames) Join(sep string) string {
 	return strings.Join(self.Strings(), sep)
 }
 
-// Remove removes the given branch name from this collection.
-func (self LocalBranchNames) Remove(toRemove LocalBranchName) LocalBranchNames {
+// Remove removes the given branch names from this collection.
+func (self LocalBranchNames) Remove(toRemove ...LocalBranchName) LocalBranchNames {
 	result := make(LocalBranchNames, 0, len(self)-1)
 	for _, branch := range self {
-		if branch != toRemove {
+		if !slices.Contains(toRemove, branch) {
 			result = append(result, branch)
 		}
 	}
