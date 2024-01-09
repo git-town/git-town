@@ -114,10 +114,9 @@ func (self *perennialBranchesModel) disableCurrentEntry() {
 
 func (self *perennialBranchesModel) enableCurrentEntry() {
 	selectionIndex := slices.Index(self.selections, self.cursor)
-	if selectionIndex != -1 {
-		return
+	if selectionIndex == -1 {
+		self.selections = append(self.selections, self.cursor)
 	}
-	self.selections = append(self.selections, self.cursor)
 }
 
 func (self *perennialBranchesModel) isRowChecked(row int) bool {
