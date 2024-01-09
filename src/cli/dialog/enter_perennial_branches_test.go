@@ -73,4 +73,17 @@ func TestPerennialBranchesModel(t *testing.T) {
 		must.True(t, model.isRowChecked(2))
 		must.False(t, model.isRowChecked(3))
 	})
+
+	t.Run("checkedEntries", func(t *testing.T) {
+		t.Parallel()
+		model := perennialBranchesModel{ //nolint:exhaustruct
+			bubbleList: bubbleList{ //nolint:exhaustruct
+				entries: []string{"zero", "one", "two", "three"},
+			},
+			selections: []int{1, 3},
+		}
+		have := model.checkedEntries()
+		want := []string{"one", "three"}
+		must.Eq(t, want, have)
+	})
 }
