@@ -64,6 +64,30 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 	})
 
+	t.Run("isSelectedRowChecked", func(t *testing.T) {
+		t.Parallel()
+		t.Run("selected row is checked", func(t *testing.T) {
+			t.Parallel()
+			model := perennialBranchesModel{ //nolint:exhaustruct
+				bubbleList: bubbleList{
+					cursor: 2,
+				},
+				selections: []int{2},
+			}
+			must.True(t, model.isSelectedRowChecked())
+		})
+		t.Run("selected row is not checked", func(t *testing.T) {
+			t.Parallel()
+			model := perennialBranchesModel{ //nolint:exhaustruct
+				bubbleList: bubbleList{
+					cursor: 1,
+				},
+				selections: []int{2},
+			}
+			must.False(t, model.isSelectedRowChecked())
+		})
+	})
+
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
 		model := perennialBranchesModel{ //nolint:exhaustruct
