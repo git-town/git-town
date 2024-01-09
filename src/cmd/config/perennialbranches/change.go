@@ -1,6 +1,8 @@
 package perennialbranches
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -53,5 +55,8 @@ func executeUpdate(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	return repo.Runner.Backend.SetPerennialBranches(newPerennialBranches)
+	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
+		return repo.Runner.SetPerennialBranches(newPerennialBranches)
+	}
+	return nil
 }
