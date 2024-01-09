@@ -46,8 +46,8 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if !isKeyMsg {
 		return self, nil
 	}
-	if self.bubbleList.handleKey(keyMsg) {
-		return self, nil
+	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
+		return self, code
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyEnter:

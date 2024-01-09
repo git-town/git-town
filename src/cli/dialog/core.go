@@ -42,6 +42,26 @@ type bubbleList struct {
 	entries []string     // the entries to select from
 }
 
+func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+	switch key.Type {
+	case tea.KeyUp, tea.KeyShiftTab:
+		self.moveCursorUp()
+		return true, nil
+	case tea.KeyDown, tea.KeyTab:
+		self.moveCursorDown()
+		return true, nil
+	}
+	switch key.String() {
+	case "k", "A", "Z":
+		self.moveCursorUp()
+		return true, nil
+	case "j", "B":
+		self.moveCursorDown()
+		return true, nil
+	}
+	return false, nil
+}
+
 func (self *bubbleList) moveCursorDown() {
 	if self.cursor < len(self.entries)-1 {
 		self.cursor++
@@ -60,24 +80,4 @@ func (self *bubbleList) moveCursorUp() {
 
 func (self bubbleList) selectedEntry() string {
 	return self.entries[self.cursor]
-}
-
-func (self *bubbleList) handleKey(key tea.KeyMsg) bool {
-	switch key.Type {
-	case tea.KeyUp, tea.KeyShiftTab:
-		self.moveCursorUp()
-		return true
-	case tea.KeyDown, tea.KeyTab:
-		self.moveCursorDown()
-		return true
-	}
-	switch key.String() {
-	case "k", "A", "Z":
-		self.moveCursorUp()
-		return true
-	case "j", "B":
-		self.moveCursorDown()
-		return true
-	}
-	return false
 }
