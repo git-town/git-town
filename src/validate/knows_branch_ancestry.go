@@ -2,7 +2,6 @@ package validate
 
 import (
 	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -19,7 +18,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		lineage := args.Backend.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
 		if !hasParent { //nolint:nestif
-			newParent, aborted, err := dialog.EnterParent(currentBranch, args.AllBranches.Names(), args.DefaultBranch)
+			parent, aborted, err := dialog.EnterParent(currentBranch, args.AllBranches, args.Config.Lineage, args.MainBranch)
 			if err != nil || aborted {
 				return false, err
 			}
@@ -46,10 +45,10 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	AllBranches   gitdomain.BranchInfos
-	Backend       *git.BackendCommands
-	Config        *configdomain.FullConfig
-	DefaultBranch gitdomain.LocalBranchName
+	AllBranches gitdomain.LocalBranchNames
+	Backend     *git.BackendCommands
+	Config      *configdomain.FullConfig
+	MainBranch  gitdomain.LocalBranchName
 }
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
@@ -60,10 +59,10 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			DefaultBranch: args.Config.MainBranch,
-			Backend:       args.Backend,
-			AllBranches:   args.AllBranches,
-			Config:        args.Config,
+			MainBranch:  args.Config.MainBranch,
+			Backend:     args.Backend,
+			AllBranches: args.AllBranches.Names(),
+			Config:      args.Config,
 		})
 		if err != nil {
 			return updated, err
@@ -80,16 +79,3 @@ type KnowsBranchesAncestorsArgs struct {
 	Backend     *git.BackendCommands
 	Config      *configdomain.FullConfig
 }
-
-func printParentBranchHeader(mainBranch gitdomain.LocalBranchName) {
-	io.Printf(parentBranchHeaderTemplate, mainBranch)
-}
-
-const parentBranchHeaderTemplate string = `
-Feature branches can be branched directly off
-%s or from other feature branches.
-
-The former allows to develop and ship features completely independent of each other.
-The latter allows to build on top of currently unshipped features.
-
-`

@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"sort"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -8,13 +9,18 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
+const PerennialBranchOption = "none (perennial branch)"
+
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
-	branchDescendants := lineage.Children(branch)
-	parentCandidates := localBranches.Remove(branch).Remove()
+	parentCandidates := localBranches.Remove(branch).Remove(lineage.Children(branch)...).Strings()
+	sort.Strings(parentCandidates)
+	parentCandidates = append([]string{PerennialBranchOption}, parentCandidates...)
 	dialogData := enterParentModel{
-		bubbleList: newBubbleList(localBranches.Strings(), mainBranch.String()),
+		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
+		branch:     branch.String(),
+		mainBranch: mainBranch.String(),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -33,7 +39,7 @@ type enterParentModel struct {
 
 func (self enterParentModel) Init() tea.Cmd {
 	return nil
-}
+} //nolint:ireturn
 
 func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
@@ -55,10 +61,8 @@ func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint
 func (self enterParentModel) View() string {
 	s := strings.Builder{}
 	s.WriteString("To sync branch \"" + self.branch + "\", Git Town needs to know its parent branch.\n")
-	s.WriteString("Typically this is the main branch (" + self.mainBranch + ").")
-	s.WriteString("If you develop using nested feature branches, it can also be another feature branch.")
-	s.WriteString("You can find more information around nesting branches at https://www.git-town.com/nested-feature-branches.")
-	s.WriteString("Hotfixes are sometimes cut from a perennial branch.")
+	s.WriteString("Typically this is the main branch: " + self.mainBranch + "\n")
+	s.WriteString("You can also select another feature or perennial branch.")
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled("> " + branch))
