@@ -2,6 +2,7 @@ package validate
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -27,7 +28,13 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			}
 			config.MainBranch = newMainBranch
 		}
-		newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(allBranches.Names())
+		newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(localBranches, config.PerennialBranches, config.MainBranch)
+		if err != nil || aborted {
+			return err
+		}
+		if slices.Compare(newPerennialBranches, config.PerennialBranches) != 0 {
+			backend.SetPerennialBranches(newPerennialBranches)
+		}
 	}
 	return backend.RemoveOutdatedConfiguration(localBranches)
 }
