@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -11,16 +10,8 @@ import (
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (selectedBranch gitdomain.LocalBranchName, aborted bool, err error) {
-	cursor := slices.Index(localBranches, oldMainBranch)
-	if cursor < 0 {
-		cursor = 0
-	}
 	dialogData := mainBranchModel{
-		bubbleList: bubbleList{
-			entries: localBranches.Strings(),
-			colors:  createColors(),
-			cursor:  cursor,
-		},
+		bubbleList: newBubbleList(localBranches.Strings(), oldMainBranch.String()),
 	}
 	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
@@ -48,12 +39,10 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
 		return self, code
 	}
-	switch keyMsg.Type { //nolint:exhaustive
-	case tea.KeyEnter:
+	if keyMsg.Type == tea.KeyEnter {
 		return self, tea.Quit
 	}
-	switch keyMsg.String() {
-	case "o":
+	if keyMsg.String() == "o" {
 		return self, tea.Quit
 	}
 	return self, nil

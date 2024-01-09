@@ -3,6 +3,7 @@ package dialog
 
 import (
 	"runtime"
+	"slices"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/muesli/termenv"
@@ -43,8 +44,21 @@ type bubbleList struct {
 	entries []string     // the entries to select from
 }
 
+func newBubbleList(entries []string, initial string) bubbleList {
+	cursor := slices.Index(entries, initial)
+	if cursor < 0 {
+		cursor = 0
+	}
+	return bubbleList{
+		aborted: false,
+		entries: entries,
+		colors:  createColors(),
+		cursor:  cursor,
+	}
+}
+
 func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
-	switch key.Type {
+	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
 		return true, nil

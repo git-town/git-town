@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"os"
-	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -10,16 +9,8 @@ import (
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, error) {
-	cursor := slices.Index(localBranches, initialBranch)
-	if cursor < 0 {
-		cursor = 0
-	}
 	dialogData := switchModel{
-		bubbleList: bubbleList{
-			entries: localBranches.Strings(),
-			cursor:  cursor,
-			colors:  createColors(),
-		},
+		bubbleList:    newBubbleList(localBranches.Strings(), initialBranch.String()),
 		initialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
@@ -49,12 +40,10 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
 		return self, code
 	}
-	switch keyMsg.Type { //nolint:exhaustive
-	case tea.KeyEnter:
+	if keyMsg.Type == tea.KeyEnter {
 		return self, tea.Quit
 	}
-	switch keyMsg.String() {
-	case "o":
+	if keyMsg.String() == "o" {
 		return self, tea.Quit
 	}
 	return self, nil
