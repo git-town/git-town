@@ -28,9 +28,9 @@ func TestFindMany(t *testing.T) {
 	t.Run("haystack contains no needles", func(t *testing.T) {
 		t.Parallel()
 		haystack := []string{"one", "two", "three"}
-		needles := []string{"two", "three"}
+		needles := []string{"four", "five"}
 		have := slice.FindMany(haystack, needles)
-		want := []int{1, 2}
+		want := []int{}
 		must.Eq(t, want, have)
 	})
 	t.Run("no needles given", func(t *testing.T) {
