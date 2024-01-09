@@ -32,6 +32,7 @@ func ParseLocalBranchNamesRef(names string) *LocalBranchNames {
 	return &result
 }
 
+// Contains indicates whether this collection contains the given branch.
 func (self LocalBranchNames) Contains(branch LocalBranchName) bool {
 	return slices.Contains(self, branch)
 }
