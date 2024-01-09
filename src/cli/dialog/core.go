@@ -33,3 +33,29 @@ func createColors() dialogColors {
 		selection: termenv.String().Foreground(termenv.ANSICyan),
 	}
 }
+
+type bubbleList struct {
+	colors  dialogColors
+	cursor  int
+	entries []string
+}
+
+func (self *bubbleList) moveCursorDown() {
+	if self.cursor < len(self.entries)-1 {
+		self.cursor++
+	} else {
+		self.cursor = 0
+	}
+}
+
+func (self *bubbleList) moveCursorUp() {
+	if self.cursor > 0 {
+		self.cursor--
+	} else {
+		self.cursor = len(self.entries) - 1
+	}
+}
+
+func (self bubbleList) selectedEntry() string {
+	return self.entries[self.cursor]
+}

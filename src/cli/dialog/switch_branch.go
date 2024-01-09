@@ -15,9 +15,11 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		cursor = 0
 	}
 	dialogData := switchModel{
-		branches:      localBranches.Strings(),
-		cursor:        cursor,
-		colors:        createColors(),
+		bubbleList: bubbleList{
+			entries: localBranches.Strings(),
+			cursor:  cursor,
+			colors:  createColors(),
+		},
 		initialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
@@ -26,15 +28,13 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", err
 	}
 	result := dialogResult.(switchModel) //nolint:forcetypeassert
-	selectedBranch := gitdomain.NewLocalBranchName(result.selectedBranch())
+	selectedBranch := gitdomain.NewLocalBranchName(result.bubbleList.selectedEntry())
 	return selectedBranch, nil
 }
 
 type switchModel struct {
-	branches      []string     // names of all branches
-	cursor        int          // index of the currently selected row
-	colors        dialogColors // colors to use in the dialog
-	initialBranch string       // name of the currently checked out branch
+	bubbleList
+	initialBranch string // name of the currently checked out branch
 }
 
 func (self switchModel) Init() tea.Cmd {
@@ -48,9 +48,11 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
-		return self.moveCursorUp(), nil
+		self.moveCursorUp()
+		return self, nil
 	case tea.KeyDown, tea.KeyTab:
-		return self.moveCursorDown(), nil
+		self.moveCursorDown()
+		return self, nil
 	case tea.KeyEnter:
 		return self, tea.Quit
 	case tea.KeyCtrlC:
@@ -58,9 +60,11 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	}
 	switch keyMsg.String() {
 	case "k", "A", "Z":
-		return self.moveCursorUp(), nil
+		self.moveCursorUp()
+		return self, nil
 	case "j", "B":
-		return self.moveCursorDown(), nil
+		self.moveCursorDown()
+		return self, nil
 	case "o":
 		return self, tea.Quit
 	case "q":
@@ -71,7 +75,7 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 
 func (self switchModel) View() string {
 	s := strings.Builder{}
-	for i, branch := range self.branches {
+	for i, branch := range self.entries {
 		switch {
 		case i == self.cursor:
 			s.WriteString(self.colors.selection.Styled("> " + branch))
@@ -104,26 +108,4 @@ func (self switchModel) View() string {
 	s.WriteString(self.colors.helpKey.Styled("q"))
 	s.WriteString(self.colors.help.Styled(" abort"))
 	return s.String()
-}
-
-func (self switchModel) moveCursorDown() switchModel {
-	if self.cursor < len(self.branches)-1 {
-		self.cursor++
-	} else {
-		self.cursor = 0
-	}
-	return self
-}
-
-func (self switchModel) moveCursorUp() switchModel {
-	if self.cursor > 0 {
-		self.cursor--
-	} else {
-		self.cursor = len(self.branches) - 1
-	}
-	return self
-}
-
-func (self switchModel) selectedBranch() string {
-	return self.branches[self.cursor]
 }

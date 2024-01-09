@@ -17,9 +17,11 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	}
 	dialogData := mainBranchModel{
 		aborted: false,
-		entries: localBranches.Strings(),
-		colors:  createColors(),
-		cursor:  cursor,
+		bubbleList: bubbleList{
+			entries: localBranches.Strings(),
+			colors:  createColors(),
+			cursor:  cursor,
+		},
 	}
 	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
@@ -32,10 +34,8 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 }
 
 type mainBranchModel struct {
+	bubbleList
 	aborted bool
-	colors  dialogColors
-	cursor  int
-	entries []string
 }
 
 func (self mainBranchModel) Init() tea.Cmd {
@@ -49,9 +49,11 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
-		return self.moveCursorUp(), nil
+		self.moveCursorUp()
+		return self, nil
 	case tea.KeyDown, tea.KeyTab:
-		return self.moveCursorDown(), nil
+		self.moveCursorDown()
+		return self, nil
 	case tea.KeyEnter:
 		return self, tea.Quit
 	case tea.KeyCtrlC:
@@ -60,9 +62,11 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	}
 	switch keyMsg.String() {
 	case "k", "A", "Z":
-		return self.moveCursorUp(), nil
+		self.moveCursorUp()
+		return self, nil
 	case "j", "B":
-		return self.moveCursorDown(), nil
+		self.moveCursorDown()
+		return self, nil
 	case "o":
 		return self, tea.Quit
 	case "q":
@@ -108,26 +112,4 @@ func (self mainBranchModel) View() string {
 	s.WriteString(self.colors.helpKey.Styled("q"))
 	s.WriteString(self.colors.help.Styled(" abort"))
 	return s.String()
-}
-
-func (self mainBranchModel) moveCursorDown() mainBranchModel {
-	if self.cursor < len(self.entries)-1 {
-		self.cursor++
-	} else {
-		self.cursor = 0
-	}
-	return self
-}
-
-func (self mainBranchModel) moveCursorUp() mainBranchModel {
-	if self.cursor > 0 {
-		self.cursor--
-	} else {
-		self.cursor = len(self.entries) - 1
-	}
-	return self
-}
-
-func (self mainBranchModel) selectedEntry() string {
-	return self.entries[self.cursor]
 }
