@@ -306,7 +306,7 @@ func (self *TestCommands) LocalBranchesMainFirst(mainBranch gitdomain.LocalBranc
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, err
 	}
-	slice.Hoist(&branches, mainBranch)
+	branches = slice.Hoist(branches, mainBranch)
 	return branches, nil
 }
 
