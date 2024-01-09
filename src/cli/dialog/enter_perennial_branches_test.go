@@ -8,6 +8,7 @@ import (
 
 func TestPerennialBranchesModel(t *testing.T) {
 	t.Parallel()
+
 	t.Run("disableCurrentEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is enabled", func(t *testing.T) {
