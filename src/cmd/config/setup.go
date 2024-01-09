@@ -1,6 +1,8 @@
 package config
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -50,7 +52,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	return dialog.EnterPerennialBranches(&repo.Runner.Backend, &repo.Runner.FullConfig, config.localBranches)
+	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch)
+	if err != nil || aborted {
+		return err
+	}
+	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
+		return repo.Runner.SetPerennialBranches(newPerennialBranches)
+	}
+	return nil
 }
 
 type setupConfig struct {

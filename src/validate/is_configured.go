@@ -27,7 +27,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			}
 			config.MainBranch = newMainBranch
 		}
-		return dialog.EnterPerennialBranches(backend, config, allBranches)
+		newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(allBranches.Names())
 	}
 	return backend.RemoveOutdatedConfiguration(allBranches)
 }
