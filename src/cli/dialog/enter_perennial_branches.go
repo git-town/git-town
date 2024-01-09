@@ -39,7 +39,7 @@ func (self perennialBranchesModel) Init() tea.Cmd {
 }
 
 func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
-	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg) //nolint:ireturn
 	if !isKeyMsg {
 		return self, nil
 	}
@@ -107,6 +107,17 @@ func (self perennialBranchesModel) View() string {
 	return s.String()
 }
 
+// checkedEntries provides all checked list entries.
+func (self *perennialBranchesModel) checkedEntries() []string {
+	result := []string{}
+	for e, entry := range self.entries {
+		if self.isRowChecked(e) {
+			result = append(result, entry)
+		}
+	}
+	return result
+}
+
 // disableCurrentEntry unchecks the currently selected list entry.
 func (self *perennialBranchesModel) disableCurrentEntry() {
 	selectionIndex := slices.Index(self.selections, self.cursor)
@@ -126,17 +137,6 @@ func (self *perennialBranchesModel) enableCurrentEntry() {
 // isRowChecked indicates whether the currently selected list entry is checked or not.
 func (self *perennialBranchesModel) isRowChecked(row int) bool {
 	return slices.Contains(self.selections, row)
-}
-
-// checkedEntries provides all checked list entries.
-func (self *perennialBranchesModel) checkedEntries() []string {
-	result := []string{}
-	for e, entry := range self.entries {
-		if self.isRowChecked(e) {
-			result = append(result, entry)
-		}
-	}
-	return result
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,

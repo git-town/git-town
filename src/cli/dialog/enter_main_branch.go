@@ -31,7 +31,7 @@ func (self mainBranchModel) Init() tea.Cmd {
 }
 
 func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
-	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg) //nolint:ireturn
 	if !isKeyMsg {
 		return self, nil
 	}
