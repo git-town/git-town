@@ -19,8 +19,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
-	dialogProcess := tea.NewProgram(dialogData)
-	dialogResult, err := dialogProcess.Run()
+	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, false, err
 	}

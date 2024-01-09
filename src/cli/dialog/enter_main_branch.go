@@ -13,8 +13,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	dialogData := mainBranchModel{
 		bubbleList: newBubbleList(localBranches.Strings(), oldMainBranch.String()),
 	}
-	dialogProcess := tea.NewProgram(dialogData)
-	dialogResult, err := dialogProcess.Run()
+	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), false, err
 	}
