@@ -14,32 +14,32 @@ func TestTruncateLast(t *testing.T) {
 	t.Run("list contains no elements", func(t *testing.T) {
 		t.Parallel()
 		list := []int{}
-		slice.TruncateLast(&list)
+		have := slice.TruncateLast(list)
 		want := []int{}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("list contains one element", func(t *testing.T) {
 		t.Parallel()
 		list := []int{1}
-		slice.TruncateLast(&list)
+		have := slice.TruncateLast(list)
 		want := []int{}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("list contains multiple elements", func(t *testing.T) {
 		t.Parallel()
 		list := []int{1, 2, 3}
-		slice.TruncateLast(&list)
+		have := slice.TruncateLast(list)
 		want := []int{1, 2}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
 		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
-		slice.TruncateLast(&list)
+		have := slice.TruncateLast(list)
 		want := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222")}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 }
