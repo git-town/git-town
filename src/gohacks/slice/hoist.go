@@ -1,10 +1,10 @@
 package slice
 
-// Hoist moves the given element in the given slice to the first position.
-func Hoist[S ~[]C, C comparable](list *S, needle C) {
-	result := make([]C, 0, len(*list))
+// Hoist provides the given list with the given element moved to the first position.
+func Hoist[S ~[]C, C comparable](list S, needle C) S { //nolint:ireturn
+	result := make([]C, 0, len(list))
 	hasNeedle := false
-	for _, element := range *list {
+	for _, element := range list {
 		if element == needle {
 			hasNeedle = true
 		} else {
@@ -14,5 +14,5 @@ func Hoist[S ~[]C, C comparable](list *S, needle C) {
 	if hasNeedle {
 		result = append([]C{needle}, result...)
 	}
-	*list = result
+	return result
 }

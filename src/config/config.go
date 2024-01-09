@@ -69,7 +69,7 @@ func (self *Config) Reload() {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *Config) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
-	slice.Remove(&self.FullConfig.PerennialBranches, branch)
+	self.FullConfig.PerennialBranches = slice.Remove(self.FullConfig.PerennialBranches, branch)
 	return self.SetPerennialBranches(self.FullConfig.PerennialBranches)
 }
 

@@ -14,24 +14,24 @@ func TestRemove(t *testing.T) {
 	t.Run("slice type", func(t *testing.T) {
 		t.Parallel()
 		list := []string{"one", "two", "three"}
-		slice.Remove(&list, "two")
+		have := slice.Remove(list, "two")
 		want := []string{"one", "three"}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("slice alias type", func(t *testing.T) {
 		t.Parallel()
 		list := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("222222"), gitdomain.NewSHA("333333")}
-		slice.Remove(&list, gitdomain.NewSHA("222222"))
+		have := slice.Remove(list, gitdomain.NewSHA("222222"))
 		want := gitdomain.SHAs{gitdomain.NewSHA("111111"), gitdomain.NewSHA("333333")}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 
 	t.Run("empty slice", func(t *testing.T) {
 		t.Parallel()
 		list := []string{}
-		slice.Remove(&list, "foo")
+		have := slice.Remove(list, "foo")
 		want := []string{}
-		must.Eq(t, want, list)
+		must.Eq(t, want, have)
 	})
 }

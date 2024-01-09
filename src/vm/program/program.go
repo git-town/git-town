@@ -97,12 +97,14 @@ func (self *Program) PrependProgram(otherProgram Program) {
 	*self = result
 }
 
+// TODO: return the modified program here.
 func (self *Program) RemoveAllButLast(removeType string) {
 	opcodeTypes := self.OpcodeTypes()
 	occurrences := slice.FindAll(opcodeTypes, removeType)
-	slice.TruncateLast(&occurrences)
+	occurrences = slice.TruncateLast(occurrences)
+	// TODO: call slice.RemoveElements here.
 	for o := len(occurrences) - 1; o >= 0; o-- {
-		slice.RemoveAt(self, occurrences[o])
+		*self = slice.RemoveAt(*self, occurrences[o])
 	}
 }
 
