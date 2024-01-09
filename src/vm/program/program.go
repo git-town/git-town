@@ -105,6 +105,7 @@ func (self Program) RemoveAllButLast(removeType string) Program {
 }
 
 // RemoveDuplicateCheckout removes checkout opcodes that immediately follow each other from this program.
+// TODO: remove this.
 func (self *Program) RemoveDuplicateCheckout() {
 	result := make([]shared.Opcode, 0, len(*self))
 	// this one is populated only if the last opcode is a checkout
