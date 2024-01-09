@@ -13,8 +13,7 @@ import (
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, bool, error) {
-	localBranchesWithoutMain := localBranches.Remove(mainBranch)
-	perennialCandidates := slice.AppendAllMissing(localBranchesWithoutMain, oldPerennialBranches)
+	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches)
 	dialogData := perennialBranchesModel{
 		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
@@ -48,7 +47,7 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
 		return self, code
 	}
-	switch keyMsg.Type {
+	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
 		self.toggleCurrentEntry()
 		return self, nil

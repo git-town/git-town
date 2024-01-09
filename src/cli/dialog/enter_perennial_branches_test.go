@@ -12,7 +12,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{
+			model := perennialBranchesModel{ //nolint:exhaustruct
 				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 2,
 				},
@@ -24,7 +24,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{
+			model := perennialBranchesModel{ //nolint:exhaustruct
 				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 2,
 				},
@@ -40,7 +40,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{
+			model := perennialBranchesModel{ //nolint:exhaustruct
 				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 2,
 				},
@@ -52,7 +52,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{
+			model := perennialBranchesModel{ //nolint:exhaustruct
 				bubbleList: bubbleList{ //nolint:exhaustruct
 					cursor: 2,
 				},
