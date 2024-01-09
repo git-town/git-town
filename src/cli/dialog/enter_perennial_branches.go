@@ -43,8 +43,8 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
-		return self, code
+	if handled, cmd := self.bubbleList.handleKey(keyMsg); handled {
+		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:

@@ -35,8 +35,8 @@ func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
-		return self, code
+	if handled, cmd := self.bubbleList.handleKey(keyMsg); handled {
+		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
 		return self, tea.Quit
