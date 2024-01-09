@@ -99,13 +99,9 @@ func (self *Program) PrependProgram(otherProgram Program) {
 
 // TODO: return the modified program here.
 func (self *Program) RemoveAllButLast(removeType string) {
-	opcodeTypes := self.OpcodeTypes()
-	occurrences := slice.FindAll(opcodeTypes, removeType)
-	occurrences = slice.TruncateLast(occurrences)
-	// TODO: call slice.RemoveElements here.
-	for o := len(occurrences) - 1; o >= 0; o-- {
-		*self = slice.RemoveAt(*self, occurrences[o])
-	}
+	allIndexes := slice.FindAll(self.OpcodeTypes(), removeType)
+	indexesToRemove := slice.TruncateLast(allIndexes)
+	*self = slice.RemoveAt(*self, indexesToRemove...)
 }
 
 // RemoveDuplicateCheckout removes checkout opcodes that immediately follow each other from this program.
