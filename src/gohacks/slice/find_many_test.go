@@ -22,7 +22,7 @@ func TestFindMany(t *testing.T) {
 		haystack := []string{"one", "two", "three"}
 		needles := []string{"two", "four"}
 		have := slice.FindMany(haystack, needles)
-		want := []int{1, 2}
+		want := []int{1}
 		must.Eq(t, want, have)
 	})
 	t.Run("haystack contains no needles", func(t *testing.T) {

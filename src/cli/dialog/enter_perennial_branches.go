@@ -16,7 +16,9 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	localBranchesWithoutMain := localBranches.Remove(mainBranch)
 	perennialCandidates := slice.AppendAllMissing(localBranchesWithoutMain, oldPerennialBranches)
 	dialogData := perennialBranchesModel{
-		bubbleList: newBubbleList(localBranchesWithoutMain.Strings(), ""),
+		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
+		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
+		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
@@ -105,10 +107,9 @@ func (self perennialBranchesModel) View() string {
 
 func (self *perennialBranchesModel) disableCurrentEntry() {
 	selectionIndex := slices.Index(self.selections, self.cursor)
-	if selectionIndex == -1 {
-		return
+	if selectionIndex != -1 {
+		self.selections = slice.RemoveAt(self.selections, selectionIndex)
 	}
-	self.selections = slices.Delete(self.selections, selectionIndex, selectionIndex)
 }
 
 func (self *perennialBranchesModel) enableCurrentEntry() {
