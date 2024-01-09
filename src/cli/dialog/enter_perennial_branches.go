@@ -13,7 +13,7 @@ import (
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, bool, error) {
-	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches)
+	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	dialogData := perennialBranchesModel{
 		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
@@ -39,7 +39,7 @@ func (self perennialBranchesModel) Init() tea.Cmd {
 }
 
 func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
-	keyMsg, isKeyMsg := msg.(tea.KeyMsg) //nolint:ireturn
+	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
 	}
@@ -120,18 +120,12 @@ func (self *perennialBranchesModel) checkedEntries() []string {
 
 // disableCurrentEntry unchecks the currently selected list entry.
 func (self *perennialBranchesModel) disableCurrentEntry() {
-	selectionIndex := slices.Index(self.selections, self.cursor)
-	if selectionIndex != -1 {
-		self.selections = slice.RemoveAt(self.selections, selectionIndex)
-	}
+	self.selections = slice.Remove(self.selections, self.cursor)
 }
 
 // enableCurrentEntry checks the currently selected list entry.
 func (self *perennialBranchesModel) enableCurrentEntry() {
-	selectionIndex := slices.Index(self.selections, self.cursor)
-	if selectionIndex == -1 {
-		self.selections = append(self.selections, self.cursor)
-	}
+	self.selections = slice.AppendAllMissing(self.selections, self.cursor)
 }
 
 // isRowChecked indicates whether the currently selected list entry is checked or not.
