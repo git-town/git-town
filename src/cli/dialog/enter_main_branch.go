@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -54,7 +53,7 @@ func (self mainBranchModel) View() string {
 	s.WriteString("and into which you ship feature branches when they are done.\n")
 	s.WriteString("In most repositories, this is the \"main\", \"master\", or \"development\" branch.\n\n")
 	for i, branch := range self.entries {
-		s.WriteString(self.dim.Styled(fmt.Sprintf(self.numberFormat, i)))
+		s.WriteString(self.entryNumberStr(i))
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled(" > " + branch))
 		} else {

@@ -40,6 +40,10 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	}
 }
 
+func (self *bubbleList) entryNumberStr(number int) string {
+	return self.dim.Styled(fmt.Sprintf(self.numberFormat, number))
+}
+
 func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
@@ -52,7 +56,6 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.aborted = true
 		return true, tea.Quit
 	}
-
 	switch keyStr := key.String(); keyStr {
 	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
 		self.entryNumber += keyStr

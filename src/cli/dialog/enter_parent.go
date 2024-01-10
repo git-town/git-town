@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -68,10 +67,10 @@ func (self enterParentModel) View() string {
 	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n\n")
 	for i, branch := range self.entries {
 		if i == self.cursor {
-			s.WriteString(self.dim.Styled(fmt.Sprintf(self.numberFormat, i)))
+			s.WriteString(self.entryNumberStr(i))
 			s.WriteString(self.colors.selection.Styled(" > " + branch))
 		} else {
-			s.WriteString(self.dim.Styled(fmt.Sprintf(self.numberFormat, i)))
+			s.WriteString(self.entryNumberStr(i))
 			s.WriteString("   " + branch)
 		}
 		s.WriteRune('\n')
