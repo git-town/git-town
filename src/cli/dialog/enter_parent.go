@@ -27,7 +27,7 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), false, err
 	}
-	result := dialogResult.(enterParentModel) //nolint:forcetypeassert
+	result := dialogResult.(enterParentModel) //nolint:forcetypeassert // we know the type for sure here
 	selectedBranch := gitdomain.LocalBranchName(result.selectedEntry())
 	return selectedBranch, result.aborted, nil
 }
