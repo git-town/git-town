@@ -14,14 +14,14 @@ import (
 const PerennialBranchOption = "<none> (perennial branch)"
 
 // EnterParent lets the user select the parent branch for the given branch.
-func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
-	parentCandidates := EnterParentEntries(branch, localBranches, lineage, mainBranch)
+func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
+	parentCandidates := EnterParentEntries(args)
 	dialogData := enterParentModel{
-		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
-		branch:     branch.String(),
+		bubbleList: newBubbleList(parentCandidates, args.MainBranch.String()),
+		branch:     args.Branch.String(),
 		digits:     "",
 		maxDigits:  gohacks.NumberLength(len(parentCandidates)),
-		mainBranch: mainBranch.String(),
+		mainBranch: args.MainBranch.String(),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -30,6 +30,13 @@ func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.Local
 	result := dialogResult.(enterParentModel) //nolint:forcetypeassert
 	selectedBranch := gitdomain.LocalBranchName(result.selectedEntry())
 	return selectedBranch, result.aborted, nil
+}
+
+type EnterParentArgs struct {
+	Branch        gitdomain.LocalBranchName
+	LocalBranches gitdomain.LocalBranchNames
+	Lineage       configdomain.Lineage
+	MainBranch    gitdomain.LocalBranchName
 }
 
 type enterParentModel struct {
@@ -42,7 +49,7 @@ type enterParentModel struct {
 
 func (self enterParentModel) Init() tea.Cmd {
 	return nil
-} //nolint:ireturn
+}
 
 func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
@@ -120,9 +127,9 @@ func (self enterParentModel) View() string {
 	return s.String()
 }
 
-func EnterParentEntries(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) []string {
-	parentCandidateBranches := localBranches.Remove(branch).Remove(lineage.Children(branch)...)
+func EnterParentEntries(args EnterParentArgs) []string {
+	parentCandidateBranches := args.LocalBranches.Remove(args.Branch).Remove(args.Lineage.Children(args.Branch)...)
 	parentCandidateBranches.Sort()
-	parentCandidates := parentCandidateBranches.Hoist(mainBranch).Strings()
+	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch).Strings()
 	return append([]string{PerennialBranchOption}, parentCandidates...)
 }
