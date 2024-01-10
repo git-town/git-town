@@ -1,6 +1,8 @@
 package validate
 
 import (
+	"os"
+
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
@@ -24,8 +26,11 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 				Lineage:       args.Config.Lineage,
 				MainBranch:    args.MainBranch,
 			})
-			if err != nil || aborted {
+			if err != nil {
 				return false, err
+			}
+			if aborted {
+				os.Exit(0)
 			}
 			if parent.String() == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
