@@ -1,12 +1,15 @@
 package dialog
 
 import (
+	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"golang.org/x/term"
 )
 
 const PerennialBranchOption = "<none> (perennial branch)"
@@ -14,6 +17,11 @@ const PerennialBranchOption = "<none> (perennial branch)"
 // EnterParent lets the user select the parent branch for the given branch.
 func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidates := EnterParentEntries(branch, localBranches, lineage, mainBranch)
+	termWidth, _, err := term.GetSize(int(os.Stdout.Fd()))
+	if err != nil {
+		return "", false, err
+	}
+	fmt.Println("term width:", termWidth)
 	dialogData := enterParentModel{
 		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
 		branch:     branch.String(),
