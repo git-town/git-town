@@ -1,8 +1,9 @@
 package validate
 
 import (
+	"os"
+
 	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -10,7 +11,6 @@ import (
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
-	headerShown := false
 	currentBranch := branch
 	if !args.Config.IsFeatureBranch(branch) {
 		return false, nil
@@ -19,15 +19,18 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 	for {
 		lineage := args.Backend.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
-		var err error
 		if !hasParent { //nolint:nestif
-			if !headerShown {
-				printParentBranchHeader(args.Config.MainBranch)
-				headerShown = true
-			}
-			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, lineage, args.AllBranches)
+			parent, aborted, err := dialog.EnterParent(dialog.EnterParentArgs{
+				Branch:        currentBranch,
+				LocalBranches: args.AllBranches,
+				Lineage:       args.Config.Lineage,
+				MainBranch:    args.MainBranch,
+			})
 			if err != nil {
 				return false, err
+			}
+			if aborted {
+				os.Exit(0)
 			}
 			if parent.String() == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
@@ -52,10 +55,11 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	AllBranches   gitdomain.BranchInfos
-	Backend       *git.BackendCommands
-	Config        *configdomain.FullConfig
-	DefaultBranch gitdomain.LocalBranchName
+	// TODO: use consistent convention for branch collections everywhere: AllBranches=remote and local branches, LocalBranches=local branches
+	AllBranches gitdomain.LocalBranchNames
+	Backend     *git.BackendCommands
+	Config      *configdomain.FullConfig
+	MainBranch  gitdomain.LocalBranchName
 }
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
@@ -66,10 +70,10 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			DefaultBranch: args.Config.MainBranch,
-			Backend:       args.Backend,
-			AllBranches:   args.AllBranches,
-			Config:        args.Config,
+			MainBranch:  args.Config.MainBranch,
+			Backend:     args.Backend,
+			AllBranches: args.AllBranches.Names(),
+			Config:      args.Config,
 		})
 		if err != nil {
 			return updated, err
@@ -86,16 +90,3 @@ type KnowsBranchesAncestorsArgs struct {
 	Backend     *git.BackendCommands
 	Config      *configdomain.FullConfig
 }
-
-func printParentBranchHeader(mainBranch gitdomain.LocalBranchName) {
-	io.Printf(parentBranchHeaderTemplate, mainBranch)
-}
-
-const parentBranchHeaderTemplate string = `
-Feature branches can be branched directly off
-%s or from other feature branches.
-
-The former allows to develop and ship features completely independent of each other.
-The latter allows to build on top of currently unshipped features.
-
-`

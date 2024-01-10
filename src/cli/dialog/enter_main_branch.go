@@ -8,7 +8,6 @@ import (
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-// This includes asking the user and updating the respective setting.
 func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (selectedBranch gitdomain.LocalBranchName, aborted bool, err error) {
 	dialogData := mainBranchModel{
 		bubbleList: newBubbleList(localBranches.Strings(), oldMainBranch.String()),
