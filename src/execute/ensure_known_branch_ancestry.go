@@ -15,10 +15,10 @@ import (
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnownBranchAncestryArgs) error {
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
-		AllBranches:   args.AllBranches,
-		Backend:       &args.Runner.Backend,
-		Config:        args.Config,
-		DefaultBranch: args.DefaultBranch,
+		AllBranches: args.AllBranches.Names(),
+		Backend:     &args.Runner.Backend,
+		Config:      args.Config,
+		MainBranch:  args.DefaultBranch,
 	})
 	if err != nil {
 		return err
