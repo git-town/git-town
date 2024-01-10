@@ -55,6 +55,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
+	// TODO: use consistent convention for branch collections everywhere: AllBranches=remote and local branches, LocalBranches=local branches
 	AllBranches gitdomain.LocalBranchNames
 	Backend     *git.BackendCommands
 	Config      *configdomain.FullConfig
