@@ -3,6 +3,7 @@ package dialog
 import (
 	"fmt"
 	"slices"
+	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/gohacks"
@@ -51,7 +52,18 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.aborted = true
 		return true, tea.Quit
 	}
-	switch key.String() {
+
+	switch keyStr := key.String(); keyStr {
+	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		self.entryNumber += keyStr
+		if len(self.entryNumber) > self.maxDigits {
+			self.entryNumber = self.entryNumber[1:]
+		}
+		number64, _ := strconv.ParseInt(self.entryNumber, 10, 0)
+		number := int(number64)
+		if number < len(self.entries) {
+			self.cursor = number
+		}
 	case "k", "A", "Z":
 		self.moveCursorUp()
 		return true, nil
