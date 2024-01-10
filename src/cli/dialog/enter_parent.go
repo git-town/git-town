@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -9,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/muesli/termenv"
 	"golang.org/x/term"
 )
 
@@ -21,11 +21,11 @@ func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.Local
 	if err != nil {
 		return "", false, err
 	}
-	fmt.Println("term width:", termWidth)
 	dialogData := enterParentModel{
 		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
 		branch:     branch.String(),
 		mainBranch: mainBranch.String(),
+		termWidth:  termWidth,
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -40,6 +40,7 @@ type enterParentModel struct {
 	bubbleList
 	branch     string
 	mainBranch string
+	termWidth  int
 }
 
 func (self enterParentModel) Init() tea.Cmd {
@@ -67,15 +68,18 @@ func (self enterParentModel) View() string {
 	s := strings.Builder{}
 	s.WriteString("\nPlease select the parent of branch \"" + self.branch + "\" or enter its number.\n")
 	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n\n")
+	dim := termenv.String().Faint()
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			// TODO: display single or double-digit numbers for branches,
 			// and also allow the user to enter the branch number.
 			// If the number is double digits, the user must press two numbers.
 			// This provides accessibility out of the box.
-			s.WriteString(self.colors.selection.Styled(strconv.FormatInt(int64(i), 10) + " > " + branch))
+			s.WriteString(dim.Styled(strconv.FormatInt(int64(i), 10)))
+			s.WriteString(self.colors.selection.Styled(" > " + branch))
 		} else {
-			s.WriteString(strconv.FormatInt(int64(i), 10) + "   " + branch)
+			s.WriteString(dim.Styled(strconv.FormatInt(int64(i), 10)))
+			s.WriteString("   " + branch)
 		}
 		s.WriteRune('\n')
 	}
