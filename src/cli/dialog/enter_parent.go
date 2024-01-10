@@ -8,7 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/muesli/termenv"
 )
 
 const PerennialBranchOption = "<none> (perennial branch)"
@@ -79,13 +78,12 @@ func (self enterParentModel) View() string {
 	s := strings.Builder{}
 	s.WriteString("\nPlease select the parent of branch \"" + self.branch + "\" or enter its number.\n")
 	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n\n")
-	dim := termenv.String().Faint()
 	for i, branch := range self.entries {
 		if i == self.cursor {
-			s.WriteString(dim.Styled(fmt.Sprintf(self.numberFormat, i)))
+			s.WriteString(self.dim.Styled(fmt.Sprintf(self.numberFormat, i)))
 			s.WriteString(self.colors.selection.Styled(" > " + branch))
 		} else {
-			s.WriteString(dim.Styled(fmt.Sprintf(self.numberFormat, i)))
+			s.WriteString(self.dim.Styled(fmt.Sprintf(self.numberFormat, i)))
 			s.WriteString("   " + branch)
 		}
 		s.WriteRune('\n')
