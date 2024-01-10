@@ -11,8 +11,7 @@ import (
 
 const PerennialBranchOption = "<none> (perennial branch)"
 
-// EnterMainBranch lets the user select a new main branch for this repo.
-// This includes asking the user and updating the respective setting.
+// EnterParent lets the user select the parent branch for the given branch.
 func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidates := EnterParentEntries(branch, localBranches, lineage, mainBranch)
 	dialogData := enterParentModel{
