@@ -116,9 +116,9 @@ func (self enterParentModel) View() string {
 	s.WriteString(self.colors.help.Styled(" accept   "))
 	// numbers
 	s.WriteString(self.colors.helpKey.Styled("0"))
-	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.help.Styled("-"))
 	s.WriteString(self.colors.helpKey.Styled("9"))
-	s.WriteString(self.colors.help.Styled(" enter branch   "))
+	s.WriteString(self.colors.help.Styled(" jump   "))
 	// abort
 	s.WriteString(self.colors.helpKey.Styled("ctrl-c"))
 	s.WriteString(self.colors.help.Styled("/"))
