@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"sort"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,9 +13,7 @@ const PerennialBranchOption = "<none> (perennial branch)"
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
-	parentCandidates := localBranches.Remove(branch).Remove(lineage.Children(branch)...).Strings()
-	sort.Strings(parentCandidates)
-	parentCandidates = append([]string{PerennialBranchOption}, parentCandidates...)
+	parentCandidates := EnterParentEntries(branch, localBranches, lineage, mainBranch)
 	dialogData := enterParentModel{
 		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
 		branch:     branch.String(),
@@ -60,9 +57,9 @@ func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint
 
 func (self enterParentModel) View() string {
 	s := strings.Builder{}
-	s.WriteString("To sync branch \"" + self.branch + "\", Git Town needs to know its parent branch.\n")
-	s.WriteString("Typically this is the main branch: " + self.mainBranch + "\n")
-	s.WriteString("You can also select another feature or perennial branch.")
+	s.WriteString("\nPlease tell me the parent of branch \"" + self.branch + "\".\n")
+	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n")
+	s.WriteString("You can also select any other of the listed branches.\n\n")
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled("> " + branch))
@@ -93,4 +90,11 @@ func (self enterParentModel) View() string {
 	s.WriteString(self.colors.helpKey.Styled("q"))
 	s.WriteString(self.colors.help.Styled(" abort"))
 	return s.String()
+}
+
+func EnterParentEntries(branch gitdomain.LocalBranchName, localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage, mainBranch gitdomain.LocalBranchName) []string {
+	parentCandidateBranches := localBranches.Remove(branch).Remove(lineage.Children(branch)...)
+	parentCandidateBranches.Sort()
+	parentCandidates := parentCandidateBranches.Hoist(mainBranch).Strings()
+	return append([]string{PerennialBranchOption}, parentCandidates...)
 }
