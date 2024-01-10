@@ -1,17 +1,22 @@
 package dialog
 
 import (
+	"fmt"
 	"slices"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/gohacks"
 )
 
 // bubbleList contains common elements of BubbleTea list implementations.
 type bubbleList struct {
-	aborted bool         // whether the user has aborted this dialog
-	colors  dialogColors // colors to use for help text
-	cursor  int          // index of the currently selected row
-	entries []string     // the entries to select from
+	aborted      bool         // whether the user has aborted this dialog
+	colors       dialogColors // colors to use for help text
+	cursor       int          // index of the currently selected row
+	entries      []string     // the entries to select from
+	entryNumber  string       // the currently entered branch number
+	maxDigits    int          // the maximal number of digits in the branch number
+	numberFormat string       // template for formatting the entry number
 }
 
 func newBubbleList(entries []string, initial string) bubbleList {
@@ -19,11 +24,15 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	if cursor < 0 {
 		cursor = 0
 	}
+	numberLen := gohacks.NumberLength(len(entries))
 	return bubbleList{
-		aborted: false,
-		entries: entries,
-		colors:  createColors(),
-		cursor:  cursor,
+		aborted:      false,
+		colors:       createColors(),
+		cursor:       cursor,
+		entries:      entries,
+		entryNumber:  "",
+		maxDigits:    numberLen,
+		numberFormat: fmt.Sprintf("%%0%dd", numberLen),
 	}
 }
 

@@ -8,7 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/muesli/termenv"
 )
 
@@ -17,14 +16,10 @@ const PerennialBranchOption = "<none> (perennial branch)"
 // EnterParent lets the user select the parent branch for the given branch.
 func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidates := EnterParentEntries(args)
-	numberLen := gohacks.NumberLength(len(parentCandidates))
 	dialogData := enterParentModel{
-		bubbleList:   newBubbleList(parentCandidates, args.MainBranch.String()),
-		branch:       args.Branch.String(),
-		entryNumber:  "",
-		maxDigits:    numberLen,
-		mainBranch:   args.MainBranch.String(),
-		numberFormat: fmt.Sprintf("%%0%dd", numberLen),
+		bubbleList: newBubbleList(parentCandidates, args.MainBranch.String()),
+		branch:     args.Branch.String(),
+		mainBranch: args.MainBranch.String(),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -44,11 +39,8 @@ type EnterParentArgs struct {
 
 type enterParentModel struct {
 	bubbleList
-	branch       string // the branch for which to enter the parent
-	entryNumber  string // the currently entered branch number
-	mainBranch   string // name of the main branch
-	maxDigits    int    // the maximal number of digits in the branch number
-	numberFormat string // template for formatting the number
+	branch     string // the branch for which to enter the parent
+	mainBranch string // name of the main branch
 }
 
 func (self enterParentModel) Init() tea.Cmd {
