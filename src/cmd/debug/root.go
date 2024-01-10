@@ -10,5 +10,6 @@ func RootCmd() *cobra.Command {
 		Hidden: true,
 	}
 	debugCommand.AddCommand(enterMainBranchCmd())
+	debugCommand.AddCommand(enterParentCmd())
 	return debugCommand
 }
