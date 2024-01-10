@@ -1,17 +1,25 @@
 package dialog
 
 import (
+	"fmt"
 	"slices"
+	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/gohacks"
+	"github.com/muesli/termenv"
 )
 
 // bubbleList contains common elements of BubbleTea list implementations.
 type bubbleList struct {
-	aborted bool         // whether the user has aborted this dialog
-	colors  dialogColors // colors to use for help text
-	cursor  int          // index of the currently selected row
-	entries []string     // the entries to select from
+	aborted      bool          // whether the user has aborted this dialog
+	colors       dialogColors  // colors to use for help text
+	cursor       int           // index of the currently selected row
+	dim          termenv.Style // style for dim output
+	entries      []string      // the entries to select from
+	entryNumber  string        // the manually entered entry number
+	maxDigits    int           // how many digits make up an entry number
+	numberFormat string        // template for formatting the entry number
 }
 
 func newBubbleList(entries []string, initial string) bubbleList {
@@ -19,14 +27,25 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	if cursor < 0 {
 		cursor = 0
 	}
+	numberLen := gohacks.NumberLength(len(entries))
 	return bubbleList{
-		aborted: false,
-		entries: entries,
-		colors:  createColors(),
-		cursor:  cursor,
+		aborted:      false,
+		colors:       createColors(),
+		cursor:       cursor,
+		dim:          termenv.String().Faint(),
+		entries:      entries,
+		entryNumber:  "",
+		maxDigits:    numberLen,
+		numberFormat: fmt.Sprintf("%%0%dd ", numberLen),
 	}
 }
 
+// entryNumberStr provides a colorized string to print the given entry number.
+func (self *bubbleList) entryNumberStr(number int) string {
+	return self.dim.Styled(fmt.Sprintf(self.numberFormat, number))
+}
+
+// handleKey handles keypresses that are common for all bubbleLists.
 func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
@@ -39,7 +58,17 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.aborted = true
 		return true, tea.Quit
 	}
-	switch key.String() {
+	switch keyStr := key.String(); keyStr {
+	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		self.entryNumber += keyStr
+		if len(self.entryNumber) > self.maxDigits {
+			self.entryNumber = self.entryNumber[1:]
+		}
+		number64, _ := strconv.ParseInt(self.entryNumber, 10, 0)
+		number := int(number64)
+		if number < len(self.entries) {
+			self.cursor = number
+		}
 	case "k", "A", "Z":
 		self.moveCursorUp()
 		return true, nil

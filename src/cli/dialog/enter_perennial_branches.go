@@ -68,6 +68,7 @@ func (self perennialBranchesModel) View() string {
 	for i, branch := range self.entries {
 		selected := self.cursor == i
 		checked := self.isRowChecked(i)
+		s.WriteString(self.entryNumberStr(i))
 		switch {
 		case selected && checked:
 			s.WriteString(self.colors.selection.Styled("> [x] " + branch))
@@ -96,6 +97,11 @@ func (self perennialBranchesModel) View() string {
 	s.WriteString(self.colors.help.Styled("/"))
 	s.WriteString(self.colors.helpKey.Styled("o"))
 	s.WriteString(self.colors.help.Styled(" toggle   "))
+	// numbers
+	s.WriteString(self.colors.helpKey.Styled("0"))
+	s.WriteString(self.colors.help.Styled("-"))
+	s.WriteString(self.colors.helpKey.Styled("9"))
+	s.WriteString(self.colors.help.Styled(" jump   "))
 	// accept
 	s.WriteString(self.colors.helpKey.Styled("enter"))
 	s.WriteString(self.colors.help.Styled(" accept   "))

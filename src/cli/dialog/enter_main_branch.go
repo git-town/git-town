@@ -53,6 +53,7 @@ func (self mainBranchModel) View() string {
 	s.WriteString("and into which you ship feature branches when they are done.\n")
 	s.WriteString("In most repositories, this is the \"main\", \"master\", or \"development\" branch.\n\n")
 	for i, branch := range self.entries {
+		s.WriteString(self.entryNumberStr(i))
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled("> " + branch))
 		} else {
@@ -71,6 +72,11 @@ func (self mainBranchModel) View() string {
 	s.WriteString(self.colors.help.Styled("/"))
 	s.WriteString(self.colors.helpKey.Styled("j"))
 	s.WriteString(self.colors.help.Styled(" down   "))
+	// numbers
+	s.WriteString(self.colors.helpKey.Styled("0"))
+	s.WriteString(self.colors.help.Styled("-"))
+	s.WriteString(self.colors.helpKey.Styled("9"))
+	s.WriteString(self.colors.help.Styled(" jump   "))
 	// accept
 	s.WriteString(self.colors.helpKey.Styled("enter"))
 	s.WriteString(self.colors.help.Styled("/"))
