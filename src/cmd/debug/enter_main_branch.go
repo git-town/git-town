@@ -20,9 +20,6 @@ func enterMainBranchCmd() *cobra.Command {
 			}
 			if aborted {
 				fmt.Println("ABORTED")
-			}
-			if aborted {
-				fmt.Println("ABORTED")
 			} else {
 				fmt.Println("SELECTED:", selected)
 			}
