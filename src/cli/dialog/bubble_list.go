@@ -15,7 +15,7 @@ type bubbleList struct {
 	aborted      bool          // whether the user has aborted this dialog
 	colors       dialogColors  // colors to use for help text
 	cursor       int           // index of the currently selected row
-	dim          termenv.Style // for dim output
+	dim          termenv.Style // style for dim output
 	entries      []string      // the entries to select from
 	entryNumber  string        // the currently entered branch number
 	maxDigits    int           // the maximal number of digits in the branch number
