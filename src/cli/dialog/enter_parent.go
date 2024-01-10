@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-const PerennialBranchOption = "none (perennial branch)"
+const PerennialBranchOption = "<none> (perennial branch)"
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
