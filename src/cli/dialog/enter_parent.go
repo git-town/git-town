@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/muesli/termenv"
 )
 
@@ -18,6 +19,8 @@ func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.Local
 	dialogData := enterParentModel{
 		bubbleList: newBubbleList(parentCandidates, mainBranch.String()),
 		branch:     branch.String(),
+		digits:     "",
+		maxDigits:  gohacks.NumberLength(len(parentCandidates)),
 		mainBranch: mainBranch.String(),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
@@ -32,7 +35,9 @@ func EnterParent(branch gitdomain.LocalBranchName, localBranches gitdomain.Local
 type enterParentModel struct {
 	bubbleList
 	branch     string
+	digits     string
 	mainBranch string
+	maxDigits  int
 }
 
 func (self enterParentModel) Init() tea.Cmd {
@@ -50,8 +55,19 @@ func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint
 	if keyMsg.Type == tea.KeyEnter {
 		return self, tea.Quit
 	}
-	if keyMsg.String() == "o" {
+	switch keyStr := keyMsg.String(); keyStr {
+	case "o":
 		return self, tea.Quit
+	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		self.digits += keyStr
+		if len(self.digits) > self.maxDigits {
+			self.digits = self.digits[1:]
+		}
+		number64, _ := strconv.ParseInt(self.digits, 10, 0)
+		number := int(number64)
+		if number < len(self.entries) {
+			self.cursor = number
+		}
 	}
 	return self, nil
 }
@@ -91,6 +107,11 @@ func (self enterParentModel) View() string {
 	s.WriteString(self.colors.help.Styled("/"))
 	s.WriteString(self.colors.helpKey.Styled("o"))
 	s.WriteString(self.colors.help.Styled(" accept   "))
+	// numbers
+	s.WriteString(self.colors.helpKey.Styled("0"))
+	s.WriteString(self.colors.help.Styled("/"))
+	s.WriteString(self.colors.helpKey.Styled("9"))
+	s.WriteString(self.colors.help.Styled(" enter branch   "))
 	// abort
 	s.WriteString(self.colors.helpKey.Styled("ctrl-c"))
 	s.WriteString(self.colors.help.Styled("/"))
