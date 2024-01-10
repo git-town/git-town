@@ -6,7 +6,7 @@ import (
 
 func RootCmd() *cobra.Command {
 	debugCommand := &cobra.Command{
-		Use:    "debug <thing>",
+		Use:    "debug",
 		Short:  "Displays dialogs to help develop them.",
 		Hidden: true,
 	}
