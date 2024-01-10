@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -16,12 +17,14 @@ const PerennialBranchOption = "<none> (perennial branch)"
 // EnterParent lets the user select the parent branch for the given branch.
 func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidates := EnterParentEntries(args)
+	numberLen := gohacks.NumberLength(len(parentCandidates))
 	dialogData := enterParentModel{
-		bubbleList:  newBubbleList(parentCandidates, args.MainBranch.String()),
-		branch:      args.Branch.String(),
-		entryNumber: "",
-		maxDigits:   gohacks.NumberLength(len(parentCandidates)),
-		mainBranch:  args.MainBranch.String(),
+		bubbleList:   newBubbleList(parentCandidates, args.MainBranch.String()),
+		branch:       args.Branch.String(),
+		entryNumber:  "",
+		maxDigits:    numberLen,
+		mainBranch:   args.MainBranch.String(),
+		numberFormat: fmt.Sprintf("%%0%dd", numberLen),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -41,10 +44,11 @@ type EnterParentArgs struct {
 
 type enterParentModel struct {
 	bubbleList
-	branch      string // the branch for which to enter the parent
-	entryNumber string // the currently entered branch number
-	mainBranch  string // name of the main branch
-	maxDigits   int    // the maximal number of digits in the branch number
+	branch       string // the branch for which to enter the parent
+	entryNumber  string // the currently entered branch number
+	mainBranch   string // name of the main branch
+	maxDigits    int    // the maximal number of digits in the branch number
+	numberFormat string // template for formatting the number
 }
 
 func (self enterParentModel) Init() tea.Cmd {
@@ -86,14 +90,10 @@ func (self enterParentModel) View() string {
 	dim := termenv.String().Faint()
 	for i, branch := range self.entries {
 		if i == self.cursor {
-			// TODO: display single or double-digit numbers for branches,
-			// and also allow the user to enter the branch number.
-			// If the number is double digits, the user must press two numbers.
-			// This provides accessibility out of the box.
-			s.WriteString(dim.Styled(strconv.FormatInt(int64(i), 10)))
+			s.WriteString(dim.Styled(fmt.Sprintf(self.numberFormat, i)))
 			s.WriteString(self.colors.selection.Styled(" > " + branch))
 		} else {
-			s.WriteString(dim.Styled(strconv.FormatInt(int64(i), 10)))
+			s.WriteString(dim.Styled(fmt.Sprintf(self.numberFormat, i)))
 			s.WriteString("   " + branch)
 		}
 		s.WriteRune('\n')
