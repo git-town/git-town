@@ -11,6 +11,7 @@ import (
 
 func TestEnterParent(t *testing.T) {
 	t.Parallel()
+
 	t.Run("EnterParentEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("flat hierarchy", func(t *testing.T) {
