@@ -18,7 +18,7 @@ type bubbleList struct {
 	dim          termenv.Style // style for dim output
 	entries      []string      // the entries to select from
 	entryNumber  string        // the manually entered entry number
-	maxDigits    int           // the maximal number of digits in the branch number
+	maxDigits    int           // how many digits make up an entry number
 	numberFormat string        // template for formatting the entry number
 }
 
