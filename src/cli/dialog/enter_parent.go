@@ -17,11 +17,11 @@ const PerennialBranchOption = "<none> (perennial branch)"
 func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	parentCandidates := EnterParentEntries(args)
 	dialogData := enterParentModel{
-		bubbleList: newBubbleList(parentCandidates, args.MainBranch.String()),
-		branch:     args.Branch.String(),
-		digits:     "",
-		maxDigits:  gohacks.NumberLength(len(parentCandidates)),
-		mainBranch: args.MainBranch.String(),
+		bubbleList:  newBubbleList(parentCandidates, args.MainBranch.String()),
+		branch:      args.Branch.String(),
+		entryNumber: "",
+		maxDigits:   gohacks.NumberLength(len(parentCandidates)),
+		mainBranch:  args.MainBranch.String(),
 	}
 	dialogResult, err := tea.NewProgram(dialogData).Run()
 	if err != nil {
@@ -41,10 +41,10 @@ type EnterParentArgs struct {
 
 type enterParentModel struct {
 	bubbleList
-	branch     string
-	digits     string
-	mainBranch string
-	maxDigits  int
+	branch      string // the branch for which to enter the parent
+	entryNumber string // the currently entered branch number
+	mainBranch  string // name of the main branch
+	maxDigits   int    // the maximal number of digits in the branch number
 }
 
 func (self enterParentModel) Init() tea.Cmd {
@@ -66,11 +66,11 @@ func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint
 	case "o":
 		return self, tea.Quit
 	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-		self.digits += keyStr
-		if len(self.digits) > self.maxDigits {
-			self.digits = self.digits[1:]
+		self.entryNumber += keyStr
+		if len(self.entryNumber) > self.maxDigits {
+			self.entryNumber = self.entryNumber[1:]
 		}
-		number64, _ := strconv.ParseInt(self.digits, 10, 0)
+		number64, _ := strconv.ParseInt(self.entryNumber, 10, 0)
 		number := int(number64)
 		if number < len(self.entries) {
 			self.cursor = number
