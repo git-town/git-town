@@ -72,6 +72,11 @@ func (self mainBranchModel) View() string {
 	s.WriteString(self.colors.help.Styled("/"))
 	s.WriteString(self.colors.helpKey.Styled("j"))
 	s.WriteString(self.colors.help.Styled(" down   "))
+	// numbers
+	s.WriteString(self.colors.helpKey.Styled("0"))
+	s.WriteString(self.colors.help.Styled("-"))
+	s.WriteString(self.colors.helpKey.Styled("9"))
+	s.WriteString(self.colors.help.Styled(" jump   "))
 	// accept
 	s.WriteString(self.colors.helpKey.Styled("enter"))
 	s.WriteString(self.colors.help.Styled("/"))
