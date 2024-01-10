@@ -14,7 +14,7 @@ func TestEnterParent(t *testing.T) {
 
 	t.Run("EnterParentEntries", func(t *testing.T) {
 		t.Parallel()
-		t.Run("flat hierarchy", func(t *testing.T) {
+		t.Run("omits the branch for which to select the parent", func(t *testing.T) {
 			t.Parallel()
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
@@ -35,7 +35,7 @@ func TestEnterParent(t *testing.T) {
 			want := []string{dialog.PerennialBranchOption, "main", "branch-1", "branch-3"}
 			must.Eq(t, want, have)
 		})
-		t.Run("parent already has descendents", func(t *testing.T) {
+		t.Run("omits all descendents of the branch for which to select the parent", func(t *testing.T) {
 			t.Parallel()
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch1a := gitdomain.NewLocalBranchName("branch-1a")
