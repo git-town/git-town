@@ -59,7 +59,6 @@ func (self enterParentModel) View() string {
 	s := strings.Builder{}
 	s.WriteString("\nPlease tell me the parent of branch \"" + self.branch + "\".\n")
 	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n")
-	s.WriteString("You can also select any other of the listed branches.\n\n")
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			s.WriteString(self.colors.selection.Styled("> " + branch))
