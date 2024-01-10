@@ -22,7 +22,6 @@ require (
 	github.com/xanzy/go-gitlab v0.94.0
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 	golang.org/x/oauth2 v0.15.0
-	golang.org/x/term v0.16.0
 	// NOTE: updating to v2 makes the integration tests slow
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
@@ -58,6 +57,7 @@ require (
 	golang.org/x/crypto v0.16.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
