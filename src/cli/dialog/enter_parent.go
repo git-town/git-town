@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"strconv"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -57,13 +58,17 @@ func (self enterParentModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint
 
 func (self enterParentModel) View() string {
 	s := strings.Builder{}
-	s.WriteString("\nPlease tell me the parent of branch \"" + self.branch + "\".\n")
-	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n")
+	s.WriteString("\nPlease select the parent of branch \"" + self.branch + "\" or enter its number.\n")
+	s.WriteString("Most of the time this is the main development branch (" + self.mainBranch + ").\n\n")
 	for i, branch := range self.entries {
 		if i == self.cursor {
-			s.WriteString(self.colors.selection.Styled("> " + branch))
+			// TODO: display single or double-digit numbers for branches,
+			// and also allow the user to enter the branch number.
+			// If the number is double digits, the user must press two numbers.
+			// This provides accessibility out of the box.
+			s.WriteString(self.colors.selection.Styled(strconv.FormatInt(int64(i), 10) + " > " + branch))
 		} else {
-			s.WriteString("  " + branch)
+			s.WriteString(strconv.FormatInt(int64(i), 10) + "   " + branch)
 		}
 		s.WriteRune('\n')
 	}
@@ -84,7 +89,7 @@ func (self enterParentModel) View() string {
 	s.WriteString(self.colors.helpKey.Styled("o"))
 	s.WriteString(self.colors.help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.colors.helpKey.Styled("esc"))
+	s.WriteString(self.colors.helpKey.Styled("ctrl-c"))
 	s.WriteString(self.colors.help.Styled("/"))
 	s.WriteString(self.colors.helpKey.Styled("q"))
 	s.WriteString(self.colors.help.Styled(" abort"))
