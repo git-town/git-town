@@ -68,10 +68,10 @@ func (self enterParentModel) View() string {
 	for i, branch := range self.entries {
 		if i == self.cursor {
 			s.WriteString(self.entryNumberStr(i))
-			s.WriteString(self.colors.selection.Styled(" > " + branch))
+			s.WriteString(self.colors.selection.Styled("> " + branch))
 		} else {
 			s.WriteString(self.entryNumberStr(i))
-			s.WriteString("   " + branch)
+			s.WriteString("  " + branch)
 		}
 		s.WriteRune('\n')
 	}

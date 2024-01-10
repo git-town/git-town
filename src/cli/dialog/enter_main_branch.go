@@ -55,9 +55,9 @@ func (self mainBranchModel) View() string {
 	for i, branch := range self.entries {
 		s.WriteString(self.entryNumberStr(i))
 		if i == self.cursor {
-			s.WriteString(self.colors.selection.Styled(" > " + branch))
+			s.WriteString(self.colors.selection.Styled("> " + branch))
 		} else {
-			s.WriteString("   " + branch)
+			s.WriteString("  " + branch)
 		}
 		s.WriteRune('\n')
 	}

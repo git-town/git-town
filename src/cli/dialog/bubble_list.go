@@ -36,7 +36,7 @@ func newBubbleList(entries []string, initial string) bubbleList {
 		entries:      entries,
 		entryNumber:  "",
 		maxDigits:    numberLen,
-		numberFormat: fmt.Sprintf("%%0%dd", numberLen),
+		numberFormat: fmt.Sprintf("%%0%dd ", numberLen),
 	}
 }
 
