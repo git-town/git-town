@@ -7,9 +7,11 @@ import (
 func RootCmd() *cobra.Command {
 	debugCommand := &cobra.Command{
 		Use:    "debug <thing>",
+		Short:  "Displays dialogs to help develop them.",
 		Hidden: true,
 	}
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterParentCmd())
+	debugCommand.AddCommand(enterPerennialBranchesCmd())
 	return debugCommand
 }
