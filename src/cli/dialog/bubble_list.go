@@ -40,10 +40,12 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	}
 }
 
+// entryNumberStr provides a colorized string to print the given entry number.
 func (self *bubbleList) entryNumberStr(number int) string {
 	return self.dim.Styled(fmt.Sprintf(self.numberFormat, number))
 }
 
+// handleKey handles keypresses that are common for all bubbleLists.
 func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
