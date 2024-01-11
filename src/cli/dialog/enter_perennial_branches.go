@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"os"
 	"slices"
 	"strings"
 
@@ -19,7 +20,17 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
-	dialogResult, err := tea.NewProgram(dialogData).Run()
+	program := tea.NewProgram(dialogData)
+	inputText, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
+	if hasInput {
+		inputs := ParseTestInput(inputText)
+		go func() {
+			for _, input := range inputs {
+				program.Send(input)
+			}
+		}()
+	}
+	dialogResult, err := program.Run()
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, false, err
 	}
