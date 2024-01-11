@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -16,8 +17,10 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 	program := tea.NewProgram(model)
 	input, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
 	if hasInput {
+		inputs := ParseTestInput(input)
+		fmt.Printf("SENDING %v TEST INPUTS TO THE DIALOG", inputs)
 		go func() {
-			for _, input := range ParseTestInput(input) {
+			for _, input := range inputs {
 				program.Send(input)
 			}
 		}()
