@@ -1,91 +1,25 @@
 package dialog
 
 import (
-	"strings"
-
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
+const enterBranchHelp = `
+Let's start by configuring the main development branch.
+This is the branch from which you cut new feature branches,
+and into which you ship feature branches when they are done.
+In most repositories, this is the "main", "master", or "development" branch.
+
+
+`
+
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (selectedBranch gitdomain.LocalBranchName, aborted bool, err error) {
-	dialogData := mainBranchModel{
-		bubbleList: newBubbleList(localBranches.Strings(), oldMainBranch.String()),
-	}
-	dialogResult, err := tea.NewProgram(dialogData).Run()
-	if err != nil {
-		return gitdomain.EmptyLocalBranchName(), false, err
-	}
-	result := dialogResult.(mainBranchModel) //nolint:forcetypeassert
-	selectedBranch = gitdomain.LocalBranchName(result.selectedEntry())
-	return selectedBranch, result.aborted, nil
-}
-
-type mainBranchModel struct {
-	bubbleList
-}
-
-func (self mainBranchModel) Init() tea.Cmd {
-	return nil
-}
-
-func (self mainBranchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
-	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
-	if !isKeyMsg {
-		return self, nil
-	}
-	if handled, cmd := self.bubbleList.handleKey(keyMsg); handled {
-		return self, cmd
-	}
-	if keyMsg.Type == tea.KeyEnter {
-		return self, tea.Quit
-	}
-	if keyMsg.String() == "o" {
-		return self, tea.Quit
-	}
-	return self, nil
-}
-
-func (self mainBranchModel) View() string {
-	s := strings.Builder{}
-	s.WriteString("Let's start by configuring the main development branch.\n")
-	s.WriteString("This is the branch from which you cut new feature branches,\n")
-	s.WriteString("and into which you ship feature branches when they are done.\n")
-	s.WriteString("In most repositories, this is the \"main\", \"master\", or \"development\" branch.\n\n")
-	for i, branch := range self.entries {
-		s.WriteString(self.entryNumberStr(i))
-		if i == self.cursor {
-			s.WriteString(self.colors.selection.Styled("> " + branch))
-		} else {
-			s.WriteString("  " + branch)
-		}
-		s.WriteRune('\n')
-	}
-	s.WriteString("\n\n  ")
-	// up
-	s.WriteString(self.colors.helpKey.Styled("↑"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("k"))
-	s.WriteString(self.colors.help.Styled(" up   "))
-	// down
-	s.WriteString(self.colors.helpKey.Styled("↓"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("j"))
-	s.WriteString(self.colors.help.Styled(" down   "))
-	// numbers
-	s.WriteString(self.colors.helpKey.Styled("0"))
-	s.WriteString(self.colors.help.Styled("-"))
-	s.WriteString(self.colors.helpKey.Styled("9"))
-	s.WriteString(self.colors.help.Styled(" jump   "))
-	// accept
-	s.WriteString(self.colors.helpKey.Styled("enter"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("o"))
-	s.WriteString(self.colors.help.Styled(" accept   "))
-	// abort
-	s.WriteString(self.colors.helpKey.Styled("esc"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("q"))
-	s.WriteString(self.colors.help.Styled(" abort"))
-	return s.String()
+func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
+	selection, aborted, err := showRadioList(radioListArgs{
+		entries:      localBranches.Strings(),
+		defaultEntry: oldMainBranch.String(),
+		help:         enterBranchHelp,
+	})
+	selectedBranch := gitdomain.LocalBranchName(selection)
+	return selectedBranch, aborted, err
 }
