@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"os"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,7 +13,16 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		bubbleList: newBubbleList(args.entries, args.defaultEntry),
 		help:       args.help,
 	}
-	dialogResult, err := tea.NewProgram(model).Run()
+	program := tea.NewProgram(model)
+	input, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
+	if hasInput {
+		go func() {
+			for _, input := range ParseTestInput(input) {
+				program.Send(input)
+			}
+		}()
+	}
+	dialogResult, err := program.Run()
 	if err != nil {
 		return "", false, err
 	}
@@ -24,6 +34,7 @@ type radioListArgs struct {
 	entries      []string
 	defaultEntry string
 	help         string
+	inputs       []string
 }
 
 type radioListModel struct {
