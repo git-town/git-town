@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -15,11 +16,11 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		help:       args.help,
 	}
 	program := tea.NewProgram(model)
-	input, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
+	inputText, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
 	if hasInput {
-		inputs := ParseTestInput(input)
-		fmt.Printf("SENDING %v TEST INPUTS TO THE DIALOG", inputs)
+		inputs := ParseTestInput(inputText)
 		go func() {
+			time.Sleep(1 * time.Second)
 			for _, input := range inputs {
 				program.Send(input)
 			}
@@ -49,7 +50,9 @@ func (self radioListModel) Init() tea.Cmd {
 }
 
 func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+	fmt.Printf("RECEIVED MSG %#v\n", msg)
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
+	fmt.Println("KEY-MSG:", keyMsg, isKeyMsg)
 	if !isKeyMsg {
 		return self, nil
 	}
@@ -57,6 +60,7 @@ func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
+		fmt.Println("RECEIVED ENTER KEY")
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {

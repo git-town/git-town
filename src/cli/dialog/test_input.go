@@ -17,9 +17,9 @@ func ParseTestInput(envData string) []tea.Msg {
 func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "enter":
-		return tea.KeyEnter
+		return tea.KeyMsg{Type: tea.KeyEnter}
 	case "0":
-		return tea.Key{Type: tea.KeyRunes, Runes: []rune{'0'}, Alt: false}
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}, Alt: false}
 	}
 	panic("unknown test input: " + input)
 }
