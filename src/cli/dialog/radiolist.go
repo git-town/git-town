@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -20,7 +19,6 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 	if hasInput {
 		inputs := ParseTestInput(inputText)
 		go func() {
-			time.Sleep(1 * time.Second)
 			for _, input := range inputs {
 				program.Send(input)
 			}
