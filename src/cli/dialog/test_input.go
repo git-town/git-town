@@ -20,6 +20,24 @@ func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyEnter}
 	case "0":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}, Alt: false}
+	case "1":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'1'}, Alt: false}
+	case "2":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'2'}, Alt: false}
+	case "3":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'3'}, Alt: false}
+	case "4":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'4'}, Alt: false}
+	case "5":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}, Alt: false}
+	case "6":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'6'}, Alt: false}
+	case "7":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'7'}, Alt: false}
+	case "8":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'8'}, Alt: false}
+	case "9":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}, Alt: false}
 	}
 	panic("unknown test input: " + input)
 }
