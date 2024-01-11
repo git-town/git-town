@@ -16,8 +16,20 @@ func ParseTestInput(envData string) []tea.Msg {
 
 func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
+	case "ctrl+c":
+		return tea.KeyMsg{Type: tea.KeyCtrlC}
+	case "down":
+		return tea.KeyMsg{Type: tea.KeyDown}
 	case "enter":
 		return tea.KeyMsg{Type: tea.KeyEnter}
+	case "o":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}, Alt: false}
+	case "q":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}, Alt: false}
+	case "space":
+		return tea.KeyMsg{Type: tea.KeySpace}
+	case "up":
+		return tea.KeyMsg{Type: tea.KeyUp}
 	case "0":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}, Alt: false}
 	case "1":
