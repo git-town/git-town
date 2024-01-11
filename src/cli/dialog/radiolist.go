@@ -34,7 +34,6 @@ type radioListArgs struct {
 	entries      []string
 	defaultEntry string
 	help         string
-	inputs       []string
 }
 
 type radioListModel struct {
