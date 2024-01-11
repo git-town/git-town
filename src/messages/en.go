@@ -5,7 +5,7 @@ const (
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
-	BranchAuthorMultiple               = "Multiple people authored the %q branch."
+	BranchAuthorMultiple               = "\nMultiple people authored the %q branch.\n\n"
 	BranchCheckoutProblem              = "cannot check out branch %q: %w"
 	BranchCurrentProblem               = "cannot determine current branch: %w"
 	BranchDeleted                      = "deleted branch %q"

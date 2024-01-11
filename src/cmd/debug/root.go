@@ -13,5 +13,6 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterParentCmd())
 	debugCommand.AddCommand(enterPerennialBranchesCmd())
+	debugCommand.AddCommand(selectCommitAuthorCmd())
 	return debugCommand
 }
