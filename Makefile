@@ -13,6 +13,9 @@ build:  # builds for the current platform
 buildwin:  # builds the binary on Windows
 	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
 
+clear:  # clears the build and lint caches
+	tools/rta golangci-lint cache clean
+
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
