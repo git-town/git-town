@@ -178,6 +178,10 @@ make fix
 
 </a>
 
+## debug the dialogs
+
+Run `git town debug` to see the commands to display Git Town's dialogs.
+
 ## learn about the code and test architecture
 
 The source code contains
