@@ -18,13 +18,12 @@ Most of the time this is the main development branch (%v).
 
 // EnterParent lets the user select the parent branch for the given branch.
 func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
-	selection, aborted, err := showRadioList(radioListArgs{
+	selection, aborted, err := radioList(radioListArgs{
 		entries:      EnterParentEntries(args),
 		defaultEntry: args.MainBranch.String(),
 		help:         fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch),
 	})
-	selectedBranch := gitdomain.LocalBranchName(selection)
-	return selectedBranch, aborted, err
+	return gitdomain.LocalBranchName(selection), aborted, err
 }
 
 type EnterParentArgs struct {

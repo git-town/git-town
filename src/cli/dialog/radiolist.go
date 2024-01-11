@@ -7,7 +7,7 @@ import (
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func showRadioList(args radioListArgs) (selected string, aborted bool, err error) {
+func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 	model := radioListModel{
 		bubbleList: newBubbleList(args.entries, args.defaultEntry),
 		help:       args.help,

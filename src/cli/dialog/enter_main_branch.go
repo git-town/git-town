@@ -15,11 +15,10 @@ In most repositories, this is the "main", "master", or "development" branch.
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, bool, error) {
-	selection, aborted, err := showRadioList(radioListArgs{
+	selection, aborted, err := radioList(radioListArgs{
 		entries:      localBranches.Strings(),
 		defaultEntry: oldMainBranch.String(),
 		help:         enterBranchHelp,
 	})
-	selectedBranch := gitdomain.LocalBranchName(selection)
-	return selectedBranch, aborted, err
+	return gitdomain.LocalBranchName(selection), aborted, err
 }
