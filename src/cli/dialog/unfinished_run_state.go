@@ -7,8 +7,15 @@ import (
 	humanize "github.com/dustin/go-humanize"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	survey "gopkg.in/AlecAivazis/survey.v1"
 )
+
+const unfinishedRunstateHelp = `
+You have an unfinished %q command
+that ended on the %q branch
+%s. Please choose how to proceed.
+
+
+`
 
 type Response string
 
@@ -28,7 +35,7 @@ const (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool) (Response, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool) (Response, bool, error) {
 	formattedOptions := map[Response]string{
 		ResponseContinue: fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
 		ResponseDiscard:  messages.UnfinishedRunStateDiscard,
@@ -44,20 +51,15 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		options = append(options, formattedOptions[ResponseSkip])
 	}
 	options = append(options, formattedOptions[ResponseUndo], formattedOptions[ResponseDiscard])
-	prompt := &survey.Select{
-		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s. Please choose how to proceed", command, endBranch, humanize.Time(endTime)),
-		Options: options,
-		Default: formattedOptions[ResponseQuit],
-	}
-	result := ""
-	err := survey.AskOne(prompt, &result, nil)
-	if err != nil {
-		return ResponseUndo, fmt.Errorf(messages.DialogCannotReadAnswer, err)
-	}
+	selection, aborted, err := radioList(radioListArgs{
+		entries:      options,
+		defaultEntry: "",
+		help:         fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)),
+	})
 	for responseType, formattedResponseType := range formattedOptions {
-		if formattedResponseType == result {
-			return responseType, nil
+		if formattedResponseType == selection {
+			return responseType, aborted, err
 		}
 	}
-	return ResponseUndo, fmt.Errorf(messages.DialogUnexpectedResponse, result)
+	return ResponseUndo, false, fmt.Errorf(messages.DialogUnexpectedResponse, selection)
 }
