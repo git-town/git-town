@@ -24,7 +24,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
 	}
-	response, err := dialog.AskHowToHandleUnfinishedRunState(
+	response, aborted, err := dialog.AskHowToHandleUnfinishedRunState(
 		runState.Command,
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
@@ -32,6 +32,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	)
 	if err != nil {
 		return quit, err
+	}
+	if aborted {
+		return quit, fmt.Errorf("user aborted")
 	}
 	switch response {
 	case dialog.ResponseDiscard:

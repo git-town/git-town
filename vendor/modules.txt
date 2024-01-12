@@ -129,9 +129,6 @@ github.com/mattn/go-localereader
 # github.com/mattn/go-runewidth v0.0.14
 ## explicit; go 1.9
 github.com/mattn/go-runewidth
-# github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
-## explicit
-github.com/mgutz/ansi
 # github.com/muesli/ansi v0.0.0-20211018074035-2e021307bc4b
 ## explicit; go 1.17
 github.com/muesli/ansi
@@ -254,8 +251,3 @@ google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
-# gopkg.in/AlecAivazis/survey.v1 v1.8.8
-## explicit; go 1.13
-gopkg.in/AlecAivazis/survey.v1
-gopkg.in/AlecAivazis/survey.v1/core
-gopkg.in/AlecAivazis/survey.v1/terminal
