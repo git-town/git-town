@@ -14,6 +14,9 @@ import (
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
+	if len(perennialCandidates) == 0 {
+		return gitdomain.LocalBranchNames{}, false, nil
+	}
 	dialogData := perennialBranchesModel{
 		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),

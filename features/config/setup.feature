@@ -25,7 +25,7 @@ Feature: enter Git Town configuration
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG           | KEYS       |
-      | main development | down enter |
+      | DIALOG                  | KEYS       |
+      | main development branch | down enter |
     Then the main branch is now "main"
     And there are still no perennial branches
