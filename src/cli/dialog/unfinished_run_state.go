@@ -61,5 +61,5 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 			return responseType, aborted, err
 		}
 	}
-	return ResponseUndo, false, fmt.Errorf(messages.DialogUnexpectedResponse, selection)
+	return ResponseUndo, aborted, fmt.Errorf(messages.DialogUnexpectedResponse, selection)
 }
