@@ -13,9 +13,9 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		help:       args.help,
 	}
 	program := tea.NewProgram(model)
-	if len(args.inputs) > 0 {
+	if len(args.testInputs) > 0 {
 		go func() {
-			for _, input := range args.inputs {
+			for _, input := range args.testInputs {
 				program.Send(input)
 			}
 		}()
@@ -32,7 +32,7 @@ type radioListArgs struct {
 	entries      []string
 	defaultEntry string
 	help         string
-	inputs       []tea.Msg
+	testInputs   []tea.Msg
 }
 
 type radioListModel struct {

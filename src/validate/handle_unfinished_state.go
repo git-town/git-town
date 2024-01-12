@@ -29,6 +29,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
 		runState.UnfinishedDetails.CanSkip,
+		args.DialogTestInputs.Next(),
 	)
 	if err != nil {
 		return quit, err
@@ -54,6 +55,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
+	DialogTestInputs        dialog.TestInputs
 	Verboe                  bool
 	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot gitdomain.BranchesStatus

@@ -21,15 +21,15 @@ func TestTestInputs(t *testing.T) {
 		}
 		have := dialog.LoadTestInputs(give)
 		want := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyEnter}},
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyEnter}}, //nolint:exhaustruct
 			dialog.TestInput{
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyDown},
-				tea.KeyMsg{Type: tea.KeySpace},
-				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}},
-				tea.KeyMsg{Type: tea.KeyEnter},
+				tea.KeyMsg{Type: tea.KeySpace},                     //nolint:exhaustruct
+				tea.KeyMsg{Type: tea.KeyDown},                      //nolint:exhaustruct
+				tea.KeyMsg{Type: tea.KeySpace},                     //nolint:exhaustruct
+				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}}, //nolint:exhaustruct
+				tea.KeyMsg{Type: tea.KeyEnter},                     //nolint:exhaustruct
 			},
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		must.Eq(t, want, have)
 	})
@@ -37,16 +37,16 @@ func TestTestInputs(t *testing.T) {
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
 		testInputs := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}},
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}, //nolint:exhaustruct
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		haveNext := testInputs.Next()
-		wantNext := dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}
+		wantNext := dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}} //nolint:exhaustruct
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}},
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}},
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		must.Eq(t, wantRemaining, testInputs)
 	})
@@ -57,13 +57,13 @@ func TestTestInputs(t *testing.T) {
 			t.Parallel()
 			have := dialog.ParseTestInput("enter|space|ctrl-c")
 			want := dialog.TestInput{
-				tea.KeyMsg{
+				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyEnter,
 				},
-				tea.KeyMsg{
+				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeySpace,
 				},
-				tea.KeyMsg{
+				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyCtrlC,
 				},
 			}
@@ -73,7 +73,7 @@ func TestTestInputs(t *testing.T) {
 			t.Parallel()
 			have := dialog.ParseTestInput("enter")
 			want := dialog.TestInput{
-				tea.KeyMsg{
+				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyEnter,
 				},
 			}

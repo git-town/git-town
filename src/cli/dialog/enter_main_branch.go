@@ -19,7 +19,7 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		entries:      localBranches.Strings(),
 		defaultEntry: oldMainBranch.String(),
 		help:         enterBranchHelp,
-		inputs:       inputs,
+		testInputs:   inputs,
 	})
 	return gitdomain.LocalBranchName(selection), aborted, err
 }

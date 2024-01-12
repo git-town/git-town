@@ -12,9 +12,6 @@ const TestInputKey = "GITTOWN_DIALOG_INPUT"
 
 type TestInput []tea.Msg
 
-// NoTestInput can be used as a sentinel value to indicated that we want to call a dialog
-var NoTestInput TestInput
-
 type TestInputs []TestInput
 
 func (self *TestInputs) Next() TestInput {
@@ -55,7 +52,7 @@ func ParseTestInput(envData string) TestInput {
 func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "ctrl+c":
-		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct
+		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct,ireturn
 	case "down":
 		return tea.KeyMsg{Type: tea.KeyDown} //nolint:exhaustruct
 	case "enter":

@@ -27,10 +27,11 @@ func TestEnterParent(t *testing.T) {
 				branch3: main,
 			}
 			have := dialog.EnterParentEntries(dialog.EnterParentArgs{
-				Branch:        branch2,
-				LocalBranches: localBranches,
-				Lineage:       lineage,
-				MainBranch:    main,
+				Branch:          branch2,
+				DialogTestInput: dialog.TestInput{},
+				LocalBranches:   localBranches,
+				Lineage:         lineage,
+				MainBranch:      main,
 			})
 			want := []string{dialog.PerennialBranchOption, "main", "branch-1", "branch-3"}
 			must.Eq(t, want, have)
@@ -52,10 +53,11 @@ func TestEnterParent(t *testing.T) {
 				branch3:  main,
 			}
 			have := dialog.EnterParentEntries(dialog.EnterParentArgs{
-				Branch:        branch2,
-				LocalBranches: localBranches,
-				Lineage:       lineage,
-				MainBranch:    main,
+				Branch:          branch2,
+				DialogTestInput: dialog.TestInput{},
+				LocalBranches:   localBranches,
+				Lineage:         lineage,
+				MainBranch:      main,
 			})
 			want := []string{dialog.PerennialBranchOption, "main", "branch-1", "branch-1a", "branch-3"}
 			must.Eq(t, want, have)

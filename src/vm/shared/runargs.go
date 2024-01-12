@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -10,6 +11,7 @@ import (
 type RunArgs struct {
 	PrependOpcodes                  func(...Opcode)
 	Connector                       hostingdomain.Connector
+	DialogTestInputs                dialog.TestInputs
 	Lineage                         configdomain.Lineage
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	Runner                          *git.ProdRunner
