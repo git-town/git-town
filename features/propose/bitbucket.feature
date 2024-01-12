@@ -1,4 +1,3 @@
-@skipWindows
 Feature: Bitbucket support
 
   Scenario Outline: normal origin
