@@ -1,4 +1,3 @@
-@skipWindows
 Feature: update the parent of a feature branch
 
   Background:
@@ -14,8 +13,8 @@ Feature: update the parent of a feature branch
 
   Scenario: select another branch
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                                      | KEYS      |
-      | Please specify the parent branch of 'child' | downenter |
+      | DIALOG                                      | KEYS       |
+      | Please specify the parent branch of 'child' | down enter |
     Then this branch lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
@@ -23,8 +22,8 @@ Feature: update the parent of a feature branch
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                                      | KEYS    |
-      | Please specify the parent branch of 'child' | upenter |
+      | DIALOG                                      | KEYS     |
+      | Please specify the parent branch of 'child' | up enter |
     Then the perennial branches are now "child"
     And this branch lineage exists now
       | BRANCH | PARENT |
