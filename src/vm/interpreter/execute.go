@@ -24,11 +24,11 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		err := nextStep.Run(shared.RunArgs{
-			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
-			Runner:                          args.Run,
 			Connector:                       args.Connector,
 			Lineage:                         args.Lineage,
+			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
+			Runner:                          args.Run,
 			UpdateInitialBranchLocalSHA:     args.InitialBranchesSnapshot.Branches.UpdateLocalSHA,
 		})
 		if err != nil {
