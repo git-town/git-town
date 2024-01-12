@@ -110,9 +110,9 @@ const (
 	SyncStatusNotRecognized            = "cannot determine the sync status for Git remote %q and branch name %q"
 	UndoCreateOpcodeProblem            = "cannot create undo operations for %q: %w"
 	UndoNothingToDo                    = "nothing to undo"
-	UnfinishedRunStateContinue         = "Restart the `%s` command after having resolved conflicts"
+	UnfinishedRunStateContinue         = "Continue the \"%s\" command after having resolved conflicts"
 	UnfinishedRunStateDiscard          = "Discard the unfinished state and run the new command"
 	UnfinishedRunStateQuit             = "Quit without running anything"
-	UnfinishedRunStateSkip             = "Restart the `%s` command by skipping the current branch"
-	UnfinishedRunStateUndo             = "Undo the `%s` command"
+	UnfinishedRunStateSkip             = "Skip the current branch and continue the \"%s\" command on the next branch"
+	UnfinishedRunStateUndo             = "Undo the previous \"%s\" command"
 )
