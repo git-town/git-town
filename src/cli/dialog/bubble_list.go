@@ -27,7 +27,6 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	if cursor < 0 {
 		cursor = 0
 	}
-	fmt.Println("22222222222222", cursor)
 	numberLen := gohacks.NumberLength(len(entries))
 	return bubbleList{
 		aborted:      false,

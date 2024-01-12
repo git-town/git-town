@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -48,7 +47,6 @@ func (self radioListModel) Init() tea.Cmd {
 }
 
 func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
-	fmt.Printf("RECEIVED MSG %#v\n", msg)
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil

@@ -20,7 +20,9 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		lineage := args.Backend.Config.Lineage
 		parent, hasParent := lineage[currentBranch]
 		if !hasParent { //nolint:nestif
-			parent, aborted, err := dialog.EnterParent(dialog.EnterParentArgs{
+			var aborted bool
+			var err error
+			parent, aborted, err = dialog.EnterParent(dialog.EnterParentArgs{
 				Branch:        currentBranch,
 				LocalBranches: args.AllBranches,
 				Lineage:       args.Config.Lineage,
