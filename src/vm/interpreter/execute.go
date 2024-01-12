@@ -42,7 +42,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
-	DialogTestInputs        dialog.TestInputs
+	DialogTestInputs        *dialog.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize

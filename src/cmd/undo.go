@@ -65,7 +65,7 @@ func executeUndo(verbose bool) error {
 		RunState:                &undoRunState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,

@@ -70,7 +70,7 @@ func executeSkip(verbose bool) error {
 		RunState:                &skipRunState,
 		Run:                     repo.Runner,
 		Connector:               nil,
-		DialogTestInputs:        dialogTestInputs,
+		DialogTestInputs:        &dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,

@@ -78,7 +78,7 @@ func executePropose(dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -123,10 +123,11 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branchesSnapshot.Branches,
-		DefaultBranch: repo.Runner.MainBranch,
-		Runner:        repo.Runner,
+		Config:           &repo.Runner.FullConfig,
+		AllBranches:      branchesSnapshot.Branches,
+		DefaultBranch:    repo.Runner.MainBranch,
+		DialogTestInputs: &dialogTestInputs,
+		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

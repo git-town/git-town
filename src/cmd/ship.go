@@ -106,7 +106,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -172,10 +172,11 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
-		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branchesSnapshot.Branches,
-		DefaultBranch: repo.Runner.MainBranch,
-		Runner:        repo.Runner,
+		Config:           &repo.Runner.FullConfig,
+		AllBranches:      branchesSnapshot.Branches,
+		DefaultBranch:    repo.Runner.MainBranch,
+		DialogTestInputs: &dialogTestInputs,
+		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

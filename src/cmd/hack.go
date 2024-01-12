@@ -65,7 +65,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,

@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -15,9 +16,10 @@ import (
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
-		AllBranches: args.AllBranches,
-		Backend:     &args.Runner.Backend,
-		Config:      args.Config,
+		AllBranches:      args.AllBranches,
+		Backend:          &args.Runner.Backend,
+		Config:           args.Config,
+		DialogTestInputs: args.DialogTestInputs,
 	})
 	if err != nil {
 		return err
@@ -29,7 +31,8 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 }
 
 type EnsureKnownBranchesAncestryArgs struct {
-	Config      *configdomain.FullConfig
-	AllBranches gitdomain.BranchInfos
-	Runner      *git.ProdRunner
+	Config           *configdomain.FullConfig
+	AllBranches      gitdomain.BranchInfos
+	DialogTestInputs *dialog.TestInputs
+	Runner           *git.ProdRunner
 }

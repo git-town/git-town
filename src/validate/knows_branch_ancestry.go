@@ -24,7 +24,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			var err error
 			parent, aborted, err = dialog.EnterParent(dialog.EnterParentArgs{
 				Branch:          currentBranch,
-				DialogTestInput: dialog.TestInput{},
+				DialogTestInput: args.DialogTestInputs.Next(),
 				LocalBranches:   args.AllBranches,
 				Lineage:         args.Config.Lineage,
 				MainBranch:      args.MainBranch,
@@ -59,10 +59,11 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 
 type KnowsBranchAncestorsArgs struct {
 	// TODO: use consistent convention for branch collections everywhere: AllBranches=remote and local branches, LocalBranches=local branches
-	AllBranches gitdomain.LocalBranchNames
-	Backend     *git.BackendCommands
-	Config      *configdomain.FullConfig
-	MainBranch  gitdomain.LocalBranchName
+	AllBranches      gitdomain.LocalBranchNames
+	Backend          *git.BackendCommands
+	Config           *configdomain.FullConfig
+	DialogTestInputs *dialog.TestInputs
+	MainBranch       gitdomain.LocalBranchName
 }
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
@@ -73,10 +74,11 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			MainBranch:  args.Config.MainBranch,
-			Backend:     args.Backend,
-			AllBranches: args.AllBranches.Names(),
-			Config:      args.Config,
+			MainBranch:       args.Config.MainBranch,
+			Backend:          args.Backend,
+			AllBranches:      args.AllBranches.Names(),
+			Config:           args.Config,
+			DialogTestInputs: args.DialogTestInputs,
 		})
 		if err != nil {
 			return updated, err
@@ -89,7 +91,8 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	AllBranches gitdomain.BranchInfos
-	Backend     *git.BackendCommands
-	Config      *configdomain.FullConfig
+	AllBranches      gitdomain.BranchInfos
+	Backend          *git.BackendCommands
+	Config           *configdomain.FullConfig
+	DialogTestInputs *dialog.TestInputs
 }

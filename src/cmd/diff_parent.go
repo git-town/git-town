@@ -67,7 +67,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -89,10 +89,11 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
-		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branchesSnapshot.Branches,
-		DefaultBranch: repo.Runner.MainBranch,
-		Runner:        repo.Runner,
+		Config:           &repo.Runner.FullConfig,
+		AllBranches:      branchesSnapshot.Branches,
+		DefaultBranch:    repo.Runner.MainBranch,
+		DialogTestInputs: &dialogTestInputs,
+		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, false, err

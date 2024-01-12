@@ -71,7 +71,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -123,10 +123,11 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-		Config:        &repo.Runner.FullConfig,
-		AllBranches:   branchesSnapshot.Branches,
-		DefaultBranch: repo.Runner.MainBranch,
-		Runner:        repo.Runner,
+		Config:           &repo.Runner.FullConfig,
+		AllBranches:      branchesSnapshot.Branches,
+		DefaultBranch:    repo.Runner.MainBranch,
+		DialogTestInputs: &dialogTestInputs,
+		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

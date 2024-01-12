@@ -67,7 +67,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	dialogInputs := dialog.LoadTestInputs(os.Environ())
-	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), dialogInputs)
+	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
 	if err != nil {
 		return nil, err
 	}

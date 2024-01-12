@@ -10,7 +10,7 @@ import (
 
 type RunArgs struct {
 	Connector                       hostingdomain.Connector
-	DialogTestInputs                dialog.TestInputs
+	DialogTestInputs                *dialog.TestInputs
 	Lineage                         configdomain.Lineage
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)

@@ -73,7 +73,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
-		DialogTestInputs:        config.dialogTestInputs,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -116,10 +116,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	if branchToKill.IsLocal() {
 		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
-			Config:        &repo.Runner.FullConfig,
-			AllBranches:   branchesSnapshot.Branches,
-			DefaultBranch: repo.Runner.MainBranch,
-			Runner:        repo.Runner,
+			Config:           &repo.Runner.FullConfig,
+			AllBranches:      branchesSnapshot.Branches,
+			DefaultBranch:    repo.Runner.MainBranch,
+			DialogTestInputs: &dialogTestInputs,
+			Runner:           repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
