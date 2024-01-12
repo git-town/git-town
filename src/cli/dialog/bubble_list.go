@@ -27,6 +27,7 @@ func newBubbleList(entries []string, initial string) bubbleList {
 	if cursor < 0 {
 		cursor = 0
 	}
+	fmt.Println("22222222222222", cursor)
 	numberLen := gohacks.NumberLength(len(entries))
 	return bubbleList{
 		aborted:      false,
@@ -52,6 +53,7 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorUp()
 		return true, nil
 	case tea.KeyDown, tea.KeyTab:
+		fmt.Println("MOVING CURSOR DOWN")
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC:
@@ -83,9 +85,12 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 }
 
 func (self *bubbleList) moveCursorDown() {
+	fmt.Println("111111111111", self.cursor, len(self.entries))
 	if self.cursor < len(self.entries)-1 {
+		fmt.Println("MOVING DOWN")
 		self.cursor++
 	} else {
+		fmt.Println("GOING TO ZERO")
 		self.cursor = 0
 	}
 }

@@ -76,25 +76,6 @@ func TestMockingRunner(t *testing.T) {
 			must.NoError(t, err)
 			must.EqOp(t, ostools.ScriptName("list-dir"), res)
 		})
-
-		t.Run("with input", func(t *testing.T) {
-			t.Parallel()
-			dir1 := t.TempDir()
-			dir2 := filepath.Join(dir1, "subdir")
-			err := os.Mkdir(dir2, 0o744)
-			must.NoError(t, err)
-			r := subshell.TestRunner{
-				WorkingDir: dir1,
-				HomeDir:    t.TempDir(),
-				BinDir:     "",
-			}
-			toolPath := filepath.Join(dir2, "list-dir")
-			ostools.CreateInputTool(toolPath)
-			cmd, args := ostools.CallScriptArgs(toolPath)
-			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
-			must.NoError(t, err)
-			must.StrContains(t, res, "You entered one and two")
-		})
 	})
 
 	t.Run("QueryWithCode", func(t *testing.T) {

@@ -21,7 +21,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	program := tea.NewProgram(dialogData)
-	inputText, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
+	inputText, hasInput := os.LookupEnv(TestInputKey)
 	if hasInput {
 		inputs := ParseTestInput(inputText)
 		go func() {

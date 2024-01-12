@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
 
 	"github.com/git-town/git-town/v11/src/subshell"
 	"github.com/git-town/git-town/v11/test/asserts"
@@ -219,24 +218,7 @@ func (self *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string)
 	var output bytes.Buffer
 	subProcess.Stdout = &output
 	subProcess.Stderr = &output
-	input, err := subProcess.StdinPipe()
-	asserts.NoError(err)
-	asserts.NoError(subProcess.Start())
-	for _, userInput := range opts.Input {
-		// Here we simply wait for some time until the subProcess needs the input.
-		// Capturing the output and scanning for the actual content needed
-		// would introduce substantial amounts of multi-threaded complexity
-		// for not enough gains.
-		// https://github.com/git-town/go-execplus could help make this more robust.
-		time.Sleep(500 * time.Millisecond)
-		_, err := input.Write([]byte(userInput))
-		if err != nil {
-			fmt.Printf("\nERROR: can't write %q to subprocess '%s %s': %v\n\n", userInput, cmd, strings.Join(args, " "), err)
-			fmt.Printf("OUTPUT: %s\n", output.String())
-			return "", 0, errors.New("subprocess crashed")
-		}
-	}
-	err = subProcess.Wait()
+	err := subProcess.Run()
 	var exitCode int
 	if err != nil {
 		var exitErr *exec.ExitError
@@ -309,10 +291,6 @@ type Options struct {
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
 	Env []string
-
-	// Input contains the user input to enter into the running command.
-	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
-	Input []string // input into the subprocess
 
 	// when set, captures the output and returns it
 	IgnoreOutput bool

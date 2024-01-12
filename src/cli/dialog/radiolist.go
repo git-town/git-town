@@ -15,7 +15,7 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		help:       args.help,
 	}
 	program := tea.NewProgram(model)
-	inputText, hasInput := os.LookupEnv("GITTOWN_TEST_INPUT")
+	inputText, hasInput := os.LookupEnv(TestInputKey)
 	if hasInput {
 		inputs := ParseTestInput(inputText)
 		go func() {
@@ -50,7 +50,6 @@ func (self radioListModel) Init() tea.Cmd {
 func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	fmt.Printf("RECEIVED MSG %#v\n", msg)
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
-	fmt.Println("KEY-MSG:", keyMsg, isKeyMsg)
 	if !isKeyMsg {
 		return self, nil
 	}
@@ -58,7 +57,6 @@ func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		fmt.Println("RECEIVED ENTER KEY")
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
