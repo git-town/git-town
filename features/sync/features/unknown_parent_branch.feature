@@ -1,4 +1,3 @@
-@skipWindows
 Feature: enter a parent branch name when prompted
 
   Background:
@@ -15,9 +14,9 @@ Feature: enter a parent branch name when prompted
 
   Scenario: choose other branches
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                                      | KEYS      |
-      | Please specify the parent branch of 'beta'  | downenter |
-      | Please specify the parent branch of 'alpha' | enter     |
+      | DIALOG                                      | KEYS       |
+      | Please specify the parent branch of 'beta'  | down enter |
+      | Please specify the parent branch of 'alpha' | enter      |
     And this branch lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
@@ -25,8 +24,8 @@ Feature: enter a parent branch name when prompted
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                                     | KEYS    |
-      | Please specify the parent branch of 'beta' | upenter |
+      | DIALOG                                     | KEYS     |
+      | Please specify the parent branch of 'beta' | up enter |
     Then the perennial branches are now "beta"
 
   Scenario: enter the parent for several branches
