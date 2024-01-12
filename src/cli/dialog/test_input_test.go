@@ -15,9 +15,9 @@ func TestTestInputs(t *testing.T) {
 		t.Parallel()
 		give := []string{
 			"foo=bar",
-			"GITTOWN_DIALOG_INPUT1=enter",
-			"GITTOWN_DIALOG_INPUT2=space|down|space|5|enter",
-			"GITTOWN_DIALOG_INPUT2=ctrl-c",
+			"GITTOWN_DIALOG_INPUT_1=enter",
+			"GITTOWN_DIALOG_INPUT_2=space|down|space|5|enter",
+			"GITTOWN_DIALOG_INPUT_3=ctrl+c",
 		}
 		have := dialog.LoadTestInputs(give)
 		want := dialog.TestInputs{
@@ -55,7 +55,7 @@ func TestTestInputs(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple values", func(t *testing.T) {
 			t.Parallel()
-			have := dialog.ParseTestInput("enter|space|ctrl-c")
+			have := dialog.ParseTestInput("enter|space|ctrl+c")
 			want := dialog.TestInput{
 				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyEnter,
@@ -81,7 +81,7 @@ func TestTestInputs(t *testing.T) {
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			have := dialog.ParseTestInput("enter")
+			have := dialog.ParseTestInput("")
 			want := dialog.TestInput{}
 			must.Eq(t, want, have)
 		})

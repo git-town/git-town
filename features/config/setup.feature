@@ -7,9 +7,9 @@ Feature: enter Git Town configuration
     And a branch "production"
     And the main branch is "main"
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                   | KEYS                   | DESCRIPTION                               |
-      | enter main branch        | enter                  | accept the already configured main branch |
-      | enter perennial branches | space down space enter | configure the perennial branches          |
+      | DIALOG                   | KEYS  | DESCRIPTION                               |
+      | enter main branch        | enter | accept the already configured main branch |
+      | enter perennial branches | enter | configure the perennial branches          |
     Then the main branch is now "main"
     And the perennial branches are now "production"
 

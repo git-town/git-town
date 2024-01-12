@@ -44,7 +44,9 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 func ParseTestInput(envData string) TestInput {
 	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
-		result = append(result, RecognizeTestInput(input))
+		if len(input) > 0 {
+			result = append(result, RecognizeTestInput(input))
+		}
 	}
 	return result
 }
