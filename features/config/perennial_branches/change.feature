@@ -1,4 +1,3 @@
-@skipWindows
 Feature: change the perennial branches
 
   Background:
@@ -6,23 +5,23 @@ Feature: change the perennial branches
 
   Scenario: add a perennial branch when no configuration exists
     Given local Git Town setting "perennial-branches" doesn't exist
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER               |
-      | Please specify perennial branches | [DOWN][SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS             |
+      | perennial branches | down space enter |
     Then the perennial branches are now "staging"
 
   Scenario: add a perennial branch to existing local Git configuration
     Given local Git Town setting "perennial-branches" is "staging"
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER         |
-      | Please specify perennial branches | [SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS        |
+      | perennial branches | space enter |
     Then the perennial branches are now "qa" and "staging"
 
   Scenario: remove a perennial branch from existing Git configuration
     Given the perennial branches are "staging" and "qa"
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER         |
-      | Please specify perennial branches | [SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS        |
+      | perennial branches | space enter |
     Then the perennial branches are now "staging"
 
   Scenario: add a perennial branch to an empty config file
@@ -30,9 +29,9 @@ Feature: change the perennial branches
     And the configuration file:
       """
       """
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER         |
-      | Please specify perennial branches | [SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS        |
+      | perennial branches | space enter |
     And the configuration file is now:
       """
       [branches]
@@ -47,9 +46,9 @@ Feature: change the perennial branches
       [branches]
         perennials = ["staging"]
       """
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER         |
-      | Please specify perennial branches | [SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS        |
+      | perennial branches | space enter |
     And the configuration file is now:
       """
       [branches]
@@ -64,9 +63,9 @@ Feature: change the perennial branches
       [branches]
         perennials = ["qa", "staging"]
       """
-    When I run "git-town config perennial-branches change" and answer the prompts:
-      | PROMPT                            | ANSWER         |
-      | Please specify perennial branches | [SPACE][ENTER] |
+    When I run "git-town config perennial-branches change" and enter into the dialog:
+      | DIALOG             | KEYS        |
+      | perennial branches | space enter |
     And the configuration file is now:
       """
       [branches]

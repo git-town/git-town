@@ -10,18 +10,18 @@ Feature: ship a coworker's feature branch
       |         |          | coworker commit    | coworker <coworker@example.com>   |
 
   Scenario: choose myself as the author
-    When I run "git-town ship -m 'feature done'" and answer the prompts:
-      | PROMPT                                        | ANSWER  |
-      | Please choose an author for the squash commit | [ENTER] |
+    When I run "git-town ship -m 'feature done'" and enter into the dialog:
+      | DIALOG                                        | KEYS  |
+      | Please choose an author for the squash commit | enter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, origin | feature done | developer <developer@example.com> |
     And no lineage exists now
 
   Scenario: choose a coworker as the author
-    When I run "git-town ship -m 'feature done'" and answer the prompts:
-      | PROMPT                                        | ANSWER        |
-      | Please choose an author for the squash commit | [DOWN][ENTER] |
+    When I run "git-town ship -m 'feature done'" and enter into the dialog:
+      | DIALOG                                        | KEYS      |
+      | Please choose an author for the squash commit | downenter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
@@ -29,8 +29,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: undo
     Given I ran "git-town ship -m 'feature done'" and answered the prompts:
-      | PROMPT                                        | ANSWER  |
-      | Please choose an author for the squash commit | [ENTER] |
+      | DIALOG                                        | KEYS  |
+      | Please choose an author for the squash commit | enter |
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                       |

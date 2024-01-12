@@ -5,9 +5,9 @@ Feature: display all executed Git commands
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the current branch is "child"
-    When I run "git-town set-parent --verbose" and answer the prompts:
-      | PROMPT                                      | ANSWER        |
-      | Please specify the parent branch of 'child' | [DOWN][ENTER] |
+    When I run "git-town set-parent --verbose" and enter into the dialog:
+      | DIALOG                                      | KEYS      |
+      | Please specify the parent branch of 'child' | downenter |
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                                         |
       |        | backend | git version                                     |

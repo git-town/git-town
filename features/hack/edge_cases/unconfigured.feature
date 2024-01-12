@@ -3,9 +3,9 @@ Feature: missing configuration
 
   Background: running unconfigured
     Given Git Town is not configured
-    When I run "git-town hack feature" and answer the prompts:
-      | PROMPT                                     | ANSWER  |
-      | Please specify the main development branch | [ENTER] |
+    When I run "git-town hack feature" and enter into the dialog:
+      | DIALOG                                     | KEYS  |
+      | Please specify the main development branch | enter |
 
   Scenario: result
     And it runs the commands

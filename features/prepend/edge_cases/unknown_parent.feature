@@ -3,9 +3,9 @@ Feature: ask for missing parent information
 
   Scenario:
     Given the current branch is "old"
-    When I run "git-town prepend new" and answer the prompts:
-      | PROMPT                                    | ANSWER  |
-      | Please specify the parent branch of "old" | [ENTER] |
+    When I run "git-town prepend new" and enter into the dialog:
+      | DIALOG                                    | KEYS  |
+      | Please specify the parent branch of "old" | enter |
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | old    | git fetch --prune --tags |
