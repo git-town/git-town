@@ -56,14 +56,14 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
 	DialogTestInputs        dialog.TestInputs
-	Verboe                  bool
-	Lineage                 configdomain.Lineage
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
+	Lineage                 configdomain.Lineage
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
+	Verbose                 bool
 }
 
 func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
@@ -71,7 +71,7 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
-		Verbose:                 args.Verboe,
+		Verbose:                 args.Verbose,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
@@ -92,7 +92,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
-		Verbose:                 args.Verboe,
+		Verbose:                 args.Verbose,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
@@ -112,7 +112,7 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
-		Verbose:                 args.Verboe,
+		Verbose:                 args.Verbose,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
