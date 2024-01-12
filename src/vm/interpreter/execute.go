@@ -39,12 +39,12 @@ func Execute(args ExecuteArgs) error {
 
 type ExecuteArgs struct {
 	*configdomain.FullConfig
-	RunState                *runstate.RunState
-	Run                     *git.ProdRunner
 	Connector               hostingdomain.Connector
-	Verbose                 bool
-	RootDir                 gitdomain.RepoRootDir
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
+	RootDir                 gitdomain.RepoRootDir
+	Run                     *git.ProdRunner
+	RunState                *runstate.RunState
+	Verbose                 bool
 }
