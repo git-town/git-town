@@ -1,4 +1,3 @@
-@skipWindows
 Feature: ask for missing parent
 
   Scenario: feature branch without parent
