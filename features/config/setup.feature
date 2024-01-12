@@ -1,7 +1,7 @@
 @skipWindows
 Feature: enter Git Town configuration
 
-  @this
+  @debug @this
   Scenario: already configured
     Given a perennial branch "qa"
     And a branch "production"

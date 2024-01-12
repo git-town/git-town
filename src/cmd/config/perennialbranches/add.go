@@ -40,7 +40,7 @@ func addPerennialBranch(branchStr string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	_, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Fetch:                 false,

@@ -462,7 +462,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialog:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		updateInitialSHAs(state)
 		env := os.Environ()
 		answers, err := helpers.TableToInputEnv(input)

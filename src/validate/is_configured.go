@@ -11,13 +11,13 @@ import (
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames) error {
+func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames, dialogInputs dialog.TestInputs) error {
 	mainBranch := config.MainBranch
 	if mainBranch.IsEmpty() {
 		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
 		var err error
-		newMainBranch, aborted, err := dialog.EnterMainBranch(localBranches, mainBranch)
+		newMainBranch, aborted, err := dialog.EnterMainBranch(localBranches, mainBranch, dialogInputs.Next())
 		if err != nil || aborted {
 			return err
 		}

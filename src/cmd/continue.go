@@ -70,7 +70,7 @@ func executeContinue(verbose bool) error {
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,

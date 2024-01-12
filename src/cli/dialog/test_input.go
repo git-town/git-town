@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"fmt"
+	"sort"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -8,8 +10,42 @@ import (
 
 const TestInputKey = "GITTOWN_DIALOG_INPUT"
 
-func ParseTestInput(envData string) []tea.Msg {
-	result := []tea.Msg{}
+type TestInput []tea.Msg
+
+// NoTestInput can be used as a sentinel value to indicated that we want to call a dialog
+var NoTestInput TestInput
+
+type TestInputs []TestInput
+
+func (self *TestInputs) Next() TestInput {
+	if len(*self) == 0 {
+		return TestInput{}
+	}
+	result := (*self)[0]
+	*self = (*self)[1:]
+	return result
+}
+
+func LoadTestInputs(environmenttVariables []string) TestInputs {
+	result := TestInputs{}
+	sort.Strings(environmenttVariables)
+	for _, environmentVariable := range environmenttVariables {
+		if !strings.HasPrefix(environmentVariable, TestInputKey) {
+			continue
+		}
+		_, value, match := strings.Cut(environmentVariable, "=")
+		if !match {
+			fmt.Printf("Notice: ignoring invalid dialog input setting %q\n", environmentVariable)
+			continue
+		}
+		inputs := ParseTestInput(value)
+		result = append(result, inputs)
+	}
+	return result
+}
+
+func ParseTestInput(envData string) TestInput {
+	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
 		result = append(result, RecognizeTestInput(input))
 	}
