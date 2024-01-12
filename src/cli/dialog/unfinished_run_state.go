@@ -55,7 +55,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		entries:      options,
 		defaultEntry: "",
 		help:         fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)),
-		testInputs:   dialogTestInput,
+		testInput:    dialogTestInput,
 	})
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == selection {

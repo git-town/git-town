@@ -28,7 +28,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			}
 			config.MainBranch = newMainBranch
 		}
-		newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(localBranches, config.PerennialBranches, config.MainBranch)
+		newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(localBranches, config.PerennialBranches, config.MainBranch, dialogInputs.Next())
 		if err != nil || aborted {
 			return err
 		}

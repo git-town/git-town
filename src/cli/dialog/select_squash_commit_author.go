@@ -16,6 +16,6 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 		entries:      authors,
 		defaultEntry: "",
 		help:         fmt.Sprintf(messages.BranchAuthorMultiple, branch),
-		testInputs:   dialogTestInputs,
+		testInput:    dialogTestInputs,
 	})
 }

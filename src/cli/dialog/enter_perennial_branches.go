@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"os"
 	"slices"
 	"strings"
 
@@ -13,7 +12,7 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, bool, error) {
+func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	dialogData := perennialBranchesModel{
 		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
@@ -21,11 +20,9 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	program := tea.NewProgram(dialogData)
-	inputText, hasInput := os.LookupEnv(TestInputKey)
-	if hasInput {
-		inputs := ParseTestInput(inputText)
+	if len(dialogTestInput) > 0 {
 		go func() {
-			for _, input := range inputs {
+			for _, input := range dialogTestInput {
 				program.Send(input)
 			}
 		}()

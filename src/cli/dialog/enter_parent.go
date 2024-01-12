@@ -22,7 +22,7 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 		entries:      EnterParentEntries(args),
 		defaultEntry: args.MainBranch.String(),
 		help:         fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch),
-		testInputs:   args.DialogTestInput,
+		testInput:    args.DialogTestInput,
 	})
 	return gitdomain.LocalBranchName(selection), aborted, err
 }

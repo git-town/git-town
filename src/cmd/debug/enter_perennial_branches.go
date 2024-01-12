@@ -2,6 +2,7 @@ package debug
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -25,7 +26,8 @@ func enterPerennialBranchesCmd() *cobra.Command {
 			localBranches := gitdomain.LocalBranchNames{branch1, branch2, branch3, branch4, branch5, branch6, branch7, branch8, branch9, branchA}
 			existingPerennialBranches := gitdomain.LocalBranchNames{branch1, branch4}
 			main := gitdomain.NewLocalBranchName("main")
-			selected, aborted, err := dialog.EnterPerennialBranches(localBranches, existingPerennialBranches, main)
+			dialogTestInputs := dialog.LoadTestInputs(os.Environ())
+			selected, aborted, err := dialog.EnterPerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
 			if err != nil {
 				return err
 			}
