@@ -1,4 +1,3 @@
-@skipWindows
 Feature: display all executed Git commands
 
   Scenario: select another branch
@@ -6,8 +5,8 @@ Feature: display all executed Git commands
     And a feature branch "child" as a child of "parent"
     And the current branch is "child"
     When I run "git-town set-parent --verbose" and enter into the dialog:
-      | DIALOG                                      | KEYS      |
-      | Please specify the parent branch of 'child' | downenter |
+      | DIALOG                                      | KEYS       |
+      | Please specify the parent branch of 'child' | down enter |
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                                         |
       |        | backend | git version                                     |
