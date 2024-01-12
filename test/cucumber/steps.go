@@ -438,14 +438,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialog:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		updateInitialSHAs(state)
-		env := append(os.Environ(), fmt.Sprintf("%s=%s", dialog.TestInputKey, helpers.TableToInputEnv(input)))
-		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
-	})
-
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
@@ -470,9 +462,31 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialog:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		updateInitialSHAs(state)
+		env := os.Environ()
+		answers, err := helpers.TableToInputEnv(input)
+		if err != nil {
+			return err
+		}
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s%d=%s", dialog.TestInputKey, dialogNumber, answer))
+		}
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
 	suite.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		updateInitialSHAs(state)
-		env := append(os.Environ(), "GIT_EDITOR=true", fmt.Sprintf("%s=%s", dialog.TestInputKey, helpers.TableToInputEnv(input)))
+		env := append(os.Environ(), "GIT_EDITOR=true")
+		answers, err := helpers.TableToInputEnv(input)
+		if err != nil {
+			return err
+		}
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s%d=%s", dialog.TestInputKey, dialogNumber, answer))
+		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
 		return nil

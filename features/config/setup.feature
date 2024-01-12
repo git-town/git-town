@@ -1,14 +1,15 @@
 @skipWindows
 Feature: enter Git Town configuration
 
+  @this
   Scenario: already configured
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
-    When I run "git-town config setup" and answer the prompts:
-      | PROMPT                                     | ANSWER                      |
-      | Please specify the main development branch | [ENTER]                     |
-      | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
+    When I run "git-town config setup" and enter into the dialogs:
+      | DIALOG                   | KEYS                   | DESCRIPTION                               |
+      | enter main branch        | enter                  | accept the already configured main branch |
+      | enter perennial branches | space down space enter | configure the perennial branches          |
     Then the main branch is now "main"
     And the perennial branches are now "production"
 

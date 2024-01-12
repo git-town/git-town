@@ -1,17 +1,32 @@
 package helpers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
 )
 
-func TableToInputEnv(table *messages.PickleStepArgument_PickleTable) string {
-	answers := make([]string, 0, len(table.Rows))
+func TableToInputEnv(table *messages.PickleStepArgument_PickleTable) ([]string, error) {
+	result := make([]string, 0, len(table.Rows)-1)
+	keyColumn, err := detectKeysColumn(table.Rows[0])
+	if err != nil {
+		return result, err
+	}
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]
-		answer := row.Cells[0].Value
-		answers = append(answers, answer)
+		answersCucumberStyle := row.Cells[keyColumn].Value
+		answersEnvStyle := strings.ReplaceAll(answersCucumberStyle, " ", "|")
+		result = append(result, answersEnvStyle)
 	}
-	return strings.Join(answers, "|")
+	return result, nil
+}
+
+func detectKeysColumn(row *messages.PickleStepArgument_PickleTable_PickleTableRow) (int, error) {
+	for i, cell := range row.Cells {
+		if cell.Value == "KEYS" {
+			return i, nil
+		}
+	}
+	return 0, fmt.Errorf(`no table column with header "KEYS" detected`)
 }
