@@ -8,9 +8,9 @@ import (
 )
 
 type RunArgs struct {
-	PrependOpcodes                  func(...Opcode)
 	Connector                       hostingdomain.Connector
 	Lineage                         configdomain.Lineage
+	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)
 	Runner                          *git.ProdRunner
 	UpdateInitialBranchLocalSHA     func(gitdomain.LocalBranchName, gitdomain.SHA) error
