@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -96,6 +97,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
+		DialogTestInputs:        config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -106,17 +108,18 @@ func executeSync(all, dryRun, verbose bool) error {
 
 type syncConfig struct {
 	*configdomain.FullConfig
-	allBranches    gitdomain.BranchInfos
-	branchesToSync gitdomain.BranchInfos
-	hasOpenChanges bool
-	initialBranch  gitdomain.LocalBranchName
-	previousBranch gitdomain.LocalBranchName
-	remotes        gitdomain.Remotes
-	shouldPushTags bool
+	allBranches      gitdomain.BranchInfos
+	branchesToSync   gitdomain.BranchInfos
+	dialogTestInputs dialog.TestInputs
+	hasOpenChanges   bool
+	initialBranch    gitdomain.LocalBranchName
+	previousBranch   gitdomain.LocalBranchName
+	remotes          gitdomain.Remotes
+	shouldPushTags   bool
 }
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branchesSnapshot, stashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -167,13 +170,14 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)
 	return &syncConfig{
-		FullConfig:     &repo.Runner.FullConfig,
-		allBranches:    branchesSnapshot.Branches,
-		branchesToSync: branchesToSync,
-		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  branchesSnapshot.Active,
-		remotes:        remotes,
-		previousBranch: previousBranch,
-		shouldPushTags: shouldPushTags,
+		FullConfig:       &repo.Runner.FullConfig,
+		allBranches:      branchesSnapshot.Branches,
+		branchesToSync:   branchesToSync,
+		dialogTestInputs: dialogTestInputs,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    branchesSnapshot.Active,
+		remotes:          remotes,
+		previousBranch:   previousBranch,
+		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSnapshot, false, err
 }

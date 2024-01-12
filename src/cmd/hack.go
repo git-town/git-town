@@ -65,6 +65,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
+		DialogTestInputs:        config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -75,7 +76,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
-	branchesSnapshot, stashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -102,6 +103,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	return &appendConfig{
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
+		dialogTestInputs:          dialogTestInputs,
 		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		initialBranch:             branchesSnapshot.Active,

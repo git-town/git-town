@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -77,6 +78,7 @@ func executePropose(dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
+		DialogTestInputs:        config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -87,18 +89,19 @@ func executePropose(dryRun, verbose bool) error {
 
 type proposeConfig struct {
 	*configdomain.FullConfig
-	allBranches    gitdomain.BranchInfos
-	branchesToSync gitdomain.BranchInfos
-	connector      hostingdomain.Connector
-	dryRun         bool
-	hasOpenChanges bool
-	initialBranch  gitdomain.LocalBranchName
-	remotes        gitdomain.Remotes
-	previousBranch gitdomain.LocalBranchName
+	allBranches      gitdomain.BranchInfos
+	branchesToSync   gitdomain.BranchInfos
+	connector        hostingdomain.Connector
+	dialogTestInputs dialog.TestInputs
+	dryRun           bool
+	hasOpenChanges   bool
+	initialBranch    gitdomain.LocalBranchName
+	remotes          gitdomain.Remotes
+	previousBranch   gitdomain.LocalBranchName
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branchesSnapshot, stashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -148,15 +151,16 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync)
 	return &proposeConfig{
-		FullConfig:     &repo.Runner.FullConfig,
-		allBranches:    branchesSnapshot.Branches,
-		branchesToSync: branchesToSync,
-		connector:      connector,
-		dryRun:         dryRun,
-		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  branchesSnapshot.Active,
-		remotes:        remotes,
-		previousBranch: previousBranch,
+		FullConfig:       &repo.Runner.FullConfig,
+		allBranches:      branchesSnapshot.Branches,
+		branchesToSync:   branchesToSync,
+		connector:        connector,
+		dialogTestInputs: dialogTestInputs,
+		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    branchesSnapshot.Active,
+		remotes:          remotes,
+		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 

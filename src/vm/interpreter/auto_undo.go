@@ -20,6 +20,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		RunState:                &abortRunState,
 		Run:                     args.Run,
 		Connector:               args.Connector,
+		DialogTestInputs:        args.DialogTestInputs,
 		Verbose:                 args.Verbose,
 		RootDir:                 args.RootDir,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,

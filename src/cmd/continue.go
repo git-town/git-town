@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -61,6 +62,7 @@ func executeContinue(verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
+		DialogTestInputs:        config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -70,7 +72,7 @@ func executeContinue(verbose bool) error {
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	initialBranchesSnapshot, initialStashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -104,14 +106,16 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		Log:            log.Printing{},
 	})
 	return &continueConfig{
-		connector:  connector,
-		FullConfig: &repo.Runner.FullConfig,
+		connector:        connector,
+		FullConfig:       &repo.Runner.FullConfig,
+		dialogTestInputs: dialogTestInputs,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
 
 type continueConfig struct {
 	connector hostingdomain.Connector
 	*configdomain.FullConfig
+	dialogTestInputs dialog.TestInputs
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {

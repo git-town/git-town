@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -105,6 +106,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
+		DialogTestInputs:        config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -118,6 +120,7 @@ type shipConfig struct {
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
+	dialogTestInputs         dialog.TestInputs
 	dryRun                   bool
 	initialBranch            gitdomain.LocalBranchName
 	targetBranch             gitdomain.BranchInfo
@@ -133,7 +136,7 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branchesSnapshot, stashSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -230,6 +233,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		FullConfig:               &repo.Runner.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		connector:                connector,
+		dialogTestInputs:         dialogTestInputs,
 		dryRun:                   dryRun,
 		initialBranch:            branchesSnapshot.Active,
 		targetBranch:             *targetBranch,
