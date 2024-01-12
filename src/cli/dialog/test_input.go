@@ -52,7 +52,7 @@ func ParseTestInput(envData string) TestInput {
 }
 
 func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
-	switch input { //nolint:ireturn
+	switch input {
 	case "ctrl+c":
 		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct
 	case "down":
