@@ -1,4 +1,3 @@
-@skipWindows
 Feature: ask for missing configuration
 
   Scenario: run unconfigured
@@ -6,8 +5,8 @@ Feature: ask for missing configuration
     And the origin is "https://github.com/git-town/git-town.git"
     And tool "open" is installed
     When I run "git-town propose" and enter into the dialog:
-      | DIALOG                                     | KEYS  |
-      | Please specify the main development branch | enter |
+      | DIALOG                  | KEYS  |
+      | main development branch | enter |
     And the main branch is now "main"
     And "open" launches a new proposal with this url in my browser:
       """

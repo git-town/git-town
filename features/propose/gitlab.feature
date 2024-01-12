@@ -1,4 +1,3 @@
-@skipWindows
 Feature: GitLab support
 
   Background:
