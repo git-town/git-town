@@ -8,12 +8,16 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// TestInputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.
 const TestInputKey = "GITTOWN_DIALOG_INPUT"
 
+// TestInput contains the input for a single dialog in an end-to-end test.
 type TestInput []tea.Msg
 
+// TestInputs contains the input for all dialogs in an end-to-end test.
 type TestInputs []TestInput
 
+// Next provides the TestInput for the next dialog in an end-to-end test.
 func (self *TestInputs) Next() TestInput {
 	if len(*self) == 0 {
 		return TestInput{}
@@ -23,6 +27,8 @@ func (self *TestInputs) Next() TestInput {
 	return result
 }
 
+// LoadTestInputs provides the TestInputs to use in an end-to-end test,
+// taken from the given environment variable snapshot.
 func LoadTestInputs(environmenttVariables []string) TestInputs {
 	result := TestInputs{}
 	sort.Strings(environmenttVariables)
@@ -41,17 +47,20 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 	return result
 }
 
+// ParseTestInput converts the given input data in the environment variable format
+// into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
 	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
 		if len(input) > 0 {
-			result = append(result, RecognizeTestInput(input))
+			result = append(result, recognizeTestInput(input))
 		}
 	}
 	return result
 }
 
-func RecognizeTestInput(input string) tea.Msg { //nolint:ireturn
+// recognizeTestInput provides the matching BubbleTea message for the given string.
+func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
 	case "ctrl+c":
 		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct
