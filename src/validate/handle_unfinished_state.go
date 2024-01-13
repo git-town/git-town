@@ -29,6 +29,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
 		runState.UnfinishedDetails.CanSkip,
+		args.DialogTestInputs.Next(),
 	)
 	if err != nil {
 		return quit, err
@@ -54,6 +55,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
+	DialogTestInputs        dialog.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
@@ -69,13 +71,14 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
-		Verbose:                 args.Verbose,
+		DialogTestInputs:        &args.DialogTestInputs,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &abortRunState,
+		Verbose:                 args.Verbose,
 	})
 }
 
@@ -90,13 +93,14 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
-		Verbose:                 args.Verbose,
+		DialogTestInputs:        &args.DialogTestInputs,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                runState,
+		Verbose:                 args.Verbose,
 	})
 }
 
@@ -110,6 +114,7 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
+		DialogTestInputs:        &args.DialogTestInputs,
 		Verbose:                 args.Verbose,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,

@@ -1,7 +1,6 @@
 package cucumber
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"log"
@@ -11,10 +10,12 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
@@ -437,13 +438,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		updateInitialSHAs(state)
-		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
-	})
-
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
@@ -468,10 +462,32 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I (?:run|ran) "([^"]+)" and enter into the dialogs?:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+		updateInitialSHAs(state)
+		env := os.Environ()
+		answers, err := helpers.TableToInputEnv(input)
+		if err != nil {
+			return err
+		}
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s_%d=%s", dialog.TestInputKey, dialogNumber, answer))
+		}
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.fixture.DevRepo.Config.Reload()
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]*)", enter into the dialog, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		updateInitialSHAs(state)
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
+		answers, err := helpers.TableToInputEnv(input)
+		if err != nil {
+			return err
+		}
+		for dialogNumber, answer := range answers {
+			env = append(env, fmt.Sprintf("%s%d=%s", dialog.TestInputKey, dialogNumber, answer))
+		}
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
@@ -485,7 +501,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Printf("\nThe workspace is at %s\n", state.fixture.DevRepo.WorkingDir)
-		_ = bufio.NewScanner(os.Stdin)
+		time.Sleep(1 * time.Hour)
 		return nil
 	})
 

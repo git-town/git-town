@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -64,6 +65,7 @@ func executeUndo(verbose bool) error {
 		RunState:                &undoRunState,
 		Run:                     repo.Runner,
 		Connector:               config.connector,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
@@ -75,13 +77,14 @@ func executeUndo(verbose bool) error {
 type undoConfig struct {
 	*configdomain.FullConfig
 	connector               hostingdomain.Connector
+	dialogTestInputs        dialog.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesStatus
 	previousBranch          gitdomain.LocalBranchName
 }
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
-	initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, dialogTestInputs, _, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -115,6 +118,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	return &undoConfig{
 		FullConfig:              &repo.Runner.FullConfig,
 		connector:               connector,
+		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,

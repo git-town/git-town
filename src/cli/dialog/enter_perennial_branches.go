@@ -12,14 +12,25 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchNames, bool, error) {
+func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
+	if len(perennialCandidates) == 0 {
+		return gitdomain.LocalBranchNames{}, false, nil
+	}
 	dialogData := perennialBranchesModel{
 		bubbleList:    newBubbleList(perennialCandidates.Strings(), ""),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
-	dialogResult, err := tea.NewProgram(dialogData).Run()
+	program := tea.NewProgram(dialogData)
+	if len(dialogTestInput) > 0 {
+		go func() {
+			for _, input := range dialogTestInput {
+				program.Send(input)
+			}
+		}()
+	}
+	dialogResult, err := program.Run()
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, false, err
 	}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -81,6 +82,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -91,15 +93,16 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 
 type renameBranchConfig struct {
 	*configdomain.FullConfig
-	dryRun         bool
-	initialBranch  gitdomain.LocalBranchName
-	newBranch      gitdomain.LocalBranchName
-	oldBranch      gitdomain.BranchInfo
-	previousBranch gitdomain.LocalBranchName
+	dialogTestInputs dialog.TestInputs
+	dryRun           bool
+	initialBranch    gitdomain.LocalBranchName
+	newBranch        gitdomain.LocalBranchName
+	oldBranch        gitdomain.BranchInfo
+	previousBranch   gitdomain.LocalBranchName
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -146,12 +149,13 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:     &repo.Runner.FullConfig,
-		dryRun:         dryRun,
-		initialBranch:  branchesSnapshot.Active,
-		newBranch:      newBranchName,
-		oldBranch:      *oldBranch,
-		previousBranch: previousBranch,
+		FullConfig:       &repo.Runner.FullConfig,
+		dialogTestInputs: dialogTestInputs,
+		dryRun:           dryRun,
+		initialBranch:    branchesSnapshot.Active,
+		newBranch:        newBranchName,
+		oldBranch:        *oldBranch,
+		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 

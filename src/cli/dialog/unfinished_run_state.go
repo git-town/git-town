@@ -35,7 +35,7 @@ const (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool) (Response, bool, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput TestInput) (Response, bool, error) {
 	formattedOptions := map[Response]string{
 		ResponseContinue: fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
 		ResponseDiscard:  messages.UnfinishedRunStateDiscard,
@@ -55,6 +55,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		entries:      options,
 		defaultEntry: "",
 		help:         fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)),
+		testInput:    dialogTestInput,
 	})
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == selection {

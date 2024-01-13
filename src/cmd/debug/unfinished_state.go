@@ -2,6 +2,7 @@ package debug
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -14,7 +15,8 @@ func unfinishedStateCommitAuthorCmd() *cobra.Command {
 		Use: "unfinished-state",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			branch := gitdomain.NewLocalBranchName("feature-branch")
-			selected, aborted, err := dialog.AskHowToHandleUnfinishedRunState("sync", branch, time.Now().Add(time.Second*-1), true)
+			dialogTestInputs := dialog.LoadTestInputs(os.Environ())
+			selected, aborted, err := dialog.AskHowToHandleUnfinishedRunState("sync", branch, time.Now().Add(time.Second*-1), true, dialogTestInputs.Next())
 			if err != nil {
 				return err
 			}

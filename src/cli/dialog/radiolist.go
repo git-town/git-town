@@ -12,7 +12,15 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		bubbleList: newBubbleList(args.entries, args.defaultEntry),
 		help:       args.help,
 	}
-	dialogResult, err := tea.NewProgram(model).Run()
+	program := tea.NewProgram(model)
+	if len(args.testInput) > 0 {
+		go func() {
+			for _, input := range args.testInput {
+				program.Send(input)
+			}
+		}()
+	}
+	dialogResult, err := program.Run()
 	if err != nil {
 		return "", false, err
 	}
@@ -24,6 +32,7 @@ type radioListArgs struct {
 	entries      []string
 	defaultEntry string
 	help         string
+	testInput    TestInput
 }
 
 type radioListModel struct {

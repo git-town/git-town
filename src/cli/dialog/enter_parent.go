@@ -22,15 +22,17 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 		entries:      EnterParentEntries(args),
 		defaultEntry: args.MainBranch.String(),
 		help:         fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch),
+		testInput:    args.DialogTestInput,
 	})
 	return gitdomain.LocalBranchName(selection), aborted, err
 }
 
 type EnterParentArgs struct {
-	Branch        gitdomain.LocalBranchName
-	LocalBranches gitdomain.LocalBranchNames
-	Lineage       configdomain.Lineage
-	MainBranch    gitdomain.LocalBranchName
+	Branch          gitdomain.LocalBranchName
+	DialogTestInput TestInput
+	LocalBranches   gitdomain.LocalBranchNames
+	Lineage         configdomain.Lineage
+	MainBranch      gitdomain.LocalBranchName
 }
 
 func EnterParentEntries(args EnterParentArgs) []string {

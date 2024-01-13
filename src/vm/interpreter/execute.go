@@ -1,6 +1,7 @@
 package interpreter
 
 import (
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -25,6 +26,7 @@ func Execute(args ExecuteArgs) error {
 		}
 		err := nextStep.Run(shared.RunArgs{
 			Connector:                       args.Connector,
+			DialogTestInputs:                args.DialogTestInputs,
 			Lineage:                         args.Lineage,
 			PrependOpcodes:                  args.RunState.RunProgram.Prepend,
 			RegisterUndoablePerennialCommit: args.RunState.RegisterUndoablePerennialCommit,
@@ -40,6 +42,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
+	DialogTestInputs        *dialog.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize

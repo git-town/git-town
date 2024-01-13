@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -72,6 +73,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		RunState:                &runState,
 		Run:                     repo.Runner,
 		Connector:               nil,
+		DialogTestInputs:        &config.dialogTestInputs,
 		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
@@ -82,16 +84,17 @@ func executeKill(args []string, dryRun, verbose bool) error {
 
 type killConfig struct {
 	*configdomain.FullConfig
-	branchToKill   gitdomain.BranchInfo
-	branchWhenDone gitdomain.LocalBranchName
-	dryRun         bool
-	hasOpenChanges bool
-	initialBranch  gitdomain.LocalBranchName
-	previousBranch gitdomain.LocalBranchName
+	branchToKill     gitdomain.BranchInfo
+	branchWhenDone   gitdomain.LocalBranchName
+	dialogTestInputs dialog.TestInputs
+	dryRun           bool
+	hasOpenChanges   bool
+	initialBranch    gitdomain.LocalBranchName
+	previousBranch   gitdomain.LocalBranchName
 }
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -113,10 +116,11 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	if branchToKill.IsLocal() {
 		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
-			Config:        &repo.Runner.FullConfig,
-			AllBranches:   branchesSnapshot.Branches,
-			DefaultBranch: repo.Runner.MainBranch,
-			Runner:        repo.Runner,
+			Config:           &repo.Runner.FullConfig,
+			AllBranches:      branchesSnapshot.Branches,
+			DefaultBranch:    repo.Runner.MainBranch,
+			DialogTestInputs: &dialogTestInputs,
+			Runner:           repo.Runner,
 		})
 		if err != nil {
 			return nil, branchesSnapshot, stashSnapshot, false, err
@@ -137,13 +141,14 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone = branchesSnapshot.Active
 	}
 	return &killConfig{
-		FullConfig:     &repo.Runner.FullConfig,
-		branchToKill:   *branchToKill,
-		branchWhenDone: branchWhenDone,
-		dryRun:         dryRun,
-		hasOpenChanges: repoStatus.OpenChanges,
-		initialBranch:  branchesSnapshot.Active,
-		previousBranch: previousBranch,
+		FullConfig:       &repo.Runner.FullConfig,
+		branchToKill:     *branchToKill,
+		branchWhenDone:   branchWhenDone,
+		dialogTestInputs: dialogTestInputs,
+		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
+		initialBranch:    branchesSnapshot.Active,
+		previousBranch:   previousBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 

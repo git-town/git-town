@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -44,7 +45,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch)
+	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), repo.Runner.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -52,7 +53,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch)
+	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -64,10 +65,11 @@ func executeConfigSetup(verbose bool) error {
 
 type setupConfig struct {
 	localBranches gitdomain.BranchInfos
+	dialogInputs  dialog.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -76,7 +78,9 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
+	dialogInputs := dialog.LoadTestInputs(os.Environ())
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
+		dialogInputs:  dialogInputs,
 	}, exit, err
 }

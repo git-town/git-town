@@ -40,7 +40,7 @@ func removePerennialBranch(branchStr string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	_, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{ //nolint:dogsled
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Fetch:                 false,

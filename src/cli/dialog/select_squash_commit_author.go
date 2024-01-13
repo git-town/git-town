@@ -8,7 +8,7 @@ import (
 )
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string) (string, bool, error) {
+func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string, dialogTestInputs TestInput) (string, bool, error) {
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
@@ -16,5 +16,6 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 		entries:      authors,
 		defaultEntry: "",
 		help:         fmt.Sprintf(messages.BranchAuthorMultiple, branch),
+		testInput:    dialogTestInputs,
 	})
 }
