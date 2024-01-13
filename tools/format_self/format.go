@@ -73,13 +73,14 @@ func formatLine(line string) string {
 	if !strings.HasPrefix(line, "func (") {
 		return line
 	}
-	instanceRE := regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
 	matches := instanceRE.FindStringSubmatch(line)
 	if len(matches) < 2 {
 		return line
 	}
 	return strings.Replace(line, "("+matches[1], "(self", 1)
 }
+
+var instanceRE = regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
 
 func isGoFile(path string) bool {
 	if strings.HasSuffix(path, "_test.go") {
