@@ -11,8 +11,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                                        | KEYS  |
-      | Please choose an author for the squash commit | enter |
+      | DIALOG                              | KEYS  |
+      | choose author for the squash commit | enter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, origin | feature done | developer <developer@example.com> |
@@ -20,8 +20,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: choose a coworker as the author
     When I run "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                                        | KEYS       |
-      | Please choose an author for the squash commit | down enter |
+      | DIALOG                              | KEYS       |
+      | choose author for the squash commit | down enter |
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
@@ -29,8 +29,8 @@ Feature: ship a coworker's feature branch
 
   Scenario: undo
     Given I ran "git-town ship -m 'feature done'" and enter into the dialog:
-      | DIALOG                                        | KEYS  |
-      | Please choose an author for the squash commit | enter |
+      | DIALOG                              | KEYS  |
+      | choose author for the squash commit | enter |
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                       |
