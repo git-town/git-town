@@ -7,14 +7,14 @@ Feature: update the parent of a feature branch
 
   Scenario: select the default branch (current parent)
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                                      | KEYS  |
-      | Please specify the parent branch of 'child' | enter |
+      | DIALOG                 | KEYS  |
+      | parent branch of child | enter |
     And the initial lineage exists
 
   Scenario: select another branch
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                                      | KEYS       |
-      | Please specify the parent branch of 'child' | down enter |
+      | DIALOG                 | KEYS       |
+      | parent branch of child | down enter |
     Then this branch lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
@@ -22,8 +22,8 @@ Feature: update the parent of a feature branch
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town set-parent" and enter into the dialog:
-      | DIALOG                                      | KEYS     |
-      | Please specify the parent branch of 'child' | up enter |
+      | DIALOG                 | KEYS     |
+      | parent branch of child | up enter |
     Then the perennial branches are now "child"
     And this branch lineage exists now
       | BRANCH | PARENT |
