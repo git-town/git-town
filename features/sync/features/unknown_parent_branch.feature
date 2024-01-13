@@ -6,17 +6,17 @@ Feature: enter a parent branch name when prompted
 
   Scenario: choose the default branch name
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                                     | KEYS  |
-      | Please specify the parent branch of 'beta' | enter |
+      | DIALOG                | KEYS  |
+      | parent branch of beta | enter |
     Then this branch lineage exists now
       | BRANCH | PARENT |
       | beta   | main   |
 
   Scenario: choose other branches
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                                      | KEYS       |
-      | Please specify the parent branch of 'beta'  | down enter |
-      | Please specify the parent branch of 'alpha' | enter      |
+      | DIALOG                 | KEYS       |
+      | parent branch of beta  | down enter |
+      | parent branch of alpha | enter      |
     And this branch lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
@@ -24,15 +24,15 @@ Feature: enter a parent branch name when prompted
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town sync" and enter into the dialog:
-      | DIALOG                                     | KEYS     |
-      | Please specify the parent branch of 'beta' | up enter |
+      | DIALOG                | KEYS     |
+      | parent branch of beta | up enter |
     Then the perennial branches are now "beta"
 
   Scenario: enter the parent for several branches
     When I run "git-town sync --all" and enter into the dialog:
-      | DIALOG                                      | KEYS  |
-      | Please specify the parent branch of 'alpha' | enter |
-      | Please specify the parent branch of 'beta'  | enter |
+      | DIALOG                 | KEYS  |
+      | parent branch of alpha | enter |
+      | parent branch of beta  | enter |
     Then this branch lineage exists now
       | BRANCH | PARENT |
       | alpha  | main   |
