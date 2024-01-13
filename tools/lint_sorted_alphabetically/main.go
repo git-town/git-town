@@ -68,7 +68,7 @@ type issue struct {
 	msg  string
 }
 
-var structDefRE regexp.Regexp = *regexp.MustCompile(`^\s*type (.+) struct \{\n.*?\n\}`)
+var structDefRE regexp.Regexp = *regexp.MustCompile(`(?ms)^type \w+ struct \{\n.*?\n\}`)
 
 func lintFileContent(content string) []string {
 	return []string{}
@@ -102,16 +102,15 @@ type MyStruct struct {
 
 func other() {
 	fmt.Println("other")
-}
-	`
+}`
 	have := findStructDefinitions(give)
-	assertEqual(len(have), 1, "findStructDefinitions")
+	assertEqual(1, len(have), "findStructDefinitions")
 	want := `
 type MyStruct struct {
 	name string
 	count int
 }`[1:]
-	assertEqual(have[0], want, "testFindStructDefinitions")
+	assertEqual(want, have[0], "testFindStructDefinitions")
 }
 
 func runTests() {
