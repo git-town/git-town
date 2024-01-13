@@ -3,7 +3,7 @@ package gitlab_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
@@ -88,7 +88,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: configdomain.HostingNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -108,7 +108,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: configdomain.HostingGitLab,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -128,7 +128,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: configdomain.HostingNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
@@ -141,7 +141,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: configdomain.HostingNone,
 			OriginURL:      originURL,
 			APIToken:       "",
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)

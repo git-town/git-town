@@ -3,7 +3,7 @@ package github_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
@@ -93,7 +93,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
@@ -111,7 +111,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
@@ -129,7 +129,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
@@ -143,7 +143,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:      originURL,
 			APIToken:       "",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
-			Log:            log.Silent{},
+			Log:            print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)

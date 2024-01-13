@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
@@ -202,7 +202,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		FullConfig:     &repo.Runner.FullConfig,
 		HostingService: hostingService,
 		OriginURL:      originURL,
-		Log:            log.Printing{},
+		Log:            print.Logger{},
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

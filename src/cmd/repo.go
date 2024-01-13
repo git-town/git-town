@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v11/src/browser"
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/cli/log"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
@@ -79,7 +78,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		FullConfig:     &repo.Runner.FullConfig,
 		HostingService: hostingService,
 		OriginURL:      repo.Runner.OriginURL(),
-		Log:            log.Printing{},
+		Log:            print.Logger{},
 	})
 	if err != nil {
 		return nil, err
