@@ -25,7 +25,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			parent, aborted, err = dialog.EnterParent(dialog.EnterParentArgs{
 				Branch:          currentBranch,
 				DialogTestInput: args.DialogTestInputs.Next(),
-				LocalBranches:   args.AllBranches,
+				LocalBranches:   args.LocalBranches,
 				Lineage:         args.Config.Lineage,
 				MainBranch:      args.MainBranch,
 			})
@@ -58,8 +58,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	// TODO: use consistent convention for branch collections everywhere: AllBranches=remote and local branches, LocalBranches=local branches
-	AllBranches      gitdomain.LocalBranchNames
+	LocalBranches    gitdomain.LocalBranchNames
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
 	DialogTestInputs *dialog.TestInputs
@@ -72,11 +71,11 @@ type KnowsBranchAncestorsArgs struct {
 // Indicates if the user made any changes to the ancestry.
 func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
-	for _, branch := range args.AllBranches {
+	for _, branch := range args.LocalBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
 			MainBranch:       args.Config.MainBranch,
 			Backend:          args.Backend,
-			AllBranches:      args.AllBranches.Names(),
+			LocalBranches:    args.LocalBranches.Names(),
 			Config:           args.Config,
 			DialogTestInputs: args.DialogTestInputs,
 		})
@@ -91,7 +90,7 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	AllBranches      gitdomain.BranchInfos
+	LocalBranches    gitdomain.BranchInfos
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
 	DialogTestInputs *dialog.TestInputs

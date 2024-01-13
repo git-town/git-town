@@ -16,7 +16,7 @@ import (
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnownBranchAncestryArgs) error {
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
-		AllBranches:      args.AllBranches.Names(),
+		LocalBranches:    args.AllBranches.Names(),
 		Backend:          &args.Runner.Backend,
 		Config:           args.Config,
 		DialogTestInputs: args.DialogTestInputs,

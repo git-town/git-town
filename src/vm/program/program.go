@@ -97,7 +97,6 @@ func (self *Program) PrependProgram(otherProgram Program) {
 	*self = result
 }
 
-// TODO: return the modified program here.
 func (self Program) RemoveAllButLast(removeType string) Program {
 	allIndexes := slice.FindAll(self.OpcodeTypes(), removeType)
 	indexesToRemove := slice.TruncateLast(allIndexes)
