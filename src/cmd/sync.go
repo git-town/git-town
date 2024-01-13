@@ -146,7 +146,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		localBranches := branchesSnapshot.Branches.LocalBranches()
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			Config:           &repo.Runner.FullConfig,
-			AllBranches:      localBranches,
+			LocalBranches:    localBranches,
 			DialogTestInputs: &dialogTestInputs,
 			Runner:           repo.Runner,
 		})
