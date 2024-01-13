@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/cli/log"
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
@@ -110,7 +110,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		FullConfig:     &repo.Runner.FullConfig,
 		HostingService: hostingService,
 		OriginURL:      originURL,
-		Log:            log.Printing{},
+		Log:            print.Logger{},
 	})
 	if err != nil {
 		return nil, initialStashSnapshot, repo.Runner.Lineage, err

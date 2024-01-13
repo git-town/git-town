@@ -59,7 +59,7 @@ func (self *Config) Reload() {
 	_, self.GlobalGitConfig, _ = self.GitConfig.LoadGlobal() // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal()   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	self.FullConfig = configdomain.DefaultConfig()
-	// TODO: merge this code with the similar code in NewGitTown.
+	// TODO: merge this code with the similar code in NewConfig.
 	if self.configFile != nil {
 		self.FullConfig.Merge(*self.configFile)
 	}
