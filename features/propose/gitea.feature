@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Gitea support
 
   Background:

@@ -1,3 +1,4 @@
+@skipWindows
 Feature: GitHub support
 
   Background:
