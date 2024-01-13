@@ -52,7 +52,7 @@ func lintFiles() {
 		}
 		issues := lintFileContent(string(content))
 		for _, issue := range issues {
-			fmt.Println("%s:%d  %s", path, issue.line, issue.msg)
+			fmt.Printf("%s  %s", path, issue)
 		}
 		return nil
 	})
@@ -71,23 +71,11 @@ type issue struct {
 var structDefRE regexp.Regexp = *regexp.MustCompile(`^\s*type (.+) struct \{\n.*?\n\}`)
 
 func lintFileContent(content string) []string {
-
+	return []string{}
 }
 
 func findStructDefinitions(code string) []string {
-	matches
-}
-
-func formatLine(line string) string {
-	if !strings.HasPrefix(line, "func (") {
-		return line
-	}
-	instanceRE := regexp.MustCompile(`func \((\w+) (\*?\w+\).*)$`)
-	matches := instanceRE.FindStringSubmatch(line)
-	if len(matches) < 2 {
-		return line
-	}
-	return strings.Replace(line, "("+matches[1], "(self", 1)
+	return structDefRE.FindAllString(code, -1)
 }
 
 func isGoFile(path string) bool {
@@ -101,21 +89,34 @@ func isGoFile(path string) bool {
  * TESTS
  */
 
-func runTests() {
-	testFormatLine()
-	fmt.Println()
+func testFindStructDefinitions() {
+	give := `
+package test
+
+var a = 1
+
+type MyStruct struct {
+	name string
+	count int
 }
 
-func testFormatLine() {
-	tests := map[string]string{
-		"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
-		"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
-		"	if err != nil {":                                                                 "	if err != nil {",
-	}
-	for give, want := range tests {
-		have := formatLine(give)
-		assertEqual(want, have, "testFormatLine")
-	}
+func other() {
+	fmt.Println("other")
+}
+	`
+	have := findStructDefinitions(give)
+	assertEqual(len(have), 1, "findStructDefinitions")
+	want := `
+type MyStruct struct {
+	name string
+	count int
+}`[1:]
+	assertEqual(have[0], want, "testFindStructDefinitions")
+}
+
+func runTests() {
+	testFindStructDefinitions()
+	fmt.Println()
 }
 
 func assertEqual[T comparable](want, have T, testName string) {
