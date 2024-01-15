@@ -10,6 +10,14 @@ import (
 	"github.com/muesli/termenv"
 )
 
+func DetermineCursorPos(entries []string, initialEntry string) int {
+	cursor := slices.Index(entries, initialEntry)
+	if cursor < 0 {
+		cursor = 0
+	}
+	return cursor
+}
+
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList struct {
 	Aborted      bool          // whether the user has aborted this dialog
