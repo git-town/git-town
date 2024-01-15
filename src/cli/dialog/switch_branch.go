@@ -10,10 +10,7 @@ import (
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
-	entries := make([]string, 0, len(lineage))
-	for _, root := range lineage.Roots() {
-		layoutBranches(&entries, root, "", lineage)
-	}
+	entries := DetermineSwitchEntries(localBranches, lineage)
 	cursor := 0
 	initialBranchName := initialBranch.String()
 	for e, entry := range entries {
@@ -105,4 +102,22 @@ func (self SwitchModel) View() string {
 	s.WriteString(self.Colors.helpKey.Styled("q"))
 	s.WriteString(self.Colors.help.Styled(" abort"))
 	return s.String()
+}
+
+func DetermineSwitchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
+	entries := make([]string, 0, len(lineage))
+	// add all entries from the lineage
+	for _, root := range lineage.Roots() {
+		layoutBranches(&entries, root, "", lineage)
+	}
+	// remove entries for which no local branches exist
+
+	// add missing local branches
+	// branchesInLineage := maps.Keys(lineage)
+	// for _, localBranch := range localBranches {
+	// 	if !slices.Contains(branchesInLineage, localBranch) {
+	// 		entries = append(entries, localBranch.String())
+	// 	}
+	// }
+	return entries
 }
