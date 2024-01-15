@@ -23,7 +23,7 @@ func TestSwitchBranch(t *testing.T) {
 				branchB: main,
 			}
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main}
-			have := dialog.DetermineSwitchEntries(localBranches, lineage)
+			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []string{
 				"main",
 				"  alpha",
@@ -42,7 +42,7 @@ func TestSwitchBranch(t *testing.T) {
 				branchB: main,
 			}
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main, perennial1}
-			have := dialog.DetermineSwitchEntries(localBranches, lineage)
+			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []string{
 				"main",
 				"  alpha",
@@ -61,7 +61,7 @@ func TestSwitchBranch(t *testing.T) {
 				branchA1: branchA,
 			}
 			localBranches := gitdomain.LocalBranchNames{branchA1, main}
-			have := dialog.DetermineSwitchEntries(localBranches, lineage)
+			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []string{
 				"main",
 				"  alpha",

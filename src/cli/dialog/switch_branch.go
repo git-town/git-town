@@ -12,7 +12,7 @@ import (
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
-	entries := DetermineSwitchEntries(localBranches, lineage)
+	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := 0
 	initialBranchName := initialBranch.String()
 	for e, entry := range entries {
@@ -34,13 +34,6 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	selectedEntry = strings.TrimSpace(selectedEntry)
 	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
 	return selectedBranch, result.Aborted, nil
-}
-
-func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
-	*result = append(*result, indentation+branch.String())
-	for _, child := range lineage.Children(branch) {
-		layoutBranches(result, child, indentation+"  ", lineage)
-	}
 }
 
 type SwitchModel struct {
@@ -106,7 +99,7 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-func DetermineSwitchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
+func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
 	entries := make([]string, 0, len(lineage))
 	roots := lineage.Roots()
 	// add all entries from the lineage
@@ -127,4 +120,11 @@ func DetermineSwitchEntries(localBranches gitdomain.LocalBranchNames, lineage co
 		entries = append(entries, localBranch.String())
 	}
 	return entries
+}
+
+func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
+	*result = append(*result, indentation+branch.String())
+	for _, child := range lineage.Children(branch) {
+		layoutBranches(result, child, indentation+"  ", lineage)
+	}
 }
