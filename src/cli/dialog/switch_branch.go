@@ -9,35 +9,35 @@ import (
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, error) {
-	dialogData := switchModel{
-		bubbleList:    newBubbleList(localBranches.Strings(), initialBranch.String()),
-		initialBranch: initialBranch.String(),
+	dialogData := SwitchModel{
+		BubbleList:    newBubbleList(localBranches.Strings(), initialBranch.String()),
+		InitialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return "", err
 	}
-	result := dialogResult.(switchModel) //nolint:forcetypeassert
-	selectedBranch := gitdomain.NewLocalBranchName(result.bubbleList.selectedEntry())
+	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
+	selectedBranch := gitdomain.NewLocalBranchName(result.BubbleList.selectedEntry())
 	return selectedBranch, nil
 }
 
-type switchModel struct {
-	bubbleList
-	initialBranch string // name of the currently checked out branch
+type SwitchModel struct {
+	BubbleList
+	InitialBranch string // name of the currently checked out branch
 }
 
-func (self switchModel) Init() tea.Cmd {
+func (self SwitchModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.bubbleList.handleKey(keyMsg); handled {
+	if handled, code := self.BubbleList.handleKey(keyMsg); handled {
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
@@ -49,14 +49,14 @@ func (self switchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	return self, nil
 }
 
-func (self switchModel) View() string {
+func (self SwitchModel) View() string {
 	s := strings.Builder{}
-	for i, branch := range self.entries {
+	for i, branch := range self.Entries {
 		switch {
-		case i == self.cursor:
-			s.WriteString(self.colors.selection.Styled("> " + branch))
-		case branch == self.initialBranch:
-			s.WriteString(self.colors.initial.Styled("* " + branch))
+		case i == self.Cursor:
+			s.WriteString(self.Colors.selection.Styled("> " + branch))
+		case branch == self.InitialBranch:
+			s.WriteString(self.Colors.initial.Styled("* " + branch))
 		default:
 			s.WriteString("  " + branch)
 		}
@@ -64,24 +64,24 @@ func (self switchModel) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.colors.helpKey.Styled("↑"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("k"))
-	s.WriteString(self.colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.helpKey.Styled("↑"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("k"))
+	s.WriteString(self.Colors.help.Styled(" up   "))
 	// down
-	s.WriteString(self.colors.helpKey.Styled("↓"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("j"))
-	s.WriteString(self.colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.helpKey.Styled("↓"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("j"))
+	s.WriteString(self.Colors.help.Styled(" down   "))
 	// accept
-	s.WriteString(self.colors.helpKey.Styled("enter"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("o"))
-	s.WriteString(self.colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.helpKey.Styled("enter"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("o"))
+	s.WriteString(self.Colors.help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.colors.helpKey.Styled("esc"))
-	s.WriteString(self.colors.help.Styled("/"))
-	s.WriteString(self.colors.helpKey.Styled("q"))
-	s.WriteString(self.colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.helpKey.Styled("esc"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("q"))
+	s.WriteString(self.Colors.help.Styled(" abort"))
 	return s.String()
 }
