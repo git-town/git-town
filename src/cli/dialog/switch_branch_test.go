@@ -51,6 +51,24 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+		t.Run("local grandparent branch with missing parent", func(t *testing.T) {
+			t.Parallel()
+			branchA := gitdomain.NewLocalBranchName("alpha")
+			branchA1 := gitdomain.NewLocalBranchName("alpha-1")
+			main := gitdomain.NewLocalBranchName("main")
+			lineage := configdomain.Lineage{
+				branchA:  main,
+				branchA1: branchA,
+			}
+			localBranches := gitdomain.LocalBranchNames{branchA1, main}
+			have := dialog.DetermineSwitchEntries(localBranches, lineage)
+			want := []string{
+				"main",
+				"  alpha",
+				"    alpha-1",
+			}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("View", func(t *testing.T) {
