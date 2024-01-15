@@ -5,12 +5,17 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, error) {
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, error) {
+	entries := make([]string, 0, len(lineage))
+	for _, root := range lineage.Roots() {
+		layoutBranches(&entries, root, "", lineage)
+	}
 	dialogData := SwitchModel{
-		BubbleList:    newBubbleList(localBranches.Strings(), initialBranch.String()),
+		BubbleList:    newBubbleList(entries, initialBranch.String()),
 		InitialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
@@ -21,6 +26,13 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
 	selectedBranch := gitdomain.NewLocalBranchName(result.BubbleList.selectedEntry())
 	return selectedBranch, nil
+}
+
+func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
+	*result = append(*result, indentation+branch.String())
+	for _, child := range lineage.Children(branch) {
+		layoutBranches(result, child, indentation+"  ", lineage)
+	}
 }
 
 type SwitchModel struct {
