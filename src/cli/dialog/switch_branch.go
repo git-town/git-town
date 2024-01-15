@@ -92,6 +92,7 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
+// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" dialog.
 func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranchName) int {
 	initialBranchName := initialBranch.String()
 	for e, entry := range entries {
@@ -102,6 +103,7 @@ func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranch
 	return 0
 }
 
+// SwitchBranchEntries provides the entries for the "switch branch" dialog.
 func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
 	entries := make([]string, 0, len(lineage))
 	roots := lineage.Roots()
@@ -123,6 +125,8 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 	return entries
 }
 
+// layoutBranches adds entries for the given branch and its children to the given entry list.
+// The entries are indented according to their position in the given lineage.
 func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
 	*result = append(*result, indentation+branch.String())
 	for _, child := range lineage.Children(branch) {
