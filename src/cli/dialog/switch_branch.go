@@ -13,13 +13,7 @@ import (
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage)
-	cursor := 0
-	initialBranchName := initialBranch.String()
-	for e, entry := range entries {
-		if strings.TrimSpace(entry) == initialBranchName {
-			cursor = e
-		}
-	}
+	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogData := SwitchModel{
 		BubbleList:       newBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
@@ -99,6 +93,16 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
+func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranchName) int {
+	initialBranchName := initialBranch.String()
+	for e, entry := range entries {
+		if strings.TrimSpace(entry) == initialBranchName {
+			return e
+		}
+	}
+	return 0
+}
+
 func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
 	entries := make([]string, 0, len(lineage))
 	roots := lineage.Roots()
@@ -107,7 +111,6 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		layoutBranches(&entries, root, "", lineage)
 	}
 	// remove entries for which no local branches exist
-
 	// add missing local branches
 	branchesInLineage := maps.Keys(lineage)
 	for _, localBranch := range localBranches {

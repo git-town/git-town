@@ -11,7 +11,25 @@ import (
 
 func TestSwitchBranch(t *testing.T) {
 	t.Parallel()
-	t.Run("DetermineSwitchEntries", func(t *testing.T) {
+
+	t.Run("SwitchBranchCursorPos", func(t *testing.T) {
+		t.Parallel()
+		t.Run("initialBranch is in the entry list", func(t *testing.T) {
+			t.Parallel()
+			entries := []string{
+				"main",
+				"  alpha",
+				"    alpha1",
+				"  beta",
+			}
+			initialBranch := gitdomain.NewLocalBranchName("alpha1")
+			have := dialog.SwitchBranchCursorPos(entries, initialBranch)
+			want := 2
+			must.EqOp(t, want, have)
+		})
+	})
+
+	t.Run("SwitchBranchEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("normal", func(t *testing.T) {
 			t.Parallel()
