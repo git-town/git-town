@@ -9,7 +9,7 @@ import (
 // EnterMainBranch lets the user select a new main branch for this repo.
 func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 	model := radioListModel{
-		bubbleList: newBubbleList(args.entries, args.defaultEntry),
+		bubbleList: newBubbleList(args.entries, DetermineCursorPos(args.entries, args.defaultEntry)),
 		help:       args.help,
 	}
 	program := tea.NewProgram(model)
