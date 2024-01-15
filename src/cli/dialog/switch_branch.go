@@ -14,9 +14,16 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	for _, root := range lineage.Roots() {
 		layoutBranches(&entries, root, "", lineage)
 	}
+	cursor := 0
+	initialBranchName := initialBranch.String()
+	for e, entry := range entries {
+		if strings.TrimSpace(entry) == initialBranchName {
+			cursor = e
+		}
+	}
 	dialogData := SwitchModel{
-		BubbleList: newBubbleList(entries, initialBranch.String()),
-		InitialPos: initialBranch.String(),
+		BubbleList:       newBubbleList(entries, cursor),
+		InitialBranchPos: cursor,
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
@@ -39,7 +46,7 @@ func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentat
 
 type SwitchModel struct {
 	BubbleList
-	InitialBranch string // name of the currently checked out branch
+	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
 func (self SwitchModel) Init() tea.Cmd {
@@ -69,7 +76,7 @@ func (self SwitchModel) View() string {
 		switch {
 		case i == self.Cursor:
 			s.WriteString(self.Colors.selection.Styled("> " + branch))
-		case branch == self.InitialBranch:
+		case i == self.InitialBranchPos:
 			s.WriteString(self.Colors.initial.Styled("* " + branch))
 		default:
 			s.WriteString("  " + branch)

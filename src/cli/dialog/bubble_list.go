@@ -30,11 +30,7 @@ type BubbleList struct {
 	NumberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList(entries []string, initial string) BubbleList {
-	cursor := slices.Index(entries, initial)
-	if cursor < 0 {
-		cursor = 0
-	}
+func newBubbleList(entries []string, cursor int) BubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList{
 		Aborted:      false,

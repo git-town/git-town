@@ -18,7 +18,7 @@ func TestSwitchBranch(t *testing.T) {
 				MaxDigits:    1,
 				NumberFormat: "%d",
 			},
-			InitialBranch: "main",
+			InitialBranchPos: 0,
 		}
 		have := model.View()
 		want := `
@@ -38,7 +38,7 @@ func TestSwitchBranch(t *testing.T) {
 				MaxDigits:    1,
 				NumberFormat: "%d",
 			},
-			InitialBranch: "main",
+			InitialBranchPos: 0,
 		}
 		have := model.View()
 		want := `
@@ -60,7 +60,7 @@ func TestSwitchBranch(t *testing.T) {
 				MaxDigits:    1,
 				NumberFormat: "%d",
 			},
-			InitialBranch: "main",
+			InitialBranchPos: 0,
 		}
 		have := model.View()
 		want := `
