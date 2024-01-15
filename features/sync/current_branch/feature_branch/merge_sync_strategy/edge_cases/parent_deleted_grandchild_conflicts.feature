@@ -10,11 +10,20 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
     And origin deletes the "child" branch
     When I run "git-town sync --all"
 
-  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND   |
-      | child  | git fetch |
+      | BRANCH     | COMMAND                               |
+      | child      | git fetch --prune --tags              |
+      |            | git checkout main                     |
+      | main       | git rebase origin/main                |
+      |            | git push                              |
+      |            | git checkout child                    |
+      | child      | git merge --no-edit main              |
+      |            | git checkout main                     |
+      | main       | git branch -d child                   |
+      |            | git checkout grandchild               |
+      | grandchild | git merge --no-edit origin/grandchild |
+      |            | git merge --no-edit main              |
     And it prints the error:
       """
       exit status 1
@@ -25,6 +34,26 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       To go back to where you started, run "git-town undo".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And the current branch is now "feature"
-    And the uncommitted file is stashed
+    And the current branch is now "grandchild"
     And a merge is now in progress
+
+  @this
+  Scenario: skip the grandchild merge conflict and kill the grandchild branch
+    When I run "git-town skip"
+    Then it runs the commands
+      | BRANCH     | COMMAND                                     |
+      | grandchild | git merge --abort                           |
+      |            | git branch child {{ sha 'initial commit' }} |
+      |            | git checkout child                          |
+      | child      | git push --tags                             |
+    And the current branch is now "child"
+    When I run "git-town kill"
+    Then it runs the commands
+      | BRANCH     | COMMAND                  |
+      | child      | git fetch --prune --tags |
+      |            | git checkout grandchild  |
+      | grandchild | git branch -d child      |
+    And it prints:
+      """
+      branch "grandchild" is now a child of "main"
+      """
