@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
-func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, error) {
+func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
 	entries := make([]string, 0, len(lineage))
 	for _, root := range lineage.Roots() {
 		layoutBranches(&entries, root, "", lineage)
@@ -28,13 +28,13 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
 	selectedEntry := result.BubbleList.selectedEntry()
 	selectedEntry = strings.TrimSpace(selectedEntry)
 	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
-	return selectedBranch, nil
+	return selectedBranch, result.Aborted, nil
 }
 
 func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
