@@ -28,4 +28,25 @@ func TestSwitchBranch(t *testing.T) {
   ↑/k up   ↓/j down   enter/o accept   esc/q abort`[1:]
 		must.EqOp(t, want, have)
 	})
+	t.Run("multiple top-level branches", func(t *testing.T) {
+		t.Parallel()
+		model := dialog.SwitchModel{
+			BubbleList: dialog.BubbleList{ //nolint:exhaustruct
+				Cursor:       0,
+				Entries:      []string{"main", "one", "two"},
+				MaxDigits:    1,
+				NumberFormat: "%d",
+			},
+			InitialBranch: "main",
+		}
+		have := model.View()
+		want := `
+> main
+  one
+  two
+
+
+  ↑/k up   ↓/j down   enter/o accept   esc/q abort`[1:]
+		must.EqOp(t, want, have)
+	})
 }
