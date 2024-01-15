@@ -17,9 +17,8 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	perennialNames := perennialCandidates.Strings()
 	dialogData := perennialBranchesModel{
-		bubbleList:    newBubbleList(perennialNames, 0),
+		bubbleList:    newBubbleList(perennialCandidates.Strings(), 0),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
