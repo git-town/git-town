@@ -10,6 +10,14 @@ import (
 	"github.com/muesli/termenv"
 )
 
+type BubbleListStatus int
+
+const (
+	BubbleListStatusEntering BubbleListStatus = iota
+	BubbleListStatusDone
+	BubbleListStatusAborted
+)
+
 func DetermineCursorPos(entries []string, initialEntry string) int {
 	cursor := slices.Index(entries, initialEntry)
 	if cursor < 0 {
@@ -20,20 +28,20 @@ func DetermineCursorPos(entries []string, initialEntry string) int {
 
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList struct {
-	Aborted      bool          // whether the user has aborted this dialog
-	Colors       dialogColors  // colors to use for help text
-	Cursor       int           // index of the currently selected row
-	Dim          termenv.Style // style for dim output
-	Entries      []string      // the entries to select from
-	EntryNumber  string        // the manually entered entry number
-	MaxDigits    int           // how many digits make up an entry number
-	NumberFormat string        // template for formatting the entry number
+	Status       BubbleListStatus // whether the user has aborted this dialog
+	Colors       dialogColors     // colors to use for help text
+	Cursor       int              // index of the currently selected row
+	Dim          termenv.Style    // style for dim output
+	Entries      []string         // the entries to select from
+	EntryNumber  string           // the manually entered entry number
+	MaxDigits    int              // how many digits make up an entry number
+	NumberFormat string           // template for formatting the entry number
 }
 
 func newBubbleList(entries []string, cursor int) BubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList{
-		Aborted:      false,
+		Status:       BubbleListStatusEntering,
 		Colors:       createColors(),
 		Cursor:       cursor,
 		Dim:          termenv.String().Faint(),
@@ -59,7 +67,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
-		self.Aborted = true
+		self.Status = BubbleListStatusAborted
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
@@ -80,7 +88,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case "q":
-		self.Aborted = true
+		self.Status = BubbleListStatusAborted
 		return true, tea.Quit
 	}
 	return false, nil

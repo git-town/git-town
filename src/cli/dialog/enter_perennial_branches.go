@@ -36,7 +36,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
 	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
-	return selectedBranches, result.Aborted, nil
+	return selectedBranches, result.Status == BubbleListStatusAborted, nil
 }
 
 type perennialBranchesModel struct {
@@ -62,9 +62,11 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.toggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
+		self.Status = BubbleListStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
+		self.Status = BubbleListStatusDone
 		self.toggleCurrentEntry()
 		return self, nil
 	}
@@ -72,6 +74,9 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self perennialBranchesModel) View() string {
+	if self.Status != BubbleListStatusEntering {
+		return ""
+	}
 	s := strings.Builder{}
 	s.WriteString("Let's configure the perennial branches.\n")
 	s.WriteString("These are long-lived branches without ancestors and are never shipped.\n")
