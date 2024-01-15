@@ -15,8 +15,8 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		layoutBranches(&entries, root, "", lineage)
 	}
 	dialogData := SwitchModel{
-		BubbleList:    newBubbleList(entries, initialBranch.String()),
-		InitialBranch: initialBranch.String(),
+		BubbleList: newBubbleList(entries, initialBranch.String()),
+		InitialPos: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
 	dialogResult, err := dialogProcess.Run()
