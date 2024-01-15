@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -36,6 +37,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
 	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
+	fmt.Println("Selected perennial branches:", strings.Join(result.checkedEntries(), ", "))
 	return selectedBranches, result.Status == BubbleListStatusAborted, nil
 }
 

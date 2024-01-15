@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
@@ -21,5 +23,11 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		help:         enterBranchHelp,
 		testInput:    inputs,
 	})
+	fmt.Print("Selected main branch: ")
+	if aborted {
+		fmt.Println("(aborted)")
+	} else {
+		fmt.Println(selection)
+	}
 	return gitdomain.LocalBranchName(selection), aborted, err
 }
