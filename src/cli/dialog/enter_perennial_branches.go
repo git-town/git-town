@@ -117,9 +117,11 @@ func (self perennialBranchesModel) View() string {
 	s.WriteString(self.Colors.helpKey.Styled("enter"))
 	s.WriteString(self.Colors.help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled("/"))
 	s.WriteString(self.Colors.helpKey.Styled("q"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("esc"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
 	s.WriteString(self.Colors.help.Styled(" abort"))
 	return s.String()
 }
