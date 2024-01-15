@@ -9,8 +9,9 @@ import (
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName) (gitdomain.LocalBranchName, error) {
+	localBranchNames := localBranches.Strings()
 	dialogData := switchModel{
-		bubbleList:    newBubbleList(localBranches.Strings(), initialBranch.String()),
+		bubbleList:    newBubbleList(localBranchNames, DetermineCursorPos(localBranchNames, initialBranch.String())),
 		initialBranch: initialBranch.String(),
 	}
 	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))

@@ -10,6 +10,14 @@ import (
 	"github.com/muesli/termenv"
 )
 
+func DetermineCursorPos(entries []string, initialEntry string) int {
+	cursor := slices.Index(entries, initialEntry)
+	if cursor < 0 {
+		cursor = 0
+	}
+	return cursor
+}
+
 // bubbleList contains common elements of BubbleTea list implementations.
 type bubbleList struct {
 	aborted      bool          // whether the user has aborted this dialog
@@ -22,11 +30,7 @@ type bubbleList struct {
 	numberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList(entries []string, initial string) bubbleList {
-	cursor := slices.Index(entries, initial)
-	if cursor < 0 {
-		cursor = 0
-	}
+func newBubbleList(entries []string, cursor int) bubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
 	return bubbleList{
 		aborted:      false,
