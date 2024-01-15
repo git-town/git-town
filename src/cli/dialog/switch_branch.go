@@ -1,7 +1,6 @@
 package dialog
 
 import (
-	"os"
 	"slices"
 	"strings"
 
@@ -18,7 +17,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		BubbleList:       newBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
 	}
-	dialogProcess := tea.NewProgram(dialogData, tea.WithOutput(os.Stderr))
+	dialogProcess := tea.NewProgram(dialogData)
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return "", false, err
