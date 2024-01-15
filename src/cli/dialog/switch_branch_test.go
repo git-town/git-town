@@ -43,7 +43,7 @@ func TestSwitchBranch(t *testing.T) {
 
 	t.Run("SwitchBranchEntries", func(t *testing.T) {
 		t.Parallel()
-		t.Run("normal", func(t *testing.T) {
+		t.Run("feature branches only", func(t *testing.T) {
 			t.Parallel()
 			branchA := gitdomain.NewLocalBranchName("alpha")
 			branchB := gitdomain.NewLocalBranchName("beta")
@@ -61,7 +61,7 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("with perennial branches", func(t *testing.T) {
+		t.Run("feature and perennial branches", func(t *testing.T) {
 			t.Parallel()
 			branchA := gitdomain.NewLocalBranchName("alpha")
 			branchB := gitdomain.NewLocalBranchName("beta")
@@ -81,21 +81,21 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
-		t.Run("local grandparent branch with missing parent", func(t *testing.T) {
+		t.Run("parent is not checked out locally", func(t *testing.T) {
 			t.Parallel()
-			branchA := gitdomain.NewLocalBranchName("alpha")
-			branchA1 := gitdomain.NewLocalBranchName("alpha-1")
+			child := gitdomain.NewLocalBranchName("child")
+			grandchild := gitdomain.NewLocalBranchName("grandchild")
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.Lineage{
-				branchA:  main,
-				branchA1: branchA,
+				child:      main,
+				grandchild: child,
 			}
-			localBranches := gitdomain.LocalBranchNames{branchA1, main}
+			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []string{
 				"main",
-				"  alpha",
-				"    alpha-1",
+				"  child",
+				"    grandchild",
 			}
 			must.Eq(t, want, have)
 		})
