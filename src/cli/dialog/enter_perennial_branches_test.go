@@ -14,8 +14,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 2,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 2,
 				},
 				selections: []int{1, 2, 3},
 			}
@@ -26,8 +26,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 2,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 2,
 				},
 				selections: []int{1, 3},
 			}
@@ -42,8 +42,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 2,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 2,
 				},
 				selections: []int{1, 3},
 			}
@@ -54,8 +54,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 2,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 2,
 				},
 				selections: []int{1, 2, 3},
 			}
@@ -70,8 +70,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("selected row is checked", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 2,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 2,
 				},
 				selections: []int{2},
 			}
@@ -80,8 +80,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Run("selected row is not checked", func(t *testing.T) {
 			t.Parallel()
 			model := perennialBranchesModel{ //nolint:exhaustruct
-				bubbleList: bubbleList{ //nolint:exhaustruct
-					cursor: 1,
+				BubbleList: BubbleList{ //nolint:exhaustruct
+					Cursor: 1,
 				},
 				selections: []int{2},
 			}
@@ -102,8 +102,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
 		model := perennialBranchesModel{ //nolint:exhaustruct
-			bubbleList: bubbleList{ //nolint:exhaustruct
-				entries: []string{"zero", "one", "two", "three"},
+			BubbleList: BubbleList{ //nolint:exhaustruct
+				Entries: []string{"zero", "one", "two", "three"},
 			},
 			selections: []int{1, 3},
 		}
@@ -115,8 +115,8 @@ func TestPerennialBranchesModel(t *testing.T) {
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
 		model := perennialBranchesModel{ //nolint:exhaustruct
-			bubbleList: bubbleList{ //nolint:exhaustruct
-				cursor: 2,
+			BubbleList: BubbleList{ //nolint:exhaustruct
+				Cursor: 2,
 			},
 			selections: []int{1, 3},
 		}

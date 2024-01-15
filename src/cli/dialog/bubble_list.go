@@ -18,39 +18,39 @@ func DetermineCursorPos(entries []string, initialEntry string) int {
 	return cursor
 }
 
-// bubbleList contains common elements of BubbleTea list implementations.
-type bubbleList struct {
-	aborted      bool          // whether the user has aborted this dialog
-	colors       dialogColors  // colors to use for help text
-	cursor       int           // index of the currently selected row
-	dim          termenv.Style // style for dim output
-	entries      []string      // the entries to select from
-	entryNumber  string        // the manually entered entry number
-	maxDigits    int           // how many digits make up an entry number
-	numberFormat string        // template for formatting the entry number
+// BubbleList contains common elements of BubbleTea list implementations.
+type BubbleList struct {
+	Aborted      bool          // whether the user has aborted this dialog
+	Colors       dialogColors  // colors to use for help text
+	Cursor       int           // index of the currently selected row
+	Dim          termenv.Style // style for dim output
+	Entries      []string      // the entries to select from
+	EntryNumber  string        // the manually entered entry number
+	MaxDigits    int           // how many digits make up an entry number
+	NumberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList(entries []string, cursor int) bubbleList {
+func newBubbleList(entries []string, cursor int) BubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
-	return bubbleList{
-		aborted:      false,
-		colors:       createColors(),
-		cursor:       cursor,
-		dim:          termenv.String().Faint(),
-		entries:      entries,
-		entryNumber:  "",
-		maxDigits:    numberLen,
-		numberFormat: fmt.Sprintf("%%0%dd ", numberLen),
+	return BubbleList{
+		Aborted:      false,
+		Colors:       createColors(),
+		Cursor:       cursor,
+		Dim:          termenv.String().Faint(),
+		Entries:      entries,
+		EntryNumber:  "",
+		MaxDigits:    numberLen,
+		NumberFormat: fmt.Sprintf("%%0%dd ", numberLen),
 	}
 }
 
 // entryNumberStr provides a colorized string to print the given entry number.
-func (self *bubbleList) entryNumberStr(number int) string {
-	return self.dim.Styled(fmt.Sprintf(self.numberFormat, number))
+func (self *BubbleList) entryNumberStr(number int) string {
+	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // handleKey handles keypresses that are common for all bubbleLists.
-func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
@@ -59,19 +59,19 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC:
-		self.aborted = true
+		self.Aborted = true
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
 	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-		self.entryNumber += keyStr
-		if len(self.entryNumber) > self.maxDigits {
-			self.entryNumber = self.entryNumber[1:]
+		self.EntryNumber += keyStr
+		if len(self.EntryNumber) > self.MaxDigits {
+			self.EntryNumber = self.EntryNumber[1:]
 		}
-		number64, _ := strconv.ParseInt(self.entryNumber, 10, 0)
+		number64, _ := strconv.ParseInt(self.EntryNumber, 10, 0)
 		number := int(number64)
-		if number < len(self.entries) {
-			self.cursor = number
+		if number < len(self.Entries) {
+			self.Cursor = number
 		}
 	case "k", "A", "Z":
 		self.moveCursorUp()
@@ -80,28 +80,28 @@ func (self *bubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case "q":
-		self.aborted = true
+		self.Aborted = true
 		return true, tea.Quit
 	}
 	return false, nil
 }
 
-func (self *bubbleList) moveCursorDown() {
-	if self.cursor < len(self.entries)-1 {
-		self.cursor++
+func (self *BubbleList) moveCursorDown() {
+	if self.Cursor < len(self.Entries)-1 {
+		self.Cursor++
 	} else {
-		self.cursor = 0
+		self.Cursor = 0
 	}
 }
 
-func (self *bubbleList) moveCursorUp() {
-	if self.cursor > 0 {
-		self.cursor--
+func (self *BubbleList) moveCursorUp() {
+	if self.Cursor > 0 {
+		self.Cursor--
 	} else {
-		self.cursor = len(self.entries) - 1
+		self.Cursor = len(self.Entries) - 1
 	}
 }
 
-func (self bubbleList) selectedEntry() string {
-	return self.entries[self.cursor]
+func (self BubbleList) selectedEntry() string {
+	return self.Entries[self.Cursor]
 }
