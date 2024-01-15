@@ -58,7 +58,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	case tea.KeyDown, tea.KeyTab:
 		self.moveCursorDown()
 		return true, nil
-	case tea.KeyCtrlC:
+	case tea.KeyCtrlC, tea.KeyEsc:
 		self.Aborted = true
 		return true, tea.Quit
 	}
