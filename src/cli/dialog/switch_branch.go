@@ -2,11 +2,13 @@ package dialog
 
 import (
 	"os"
+	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"golang.org/x/exp/maps"
 )
 
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
@@ -106,18 +108,23 @@ func (self SwitchModel) View() string {
 
 func DetermineSwitchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
 	entries := make([]string, 0, len(lineage))
+	roots := lineage.Roots()
 	// add all entries from the lineage
-	for _, root := range lineage.Roots() {
+	for _, root := range roots {
 		layoutBranches(&entries, root, "", lineage)
 	}
 	// remove entries for which no local branches exist
 
 	// add missing local branches
-	// branchesInLineage := maps.Keys(lineage)
-	// for _, localBranch := range localBranches {
-	// 	if !slices.Contains(branchesInLineage, localBranch) {
-	// 		entries = append(entries, localBranch.String())
-	// 	}
-	// }
+	branchesInLineage := maps.Keys(lineage)
+	for _, localBranch := range localBranches {
+		if slices.Contains(roots, localBranch) {
+			continue
+		}
+		if slices.Contains(branchesInLineage, localBranch) {
+			continue
+		}
+		entries = append(entries, localBranch.String())
+	}
 	return entries
 }

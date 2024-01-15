@@ -31,6 +31,26 @@ func TestSwitchBranch(t *testing.T) {
 			}
 			must.Eq(t, want, have)
 		})
+		t.Run("with perennial branches", func(t *testing.T) {
+			t.Parallel()
+			branchA := gitdomain.NewLocalBranchName("alpha")
+			branchB := gitdomain.NewLocalBranchName("beta")
+			perennial1 := gitdomain.NewLocalBranchName("perennial-1")
+			main := gitdomain.NewLocalBranchName("main")
+			lineage := configdomain.Lineage{
+				branchA: main,
+				branchB: main,
+			}
+			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main, perennial1}
+			have := dialog.DetermineSwitchEntries(localBranches, lineage)
+			want := []string{
+				"main",
+				"  alpha",
+				"  beta",
+				"perennial-1",
+			}
+			must.Eq(t, want, have)
+		})
 	})
 
 	t.Run("View", func(t *testing.T) {
