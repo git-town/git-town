@@ -109,7 +109,6 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 	for _, root := range roots {
 		layoutBranches(&entries, root, "", lineage)
 	}
-	// remove entries for which no local branches exist
 	// add missing local branches
 	branchesInLineage := maps.Keys(lineage)
 	for _, localBranch := range localBranches {
