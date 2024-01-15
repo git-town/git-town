@@ -24,7 +24,9 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedBranch := gitdomain.NewLocalBranchName(result.BubbleList.selectedEntry())
+	selectedEntry := result.BubbleList.selectedEntry()
+	selectedEntry = strings.TrimSpace(selectedEntry)
+	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
 	return selectedBranch, nil
 }
 
