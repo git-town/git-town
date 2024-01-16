@@ -57,6 +57,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		help:         fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)),
 		testInput:    dialogTestInput,
 	})
+	fmt.Printf("Handle unfinished command: %s\n", formattedSelection(selection, aborted))
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == selection {
 			return responseType, aborted, err
