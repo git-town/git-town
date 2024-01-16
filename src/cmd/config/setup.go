@@ -58,7 +58,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
-		return repo.Runner.SetPerennialBranches(newPerennialBranches)
+		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
+		if err != nil {
+			return err
+		}
 	}
 	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {

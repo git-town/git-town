@@ -1,15 +1,19 @@
 Feature: enter Git Town configuration
 
-  Scenario: already configured
+  @this
+  Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
+    And local Git Town setting "push-hook" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                   | KEYS                   | DESCRIPTION                               |
       | enter main branch        | enter                  | accept the already configured main branch |
       | enter perennial branches | space down space enter | configure the perennial branches          |
+      | enter push-hook          | down enter             | disable the push hook                     |
     Then the main branch is now "main"
     And the perennial branches are now "production"
+    And local Git Town setting "push-hook" is now "true"
 
   Scenario: unconfigured
     Given the branches "dev" and "production"
