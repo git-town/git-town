@@ -19,15 +19,16 @@ More info at https://www.git-town.com/preferences/push-hook.
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
-	var defaultEntry string
+	entries := []string{"enabled", "disabled"}
+	var defaultPos int
 	if existing {
-		defaultEntry = "yes (default)"
+		defaultPos = 0
 	} else {
-		defaultEntry = "no"
+		defaultPos = 1
 	}
 	selection, aborted, err := radioList(radioListArgs{
-		entries:      []string{"enabled", "disabled"},
-		defaultEntry: defaultEntry,
+		entries:      entries,
+		defaultEntry: entries[defaultPos],
 		help:         enterPushHookHelp,
 		testInput:    inputs,
 	})
