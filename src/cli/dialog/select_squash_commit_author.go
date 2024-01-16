@@ -18,6 +18,6 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 		help:         fmt.Sprintf(messages.BranchAuthorMultiple, branch),
 		testInput:    dialogTestInputs,
 	})
-	fmt.Printf("Selected perennial branches: %s\n", formattedSelection(selection, aborted))
+	fmt.Printf("Selected squash commit author: %s\n", formattedSelection(selection, aborted))
 	return selection, aborted, err
 }
