@@ -23,11 +23,6 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 		help:         enterBranchHelp,
 		testInput:    inputs,
 	})
-	fmt.Print("Selected main branch: ")
-	if aborted {
-		fmt.Println("(aborted)")
-	} else {
-		fmt.Println(selection)
-	}
+	fmt.Printf("Selected main branch: %s\n", formattedSelection(selection, aborted))
 	return gitdomain.LocalBranchName(selection), aborted, err
 }
