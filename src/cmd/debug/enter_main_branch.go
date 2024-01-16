@@ -1,7 +1,6 @@
 package debug
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -16,16 +15,8 @@ func enterMainBranchCmd() *cobra.Command {
 			localBranches := gitdomain.NewLocalBranchNames("main", "branch-1", "branch-2", "branch-3", "branch-4", "branch-5", "branch-6", "branch-7", "branch-8", "branch-9", "branch-A", "branch-B")
 			main := gitdomain.NewLocalBranchName("main")
 			dialogInputs := dialog.LoadTestInputs(os.Environ())
-			selected, aborted, err := dialog.EnterMainBranch(localBranches, main, dialogInputs.Next())
-			if err != nil {
-				return err
-			}
-			if aborted {
-				fmt.Println("ABORTED")
-			} else {
-				fmt.Println("SELECTED:", selected)
-			}
-			return nil
+			_, _, err := dialog.EnterMainBranch(localBranches, main, dialogInputs.Next())
+			return err
 		},
 	}
 }

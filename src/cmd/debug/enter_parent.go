@@ -1,7 +1,6 @@
 package debug
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -28,22 +27,14 @@ func enterParentCmd() *cobra.Command {
 			lineage := configdomain.Lineage{}
 			localBranches := gitdomain.LocalBranchNames{branch1, branch2, branch3, branch4, branch5, branch6, branch7, branch8, branch9, branchA}
 			dialogTestInputs := dialog.LoadTestInputs(os.Environ())
-			selected, aborted, err := dialog.EnterParent(dialog.EnterParentArgs{
+			_, _, err := dialog.EnterParent(dialog.EnterParentArgs{
 				Branch:          branch2,
 				DialogTestInput: dialogTestInputs.Next(),
 				LocalBranches:   localBranches,
 				Lineage:         lineage,
 				MainBranch:      main,
 			})
-			if err != nil {
-				return err
-			}
-			if aborted {
-				fmt.Println("ABORTED")
-			} else {
-				fmt.Println("SELECTED:", selected)
-			}
-			return nil
+			return err
 		},
 	}
 }

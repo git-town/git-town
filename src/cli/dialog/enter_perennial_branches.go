@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -36,7 +37,9 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
 	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
-	return selectedBranches, result.Aborted, nil
+	aborted := result.Status == dialogStatusAborted
+	fmt.Printf("Selected perennial branches: %s\n", formattedSelection(strings.Join(result.checkedEntries(), ", "), aborted))
+	return selectedBranches, aborted, nil
 }
 
 type perennialBranchesModel struct {
@@ -62,9 +65,11 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.toggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
+		self.Status = dialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
+		self.Status = dialogStatusDone
 		self.toggleCurrentEntry()
 		return self, nil
 	}
@@ -72,6 +77,9 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self perennialBranchesModel) View() string {
+	if self.Status != dialogStatusActive {
+		return ""
+	}
 	s := strings.Builder{}
 	s.WriteString("Let's configure the perennial branches.\n")
 	s.WriteString("These are long-lived branches without ancestors and are never shipped.\n")

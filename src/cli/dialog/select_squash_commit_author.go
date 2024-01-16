@@ -12,10 +12,12 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
-	return radioList(radioListArgs{
+	selection, aborted, err := radioList(radioListArgs{
 		entries:      authors,
 		defaultEntry: "",
 		help:         fmt.Sprintf(messages.BranchAuthorMultiple, branch),
 		testInput:    dialogTestInputs,
 	})
+	fmt.Printf("Selected squash commit author: %s\n", formattedSelection(selection, aborted))
+	return selection, aborted, err
 }

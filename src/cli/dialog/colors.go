@@ -18,3 +18,18 @@ func createColors() dialogColors {
 		selection: termenv.String().Foreground(termenv.ANSICyan),
 	}
 }
+
+func formattedSelection(selection string, aborted bool) string {
+	if aborted {
+		return red().Styled("(aborted)")
+	}
+	return green().Styled(selection)
+}
+
+func green() termenv.Style {
+	return termenv.String().Foreground(termenv.ANSIGreen)
+}
+
+func red() termenv.Style {
+	return termenv.String().Foreground(termenv.ANSIRed)
+}

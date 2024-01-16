@@ -24,6 +24,7 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 		help:         fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch),
 		testInput:    args.DialogTestInput,
 	})
+	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, formattedSelection(selection, aborted))
 	return gitdomain.LocalBranchName(selection), aborted, err
 }
 
