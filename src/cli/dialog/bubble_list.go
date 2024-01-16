@@ -28,7 +28,7 @@ func DetermineCursorPos(entries []string, initialEntry string) int {
 
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList struct {
-	Status       DialogStatus  // whether the user has aborted this dialog
+	Status       DialogStatus
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
