@@ -42,7 +42,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf("Selected perennial branches: %s\n", formattedSelection(selectionText, aborted))
+	fmt.Printf("Perennial branches: %s\n", formattedSelection(selectionText, aborted))
 	return selectedBranches, aborted, nil
 }
 

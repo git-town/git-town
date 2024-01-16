@@ -46,6 +46,7 @@
   - [gitlab-token](preferences/gitlab-token.md)
   - [main-branch](preferences/main-branch.md)
   - [offline](preferences/offline.md)
+  - [push-hook](preferences/push-hook.md)
   - [push-new-branches](preferences/push-new-branches.md)
   - [parent](preferences/parent.md)
   - [pererennial-branches](preferences/perennial-branches.md)

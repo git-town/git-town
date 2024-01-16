@@ -34,6 +34,16 @@ func TestParseBool(t *testing.T) {
 		})
 	})
 
+	t.Run("enable/disable", func(t *testing.T) {
+		t.Parallel()
+		verifyParseBool(t, map[string]bool{
+			"enable":   true,
+			"enabled":  true,
+			"disable":  false,
+			"disabled": false,
+		})
+	})
+
 	t.Run("numbers", func(t *testing.T) {
 		t.Parallel()
 		verifyParseBool(t, map[string]bool{
