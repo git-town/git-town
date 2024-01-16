@@ -19,7 +19,7 @@ and triggers an unnecessary CI run.
 
 `
 
-func EnterPushNewBranches(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
+func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
 	entries := []string{"yes, push new branches to origin", "no, don't push new branches to origin"}
 	var defaultPos int
 	if existing {
@@ -38,6 +38,6 @@ func EnterPushNewBranches(existing configdomain.PushHook, inputs TestInput) (con
 	}
 	selection, _, _ = strings.Cut(selection, ",")
 	fmt.Printf("Push new branches: %s\n", formattedSelection(selection, aborted))
-	result, err := configdomain.NewPushHook(selection, "user dialog")
+	result, err := configdomain.ParseNewBranchPush(selection, "user dialog")
 	return result, aborted, err
 }

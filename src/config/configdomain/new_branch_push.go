@@ -19,16 +19,24 @@ func (self NewBranchPush) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
+func NewNewBranchPush(value bool) NewBranchPush {
+	return NewBranchPush(value)
+}
+
 func NewNewBranchPushRef(value bool) *NewBranchPush {
 	result := NewBranchPush(value)
 	return &result
 }
 
-func ParseNewBranchPushRef(value, source string) (*NewBranchPush, error) {
+func ParseNewBranchPush(value, source string) (NewBranchPush, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
+		return false, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
-	token := NewBranchPush(parsed)
-	return &token, nil
+	return NewBranchPush(parsed), nil
+}
+
+func ParseNewBranchPushRef(value, source string) (*NewBranchPush, error) {
+	result, err := ParseNewBranchPush(value, source)
+	return &result, err
 }

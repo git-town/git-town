@@ -71,6 +71,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.testInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetNewBranchPush(newPushNewBranches, false)
+	if err != nil {
+		return err
+	}
 	newPushHook, aborted, err = dialog.EnterPushHook(config.PushHook, config.testInputs.Next())
 	if err != nil || aborted {
 		return err
