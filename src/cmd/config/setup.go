@@ -66,7 +66,9 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	err = repo.Runner.SetPushHookLocally(newPushHook)
-
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -74,7 +76,7 @@ type setupConfig struct {
 	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
-	testInputs    *dialog.TestInputs
+	testInputs    dialog.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 const enterPushHookHelp = `
@@ -26,13 +25,13 @@ func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdoma
 	selection, aborted, err := radioList(radioListArgs{
 		entries:      []string{"yes", "no"},
 		defaultEntry: defaultEntry,
-		help:         enterBranchHelp,
+		help:         enterPushHookHelp,
 		testInput:    inputs,
 	})
 	if err != nil || aborted {
 		return true, aborted, err
 	}
 	fmt.Printf("Push hook: %s\n", formattedSelection(selection, aborted))
-	result, err := configdomain.NewPushHook(selection, "push hook dialog")
-	return gitdomain.LocalBranchName(selection), aborted, err
+	result, err := configdomain.NewPushHook(selection, "user dialog")
+	return result, aborted, err
 }
