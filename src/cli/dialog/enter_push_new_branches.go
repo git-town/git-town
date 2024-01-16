@@ -2,28 +2,42 @@ package dialog
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
 const enterPushNewBranchesHelp = `
-After creating new feature branches
-by running "git hack", "git append", or "git prepend",
-should Git Town push the new branch to the origin remote?
-Doing so will trigger an unnecessary CI run that tests the empty branch.
-The extra network access also increases the time these commands take.
+Should Git Town push the new branches it creates
+immediately to origin even if they are empty?
 
+Doing so makes the full setup available right away.
+You can run "git push".
+The downside is that the extra network operation
+makes certain Git Town commands slower
+and triggers an unnecessary CI run.
 
 `
 
-// EnterMainBranch lets the user select a new main branch for this repo.
-func EnterPushNewBranches(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs TestInput) (gitdomain.LocalBranchName, bool, error) {
+func EnterPushNewBranches(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
+	entries := []string{"yes, push new branches to origin", "no, don't push new branches to origin"}
+	var defaultPos int
+	if existing {
+		defaultPos = 0
+	} else {
+		defaultPos = 1
+	}
 	selection, aborted, err := radioList(radioListArgs{
-		entries:      localBranches.Strings(),
-		defaultEntry: oldMainBranch.String(),
-		help:         enterBranchHelp,
+		entries:      entries,
+		defaultEntry: entries[defaultPos],
+		help:         enterPushHookHelp,
 		testInput:    inputs,
 	})
-	fmt.Printf("Selected main branch: %s\n", formattedSelection(selection, aborted))
-	return gitdomain.LocalBranchName(selection), aborted, err
+	if err != nil || aborted {
+		return true, aborted, err
+	}
+	selection, _, _ = strings.Cut(selection, ",")
+	fmt.Printf("Push new branches: %s\n", formattedSelection(selection, aborted))
+	result, err := configdomain.NewPushHook(selection, "user dialog")
+	return result, aborted, err
 }
