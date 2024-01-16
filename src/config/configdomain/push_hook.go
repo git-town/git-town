@@ -24,13 +24,18 @@ func (pushHook PushHook) String() string {
 	return strconv.FormatBool(pushHook.Bool())
 }
 
-func NewPushHookRef(value, source string) (*PushHook, error) {
+func NewPushHook(value, source string) (PushHook, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
+		return PushHook(true), fmt.Errorf(messages.ValueInvalid, source, value)
 	}
-	token := PushHook(parsed)
-	return &token, nil
+	result := PushHook(parsed)
+	return result, nil
+}
+
+func NewPushHookRef(value, source string) (*PushHook, error) {
+	result, err := NewPushHook(value, source)
+	return &result, err
 }
 
 // NoPushHook helps using the type checker to verify correct negation of the push-hook configuration setting.

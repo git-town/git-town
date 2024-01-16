@@ -1,12 +1,12 @@
 package config
 
 import (
-	"os"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -58,18 +58,30 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
-		return repo.Runner.SetPerennialBranches(newPerennialBranches)
+		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
+		if err != nil {
+			return err
+		}
+	}
+	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetPushHookLocally(newPushHook)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
 type setupConfig struct {
+	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, dialogInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -78,8 +90,8 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
-	dialogInputs := dialog.LoadTestInputs(os.Environ())
 	return setupConfig{
+		FullConfig:    &repo.Runner.FullConfig,
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
