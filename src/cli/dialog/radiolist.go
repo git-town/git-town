@@ -64,7 +64,7 @@ func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 }
 
 func (self radioListModel) View() string {
-	if self.Status != DialogStatusEntering {
+	if self.Status != DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

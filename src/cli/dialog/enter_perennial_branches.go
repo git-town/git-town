@@ -77,7 +77,7 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self perennialBranchesModel) View() string {
-	if self.Status != DialogStatusEntering {
+	if self.Status != DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

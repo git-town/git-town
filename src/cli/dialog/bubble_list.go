@@ -13,9 +13,9 @@ import (
 type DialogStatus int
 
 const (
-	DialogStatusEntering DialogStatus = iota
-	DialogStatusDone
-	DialogStatusAborted
+	DialogStatusActive  DialogStatus = iota // the user is currently entering data into the dialog
+	DialogStatusDone                        // the user has made a selection
+	DialogStatusAborted                     // the user has aborted the dialog
 )
 
 func DetermineCursorPos(entries []string, initialEntry string) int {
@@ -41,7 +41,7 @@ type BubbleList struct {
 func newBubbleList(entries []string, cursor int) BubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList{
-		Status:       DialogStatusEntering,
+		Status:       DialogStatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
 		Dim:          termenv.String().Faint(),
