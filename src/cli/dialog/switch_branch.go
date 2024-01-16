@@ -26,7 +26,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	selectedEntry := result.BubbleList.selectedEntry()
 	selectedEntry = strings.TrimSpace(selectedEntry)
 	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
-	return selectedBranch, result.Status == BubbleListStatusAborted, nil
+	return selectedBranch, result.Status == DialogStatusAborted, nil
 }
 
 type SwitchModel struct {
@@ -47,18 +47,18 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = BubbleListStatusDone
+		self.Status = DialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = BubbleListStatusDone
+		self.Status = DialogStatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != BubbleListStatusEntering {
+	if self.Status != DialogStatusEntering {
 		return ""
 	}
 	s := strings.Builder{}
