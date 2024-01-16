@@ -9,14 +9,11 @@ import (
 const enterPushHookHelp = `
 The "push-hook" setting determines whether Git Town
 permits or prevents Git hooks while pushing branches.
-By default, hooks are enabled. If your Git hooks are slow,
-you can disable them to speed up pushes made by Git Town.
+Hooks are enabled by default. If your Git hooks are slow,
+you can disable them to speed up branch syncing.
 
 When disabled, Git Town pushes using the "--no-verify" switch.
-This disables the "pre-push" hook.
-More info at https://git-scm.com/docs/git-push and
-https://git-scm.com/docs/githooks#_pre_push.
-
+More info at https://www.git-town.com/preferences/push-hook.
 
 `
 
@@ -29,7 +26,7 @@ func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdoma
 		defaultEntry = "no"
 	}
 	selection, aborted, err := radioList(radioListArgs{
-		entries:      []string{"yes", "no"},
+		entries:      []string{"enabled", "disabled"},
 		defaultEntry: defaultEntry,
 		help:         enterPushHookHelp,
 		testInput:    inputs,
