@@ -37,7 +37,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
 	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
-	aborted := result.Status == DialogStatusAborted
+	aborted := result.Status == dialogStatusAborted
 	fmt.Printf("Selected perennial branches: %s\n", formattedSelection(strings.Join(result.checkedEntries(), ", "), aborted))
 	return selectedBranches, aborted, nil
 }
@@ -65,11 +65,11 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.toggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = DialogStatusDone
+		self.Status = dialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = DialogStatusDone
+		self.Status = dialogStatusDone
 		self.toggleCurrentEntry()
 		return self, nil
 	}
@@ -77,7 +77,7 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self perennialBranchesModel) View() string {
-	if self.Status != DialogStatusActive {
+	if self.Status != dialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

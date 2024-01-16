@@ -25,7 +25,7 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		return "", false, err
 	}
 	result := dialogResult.(radioListModel) //nolint:forcetypeassert
-	return result.selectedEntry(), result.Status == DialogStatusAborted, nil
+	return result.selectedEntry(), result.Status == dialogStatusAborted, nil
 }
 
 type radioListArgs struct {
@@ -53,18 +53,18 @@ func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = DialogStatusDone
+		self.Status = dialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = DialogStatusDone
+		self.Status = dialogStatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self radioListModel) View() string {
-	if self.Status != DialogStatusActive {
+	if self.Status != dialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

@@ -10,12 +10,12 @@ import (
 	"github.com/muesli/termenv"
 )
 
-type DialogStatus int
+type dialogStatus int
 
 const (
-	DialogStatusActive  DialogStatus = iota // the user is currently entering data into the dialog
-	DialogStatusDone                        // the user has made a selection
-	DialogStatusAborted                     // the user has aborted the dialog
+	dialogStatusActive  dialogStatus = iota // the user is currently entering data into the dialog
+	dialogStatusDone                        // the user has made a selection
+	dialogStatusAborted                     // the user has aborted the dialog
 )
 
 func DetermineCursorPos(entries []string, initialEntry string) int {
@@ -28,7 +28,7 @@ func DetermineCursorPos(entries []string, initialEntry string) int {
 
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList struct {
-	Status       DialogStatus
+	Status       dialogStatus
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
@@ -41,7 +41,7 @@ type BubbleList struct {
 func newBubbleList(entries []string, cursor int) BubbleList {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList{
-		Status:       DialogStatusActive,
+		Status:       dialogStatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
 		Dim:          termenv.String().Faint(),
@@ -67,7 +67,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
-		self.Status = DialogStatusAborted
+		self.Status = dialogStatusAborted
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
@@ -88,7 +88,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case "q":
-		self.Status = DialogStatusAborted
+		self.Status = dialogStatusAborted
 		return true, tea.Quit
 	}
 	return false, nil
