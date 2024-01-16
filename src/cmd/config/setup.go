@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -61,7 +60,7 @@ func executeConfigSetup(verbose bool) error {
 	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
 		return repo.Runner.SetPerennialBranches(newPerennialBranches)
 	}
-	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.testInputs.Next())
+	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -76,11 +75,10 @@ type setupConfig struct {
 	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
-	testInputs    dialog.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
-	branchesSnapshot, _, testInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, dialogInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -89,11 +87,9 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
 	})
-	dialogInputs := dialog.LoadTestInputs(os.Environ())
 	return setupConfig{
 		FullConfig:    &repo.Runner.FullConfig,
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
-		testInputs:    testInputs,
 	}, exit, err
 }
