@@ -7,11 +7,15 @@ import (
 )
 
 const enterPushHookHelp = `
-The "push-hook" setting determines whether Git Town permits or prevents Git hooks
-while pushing branches.  If your Git hooks are slow, you might want to disable them
-when syncing branches to speed up that process. When disabled, Git Town pushes using
-the "--no-verify" option, which disables the "pre-push" hook.
-More info at https://git-scm.com/docs/githooks#_pre_push.
+The "push-hook" setting determines whether Git Town
+permits or prevents Git hooks while pushing branches.
+By default, hooks are enabled. If your Git hooks are slow,
+you can disable them to speed up pushes made by Git Town.
+
+When disabled, Git Town pushes using the "--no-verify" switch.
+This disables the "pre-push" hook.
+More info at https://git-scm.com/docs/git-push and
+https://git-scm.com/docs/githooks#_pre_push.
 
 
 `
