@@ -1,17 +1,20 @@
 Feature: enter Git Town configuration
 
-  Scenario: unconfigured
+  Scenario: unconfigured, accept all default values
     Given the branches "dev" and "production"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                  | KEYS                   |
-      | main development branch | down enter             |
-      | perennial branches      | space down space enter |
-      | enter push-hook         | down enter             |
-    Then the main branch is now "main"
-    And the perennial branches are now "dev" and "production"
-    And local Git Town setting "push-hook" is now "false"
+      | DIALOG                  | KEYS  |
+      | main development branch | enter |
+      | perennial branches      | enter |
+      | enter push-new-branches | enter |
+      | enter push-hook         | enter |
+    Then the main branch is now "dev"
+    And there are still no perennial branches
+    And local Git Town setting "push-new-branches" is now "false"
+    And local Git Town setting "push-hook" is now "true"
 
+  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -54,10 +55,11 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
+	fmt.Printf("11111111111111 %#v\n", newPerennialBranches)
 	if err != nil || aborted {
 		return err
 	}
-	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
+	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 || repo.Runner.LocalGitConfig.PerennialBranches == nil {
 		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
 		if err != nil {
 			return err
