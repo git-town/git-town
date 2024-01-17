@@ -25,7 +25,7 @@ Feature: enter Git Town configuration
       | DIALOG                   | KEYS                   | DESCRIPTION                               |
       | enter main branch        | enter                  | accept the already configured main branch |
       | enter perennial branches | space down space enter | configure the perennial branches          |
-      | enter push-new-branches  | down down enter        | enable push-new-branches                  |
+      | enter push-new-branches  | down enter             | enable push-new-branches                  |
       | enter push-hook          | down enter             | disable the push hook                     |
     Then the main branch is now "main"
     And the perennial branches are now "production"

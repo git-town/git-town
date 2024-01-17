@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -64,8 +63,7 @@ func executeConfigSetup(verbose bool) error {
 			return err
 		}
 	}
-	fmt.Println("2222222222222222", config.testInputs)
-	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.testInputs.Next())
+	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -88,7 +86,6 @@ type setupConfig struct {
 	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
-	testInputs    dialog.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -105,6 +102,5 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		FullConfig:    &repo.Runner.FullConfig,
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
-		testInputs:    dialogInputs,
 	}, exit, err
 }
