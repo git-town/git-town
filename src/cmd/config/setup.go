@@ -55,7 +55,6 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
-	fmt.Printf("11111111111111 %#v\n", newPerennialBranches)
 	if err != nil || aborted {
 		return err
 	}
@@ -65,14 +64,7 @@ func executeConfigSetup(verbose bool) error {
 			return err
 		}
 	}
-	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetPushHookLocally(newPushHook)
-	if err != nil {
-		return err
-	}
+	fmt.Println("2222222222222222", config.testInputs)
 	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.testInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -81,7 +73,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	newPushHook, aborted, err = dialog.EnterPushHook(config.PushHook, config.testInputs.Next())
+	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
