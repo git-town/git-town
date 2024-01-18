@@ -211,7 +211,8 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("DefaultBranch", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.GitConfig.SetLocalConfigValue("init.defaultbranch", "main")
+		err := runtime.GitConfig.SetLocalConfigValue("init.defaultbranch", "main")
+		must.NoError(t, err)
 		have, err := runtime.Backend.DefaultBranch()
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchName("main")
