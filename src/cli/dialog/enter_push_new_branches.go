@@ -22,7 +22,7 @@ on the first run of "git sync".
 `
 
 func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
-	entries := []string{"yes, push new branches to origin", "no, new branches remain local"}
+	entries := []string{"yes, push new branches to origin", "no, new branches remain local until synced"}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
