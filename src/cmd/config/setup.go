@@ -57,11 +57,19 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 {
+	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 || repo.Runner.LocalGitConfig.PerennialBranches == nil {
 		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
 		if err != nil {
 			return err
 		}
+	}
+	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetNewBranchPush(newPushNewBranches, false)
+	if err != nil {
+		return err
 	}
 	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
