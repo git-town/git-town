@@ -377,6 +377,10 @@ func (self *TestCommands) SetColorUI(value string) error {
 	return self.Run("git", "config", "color.ui", value)
 }
 
+func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
+	self.MustRun("git", "config", "init.defaultbranch", value.String())
+}
+
 // StageFiles adds the file with the given name to the Git index.
 func (self *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)

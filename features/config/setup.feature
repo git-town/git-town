@@ -2,6 +2,7 @@ Feature: enter Git Town configuration
 
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
+    And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                            | KEYS  |
@@ -10,7 +11,7 @@ Feature: enter Git Town configuration
       | enter push-new-branches           | enter |
       | enter push-hook                   | enter |
       | enter ship-delete-tracking-branch | enter |
-    Then the main branch is now "dev"
+    Then the main branch is now "main"
     And there are still no perennial branches
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
