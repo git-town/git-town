@@ -41,6 +41,7 @@ func TestTestInputs(t *testing.T) {
 			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
 			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
+		// request the first entry: A
 		haveNext := testInputs.Next()
 		wantNext := dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}} //nolint:exhaustruct
 		must.Eq(t, wantNext, haveNext)
@@ -48,6 +49,26 @@ func TestTestInputs(t *testing.T) {
 			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
 			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
+		must.Eq(t, wantRemaining, testInputs)
+		// request the next entry: B
+		haveNext = testInputs.Next()
+		wantNext = dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}} //nolint:exhaustruct
+		must.Eq(t, wantNext, haveNext)
+		wantRemaining = dialog.TestInputs{
+			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
+		}
+		must.Eq(t, wantRemaining, testInputs)
+		// request the next entry: C
+		haveNext = testInputs.Next()
+		wantNext = dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}} //nolint:exhaustruct
+		must.Eq(t, wantNext, haveNext)
+		wantRemaining = dialog.TestInputs{}
+		must.Eq(t, wantRemaining, testInputs)
+		// request the next entry: empty
+		haveNext = testInputs.Next()
+		wantNext = dialog.TestInput{}
+		must.Eq(t, wantNext, haveNext)
+		wantRemaining = dialog.TestInputs{}
 		must.Eq(t, wantRemaining, testInputs)
 	})
 

@@ -18,7 +18,6 @@ More info at https://www.git-town.com/preferences/push-hook.
 Push hooks in Git Town are:
 `
 
-// EnterMainBranch lets the user select a new main branch for this repo.
 func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
 	entries := []string{"enabled", "disabled"}
 	var defaultPos int
