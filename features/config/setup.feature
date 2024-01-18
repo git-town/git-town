@@ -1,6 +1,5 @@
 Feature: enter Git Town configuration
 
-  @debug @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And Git Town is not configured

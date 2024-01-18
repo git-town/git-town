@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -47,10 +46,8 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	defaultMainBranch := repo.Runner.MainBranch
-	fmt.Println("1111111111111", defaultMainBranch)
 	if defaultMainBranch.IsEmpty() {
 		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
-		fmt.Println("22222222222222", defaultMainBranch)
 	}
 	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), defaultMainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
