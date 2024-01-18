@@ -14,7 +14,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
 
-  @debug @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -22,16 +21,17 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     When I run "git-town config setup" and enter into the dialogs:
-      | DIALOG                   | KEYS                   | DESCRIPTION                               |
-      | enter main branch        | enter                  | accept the already configured main branch |
-      | enter perennial branches | space down space enter | configure the perennial branches          |
-      | enter push-new-branches  | down enter             | enable push-new-branches                  |
-      | enter push-hook          | down enter             | disable the push hook                     |
+      | DESCRIPTION                               | KEYS                   |
+      | accept the already configured main branch | enter                  |
+      | configure the perennial branches          | space down space enter |
+      | enable push-new-branches                  | down enter             |
+      | disable the push hook                     | down enter             |
     Then the main branch is now "main"
     And the perennial branches are now "production"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
 
+  @this
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
