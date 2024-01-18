@@ -16,7 +16,8 @@ but creating new branches is slower and
 it triggers an unnecessary CI run on the empty branch.
 
 When disabled, many Git Town commands execute faster
-and Git Town will create the missing tracking branch on the first run of "git sync".
+and Git Town will create the missing tracking branch
+on the first run of "git sync".
 
 `
 
