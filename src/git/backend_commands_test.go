@@ -208,6 +208,16 @@ func TestBackendCommands(t *testing.T) {
 		must.EqOp(t, initial, branch)
 	})
 
+	t.Run("DefaultBranch", func(t *testing.T) {
+		t.Parallel()
+		runtime := testruntime.Create(t)
+		runtime.SetDefaultGitBranch("main")
+		have, err := runtime.Backend.DefaultBranch()
+		must.NoError(t, err)
+		want := gitdomain.NewLocalBranchName("main")
+		must.EqOp(t, want, have)
+	})
+
 	t.Run("FirstExistingBranch", func(t *testing.T) {
 		t.Parallel()
 		t.Run("first branch matches", func(t *testing.T) {
