@@ -1,6 +1,6 @@
 Feature: enter Git Town configuration
 
-  Scenario: unconfigured, accept all default values
+  Scenario: unconfigured, accepting all default values yields working setup
     Given the branches "dev" and "production"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
