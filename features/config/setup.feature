@@ -31,13 +31,13 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
 
-  @this
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                  | KEYS       | DESCRIPTION                                 |
       | main development branch | down enter |                                             |
       | perennial branches      |            | no input here since the dialog doesn't show |
+      | enter push-new-branches | enter      |                                             |
       | enter push-hook         | enter      |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
