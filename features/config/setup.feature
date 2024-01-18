@@ -1,6 +1,5 @@
 Feature: enter Git Town configuration
 
-  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
