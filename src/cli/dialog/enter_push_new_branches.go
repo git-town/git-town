@@ -11,11 +11,12 @@ const enterPushNewBranchesHelp = `
 Should Git Town push the new branches it creates
 immediately to origin even if they are empty?
 
-Doing so makes the full setup available right away.
-You can run "git push".
-The downside is that the extra network operation
-makes certain Git Town commands slower
-and triggers an unnecessary CI run.
+When enabled, you can run "git push" right away
+but creating new branches is slower and
+it triggers an unnecessary CI run on the empty branch.
+
+When disabled, many Git Town commands execute faster
+and Git Town will create the missing tracking branch on the first run of "git sync".
 
 `
 
