@@ -253,6 +253,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(configKey, value)
 	})
 
+	suite.Step(`^local Git setting "init.defaultbranch" is "([^"]*)"$`, func(value string) error {
+		state.fixture.DevRepo.SetDefaultGitBranch(gitdomain.NewLocalBranchName(value))
+		return nil
+	})
+
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
