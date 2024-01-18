@@ -20,7 +20,7 @@ and triggers an unnecessary CI run.
 `
 
 func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
-	entries := []string{"yes, push new branches to origin", "no, don't push new branches to origin"}
+	entries := []string{"yes, push new branches to origin", "no, new branches remain local"}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -30,7 +30,7 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 	selection, aborted, err := radioList(radioListArgs{
 		entries:      entries,
 		defaultEntry: entries[defaultPos],
-		help:         enterPushHookHelp,
+		help:         enterPushNewBranchesHelp,
 		testInput:    inputs,
 	})
 	if err != nil || aborted {
