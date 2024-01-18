@@ -66,7 +66,7 @@ func TestTestInputs(t *testing.T) {
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: empty
 		haveNext = testInputs.Next()
-		wantNext = dialog.TestInput{} //nolint:exhaustruct
+		wantNext = dialog.TestInput{}
 		must.Eq(t, wantNext, haveNext)
 		wantRemaining = dialog.TestInputs{}
 		must.Eq(t, wantRemaining, testInputs)

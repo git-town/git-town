@@ -19,10 +19,6 @@ func (self NewBranchPush) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
-func NewNewBranchPush(value bool) NewBranchPush {
-	return NewBranchPush(value)
-}
-
 func NewNewBranchPushRef(value bool) *NewBranchPush {
 	result := NewBranchPush(value)
 	return &result
