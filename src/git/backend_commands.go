@@ -119,6 +119,11 @@ func (self *BackendCommands) CheckoutBranch(name gitdomain.LocalBranchName) erro
 	return nil
 }
 
+func (self *BackendCommands) DefaultBranch() (gitdomain.LocalBranchName, error) {
+	name, err := self.QueryTrim("git", "config", "--get", "init.defaultbranch")
+	return gitdomain.LocalBranchName(name), err
+}
+
 func IsAhead(branchName, remoteText string) (bool, gitdomain.RemoteBranchName) {
 	reText := fmt.Sprintf(`\[(\w+\/%s): ahead \d+\] `, regexp.QuoteMeta(branchName))
 	re := regexp.MustCompile(reText)
