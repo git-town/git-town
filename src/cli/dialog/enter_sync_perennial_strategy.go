@@ -10,9 +10,9 @@ import (
 const enterSyncPerennialStrategyHelp = `
 How should Git Town synchronize perennial branches?
 
-Perennial branches don't have a parent branch
-and get updated only with additional commits
-made to their tracking branch somewhere else.
+Perennial branches don't have a parent branch.
+The only updates they receive are additional commits
+to their tracking branch made somewhere else.
 
 `
 
