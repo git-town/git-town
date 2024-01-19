@@ -1,6 +1,5 @@
 Feature: enter Git Town configuration
 
-  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -30,18 +29,21 @@ Feature: enter Git Town configuration
       | configure the perennial branches          | space down space enter |
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
+      | disable ship-delete-tracking-branch       | down enter             |
     Then the main branch is now "main"
     And the perennial branches are now "production"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
+    And local Git Town setting "ship-delete-tracking-branch" is now "false"
 
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                  | KEYS       | DESCRIPTION                                 |
-      | main development branch | down enter |                                             |
-      | perennial branches      |            | no input here since the dialog doesn't show |
-      | enter push-new-branches | enter      |                                             |
-      | enter push-hook         | enter      |                                             |
+      | DIALOG                      | KEYS       | DESCRIPTION                                 |
+      | main development branch     | down enter |                                             |
+      | perennial branches          |            | no input here since the dialog doesn't show |
+      | push-new-branches           | enter      |                                             |
+      | push-hook                   | enter      |                                             |
+      | ship-delete-tracking-branch | enter      |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
