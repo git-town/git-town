@@ -1,6 +1,5 @@
 Feature: enter Git Town configuration
 
-  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -26,6 +25,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
     And local Git Town setting "sync-before-ship" is now "false"
 
+  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"

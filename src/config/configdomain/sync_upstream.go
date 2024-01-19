@@ -24,11 +24,15 @@ func NewSyncUpstreamRef(value bool) *SyncUpstream {
 	return &result
 }
 
-func ParseSyncUpstreamRef(value, source string) (*SyncUpstream, error) {
+func ParseSyncUpstream(value, source string) (SyncUpstream, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
+		return true, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
-	token := SyncUpstream(parsed)
-	return &token, nil
+	return SyncUpstream(parsed), nil
+}
+
+func ParseSyncUpstreamRef(value, source string) (*SyncUpstream, error) {
+	result, err := ParseSyncUpstream(value, source)
+	return &result, err
 }

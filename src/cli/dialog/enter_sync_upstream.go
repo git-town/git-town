@@ -19,8 +19,8 @@ and you want to keep it in sync with the repo it was forked from.
 
 `
 
-func enterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []string{`yes, "git sync" should also pull`, `no, "git ship" should not sync the branch`}
+func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
+	entries := []string{`yes, receive updates from the upstream repo`, `no, don't receive updates from upstream`}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -37,7 +37,7 @@ func enterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 		return true, aborted, err
 	}
 	cutSelection, _, _ := strings.Cut(selection, ",")
-	fmt.Printf("Sync before ship: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseSyncBeforeShip(cutSelection, "user dialog")
+	fmt.Printf("Sync with upstream: %s\n", formattedSelection(cutSelection, aborted))
+	parsedAnswer, err := configdomain.ParseSyncUpstream(cutSelection, "user dialog")
 	return parsedAnswer, aborted, err
 }
