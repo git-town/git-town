@@ -1,5 +1,6 @@
 Feature: enter Git Town configuration
 
+  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -11,11 +12,13 @@ Feature: enter Git Town configuration
       | push-new-branches           | enter |
       | push-hook                   | enter |
       | ship-delete-tracking-branch | enter |
+      | sync-before-ship            | enter |
     Then the main branch is now "main"
     And there are still no perennial branches
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
+    And local Git Town setting "sync-before-ship" is now "false"
 
   Scenario: change existing configuration
     Given a perennial branch "qa"
