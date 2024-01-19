@@ -9,12 +9,14 @@ import (
 
 func TestShipDeleteTrackingBranch(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Bool", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.NewShipDeleteTrackingBranch(true)
 		have := give.Bool()
 		must.True(t, have)
 	})
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.NewShipDeleteTrackingBranch(true)
