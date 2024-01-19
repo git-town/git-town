@@ -1,5 +1,6 @@
 Feature: enter Git Town configuration
 
+  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -9,6 +10,7 @@ Feature: enter Git Town configuration
       | main development branch     | enter |
       | perennial branches          | enter |
       | sync-feature-strategy       | enter |
+      | sync-perennial-strategy     | enter |
       | push-new-branches           | enter |
       | push-hook                   | enter |
       | ship-delete-tracking-branch | enter |
@@ -18,6 +20,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "sync-feature-strategy" is now "merge"
+    And local Git Town setting "sync-perennial-strategy" is now "rebase"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
     And local Git Town setting "sync-before-ship" is now "false"
 
