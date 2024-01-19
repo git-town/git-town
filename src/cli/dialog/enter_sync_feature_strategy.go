@@ -19,7 +19,7 @@ How should Git Town update feature branches?
 `
 
 func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := []string{`merge updates from the main branch into feature branches`, `rebase feature branches against the main branch`}
+	entries := []string{`merge updates from the parent branch into feature branches`, `rebase feature branches against their parent branch`}
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncFeatureStrategyMerge:
