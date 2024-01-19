@@ -19,8 +19,12 @@ func (self ShipDeleteTrackingBranch) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
+func NewShipDeleteTrackingBranch(value bool) ShipDeleteTrackingBranch {
+	return ShipDeleteTrackingBranch(value)
+}
+
 func NewShipDeleteTrackingBranchRef(value bool) *ShipDeleteTrackingBranch {
-	result := ShipDeleteTrackingBranch(value)
+	result := NewShipDeleteTrackingBranch(value)
 	return &result
 }
 
