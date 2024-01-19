@@ -11,8 +11,8 @@ const enterSyncUpstreamHelp = `
 Should "git sync" also fetch updates from the upstream remote?
 
 If an "upstream" remote exists, and this setting is enabled,
-"git sync" will also rebase/merge the local main branch
-against the main branch at the upstream remote.
+"git sync" will also update the local main branch
+with commits from the main branch at the upstream remote.
 
 This is useful if the repository you work on is a fork,
 and you want to keep it in sync with the repo it was forked from.
