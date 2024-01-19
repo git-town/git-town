@@ -10,7 +10,7 @@ import (
 
 func enterPerennialBranchesCmd() *cobra.Command {
 	return &cobra.Command{
-		Use: "enter-perennial-branches",
+		Use: "perennial-branches",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")

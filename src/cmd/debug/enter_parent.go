@@ -11,7 +11,7 @@ import (
 
 func enterParentCmd() *cobra.Command {
 	return &cobra.Command{
-		Use: "enter-parent",
+		Use: "parent",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			branch1 := gitdomain.NewLocalBranchName("branch-1")
 			branch2 := gitdomain.NewLocalBranchName("branch-2")
