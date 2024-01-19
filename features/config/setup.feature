@@ -25,7 +25,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
     And local Git Town setting "sync-before-ship" is now "false"
 
-  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -38,7 +37,7 @@ Feature: enter Git Town configuration
       | configure the perennial branches          | space down space enter |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
-      | sync-upstream-strategy                    | down enter             |
+      | sync-upstream                             | down enter             |
       | enable push-new-branches                  | down enter             |
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
@@ -47,6 +46,7 @@ Feature: enter Git Town configuration
     And the perennial branches are now "production"
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
+    And local Git Town setting "sync-upstream" is now "false"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
@@ -60,6 +60,7 @@ Feature: enter Git Town configuration
       | perennial branches          |            | no input here since the dialog doesn't show |
       | sync-feature-strategy       | enter      |                                             |
       | sync-perennial-strategy     | enter      |                                             |
+      | sync-upstream               | enter      |                                             |
       | push-new-branches           | enter      |                                             |
       | push-hook                   | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
