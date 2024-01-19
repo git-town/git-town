@@ -7,21 +7,25 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/muesli/termenv"
 )
 
-// EnterPerennialBranches lets the user update the perennial branches.
+const enterAliasesHelp = `
+You can create shorter aliases for frequently used Git Town commands.
+For example, if the "git town sync" command is aliased,
+you can call it as "git sync".
+
+Please select which Git Town commands should be shortened.
+
+`
+
+// EnterAliases lets the select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterAliases(aliases configdomain.AliasableCommands, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
-	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
-	if len(perennialCandidates) == 0 {
-		return gitdomain.LocalBranchNames{}, false, nil
-	}
-	dialogData := perennialBranchesModel{
-		BubbleList:    newBubbleList(perennialCandidates.Strings(), 0),
-		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
+func EnterAliases(all, selected configdomain.AliasableCommands, dialogTestInput TestInput) (configdomain.AliasableCommands, bool, error) {
+	dialogData := AliasesModel{
+		BubbleList:    newBubbleList(all.Strings(), 0),
+		Selections:    slice.FindMany(all, selected),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	program := tea.NewProgram(dialogData)
@@ -34,30 +38,35 @@ func EnterAliases(aliases configdomain.AliasableCommands, oldPerennialBranches g
 	}
 	dialogResult, err := program.Run()
 	if err != nil {
-		return gitdomain.LocalBranchNames{}, false, err
+		return []configdomain.AliasableCommand{}, false, err
 	}
-	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
+	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
+	selectedCommands := configdomain.NewAliasableCommands(result.checkedEntries()...)
 	aborted := result.Status == dialogStatusAborted
-	selectionText := strings.Join(result.checkedEntries(), ", ")
-	if selectionText == "" {
+	var selectionText string
+	switch len(selectedCommands) {
+	case 0:
 		selectionText = "(none)"
+	case len(configdomain.AllAliasableCommands()):
+		selectionText = "(all)"
+	default:
+		selectionText = strings.Join(result.checkedEntries(), ", ")
 	}
-	fmt.Printf("Perennial branches: %s\n", formattedSelection(selectionText, aborted))
-	return selectedBranches, aborted, nil
+	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, aborted))
+	return selectedCommands, aborted, nil
 }
 
-type perennialBranchesModel struct {
+type AliasesModel struct {
 	BubbleList
-	selections    []int
+	Selections    []int
 	selectedColor termenv.Style
 }
 
-func (self perennialBranchesModel) Init() tea.Cmd {
+func (self AliasesModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -73,7 +82,12 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.Status = dialogStatusDone
 		return self, tea.Quit
 	}
-	if keyMsg.String() == "o" {
+	switch keyMsg.String() {
+	case "a":
+		self.SelectAll()
+	case "n":
+		self.selectNone()
+	case "o":
 		self.Status = dialogStatusDone
 		self.toggleCurrentEntry()
 		return self, nil
@@ -81,14 +95,12 @@ func (self perennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	return self, nil
 }
 
-func (self perennialBranchesModel) View() string {
+func (self AliasesModel) View() string {
 	if self.Status != dialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}
-	s.WriteString("Let's configure the perennial branches.\n")
-	s.WriteString("These are long-lived branches without ancestors and are never shipped.\n")
-	s.WriteString("Typically, perennial branches have names like \"development\", \"staging\", \"qa\", \"production\", etc.\n\n")
+	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
 		checked := self.isRowChecked(i)
@@ -121,6 +133,11 @@ func (self perennialBranchesModel) View() string {
 	s.WriteString(self.Colors.help.Styled("/"))
 	s.WriteString(self.Colors.helpKey.Styled("o"))
 	s.WriteString(self.Colors.help.Styled(" toggle   "))
+	// select all/none
+	s.WriteString(self.Colors.helpKey.Styled("a"))
+	s.WriteString(self.Colors.help.Styled("/"))
+	s.WriteString(self.Colors.helpKey.Styled("n"))
+	s.WriteString(self.Colors.help.Styled(" select all/none   "))
 	// numbers
 	s.WriteString(self.Colors.helpKey.Styled("0"))
 	s.WriteString(self.Colors.help.Styled("-"))
@@ -140,7 +157,7 @@ func (self perennialBranchesModel) View() string {
 }
 
 // checkedEntries provides all checked list entries.
-func (self *perennialBranchesModel) checkedEntries() []string {
+func (self *AliasesModel) checkedEntries() []string {
 	result := []string{}
 	for e, entry := range self.Entries {
 		if self.isRowChecked(e) {
@@ -151,28 +168,42 @@ func (self *perennialBranchesModel) checkedEntries() []string {
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self *perennialBranchesModel) disableCurrentEntry() {
-	self.selections = slice.Remove(self.selections, self.Cursor)
+func (self *AliasesModel) disableCurrentEntry() {
+	self.Selections = slice.Remove(self.Selections, self.Cursor)
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self *perennialBranchesModel) enableCurrentEntry() {
-	self.selections = slice.AppendAllMissing(self.selections, self.Cursor)
+func (self *AliasesModel) enableCurrentEntry() {
+	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self *perennialBranchesModel) isRowChecked(row int) bool {
-	return slices.Contains(self.selections, row)
+func (self *AliasesModel) isRowChecked(row int) bool {
+	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *perennialBranchesModel) isSelectedRowChecked() bool {
+func (self *AliasesModel) isSelectedRowChecked() bool {
 	return self.isRowChecked(self.Cursor)
+}
+
+// checks all entries in the list
+func (self *AliasesModel) SelectAll() {
+	count := len(self.Entries)
+	self.Selections = make([]int, count)
+	for i := 0; i < count; i++ {
+		self.Selections[i] = i
+	}
+}
+
+// checks all entries in the list
+func (self *AliasesModel) selectNone() {
+	self.Selections = []int{}
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *perennialBranchesModel) toggleCurrentEntry() {
+func (self *AliasesModel) toggleCurrentEntry() {
 	if self.isRowChecked(self.Cursor) {
 		self.disableCurrentEntry()
 	} else {
