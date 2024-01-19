@@ -10,9 +10,9 @@ import (
 const enterSyncFeatureStrategy = `
 How should Git Town synchronize feature branches?
 
-Feature branches are short-lived branches cut from the main branch.
-Typically you develop new features on them, hence their name.
-When done, they get shipped back into the main branch.
+Feature branches are short-lived branches cut from the main branch
+and shipped back into the main branch.
+Typically you develop features and bug fixes on them, hence their name.
 
 How should Git Town update feature branches?
 
@@ -38,8 +38,8 @@ func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs 
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}
-	fmt.Printf("Sync feature branches: %s\n", formattedSelection(selection, aborted))
 	cutSelection, _, _ := strings.Cut(selection, " ")
+	fmt.Printf("Sync feature branches: %s\n", formattedSelection(cutSelection, aborted))
 	parsedAnswer, err := configdomain.NewSyncFeatureStrategy(cutSelection)
 	return parsedAnswer, aborted, err
 }
