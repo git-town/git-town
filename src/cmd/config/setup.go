@@ -83,6 +83,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	newShipDeleteTrackingBranch, aborted, err := dialog.EnterShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetShipDeleteTrackingBranch(newShipDeleteTrackingBranch, false)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
