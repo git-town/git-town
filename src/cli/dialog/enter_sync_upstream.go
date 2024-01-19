@@ -12,7 +12,7 @@ Should "git sync" also fetch updates from the upstream remote?
 
 If an "upstream" remote exists, and this setting is enabled,
 "git sync" will also rebase/merge the local main branch
-against that branch at the upstream remote.
+against the main branch at the upstream remote.
 
 This is useful if the repository you work on is a fork,
 and you want to keep it in sync with the repo it was forked from.
@@ -30,7 +30,7 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 	selection, aborted, err := radioList(radioListArgs{
 		entries:      entries,
 		defaultEntry: entries[defaultPos],
-		help:         enterSyncBeforeShipHelp,
+		help:         enterSyncUpstreamHelp,
 		testInput:    inputs,
 	})
 	if err != nil || aborted {
