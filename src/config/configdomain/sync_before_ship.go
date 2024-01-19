@@ -18,16 +18,25 @@ func (self SyncBeforeShip) String() string {
 	return strconv.FormatBool(self.Bool())
 }
 
+func NewSyncBeforeShip(value bool) SyncBeforeShip {
+	return SyncBeforeShip(value)
+}
+
 func NewSyncBeforeShipRef(value bool) *SyncBeforeShip {
-	result := SyncBeforeShip(value)
+	result := NewSyncBeforeShip(value)
 	return &result
 }
 
-func ParseSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
+func ParseSyncBeforeShip(value, source string) (SyncBeforeShip, error) {
 	parsed, err := gohacks.ParseBool(value)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ValueInvalid, source, value)
+		return false, fmt.Errorf(messages.ValueInvalid, source, value)
 	}
-	token := SyncBeforeShip(parsed)
-	return &token, nil
+	result := SyncBeforeShip(parsed)
+	return result, nil
+}
+
+func ParseSyncBeforeShipRef(value, source string) (*SyncBeforeShip, error) {
+	result, err := ParseSyncBeforeShip(value, source)
+	return &result, err
 }

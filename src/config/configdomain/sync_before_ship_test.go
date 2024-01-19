@@ -7,50 +7,50 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestShipDeleteTrackingBranch(t *testing.T) {
+func TestSyncBeforeShip(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Bool", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.NewShipDeleteTrackingBranch(true)
+		give := configdomain.NewSyncBeforeShip(true)
 		have := give.Bool()
 		must.True(t, have)
 	})
 
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.NewShipDeleteTrackingBranch(true)
+		give := configdomain.NewSyncBeforeShip(true)
 		have := give.String()
 		want := "true"
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("NewShipDeleteTrackingBranch", func(t *testing.T) {
+	t.Run("NewSyncBeforeShip", func(t *testing.T) {
 		t.Parallel()
-		have := configdomain.NewShipDeleteTrackingBranch(true)
-		want := configdomain.ShipDeleteTrackingBranch(true)
+		have := configdomain.NewSyncBeforeShip(true)
+		want := configdomain.SyncBeforeShip(true)
 		must.EqOp(t, want, have)
 	})
 
-	t.Run("NewShipDeleteTrackingBranchRef", func(t *testing.T) {
+	t.Run("NewSyncBeforeShipRef", func(t *testing.T) {
 		t.Parallel()
-		have := configdomain.NewShipDeleteTrackingBranchRef(true)
-		want := configdomain.ShipDeleteTrackingBranch(true)
+		have := configdomain.NewSyncBeforeShipRef(true)
+		want := configdomain.SyncBeforeShip(true)
 		must.EqOp(t, want, *have)
 	})
 
-	t.Run("ParseShipDeleteTrackingBranch", func(t *testing.T) {
+	t.Run("ParseSyncBeforeShip", func(t *testing.T) {
 		t.Parallel()
 		t.Run("parsable value", func(t *testing.T) {
 			t.Parallel()
-			have, err := configdomain.ParseShipDeleteTrackingBranch("yes", "test")
+			have, err := configdomain.ParseSyncBeforeShip("yes", "test")
 			must.NoError(t, err)
-			want := configdomain.NewShipDeleteTrackingBranch(true)
+			want := configdomain.NewSyncBeforeShip(true)
 			must.EqOp(t, want, have)
 		})
 		t.Run("invalid value", func(t *testing.T) {
 			t.Parallel()
-			_, err := configdomain.ParseShipDeleteTrackingBranch("zonk", "local config")
+			_, err := configdomain.ParseSyncBeforeShip("zonk", "local config")
 			must.EqOp(t, `invalid value for local config: "zonk". Please provide either "yes" or "no"`, err.Error())
 		})
 	})
