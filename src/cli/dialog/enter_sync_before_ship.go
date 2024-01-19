@@ -39,8 +39,8 @@ func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Sync before ship: %s\n", formattedSelection(selection, aborted))
 	cutSelection, _, _ := strings.Cut(selection, ",")
+	fmt.Printf("Sync before ship: %s\n", formattedSelection(cutSelection, aborted))
 	parsedAnswer, err := configdomain.ParseSyncBeforeShip(cutSelection, "user dialog")
 	return parsedAnswer, aborted, err
 }

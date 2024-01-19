@@ -33,8 +33,8 @@ func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranc
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(selection, aborted))
 	cutSelection, _, _ := strings.Cut(selection, ",")
+	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(cutSelection, aborted))
 	parsedAnswer, err := configdomain.ParseShipDeleteTrackingBranch(cutSelection, "user dialog")
 	return parsedAnswer, aborted, err
 }

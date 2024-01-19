@@ -38,8 +38,8 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push new branches: %s\n", formattedSelection(selection, aborted))
 	cutSelection, _, _ := strings.Cut(selection, ",")
+	fmt.Printf("Push new branches: %s\n", formattedSelection(cutSelection, aborted))
 	parsedAnswer, err := configdomain.ParseNewBranchPush(cutSelection, "user dialog")
 	return parsedAnswer, aborted, err
 }

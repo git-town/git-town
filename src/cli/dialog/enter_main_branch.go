@@ -7,10 +7,10 @@ import (
 )
 
 const enterBranchHelp = `
-Let's start by configuring the main development branch.
+Let's start by configuring the main development branch aka "main branch".
 This is the branch from which you cut new feature branches,
 and into which you ship feature branches when they are done.
-In most repositories, this is the "main", "master", or "development" branch.
+In most repositories, this branch is called "main", "master", or "development".
 
 
 `
