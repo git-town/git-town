@@ -23,7 +23,7 @@ func NewSyncBeforeShip(value bool) SyncBeforeShip {
 }
 
 func NewSyncBeforeShipRef(value bool) *SyncBeforeShip {
-	result := SyncBeforeShip(value)
+	result := NewSyncBeforeShip(value)
 	return &result
 }
 
