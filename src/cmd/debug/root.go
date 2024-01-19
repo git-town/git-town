@@ -14,6 +14,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterParentCmd())
 	debugCommand.AddCommand(enterPerennialBranchesCmd())
 	debugCommand.AddCommand(enterSyncFeatureStrategy())
+	debugCommand.AddCommand(enterSyncPerennialStrategy())
 	debugCommand.AddCommand(enterPushHookCmd())
 	debugCommand.AddCommand(enterPushNewBranches())
 	debugCommand.AddCommand(enterShipDeleteTrackingBranch())

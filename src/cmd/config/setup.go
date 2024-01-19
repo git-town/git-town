@@ -75,6 +75,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	newSyncPerennialStrategy, aborted, err := dialog.EnterSyncPerennialStrategy(config.SyncPerennialStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetSyncPerennialStrategy(newSyncPerennialStrategy)
+	if err != nil {
+		return err
+	}
 	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
