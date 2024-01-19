@@ -83,6 +83,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	newSyncUpstream, aborted, err := dialog.EnterSyncUpstream(config.SyncUpstream, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetSyncUpstream(newSyncUpstream, false)
+	if err != nil {
+		return err
+	}
 	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
