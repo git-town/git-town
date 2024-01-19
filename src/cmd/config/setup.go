@@ -67,6 +67,14 @@ func executeConfigSetup(verbose bool) error {
 			return err
 		}
 	}
+	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	err = repo.Runner.SetSyncFeatureStrategy(newSyncFeatureStrategy)
+	if err != nil {
+		return err
+	}
 	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
