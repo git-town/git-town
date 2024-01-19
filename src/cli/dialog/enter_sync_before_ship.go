@@ -10,15 +10,15 @@ import (
 const enterSyncBeforeShipHelp = `
 Should "git ship" sync branches before shipping them?
 
-Guidance: enable this when shipping feature branches on your machine
-and disable it when shipping feature branches via the code hosting
+Guidance: enable when shipping branches locally on your machine
+and disable when shipping feature branches via the code hosting
 API or web UI.
 
 When enabled, branches are always fully up to date when shipped
 and you get a chance to resolve merge conflicts
 between the feature branch to ship and the main development branch
 on the feature branch. This helps keep the main branch green.
-But this also triggers another CI run, which delay shipping.
+But this also triggers another CI run and delays shipping.
 
 `
 
