@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterSyncFeatureStrategy = `
+const enterSyncFeatureStrategyHelp = `
 How should Git Town synchronize feature branches?
 
 Feature branches are short-lived branches cut from the main branch
@@ -32,7 +32,7 @@ func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs 
 	selection, aborted, err := radioList(radioListArgs{
 		entries:      entries,
 		defaultEntry: entries[defaultPos],
-		help:         enterSyncFeatureStrategy,
+		help:         enterSyncFeatureStrategyHelp,
 		testInput:    inputs,
 	})
 	if err != nil || aborted {
