@@ -17,6 +17,7 @@ For example, if the "git town sync" command is aliased,
 you can call it as "git sync".
 
 Please select which Git Town commands should be shortened.
+If you are not sure, select all :)
 
 `
 

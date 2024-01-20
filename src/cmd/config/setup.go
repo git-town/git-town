@@ -45,6 +45,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	currentlyAliasedCommands := repo.Runner.Config.FullConfig.Aliases
 	defaultMainBranch := repo.Runner.MainBranch
 	if defaultMainBranch.IsEmpty() {
 		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
