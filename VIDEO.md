@@ -1,28 +1,15 @@
 # Creating animations of the development work
 
-You can use [gource](https://gource.io) to create an animation of the commit
-activity.
+First, install [gource](https://gource.io). It seems to be the most solid on Windows.
 
-For a nicer video, the video should not include the "vendor" folder since we
-don't really "work" on the files in there. To do that:
+Preview the generated movie:
 
-- create a copy of the repo
+```bash
+gource --load-config .gource.conf
+```
 
-  ```bash
-  cp -r git-town/ git-town-video/
-  ```
-- enter the new folder
+Create a video file:
 
-  ```bash
-  cd git-town-video
-  ```
-- remove the "vendor" folder from all commits
-
-  ```bash
-  git filter-branch --tree-filter 'rm -rf vendor' HEAD
-  ```
-- run gource
-
-  ```bash
-  gource --load-config .gource.conf
-  ```
+```bash
+gource --load-config .gource.conf | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset veryslow -pix_fmt yuv420p -threads 0 -b:v 600k git-town.mp4
+```
