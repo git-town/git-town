@@ -24,10 +24,5 @@ don't really "work" on the files in there. To do that:
 - run gource
 
   ```bash
-  gource --auto-skip-seconds 0.1 \
-         --file-idle-time 0 \
-         --date-format "%d %b %Y" \
-         --seconds-per-day 0.05 \
-         --hide dirnames,filenames,mouse,bloom \
-         --fullscreen
+  gource --load-config .gource.conf
   ```
