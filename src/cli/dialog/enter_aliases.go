@@ -2,12 +2,10 @@ package dialog
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/muesli/termenv"
 )
 
@@ -23,11 +21,13 @@ If you are not sure, select all :)
 
 // EnterAliases lets the select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterAliases(all, selected configdomain.AliasableCommands, dialogTestInput TestInput) (configdomain.AliasableCommands, bool, error) {
+func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
+	selections := newAliasSelections(aliasableCommands, originalSelections)
 	dialogData := AliasesModel{
-		BubbleList:    newBubbleList(all.Strings(), 0),
-		Selections:    slice.FindMany(all, selected),
-		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
+		BubbleList:         newBubbleList(aliasableCommands.Strings(), 0),
+		CurrentSelections:  selections,
+		OriginalSelections: selections,
+		selectedColor:      termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	program := tea.NewProgram(dialogData)
 	if len(dialogTestInput) > 0 {
@@ -39,11 +39,13 @@ func EnterAliases(all, selected configdomain.AliasableCommands, dialogTestInput 
 	}
 	dialogResult, err := program.Run()
 	if err != nil {
-		return []configdomain.AliasableCommand{}, false, err
+		return configdomain.Aliases{}, false, err
 	}
 	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
-	selectedCommands := configdomain.NewAliasableCommands(result.checkedEntries()...)
-	aborted := result.Status == dialogStatusAborted
+	if result.Status == dialogStatusAborted {
+		return configdomain.Aliases{}, true, nil
+	}
+	selectedCommands := result.Checked(aliasableCommands)
 	var selectionText string
 	switch len(selectedCommands) {
 	case 0:
@@ -51,20 +53,31 @@ func EnterAliases(all, selected configdomain.AliasableCommands, dialogTestInput 
 	case len(configdomain.AllAliasableCommands()):
 		selectionText = "(all)"
 	default:
-		selectionText = strings.Join(result.checkedEntries(), ", ")
+		selectionText = strings.Join(selectedCommands.Strings(), ", ")
 	}
-	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, aborted))
-	return selectedCommands, aborted, nil
+	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
+	return aliasResult(result.CurrentSelections, originalSelections), false, nil
 }
 
 type AliasesModel struct {
 	BubbleList
-	Selections    []int
-	selectedColor termenv.Style
+	CurrentSelections  []AliasSelection
+	OriginalSelections []AliasSelection
+	selectedColor      termenv.Style
 }
 
 func (self AliasesModel) Init() tea.Cmd {
 	return nil
+}
+
+func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommands) configdomain.AliasableCommands {
+	result := configdomain.AliasableCommands{}
+	for c, choice := range self.CurrentSelections {
+		if choice == AliasSelectionGT {
+			result = append(result, aliasableCommands[c])
+		}
+	}
+	return result
 }
 
 func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -77,7 +90,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.toggleCurrentEntry()
+		self.rotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = dialogStatusDone
@@ -90,7 +103,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.selectNone()
 	case "o":
 		self.Status = dialogStatusDone
-		self.toggleCurrentEntry()
+		self.rotateCurrentEntry()
 		return self, nil
 	}
 	return self, nil
@@ -104,17 +117,21 @@ func (self AliasesModel) View() string {
 	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
-		checked := self.isRowChecked(i)
+		checked := self.CurrentSelections[self.Cursor]
 		s.WriteString(self.entryNumberStr(i))
 		switch {
-		case selected && checked:
-			s.WriteString(self.Colors.selection.Styled("> [x] " + branch))
-		case selected && !checked:
+		case selected && checked == AliasSelectionNone:
 			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch))
-		case !selected && checked:
+		case selected && checked == AliasSelectionOther:
+			s.WriteString(self.Colors.selection.Styled("> [o] " + branch))
+		case selected && checked == AliasSelectionGT:
+			s.WriteString(self.Colors.selection.Styled("> [x] " + branch))
+		case !selected && checked == AliasSelectionNone:
+			s.WriteString(self.selectedColor.Styled("  [ ] " + branch))
+		case !selected && checked == AliasSelectionOther:
+			s.WriteString(self.selectedColor.Styled("  [o] " + branch))
+		case !selected && checked == AliasSelectionGT:
 			s.WriteString(self.selectedColor.Styled("  [x] " + branch))
-		case !selected && !checked:
-			s.WriteString("  [ ] " + branch)
 		}
 		s.WriteRune('\n')
 	}
@@ -157,57 +174,60 @@ func (self AliasesModel) View() string {
 	return s.String()
 }
 
-// checkedEntries provides all checked list entries.
-func (self *AliasesModel) checkedEntries() []string {
-	result := []string{}
-	for e, entry := range self.Entries {
-		if self.isRowChecked(e) {
-			result = append(result, entry)
-		}
-	}
-	return result
-}
-
-// disableCurrentEntry unchecks the currently selected list entry.
-func (self *AliasesModel) disableCurrentEntry() {
-	self.Selections = slice.Remove(self.Selections, self.Cursor)
-}
-
-// enableCurrentEntry checks the currently selected list entry.
-func (self *AliasesModel) enableCurrentEntry() {
-	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
-}
-
-// isRowChecked indicates whether the row with the given number is checked or not.
-func (self *AliasesModel) isRowChecked(row int) bool {
-	return slices.Contains(self.Selections, row)
-}
-
-// isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *AliasesModel) isSelectedRowChecked() bool {
-	return self.isRowChecked(self.Cursor)
-}
-
 // checks all entries in the list
 func (self *AliasesModel) SelectAll() {
-	count := len(self.Entries)
-	self.Selections = make([]int, count)
-	for i := 0; i < count; i++ {
-		self.Selections[i] = i
+	for s := range self.CurrentSelections {
+		self.CurrentSelections[s] = AliasSelectionGT
 	}
 }
 
 // checks all entries in the list
 func (self *AliasesModel) selectNone() {
-	self.Selections = []int{}
+	for s := range self.CurrentSelections {
+		self.CurrentSelections[s] = AliasSelectionNone
+	}
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *AliasesModel) toggleCurrentEntry() {
-	if self.isRowChecked(self.Cursor) {
-		self.disableCurrentEntry()
-	} else {
-		self.enableCurrentEntry()
+func (self *AliasesModel) rotateCurrentEntry() {
+	switch self.CurrentSelections[self.Cursor] {
+	case AliasSelectionNone:
+		if self.OriginalSelections[self.Cursor] == AliasSelectionOther {
+			self.CurrentSelections[self.Cursor] = AliasSelectionOther
+		} else {
+			self.CurrentSelections[self.Cursor] = AliasSelectionGT
+		}
+	case AliasSelectionOther:
+		self.CurrentSelections[self.Cursor] = AliasSelectionGT
+	case AliasSelectionGT:
+		self.CurrentSelections[self.Cursor] = AliasSelectionNone
 	}
 }
+
+func newAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
+	result := make([]AliasSelection, len(existingAliases))
+	for a, aliasableCommand := range aliasableCommands {
+		existingAlias, exists := existingAliases[aliasableCommand]
+		if !exists {
+			result[a] = AliasSelectionNone
+		} else if existingAlias == "town "+aliasableCommand.String() {
+			result[a] = AliasSelectionGT
+		} else {
+			result[a] = AliasSelectionOther
+		}
+	}
+	return result
+}
+
+func aliasResult(selections []AliasSelection, oldAliases configdomain.Aliases) configdomain.Aliases {
+	return configdomain.Aliases{}
+}
+
+type AliasSelection int
+
+const (
+	AliasSelectionNone  AliasSelection = iota // no alias
+	AliasSelectionGT                          // the user wants to keep the externally set alias
+	AliasSelectionOther                       //
+)

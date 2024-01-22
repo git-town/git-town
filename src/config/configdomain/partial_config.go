@@ -6,7 +6,7 @@ import (
 
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
-	Aliases                   map[AliasableCommand]string
+	Aliases                   Aliases
 	CodeHostingOriginHostname *CodeHostingOriginHostname
 	CodeHostingPlatformName   *CodeHostingPlatformName
 	GiteaToken                *GiteaToken
@@ -29,6 +29,6 @@ type PartialConfig struct {
 
 func EmptyPartialConfig() PartialConfig {
 	return PartialConfig{ //nolint:exhaustruct
-		Aliases: map[AliasableCommand]string{},
+		Aliases: Aliases{},
 	}
 }

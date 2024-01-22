@@ -13,9 +13,10 @@ func enterAliases() *cobra.Command {
 		Use: "aliases",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			all := configdomain.AllAliasableCommands()
-			existing := configdomain.AliasableCommands{
-				configdomain.AliasableCommandAppend,
-				configdomain.AliasableCommandHack,
+			existing := configdomain.Aliases{
+				configdomain.AliasableCommandAppend: "town append",
+				configdomain.AliasableCommandHack:   "town hack",
+				configdomain.AliasableCommandRepo:   "other command",
 			}
 			dialogTestInputs := dialog.LoadTestInputs(os.Environ())
 			_, _, err := dialog.EnterAliases(all, existing, dialogTestInputs.Next())

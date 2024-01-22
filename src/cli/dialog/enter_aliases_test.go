@@ -15,10 +15,18 @@ func TestEnterAliases(t *testing.T) {
 			BubbleList: dialog.BubbleList{
 				Entries: []string{"append", "hack", "diff-parent"},
 			},
-			Selections: []int{},
+			CurrentSelections: []dialog.AliasSelection{
+				dialog.AliasSelectionNone,
+				dialog.AliasSelectionNone,
+				dialog.AliasSelectionNone,
+			},
 		}
 		model.SelectAll()
-		want := []int{0, 1, 2}
-		must.Eq(t, model.Selections, want)
+		want := []dialog.AliasSelection{
+			dialog.AliasSelectionGT,
+			dialog.AliasSelectionGT,
+			dialog.AliasSelectionGT,
+		}
+		must.Eq(t, model.CurrentSelections, want)
 	})
 }
