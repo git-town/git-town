@@ -70,7 +70,7 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("Checked", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{
+		model := dialog.AliasesModel{ //nolint:exhaustruct
 			CurrentSelections: []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 				dialog.AliasSelectionGT,
@@ -126,7 +126,7 @@ func TestEnterAliases(t *testing.T) {
 				OriginalSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionNone,
 				},
-				BubbleList: dialog.BubbleList{
+				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -152,7 +152,7 @@ func TestEnterAliases(t *testing.T) {
 				OriginalSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionGT,
 				},
-				BubbleList: dialog.BubbleList{
+				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -178,7 +178,7 @@ func TestEnterAliases(t *testing.T) {
 				OriginalSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionOther,
 				},
-				BubbleList: dialog.BubbleList{
+				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -205,8 +205,8 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{
-			BubbleList: dialog.BubbleList{
+		model := dialog.AliasesModel{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 				Entries: []string{"append", "hack", "diff-parent"},
 			},
 			CurrentSelections: []dialog.AliasSelection{
@@ -226,8 +226,8 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{
-			BubbleList: dialog.BubbleList{
+		model := dialog.AliasesModel{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 				Entries: []string{"append", "hack", "diff-parent"},
 			},
 			CurrentSelections: []dialog.AliasSelection{
