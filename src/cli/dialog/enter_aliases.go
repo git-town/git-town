@@ -48,7 +48,7 @@ func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSele
 	selectedCommands := result.Checked(aliasableCommands)
 	var selectionText = AliasSelectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
-	return aliasResult(result.CurrentSelections, originalSelections), false, nil
+	return AliasResult(result.CurrentSelections, aliasableCommands, originalSelections), false, nil
 }
 
 type AliasesModel struct {
@@ -212,8 +212,20 @@ func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existi
 	return result
 }
 
-func aliasResult(selections []AliasSelection, oldAliases configdomain.Aliases) configdomain.Aliases {
-	return configdomain.Aliases{}
+func AliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, oldAliases configdomain.Aliases) configdomain.Aliases {
+	result := configdomain.Aliases{}
+	for s, selection := range selections {
+		command := allAliasableCommands[s]
+		switch selection {
+		case AliasSelectionGT:
+			result[command] = "town " + command.String()
+		case AliasSelectionNone:
+			// do nothing
+		case AliasSelectionOther:
+			result[command] = oldAliases[command]
+		}
+	}
+	return result
 }
 
 type AliasSelection int
