@@ -125,7 +125,6 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	case "n":
 		self.SelectNone()
 	case "o":
-		self.Status = dialogStatusDone
 		self.RotateCurrentEntry()
 		return self, nil
 	}
