@@ -140,7 +140,7 @@ func (self AliasesModel) View() string {
 	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
-		checked := self.CurrentSelections[self.Cursor]
+		checked := self.CurrentSelections[i]
 		s.WriteString(self.entryNumberStr(i))
 		switch {
 		case selected && checked == AliasSelectionNone:
