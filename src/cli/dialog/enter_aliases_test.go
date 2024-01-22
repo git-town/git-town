@@ -87,6 +87,32 @@ func TestEnterAliases(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("RotateCurrentEntry", func(t *testing.T) {
+		t.Parallel()
+		t.Run("current entry is disabled, wasn't set before", func(t *testing.T) {
+			t.Parallel()
+			model := dialog.AliasesModel{
+				CurrentSelections: []dialog.AliasSelection{
+					dialog.AliasSelectionNone,
+					dialog.AliasSelectionNone,
+				},
+				OriginalSelections: []dialog.AliasSelection{
+					dialog.AliasSelectionNone,
+					dialog.AliasSelectionNone,
+				},
+				BubbleList: dialog.BubbleList{
+					Cursor: 0,
+				},
+			}
+			model.RotateCurrentEntry()
+			want := []dialog.AliasSelection{
+				dialog.AliasSelectionGT,
+				dialog.AliasSelectionNone,
+			}
+			must.Eq(t, want, model.CurrentSelections)
+		})
+	})
+
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{

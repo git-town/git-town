@@ -82,7 +82,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.rotateCurrentEntry()
+		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
 		self.Status = dialogStatusDone
@@ -95,7 +95,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.SelectNone()
 	case "o":
 		self.Status = dialogStatusDone
-		self.rotateCurrentEntry()
+		self.RotateCurrentEntry()
 		return self, nil
 	}
 	return self, nil
@@ -182,7 +182,7 @@ func (self *AliasesModel) SelectNone() {
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *AliasesModel) rotateCurrentEntry() {
+func (self *AliasesModel) RotateCurrentEntry() {
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
 		if self.OriginalSelections[self.Cursor] == AliasSelectionOther {
