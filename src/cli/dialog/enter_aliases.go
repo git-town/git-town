@@ -70,12 +70,6 @@ func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommand
 	return result
 }
 
-// HasCustomAliasAtCursor indicates whether the currently existing alias at the cursor is a custom alias.
-func (self AliasesModel) HasCustomAliasAtCursor() bool {
-	commandAtCursor := self.AllAliasableCommands[self.Cursor]
-	return strings.HasPrefix(self.OriginalAliases[commandAtCursor], "town ")
-}
-
 func (self AliasesModel) Init() tea.Cmd {
 	return nil
 }
@@ -85,7 +79,10 @@ func (self AliasesModel) Init() tea.Cmd {
 func (self *AliasesModel) RotateCurrentEntry() {
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
-		if self.HasCustomAliasAtCursor() {
+		commandAtCursor := self.AllAliasableCommands[self.Cursor]
+		gitTownAlias := "town " + commandAtCursor.String()
+		originalAlias, hasOriginalAlias := self.OriginalAliases[commandAtCursor]
+		if hasOriginalAlias && originalAlias != gitTownAlias {
 			self.CurrentSelections[self.Cursor] = AliasSelectionOther
 		} else {
 			self.CurrentSelections[self.Cursor] = AliasSelectionGT
