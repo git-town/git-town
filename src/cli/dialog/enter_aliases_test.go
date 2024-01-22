@@ -30,7 +30,7 @@ func TestEnterAliases(t *testing.T) {
 			dialog.AliasSelectionNone,
 			dialog.AliasSelectionOther,
 		}
-		have := dialog.AliasResult(selections, allAliasableCommands, oldAliases)
+		have := dialog.DetermineAliasResult(selections, allAliasableCommands, oldAliases)
 		want := configdomain.Aliases{
 			configdomain.AliasableCommandAppend: "town append",
 			configdomain.AliasableCommandHack:   "town hack",
@@ -44,14 +44,14 @@ func TestEnterAliases(t *testing.T) {
 		t.Run("all commands selected", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AllAliasableCommands()
-			have := dialog.AliasSelectionText(give)
+			have := dialog.DetermineAliasSelectionText(give)
 			want := "(all)"
 			must.EqOp(t, want, have)
 		})
 		t.Run("no commands selected", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AliasableCommands{}
-			have := dialog.AliasSelectionText(give)
+			have := dialog.DetermineAliasSelectionText(give)
 			want := "(none)"
 			must.EqOp(t, want, have)
 		})
@@ -62,7 +62,7 @@ func TestEnterAliases(t *testing.T) {
 				configdomain.AliasableCommandHack,
 				configdomain.AliasableCommandSync,
 			}
-			have := dialog.AliasSelectionText(give)
+			have := dialog.DetermineAliasSelectionText(give)
 			want := "append, hack, sync"
 			must.EqOp(t, want, have)
 		})

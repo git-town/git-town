@@ -19,9 +19,9 @@ If you are not sure, select all :)
 
 `
 
-// EnterAliases lets the select which Git Town commands should have shorter aliases.
+// Aliases lets the select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
 	selections := NewAliasSelections(aliasableCommands, originalSelections)
 	dialogData := AliasesModel{
 		BubbleList:         newBubbleList(aliasableCommands.Strings(), 0),
@@ -46,9 +46,9 @@ func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSele
 		return configdomain.Aliases{}, true, nil
 	}
 	selectedCommands := result.Checked(aliasableCommands)
-	var selectionText = AliasSelectionText(selectedCommands)
+	selectionText := DetermineAliasSelectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
-	return AliasResult(result.CurrentSelections, aliasableCommands, originalSelections), false, nil
+	return DetermineAliasResult(result.CurrentSelections, aliasableCommands, originalSelections), false, nil
 }
 
 type AliasesModel struct {
@@ -56,10 +56,6 @@ type AliasesModel struct {
 	CurrentSelections  []AliasSelection
 	OriginalSelections []AliasSelection
 	selectedColor      termenv.Style
-}
-
-func (self AliasesModel) Init() tea.Cmd {
-	return nil
 }
 
 func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommands) configdomain.AliasableCommands {
@@ -70,6 +66,41 @@ func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommand
 		}
 	}
 	return result
+}
+
+func (self AliasesModel) Init() tea.Cmd {
+	return nil
+}
+
+// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
+// and checks it if it is unchecked.
+func (self *AliasesModel) RotateCurrentEntry() {
+	switch self.CurrentSelections[self.Cursor] {
+	case AliasSelectionNone:
+		if self.OriginalSelections[self.Cursor] == AliasSelectionOther {
+			self.CurrentSelections[self.Cursor] = AliasSelectionOther
+		} else {
+			self.CurrentSelections[self.Cursor] = AliasSelectionGT
+		}
+	case AliasSelectionOther:
+		self.CurrentSelections[self.Cursor] = AliasSelectionGT
+	case AliasSelectionGT:
+		self.CurrentSelections[self.Cursor] = AliasSelectionNone
+	}
+}
+
+// SelectAll checks all entries in the list.
+func (self *AliasesModel) SelectAll() {
+	for s := range self.CurrentSelections {
+		self.CurrentSelections[s] = AliasSelectionGT
+	}
+}
+
+// SelectNone unchecks all entries in the list.
+func (self *AliasesModel) SelectNone() {
+	for s := range self.CurrentSelections {
+		self.CurrentSelections[s] = AliasSelectionNone
+	}
 }
 
 func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -166,53 +197,7 @@ func (self AliasesModel) View() string {
 	return s.String()
 }
 
-// checks all entries in the list
-func (self *AliasesModel) SelectAll() {
-	for s := range self.CurrentSelections {
-		self.CurrentSelections[s] = AliasSelectionGT
-	}
-}
-
-// checks all entries in the list
-func (self *AliasesModel) SelectNone() {
-	for s := range self.CurrentSelections {
-		self.CurrentSelections[s] = AliasSelectionNone
-	}
-}
-
-// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
-// and checks it if it is unchecked.
-func (self *AliasesModel) RotateCurrentEntry() {
-	switch self.CurrentSelections[self.Cursor] {
-	case AliasSelectionNone:
-		if self.OriginalSelections[self.Cursor] == AliasSelectionOther {
-			self.CurrentSelections[self.Cursor] = AliasSelectionOther
-		} else {
-			self.CurrentSelections[self.Cursor] = AliasSelectionGT
-		}
-	case AliasSelectionOther:
-		self.CurrentSelections[self.Cursor] = AliasSelectionGT
-	case AliasSelectionGT:
-		self.CurrentSelections[self.Cursor] = AliasSelectionNone
-	}
-}
-
-func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
-	result := make([]AliasSelection, len(aliasableCommands))
-	for a, aliasableCommand := range aliasableCommands {
-		existingAlias, exists := existingAliases[aliasableCommand]
-		if !exists {
-			result[a] = AliasSelectionNone
-		} else if existingAlias == "town "+aliasableCommand.String() {
-			result[a] = AliasSelectionGT
-		} else {
-			result[a] = AliasSelectionOther
-		}
-	}
-	return result
-}
-
-func AliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, oldAliases configdomain.Aliases) configdomain.Aliases {
+func DetermineAliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, oldAliases configdomain.Aliases) configdomain.Aliases {
 	result := configdomain.Aliases{}
 	for s, selection := range selections {
 		command := allAliasableCommands[s]
@@ -228,15 +213,7 @@ func AliasResult(selections []AliasSelection, allAliasableCommands configdomain.
 	return result
 }
 
-type AliasSelection int
-
-const (
-	AliasSelectionNone  AliasSelection = iota // no alias
-	AliasSelectionGT                          // the user wants to keep the externally set alias
-	AliasSelectionOther                       //
-)
-
-func AliasSelectionText(selectedCommands configdomain.AliasableCommands) string {
+func DetermineAliasSelectionText(selectedCommands configdomain.AliasableCommands) string {
 	switch len(selectedCommands) {
 	case 0:
 		return "(none)"
@@ -246,3 +223,27 @@ func AliasSelectionText(selectedCommands configdomain.AliasableCommands) string 
 		return strings.Join(selectedCommands.Strings(), ", ")
 	}
 }
+
+func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
+	result := make([]AliasSelection, len(aliasableCommands))
+	for a, aliasableCommand := range aliasableCommands {
+		existingAlias, exists := existingAliases[aliasableCommand]
+		switch {
+		case !exists:
+			result[a] = AliasSelectionNone
+		case existingAlias == "town "+aliasableCommand.String():
+			result[a] = AliasSelectionGT
+		default:
+			result[a] = AliasSelectionOther
+		}
+	}
+	return result
+}
+
+type AliasSelection int
+
+const (
+	AliasSelectionNone  AliasSelection = iota // no alias
+	AliasSelectionGT                          // the user wants to keep the externally set alias
+	AliasSelectionOther                       //
+)
