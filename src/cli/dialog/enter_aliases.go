@@ -46,7 +46,7 @@ func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSele
 		return configdomain.Aliases{}, true, nil
 	}
 	selectedCommands := result.Checked(aliasableCommands)
-	var selectionText = selectionText(selectedCommands)
+	var selectionText = AliasSelectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
 	return aliasResult(result.CurrentSelections, originalSelections), false, nil
 }
@@ -224,7 +224,7 @@ const (
 	AliasSelectionOther                       //
 )
 
-func selectionText(selectedCommands configdomain.AliasableCommands) string {
+func AliasSelectionText(selectedCommands configdomain.AliasableCommands) string {
 	switch len(selectedCommands) {
 	case 0:
 		return "(none)"
