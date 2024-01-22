@@ -11,6 +11,59 @@ import (
 func TestEnterAliases(t *testing.T) {
 	t.Parallel()
 
+	t.Run("AliasSelectionText", func(t *testing.T) {
+		t.Parallel()
+		t.Run("all commands selected", func(t *testing.T) {
+			t.Parallel()
+			give := configdomain.AllAliasableCommands()
+			have := dialog.AliasSelectionText(give)
+			want := "(all)"
+			must.EqOp(t, want, have)
+		})
+		t.Run("no commands selected", func(t *testing.T) {
+			t.Parallel()
+			give := configdomain.AliasableCommands{}
+			have := dialog.AliasSelectionText(give)
+			want := "(none)"
+			must.EqOp(t, want, have)
+		})
+		t.Run("some commands selected", func(t *testing.T) {
+			t.Parallel()
+			give := configdomain.AliasableCommands{
+				configdomain.AliasableCommandAppend,
+				configdomain.AliasableCommandHack,
+				configdomain.AliasableCommandSync,
+			}
+			have := dialog.AliasSelectionText(give)
+			want := "append, hack, sync"
+			must.EqOp(t, want, have)
+		})
+	})
+
+	t.Run("Checked", func(t *testing.T) {
+		t.Parallel()
+		model := dialog.AliasesModel{
+			CurrentSelections: []dialog.AliasSelection{
+				dialog.AliasSelectionGT,
+				dialog.AliasSelectionGT,
+				dialog.AliasSelectionNone,
+				dialog.AliasSelectionOther,
+			},
+		}
+		aliasableCommands := configdomain.AliasableCommands{
+			configdomain.AliasableCommandAppend,
+			configdomain.AliasableCommandHack,
+			configdomain.AliasableCommandShip,
+			configdomain.AliasableCommandSync,
+		}
+		have := model.Checked(aliasableCommands)
+		want := configdomain.AliasableCommands{
+			configdomain.AliasableCommandAppend,
+			configdomain.AliasableCommandHack,
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("NewAliasSelections", func(t *testing.T) {
 		t.Parallel()
 		allAliasableCommands := configdomain.AliasableCommands{
@@ -53,35 +106,6 @@ func TestEnterAliases(t *testing.T) {
 			dialog.AliasSelectionGT,
 		}
 		must.Eq(t, model.CurrentSelections, want)
-	})
-
-	t.Run("SelectionText", func(t *testing.T) {
-		t.Parallel()
-		t.Run("all commands selected", func(t *testing.T) {
-			t.Parallel()
-			give := configdomain.AllAliasableCommands()
-			have := dialog.AliasSelectionText(give)
-			want := "(all)"
-			must.EqOp(t, want, have)
-		})
-		t.Run("no commands selected", func(t *testing.T) {
-			t.Parallel()
-			give := configdomain.AliasableCommands{}
-			have := dialog.AliasSelectionText(give)
-			want := "(none)"
-			must.EqOp(t, want, have)
-		})
-		t.Run("some commands selected", func(t *testing.T) {
-			t.Parallel()
-			give := configdomain.AliasableCommands{
-				configdomain.AliasableCommandAppend,
-				configdomain.AliasableCommandHack,
-				configdomain.AliasableCommandSync,
-			}
-			have := dialog.AliasSelectionText(give)
-			want := "append, hack, sync"
-			must.EqOp(t, want, have)
-		})
 	})
 
 	t.Run("SelectNone", func(t *testing.T) {
