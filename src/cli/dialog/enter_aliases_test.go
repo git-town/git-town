@@ -11,6 +11,29 @@ import (
 func TestEnterAliases(t *testing.T) {
 	t.Parallel()
 
+	t.Run("NewAliasSelections", func(t *testing.T) {
+		t.Parallel()
+		allAliasableCommands := configdomain.AliasableCommands{
+			configdomain.AliasableCommandAppend,
+			configdomain.AliasableCommandDiffParent,
+			configdomain.AliasableCommandHack,
+			configdomain.AliasableCommandRepo,
+		}
+		existingAliases := configdomain.Aliases{
+			configdomain.AliasableCommandAppend:     "town append",
+			configdomain.AliasableCommandDiffParent: "town diff-parent",
+			configdomain.AliasableCommandRepo:       "other command",
+		}
+		have := dialog.NewAliasSelections(allAliasableCommands, existingAliases)
+		want := []dialog.AliasSelection{
+			dialog.AliasSelectionGT,
+			dialog.AliasSelectionGT,
+			dialog.AliasSelectionNone,
+			dialog.AliasSelectionOther,
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{

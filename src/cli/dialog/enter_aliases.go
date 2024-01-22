@@ -22,7 +22,7 @@ If you are not sure, select all :)
 // EnterAliases lets the select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
-	selections := newAliasSelections(aliasableCommands, originalSelections)
+	selections := NewAliasSelections(aliasableCommands, originalSelections)
 	dialogData := AliasesModel{
 		BubbleList:         newBubbleList(aliasableCommands.Strings(), 0),
 		CurrentSelections:  selections,
@@ -197,8 +197,8 @@ func (self *AliasesModel) rotateCurrentEntry() {
 	}
 }
 
-func newAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
-	result := make([]AliasSelection, len(existingAliases))
+func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) []AliasSelection {
+	result := make([]AliasSelection, len(aliasableCommands))
 	for a, aliasableCommand := range aliasableCommands {
 		existingAlias, exists := existingAliases[aliasableCommand]
 		if !exists {
