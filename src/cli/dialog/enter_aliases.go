@@ -100,7 +100,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	case "a":
 		self.SelectAll()
 	case "n":
-		self.selectNone()
+		self.SelectNone()
 	case "o":
 		self.Status = dialogStatusDone
 		self.rotateCurrentEntry()
@@ -182,7 +182,7 @@ func (self *AliasesModel) SelectAll() {
 }
 
 // checks all entries in the list
-func (self *AliasesModel) selectNone() {
+func (self *AliasesModel) SelectNone() {
 	for s := range self.CurrentSelections {
 		self.CurrentSelections[s] = AliasSelectionNone
 	}

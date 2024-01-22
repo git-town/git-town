@@ -29,4 +29,25 @@ func TestEnterAliases(t *testing.T) {
 		}
 		must.Eq(t, model.CurrentSelections, want)
 	})
+
+	t.Run("SelectNone", func(t *testing.T) {
+		t.Parallel()
+		model := dialog.AliasesModel{
+			BubbleList: dialog.BubbleList{
+				Entries: []string{"append", "hack", "diff-parent"},
+			},
+			CurrentSelections: []dialog.AliasSelection{
+				dialog.AliasSelectionGT,
+				dialog.AliasSelectionOther,
+				dialog.AliasSelectionGT,
+			},
+		}
+		model.SelectNone()
+		want := []dialog.AliasSelection{
+			dialog.AliasSelectionNone,
+			dialog.AliasSelectionNone,
+			dialog.AliasSelectionNone,
+		}
+		must.Eq(t, model.CurrentSelections, want)
+	})
 }
