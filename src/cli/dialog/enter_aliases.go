@@ -24,10 +24,11 @@ If you are not sure, select all :)
 func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
 	selections := NewAliasSelections(aliasableCommands, originalSelections)
 	dialogData := AliasesModel{
-		BubbleList:         newBubbleList(aliasableCommands.Strings(), 0),
-		CurrentSelections:  selections,
-		OriginalSelections: selections,
-		selectedColor:      termenv.String().Foreground(termenv.ANSIGreen),
+		AllAliasableCommands: aliasableCommands,
+		BubbleList:           newBubbleList(aliasableCommands.Strings(), 0),
+		CurrentSelections:    selections,
+		OriginalAliases:      originalSelections,
+		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
 	}
 	program := tea.NewProgram(dialogData)
 	if len(dialogTestInput) > 0 {
@@ -53,9 +54,10 @@ func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelection
 
 type AliasesModel struct {
 	BubbleList
-	CurrentSelections  []AliasSelection
-	OriginalSelections []AliasSelection
-	selectedColor      termenv.Style
+	AllAliasableCommands configdomain.AliasableCommands
+	CurrentSelections    []AliasSelection
+	OriginalAliases      configdomain.Aliases
+	selectedColor        termenv.Style
 }
 
 func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommands) configdomain.AliasableCommands {
@@ -68,6 +70,12 @@ func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommand
 	return result
 }
 
+// HasCustomAliasAtCursor indicates whether the currently existing alias at the cursor is a custom alias.
+func (self AliasesModel) HasCustomAliasAtCursor() bool {
+	commandAtCursor := self.AllAliasableCommands[self.Cursor]
+	return strings.HasPrefix(self.OriginalAliases[commandAtCursor], "town ")
+}
+
 func (self AliasesModel) Init() tea.Cmd {
 	return nil
 }
@@ -77,7 +85,7 @@ func (self AliasesModel) Init() tea.Cmd {
 func (self *AliasesModel) RotateCurrentEntry() {
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
-		if self.OriginalSelections[self.Cursor] == AliasSelectionOther {
+		if self.HasCustomAliasAtCursor() {
 			self.CurrentSelections[self.Cursor] = AliasSelectionOther
 		} else {
 			self.CurrentSelections[self.Cursor] = AliasSelectionGT

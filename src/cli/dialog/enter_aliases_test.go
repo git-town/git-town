@@ -120,12 +120,13 @@ func TestEnterAliases(t *testing.T) {
 		t.Run("currently selected alias doesn't exist", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
+				AllAliasableCommands: configdomain.AliasableCommands{
+					configdomain.AliasableCommandAppend,
+				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionNone,
 				},
-				OriginalSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionNone,
-				},
+				OriginalAliases: configdomain.Aliases{},
 				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
 				},
@@ -146,11 +147,14 @@ func TestEnterAliases(t *testing.T) {
 		t.Run("currently selected alias is set to the Git Town command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
+				AllAliasableCommands: configdomain.AliasableCommands{
+					configdomain.AliasableCommandAppend,
+				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionGT,
 				},
-				OriginalSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionGT,
+				OriginalAliases: configdomain.Aliases{
+					configdomain.AliasableCommandAppend: "town append",
 				},
 				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
@@ -172,11 +176,14 @@ func TestEnterAliases(t *testing.T) {
 		t.Run("currently selected alias is set to an external command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
+				AllAliasableCommands: configdomain.AliasableCommands{
+					configdomain.AliasableCommandAppend,
+				},
 				CurrentSelections: []dialog.AliasSelection{
 					dialog.AliasSelectionOther,
 				},
-				OriginalSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionOther,
+				OriginalAliases: configdomain.Aliases{
+					configdomain.AliasableCommandAppend: "other command",
 				},
 				BubbleList: dialog.BubbleList{ //nolint:exhaustruct
 					Cursor: 0,
