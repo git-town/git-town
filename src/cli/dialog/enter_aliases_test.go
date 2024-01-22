@@ -41,6 +41,13 @@ func TestEnterAliases(t *testing.T) {
 			want := "(all)"
 			must.EqOp(t, want, have)
 		})
+		t.Run("no commands selected", func(t *testing.T) {
+			t.Parallel()
+			give := configdomain.AliasableCommands{}
+			have := dialog.AliasSelectionText(give)
+			want := "(none)"
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("SelectNone", func(t *testing.T) {
