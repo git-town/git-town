@@ -9,6 +9,7 @@ import (
 
 func TestEnterAliases(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{

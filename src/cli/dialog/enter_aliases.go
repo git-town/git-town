@@ -46,15 +46,7 @@ func EnterAliases(aliasableCommands configdomain.AliasableCommands, originalSele
 		return configdomain.Aliases{}, true, nil
 	}
 	selectedCommands := result.Checked(aliasableCommands)
-	var selectionText string
-	switch len(selectedCommands) {
-	case 0:
-		selectionText = "(none)"
-	case len(configdomain.AllAliasableCommands()):
-		selectionText = "(all)"
-	default:
-		selectionText = strings.Join(selectedCommands.Strings(), ", ")
-	}
+	var selectionText = selectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
 	return aliasResult(result.CurrentSelections, originalSelections), false, nil
 }
@@ -231,3 +223,14 @@ const (
 	AliasSelectionGT                          // the user wants to keep the externally set alias
 	AliasSelectionOther                       //
 )
+
+func selectionText(selectedCommands configdomain.AliasableCommands) string {
+	switch len(selectedCommands) {
+	case 0:
+		return "(none)"
+	case len(configdomain.AllAliasableCommands()):
+		return "(all)"
+	default:
+		return strings.Join(selectedCommands.Strings(), ", ")
+	}
+}
