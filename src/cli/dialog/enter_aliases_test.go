@@ -115,7 +115,7 @@ func TestEnterAliases(t *testing.T) {
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
-		t.Run("currently selected alias was set to the Git Town command", func(t *testing.T) {
+		t.Run("currently selected alias is set to the Git Town command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
 				CurrentSelections: []dialog.AliasSelection{
@@ -138,6 +138,38 @@ func TestEnterAliases(t *testing.T) {
 			model.RotateCurrentEntry()
 			want = []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
+			}
+			must.Eq(t, want, model.CurrentSelections)
+		})
+		t.Run("currently selected alias is set to an external command", func(t *testing.T) {
+			t.Parallel()
+			model := dialog.AliasesModel{
+				CurrentSelections: []dialog.AliasSelection{
+					dialog.AliasSelectionOther,
+				},
+				OriginalSelections: []dialog.AliasSelection{
+					dialog.AliasSelectionOther,
+				},
+				BubbleList: dialog.BubbleList{
+					Cursor: 0,
+				},
+			}
+			// rotate the first time to check
+			model.RotateCurrentEntry()
+			want := []dialog.AliasSelection{
+				dialog.AliasSelectionGT,
+			}
+			must.Eq(t, want, model.CurrentSelections)
+			// rotate the second time to uncheck
+			model.RotateCurrentEntry()
+			want = []dialog.AliasSelection{
+				dialog.AliasSelectionNone,
+			}
+			must.Eq(t, want, model.CurrentSelections)
+			// rotate a third time to set to "other" again
+			model.RotateCurrentEntry()
+			want = []dialog.AliasSelection{
+				dialog.AliasSelectionOther,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
