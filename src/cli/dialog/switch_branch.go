@@ -26,7 +26,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	selectedEntry := result.BubbleList.selectedEntry()
 	selectedEntry = strings.TrimSpace(selectedEntry)
 	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
-	return selectedBranch, result.Status == dialogStatusAborted, nil
+	return selectedBranch, result.aborted(), nil
 }
 
 type SwitchModel struct {
