@@ -138,9 +138,9 @@ func (self AliasesModel) View() string {
 	s := strings.Builder{}
 	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
+		s.WriteString(self.entryNumberStr(i))
 		selected := self.Cursor == i
 		checked := self.CurrentSelections[i]
-		s.WriteString(self.entryNumberStr(i))
 		switch {
 		case selected && checked == AliasSelectionNone:
 			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch))
