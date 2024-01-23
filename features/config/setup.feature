@@ -65,6 +65,24 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
+  Scenario: don't change an existing Git alias
+    Given I ran "git config --global alias.append checkout"
+    When I run "git-town config setup" and enter into the dialogs:
+      | DIALOG                      | KEYS    |
+      | aliases                     | o enter |
+      | main development branch     | enter   |
+      | perennial branches          | enter   |
+      | sync-feature-strategy       | enter   |
+      | sync-perennial-strategy     | enter   |
+      | sync-upstream               | enter   |
+      | push-new-branches           | enter   |
+      | push-hook                   | enter   |
+      | ship-delete-tracking-branch | enter   |
+      | sync-before-ship            | enter   |
+    Then global Git setting "alias.append" is now "town append"
+
+
+
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
