@@ -139,20 +139,20 @@ func (self AliasesModel) View() string {
 	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
 		s.WriteString(self.entryNumberStr(i))
-		selected := self.Cursor == i
-		checked := self.CurrentSelections[i]
+		highlighted := self.Cursor == i
+		selection := self.CurrentSelections[i]
 		switch {
-		case selected && checked == AliasSelectionNone:
+		case highlighted && selection == AliasSelectionNone:
 			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch))
-		case selected && checked == AliasSelectionOther:
+		case highlighted && selection == AliasSelectionOther:
 			s.WriteString(self.Colors.selection.Styled("> [o] " + branch))
-		case selected && checked == AliasSelectionGT:
+		case highlighted && selection == AliasSelectionGT:
 			s.WriteString(self.Colors.selection.Styled("> [x] " + branch))
-		case !selected && checked == AliasSelectionNone:
+		case !highlighted && selection == AliasSelectionNone:
 			s.WriteString("  [ ] " + branch)
-		case !selected && checked == AliasSelectionOther:
+		case !highlighted && selection == AliasSelectionOther:
 			s.WriteString("  [o] " + branch)
-		case !selected && checked == AliasSelectionGT:
+		case !highlighted && selection == AliasSelectionGT:
 			s.WriteString(self.selectedColor.Styled("  [x] " + branch))
 		}
 		s.WriteRune('\n')
