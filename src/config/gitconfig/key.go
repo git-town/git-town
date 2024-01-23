@@ -97,7 +97,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 }
 
 func AliasableCommandForKey(key Key) *configdomain.AliasableCommand {
-	for _, aliasableCommand := range configdomain.AliasableCommands() {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		if KeyForAliasableCommand(aliasableCommand) == key {
 			return &aliasableCommand
 		}
@@ -147,7 +147,7 @@ func ParseKey(name string) *Key {
 	if lineageKey != nil {
 		return lineageKey
 	}
-	for _, aliasableCommand := range configdomain.AliasableCommands() {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		key := KeyForAliasableCommand(aliasableCommand)
 		if key.String() == name {
 			return &key

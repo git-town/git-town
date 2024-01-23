@@ -45,6 +45,27 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	allAliasableCommands := configdomain.AllAliasableCommands()
+	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.FullConfig.Aliases, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	for _, aliasableCommand := range allAliasableCommands {
+		newAlias, hasNew := newAliases[aliasableCommand]
+		oldAlias, hasOld := config.FullConfig.Aliases[aliasableCommand]
+		switch {
+		case hasOld && !hasNew:
+			err := repo.Runner.Frontend.RemoveGitAlias(aliasableCommand)
+			if err != nil {
+				return err
+			}
+		case newAlias != oldAlias:
+			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	defaultMainBranch := repo.Runner.MainBranch
 	if defaultMainBranch.IsEmpty() {
 		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
