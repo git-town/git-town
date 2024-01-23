@@ -118,7 +118,7 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("RotateCurrentEntry", func(t *testing.T) {
 		t.Parallel()
-		t.Run("currently selected alias doesn't exist", func(t *testing.T) {
+		t.Run("currently selecting an alias that isn't currently set on disk", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
