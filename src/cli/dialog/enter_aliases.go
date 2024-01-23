@@ -49,9 +49,9 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 
 type AliasesModel struct {
 	BubbleList
-	AllAliasableCommands configdomain.AliasableCommands
-	CurrentSelections    []AliasSelection
-	OriginalAliases      configdomain.Aliases
+	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
+	CurrentSelections    []AliasSelection               // the status of the list entries
+	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
 	selectedColor        termenv.Style
 }
 
