@@ -69,8 +69,7 @@ func (self AliasesModel) Init() tea.Cmd {
 	return nil
 }
 
-// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
-// and checks it if it is unchecked.
+// RotateCurrentEntry switches the status of the currently selected list entry to the next status.
 func (self *AliasesModel) RotateCurrentEntry() {
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
