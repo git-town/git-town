@@ -71,20 +71,22 @@ func (self AliasesModel) Init() tea.Cmd {
 
 // RotateCurrentEntry switches the status of the currently selected list entry to the next status.
 func (self *AliasesModel) RotateCurrentEntry() {
+	var newSelection AliasSelection
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
 		commandAtCursor := self.AllAliasableCommands[self.Cursor]
 		originalAlias, hasOriginalAlias := self.OriginalAliases[commandAtCursor]
 		if hasOriginalAlias && originalAlias != "town "+commandAtCursor.String() {
-			self.CurrentSelections[self.Cursor] = AliasSelectionOther
+			newSelection = AliasSelectionOther
 		} else {
-			self.CurrentSelections[self.Cursor] = AliasSelectionGT
+			newSelection = AliasSelectionGT
 		}
 	case AliasSelectionOther:
-		self.CurrentSelections[self.Cursor] = AliasSelectionGT
+		newSelection = AliasSelectionGT
 	case AliasSelectionGT:
-		self.CurrentSelections[self.Cursor] = AliasSelectionNone
+		newSelection = AliasSelectionNone
 	}
+	self.CurrentSelections[self.Cursor] = newSelection
 }
 
 // SelectAll checks all entries in the list.
