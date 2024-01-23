@@ -196,7 +196,7 @@ func (self AliasesModel) View() string {
 	return s.String()
 }
 
-func DetermineAliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, oldAliases configdomain.Aliases) configdomain.Aliases {
+func DetermineAliasResult(selections []AliasSelection, allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases) configdomain.Aliases {
 	result := configdomain.Aliases{}
 	for s, selection := range selections {
 		command := allAliasableCommands[s]
@@ -206,7 +206,7 @@ func DetermineAliasResult(selections []AliasSelection, allAliasableCommands conf
 		case AliasSelectionNone:
 			// do nothing
 		case AliasSelectionOther:
-			result[command] = oldAliases[command]
+			result[command] = existingAliases[command]
 		}
 	}
 	return result
