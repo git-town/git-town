@@ -25,7 +25,7 @@ func radioList(args radioListArgs) (selected string, aborted bool, err error) {
 		return "", false, err
 	}
 	result := dialogResult.(radioListModel) //nolint:forcetypeassert
-	return result.selectedEntry(), result.Status == dialogStatusAborted, nil
+	return result.selectedEntry(), result.aborted(), nil
 }
 
 type radioListArgs struct {
