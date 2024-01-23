@@ -71,14 +71,13 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("Checked", func(t *testing.T) {
 		t.Parallel()
-		aliasableCommands := configdomain.AliasableCommands{
-			configdomain.AliasableCommandAppend,
-			configdomain.AliasableCommandHack,
-			configdomain.AliasableCommandShip,
-			configdomain.AliasableCommandSync,
-		}
 		model := dialog.AliasesModel{ //nolint:exhaustruct
-			AllAliasableCommands: aliasableCommands,
+			AllAliasableCommands: configdomain.AliasableCommands{
+				configdomain.AliasableCommandAppend,
+				configdomain.AliasableCommandHack,
+				configdomain.AliasableCommandShip,
+				configdomain.AliasableCommandSync,
+			},
 			CurrentSelections: []dialog.AliasSelection{
 				dialog.AliasSelectionGT,
 				dialog.AliasSelectionGT,
