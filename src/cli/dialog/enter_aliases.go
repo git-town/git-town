@@ -19,7 +19,7 @@ If you are not sure, select all :)
 
 `
 
-// Aliases lets the select which Git Town commands should have shorter aliases.
+// Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
 func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
 	selections := NewAliasSelections(aliasableCommands, originalSelections)
