@@ -74,9 +74,8 @@ func (self *AliasesModel) RotateCurrentEntry() {
 	switch self.CurrentSelections[self.Cursor] {
 	case AliasSelectionNone:
 		commandAtCursor := self.AllAliasableCommands[self.Cursor]
-		gitTownAlias := "town " + commandAtCursor.String()
 		originalAlias, hasOriginalAlias := self.OriginalAliases[commandAtCursor]
-		if hasOriginalAlias && originalAlias != gitTownAlias {
+		if hasOriginalAlias && originalAlias != "town "+commandAtCursor.String() {
 			self.CurrentSelections[self.Cursor] = AliasSelectionOther
 		} else {
 			self.CurrentSelections[self.Cursor] = AliasSelectionGT
