@@ -239,10 +239,11 @@ func NewAliasSelections(aliasableCommands configdomain.AliasableCommands, existi
 	return result
 }
 
+// AliasSelection encodes the status of a checkbox in the alias dialog.
 type AliasSelection int
 
 const (
-	AliasSelectionNone  AliasSelection = iota // no alias
-	AliasSelectionGT                          // the user wants to keep the externally set alias
-	AliasSelectionOther                       //
+	AliasSelectionNone  AliasSelection = iota // the user chose to not set this alias
+	AliasSelectionGT                          // the user chose to set this alias to the corresponding Git Town command
+	AliasSelectionOther                       // the user chose to keep the alias calling an external command
 )
