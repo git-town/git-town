@@ -12,9 +12,10 @@ import (
 )
 
 const enterPerennialBranchesHelp = `
-	Let's configure the perennial branches.
-	These are long-lived branches without ancestors and are never shipped.
-	Typically, perennial branches have names like "development", "staging", "qa", "production", etc.
+	Perennial branches are long-lived branches.
+	They are never shipped and don't have ancestors.
+	Typically, perennial branches have names like
+	"development", "staging", "qa", "production", etc.
 
 `
 
