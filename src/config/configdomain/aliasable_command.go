@@ -56,9 +56,9 @@ func NewAliasableCommand(command string) AliasableCommand {
 }
 
 func NewAliasableCommands(commands ...string) AliasableCommands {
-	result := make(AliasableCommands, 0, len(commands))
-	for _, command := range commands {
-		result = append(result, NewAliasableCommand(command))
+	result := make(AliasableCommands, len(commands))
+	for c, command := range commands {
+		result[c] = NewAliasableCommand(command)
 	}
 	return result
 }
