@@ -20,9 +20,10 @@ func TestEnterAliases(t *testing.T) {
 			configdomain.AliasableCommandSync,
 		}
 		existingAliases := configdomain.Aliases{
-			configdomain.AliasableCommandAppend: "town append",
-			configdomain.AliasableCommandHack:   "other hack",
-			configdomain.AliasableCommandSync:   "other sync",
+			configdomain.AliasableCommandAppend:  "town append",
+			configdomain.AliasableCommandHack:    "other hack",
+			configdomain.AliasableCommandPropose: "town propose",
+			configdomain.AliasableCommandSync:    "other sync",
 		}
 		selections := []dialog.AliasSelection{
 			dialog.AliasSelectionGT,
