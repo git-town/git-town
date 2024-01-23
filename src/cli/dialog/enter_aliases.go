@@ -203,10 +203,10 @@ func DetermineAliasResult(selections []AliasSelection, allAliasableCommands conf
 		switch selection {
 		case AliasSelectionGT:
 			result[command] = "town " + command.String()
-		case AliasSelectionNone:
-			// do nothing
 		case AliasSelectionOther:
 			result[command] = existingAliases[command]
+		case AliasSelectionNone:
+			// do nothing
 		}
 	}
 	return result
