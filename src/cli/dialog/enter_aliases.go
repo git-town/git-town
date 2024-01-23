@@ -37,17 +37,15 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 		}()
 	}
 	dialogResult, err := program.Run()
-	if err != nil {
-		return configdomain.Aliases{}, false, err
-	}
 	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
-	if result.Status == dialogStatusAborted {
-		return configdomain.Aliases{}, true, nil
+	aborted := result.Status == dialogStatusAborted
+	if err != nil || aborted {
+		return configdomain.Aliases{}, aborted, err
 	}
 	selectedCommands := result.Checked(allAliasableCommands)
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
-	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), false, nil
+	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, aborted))
+	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), aborted, err
 }
 
 type AliasesModel struct {
