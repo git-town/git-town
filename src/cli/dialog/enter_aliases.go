@@ -21,16 +21,14 @@ If you are not sure, select all :)
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelections configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
-	selections := NewAliasSelections(aliasableCommands, originalSelections)
-	dialogData := AliasesModel{
-		AllAliasableCommands: aliasableCommands,
-		BubbleList:           newBubbleList(aliasableCommands.Strings(), 0),
-		CurrentSelections:    selections,
-		OriginalAliases:      originalSelections,
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
+	program := tea.NewProgram(AliasesModel{
+		AllAliasableCommands: allAliasableCommands,
+		BubbleList:           newBubbleList(allAliasableCommands.Strings(), 0),
+		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
+		OriginalAliases:      existingAliases,
 		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
-	}
-	program := tea.NewProgram(dialogData)
+	})
 	if len(dialogTestInput) > 0 {
 		go func() {
 			for _, input := range dialogTestInput {
@@ -46,10 +44,10 @@ func Aliases(aliasableCommands configdomain.AliasableCommands, originalSelection
 	if result.Status == dialogStatusAborted {
 		return configdomain.Aliases{}, true, nil
 	}
-	selectedCommands := result.Checked(aliasableCommands)
+	selectedCommands := result.Checked(allAliasableCommands)
 	selectionText := DetermineAliasSelectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, false))
-	return DetermineAliasResult(result.CurrentSelections, aliasableCommands, originalSelections), false, nil
+	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), false, nil
 }
 
 type AliasesModel struct {

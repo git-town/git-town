@@ -25,12 +25,11 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	dialogData := perennialBranchesModel{
+	program := tea.NewProgram(perennialBranchesModel{
 		BubbleList:    newBubbleList(perennialCandidates.Strings(), 0),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
-	}
-	program := tea.NewProgram(dialogData)
+	})
 	if len(dialogTestInput) > 0 {
 		go func() {
 			for _, input := range dialogTestInput {
