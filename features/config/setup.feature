@@ -1,5 +1,6 @@
 Feature: enter Git Town configuration
 
+  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -7,6 +8,7 @@ Feature: enter Git Town configuration
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS  |
       | aliases                     | enter |
+      | hosting                     | enter |
       | main development branch     | enter |
       | perennial branches          | enter |
       | sync-feature-strategy       | enter |
