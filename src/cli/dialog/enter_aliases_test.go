@@ -19,7 +19,7 @@ func TestEnterAliases(t *testing.T) {
 			configdomain.AliasableCommandPropose,
 			configdomain.AliasableCommandSync,
 		}
-		oldAliases := configdomain.Aliases{
+		existingAliases := configdomain.Aliases{
 			configdomain.AliasableCommandAppend: "town append",
 			configdomain.AliasableCommandHack:   "other hack",
 			configdomain.AliasableCommandSync:   "other sync",
@@ -30,7 +30,7 @@ func TestEnterAliases(t *testing.T) {
 			dialog.AliasSelectionNone,
 			dialog.AliasSelectionOther,
 		}
-		have := dialog.DetermineAliasResult(selections, allAliasableCommands, oldAliases)
+		have := dialog.DetermineAliasResult(selections, allAliasableCommands, existingAliases)
 		want := configdomain.Aliases{
 			configdomain.AliasableCommandAppend: "town append",
 			configdomain.AliasableCommandHack:   "town hack",
