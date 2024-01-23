@@ -37,13 +37,12 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
 	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
-	aborted := result.Status == dialogStatusAborted
 	selectionText := strings.Join(result.checkedEntries(), ", ")
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf("Perennial branches: %s\n", formattedSelection(selectionText, aborted))
-	return selectedBranches, aborted, nil
+	fmt.Printf("Perennial branches: %s\n", formattedSelection(selectionText, result.aborted()))
+	return selectedBranches, result.aborted(), nil
 }
 
 type perennialBranchesModel struct {

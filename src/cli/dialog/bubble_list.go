@@ -52,6 +52,11 @@ func newBubbleList(entries []string, cursor int) BubbleList {
 	}
 }
 
+// Aborted indicates whether the user has aborted this dialog.
+func (self *BubbleList) aborted() bool {
+	return self.Status == dialogStatusAborted
+}
+
 // entryNumberStr provides a colorized string to print the given entry number.
 func (self *BubbleList) entryNumberStr(number int) string {
 	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
