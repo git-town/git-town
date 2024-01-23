@@ -11,6 +11,14 @@ import (
 	"github.com/muesli/termenv"
 )
 
+const enterPerennialBranchesHelp = `
+	Perennial branches are long-lived branches.
+	They are never shipped and don't have ancestors.
+	Typically, perennial branches have names like
+	"development", "staging", "qa", "production", etc.
+
+`
+
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
@@ -18,12 +26,11 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
-	dialogData := perennialBranchesModel{
+	program := tea.NewProgram(perennialBranchesModel{
 		BubbleList:    newBubbleList(perennialCandidates.Strings(), 0),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
-	}
-	program := tea.NewProgram(dialogData)
+	})
 	if len(dialogTestInput) > 0 {
 		go func() {
 			for _, input := range dialogTestInput {
@@ -84,9 +91,7 @@ func (self perennialBranchesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
-	s.WriteString("Let's configure the perennial branches.\n")
-	s.WriteString("These are long-lived branches without ancestors and are never shipped.\n")
-	s.WriteString("Typically, perennial branches have names like \"development\", \"staging\", \"qa\", \"production\", etc.\n\n")
+	s.WriteString(enterPerennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
 		checked := self.isRowChecked(i)

@@ -10,6 +10,7 @@ func RootCmd() *cobra.Command {
 		Short:  "Displays dialogs to help debug them.",
 		Hidden: true,
 	}
+	debugCommand.AddCommand(enterAliases())
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterParentCmd())
 	debugCommand.AddCommand(enterPerennialBranchesCmd())

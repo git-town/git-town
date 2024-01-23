@@ -13,11 +13,10 @@ import (
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
-	dialogData := SwitchModel{
+	dialogProcess := tea.NewProgram(SwitchModel{
 		BubbleList:       newBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
-	}
-	dialogProcess := tea.NewProgram(dialogData)
+	})
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return "", false, err

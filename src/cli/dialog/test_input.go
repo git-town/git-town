@@ -68,10 +68,6 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyDown} //nolint:exhaustruct
 	case "enter":
 		return tea.KeyMsg{Type: tea.KeyEnter} //nolint:exhaustruct
-	case "o":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //nolint:exhaustruct
-	case "q":
-		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //nolint:exhaustruct
 	case "space":
 		return tea.KeyMsg{Type: tea.KeySpace} //nolint:exhaustruct
 	case "up":
@@ -96,6 +92,12 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'8'}} //nolint:exhaustruct
 	case "9":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //nolint:exhaustruct
+	case "a":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //nolint:exhaustruct
+	case "o":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //nolint:exhaustruct
+	case "q":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}} //nolint:exhaustruct
 	}
 	panic("unknown test input: " + input)
 }
