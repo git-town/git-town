@@ -46,7 +46,7 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	allAliasableCommands := configdomain.AllAliasableCommands()
-	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.Config.FullConfig.Aliases, config.dialogInputs.Next())
+	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.FullConfig.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
