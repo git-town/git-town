@@ -145,7 +145,7 @@ func TestEnterAliases(t *testing.T) {
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
-		t.Run("currently selected alias is set to the Git Town command", func(t *testing.T) {
+		t.Run("currently selecting an alias that is set on disk to a Git Town command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
@@ -174,7 +174,7 @@ func TestEnterAliases(t *testing.T) {
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
-		t.Run("currently selected alias is set to an external command", func(t *testing.T) {
+		t.Run("currently selecting an alias that is currently set on disk to an external command", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
