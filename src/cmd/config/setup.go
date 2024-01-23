@@ -59,7 +59,7 @@ func executeConfigSetup(verbose bool) error {
 			if err != nil {
 				return err
 			}
-		case !hasOld && hasNew || newAlias != oldAlias:
+		case newAlias != oldAlias:
 			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
 			if err != nil {
 				return err
