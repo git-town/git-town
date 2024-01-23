@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -50,32 +51,27 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
+	changedAliases := false
 	for _, aliasableCommand := range allAliasableCommands {
 		newAlias, hasNew := newAliases[aliasableCommand]
 		oldAlias, hasOld := config.FullConfig.Aliases[aliasableCommand]
-		if !hasOld && !hasNew {
-			continue
-		}
-		if !hasOld && hasNew {
-			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-			continue
-		}
-		if hasOld && !hasNew {
+		switch {
+		case hasOld && !hasNew:
 			err := repo.Runner.Frontend.RemoveGitAlias(aliasableCommand)
 			if err != nil {
 				return err
 			}
-			continue
-		}
-		if newAlias != oldAlias {
+			changedAliases = true
+		case !hasOld && hasNew || newAlias != oldAlias:
 			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
 			if err != nil {
 				return err
 			}
+			changedAliases = true
 		}
+	}
+	if changedAliases {
+		fmt.Println()
 	}
 	defaultMainBranch := repo.Runner.MainBranch
 	if defaultMainBranch.IsEmpty() {
