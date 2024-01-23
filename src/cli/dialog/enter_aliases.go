@@ -41,7 +41,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	if err != nil || result.aborted() {
 		return configdomain.Aliases{}, result.aborted(), err
 	}
-	selectedCommands := result.Checked(allAliasableCommands)
+	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
 	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, result.aborted()))
 	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.aborted(), err
@@ -55,11 +55,11 @@ type AliasesModel struct {
 	selectedColor        termenv.Style
 }
 
-func (self AliasesModel) Checked(aliasableCommands configdomain.AliasableCommands) configdomain.AliasableCommands {
+func (self AliasesModel) Checked() configdomain.AliasableCommands {
 	result := configdomain.AliasableCommands{}
 	for c, choice := range self.CurrentSelections {
 		if choice == AliasSelectionGT {
-			result = append(result, aliasableCommands[c])
+			result = append(result, self.AllAliasableCommands[c])
 		}
 	}
 	return result
