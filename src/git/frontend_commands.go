@@ -224,8 +224,8 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 }
 
 // SetCodeHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetCodeHostingPlatform(name string) error {
-	return self.Run("git", "config", gitconfig.KeyCodeHostingPlatform.String(), name)
+func (self *FrontendCommands) SetCodeHostingPlatform(platform configdomain.CodeHostingPlatform) error {
+	return self.Run("git", "config", gitconfig.KeyCodeHostingPlatform.String(), platform.String())
 }
 
 // SetGitAlias sets the given Git alias.

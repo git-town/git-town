@@ -101,14 +101,14 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 	switch {
-	case config.CodeHostingPlatform == "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
+	case config.CodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
 		// no changes --> do nothing
 	case config.CodeHostingPlatform != "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
 		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
 		if err != nil {
 			return err
 		}
-	case config.CodeHostingPlatform.String() != newCodeHostingPlatform:
+	case config.CodeHostingPlatform != newCodeHostingPlatform:
 		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatform)
 		if err != nil {
 			return err
