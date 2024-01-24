@@ -17,7 +17,8 @@ Feature: enter Git Town configuration
       | push-hook                   | enter |
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
-    Then the main branch is now "main"
+    Then it runs no commands
+    And the main branch is now "main"
     And there are still no perennial branches
     And local Git Town setting "code-hosting-platform" is still not set
     And local Git Town setting "push-new-branches" is now "false"
@@ -47,7 +48,21 @@ Feature: enter Git Town configuration
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
-    Then global Git setting "alias.append" is now "town append"
+    Then it runs the commands
+      | COMMAND                                                      |
+      | git config --global alias.append "town append"               |
+      | git config --global alias.diff-parent "town diff-parent"     |
+      | git config --global alias.hack "town hack"                   |
+      | git config --global alias.kill "town kill"                   |
+      | git config --global alias.prepend "town prepend"             |
+      | git config --global alias.propose "town propose"             |
+      | git config --global alias.rename-branch "town rename-branch" |
+      | git config --global alias.repo "town repo"                   |
+      | git config --global alias.set-parent "town set-parent"       |
+      | git config --global alias.ship "town ship"                   |
+      | git config --global alias.sync "town sync"                   |
+      | git config git-town.code-hosting-platform github             |
+    And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
     And global Git setting "alias.kill" is now "town kill"
