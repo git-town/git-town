@@ -85,7 +85,6 @@ Feature: enter Git Town configuration
       | sync-before-ship            | enter   |
     Then global Git setting "alias.append" is now "town append"
 
-  @this
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
@@ -93,6 +92,7 @@ Feature: enter Git Town configuration
       | aliases                     | enter      |                                             |
       | main development branch     | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
+      | hosting service             | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |
       | sync-perennial-strategy     | enter      |                                             |
       | sync-upstream               | enter      |                                             |
