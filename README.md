@@ -47,10 +47,8 @@ Flow, and trunk-based development. Check out
 - [git set-parent](https://www.git-town.com/commands/set-parent.html) - updates
   a branch's parent
 
-#### Setup/configuration
+#### Configuration
 
-- [git town install](https://www.git-town.com/commands/install.html) - install
-  Git Town on your computer
 - [git town config](https://www.git-town.com/commands/config.html) - display or
   update your Git Town configuration
 - [git town version](https://www.git-town.com/commands/version.html) - display

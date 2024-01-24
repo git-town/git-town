@@ -45,6 +45,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+
+	// ALIASES
 	allAliasableCommands := configdomain.AllAliasableCommands()
 	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.FullConfig.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -66,6 +68,8 @@ func executeConfigSetup(verbose bool) error {
 			}
 		}
 	}
+
+	// MAIN BRANCH
 	defaultMainBranch := repo.Runner.MainBranch
 	if defaultMainBranch.IsEmpty() {
 		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
@@ -78,6 +82,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// PERENNIAL BRANCHES
 	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -88,6 +94,28 @@ func executeConfigSetup(verbose bool) error {
 			return err
 		}
 	}
+
+	// CODE HOSTING
+	newCodeHostingPlatformName, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatformName, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	switch {
+	case config.CodeHostingPlatformName == "" && newCodeHostingPlatformName == configdomain.CodeHostingPlatformNameAutoDetect:
+		// no changes --> do nothing
+	case config.CodeHostingPlatformName != "" && newCodeHostingPlatformName == configdomain.CodeHostingPlatformNameAutoDetect:
+		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
+		if err != nil {
+			return err
+		}
+	case config.CodeHostingPlatformName.String() != newCodeHostingPlatformName:
+		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatformName)
+		if err != nil {
+			return err
+		}
+	}
+
+	// SYNC-FEATURE-STRATEGY
 	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -96,6 +124,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// SYNC-PERENNIAL-STRATEGY
 	newSyncPerennialStrategy, aborted, err := dialog.EnterSyncPerennialStrategy(config.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -104,6 +134,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// SYNC UPSTREAM
 	newSyncUpstream, aborted, err := dialog.EnterSyncUpstream(config.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -112,6 +144,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// PUSH NEW BRANCHES
 	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -120,6 +154,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// PUSH HOOK
 	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -128,6 +164,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// SYNC BEFORE SHIP
 	newSyncBeforeShip, aborted, err := dialog.EnterSyncBeforeShip(config.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -136,6 +174,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
+	// SHIP DELETE TRACKING BRANCH
 	newShipDeleteTrackingBranch, aborted, err := dialog.EnterShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -144,6 +184,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

@@ -11,6 +11,7 @@ func RootCmd() *cobra.Command {
 		Hidden: true,
 	}
 	debugCommand.AddCommand(enterAliases())
+	debugCommand.AddCommand(enterHostingPlatform())
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterParentCmd())
 	debugCommand.AddCommand(enterPerennialBranchesCmd())

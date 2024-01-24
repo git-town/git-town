@@ -475,7 +475,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s_%d=%s", dialog.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialog.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
@@ -645,6 +645,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.CodeHostingPlatformName
 		if have.String() != want {
 			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "code-hosting-platform" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.CodeHostingPlatformName
+		if have != nil {
+			return fmt.Errorf(`expected local setting "code-hosting-platform" to not exist but was %q`, *have)
 		}
 		return nil
 	})
