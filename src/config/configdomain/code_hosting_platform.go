@@ -15,10 +15,17 @@ func (self CodeHostingPlatform) String() string {
 }
 
 func NewCodeHostingPlatform(value string) CodeHostingPlatform {
-	for _, codeHostingPlatformName := range AllCodeHostingPlatforms() {
-		if codeHostingPlatformName.String() == value {
-			return codeHostingPlatformName
-		}
+	switch value {
+	case "", "auto-detect":
+		return CodeHostingPlatformAutoDetect
+	case "bitbucket", "BitBucket":
+		return CodeHostingPlatformBitBucket
+	case "gitea", "Gitea":
+		return CodeHostingPlatformGitea
+	case "github", "GitHub":
+		return CodeHostingPlatformGitHub
+	case "gitlab", "GitLab":
+		return CodeHostingPlatformGitLab
 	}
 	panic("unknown code hosting platform: " + value)
 }
