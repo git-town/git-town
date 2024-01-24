@@ -76,7 +76,7 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Entry("sync before shipping", format.Bool(config.SyncBeforeShip.Bool()))
 	fmt.Println()
 	print.Header("Hosting")
-	print.Entry("hosting service override", format.StringSetting(config.CodeHostingPlatformName.String()))
+	print.Entry("hosting service override", format.StringSetting(config.CodeHostingPlatform.String()))
 	print.Entry("GitHub token", format.StringSetting(string(config.GitHubToken)))
 	print.Entry("GitLab token", format.StringSetting(string(config.GitLabToken)))
 	print.Entry("Gitea token", format.StringSetting(string(config.GiteaToken)))

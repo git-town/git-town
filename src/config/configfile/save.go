@@ -48,8 +48,8 @@ func toData(config *configdomain.PartialConfig) Data {
 	if config.CodeHostingOriginHostname != nil {
 		codeHosting.OriginHostname = (*string)(config.CodeHostingOriginHostname)
 	}
-	if config.CodeHostingPlatformName != nil {
-		codeHosting.Platform = (*string)(config.CodeHostingPlatformName)
+	if config.CodeHostingPlatform != nil {
+		codeHosting.Platform = (*string)(config.CodeHostingPlatform)
 	}
 	if !codeHosting.IsEmpty() {
 		result.CodeHosting = &codeHosting

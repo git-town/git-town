@@ -59,7 +59,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupCodeHostingPlatform(config.CodeHostingPlatformName, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupCodeHostingPlatform(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
