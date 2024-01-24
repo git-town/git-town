@@ -14,10 +14,10 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(platformName configdomain.CodeHostingPlatformName, inputs TestInput) (string, bool, error) {
+func EnterHostingPlatform(platformName configdomain.CodeHostingPlatform, inputs TestInput) (string, bool, error) {
 	selection, aborted, err := radioList(radioListArgs{
 		entries: []string{
-			configdomain.CodeHostingPlatformNameAutoDetect,
+			configdomain.CodeHostingPlatformAutoDetect,
 			configdomain.CodeHostingPlatformBitBucket,
 			configdomain.CodeHostingPlatformGitea,
 			configdomain.CodeHostingPlatformGitHub,
