@@ -28,7 +28,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-before-ship" is now "false"
     And local Git Town setting "code-hosting-platform" is still not set
 
-  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -76,6 +75,7 @@ Feature: enter Git Town configuration
       | aliases                     | o enter |
       | main development branch     | enter   |
       | perennial branches          | enter   |
+      | hosting service             | enter   |
       | sync-feature-strategy       | enter   |
       | sync-perennial-strategy     | enter   |
       | sync-upstream               | enter   |
@@ -85,6 +85,7 @@ Feature: enter Git Town configuration
       | sync-before-ship            | enter   |
     Then global Git setting "alias.append" is now "town append"
 
+  @this
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
