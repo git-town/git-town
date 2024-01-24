@@ -39,7 +39,7 @@ Feature: enter Git Town configuration
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
-      | set a hosting service                     | down enter             |
+      | set a hosting service                     | up up enter            |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -60,6 +60,7 @@ Feature: enter Git Town configuration
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
+    And local Git Town setting "code-hosting-platform" is now "github"
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
