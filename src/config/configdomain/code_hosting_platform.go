@@ -3,25 +3,15 @@ package configdomain
 type CodeHostingPlatform string
 
 const (
-	CodeHostingPlatformAutoDetect = "auto-detect"
-	CodeHostingPlatformBitBucket  = "bitbucket"
-	CodeHostingPlatformGitea      = "gitea"
-	CodeHostingPlatformGitHub     = "github"
-	CodeHostingPlatformGitLab     = "gitlab"
+	CodeHostingPlatformAutoDetect CodeHostingPlatform = "auto-detect"
+	CodeHostingPlatformBitBucket  CodeHostingPlatform = "bitbucket"
+	CodeHostingPlatformGitea      CodeHostingPlatform = "gitea"
+	CodeHostingPlatformGitHub     CodeHostingPlatform = "github"
+	CodeHostingPlatformGitLab     CodeHostingPlatform = "gitlab"
 )
 
 func (self CodeHostingPlatform) String() string {
 	return string(self)
-}
-
-func AllCodeHostingPlatforms() []CodeHostingPlatform {
-	return []CodeHostingPlatform{
-		CodeHostingPlatformAutoDetect,
-		CodeHostingPlatformBitBucket,
-		CodeHostingPlatformGitea,
-		CodeHostingPlatformGitHub,
-		CodeHostingPlatformGitLab,
-	}
 }
 
 func NewCodeHostingPlatform(value string) CodeHostingPlatform {
