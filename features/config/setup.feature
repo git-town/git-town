@@ -84,7 +84,10 @@ Feature: enter Git Town configuration
       | push-hook                   | enter   |
       | ship-delete-tracking-branch | enter   |
       | sync-before-ship            | enter   |
-    Then global Git setting "alias.append" is now "town append"
+    Then it runs the commands
+      | COMMAND                                        |
+      | git config --global alias.append "town append" |
+    And global Git setting "alias.append" is now "town append"
 
   Scenario: don't ask for perennial branches if no branches that could be perennial exist
     Given Git Town is not configured
@@ -119,4 +122,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter          |                                             |
       | ship-delete-tracking-branch | enter          |                                             |
       | sync-before-ship            | enter          |                                             |
-    Then local Git Town setting "code-hosting-platform" is now not set
+    Then it runs the commands
+      | COMMAND                                           |
+      | git config --unset git-town.code-hosting-platform |
+    And local Git Town setting "code-hosting-platform" is now not set
