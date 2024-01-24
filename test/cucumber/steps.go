@@ -475,7 +475,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s_%d=%s", dialog.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialog.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()

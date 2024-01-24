@@ -40,6 +40,7 @@ Feature: enter Git Town configuration
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
+      | set a hosting service                     | down enter             |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
