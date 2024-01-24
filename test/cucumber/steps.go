@@ -649,6 +649,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "code-hosting-platform" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.CodeHostingPlatformName
+		if have != nil {
+			return fmt.Errorf(`expected local setting "code-hosting-platform" to not exist but was %q`, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
 		want := gitdomain.NewLocalBranchName(wantStr)

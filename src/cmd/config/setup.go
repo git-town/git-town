@@ -95,6 +95,24 @@ func executeConfigSetup(verbose bool) error {
 		}
 	}
 
+	// CODE HOSTING
+	newCodeHostingPlatformName, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatformName, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	switch {
+	case config.CodeHostingPlatformName != "" && newCodeHostingPlatformName == "":
+		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
+		if err != nil {
+			return err
+		}
+	case config.CodeHostingPlatformName.String() != newCodeHostingPlatformName:
+		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatformName)
+		if err != nil {
+			return err
+		}
+	}
+
 	// SYNC-FEATURE-STRATEGY
 	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -164,6 +182,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
