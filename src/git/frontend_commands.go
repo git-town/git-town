@@ -103,6 +103,11 @@ func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchN
 	return self.Run("git", args...)
 }
 
+// SetCodeHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) DeleteCodeHostingPlatform() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyCodeHostingPlatform.String())
+}
+
 // DeleteLastCommit resets HEAD to the previous commit.
 func (self *FrontendCommands) DeleteLastCommit() error {
 	return self.Run("git", "reset", "--hard", "HEAD~1")
@@ -216,6 +221,11 @@ func (self *FrontendCommands) ResetRemoteBranchToSHA(branch gitdomain.RemoteBran
 // RevertCommit reverts the commit with the given SHA.
 func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 	return self.Run("git", "revert", sha.String())
+}
+
+// SetCodeHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetCodeHostingPlatform(name string) error {
+	return self.Run("git", "config", gitconfig.KeyCodeHostingPlatform.String(), name)
 }
 
 // SetGitAlias sets the given Git alias.
