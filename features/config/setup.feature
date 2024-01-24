@@ -19,6 +19,7 @@ Feature: enter Git Town configuration
       | sync-before-ship            | enter |
     Then the main branch is now "main"
     And there are still no perennial branches
+    And local Git Town setting "code-hosting-platform" is still not set
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "sync-feature-strategy" is now "merge"
@@ -26,7 +27,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-upstream" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
     And local Git Town setting "sync-before-ship" is now "false"
-    And local Git Town setting "code-hosting-platform" is still not set
 
   Scenario: change existing configuration
     Given a perennial branch "qa"
@@ -103,3 +103,20 @@ Feature: enter Git Town configuration
       | sync-before-ship            | enter      |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
+
+  Scenario: remove an existing code hosting override
+    Given local Git Town setting "code-hosting-platform" is "github"
+    When I run "git-town config setup" and enter into the dialog:
+      | DIALOG                      | KEYS           | DESCRIPTION                                 |
+      | aliases                     | enter          |                                             |
+      | main development branch     | down enter     |                                             |
+      | perennial branches          |                | no input here since the dialog doesn't show |
+      | hosting service             | up up up enter |                                             |
+      | sync-feature-strategy       | enter          |                                             |
+      | sync-perennial-strategy     | enter          |                                             |
+      | sync-upstream               | enter          |                                             |
+      | push-new-branches           | enter          |                                             |
+      | push-hook                   | enter          |                                             |
+      | ship-delete-tracking-branch | enter          |                                             |
+      | sync-before-ship            | enter          |                                             |
+    Then local Git Town setting "code-hosting-platform" is now not set
