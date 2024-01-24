@@ -1,22 +1,22 @@
 package configdomain
 
-type CodeHostingPlatformName string
+type CodeHostingPlatform string
 
 const (
-	CodeHostingPlatformNameAutoDetect = "auto-detect"
-	CodeHostingPlatformBitBucket      = "bitbucket"
-	CodeHostingPlatformGitea          = "gitea"
-	CodeHostingPlatformGitHub         = "github"
-	CodeHostingPlatformGitLab         = "gitlab"
+	CodeHostingPlatformAutoDetect = "auto-detect"
+	CodeHostingPlatformBitBucket  = "bitbucket"
+	CodeHostingPlatformGitea      = "gitea"
+	CodeHostingPlatformGitHub     = "github"
+	CodeHostingPlatformGitLab     = "gitlab"
 )
 
-func (self CodeHostingPlatformName) String() string {
+func (self CodeHostingPlatform) String() string {
 	return string(self)
 }
 
-func AllCodeHostingPlatformNames() []CodeHostingPlatformName {
-	return []CodeHostingPlatformName{
-		CodeHostingPlatformNameAutoDetect,
+func AllCodeHostingPlatforms() []CodeHostingPlatform {
+	return []CodeHostingPlatform{
+		CodeHostingPlatformAutoDetect,
 		CodeHostingPlatformBitBucket,
 		CodeHostingPlatformGitea,
 		CodeHostingPlatformGitHub,
@@ -24,8 +24,8 @@ func AllCodeHostingPlatformNames() []CodeHostingPlatformName {
 	}
 }
 
-func NewCodeHostingPlatformName(value string) CodeHostingPlatformName {
-	for _, codeHostingPlatformName := range AllCodeHostingPlatformNames() {
+func NewCodeHostingPlatform(value string) CodeHostingPlatform {
+	for _, codeHostingPlatformName := range AllCodeHostingPlatforms() {
 		if codeHostingPlatformName.String() == value {
 			return codeHostingPlatformName
 		}
@@ -33,7 +33,7 @@ func NewCodeHostingPlatformName(value string) CodeHostingPlatformName {
 	panic("unknown code hosting platform name: " + value)
 }
 
-func NewCodeHostingPlatformNameRef(value string) *CodeHostingPlatformName {
-	result := NewCodeHostingPlatformName(value)
+func NewCodeHostingPlatformRef(value string) *CodeHostingPlatform {
+	result := NewCodeHostingPlatform(value)
 	return &result
 }
