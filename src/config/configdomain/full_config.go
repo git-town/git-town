@@ -9,7 +9,7 @@ import (
 type FullConfig struct {
 	Aliases                   Aliases
 	CodeHostingOriginHostname CodeHostingOriginHostname
-	CodeHostingPlatformName   CodeHostingPlatformName
+	CodeHostingPlatform       CodeHostingPlatform
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
 	GitLabToken               GitLabToken
@@ -36,7 +36,7 @@ func (self *FullConfig) ContainsLineage() bool {
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *FullConfig) HostingService() (Hosting, error) {
-	return NewHosting(self.CodeHostingPlatformName)
+	return NewHosting(self.CodeHostingPlatform)
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
@@ -74,8 +74,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.CodeHostingOriginHostname != nil {
 		self.CodeHostingOriginHostname = *other.CodeHostingOriginHostname
 	}
-	if other.CodeHostingPlatformName != nil {
-		self.CodeHostingPlatformName = *other.CodeHostingPlatformName
+	if other.CodeHostingPlatform != nil {
+		self.CodeHostingPlatform = *other.CodeHostingPlatform
 	}
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
@@ -141,7 +141,7 @@ func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                   Aliases{},
 		CodeHostingOriginHostname: "",
-		CodeHostingPlatformName:   "",
+		CodeHostingPlatform:       "",
 		GiteaToken:                "",
 		GitLabToken:               "",
 		GitHubToken:               "",

@@ -96,20 +96,20 @@ func executeConfigSetup(verbose bool) error {
 	}
 
 	// CODE HOSTING
-	newCodeHostingPlatformName, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatformName, config.dialogInputs.Next())
+	newCodeHostingPlatform, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
 	switch {
-	case config.CodeHostingPlatformName == "" && newCodeHostingPlatformName == configdomain.CodeHostingPlatformNameAutoDetect:
+	case config.CodeHostingPlatform == "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
 		// no changes --> do nothing
-	case config.CodeHostingPlatformName != "" && newCodeHostingPlatformName == configdomain.CodeHostingPlatformNameAutoDetect:
+	case config.CodeHostingPlatform != "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
 		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
 		if err != nil {
 			return err
 		}
-	case config.CodeHostingPlatformName.String() != newCodeHostingPlatformName:
-		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatformName)
+	case config.CodeHostingPlatform.String() != newCodeHostingPlatform:
+		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatform)
 		if err != nil {
 			return err
 		}

@@ -8,7 +8,7 @@ import (
 type PartialConfig struct {
 	Aliases                   Aliases
 	CodeHostingOriginHostname *CodeHostingOriginHostname
-	CodeHostingPlatformName   *CodeHostingPlatformName
+	CodeHostingPlatform       *CodeHostingPlatform
 	GiteaToken                *GiteaToken
 	GitHubToken               *GitHubToken
 	GitLabToken               *GitLabToken
