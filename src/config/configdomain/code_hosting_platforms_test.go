@@ -13,11 +13,12 @@ func TestCodeHostingPlatforms(t *testing.T) {
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.CodeHostingPlatforms{
+			configdomain.CodeHostingPlatformAutoDetect,
 			configdomain.CodeHostingPlatformGitHub,
 			configdomain.CodeHostingPlatformGitLab,
 		}
 		have := give.Strings()
-		want := []string{"github", "gitlab"}
+		want := []string{"auto-detect", "github", "gitlab"}
 		must.Eq(t, want, have)
 	})
 }
