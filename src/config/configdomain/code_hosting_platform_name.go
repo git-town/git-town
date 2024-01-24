@@ -30,7 +30,7 @@ func NewCodeHostingPlatform(value string) CodeHostingPlatform {
 			return codeHostingPlatformName
 		}
 	}
-	panic("unknown code hosting platform name: " + value)
+	panic("unknown code hosting platform: " + value)
 }
 
 func NewCodeHostingPlatformRef(value string) *CodeHostingPlatform {
