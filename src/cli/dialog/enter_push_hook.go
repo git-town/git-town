@@ -36,7 +36,7 @@ func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdoma
 		return true, aborted, err
 	}
 	fmt.Printf("Push hook: %s\n", formattedSelection(selection.String(), aborted))
-	return selection.ToPushHook(), aborted, err
+	return selection.PushHook(), aborted, err
 }
 
 type pushHookEntry string
@@ -45,7 +45,7 @@ func (self pushHookEntry) String() string {
 	return string(self)
 }
 
-func (self pushHookEntry) ToPushHook() configdomain.PushHook {
+func (self pushHookEntry) PushHook() configdomain.PushHook {
 	switch self {
 	case pushHookEntryEnabled:
 		return configdomain.PushHook(true)

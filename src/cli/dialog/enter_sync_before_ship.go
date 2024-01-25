@@ -40,7 +40,7 @@ func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput)
 		return true, aborted, err
 	}
 	fmt.Printf("Sync before ship: %s\n", formattedSelection(selection.Short(), aborted))
-	return selection.ToSyncBeforeShip(), aborted, err
+	return selection.SyncBeforeShip(), aborted, err
 }
 
 type syncBeforeShipEntry string
@@ -54,7 +54,7 @@ func (self syncBeforeShipEntry) String() string {
 	return string(self)
 }
 
-func (self syncBeforeShipEntry) ToSyncBeforeShip() configdomain.SyncBeforeShip {
+func (self syncBeforeShipEntry) SyncBeforeShip() configdomain.SyncBeforeShip {
 	switch self {
 	case SyncBeforeShipEntryYes:
 		return configdomain.SyncBeforeShip(true)

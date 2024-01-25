@@ -39,7 +39,7 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 		return true, aborted, err
 	}
 	fmt.Printf("Push new branches: %s\n", formattedSelection(selection.Short(), aborted))
-	return selection.ToNewBranchPush(), aborted, err
+	return selection.NewBranchPush(), aborted, err
 }
 
 type pushNewBranchesEntry string
@@ -53,7 +53,7 @@ func (self pushNewBranchesEntry) String() string {
 	return string(self)
 }
 
-func (self pushNewBranchesEntry) ToNewBranchPush() configdomain.NewBranchPush {
+func (self pushNewBranchesEntry) NewBranchPush() configdomain.NewBranchPush {
 	switch self {
 	case PushNewBranchesEntryYes:
 		return configdomain.NewBranchPush(true)

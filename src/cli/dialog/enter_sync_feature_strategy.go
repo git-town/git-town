@@ -40,7 +40,7 @@ func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs 
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
 	fmt.Printf("Sync feature branches: %s\n", formattedSelection(cutSelection, aborted))
-	return selection.ToSyncFeatureStrategy(), aborted, err
+	return selection.SyncFeatureStrategy(), aborted, err
 }
 
 type syncFeatureStrategyEntry string
@@ -49,7 +49,7 @@ func (self syncFeatureStrategyEntry) String() string {
 	return string(self)
 }
 
-func (self syncFeatureStrategyEntry) ToSyncFeatureStrategy() configdomain.SyncFeatureStrategy {
+func (self syncFeatureStrategyEntry) SyncFeatureStrategy() configdomain.SyncFeatureStrategy {
 	switch self {
 	case syncFeatureStrategyEntryMerge:
 		return configdomain.SyncFeatureStrategyMerge

@@ -34,7 +34,7 @@ func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranc
 		return true, aborted, err
 	}
 	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(selection.Short(), aborted))
-	return selection.ToShipDeleteTrackingBranch(), aborted, err
+	return selection.ShipDeleteTrackingBranch(), aborted, err
 }
 
 type shipDeleteTrackingBranchEntry string
@@ -48,7 +48,7 @@ func (self shipDeleteTrackingBranchEntry) String() string {
 	return string(self)
 }
 
-func (self shipDeleteTrackingBranchEntry) ToShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
+func (self shipDeleteTrackingBranchEntry) ShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
 	switch self {
 	case ShipDeleteTrackingBranchEntryYes:
 		return configdomain.ShipDeleteTrackingBranch(true)

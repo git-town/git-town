@@ -38,7 +38,7 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), ",")
 	fmt.Printf("Sync with upstream: %s\n", formattedSelection(cutSelection, aborted))
-	return selection.ToSyncUpstream(), aborted, err
+	return selection.SyncUpstream(), aborted, err
 }
 
 type syncUpstreamEntry string
@@ -47,7 +47,7 @@ func (self syncUpstreamEntry) String() string {
 	return string(self)
 }
 
-func (self syncUpstreamEntry) ToSyncUpstream() configdomain.SyncUpstream {
+func (self syncUpstreamEntry) SyncUpstream() configdomain.SyncUpstream {
 	switch self {
 	case syncUpstreamEntryYes:
 		return configdomain.SyncUpstream(true)

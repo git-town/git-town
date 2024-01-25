@@ -37,7 +37,7 @@ func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inp
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}
 	fmt.Printf("Sync perennial branches: %s\n", formattedSelection(selection.Short(), aborted))
-	return selection.ToSyncPerennialStrategy(), aborted, err
+	return selection.SyncPerennialStrategy(), aborted, err
 }
 
 type syncPerennialStrategyEntry string
@@ -51,7 +51,7 @@ func (self syncPerennialStrategyEntry) String() string {
 	return string(self)
 }
 
-func (self syncPerennialStrategyEntry) ToSyncPerennialStrategy() configdomain.SyncPerennialStrategy {
+func (self syncPerennialStrategyEntry) SyncPerennialStrategy() configdomain.SyncPerennialStrategy {
 	switch self {
 	case SyncPerennialStrategyEntryMerge:
 		return configdomain.SyncPerennialStrategyMerge
