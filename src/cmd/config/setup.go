@@ -84,18 +84,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// PERENNIAL BRANCHES
-	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
+	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 || repo.Runner.LocalGitConfig.PerennialBranches == nil {
-		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
-		if err != nil {
-			return err
-		}
-	}
-
 	aborted, err = setupCodeHosting(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -168,6 +160,17 @@ func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *gi
 		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
 	}
 	return aborted, nil
+}
+
+func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterPerennialBranches(allBranches, existingValue, mainBranch, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	if slices.Compare(runner.PerennialBranches, newValue) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
+		err = runner.SetPerennialBranches(newValue)
+	}
+	return aborted, err
 }
 
 func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
