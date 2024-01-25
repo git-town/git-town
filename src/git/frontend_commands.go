@@ -103,7 +103,7 @@ func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchN
 	return self.Run("git", args...)
 }
 
-// SetCodeHostingPlatform sets the given code hosting platform.
+// DeleteHostingPlatform removes the hosting platform config entry.
 func (self *FrontendCommands) DeleteHostingPlatform() error {
 	return self.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
 }

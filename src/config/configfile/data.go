@@ -3,7 +3,7 @@ package configfile
 // Data defines the Go equivalent of the TOML file content.
 type Data struct {
 	Branches                 *Branches     `toml:"branches"`
-	CodeHosting              *CodeHosting  `toml:"code-hosting"`
+	Hosting                  *Hosting      `toml:"hosting"`
 	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	PushHook                 *bool         `toml:"push-hook"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
@@ -21,12 +21,12 @@ func (self Branches) IsEmpty() bool {
 	return self.Main == nil && len(self.Perennials) == 0
 }
 
-type CodeHosting struct {
+type Hosting struct {
 	Platform       *string `toml:"platform"`
 	OriginHostname *string `toml:"origin-hostname"`
 }
 
-func (self CodeHosting) IsEmpty() bool {
+func (self Hosting) IsEmpty() bool {
 	return self.Platform == nil && self.OriginHostname == nil
 }
 

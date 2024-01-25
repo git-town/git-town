@@ -48,12 +48,12 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 			result.PerennialBranches = gitdomain.NewLocalBranchNamesRef(data.Branches.Perennials...)
 		}
 	}
-	if data.CodeHosting != nil {
-		if data.CodeHosting.Platform != nil {
-			result.HostingPlatform = configdomain.NewHostingPlatformRef(*data.CodeHosting.Platform)
+	if data.Hosting != nil {
+		if data.Hosting.Platform != nil {
+			result.HostingPlatform = configdomain.NewHostingPlatformRef(*data.Hosting.Platform)
 		}
-		if data.CodeHosting.OriginHostname != nil {
-			result.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(*data.CodeHosting.OriginHostname)
+		if data.Hosting.OriginHostname != nil {
+			result.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(*data.Hosting.OriginHostname)
 		}
 	}
 	if data.SyncStrategy != nil {

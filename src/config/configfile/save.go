@@ -44,7 +44,7 @@ func toData(config *configdomain.PartialConfig) Data {
 		result.Branches = &branches
 	}
 	// codehosting
-	codeHosting := CodeHosting{} //nolint:exhaustruct
+	codeHosting := Hosting{} //nolint:exhaustruct
 	if config.HostingOriginHostname != nil {
 		codeHosting.OriginHostname = (*string)(config.HostingOriginHostname)
 	}
@@ -52,7 +52,7 @@ func toData(config *configdomain.PartialConfig) Data {
 		codeHosting.Platform = (*string)(config.HostingPlatform)
 	}
 	if !codeHosting.IsEmpty() {
-		result.CodeHosting = &codeHosting
+		result.Hosting = &codeHosting
 	}
 	// sync-strategy
 	syncStrategy := SyncStrategy{} //nolint:exhaustruct
