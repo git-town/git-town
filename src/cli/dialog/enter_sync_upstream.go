@@ -27,12 +27,7 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncUpstreamHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

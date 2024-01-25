@@ -22,24 +22,39 @@ on the first run of "git sync".
 `
 
 func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
-	entries := []string{"yes, push new branches to origin", "no, new branches remain local until synced"}
+	entries := []pushNewBranchesEntry{pushNewBranchesEntryYes, pushNewBranchesEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterPushNewBranchesHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterPushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
+	cutSelection, _, _ := strings.Cut(selection.String(), ",")
 	fmt.Printf("Push new branches: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseNewBranchPush(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	return selection.ToNewBranchPush(), aborted, err
 }
+
+type pushNewBranchesEntry string
+
+func (self pushNewBranchesEntry) String() string {
+	return string(self)
+}
+
+func (self pushNewBranchesEntry) ToNewBranchPush() configdomain.NewBranchPush {
+	switch self {
+	case pushNewBranchesEntryYes:
+		return configdomain.NewBranchPush(true)
+	case pushNewBranchesEntryNo:
+		return configdomain.NewBranchPush(false)
+	}
+	panic("unhandled pushNewBranchesEntry: " + self)
+}
+
+const (
+	pushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"
+	pushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
+)

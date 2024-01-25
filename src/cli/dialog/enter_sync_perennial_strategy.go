@@ -27,12 +27,7 @@ func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inp
 	default:
 		panic("unknown sync-perennial-strategy: " + existing.String())
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncPerennialStrategyHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}

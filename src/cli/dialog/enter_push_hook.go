@@ -19,23 +19,38 @@ Push hooks in Git Town are:
 `
 
 func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
-	entries := []string{"enabled", "disabled"}
+	entries := []pushHookEntry{pushHookEntryEnabled, pushHookEntryDisabled}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterPushHookHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterPushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push hook: %s\n", formattedSelection(selection, aborted))
-	result, err := configdomain.NewPushHook(selection, "user dialog")
-	return result, aborted, err
+	fmt.Printf("Push hook: %s\n", formattedSelection(selection.String(), aborted))
+	return selection.ToPushHook(), aborted, err
 }
+
+type pushHookEntry string
+
+func (self pushHookEntry) String() string {
+	return string(self)
+}
+
+func (self pushHookEntry) ToPushHook() configdomain.PushHook {
+	switch self {
+	case pushHookEntryEnabled:
+		return configdomain.PushHook(true)
+	case pushHookEntryDisabled:
+		return configdomain.PushHook(false)
+	}
+	panic("unhandled pushHookEntry: " + self)
+}
+
+const (
+	pushHookEntryEnabled  pushHookEntry = "enabled"
+	pushHookEntryDisabled pushHookEntry = "disabled"
+)

@@ -23,24 +23,39 @@ But this also triggers another CI run and delays shipping.
 `
 
 func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []string{`yes, "git ship" should also sync the branch`, `no, "git ship" should not sync the branch`}
+	entries := []syncBeforeShipEntry{syncBeforeShipEntryYes, syncBeforeShipEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncBeforeShipHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
+	cutSelection, _, _ := strings.Cut(selection.String(), ",")
 	fmt.Printf("Sync before ship: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseSyncBeforeShip(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	return selection.ToSyncBeforeShip(), aborted, err
 }
+
+type syncBeforeShipEntry string
+
+func (self syncBeforeShipEntry) String() string {
+	return string(self)
+}
+
+func (self syncBeforeShipEntry) ToSyncBeforeShip() configdomain.SyncBeforeShip {
+	switch self {
+	case syncBeforeShipEntryYes:
+		return configdomain.SyncBeforeShip(true)
+	case syncBeforeShipEntryNo:
+		return configdomain.SyncBeforeShip(false)
+	}
+	panic("unhandled syncBeforeShipEntry: " + self)
+}
+
+const (
+	syncBeforeShipEntryYes syncBeforeShipEntry = `yes, "git ship" should also sync the branch`
+	syncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
+)

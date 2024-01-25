@@ -51,12 +51,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		options = append(options, formattedOptions[ResponseSkip])
 	}
 	options = append(options, formattedOptions[ResponseUndo], formattedOptions[ResponseDiscard])
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      options,
-		defaultEntry: "",
-		help:         fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)),
-		testInput:    dialogTestInput,
-	})
+	selection, aborted, err := radioList(options, "", fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
 	fmt.Printf("Handle unfinished command: %s\n", formattedSelection(selection, aborted))
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == selection {

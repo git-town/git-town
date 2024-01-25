@@ -17,24 +17,39 @@ merging pull requests through its UI.
 `
 
 func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []string{`yes, "git ship" should delete tracking branches`, `no, my code hosting platform deletes tracking branches`}
+	entries := []shipDeleteTrackingBranchEntry{shipDeleteTrackingBranchEntryYes, shipDeleteTrackingBranchEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterShipDeleteTrackingBranchHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterShipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
+	cutSelection, _, _ := strings.Cut(selection.String(), ",")
 	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseShipDeleteTrackingBranch(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	return selection.ToShipDeleteTrackingBranch(), aborted, err
 }
+
+type shipDeleteTrackingBranchEntry string
+
+func (self shipDeleteTrackingBranchEntry) String() string {
+	return string(self)
+}
+
+func (self shipDeleteTrackingBranchEntry) ToShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
+	switch self {
+	case shipDeleteTrackingBranchEntryYes:
+		return configdomain.ShipDeleteTrackingBranch(true)
+	case shipDeleteTrackingBranchEntryNo:
+		return configdomain.ShipDeleteTrackingBranch(false)
+	}
+	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
+}
+
+const (
+	shipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
+	shipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
+)

@@ -1,6 +1,8 @@
 package dialog
 
-import "github.com/muesli/termenv"
+import (
+	"github.com/muesli/termenv"
+)
 
 // Typical colors used in BubbleTea dialogs.
 type dialogColors struct {

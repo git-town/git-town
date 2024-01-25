@@ -27,7 +27,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	program := tea.NewProgram(perennialBranchesModel{
-		BubbleList:    newBubbleList(perennialCandidates.Strings(), 0),
+		BubbleList:    newBubbleList(perennialCandidates, 0),
 		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	})
@@ -43,8 +43,8 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		return gitdomain.LocalBranchNames{}, false, err
 	}
 	result := dialogResult.(perennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := gitdomain.NewLocalBranchNames(result.checkedEntries()...)
-	selectionText := strings.Join(result.checkedEntries(), ", ")
+	selectedBranches := result.checkedEntries()
+	selectionText := strings.Join(selectedBranches.Strings(), ", ")
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
@@ -53,7 +53,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 }
 
 type perennialBranchesModel struct {
-	BubbleList
+	BubbleList[gitdomain.LocalBranchNames, gitdomain.LocalBranchName]
 	selections    []int
 	selectedColor termenv.Style
 }
@@ -98,13 +98,13 @@ func (self perennialBranchesModel) View() string {
 		s.WriteString(self.entryNumberStr(i))
 		switch {
 		case selected && checked:
-			s.WriteString(self.Colors.selection.Styled("> [x] " + branch))
+			s.WriteString(self.Colors.selection.Styled("> [x] " + branch.String()))
 		case selected && !checked:
-			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch))
+			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch.String()))
 		case !selected && checked:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
 		case !selected && !checked:
-			s.WriteString("  [ ] " + branch)
+			s.WriteString("  [ ] " + branch.String())
 		}
 		s.WriteRune('\n')
 	}
@@ -143,8 +143,8 @@ func (self perennialBranchesModel) View() string {
 }
 
 // checkedEntries provides all checked list entries.
-func (self *perennialBranchesModel) checkedEntries() []string {
-	result := []string{}
+func (self *perennialBranchesModel) checkedEntries() gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
 	for e, entry := range self.Entries {
 		if self.isRowChecked(e) {
 			result = append(result, entry)

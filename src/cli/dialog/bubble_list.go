@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"slices"
 	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -18,29 +17,21 @@ const (
 	dialogStatusAborted                     // the user has aborted the dialog
 )
 
-func DetermineCursorPos(entries []string, initialEntry string) int {
-	cursor := slices.Index(entries, initialEntry)
-	if cursor < 0 {
-		cursor = 0
-	}
-	return cursor
-}
-
 // BubbleList contains common elements of BubbleTea list implementations.
-type BubbleList struct {
+type BubbleList[S ~[]C, C fmt.Stringer] struct {
 	Status       dialogStatus
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
-	Entries      []string      // the entries to select from
+	Entries      S             // the entries to select from
 	EntryNumber  string        // the manually entered entry number
 	MaxDigits    int           // how many digits make up an entry number
 	NumberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList(entries []string, cursor int) BubbleList {
+func newBubbleList[S ~[]C, C fmt.Stringer](entries S, cursor int) BubbleList[S, C] {
 	numberLen := gohacks.NumberLength(len(entries))
-	return BubbleList{
+	return BubbleList[S, C]{
 		Status:       dialogStatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
@@ -53,17 +44,17 @@ func newBubbleList(entries []string, cursor int) BubbleList {
 }
 
 // Aborted indicates whether the user has aborted this dialog.
-func (self *BubbleList) aborted() bool {
+func (self *BubbleList[S, C]) aborted() bool {
 	return self.Status == dialogStatusAborted
 }
 
 // entryNumberStr provides a colorized string to print the given entry number.
-func (self *BubbleList) entryNumberStr(number int) string {
+func (self *BubbleList[S, C]) entryNumberStr(number int) string {
 	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // handleKey handles keypresses that are common for all bubbleLists.
-func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+func (self *BubbleList[S, C]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
@@ -99,7 +90,7 @@ func (self *BubbleList) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	return false, nil
 }
 
-func (self *BubbleList) moveCursorDown() {
+func (self *BubbleList[S, C]) moveCursorDown() {
 	if self.Cursor < len(self.Entries)-1 {
 		self.Cursor++
 	} else {
@@ -107,7 +98,7 @@ func (self *BubbleList) moveCursorDown() {
 	}
 }
 
-func (self *BubbleList) moveCursorUp() {
+func (self *BubbleList[S, C]) moveCursorUp() {
 	if self.Cursor > 0 {
 		self.Cursor--
 	} else {
@@ -115,6 +106,6 @@ func (self *BubbleList) moveCursorUp() {
 	}
 }
 
-func (self BubbleList) selectedEntry() string {
+func (self BubbleList[S, C]) selectedEntry() C {
 	return self.Entries[self.Cursor]
 }
