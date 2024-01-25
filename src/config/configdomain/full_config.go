@@ -8,7 +8,7 @@ import (
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
 	Aliases                   Aliases
-	CodeHostingOriginHostname CodeHostingOriginHostname
+	CodeHostingOriginHostname HostingOriginHostname
 	CodeHostingPlatform       HostingPlatform
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
@@ -71,11 +71,11 @@ func (self *FullConfig) Merge(other PartialConfig) {
 			self.Lineage[child] = parent
 		}
 	}
-	if other.CodeHostingOriginHostname != nil {
-		self.CodeHostingOriginHostname = *other.CodeHostingOriginHostname
+	if other.HostingOriginHostname != nil {
+		self.CodeHostingOriginHostname = *other.HostingOriginHostname
 	}
-	if other.CodeHostingPlatform != nil {
-		self.CodeHostingPlatform = *other.CodeHostingPlatform
+	if other.HostingPlatform != nil {
+		self.CodeHostingPlatform = *other.HostingPlatform
 	}
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken

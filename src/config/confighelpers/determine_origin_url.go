@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/giturl"
 )
 
-func DetermineOriginURL(originURL string, originOverride configdomain.CodeHostingOriginHostname, originURLCache configdomain.OriginURLCache) *giturl.Parts {
+func DetermineOriginURL(originURL string, originOverride configdomain.HostingOriginHostname, originURLCache configdomain.OriginURLCache) *giturl.Parts {
 	cached, has := originURLCache[originURL]
 	if has {
 		return cached

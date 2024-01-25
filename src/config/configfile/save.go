@@ -45,11 +45,11 @@ func toData(config *configdomain.PartialConfig) Data {
 	}
 	// codehosting
 	codeHosting := CodeHosting{} //nolint:exhaustruct
-	if config.CodeHostingOriginHostname != nil {
-		codeHosting.OriginHostname = (*string)(config.CodeHostingOriginHostname)
+	if config.HostingOriginHostname != nil {
+		codeHosting.OriginHostname = (*string)(config.HostingOriginHostname)
 	}
-	if config.CodeHostingPlatform != nil {
-		codeHosting.Platform = (*string)(config.CodeHostingPlatform)
+	if config.HostingPlatform != nil {
+		codeHosting.Platform = (*string)(config.HostingPlatform)
 	}
 	if !codeHosting.IsEmpty() {
 		result.CodeHosting = &codeHosting
