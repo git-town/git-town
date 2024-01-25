@@ -20,14 +20,14 @@ and you want to keep it in sync with the repo it was forked from.
 `
 
 const (
-	syncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
-	syncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
+	SyncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
+	SyncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
 )
 
 func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
 	entries := []syncUpstreamEntry{
-		syncUpstreamEntryYes,
-		syncUpstreamEntryNo,
+		SyncUpstreamEntryYes,
+		SyncUpstreamEntryNo,
 	}
 	var defaultPos int
 	if existing {
@@ -39,12 +39,16 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection.String(), ",")
-	fmt.Printf("Sync with upstream: %s\n", formattedSelection(cutSelection, aborted))
+	fmt.Printf("Sync with upstream: %s\n", formattedSelection(selection.Short(), aborted))
 	return selection.SyncUpstream(), aborted, err
 }
 
 type syncUpstreamEntry string
+
+func (self syncUpstreamEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
 
 func (self syncUpstreamEntry) String() string {
 	return string(self)
@@ -52,9 +56,9 @@ func (self syncUpstreamEntry) String() string {
 
 func (self syncUpstreamEntry) SyncUpstream() configdomain.SyncUpstream {
 	switch self {
-	case syncUpstreamEntryYes:
+	case SyncUpstreamEntryYes:
 		return configdomain.SyncUpstream(true)
-	case syncUpstreamEntryNo:
+	case SyncUpstreamEntryNo:
 		return configdomain.SyncUpstream(false)
 	}
 	panic("unhandled syncUpstreamEntry: " + self)
