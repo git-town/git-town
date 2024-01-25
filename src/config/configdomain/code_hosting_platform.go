@@ -31,6 +31,6 @@ func NewCodeHostingPlatform(value string) CodeHostingPlatform {
 }
 
 func NewCodeHostingPlatformRef(value string) *CodeHostingPlatform {
-	token := CodeHostingPlatform(value)
-	return &token
+	result := CodeHostingPlatform(value)
+	return &result
 }
