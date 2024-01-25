@@ -17,12 +17,12 @@ merging pull requests through its UI.
 `
 
 const (
-	shipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
-	shipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
+	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
+	ShipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
 )
 
 func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []shipDeleteTrackingBranchEntry{shipDeleteTrackingBranchEntryYes, shipDeleteTrackingBranchEntryNo}
+	entries := []shipDeleteTrackingBranchEntry{ShipDeleteTrackingBranchEntryYes, ShipDeleteTrackingBranchEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -50,9 +50,9 @@ func (self shipDeleteTrackingBranchEntry) String() string {
 
 func (self shipDeleteTrackingBranchEntry) ToShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
 	switch self {
-	case shipDeleteTrackingBranchEntryYes:
+	case ShipDeleteTrackingBranchEntryYes:
 		return configdomain.ShipDeleteTrackingBranch(true)
-	case shipDeleteTrackingBranchEntryNo:
+	case ShipDeleteTrackingBranchEntryNo:
 		return configdomain.ShipDeleteTrackingBranch(false)
 	}
 	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
