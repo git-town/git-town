@@ -9,6 +9,7 @@ import (
 
 func TestSyncPerennialStrategy(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SyncPerennialStrategyEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Short", func(t *testing.T) {

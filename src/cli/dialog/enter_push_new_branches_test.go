@@ -9,6 +9,7 @@ import (
 
 func TestEnterPushNewBranches(t *testing.T) {
 	t.Parallel()
+
 	t.Run("pushNewBranchesEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Short", func(t *testing.T) {

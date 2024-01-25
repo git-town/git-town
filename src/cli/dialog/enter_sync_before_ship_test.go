@@ -9,6 +9,7 @@ import (
 
 func TestEnterSyncBeforeShip(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SyncBeforeShipEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Short", func(t *testing.T) {

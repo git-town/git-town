@@ -9,6 +9,7 @@ import (
 
 func TestEnterSyncUpstream(t *testing.T) {
 	t.Parallel()
+
 	t.Run("SyncUpstreamEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Short", func(t *testing.T) {

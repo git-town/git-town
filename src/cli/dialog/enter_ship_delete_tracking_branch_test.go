@@ -9,6 +9,7 @@ import (
 
 func TestEnterShipDeleteTrackingBranch(t *testing.T) {
 	t.Parallel()
+
 	t.Run("ShipDeleteTrackingBranchEntry", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Short", func(t *testing.T) {
