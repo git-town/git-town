@@ -116,16 +116,10 @@ func executeConfigSetup(verbose bool) error {
 		}
 	}
 
-	// SYNC-FEATURE-STRATEGY
-	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
+	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncFeatureStrategy(newSyncFeatureStrategy)
-	if err != nil {
-		return err
-	}
-
 	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -206,6 +200,14 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
+}
+
+func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncFeatureStrategy(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncFeatureStrategy(newValue)
 }
 
 func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
