@@ -44,17 +44,17 @@ func newBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 }
 
 // Aborted indicates whether the user has aborted this dialog.
-func (self *BubbleList[C]) aborted() bool {
+func (self *BubbleList[S]) aborted() bool {
 	return self.Status == dialogStatusAborted
 }
 
 // entryNumberStr provides a colorized string to print the given entry number.
-func (self *BubbleList[C]) entryNumberStr(number int) string {
+func (self *BubbleList[S]) entryNumberStr(number int) string {
 	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
 // handleKey handles keypresses that are common for all bubbleLists.
-func (self *BubbleList[C]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+func (self *BubbleList[S]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
@@ -90,7 +90,7 @@ func (self *BubbleList[C]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	return false, nil
 }
 
-func (self *BubbleList[C]) moveCursorDown() {
+func (self *BubbleList[S]) moveCursorDown() {
 	if self.Cursor < len(self.Entries)-1 {
 		self.Cursor++
 	} else {
@@ -98,7 +98,7 @@ func (self *BubbleList[C]) moveCursorDown() {
 	}
 }
 
-func (self *BubbleList[C]) moveCursorUp() {
+func (self *BubbleList[S]) moveCursorUp() {
 	if self.Cursor > 0 {
 		self.Cursor--
 	} else {
@@ -106,6 +106,6 @@ func (self *BubbleList[C]) moveCursorUp() {
 	}
 }
 
-func (self BubbleList[C]) selectedEntry() C { //nolint:ireturn
+func (self BubbleList[S]) selectedEntry() C { //nolint:ireturn
 	return self.Entries[self.Cursor]
 }
