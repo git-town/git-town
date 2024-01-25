@@ -126,16 +126,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// SYNC-PERENNIAL-STRATEGY
-	newSyncPerennialStrategy, aborted, err := dialog.EnterSyncPerennialStrategy(config.SyncPerennialStrategy, config.dialogInputs.Next())
+	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncPerennialStrategy(newSyncPerennialStrategy)
-	if err != nil {
-		return err
-	}
-
 	aborted, err = setupSyncUpstream(config.SyncUpstream, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -212,6 +206,14 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
+}
+
+func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncPerennialStrategy(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncPerennialStrategy(newValue)
 }
 
 func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
