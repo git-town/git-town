@@ -33,11 +33,11 @@ type radioListModel[S fmt.Stringer] struct {
 	help string // help text to display before the radio list
 }
 
-func (self radioListModel[C]) Init() tea.Cmd {
+func (self radioListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
-func (self radioListModel[C]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -56,7 +56,7 @@ func (self radioListModel[C]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolin
 	return self, nil
 }
 
-func (self radioListModel[C]) View() string {
+func (self radioListModel[S]) View() string {
 	if self.Status != dialogStatusActive {
 		return ""
 	}
