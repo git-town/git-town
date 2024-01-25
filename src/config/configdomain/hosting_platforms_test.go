@@ -12,10 +12,10 @@ func TestCodeHostingPlatforms(t *testing.T) {
 
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
-		give := configdomain.CodeHostingPlatforms{
-			configdomain.CodeHostingPlatformAutoDetect,
-			configdomain.CodeHostingPlatformGitHub,
-			configdomain.CodeHostingPlatformGitLab,
+		give := configdomain.HostingPlatforms{
+			configdomain.HostingPlatformAutoDetect,
+			configdomain.HostingPlatformGitHub,
+			configdomain.HostingPlatformGitLab,
 		}
 		have := give.Strings()
 		want := []string{"auto-detect", "github", "gitlab"}
