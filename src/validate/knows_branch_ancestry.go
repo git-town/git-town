@@ -35,7 +35,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			if aborted {
 				os.Exit(0)
 			}
-			if parent.String() == dialog.PerennialBranchOption {
+			if parent == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
