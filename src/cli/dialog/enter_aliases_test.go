@@ -128,7 +128,7 @@ func TestEnterAliases(t *testing.T) {
 					dialog.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -157,7 +157,7 @@ func TestEnterAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -186,7 +186,7 @@ func TestEnterAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -214,7 +214,7 @@ func TestEnterAliases(t *testing.T) {
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialog.BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
@@ -239,7 +239,7 @@ func TestEnterAliases(t *testing.T) {
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
 		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialog.BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,

@@ -8,8 +8,8 @@ import (
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func radioList[S ~[]C, C fmt.Stringer](entries S, cursor int, help string, testInput TestInput) (selected C, aborted bool, err error) { //nolint:ireturn
-	program := tea.NewProgram(radioListModel[S, C]{
+func radioList[C fmt.Stringer](entries []C, cursor int, help string, testInput TestInput) (selected C, aborted bool, err error) { //nolint:ireturn
+	program := tea.NewProgram(radioListModel[C]{
 		BubbleList: newBubbleList(entries, cursor),
 		help:       help,
 	})
@@ -24,20 +24,20 @@ func radioList[S ~[]C, C fmt.Stringer](entries S, cursor int, help string, testI
 	if err != nil {
 		return entries[0], false, err
 	}
-	result := dialogResult.(radioListModel[S, C]) //nolint:forcetypeassert
+	result := dialogResult.(radioListModel[C]) //nolint:forcetypeassert
 	return result.selectedEntry(), result.aborted(), nil
 }
 
-type radioListModel[S ~[]C, C fmt.Stringer] struct {
-	BubbleList[S, C]
+type radioListModel[C fmt.Stringer] struct {
+	BubbleList[C]
 	help string // help text to display before the radio list
 }
 
-func (self radioListModel[S, C]) Init() tea.Cmd {
+func (self radioListModel[C]) Init() tea.Cmd {
 	return nil
 }
 
-func (self radioListModel[S, C]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self radioListModel[C]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -56,7 +56,7 @@ func (self radioListModel[S, C]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //no
 	return self, nil
 }
 
-func (self radioListModel[S, C]) View() string {
+func (self radioListModel[C]) View() string {
 	if self.Status != dialogStatusActive {
 		return ""
 	}

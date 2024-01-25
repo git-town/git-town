@@ -27,7 +27,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 }
 
 type SwitchModel struct {
-	BubbleList[[]SwitchBranchEntry, SwitchBranchEntry]
+	BubbleList[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 

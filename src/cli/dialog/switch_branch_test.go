@@ -105,7 +105,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
 					Entries:      []dialog.SwitchBranchEntry{{Branch: "main", Indentation: ""}},
 					MaxDigits:    1,
@@ -125,7 +125,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},
@@ -151,7 +151,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("nested branches", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
-				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},

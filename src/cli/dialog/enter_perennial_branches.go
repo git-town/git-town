@@ -53,7 +53,7 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 }
 
 type perennialBranchesModel struct {
-	BubbleList[gitdomain.LocalBranchNames, gitdomain.LocalBranchName]
+	BubbleList[gitdomain.LocalBranchName]
 	selections    []int
 	selectedColor termenv.Style
 }

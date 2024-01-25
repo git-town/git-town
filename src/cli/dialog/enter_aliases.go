@@ -24,7 +24,7 @@ If you are not sure, select all :)
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           newBubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand](allAliasableCommands, 0),
+		BubbleList:           newBubbleList[configdomain.AliasableCommand](allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
@@ -48,7 +48,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 }
 
 type AliasesModel struct {
-	BubbleList[configdomain.AliasableCommands, configdomain.AliasableCommand]
+	BubbleList[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
