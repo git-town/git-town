@@ -18,20 +18,20 @@ const (
 )
 
 // BubbleList contains common elements of BubbleTea list implementations.
-type BubbleList[C fmt.Stringer] struct {
+type BubbleList[S fmt.Stringer] struct {
 	Status       dialogStatus
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
-	Entries      []C           // the entries to select from
+	Entries      []S           // the entries to select from
 	EntryNumber  string        // the manually entered entry number
 	MaxDigits    int           // how many digits make up an entry number
 	NumberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList[C fmt.Stringer](entries []C, cursor int) BubbleList[C] {
+func newBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 	numberLen := gohacks.NumberLength(len(entries))
-	return BubbleList[C]{
+	return BubbleList[S]{
 		Status:       dialogStatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,

@@ -8,8 +8,8 @@ import (
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func radioList[C fmt.Stringer](entries []C, cursor int, help string, testInput TestInput) (selected C, aborted bool, err error) { //nolint:ireturn
-	program := tea.NewProgram(radioListModel[C]{
+func radioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+	program := tea.NewProgram(radioListModel[S]{
 		BubbleList: newBubbleList(entries, cursor),
 		help:       help,
 	})
@@ -24,12 +24,12 @@ func radioList[C fmt.Stringer](entries []C, cursor int, help string, testInput T
 	if err != nil {
 		return entries[0], false, err
 	}
-	result := dialogResult.(radioListModel[C]) //nolint:forcetypeassert
+	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
 	return result.selectedEntry(), result.aborted(), nil
 }
 
-type radioListModel[C fmt.Stringer] struct {
-	BubbleList[C]
+type radioListModel[S fmt.Stringer] struct {
+	BubbleList[S]
 	help string // help text to display before the radio list
 }
 
