@@ -1,2 +1,2 @@
-// Package stringers provides helper functions for lists of fmt.Stringer instances
+// Package stringers provides helper functions for lists of fmt.Stringer instances.
 package stringers
