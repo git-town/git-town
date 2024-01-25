@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -45,146 +46,50 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-
-	// ALIASES
-	allAliasableCommands := configdomain.AllAliasableCommands()
-	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.FullConfig.Aliases, config.dialogInputs.Next())
+	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	for _, aliasableCommand := range allAliasableCommands {
-		newAlias, hasNew := newAliases[aliasableCommand]
-		oldAlias, hasOld := config.FullConfig.Aliases[aliasableCommand]
-		switch {
-		case hasOld && !hasNew:
-			err := repo.Runner.Frontend.RemoveGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-		case newAlias != oldAlias:
-			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	// MAIN BRANCH
-	defaultMainBranch := repo.Runner.MainBranch
-	if defaultMainBranch.IsEmpty() {
-		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
-	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), defaultMainBranch, config.dialogInputs.Next())
+	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetMainBranch(newMainBranch)
-	if err != nil {
-		return err
-	}
-
-	// PERENNIAL BRANCHES
-	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
+	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 || repo.Runner.LocalGitConfig.PerennialBranches == nil {
-		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
-		if err != nil {
-			return err
-		}
-	}
-
-	// CODE HOSTING
-	newCodeHostingPlatform, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatform, config.dialogInputs.Next())
+	aborted, err = setupCodeHosting(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	switch {
-	case config.CodeHostingPlatform == "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
-		// no changes --> do nothing
-	case config.CodeHostingPlatform != "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
-		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
-		if err != nil {
-			return err
-		}
-	case config.CodeHostingPlatform.String() != newCodeHostingPlatform:
-		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatform)
-		if err != nil {
-			return err
-		}
-	}
-
-	// SYNC-FEATURE-STRATEGY
-	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
+	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncFeatureStrategy(newSyncFeatureStrategy)
-	if err != nil {
-		return err
-	}
-
-	// SYNC-PERENNIAL-STRATEGY
-	newSyncPerennialStrategy, aborted, err := dialog.EnterSyncPerennialStrategy(config.SyncPerennialStrategy, config.dialogInputs.Next())
+	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncPerennialStrategy(newSyncPerennialStrategy)
-	if err != nil {
-		return err
-	}
-
-	// SYNC UPSTREAM
-	newSyncUpstream, aborted, err := dialog.EnterSyncUpstream(config.SyncUpstream, config.dialogInputs.Next())
+	aborted, err = setupSyncUpstream(config.SyncUpstream, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncUpstream(newSyncUpstream, false)
-	if err != nil {
-		return err
-	}
-
-	// PUSH NEW BRANCHES
-	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
+	aborted, err = setupPushNewBranches(config.NewBranchPush, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetNewBranchPush(newPushNewBranches, false)
-	if err != nil {
-		return err
-	}
-
-	// PUSH HOOK
-	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
+	aborted, err = setupPushHook(config.PushHook, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetPushHookLocally(newPushHook)
-	if err != nil {
-		return err
-	}
-
-	// SYNC BEFORE SHIP
-	newSyncBeforeShip, aborted, err := dialog.EnterSyncBeforeShip(config.SyncBeforeShip, config.dialogInputs.Next())
+	aborted, err = setupSyncBeforeShip(config.SyncBeforeShip, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncBeforeShip(newSyncBeforeShip, false)
-	if err != nil {
-		return err
-	}
-
-	// SHIP DELETE TRACKING BRANCH
-	newShipDeleteTrackingBranch, aborted, err := dialog.EnterShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	aborted, err = setupShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetShipDeleteTrackingBranch(newShipDeleteTrackingBranch, false)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -209,4 +114,122 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
+}
+
+func setupAliases(existingValue configdomain.Aliases, allAliasableCommands configdomain.AliasableCommands, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	for _, aliasableCommand := range allAliasableCommands {
+		newAlias, hasNew := newAliases[aliasableCommand]
+		oldAlias, hasOld := existingValue[aliasableCommand]
+		switch {
+		case hasOld && !hasNew:
+			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
+			if err != nil {
+				return aborted, err
+			}
+		case newAlias != oldAlias:
+			err := runner.Frontend.SetGitAlias(aliasableCommand)
+			if err != nil {
+				return aborted, err
+			}
+		}
+	}
+	return aborted, nil
+}
+
+func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	switch {
+	case existingValue == "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
+		// no changes --> do nothing
+	case existingValue != "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
+		return aborted, runner.Frontend.DeleteCodeHostingPlatform()
+	case existingValue.String() != newValue:
+		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
+	}
+	return aborted, nil
+}
+
+func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	if existingValue.IsEmpty() {
+		existingValue, _ = runner.Backend.DefaultBranch()
+	}
+	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetMainBranch(newMainBranch)
+}
+
+func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterPerennialBranches(allBranches, existingValue, mainBranch, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	if slices.Compare(runner.PerennialBranches, newValue) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
+		err = runner.SetPerennialBranches(newValue)
+	}
+	return aborted, err
+}
+
+func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newPushHook, aborted, err := dialog.EnterPushHook(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetPushHookLocally(newPushHook)
+}
+
+func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterPushNewBranches(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetNewBranchPush(newValue, false)
+}
+
+func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterShipDeleteTrackingBranch(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
+}
+
+func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncBeforeShip(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncBeforeShip(newValue, false)
+}
+
+func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncFeatureStrategy(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncFeatureStrategy(newValue)
+}
+
+func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncPerennialStrategy(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncPerennialStrategy(newValue)
+}
+
+func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncUpstream(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncUpstream(newValue, false)
 }
