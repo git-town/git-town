@@ -146,16 +146,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// PUSH NEW BRANCHES
-	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
+	aborted, err = setupPushNewBranches(config.NewBranchPush, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetNewBranchPush(newPushNewBranches, false)
-	if err != nil {
-		return err
-	}
-
 	aborted, err = setupPushHook(config.PushHook, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -200,6 +194,14 @@ func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, 
 		return aborted, err
 	}
 	return aborted, runner.SetPushHookLocally(newPushHook)
+}
+
+func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterPushNewBranches(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetNewBranchPush(newValue, false)
 }
 
 func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
