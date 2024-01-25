@@ -23,13 +23,11 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
 	selectedEntry := result.BubbleList.selectedEntry()
-	selectedEntry = strings.TrimSpace(selectedEntry)
-	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
-	return selectedBranch, result.aborted(), nil
+	return selectedEntry.Branch, result.aborted(), nil
 }
 
 type SwitchModel struct {
-	BubbleList
+	BubbleList[[]SwitchBranchEntry, SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -64,11 +62,11 @@ func (self SwitchModel) View() string {
 	for i, branch := range self.Entries {
 		switch {
 		case i == self.Cursor:
-			s.WriteString(self.Colors.selection.Styled("> " + branch))
+			s.WriteString(self.Colors.selection.Styled("> " + branch.String()))
 		case i == self.InitialBranchPos:
-			s.WriteString(self.Colors.initial.Styled("* " + branch))
+			s.WriteString(self.Colors.initial.Styled("* " + branch.String()))
 		default:
-			s.WriteString("  " + branch)
+			s.WriteString("  " + branch.String())
 		}
 		s.WriteRune('\n')
 	}
@@ -99,10 +97,9 @@ func (self SwitchModel) View() string {
 }
 
 // SwitchBranchCursorPos provides the initial cursor position for the "switch branch" dialog.
-func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranchName) int {
-	initialBranchName := initialBranch.String()
+func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
 	for e, entry := range entries {
-		if strings.TrimSpace(entry) == initialBranchName {
+		if entry.Branch == initialBranch {
 			return e
 		}
 	}
@@ -110,8 +107,8 @@ func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranch
 }
 
 // SwitchBranchEntries provides the entries for the "switch branch" dialog.
-func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
-	entries := make([]string, 0, len(lineage))
+func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []SwitchBranchEntry {
+	entries := make([]SwitchBranchEntry, 0, len(lineage))
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
@@ -126,16 +123,25 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		entries = append(entries, localBranch.String())
+		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: ""})
 	}
 	return entries
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
-	*result = append(*result, indentation+branch.String())
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
+	*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage)
 	}
+}
+
+type SwitchBranchEntry struct {
+	Branch      gitdomain.LocalBranchName
+	Indentation string
+}
+
+func (self SwitchBranchEntry) String() string {
+	return self.Indentation + self.Branch.String()
 }
