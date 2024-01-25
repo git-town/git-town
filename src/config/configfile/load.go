@@ -53,7 +53,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 			result.HostingPlatform = configdomain.NewHostingPlatformRef(*data.CodeHosting.Platform)
 		}
 		if data.CodeHosting.OriginHostname != nil {
-			result.HostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(*data.CodeHosting.OriginHostname)
+			result.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(*data.CodeHosting.OriginHostname)
 		}
 	}
 	if data.SyncStrategy != nil {

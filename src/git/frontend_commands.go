@@ -104,7 +104,7 @@ func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchN
 }
 
 // SetCodeHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) DeleteCodeHostingPlatform() error {
+func (self *FrontendCommands) DeleteHostingPlatform() error {
 	return self.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
 }
 
@@ -223,8 +223,8 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 	return self.Run("git", "revert", sha.String())
 }
 
-// SetCodeHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetCodeHostingPlatform(platform configdomain.HostingPlatform) error {
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
 	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
