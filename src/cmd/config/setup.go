@@ -136,16 +136,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// SYNC UPSTREAM
-	newSyncUpstream, aborted, err := dialog.EnterSyncUpstream(config.SyncUpstream, config.dialogInputs.Next())
+	aborted, err = setupSyncUpstream(config.SyncUpstream, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncUpstream(newSyncUpstream, false)
-	if err != nil {
-		return err
-	}
-
 	aborted, err = setupPushNewBranches(config.NewBranchPush, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -218,4 +212,12 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
+}
+
+func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncUpstream(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncUpstream(newValue, false)
 }
