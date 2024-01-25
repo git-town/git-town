@@ -16,25 +16,47 @@ merging pull requests through its UI.
 
 `
 
+const (
+	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
+	ShipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
+)
+
 func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []string{`yes, "git ship" should delete tracking branches`, `no, my code hosting platform deletes tracking branches`}
+	entries := []shipDeleteTrackingBranchEntry{
+		ShipDeleteTrackingBranchEntryYes,
+		ShipDeleteTrackingBranchEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterShipDeleteTrackingBranchHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterShipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
-	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseShipDeleteTrackingBranch(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(selection.Short(), aborted))
+	return selection.ShipDeleteTrackingBranch(), aborted, err
+}
+
+type shipDeleteTrackingBranchEntry string
+
+func (self shipDeleteTrackingBranchEntry) ShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
+	switch self {
+	case ShipDeleteTrackingBranchEntryYes:
+		return configdomain.ShipDeleteTrackingBranch(true)
+	case ShipDeleteTrackingBranchEntryNo:
+		return configdomain.ShipDeleteTrackingBranch(false)
+	}
+	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
+}
+
+func (self shipDeleteTrackingBranchEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
+
+func (self shipDeleteTrackingBranchEntry) String() string {
+	return string(self)
 }

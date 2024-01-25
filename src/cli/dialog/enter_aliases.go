@@ -24,7 +24,7 @@ If you are not sure, select all :)
 func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           newBubbleList(allAliasableCommands.Strings(), 0),
+		BubbleList:           newBubbleList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
@@ -48,7 +48,7 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 }
 
 type AliasesModel struct {
-	BubbleList
+	BubbleList[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
@@ -143,17 +143,17 @@ func (self AliasesModel) View() string {
 		selection := self.CurrentSelections[i]
 		switch {
 		case highlighted && selection == AliasSelectionNone:
-			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch))
+			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch.String()))
 		case highlighted && selection == AliasSelectionOther:
-			s.WriteString(self.Colors.selection.Styled("> [o] " + branch))
+			s.WriteString(self.Colors.selection.Styled("> [o] " + branch.String()))
 		case highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.Colors.selection.Styled("> [x] " + branch))
+			s.WriteString(self.Colors.selection.Styled("> [x] " + branch.String()))
 		case !highlighted && selection == AliasSelectionNone:
-			s.WriteString("  [ ] " + branch)
+			s.WriteString("  [ ] " + branch.String())
 		case !highlighted && selection == AliasSelectionOther:
-			s.WriteString("  [o] " + branch)
+			s.WriteString("  [o] " + branch.String())
 		case !highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.selectedColor.Styled("  [x] " + branch))
+			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
 		}
 		s.WriteRune('\n')
 	}

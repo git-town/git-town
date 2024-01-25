@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
 
 const enterBranchHelp = `
@@ -16,12 +17,8 @@ In most repositories, this branch is called "main", "master", or "development".
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs TestInput) (gitdomain.LocalBranchName, bool, error) {
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      localBranches.Strings(),
-		defaultEntry: oldMainBranch.String(),
-		help:         enterBranchHelp,
-		testInput:    inputs,
-	})
-	fmt.Printf("Main branch: %s\n", formattedSelection(selection, aborted))
-	return gitdomain.LocalBranchName(selection), aborted, err
+	cursor := stringers.IndexOrStart(localBranches, oldMainBranch)
+	selection, aborted, err := radioList(localBranches, cursor, enterBranchHelp, inputs)
+	fmt.Printf("Main branch: %s\n", formattedSelection(selection.String(), aborted))
+	return selection, aborted, err
 }
