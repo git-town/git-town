@@ -39,8 +39,6 @@ const (
 	KeyAliasSetParent                   = Key("alias.set-parent")
 	KeyAliasShip                        = Key("alias.ship")
 	KeyAliasSync                        = Key("alias.sync")
-	KeyCodeHostingOriginHostname        = Key("git-town.code-hosting-origin-hostname")
-	KeyCodeHostingPlatform              = Key("git-town.code-hosting-platform")
 	KeyDeprecatedCodeHostingDriver      = Key("git-town.code-hosting-driver")
 	KeyDeprecatedMainBranchName         = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag      = Key("git-town.new-branch-push-flag")
@@ -52,6 +50,8 @@ const (
 	KeyGiteaToken                       = Key("git-town.gitea-token")
 	KeyGithubToken                      = Key("git-town.github-token")
 	KeyGitlabToken                      = Key("git-town.gitlab-token")
+	KeyHostingOriginHostname            = Key("git-town.code-hosting-origin-hostname")
+	KeyHostingPlatform                  = Key("git-town.code-hosting-platform")
 	KeyMainBranch                       = Key("git-town.main-branch")
 	KeyOffline                          = Key("git-town.offline")
 	KeyPerennialBranches                = Key("git-town.perennial-branches")
@@ -68,8 +68,8 @@ const (
 )
 
 var keys = []Key{ //nolint:gochecknoglobals
-	KeyCodeHostingOriginHostname,
-	KeyCodeHostingPlatform,
+	KeyHostingOriginHostname,
+	KeyHostingPlatform,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
@@ -166,7 +166,7 @@ func parseLineageKey(key string) *Key {
 
 // DeprecatedKeys defines the up-to-date counterparts to deprecated configuration settings.
 var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
-	KeyDeprecatedCodeHostingDriver:      KeyCodeHostingPlatform,
+	KeyDeprecatedCodeHostingDriver:      KeyHostingPlatform,
 	KeyDeprecatedMainBranchName:         KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:      KeyPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:   KeyPerennialBranches,
