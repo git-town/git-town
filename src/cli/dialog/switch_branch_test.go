@@ -17,10 +17,10 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("initialBranch is in the entry list", func(t *testing.T) {
 			t.Parallel()
 			entries := []dialog.SwitchBranchEntry{
-				dialog.SwitchBranchEntry{Branch: "main"},
-				dialog.SwitchBranchEntry{Branch: "alpha"},
-				dialog.SwitchBranchEntry{Branch: "alpha1"},
-				dialog.SwitchBranchEntry{Branch: "beta"},
+				{Branch: "main"},
+				{Branch: "alpha"},
+				{Branch: "alpha1"},
+				{Branch: "beta"},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("alpha1")
 			have := dialog.SwitchBranchCursorPos(entries, initialBranch)
@@ -30,9 +30,9 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("initialBranch is not in the entry list", func(t *testing.T) {
 			t.Parallel()
 			entries := []dialog.SwitchBranchEntry{
-				dialog.SwitchBranchEntry{Branch: "main"},
-				dialog.SwitchBranchEntry{Branch: "alpha"},
-				dialog.SwitchBranchEntry{Branch: "beta"},
+				{Branch: "main"},
+				{Branch: "alpha"},
+				{Branch: "beta"},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("other")
 			have := dialog.SwitchBranchCursorPos(entries, initialBranch)
@@ -55,15 +55,15 @@ func TestSwitchBranch(t *testing.T) {
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []dialog.SwitchBranchEntry{
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "main",
 					Indentation: "",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "alpha",
 					Indentation: "  ",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "beta",
 					Indentation: "  ",
 				},
@@ -83,19 +83,19 @@ func TestSwitchBranch(t *testing.T) {
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main, perennial1}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []dialog.SwitchBranchEntry{
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "main",
 					Indentation: "",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "alpha",
 					Indentation: "  ",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "beta",
 					Indentation: "  ",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "perennial-1",
 					Indentation: "",
 				},
@@ -114,15 +114,15 @@ func TestSwitchBranch(t *testing.T) {
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
 			have := dialog.SwitchBranchEntries(localBranches, lineage)
 			want := []dialog.SwitchBranchEntry{
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "main",
 					Indentation: "",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "child",
 					Indentation: "  ",
 				},
-				dialog.SwitchBranchEntry{
+				{
 					Branch:      "grandchild",
 					Indentation: "    ",
 				},
@@ -138,7 +138,7 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						dialog.SwitchBranchEntry{
+						{
 							Branch:      "main",
 							Indentation: "",
 						},
@@ -163,9 +163,9 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						dialog.SwitchBranchEntry{Branch: "main", Indentation: ""},
-						dialog.SwitchBranchEntry{Branch: "one", Indentation: ""},
-						dialog.SwitchBranchEntry{Branch: "two", Indentation: ""},
+						{Branch: "main", Indentation: ""},
+						{Branch: "one", Indentation: ""},
+						{Branch: "two", Indentation: ""},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",
@@ -189,13 +189,13 @@ func TestSwitchBranch(t *testing.T) {
 				BubbleList: dialog.BubbleList[[]dialog.SwitchBranchEntry, dialog.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []dialog.SwitchBranchEntry{
-						dialog.SwitchBranchEntry{Branch: "main", Indentation: ""},
-						dialog.SwitchBranchEntry{Branch: "alpha", Indentation: "  "},
-						dialog.SwitchBranchEntry{Branch: "alpha1", Indentation: "    "},
-						dialog.SwitchBranchEntry{Branch: "alpha2", Indentation: "    "},
-						dialog.SwitchBranchEntry{Branch: "beta", Indentation: "  "},
-						dialog.SwitchBranchEntry{Branch: "beta1", Indentation: "    "},
-						dialog.SwitchBranchEntry{Branch: "other", Indentation: ""},
+						{Branch: "main", Indentation: ""},
+						{Branch: "alpha", Indentation: "  "},
+						{Branch: "alpha1", Indentation: "    "},
+						{Branch: "alpha2", Indentation: "    "},
+						{Branch: "beta", Indentation: "  "},
+						{Branch: "beta1", Indentation: "    "},
+						{Branch: "other", Indentation: ""},
 					},
 					MaxDigits:    1,
 					NumberFormat: "%d",

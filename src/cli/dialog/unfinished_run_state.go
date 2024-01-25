@@ -22,41 +22,36 @@ type Response string
 func (self Response) String() string { return string(self) }
 
 const (
-	// ResponseContinue stands for the user choosing to continue the unfinished run state.
-	ResponseContinue = Response("continue")
-	// ResponseDiscard stands for the user choosing to discard the unfinished run state.
-	ResponseDiscard = Response("discard")
-	// ResponseQuit stands for the user choosing to quit the program.
-	ResponseQuit = Response("quit")
-	// ResponseSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
-	ResponseSkip = Response("skip")
-	// ResponseUndo stands for the user choosing to undo the unfinished run state.
-	ResponseUndo = Response("undo")
+	ResponseContinue = Response("continue") // continue the unfinished run state
+	ResponseDiscard  = Response("discard")  // discard the unfinished run state
+	ResponseQuit     = Response("quit")     // quit the program
+	ResponseSkip     = Response("skip")     // continue the unfinished run state by skipping the current branch
+	ResponseUndo     = Response("undo")     // undo the unfinished run state
 )
+
+type unfinishedRunstateDialogEntry struct {
+	response Response
+	text     string
+}
+
+func (self unfinishedRunstateDialogEntry) String() string {
+	return self.text
+}
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput TestInput) (Response, bool, error) {
-	formattedOptions := map[Response]string{
-		ResponseContinue: fmt.Sprintf(messages.UnfinishedRunStateContinue, command),
-		ResponseDiscard:  messages.UnfinishedRunStateDiscard,
-		ResponseQuit:     messages.UnfinishedRunStateQuit,
-		ResponseSkip:     fmt.Sprintf(messages.UnfinishedRunStateSkip, command),
-		ResponseUndo:     fmt.Sprintf(messages.UnfinishedRunStateUndo, command),
-	}
-	options := []string{
-		formattedOptions[ResponseQuit],
-		formattedOptions[ResponseContinue],
+	options := []unfinishedRunstateDialogEntry{
+		{response: ResponseQuit, text: messages.UnfinishedRunStateQuit},
+		{response: ResponseContinue, text: fmt.Sprintf(messages.UnfinishedRunStateContinue, command)},
 	}
 	if canSkip {
-		options = append(options, formattedOptions[ResponseSkip])
+		options = append(options, unfinishedRunstateDialogEntry{response: ResponseSkip, text: fmt.Sprintf(messages.UnfinishedRunStateSkip, command)})
 	}
-	options = append(options, formattedOptions[ResponseUndo], formattedOptions[ResponseDiscard])
-	selection, aborted, err := radioList(options, "", fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
-	fmt.Printf("Handle unfinished command: %s\n", formattedSelection(selection, aborted))
-	for responseType, formattedResponseType := range formattedOptions {
-		if formattedResponseType == selection {
-			return responseType, aborted, err
-		}
-	}
-	return ResponseUndo, aborted, fmt.Errorf(messages.DialogUnexpectedResponse, selection)
+	options = append(options,
+		unfinishedRunstateDialogEntry{response: ResponseUndo, text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command)},
+		unfinishedRunstateDialogEntry{response: ResponseDiscard, text: messages.UnfinishedRunStateDiscard},
+	)
+	selection, aborted, err := radioList(options, 0, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
+	fmt.Printf("Handle unfinished command: %s\n", formattedSelection(selection.response.String(), aborted))
+	return selection.response, aborted, err
 }
