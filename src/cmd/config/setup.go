@@ -157,11 +157,10 @@ func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *gi
 }
 
 func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	defaultMainBranch := runner.MainBranch
-	if defaultMainBranch.IsEmpty() {
-		defaultMainBranch, _ = runner.Backend.DefaultBranch()
+	if existingValue.IsEmpty() {
+		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, defaultMainBranch, inputs)
+	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
