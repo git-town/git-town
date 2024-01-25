@@ -21,7 +21,8 @@ Most of the time this is the main development branch (%v).
 func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	entries := EnterParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
-	selection, aborted, err := radioList(entries, cursor, fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch), args.DialogTestInput)
+	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)
+	selection, aborted, err := radioList(entries, cursor, help, args.DialogTestInput)
 	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, formattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }
