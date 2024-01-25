@@ -70,20 +70,10 @@ func executeConfigSetup(verbose bool) error {
 		}
 	}
 
-	// MAIN BRANCH
-	defaultMainBranch := repo.Runner.MainBranch
-	if defaultMainBranch.IsEmpty() {
-		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
-	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), defaultMainBranch, config.dialogInputs.Next())
+	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetMainBranch(newMainBranch)
-	if err != nil {
-		return err
-	}
-
 	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -160,6 +150,18 @@ func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *gi
 		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
 	}
 	return aborted, nil
+}
+
+func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	defaultMainBranch := runner.MainBranch
+	if defaultMainBranch.IsEmpty() {
+		defaultMainBranch, _ = runner.Backend.DefaultBranch()
+	}
+	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, defaultMainBranch, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetMainBranch(newMainBranch)
 }
 
 func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
