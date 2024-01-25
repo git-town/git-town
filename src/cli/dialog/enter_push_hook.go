@@ -41,10 +41,6 @@ func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdoma
 
 type pushHookEntry string
 
-func (self pushHookEntry) String() string {
-	return string(self)
-}
-
 func (self pushHookEntry) PushHook() configdomain.PushHook {
 	switch self {
 	case pushHookEntryEnabled:
@@ -53,4 +49,8 @@ func (self pushHookEntry) PushHook() configdomain.PushHook {
 		return configdomain.PushHook(false)
 	}
 	panic("unhandled pushHookEntry: " + self)
+}
+
+func (self pushHookEntry) String() string {
+	return string(self)
 }

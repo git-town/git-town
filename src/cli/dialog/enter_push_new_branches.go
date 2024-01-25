@@ -44,15 +44,6 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 
 type pushNewBranchesEntry string
 
-func (self pushNewBranchesEntry) Short() string {
-	begin, _, _ := strings.Cut(self.String(), ",")
-	return begin
-}
-
-func (self pushNewBranchesEntry) String() string {
-	return string(self)
-}
-
 func (self pushNewBranchesEntry) NewBranchPush() configdomain.NewBranchPush {
 	switch self {
 	case PushNewBranchesEntryYes:
@@ -61,4 +52,13 @@ func (self pushNewBranchesEntry) NewBranchPush() configdomain.NewBranchPush {
 		return configdomain.NewBranchPush(false)
 	}
 	panic("unhandled pushNewBranchesEntry: " + self)
+}
+
+func (self pushNewBranchesEntry) Short() string {
+	begin, _, _ := strings.Cut(self.String(), ",")
+	return begin
+}
+
+func (self pushNewBranchesEntry) String() string {
+	return string(self)
 }

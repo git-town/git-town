@@ -39,15 +39,6 @@ func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranc
 
 type shipDeleteTrackingBranchEntry string
 
-func (self shipDeleteTrackingBranchEntry) Short() string {
-	start, _, _ := strings.Cut(self.String(), ",")
-	return start
-}
-
-func (self shipDeleteTrackingBranchEntry) String() string {
-	return string(self)
-}
-
 func (self shipDeleteTrackingBranchEntry) ShipDeleteTrackingBranch() configdomain.ShipDeleteTrackingBranch {
 	switch self {
 	case ShipDeleteTrackingBranchEntryYes:
@@ -56,4 +47,13 @@ func (self shipDeleteTrackingBranchEntry) ShipDeleteTrackingBranch() configdomai
 		return configdomain.ShipDeleteTrackingBranch(false)
 	}
 	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
+}
+
+func (self shipDeleteTrackingBranchEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
+
+func (self shipDeleteTrackingBranchEntry) String() string {
+	return string(self)
 }
