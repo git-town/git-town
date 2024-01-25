@@ -23,12 +23,12 @@ But this also triggers another CI run and delays shipping.
 `
 
 const (
-	syncBeforeShipEntryYes syncBeforeShipEntry = `yes, "git ship" should also sync the branch`
-	syncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
+	SyncBeforeShipEntryYes syncBeforeShipEntry = `yes, "git ship" should also sync the branch`
+	SyncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
 )
 
 func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []syncBeforeShipEntry{syncBeforeShipEntryYes, syncBeforeShipEntryNo}
+	entries := []syncBeforeShipEntry{SyncBeforeShipEntryYes, SyncBeforeShipEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -56,9 +56,9 @@ func (self syncBeforeShipEntry) String() string {
 
 func (self syncBeforeShipEntry) ToSyncBeforeShip() configdomain.SyncBeforeShip {
 	switch self {
-	case syncBeforeShipEntryYes:
+	case SyncBeforeShipEntryYes:
 		return configdomain.SyncBeforeShip(true)
-	case syncBeforeShipEntryNo:
+	case SyncBeforeShipEntryNo:
 		return configdomain.SyncBeforeShip(false)
 	}
 	panic("unhandled syncBeforeShipEntry: " + self)
