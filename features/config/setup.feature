@@ -1,3 +1,4 @@
+@this
 Feature: enter Git Town configuration
 
   Scenario: unconfigured, accept all default values --> working setup

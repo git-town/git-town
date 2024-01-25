@@ -156,17 +156,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// PUSH HOOK
-	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
+	aborted, err = setupPushHook(config.PushHook, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetPushHookLocally(newPushHook)
-	if err != nil {
-		return err
-	}
-
-	// SYNC BEFORE SHIP
 	aborted, err = setupSyncBeforeShip(config.SyncBeforeShip, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -199,6 +192,14 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
+}
+
+func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newPushHook, aborted, err := dialog.EnterPushHook(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetPushHookLocally(newPushHook)
 }
 
 func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
