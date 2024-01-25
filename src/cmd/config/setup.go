@@ -47,29 +47,10 @@ func executeConfigSetup(verbose bool) error {
 		return err
 	}
 
-	// ALIASES
-	allAliasableCommands := configdomain.AllAliasableCommands()
-	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, repo.Runner.FullConfig.Aliases, config.dialogInputs.Next())
+	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	for _, aliasableCommand := range allAliasableCommands {
-		newAlias, hasNew := newAliases[aliasableCommand]
-		oldAlias, hasOld := config.FullConfig.Aliases[aliasableCommand]
-		switch {
-		case hasOld && !hasNew:
-			err := repo.Runner.Frontend.RemoveGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-		case newAlias != oldAlias:
-			err := repo.Runner.Frontend.SetGitAlias(aliasableCommand)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -134,6 +115,30 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
+}
+
+func setupAliases(existingValue configdomain.Aliases, allAliasableCommands configdomain.AliasableCommands, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	for _, aliasableCommand := range allAliasableCommands {
+		newAlias, hasNew := newAliases[aliasableCommand]
+		oldAlias, hasOld := existingValue[aliasableCommand]
+		switch {
+		case hasOld && !hasNew:
+			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
+			if err != nil {
+				return aborted, err
+			}
+		case newAlias != oldAlias:
+			err := runner.Frontend.SetGitAlias(aliasableCommand)
+			if err != nil {
+				return aborted, err
+			}
+		}
+	}
+	return aborted, nil
 }
 
 func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
