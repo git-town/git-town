@@ -96,26 +96,10 @@ func executeConfigSetup(verbose bool) error {
 		}
 	}
 
-	// CODE HOSTING
-	newCodeHostingPlatform, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatform, config.dialogInputs.Next())
+	aborted, err = setupCodeHosting(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	switch {
-	case config.CodeHostingPlatform == "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
-		// no changes --> do nothing
-	case config.CodeHostingPlatform != "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
-		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
-		if err != nil {
-			return err
-		}
-	case config.CodeHostingPlatform.String() != newCodeHostingPlatform:
-		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatform)
-		if err != nil {
-			return err
-		}
-	}
-
 	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -168,6 +152,22 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
+}
+
+func setupCodeHosting(existingValue configdomain.CodeHostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	switch {
+	case existingValue == "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
+		// no changes --> do nothing
+	case existingValue != "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
+		return aborted, runner.Frontend.DeleteCodeHostingPlatform()
+	case existingValue.String() != newValue:
+		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
+	}
+	return aborted, nil
 }
 
 func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
