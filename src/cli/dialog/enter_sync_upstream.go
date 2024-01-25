@@ -25,7 +25,10 @@ const (
 )
 
 func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []syncUpstreamEntry{syncUpstreamEntryYes, syncUpstreamEntryNo}
+	entries := []syncUpstreamEntry{
+		syncUpstreamEntryYes,
+		syncUpstreamEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0

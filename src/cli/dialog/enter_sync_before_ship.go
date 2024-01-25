@@ -28,7 +28,10 @@ const (
 )
 
 func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []syncBeforeShipEntry{SyncBeforeShipEntryYes, SyncBeforeShipEntryNo}
+	entries := []syncBeforeShipEntry{
+		SyncBeforeShipEntryYes,
+		SyncBeforeShipEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0

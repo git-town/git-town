@@ -22,7 +22,10 @@ const (
 )
 
 func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
-	entries := []shipDeleteTrackingBranchEntry{ShipDeleteTrackingBranchEntryYes, ShipDeleteTrackingBranchEntryNo}
+	entries := []shipDeleteTrackingBranchEntry{
+		ShipDeleteTrackingBranchEntryYes,
+		ShipDeleteTrackingBranchEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0

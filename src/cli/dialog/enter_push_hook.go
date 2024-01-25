@@ -24,7 +24,10 @@ const (
 )
 
 func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
-	entries := []pushHookEntry{pushHookEntryEnabled, pushHookEntryDisabled}
+	entries := []pushHookEntry{
+		pushHookEntryEnabled,
+		pushHookEntryDisabled,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0

@@ -24,7 +24,10 @@ const (
 )
 
 func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := []syncFeatureStrategyEntry{syncFeatureStrategyEntryMerge, syncFeatureStrategyEntryRebase}
+	entries := []syncFeatureStrategyEntry{
+		syncFeatureStrategyEntryMerge,
+		syncFeatureStrategyEntryRebase,
+	}
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncFeatureStrategyMerge:

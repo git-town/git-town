@@ -27,7 +27,10 @@ const (
 )
 
 func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
-	entries := []pushNewBranchesEntry{PushNewBranchesEntryYes, PushNewBranchesEntryNo}
+	entries := []pushNewBranchesEntry{
+		PushNewBranchesEntryYes,
+		PushNewBranchesEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
