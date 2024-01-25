@@ -14,9 +14,13 @@ func TestNewHostingService(t *testing.T) {
 		t.Parallel()
 		tests := map[configdomain.CodeHostingPlatform]configdomain.Hosting{
 			"bitbucket": configdomain.HostingBitbucket,
+			"BitBucket": configdomain.HostingBitbucket,
 			"github":    configdomain.HostingGitHub,
+			"GitHub":    configdomain.HostingGitHub,
 			"gitlab":    configdomain.HostingGitLab,
+			"GitLab":    configdomain.HostingGitLab,
 			"gitea":     configdomain.HostingGitea,
+			"Gitea":     configdomain.HostingGitea,
 			"":          configdomain.HostingNone,
 		}
 		for give, want := range tests {
