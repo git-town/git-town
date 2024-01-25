@@ -18,6 +18,11 @@ More info at https://www.git-town.com/preferences/push-hook.
 Push hooks in Git Town are:
 `
 
+const (
+	pushHookEntryEnabled  pushHookEntry = "enabled"
+	pushHookEntryDisabled pushHookEntry = "disabled"
+)
+
 func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
 	entries := []pushHookEntry{pushHookEntryEnabled, pushHookEntryDisabled}
 	var defaultPos int
@@ -49,8 +54,3 @@ func (self pushHookEntry) ToPushHook() configdomain.PushHook {
 	}
 	panic("unhandled pushHookEntry: " + self)
 }
-
-const (
-	pushHookEntryEnabled  pushHookEntry = "enabled"
-	pushHookEntryDisabled pushHookEntry = "disabled"
-)

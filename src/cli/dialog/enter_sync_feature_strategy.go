@@ -18,6 +18,11 @@ How should Git Town update feature branches?
 
 `
 
+const (
+	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
+	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
+)
+
 func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
 	entries := []syncFeatureStrategyEntry{syncFeatureStrategyEntryMerge, syncFeatureStrategyEntryRebase}
 	var defaultPos int
@@ -53,8 +58,3 @@ func (self syncFeatureStrategyEntry) ToSyncFeatureStrategy() configdomain.SyncFe
 	}
 	panic("unhandled syncFeatureStrategyEntry: " + self)
 }
-
-const (
-	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
-	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
-)

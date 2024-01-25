@@ -16,6 +16,11 @@ merging pull requests through its UI.
 
 `
 
+const (
+	shipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
+	shipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
+)
+
 func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
 	entries := []shipDeleteTrackingBranchEntry{shipDeleteTrackingBranchEntryYes, shipDeleteTrackingBranchEntryNo}
 	var defaultPos int
@@ -48,8 +53,3 @@ func (self shipDeleteTrackingBranchEntry) ToShipDeleteTrackingBranch() configdom
 	}
 	panic("unhandled shipDeleteTrackingBranchEntry: " + self)
 }
-
-const (
-	shipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
-	shipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
-)

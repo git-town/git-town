@@ -19,6 +19,11 @@ and you want to keep it in sync with the repo it was forked from.
 
 `
 
+const (
+	syncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
+	syncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
+)
+
 func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
 	entries := []syncUpstreamEntry{syncUpstreamEntryYes, syncUpstreamEntryNo}
 	var defaultPos int
@@ -51,8 +56,3 @@ func (self syncUpstreamEntry) ToSyncUpstream() configdomain.SyncUpstream {
 	}
 	panic("unhandled syncUpstreamEntry: " + self)
 }
-
-const (
-	syncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
-	syncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
-)

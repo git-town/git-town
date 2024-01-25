@@ -21,6 +21,11 @@ on the first run of "git sync".
 
 `
 
+const (
+	pushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"
+	pushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
+)
+
 func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
 	entries := []pushNewBranchesEntry{pushNewBranchesEntryYes, pushNewBranchesEntryNo}
 	var defaultPos int
@@ -53,8 +58,3 @@ func (self pushNewBranchesEntry) ToNewBranchPush() configdomain.NewBranchPush {
 	}
 	panic("unhandled pushNewBranchesEntry: " + self)
 }
-
-const (
-	pushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"
-	pushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
-)
