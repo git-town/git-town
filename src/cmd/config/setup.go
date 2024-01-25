@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -166,25 +167,14 @@ func executeConfigSetup(verbose bool) error {
 	}
 
 	// SYNC BEFORE SHIP
-	newSyncBeforeShip, aborted, err := dialog.EnterSyncBeforeShip(config.SyncBeforeShip, config.dialogInputs.Next())
+	aborted, err = setupSyncBeforeShip(config.SyncBeforeShip, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetSyncBeforeShip(newSyncBeforeShip, false)
-	if err != nil {
-		return err
-	}
-
-	// SHIP DELETE TRACKING BRANCH
-	newShipDeleteTrackingBranch, aborted, err := dialog.EnterShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	aborted, err = setupShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetShipDeleteTrackingBranch(newShipDeleteTrackingBranch, false)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -209,4 +199,20 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
+}
+
+func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterShipDeleteTrackingBranch(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
+}
+
+func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	newValue, aborted, err := dialog.EnterSyncBeforeShip(existingValue, inputs)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return aborted, runner.SetSyncBeforeShip(newValue, false)
 }
