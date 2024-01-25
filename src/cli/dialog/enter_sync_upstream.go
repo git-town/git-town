@@ -20,7 +20,7 @@ and you want to keep it in sync with the repo it was forked from.
 `
 
 func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []string{`yes, receive updates from the upstream repo`, `no, don't receive updates from upstream`}
+	entries := []syncUpstreamEntry{syncUpstreamEntryYes, syncUpstreamEntryNo}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
@@ -31,8 +31,28 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (co
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
+	cutSelection, _, _ := strings.Cut(selection.String(), ",")
 	fmt.Printf("Sync with upstream: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseSyncUpstream(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	return selection.ToSyncUpstream(), aborted, err
 }
+
+type syncUpstreamEntry string
+
+func (self syncUpstreamEntry) String() string {
+	return string(self)
+}
+
+func (self syncUpstreamEntry) ToSyncUpstream() configdomain.SyncUpstream {
+	switch self {
+	case syncUpstreamEntryYes:
+		return configdomain.SyncUpstream(true)
+	case syncUpstreamEntryNo:
+		return configdomain.SyncUpstream(false)
+	}
+	panic("unhandled syncUpstreamEntry: " + self)
+}
+
+const (
+	syncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
+	syncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
+)
