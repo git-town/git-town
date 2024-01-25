@@ -9,6 +9,7 @@ import (
 
 func TestIndex(t *testing.T) {
 	t.Parallel()
+
 	t.Run("haystack contains the needle", func(t *testing.T) {
 		t.Parallel()
 		one := testEntry("one")
@@ -19,6 +20,7 @@ func TestIndex(t *testing.T) {
 		have = stringers.Index(list, two)
 		must.Eq(t, 1, have)
 	})
+
 	t.Run("haystack does not contain the needle", func(t *testing.T) {
 		t.Parallel()
 		one := testEntry("one")
@@ -27,6 +29,7 @@ func TestIndex(t *testing.T) {
 		have := stringers.Index(list, two)
 		must.Eq(t, -1, have)
 	})
+
 	t.Run("empty haystack", func(t *testing.T) {
 		t.Parallel()
 		one := testEntry("one")
