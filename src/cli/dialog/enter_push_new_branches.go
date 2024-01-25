@@ -38,12 +38,16 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection.String(), ",")
-	fmt.Printf("Push new branches: %s\n", formattedSelection(cutSelection, aborted))
+	fmt.Printf("Push new branches: %s\n", formattedSelection(selection.Short(), aborted))
 	return selection.ToNewBranchPush(), aborted, err
 }
 
 type pushNewBranchesEntry string
+
+func (self pushNewBranchesEntry) Short() string {
+	begin, _, _ := strings.Cut(self.String(), ",")
+	return begin
+}
 
 func (self pushNewBranchesEntry) String() string {
 	return string(self)

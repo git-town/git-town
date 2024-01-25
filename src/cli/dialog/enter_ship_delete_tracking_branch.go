@@ -33,12 +33,16 @@ func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranc
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection.String(), ",")
-	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(cutSelection, aborted))
+	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(selection.Short(), aborted))
 	return selection.ToShipDeleteTrackingBranch(), aborted, err
 }
 
 type shipDeleteTrackingBranchEntry string
+
+func (self shipDeleteTrackingBranchEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
 
 func (self shipDeleteTrackingBranchEntry) String() string {
 	return string(self)

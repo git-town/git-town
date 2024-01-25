@@ -36,12 +36,16 @@ func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inp
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection.String(), " ")
-	fmt.Printf("Sync perennial branches: %s\n", formattedSelection(cutSelection, aborted))
+	fmt.Printf("Sync perennial branches: %s\n", formattedSelection(selection.Short(), aborted))
 	return selection.ToSyncPerennialStrategy(), aborted, err
 }
 
 type syncPerennialStrategyEntry string
+
+func (self syncPerennialStrategyEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), " ")
+	return start
+}
 
 func (self syncPerennialStrategyEntry) String() string {
 	return string(self)

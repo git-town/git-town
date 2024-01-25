@@ -39,12 +39,16 @@ func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection.String(), ",")
-	fmt.Printf("Sync before ship: %s\n", formattedSelection(cutSelection, aborted))
+	fmt.Printf("Sync before ship: %s\n", formattedSelection(selection.Short(), aborted))
 	return selection.ToSyncBeforeShip(), aborted, err
 }
 
 type syncBeforeShipEntry string
+
+func (self syncBeforeShipEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
 
 func (self syncBeforeShipEntry) String() string {
 	return string(self)
