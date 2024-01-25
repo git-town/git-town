@@ -22,7 +22,7 @@ const (
 )
 
 // NewHosting provides the HostingService enum matching the given text.
-func NewHosting(platformName CodeHostingPlatform) (Hosting, error) {
+func NewHosting(platformName HostingPlatform) (Hosting, error) {
 	text := strings.ToLower(platformName.String())
 	for _, hostingService := range hostings() {
 		if strings.ToLower(text) == hostingService.String() {
