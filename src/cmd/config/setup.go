@@ -46,7 +46,6 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-
 	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
