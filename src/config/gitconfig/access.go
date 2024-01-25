@@ -68,7 +68,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyCodeHostingOriginHostname:
 		config.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(value)
 	case KeyCodeHostingPlatform:
-		config.CodeHostingPlatform = configdomain.NewCodeHostingPlatformRef(value)
+		config.CodeHostingPlatform = configdomain.NewHostingPlatformRef(value)
 	case KeyGiteaToken:
 		config.GiteaToken = configdomain.NewGiteaTokenRef(value)
 	case KeyGithubToken:
