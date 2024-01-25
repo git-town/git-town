@@ -46,24 +46,59 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-
 	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupMainbranch(config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupCodeHostingPlatform(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupCodeHosting(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
 
+	// CODE HOSTING TOKEN
+	switch newCodeHostingPlatform {
+	case configdomain.CodeHostingPlatformAutoDetect:
+		newToken, err := dialog.EnterHostingToken(newCodeHostingPlatform, config.dialogInputs.Next())
+		if err != nil {
+			return err
+		}
+		err = repo.Runner.Frontend.SetCodeHostingToken(newCodeHostingToken)
+		if err != nil {
+			return err
+		}
+	}
+
+	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
+
+	// CODE HOSTING
+	newCodeHostingPlatform, aborted, err := dialog.EnterHostingPlatform(config.CodeHostingPlatform, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
+	}
+	switch {
+	case config.CodeHostingPlatform == "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
+		// no changes --> do nothing
+	case config.CodeHostingPlatform != "" && newCodeHostingPlatform == configdomain.CodeHostingPlatformAutoDetect:
+		err = repo.Runner.Frontend.DeleteCodeHostingPlatform()
+		if err != nil {
+			return err
+		}
+	case config.CodeHostingPlatform.String() != newCodeHostingPlatform:
+		err = repo.Runner.Frontend.SetCodeHostingPlatform(newCodeHostingPlatform)
+		if err != nil {
+			return err
+		}
+	}
+
+	// SYNC-FEATURE-STRATEGY
 	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -151,25 +186,15 @@ func setupCodeHostingPlatform(existingValue configdomain.CodeHostingPlatform, ru
 	case existingValue == "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
 		// no changes --> do nothing
 	case existingValue != "" && newValue == configdomain.CodeHostingPlatformAutoDetect:
-		err = runner.Frontend.DeleteCodeHostingPlatform()
-		if err != nil {
-			return aborted, err
-		}
-	case existingValue != newValue:
-		err = runner.Frontend.SetCodeHostingPlatform(newValue)
-		if err != nil {
-			return aborted, err
-		}
 	}
 	return aborted, nil
 }
 
-func setupMainbranch(allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	defaultMainBranch := runner.MainBranch
-	if defaultMainBranch.IsEmpty() {
-		defaultMainBranch, _ = runner.Backend.DefaultBranch()
+func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+	if existingValue.IsEmpty() {
+		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, defaultMainBranch, inputs)
+	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -183,27 +208,24 @@ func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch
 	}
 	if slices.Compare(runner.PerennialBranches, newValue) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
 		err = runner.SetPerennialBranches(newValue)
-		if err != nil {
-			return aborted, err
-		}
 	}
-	return aborted, nil
+	return aborted, err
 }
 
 func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterPushHook(existingValue, inputs)
+	newPushHook, aborted, err := dialog.EnterPushHook(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
-	return aborted, runner.SetPushHookLocally(newValue)
+	return aborted, runner.SetPushHookLocally(newPushHook)
 }
 
 func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(existingValue, inputs)
+	newValue, aborted, err := dialog.EnterPushNewBranches(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
-	return aborted, runner.SetNewBranchPush(newPushNewBranches, false)
+	return aborted, runner.SetNewBranchPush(newValue, false)
 }
 
 func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
