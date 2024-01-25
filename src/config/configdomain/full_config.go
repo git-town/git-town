@@ -141,7 +141,7 @@ func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                   Aliases{},
 		CodeHostingOriginHostname: "",
-		CodeHostingPlatform:       "",
+		CodeHostingPlatform:       CodeHostingPlatformAutoDetect,
 		GiteaToken:                "",
 		GitLabToken:               "",
 		GitHubToken:               "",
