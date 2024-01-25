@@ -1,49 +1,43 @@
 package dialog
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func radioList(args radioListArgs) (selected string, aborted bool, err error) {
-	program := tea.NewProgram(radioListModel{
-		BubbleList: newBubbleList(args.entries, DetermineCursorPos(args.entries, args.defaultEntry)),
-		help:       args.help,
+func radioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+	program := tea.NewProgram(radioListModel[S]{
+		BubbleList: newBubbleList(entries, cursor),
+		help:       help,
 	})
-	if len(args.testInput) > 0 {
+	if len(testInput) > 0 {
 		go func() {
-			for _, input := range args.testInput {
+			for _, input := range testInput {
 				program.Send(input)
 			}
 		}()
 	}
 	dialogResult, err := program.Run()
 	if err != nil {
-		return "", false, err
+		return entries[0], false, err
 	}
-	result := dialogResult.(radioListModel) //nolint:forcetypeassert
+	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
 	return result.selectedEntry(), result.aborted(), nil
 }
 
-type radioListArgs struct {
-	entries      []string
-	defaultEntry string
-	help         string
-	testInput    TestInput
-}
-
-type radioListModel struct {
-	BubbleList
+type radioListModel[S fmt.Stringer] struct {
+	BubbleList[S]
 	help string // help text to display before the radio list
 }
 
-func (self radioListModel) Init() tea.Cmd {
+func (self radioListModel[S]) Init() tea.Cmd {
 	return nil
 }
 
-func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	keyMsg, isKeyMsg := msg.(tea.KeyMsg)
 	if !isKeyMsg {
 		return self, nil
@@ -62,7 +56,7 @@ func (self radioListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 	return self, nil
 }
 
-func (self radioListModel) View() string {
+func (self radioListModel[S]) View() string {
 	if self.Status != dialogStatusActive {
 		return ""
 	}
@@ -71,9 +65,9 @@ func (self radioListModel) View() string {
 	for i, branch := range self.Entries {
 		s.WriteString(self.entryNumberStr(i))
 		if i == self.Cursor {
-			s.WriteString(self.Colors.selection.Styled("> " + branch))
+			s.WriteString(self.Colors.selection.Styled("> " + branch.String()))
 		} else {
-			s.WriteString("  " + branch)
+			s.WriteString("  " + branch.String())
 		}
 		s.WriteRune('\n')
 	}

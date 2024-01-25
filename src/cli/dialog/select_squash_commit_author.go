@@ -12,12 +12,22 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      authors,
-		defaultEntry: "",
-		help:         fmt.Sprintf(messages.BranchAuthorMultiple, branch),
-		testInput:    dialogTestInputs,
-	})
-	fmt.Printf("Selected squash commit author: %s\n", formattedSelection(selection, aborted))
-	return selection, aborted, err
+	authorsList := squashCommitAuthorList(authors)
+	selection, aborted, err := radioList(authorsList, 0, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
+	fmt.Printf("Selected squash commit author: %s\n", formattedSelection(selection.String(), aborted))
+	return selection.String(), aborted, err
+}
+
+type squashCommitAuthor string
+
+func (self squashCommitAuthor) String() string {
+	return string(self)
+}
+
+func squashCommitAuthorList(authors []string) []squashCommitAuthor {
+	result := make([]squashCommitAuthor, len(authors))
+	for a, author := range authors {
+		result[a] = squashCommitAuthor(author)
+	}
+	return result
 }

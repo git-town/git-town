@@ -18,8 +18,16 @@ How should Git Town update feature branches?
 
 `
 
+const (
+	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
+	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
+)
+
 func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
-	entries := []string{`merge updates from the parent branch into feature branches`, `rebase feature branches against their parent branch`}
+	entries := []syncFeatureStrategyEntry{
+		syncFeatureStrategyEntryMerge,
+		syncFeatureStrategyEntryRebase,
+	}
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncFeatureStrategyMerge:
@@ -29,17 +37,27 @@ func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs 
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncFeatureStrategyHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, " ")
+	cutSelection, _, _ := strings.Cut(selection.String(), " ")
 	fmt.Printf("Sync feature branches: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.NewSyncFeatureStrategy(cutSelection)
-	return parsedAnswer, aborted, err
+	return selection.SyncFeatureStrategy(), aborted, err
+}
+
+type syncFeatureStrategyEntry string
+
+func (self syncFeatureStrategyEntry) String() string {
+	return string(self)
+}
+
+func (self syncFeatureStrategyEntry) SyncFeatureStrategy() configdomain.SyncFeatureStrategy {
+	switch self {
+	case syncFeatureStrategyEntryMerge:
+		return configdomain.SyncFeatureStrategyMerge
+	case syncFeatureStrategyEntryRebase:
+		return configdomain.SyncFeatureStrategyRebase
+	}
+	panic("unhandled syncFeatureStrategyEntry: " + self)
 }

@@ -22,25 +22,47 @@ But this also triggers another CI run and delays shipping.
 
 `
 
+const (
+	SyncBeforeShipEntryYes syncBeforeShipEntry = `yes, "git ship" should also sync the branch`
+	SyncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
+)
+
 func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput) (configdomain.SyncBeforeShip, bool, error) {
-	entries := []string{`yes, "git ship" should also sync the branch`, `no, "git ship" should not sync the branch`}
+	entries := []syncBeforeShipEntry{
+		SyncBeforeShipEntryYes,
+		SyncBeforeShipEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncBeforeShipHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
-	fmt.Printf("Sync before ship: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseSyncBeforeShip(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	fmt.Printf("Sync before ship: %s\n", formattedSelection(selection.Short(), aborted))
+	return selection.SyncBeforeShip(), aborted, err
+}
+
+type syncBeforeShipEntry string
+
+func (self syncBeforeShipEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
+
+func (self syncBeforeShipEntry) String() string {
+	return string(self)
+}
+
+func (self syncBeforeShipEntry) SyncBeforeShip() configdomain.SyncBeforeShip {
+	switch self {
+	case SyncBeforeShipEntryYes:
+		return configdomain.SyncBeforeShip(true)
+	case SyncBeforeShipEntryNo:
+		return configdomain.SyncBeforeShip(false)
+	}
+	panic("unhandled syncBeforeShipEntry: " + self)
 }

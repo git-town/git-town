@@ -150,7 +150,7 @@ func setupCodeHosting(existingValue configdomain.HostingPlatform, runner *git.Pr
 		// no changes --> do nothing
 	case existingValue != "" && newValue == configdomain.HostingPlatformAutoDetect:
 		return aborted, runner.Frontend.DeleteCodeHostingPlatform()
-	case existingValue.String() != newValue:
+	case existingValue != newValue:
 		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
 	}
 	return aborted, nil

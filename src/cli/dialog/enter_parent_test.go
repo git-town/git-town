@@ -33,7 +33,7 @@ func TestEnterParent(t *testing.T) {
 				Lineage:         lineage,
 				MainBranch:      main,
 			})
-			want := []string{dialog.PerennialBranchOption, "main", "branch-1", "branch-3"}
+			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch3}
 			must.Eq(t, want, have)
 		})
 		t.Run("omits all descendents of the branch for which to select the parent", func(t *testing.T) {
@@ -59,7 +59,7 @@ func TestEnterParent(t *testing.T) {
 				Lineage:         lineage,
 				MainBranch:      main,
 			})
-			want := []string{dialog.PerennialBranchOption, "main", "branch-1", "branch-1a", "branch-3"}
+			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch1a, branch3}
 			must.Eq(t, want, have)
 		})
 	})

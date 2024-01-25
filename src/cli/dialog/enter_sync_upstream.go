@@ -19,25 +19,47 @@ and you want to keep it in sync with the repo it was forked from.
 
 `
 
+const (
+	SyncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
+	SyncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
+)
+
 func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs TestInput) (configdomain.SyncUpstream, bool, error) {
-	entries := []string{`yes, receive updates from the upstream repo`, `no, don't receive updates from upstream`}
+	entries := []syncUpstreamEntry{
+		SyncUpstreamEntryYes,
+		SyncUpstreamEntryNo,
+	}
 	var defaultPos int
 	if existing {
 		defaultPos = 0
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(radioListArgs{
-		entries:      entries,
-		defaultEntry: entries[defaultPos],
-		help:         enterSyncUpstreamHelp,
-		testInput:    inputs,
-	})
+	selection, aborted, err := radioList(entries, defaultPos, enterSyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	cutSelection, _, _ := strings.Cut(selection, ",")
-	fmt.Printf("Sync with upstream: %s\n", formattedSelection(cutSelection, aborted))
-	parsedAnswer, err := configdomain.ParseSyncUpstream(cutSelection, "user dialog")
-	return parsedAnswer, aborted, err
+	fmt.Printf("Sync with upstream: %s\n", formattedSelection(selection.Short(), aborted))
+	return selection.SyncUpstream(), aborted, err
+}
+
+type syncUpstreamEntry string
+
+func (self syncUpstreamEntry) Short() string {
+	start, _, _ := strings.Cut(self.String(), ",")
+	return start
+}
+
+func (self syncUpstreamEntry) String() string {
+	return string(self)
+}
+
+func (self syncUpstreamEntry) SyncUpstream() configdomain.SyncUpstream {
+	switch self {
+	case SyncUpstreamEntryYes:
+		return configdomain.SyncUpstream(true)
+	case SyncUpstreamEntryNo:
+		return configdomain.SyncUpstream(false)
+	}
+	panic("unhandled syncUpstreamEntry: " + self)
 }
