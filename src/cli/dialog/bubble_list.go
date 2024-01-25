@@ -106,6 +106,6 @@ func (self *BubbleList[S, C]) moveCursorUp() {
 	}
 }
 
-func (self BubbleList[S, C]) selectedEntry() C {
+func (self BubbleList[S, C]) selectedEntry() C { //nolint:ireturn
 	return self.Entries[self.Cursor]
 }

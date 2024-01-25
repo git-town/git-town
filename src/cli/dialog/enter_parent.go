@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
 
-var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)")
+var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)") //nolint:gochecknoglobals
 
 const enterParentHelpTemplate = `
 Please select the parent of branch %q or enter its number.
@@ -23,7 +23,7 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
 	selection, aborted, err := radioList(entries, cursor, fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch), args.DialogTestInput)
 	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, formattedSelection(selection.String(), aborted))
-	return gitdomain.LocalBranchName(selection), aborted, err
+	return selection, aborted, err
 }
 
 type EnterParentArgs struct {

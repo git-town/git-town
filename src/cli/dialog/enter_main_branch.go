@@ -20,5 +20,5 @@ func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch git
 	cursor := stringers.IndexOrStart(localBranches, oldMainBranch)
 	selection, aborted, err := radioList(localBranches, cursor, enterBranchHelp, inputs)
 	fmt.Printf("Main branch: %s\n", formattedSelection(selection.String(), aborted))
-	return gitdomain.LocalBranchName(selection), aborted, err
+	return selection, aborted, err
 }

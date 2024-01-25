@@ -8,7 +8,7 @@ import (
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func radioList[S ~[]C, C fmt.Stringer](entries S, cursor int, help string, testInput TestInput) (selected C, aborted bool, err error) {
+func radioList[S ~[]C, C fmt.Stringer](entries S, cursor int, help string, testInput TestInput) (selected C, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S, C]{
 		BubbleList: newBubbleList(entries, cursor),
 		help:       help,
