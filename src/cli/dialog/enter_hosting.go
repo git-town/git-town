@@ -14,9 +14,9 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(platformName configdomain.CodeHostingPlatform, inputs TestInput) (configdomain.CodeHostingPlatform, bool, error) {
+func EnterHostingPlatform(platformName configdomain.HostingPlatform, inputs TestInput) (configdomain.HostingPlatform, bool, error) {
 	selection, aborted, err := radioList(radioListArgs{
-		entries:      configdomain.AllCodeHostingPlatforms().Strings(),
+		entries:      configdomain.AllHostingPlatforms().Strings(),
 		defaultEntry: platformName.String(),
 		help:         enterHostingPlatformHelp,
 		testInput:    inputs,

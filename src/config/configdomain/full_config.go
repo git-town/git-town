@@ -9,7 +9,7 @@ import (
 type FullConfig struct {
 	Aliases                   Aliases
 	CodeHostingOriginHostname CodeHostingOriginHostname
-	CodeHostingPlatform       CodeHostingPlatform
+	CodeHostingPlatform       HostingPlatform
 	GiteaToken                GiteaToken
 	GitHubToken               GitHubToken
 	GitLabToken               GitLabToken
