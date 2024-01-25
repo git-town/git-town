@@ -17,12 +17,12 @@ to their tracking branch made somewhere else.
 `
 
 const (
-	syncPerennialStrategyEntryMerge  syncPerennialStrategyEntry = `merge updates from the tracking branch into perennial branches`
-	syncPerennialStrategyEntryRebase syncPerennialStrategyEntry = `rebase perennial branches against their tracking branch`
+	SyncPerennialStrategyEntryMerge  syncPerennialStrategyEntry = `merge updates from the tracking branch into perennial branches`
+	SyncPerennialStrategyEntryRebase syncPerennialStrategyEntry = `rebase perennial branches against their tracking branch`
 )
 
 func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
-	entries := []syncPerennialStrategyEntry{syncPerennialStrategyEntryMerge, syncPerennialStrategyEntryRebase}
+	entries := []syncPerennialStrategyEntry{SyncPerennialStrategyEntryMerge, SyncPerennialStrategyEntryRebase}
 	var defaultPos int
 	switch existing {
 	case configdomain.SyncPerennialStrategyMerge:
@@ -53,9 +53,9 @@ func (self syncPerennialStrategyEntry) String() string {
 
 func (self syncPerennialStrategyEntry) ToSyncPerennialStrategy() configdomain.SyncPerennialStrategy {
 	switch self {
-	case syncPerennialStrategyEntryMerge:
+	case SyncPerennialStrategyEntryMerge:
 		return configdomain.SyncPerennialStrategyMerge
-	case syncPerennialStrategyEntryRebase:
+	case SyncPerennialStrategyEntryRebase:
 		return configdomain.SyncPerennialStrategyRebase
 	}
 	panic("unhandled syncPerennialStrategyEntry: " + self)
