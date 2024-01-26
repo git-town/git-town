@@ -3,7 +3,7 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"

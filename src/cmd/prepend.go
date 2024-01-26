@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"

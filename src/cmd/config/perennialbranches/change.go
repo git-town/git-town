@@ -3,7 +3,7 @@ package perennialbranches
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
