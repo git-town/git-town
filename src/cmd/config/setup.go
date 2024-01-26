@@ -101,7 +101,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = setupSyncBeforeShip(runner, config)
+	config.userInput.SyncBeforeShip, aborted, err = enter.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -163,6 +163,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 		return err
 	}
 	err = saveSyncUpstream(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncBeforeShip(runner, newConfig)
 	if err != nil {
 		return err
 	}
@@ -251,18 +255,17 @@ func saveSyncUpstream(runner *git.ProdRunner, newConfig configdomain.FullConfig)
 	return runner.SetSyncUpstream(newConfig.SyncUpstream, false)
 }
 
+func saveSyncBeforeShip(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncBeforeShip == runner.SyncBeforeShip {
+		return nil
+	}
+	return runner.SetSyncBeforeShip(newConfig.SyncBeforeShip, false)
+}
+
 func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
-}
-
-func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetSyncBeforeShip(newValue, false)
 }

@@ -28,7 +28,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-perennial-strategy" is still not set
     And local Git Town setting "sync-upstream" is still not set
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
-    And local Git Town setting "sync-before-ship" is now "false"
+    And local Git Town setting "sync-before-ship" is still not set
 
   Scenario: change existing configuration
     Given a perennial branch "qa"
