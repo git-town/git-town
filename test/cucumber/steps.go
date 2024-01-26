@@ -675,6 +675,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "push-hook" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
 		wantBool, err := strconv.ParseBool(wantStr)
@@ -684,6 +692,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
@@ -697,6 +713,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
 		wantBool, err := strconv.ParseBool(wantStr)
@@ -706,6 +730,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-before-ship" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncBeforeShip
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-before-ship" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "sync-before-ship" is now "([^"]*)"$`, func(wantStr string) error {
@@ -719,6 +751,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "sync-feature-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
@@ -729,6 +769,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-perennial-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
@@ -737,6 +785,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-upstream" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
@@ -1111,6 +1167,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^the main branch is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf("unexpected main branch setting %q", have)
 	})
 
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
