@@ -38,7 +38,7 @@ func proposeCommand() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   proposeDesc,
-		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyCodeHostingPlatform, gitconfig.KeyCodeHostingOriginHostname)),
+		Long:    cmdhelpers.Long(proposeDesc, fmt.Sprintf(proposeHelp, gitconfig.KeyHostingPlatform, gitconfig.KeyHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePropose(readDryRunFlag(cmd), readVerboseFlag(cmd))
 		},

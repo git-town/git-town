@@ -42,7 +42,7 @@ func (self *Config) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	return confighelpers.DetermineOriginURL(text, self.CodeHostingOriginHostname, self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.HostingOriginHostname, self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.

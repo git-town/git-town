@@ -1,12 +1,12 @@
 package configdomain
 
-type CodeHostingOriginHostname string
+type HostingOriginHostname string
 
-func (self CodeHostingOriginHostname) String() string {
+func (self HostingOriginHostname) String() string {
 	return string(self)
 }
 
-func NewCodeHostingOriginHostnameRef(value string) *CodeHostingOriginHostname {
-	token := CodeHostingOriginHostname(value)
+func NewHostingOriginHostnameRef(value string) *HostingOriginHostname {
+	token := HostingOriginHostname(value)
 	return &token
 }
