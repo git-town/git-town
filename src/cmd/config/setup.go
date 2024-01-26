@@ -59,7 +59,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupHostingPlatform(config.HostingPlatform, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupHostingPlatform(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -141,8 +141,9 @@ func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 	return aborted, nil
 }
 
-func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.HostingPlatform(existingValue, inputs)
+func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	existingValue := runner.FullConfig.HostingPlatform
+	newValue, aborted, err := enter.HostingPlatform(existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
