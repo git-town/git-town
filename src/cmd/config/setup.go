@@ -47,48 +47,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	var aborted bool
-	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), repo.Runner.Aliases, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = enterMainBranch(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(repo.Runner.HostingPlatform, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupSyncFeatureStrategy(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupSyncPerennialStrategy(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupSyncUpstream(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupPushNewBranches(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	config.userInput.PushHook, aborted, err = enter.PushHook(repo.Runner.PushHook, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupSyncBeforeShip(repo.Runner, &config)
-	if err != nil || aborted {
-		return err
-	}
-	aborted, err = setupShipDeleteTrackingBranch(repo.Runner, &config)
+	aborted, err := enterData(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -99,6 +58,51 @@ type setupConfig struct {
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
 	userInput     configdomain.FullConfig
+}
+
+func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = enterMainBranch(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupSyncFeatureStrategy(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupSyncPerennialStrategy(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupSyncUpstream(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupPushNewBranches(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.PushHook, aborted, err = enter.PushHook(runner.PushHook, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupSyncBeforeShip(runner, config)
+	if err != nil || aborted {
+		return aborted, err
+	}
+	aborted, err = setupShipDeleteTrackingBranch(runner, config)
+	return aborted, err
 }
 
 func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
