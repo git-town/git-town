@@ -83,7 +83,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncBeforeShip(config.SyncBeforeShip, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncBeforeShip(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -205,8 +205,8 @@ func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTracking
 	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
 }
 
-func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncBeforeShip(existingValue, inputs)
+func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
