@@ -59,6 +59,11 @@ func (self hostingPlatformEntry) String() string {
 	return string(self)
 }
 
+func indexOfHostingPlatform(hostingPlatform configdomain.HostingPlatform, entries []hostingPlatformEntry) int {
+	entry := newHostingPlatformEntry(hostingPlatform)
+	return stringers.IndexOrStart(entries, entry)
+}
+
 func newHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatformEntry {
 	switch hosting {
 	case configdomain.HostingPlatformNone:
@@ -73,9 +78,4 @@ func newHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatfo
 		return hostingPlatformGitLab
 	}
 	panic("unknown hosting: " + hosting)
-}
-
-func indexOfHostingPlatform(hostingPlatform configdomain.HostingPlatform, entries []hostingPlatformEntry) int {
-	entry := newHostingPlatformEntry(hostingPlatform)
-	return stringers.IndexOrStart(entries, entry)
 }

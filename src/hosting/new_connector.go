@@ -39,10 +39,10 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 		return bitbucketConnector, err
 	}
 	giteaConnector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-		OriginURL:      args.OriginURL,
-		HostingService: args.HostingService,
-		APIToken:       args.GiteaToken,
-		Log:            args.Log,
+		OriginURL:       args.OriginURL,
+		HostingPlatform: args.HostingService,
+		APIToken:        args.GiteaToken,
+		Log:             args.Log,
 	})
 	if giteaConnector != nil || err != nil {
 		return giteaConnector, err
