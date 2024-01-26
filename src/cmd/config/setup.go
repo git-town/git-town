@@ -87,7 +87,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupShipDeleteTrackingBranch(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -197,8 +197,8 @@ func setupPushNewBranches(runner *git.ProdRunner, config *setupConfig) (bool, er
 	return aborted, runner.SetNewBranchPush(newValue, false)
 }
 
-func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.ShipDeleteTrackingBranch(existingValue, inputs)
+func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
