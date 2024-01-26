@@ -4,10 +4,10 @@ Git Town prompts for all the configuration information it needs. The commands
 below set additional configuration options that might be helpful in your use
 case. We will cover the full list of options [later](configuration-commands.md).
 
-## API access to your hosting provider
+## API access to your hosting platform
 
 Git Town can ship branches that have an open proposal by merging this proposal
-via your code hosting service's API. To enable it, create an API token for your
+via your code hosting platform's API. To enable it, create an API token for your
 account at your code hosting platform.
 
 - [instructions for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)

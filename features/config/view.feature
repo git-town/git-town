@@ -22,7 +22,7 @@ Feature: show the configuration
         sync before shipping: no
 
       Hosting:
-        hosting service override: (not set)
+        hosting platform override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -65,7 +65,7 @@ Feature: show the configuration
         sync before shipping: no
 
       Hosting:
-        hosting service override: github
+        hosting platform override: github
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -115,7 +115,7 @@ Feature: show the configuration
         sync before shipping: no
 
       Hosting:
-        hosting service override: github
+        hosting platform override: github
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -144,7 +144,7 @@ Feature: show the configuration
         sync before shipping: no
 
       Hosting:
-        hosting service override: (not set)
+        hosting platform override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -179,7 +179,7 @@ Feature: show the configuration
         sync before shipping: no
 
       Hosting:
-        hosting service override: (not set)
+        hosting platform override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)

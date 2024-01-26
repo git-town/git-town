@@ -83,7 +83,7 @@ func TestGitea(t *testing.T) {
 	//
 	// t.Run("NewProposalURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingService: configdomain.HostingGitea,
+	// 		HostingPlatform: configdomain.HostingGitea,
 	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
@@ -100,7 +100,7 @@ func TestGitea(t *testing.T) {
 	//
 	// t.Run("RepositoryURL", func(t *testing.T) {
 	// 	connector, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingService: configdomain.HostingGitea,
+	// 		HostingPlatform: configdomain.HostingGitea,
 	// 		OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
@@ -121,7 +121,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// t.Run("hosted service type provided manually", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingService: configdomain.HostingGitea,
+	// 		HostingPlatform: configdomain.HostingGitea,
 	// 		OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 	// 		APIToken:       "apiToken",
 	// 		Log:            log.Silent{},
@@ -139,10 +139,10 @@ func TestNewGiteaConnector(t *testing.T) {
 	// WHICH MAKES IT SLOW AND FLAKY.
 	// DISABLE AS NEEDED TO DEBUG THE GITEA CONNECTOR.
 	//
-	// t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
+	// t.Run("repo is hosted by another hosting platform --> no connector", func(t *testing.T) {
 	// 	t.Parallel()
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingService: configdomain.HostingNone,
+	// 		HostingPlatform: configdomain.HostingNone,
 	// 		OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
@@ -159,7 +159,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	// 	t.Parallel()
 	// 	var originURL *giturl.Parts
 	// 	have, err := gitea.NewConnector(gitea.NewConnectorArgs{
-	// 		HostingService: configdomain.HostingNone,
+	// 		HostingPlatform: configdomain.HostingNone,
 	// 		OriginURL:      originURL,
 	// 		APIToken:       "",
 	// 		Log:            log.Silent{},
