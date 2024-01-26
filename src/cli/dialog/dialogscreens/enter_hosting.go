@@ -3,6 +3,7 @@ package dialogscreens
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
@@ -15,7 +16,7 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs TestInput) (configdomain.HostingPlatform, bool, error) {
+func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs dialogcomponents.TestInput) (configdomain.HostingPlatform, bool, error) {
 	entries := []hostingPlatformEntry{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
@@ -24,8 +25,8 @@ func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs Tes
 		hostingPlatformGitLab,
 	}
 	cursor := indexOfHostingPlatform(existingValue, entries)
-	newValue, aborted, err := radioList(entries, cursor, enterHostingPlatformHelp, inputs)
-	fmt.Printf("Code hosting: %s\n", formattedSelection(newValue.String(), aborted))
+	newValue, aborted, err := dialogcomponents.RadioList(entries, cursor, enterHostingPlatformHelp, inputs)
+	fmt.Printf("Code hosting: %s\n", dialogcomponents.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }
 

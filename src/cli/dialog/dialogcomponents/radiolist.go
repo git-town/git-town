@@ -7,8 +7,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// EnterMainBranch lets the user select a new main branch for this repo.
-func radioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+// RadioList lets the user select a new main branch for this repo.
+func RadioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		BubbleList: NewBubbleList(entries, cursor),
 		help:       help,
