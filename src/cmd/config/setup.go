@@ -47,7 +47,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := setupAliases(repo.Runner, &config)
+	aborted, err := enterAliases(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -59,7 +59,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupHostingPlatform(repo.Runner, &config)
+	aborted, err = enterHostingPlatform(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -91,14 +91,19 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	saveEnteredConfig(repo.Runner, config.newConfig)
+	saveUserInput(repo.Runner, config.newConfig)
 	return nil
 }
 
 type setupConfig struct {
 	localBranches gitdomain.BranchInfos
 	inputs        dialog.TestInputs
-	newConfig     configdomain.PartialConfig
+	newConfig     configdomain.FullConfig
+}
+
+func enterAliases(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.newConfig.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.inputs.Next())
+	return aborted, err
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -114,15 +119,14 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
 		inputs:        dialogInputs,
-		newConfig:     configdomain.PartialConfig{},
+		newConfig:     configdomain.FullConfig{},
 	}, exit, err
 }
 
-func saveAliases(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
+func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := runner.Aliases[aliasableCommand]
 		newAlias, hasNew := newConfig.Aliases[aliasableCommand]
-		var err error
 		switch {
 		case hasOld && !hasNew:
 			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
@@ -136,7 +140,7 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.PartialConfig) e
 	return nil
 }
 
-func saveEnteredConfig(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
+func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	err := saveAliases(runner, newConfig)
 	if err != nil {
 		return err
@@ -144,26 +148,23 @@ func saveEnteredConfig(runner *git.ProdRunner, newConfig configdomain.PartialCon
 	return nil
 }
 
-func setupAliases(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.newConfig.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.inputs.Next())
+func enterHostingPlatform(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.newConfig.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.inputs.Next())
 	return aborted, err
 }
 
-func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	existingValue := runner.HostingPlatform
-	newValue, aborted, err := enter.HostingPlatform(existingValue, config.inputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
+func saveHostingPlatform(runner *git.ProdRunner, config *setupConfig) (err error) {
+	oldValue := runner.HostingPlatform
+	newValue := config.newConfig.HostingPlatform
 	switch {
-	case existingValue == "" && newValue == configdomain.HostingPlatformNone:
+	case oldValue == "" && newValue == configdomain.HostingPlatformNone:
 		// no changes --> do nothing
-	case existingValue != "" && newValue == configdomain.HostingPlatformNone:
-		return aborted, runner.Frontend.DeleteHostingPlatform()
-	case existingValue != newValue:
-		return aborted, runner.Frontend.SetHostingPlatform(newValue)
+	case oldValue != "" && newValue == configdomain.HostingPlatformNone:
+		return runner.Frontend.DeleteHostingPlatform()
+	case oldValue != newValue:
+		return runner.Frontend.SetHostingPlatform(newValue)
 	}
-	return aborted, nil
+	return nil
 }
 
 func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
