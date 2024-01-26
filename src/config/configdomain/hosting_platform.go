@@ -8,7 +8,6 @@ import (
 )
 
 // HostingPlatform defines legal values for the "git-town.code-hosting-platform" config setting.
-// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type HostingPlatform string
 
 func (self HostingPlatform) String() string { return string(self) }
