@@ -65,7 +65,11 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = enterMainBranch(runner, config)
+	existingValue := runner.MainBranch
+	if existingValue.IsEmpty() {
+		existingValue, _ = runner.Backend.DefaultBranch()
+	}
+	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -102,16 +106,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		return aborted, err
 	}
 	aborted, err = setupShipDeleteTrackingBranch(runner, config)
-	return aborted, err
-}
-
-func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	existingValue := runner.MainBranch
-	if existingValue.IsEmpty() {
-		existingValue, _ = runner.Backend.DefaultBranch()
+	if err != nil || aborted {
+		return aborted, err
 	}
-	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
-	return aborted, err
+	return false, nil
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
