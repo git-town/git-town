@@ -59,7 +59,7 @@ func (self hostingPlatformEntry) String() string {
 	return string(self)
 }
 
-func hostingPlatformToHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatformEntry {
+func newHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatformEntry {
 	switch hosting {
 	case configdomain.HostingNone:
 		return hostingPlatformAutoDetect
@@ -76,6 +76,6 @@ func hostingPlatformToHostingPlatformEntry(hosting configdomain.HostingPlatform)
 }
 
 func indexOfHostingPlatform(hostingPlatform configdomain.HostingPlatform, entries []hostingPlatformEntry) int {
-	entry := hostingPlatformToHostingPlatformEntry(hostingPlatform)
+	entry := newHostingPlatformEntry(hostingPlatform)
 	return stringers.IndexOrStart(entries, entry)
 }
