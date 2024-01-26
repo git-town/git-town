@@ -1,13 +1,14 @@
-package dialog
+package enter
 
 import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 )
 
-func textInput(existingValue string, help string, placeholder string, testInput TestInput) (string, bool, error) {
+func textInput(existingValue string, help string, placeholder string, testInput dialog.TestInput) (string, bool, error) {
 	ti := textinput.New()
 	ti.SetValue(existingValue)
 	ti.Placeholder = placeholder
