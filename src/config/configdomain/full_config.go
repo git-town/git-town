@@ -140,7 +140,7 @@ func DefaultConfig() FullConfig {
 		GitUserEmail:             "",
 		GitUserName:              "",
 		HostingOriginHostname:    "",
-		HostingPlatform:          CodeHostingPlatformAutoDetect,
+		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		NewBranchPush:            false,
