@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -26,7 +27,7 @@ const (
 	PushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
 )
 
-func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput) (configdomain.NewBranchPush, bool, error) {
+func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs dialogcomponents.TestInput) (configdomain.NewBranchPush, bool, error) {
 	entries := []pushNewBranchesEntry{
 		PushNewBranchesEntryYes,
 		PushNewBranchesEntryNo,
@@ -37,11 +38,11 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs TestInput)
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(entries, defaultPos, enterPushNewBranchesHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterPushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push new branches: %s\n", formattedSelection(selection.Short(), aborted))
+	fmt.Printf("Push new branches: %s\n", dialogcomponents.FormattedSelection(selection.Short(), aborted))
 	return selection.NewBranchPush(), aborted, err
 }
 
