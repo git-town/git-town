@@ -13,7 +13,7 @@ import (
 func TestParent(t *testing.T) {
 	t.Parallel()
 
-	t.Run("EnterParentEntries", func(t *testing.T) {
+	t.Run("ParentEntries", func(t *testing.T) {
 		t.Parallel()
 		t.Run("omits the branch for which to select the parent", func(t *testing.T) {
 			t.Parallel()
@@ -27,7 +27,7 @@ func TestParent(t *testing.T) {
 				branch2: main,
 				branch3: main,
 			}
-			have := enter.EnterParentEntries(enter.EnterParentArgs{
+			have := enter.ParentEntries(enter.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: dialogcomponents.TestInput{},
 				LocalBranches:   localBranches,
@@ -53,7 +53,7 @@ func TestParent(t *testing.T) {
 				branch2a: branch2,
 				branch3:  main,
 			}
-			have := enter.EnterParentEntries(enter.EnterParentArgs{
+			have := enter.ParentEntries(enter.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: dialogcomponents.TestInput{},
 				LocalBranches:   localBranches,

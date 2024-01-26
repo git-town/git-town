@@ -19,8 +19,8 @@ Most of the time this is the main development branch (%v).
 `
 
 // Parent lets the user select the parent branch for the given branch.
-func Parent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
-	entries := EnterParentEntries(args)
+func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
+	entries := ParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
 	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)
 	selection, aborted, err := dialogcomponents.RadioList(entries, cursor, help, args.DialogTestInput)
@@ -28,7 +28,7 @@ func Parent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	return selection, aborted, err
 }
 
-type EnterParentArgs struct {
+type ParentArgs struct {
 	Branch          gitdomain.LocalBranchName
 	DialogTestInput dialogcomponents.TestInput
 	LocalBranches   gitdomain.LocalBranchNames
@@ -36,7 +36,7 @@ type EnterParentArgs struct {
 	MainBranch      gitdomain.LocalBranchName
 }
 
-func EnterParentEntries(args EnterParentArgs) gitdomain.LocalBranchNames {
+func ParentEntries(args ParentArgs) gitdomain.LocalBranchNames {
 	parentCandidateBranches := args.LocalBranches.Remove(args.Branch).Remove(args.Lineage.Children(args.Branch)...)
 	parentCandidateBranches.Sort()
 	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch)
