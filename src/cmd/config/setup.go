@@ -62,7 +62,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupHostingToken(config, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupHostingToken()
 	if err != nil || aborted {
 		return err
 	}
@@ -161,17 +161,22 @@ func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *gi
 }
 
 func setupHostingToken() (bool, error) {
-	switch newCodeHostingPlatform {
-	case configdomain.CodeHostingPlatformAutoDetect:
-		newToken, err := dialog.EnterHostingToken(newCodeHostingPlatform, config.dialogInputs.Next())
-		if err != nil {
-			return err
-		}
-		err = repo.Runner.Frontend.SetCodeHostingToken(newCodeHostingToken)
-		if err != nil {
-			return err
-		}
-	}
+	// switch newCodeHostingPlatform {
+	// case configdomain.CodeHostingPlatformAutoDetect:
+	// }
+	return false, nil
+}
+
+func setupGitHubToken() (bool, error) {
+	// newToken, err := dialog.EnterGitHubToken(newCodeHostingPlatform, config.dialogInputs.Next())
+	// if err != nil {
+	// 	return err
+	// }
+	// err = repo.Runner.Frontend.SetCodeHostingToken(newCodeHostingToken)
+	// if err != nil {
+	// 	return err
+	// }
+	return false, nil
 }
 
 func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
