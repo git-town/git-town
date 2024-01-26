@@ -1,20 +1,49 @@
 package configdomain
 
-type HostingPlatform string
+import (
+	"fmt"
+	"strings"
 
-const (
-	HostingPlatformAutoDetect = "auto-detect"
-	HostingPlatformBitBucket  = "bitbucket"
-	HostingPlatformGitea      = "gitea"
-	HostingPlatformGitHub     = "github"
-	HostingPlatformGitLab     = "gitlab"
+	"github.com/git-town/git-town/v11/src/messages"
 )
 
-func (self HostingPlatform) String() string {
-	return string(self)
+// HostingPlatform defines legal values for the "git-town.code-hosting-platform" config setting.
+type HostingPlatform string
+
+func (self HostingPlatform) String() string { return string(self) }
+
+const (
+	HostingPlatformBitbucket = HostingPlatform("bitbucket")
+	HostingPlatformGitHub    = HostingPlatform("github")
+	HostingPlatformGitLab    = HostingPlatform("gitlab")
+	HostingPlatformGitea     = HostingPlatform("gitea")
+	HostingPlatformNone      = HostingPlatform("")
+)
+
+// NewHostingPlatform provides the HostingPlatform enum matching the given text.
+func NewHostingPlatform(platformName string) (HostingPlatform, error) {
+	text := strings.ToLower(platformName)
+	for _, hostingPlatform := range hostingPlatforms() {
+		if strings.ToLower(text) == hostingPlatform.String() {
+			return hostingPlatform, nil
+		}
+	}
+	return HostingPlatformNone, fmt.Errorf(messages.HostingPlatformUnknown, text)
 }
 
-func NewHostingPlatformRef(value string) *HostingPlatform {
-	token := HostingPlatform(value)
-	return &token
+// NewHostingPlatformRef provides the HostingPlatform enum matching the given text.
+func NewHostingPlatformRef(platformName string) (*HostingPlatform, error) {
+	result, err := NewHostingPlatform(platformName)
+	return &result, err
+}
+
+// hostingPlatforms provides all legal values for HostingPlatform.
+func hostingPlatforms() []HostingPlatform {
+	return []HostingPlatform{
+		HostingPlatformNone,
+		HostingPlatformBitbucket,
+		HostingPlatformGitHub,
+		HostingPlatformGitLab,
+		HostingPlatformGitea,
+	}
 }

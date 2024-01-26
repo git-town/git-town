@@ -85,10 +85,10 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
-			OriginURL:      giturl.Parse("git@gitlab.com:git-town/docs.git"),
-			APIToken:       "apiToken",
-			Log:            print.NoLogger{},
+			HostingPlatform: configdomain.HostingPlatformNone,
+			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
+			APIToken:        "apiToken",
+			Log:             print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -105,10 +105,10 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingService: configdomain.HostingGitLab,
-			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
-			APIToken:       "apiToken",
-			Log:            print.NoLogger{},
+			HostingPlatform: configdomain.HostingPlatformGitLab,
+			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:        "apiToken",
+			Log:             print.NoLogger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -122,13 +122,13 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.EqOp(t, wantConfig, have.Config)
 	})
 
-	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting platform --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
-			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
-			APIToken:       "",
-			Log:            print.NoLogger{},
+			HostingPlatform: configdomain.HostingPlatformNone,
+			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
+			APIToken:        "",
+			Log:             print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
@@ -138,10 +138,10 @@ func TestNewGitlabConnector(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
-			OriginURL:      originURL,
-			APIToken:       "",
-			Log:            print.NoLogger{},
+			HostingPlatform: configdomain.HostingPlatformNone,
+			OriginURL:       originURL,
+			APIToken:        "",
+			Log:             print.NoLogger{},
 		})
 		must.Nil(t, have)
 		must.NoError(t, err)
