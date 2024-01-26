@@ -145,6 +145,10 @@ func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) er
 	if err != nil {
 		return err
 	}
+	err = saveHostingPlatform(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -153,9 +157,9 @@ func enterHostingPlatform(runner *git.ProdRunner, config *setupConfig) (aborted 
 	return aborted, err
 }
 
-func saveHostingPlatform(runner *git.ProdRunner, config *setupConfig) (err error) {
+func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {
 	oldValue := runner.HostingPlatform
-	newValue := config.newConfig.HostingPlatform
+	newValue := userInput.HostingPlatform
 	switch {
 	case oldValue == "" && newValue == configdomain.HostingPlatformNone:
 		// no changes --> do nothing
