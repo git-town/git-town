@@ -55,7 +55,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPerennialBranches(repo.Runner, &config)
+	aborted, err = enterPerennialBranches(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -91,8 +91,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	saveUserInput(repo.Runner, config.userInput)
-	return nil
+	return saveUserInput(repo.Runner, config.userInput)
 }
 
 type setupConfig struct {
@@ -117,6 +116,11 @@ func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool,
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
 	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.inputs.Next())
+	return aborted, err
+}
+
+func enterPerennialBranches(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.inputs.Next())
 	return aborted, err
 }
 
@@ -175,6 +179,15 @@ func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) e
 	return runner.SetMainBranch(newConfig.MainBranch)
 }
 
+func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {
+	oldSetting := runner.PerennialBranches
+	newSetting := config.PerennialBranches
+	if slices.Compare(oldSetting, newSetting) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
+		return runner.SetPerennialBranches(newSetting)
+	}
+	return nil
+}
+
 func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	err := saveAliases(runner, newConfig)
 	if err != nil {
@@ -184,18 +197,15 @@ func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) er
 	if err != nil {
 		return err
 	}
+	err = saveMainBranch(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePerennialBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	return nil
-}
-
-func setupPerennialBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, runner.MainBranch, config.inputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	if slices.Compare(runner.PerennialBranches, newValue) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
-		err = runner.SetPerennialBranches(newValue)
-	}
-	return aborted, err
 }
 
 func setupPushHook(runner *git.ProdRunner, config *setupConfig) (bool, error) {
