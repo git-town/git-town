@@ -134,13 +134,13 @@ func (self *FullConfig) ShouldNewBranchPush() bool {
 func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                  Aliases{},
-		HostingOriginHostname:    "",
-		HostingPlatform:          HostingPlatformNone,
 		GiteaToken:               "",
 		GitLabToken:              "",
 		GitHubToken:              "",
 		GitUserEmail:             "",
 		GitUserName:              "",
+		HostingOriginHostname:    "",
+		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		NewBranchPush:            false,
