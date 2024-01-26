@@ -3,6 +3,7 @@ package dialogscreens
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -23,7 +24,7 @@ const (
 	pushHookEntryDisabled pushHookEntry = "disabled"
 )
 
-func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdomain.PushHook, bool, error) {
+func EnterPushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput) (configdomain.PushHook, bool, error) {
 	entries := []pushHookEntry{
 		pushHookEntryEnabled,
 		pushHookEntryDisabled,
@@ -34,11 +35,11 @@ func EnterPushHook(existing configdomain.PushHook, inputs TestInput) (configdoma
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(entries, defaultPos, enterPushHookHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterPushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push hook: %s\n", formattedSelection(selection.String(), aborted))
+	fmt.Printf("Push hook: %s\n", dialogcomponents.FormattedSelection(selection.String(), aborted))
 	return selection.PushHook(), aborted, err
 }
 

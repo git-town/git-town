@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/muesli/termenv"
@@ -21,14 +22,14 @@ const enterPerennialBranchesHelp = `
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput TestInput) (gitdomain.LocalBranchNames, bool, error) {
+func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput dialogcomponents.TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	program := tea.NewProgram(PerennialBranchesModel{
-		BubbleList:    newBubbleList(perennialCandidates, 0),
-		selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
+		BubbleList:    dialogcomponents.NewBubbleList(perennialCandidates, 0),
+		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	})
 	if len(dialogTestInput) > 0 {
@@ -43,18 +44,18 @@ func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerenni
 		return gitdomain.LocalBranchNames{}, false, err
 	}
 	result := dialogResult.(PerennialBranchesModel) //nolint:forcetypeassert
-	selectedBranches := result.checkedEntries()
+	selectedBranches := result.CheckedEntries()
 	selectionText := strings.Join(selectedBranches.Strings(), ", ")
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf("Perennial branches: %s\n", formattedSelection(selectionText, result.aborted()))
-	return selectedBranches, result.aborted(), nil
+	fmt.Printf("Perennial branches: %s\n", dialogcomponents.FormattedSelection(selectionText, result.Aborted()))
+	return selectedBranches, result.Aborted(), nil
 }
 
 type PerennialBranchesModel struct {
-	BubbleList[gitdomain.LocalBranchName]
-	selections    []int
+	dialogcomponents.BubbleList[gitdomain.LocalBranchName]
+	Selections    []int
 	selectedColor termenv.Style
 }
 
@@ -67,40 +68,40 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.handleKey(keyMsg); handled {
+	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
 	case tea.KeySpace:
-		self.toggleCurrentEntry()
+		self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialogStatusDone
+		self.Status = dialogcomponents.DialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialogStatusDone
-		self.toggleCurrentEntry()
+		self.Status = dialogcomponents.DialogStatusDone
+		self.ToggleCurrentEntry()
 		return self, nil
 	}
 	return self, nil
 }
 
 func (self PerennialBranchesModel) View() string {
-	if self.Status != dialogStatusActive {
+	if self.Status != dialogcomponents.DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}
 	s.WriteString(enterPerennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
-		checked := self.isRowChecked(i)
-		s.WriteString(self.entryNumberStr(i))
+		checked := self.IsRowChecked(i)
+		s.WriteString(self.EntryNumberStr(i))
 		switch {
 		case selected && checked:
-			s.WriteString(self.Colors.selection.Styled("> [x] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.String()))
 		case selected && !checked:
-			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.String()))
 		case !selected && checked:
 			s.WriteString(self.selectedColor.Styled("  [x] " + branch.String()))
 		case !selected && !checked:
@@ -110,43 +111,43 @@ func (self PerennialBranchesModel) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.Colors.helpKey.Styled("↑"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("k"))
-	s.WriteString(self.Colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↑"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("k"))
+	s.WriteString(self.Colors.Help.Styled(" up   "))
 	// down
-	s.WriteString(self.Colors.helpKey.Styled("↓"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("j"))
-	s.WriteString(self.Colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↓"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("j"))
+	s.WriteString(self.Colors.Help.Styled(" down   "))
 	// toggle
-	s.WriteString(self.Colors.helpKey.Styled("space"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("o"))
-	s.WriteString(self.Colors.help.Styled(" toggle   "))
+	s.WriteString(self.Colors.HelpKey.Styled("space"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("o"))
+	s.WriteString(self.Colors.Help.Styled(" toggle   "))
 	// numbers
-	s.WriteString(self.Colors.helpKey.Styled("0"))
-	s.WriteString(self.Colors.help.Styled("-"))
-	s.WriteString(self.Colors.helpKey.Styled("9"))
-	s.WriteString(self.Colors.help.Styled(" jump   "))
+	s.WriteString(self.Colors.HelpKey.Styled("0"))
+	s.WriteString(self.Colors.Help.Styled("-"))
+	s.WriteString(self.Colors.HelpKey.Styled("9"))
+	s.WriteString(self.Colors.Help.Styled(" jump   "))
 	// accept
-	s.WriteString(self.Colors.helpKey.Styled("enter"))
-	s.WriteString(self.Colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.HelpKey.Styled("enter"))
+	s.WriteString(self.Colors.Help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("q"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("esc"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.HelpKey.Styled("q"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("esc"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
+	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
 }
 
 // checkedEntries provides all checked list entries.
-func (self *PerennialBranchesModel) checkedEntries() gitdomain.LocalBranchNames {
+func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
 	result := gitdomain.LocalBranchNames{}
 	for e, entry := range self.Entries {
-		if self.isRowChecked(e) {
+		if self.IsRowChecked(e) {
 			result = append(result, entry)
 		}
 	}
@@ -154,31 +155,31 @@ func (self *PerennialBranchesModel) checkedEntries() gitdomain.LocalBranchNames 
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.
-func (self *PerennialBranchesModel) disableCurrentEntry() {
-	self.selections = slice.Remove(self.selections, self.Cursor)
+func (self *PerennialBranchesModel) DisableCurrentEntry() {
+	self.Selections = slice.Remove(self.Selections, self.Cursor)
 }
 
 // enableCurrentEntry checks the currently selected list entry.
-func (self *PerennialBranchesModel) enableCurrentEntry() {
-	self.selections = slice.AppendAllMissing(self.selections, self.Cursor)
+func (self *PerennialBranchesModel) EnableCurrentEntry() {
+	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
 }
 
 // isRowChecked indicates whether the row with the given number is checked or not.
-func (self *PerennialBranchesModel) isRowChecked(row int) bool {
-	return slices.Contains(self.selections, row)
+func (self *PerennialBranchesModel) IsRowChecked(row int) bool {
+	return slices.Contains(self.Selections, row)
 }
 
 // isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *PerennialBranchesModel) isSelectedRowChecked() bool {
-	return self.isRowChecked(self.Cursor)
+func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
+	return self.IsRowChecked(self.Cursor)
 }
 
 // toggleCurrentEntry unchecks the currently selected list entry if it is checked,
 // and checks it if it is unchecked.
-func (self *PerennialBranchesModel) toggleCurrentEntry() {
-	if self.isRowChecked(self.Cursor) {
-		self.disableCurrentEntry()
+func (self *PerennialBranchesModel) ToggleCurrentEntry() {
+	if self.IsRowChecked(self.Cursor) {
+		self.DisableCurrentEntry()
 	} else {
-		self.enableCurrentEntry()
+		self.EnableCurrentEntry()
 	}
 }

@@ -3,6 +3,8 @@ package dialogscreens_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
@@ -14,27 +16,27 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
-				selections: []int{1, 2, 3},
+				Selections: []int{1, 2, 3},
 			}
-			model.disableCurrentEntry()
+			model.DisableCurrentEntry()
 			wantSelections := []int{1, 3}
-			must.Eq(t, wantSelections, model.selections)
+			must.Eq(t, wantSelections, model.Selections)
 		})
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
-				selections: []int{1, 3},
+				Selections: []int{1, 3},
 			}
-			model.disableCurrentEntry()
+			model.DisableCurrentEntry()
 			wantSelections := []int{1, 3}
-			must.Eq(t, wantSelections, model.selections)
+			must.Eq(t, wantSelections, model.Selections)
 		})
 	})
 
@@ -42,27 +44,27 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
-				selections: []int{1, 3},
+				Selections: []int{1, 3},
 			}
-			model.enableCurrentEntry()
+			model.EnableCurrentEntry()
 			wantSelections := []int{1, 3, 2}
-			must.Eq(t, wantSelections, model.selections)
+			must.Eq(t, wantSelections, model.Selections)
 		})
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
-				selections: []int{1, 2, 3},
+				Selections: []int{1, 2, 3},
 			}
-			model.enableCurrentEntry()
+			model.EnableCurrentEntry()
 			wantSelections := []int{1, 2, 3}
-			must.Eq(t, wantSelections, model.selections)
+			must.Eq(t, wantSelections, model.Selections)
 		})
 	})
 
@@ -70,64 +72,64 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("selected row is checked", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
-				selections: []int{2},
+				Selections: []int{2},
 			}
-			must.True(t, model.isSelectedRowChecked())
+			must.True(t, model.IsSelectedRowChecked())
 		})
 		t.Run("selected row is not checked", func(t *testing.T) {
 			t.Parallel()
-			model := perennialBranchesModel{ //nolint:exhaustruct
-				BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+			model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 1,
 				},
-				selections: []int{2},
+				Selections: []int{2},
 			}
-			must.False(t, model.isSelectedRowChecked())
+			must.False(t, model.IsSelectedRowChecked())
 		})
 	})
 
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
-		model := perennialBranchesModel{ //nolint:exhaustruct
-			selections: []int{2},
+		model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+			Selections: []int{2},
 		}
-		must.False(t, model.isRowChecked(1))
-		must.True(t, model.isRowChecked(2))
-		must.False(t, model.isRowChecked(3))
+		must.False(t, model.IsRowChecked(1))
+		must.True(t, model.IsRowChecked(2))
+		must.False(t, model.IsRowChecked(3))
 	})
 
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
-		model := perennialBranchesModel{ //nolint:exhaustruct
-			BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+		model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+			BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 				Entries: gitdomain.NewLocalBranchNames("zero", "one", "two", "three"),
 			},
-			selections: []int{1, 3},
+			Selections: []int{1, 3},
 		}
-		have := model.checkedEntries()
+		have := model.CheckedEntries()
 		want := gitdomain.NewLocalBranchNames("one", "three")
 		must.Eq(t, want, have)
 	})
 
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
-		model := perennialBranchesModel{ //nolint:exhaustruct
-			BubbleList: BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
+		model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+			BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 				Cursor: 2,
 			},
-			selections: []int{1, 3},
+			Selections: []int{1, 3},
 		}
 		// enable the selected entry
-		model.toggleCurrentEntry()
+		model.ToggleCurrentEntry()
 		wantSelections := []int{1, 3, 2}
-		must.Eq(t, wantSelections, model.selections)
+		must.Eq(t, wantSelections, model.Selections)
 		// disable the selected entry
-		model.toggleCurrentEntry()
+		model.ToggleCurrentEntry()
 		wantSelections = []int{1, 3}
-		must.Eq(t, wantSelections, model.selections)
+		must.Eq(t, wantSelections, model.Selections)
 	})
 }

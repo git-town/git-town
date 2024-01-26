@@ -9,6 +9,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
+// TODO: rename to BubbleListStatus
 type dialogStatus int
 
 const (
