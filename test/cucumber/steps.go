@@ -753,6 +753,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-perennial-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)

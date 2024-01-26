@@ -88,7 +88,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = setupSyncPerennialStrategy(runner, config)
+	config.userInput.SyncPerennialStrategy, aborted, err = enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -164,6 +167,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveSyncPerennialStrategy(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -215,24 +222,31 @@ func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfi
 }
 
 func savePushHook(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.PushHook != runner.PushHook {
-		return runner.SetPushHookLocally(newConfig.PushHook)
+	if newConfig.PushHook == runner.PushHook {
+		return nil
 	}
-	return nil
+	return runner.SetPushHookLocally(newConfig.PushHook)
 }
 
 func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.NewBranchPush != runner.NewBranchPush {
-		return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
+	if newConfig.NewBranchPush == runner.NewBranchPush {
+		return nil
 	}
-	return nil
+	return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
 }
 
 func saveSyncFeatureStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.SyncFeatureStrategy != runner.SyncFeatureStrategy {
-		return runner.SetSyncFeatureStrategy(newConfig.SyncFeatureStrategy)
+	if newConfig.SyncFeatureStrategy == runner.SyncFeatureStrategy {
+		return nil
 	}
-	return nil
+	return runner.SetSyncFeatureStrategy(newConfig.SyncFeatureStrategy)
+}
+
+func saveSyncPerennialStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncPerennialStrategy == runner.SyncPerennialStrategy {
+		return nil
+	}
+	return runner.SetSyncPerennialStrategy(newConfig.SyncPerennialStrategy)
 }
 
 func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
@@ -249,14 +263,6 @@ func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, err
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
-}
-
-func setupSyncPerennialStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetSyncPerennialStrategy(newValue)
 }
 
 func setupSyncUpstream(runner *git.ProdRunner, config *setupConfig) (bool, error) {
