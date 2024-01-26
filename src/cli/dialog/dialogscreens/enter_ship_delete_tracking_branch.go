@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -21,7 +22,7 @@ const (
 	ShipDeleteTrackingBranchEntryNo  shipDeleteTrackingBranchEntry = `no, my code hosting platform deletes tracking branches`
 )
 
-func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
+func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, inputs dialogcomponents.TestInput) (configdomain.ShipDeleteTrackingBranch, bool, error) {
 	entries := []shipDeleteTrackingBranchEntry{
 		ShipDeleteTrackingBranchEntryYes,
 		ShipDeleteTrackingBranchEntryNo,
@@ -32,11 +33,11 @@ func EnterShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranc
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(entries, defaultPos, enterShipDeleteTrackingBranchHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterShipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Ship deletes tracking branches: %s\n", formattedSelection(selection.Short(), aborted))
+	fmt.Printf("Ship deletes tracking branches: %s\n", dialogcomponents.FormattedSelection(selection.Short(), aborted))
 	return selection.ShipDeleteTrackingBranch(), aborted, err
 }
 
