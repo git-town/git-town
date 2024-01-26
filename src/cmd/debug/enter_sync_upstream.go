@@ -13,7 +13,7 @@ func enterSyncUpstream() *cobra.Command {
 		Use: "sync-upstream",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := enter.EnterSyncUpstream(true, dialogTestInputs.Next())
+			_, _, err := enter.SyncUpstream(true, dialogTestInputs.Next())
 			return err
 		},
 	}

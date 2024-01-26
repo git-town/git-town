@@ -16,7 +16,7 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs dialogcomponents.TestInput) (configdomain.HostingPlatform, bool, error) {
+func HostingPlatform(existingValue configdomain.HostingPlatform, inputs dialogcomponents.TestInput) (configdomain.HostingPlatform, bool, error) {
 	entries := []hostingPlatformEntry{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,

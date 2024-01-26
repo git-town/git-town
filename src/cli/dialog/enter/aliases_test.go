@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnterAliases(t *testing.T) {
+func TestAliases(t *testing.T) {
 	t.Parallel()
 
 	t.Run("AliasResult", func(t *testing.T) {

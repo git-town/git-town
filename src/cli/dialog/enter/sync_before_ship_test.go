@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnterSyncBeforeShip(t *testing.T) {
+func TestSyncBeforeShip(t *testing.T) {
 	t.Parallel()
 
 	t.Run("SyncBeforeShipEntry", func(t *testing.T) {

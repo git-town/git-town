@@ -18,8 +18,8 @@ Most of the time this is the main development branch (%v).
 
 `
 
-// EnterParent lets the user select the parent branch for the given branch.
-func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
+// Parent lets the user select the parent branch for the given branch.
+func Parent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	entries := EnterParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
 	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)

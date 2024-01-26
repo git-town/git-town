@@ -10,7 +10,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnterParent(t *testing.T) {
+func TestParent(t *testing.T) {
 	t.Parallel()
 
 	t.Run("EnterParentEntries", func(t *testing.T) {

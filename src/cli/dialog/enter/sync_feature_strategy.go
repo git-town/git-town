@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterSyncFeatureStrategyHelp = `
+const syncFeatureStrategyHelp = `
 How should Git Town synchronize feature branches?
 
 Feature branches are short-lived branches cut from the main branch
@@ -24,7 +24,7 @@ const (
 	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
 )
 
-func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
+func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
 	entries := []syncFeatureStrategyEntry{
 		syncFeatureStrategyEntryMerge,
 		syncFeatureStrategyEntryRebase,
@@ -38,7 +38,7 @@ func EnterSyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs 
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncFeatureStrategyHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterPushNewBranchesHelp = `
+const pushNewBranchesHelp = `
 Should Git Town push the new branches it creates
 immediately to origin even if they are empty?
 
@@ -27,7 +27,7 @@ const (
 	PushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
 )
 
-func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs dialogcomponents.TestInput) (configdomain.NewBranchPush, bool, error) {
+func PushNewBranches(existing configdomain.NewBranchPush, inputs dialogcomponents.TestInput) (configdomain.NewBranchPush, bool, error) {
 	entries := []pushNewBranchesEntry{
 		PushNewBranchesEntryYes,
 		PushNewBranchesEntryNo,
@@ -38,7 +38,7 @@ func EnterPushNewBranches(existing configdomain.NewBranchPush, inputs dialogcomp
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterPushNewBranchesHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, pushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

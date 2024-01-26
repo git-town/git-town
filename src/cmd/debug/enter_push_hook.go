@@ -13,7 +13,7 @@ func enterPushHookCmd() *cobra.Command {
 		Use: "push-hook",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := enter.EnterPushHook(true, dialogTestInputs.Next())
+			_, _, err := enter.PushHook(true, dialogTestInputs.Next())
 			return err
 		},
 	}

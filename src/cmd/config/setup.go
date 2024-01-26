@@ -142,7 +142,7 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 }
 
 func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterHostingPlatform(existingValue, inputs)
+	newValue, aborted, err := enter.HostingPlatform(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -161,7 +161,7 @@ func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdom
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := enter.EnterMainBranch(allBranches, existingValue, inputs)
+	newMainBranch, aborted, err := enter.MainBranch(allBranches, existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -169,7 +169,7 @@ func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdom
 }
 
 func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterPerennialBranches(allBranches, existingValue, mainBranch, inputs)
+	newValue, aborted, err := enter.PerennialBranches(allBranches, existingValue, mainBranch, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -180,7 +180,7 @@ func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch
 }
 
 func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newPushHook, aborted, err := enter.EnterPushHook(existingValue, inputs)
+	newPushHook, aborted, err := enter.PushHook(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -188,7 +188,7 @@ func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, 
 }
 
 func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterPushNewBranches(existingValue, inputs)
+	newValue, aborted, err := enter.PushNewBranches(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -196,7 +196,7 @@ func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.
 }
 
 func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterShipDeleteTrackingBranch(existingValue, inputs)
+	newValue, aborted, err := enter.ShipDeleteTrackingBranch(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -204,7 +204,7 @@ func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTracking
 }
 
 func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterSyncBeforeShip(existingValue, inputs)
+	newValue, aborted, err := enter.SyncBeforeShip(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -212,7 +212,7 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 }
 
 func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterSyncFeatureStrategy(existingValue, inputs)
+	newValue, aborted, err := enter.SyncFeatureStrategy(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -220,7 +220,7 @@ func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, ru
 }
 
 func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterSyncPerennialStrategy(existingValue, inputs)
+	newValue, aborted, err := enter.SyncPerennialStrategy(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -228,7 +228,7 @@ func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy
 }
 
 func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialogcomponents.TestInput) (bool, error) {
-	newValue, aborted, err := enter.EnterSyncUpstream(existingValue, inputs)
+	newValue, aborted, err := enter.SyncUpstream(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterSyncPerennialStrategyHelp = `
+const syncPerennialStrategyHelp = `
 How should Git Town synchronize perennial branches?
 
 Perennial branches don't have a parent branch.
@@ -22,7 +22,7 @@ const (
 	SyncPerennialStrategyEntryRebase syncPerennialStrategyEntry = `rebase perennial branches against their tracking branch`
 )
 
-func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
+func SyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
 	entries := []syncPerennialStrategyEntry{
 		SyncPerennialStrategyEntryMerge,
 		SyncPerennialStrategyEntryRebase,
@@ -36,7 +36,7 @@ func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inp
 	default:
 		panic("unknown sync-perennial-strategy: " + existing.String())
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncPerennialStrategyHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, syncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}

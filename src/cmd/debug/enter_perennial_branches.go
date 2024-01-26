@@ -27,7 +27,7 @@ func enterPerennialBranchesCmd() *cobra.Command {
 			existingPerennialBranches := gitdomain.LocalBranchNames{branch1, branch4}
 			main := gitdomain.NewLocalBranchName("main")
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := enter.EnterPerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
+			_, _, err := enter.PerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
 			return err
 		},
 	}

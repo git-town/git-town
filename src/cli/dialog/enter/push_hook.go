@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterPushHookHelp = `
+const pushHookHelp = `
 The "push-hook" setting determines whether Git Town
 permits or prevents Git hooks while pushing branches.
 Hooks are enabled by default. If your Git hooks are slow,
@@ -24,7 +24,7 @@ const (
 	pushHookEntryDisabled pushHookEntry = "disabled"
 )
 
-func EnterPushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput) (configdomain.PushHook, bool, error) {
+func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput) (configdomain.PushHook, bool, error) {
 	entries := []pushHookEntry{
 		pushHookEntryEnabled,
 		pushHookEntryDisabled,
@@ -35,7 +35,7 @@ func EnterPushHook(existing configdomain.PushHook, inputs dialogcomponents.TestI
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterPushHookHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, pushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterSyncUpstreamHelp = `
+const syncUpstreamHelp = `
 Should "git sync" also fetch updates from the upstream remote?
 
 If an "upstream" remote exists, and this setting is enabled,
@@ -25,7 +25,7 @@ const (
 	SyncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
 )
 
-func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInput) (configdomain.SyncUpstream, bool, error) {
+func SyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponents.TestInput) (configdomain.SyncUpstream, bool, error) {
 	entries := []syncUpstreamEntry{
 		SyncUpstreamEntryYes,
 		SyncUpstreamEntryNo,
@@ -36,7 +36,7 @@ func EnterSyncUpstream(existing configdomain.SyncUpstream, inputs dialogcomponen
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncUpstreamHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, syncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

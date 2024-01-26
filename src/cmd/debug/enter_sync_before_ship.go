@@ -13,7 +13,7 @@ func enterSyncBeforeShip() *cobra.Command {
 		Use: "sync-before-ship",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := enter.EnterSyncBeforeShip(false, dialogTestInputs.Next())
+			_, _, err := enter.SyncBeforeShip(false, dialogTestInputs.Next())
 			return err
 		},
 	}

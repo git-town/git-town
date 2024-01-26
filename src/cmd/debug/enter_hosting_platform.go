@@ -13,7 +13,7 @@ func enterHostingPlatform() *cobra.Command {
 		Use: "hosting-platform",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := enter.EnterHostingPlatform("", dialogInputs.Next())
+			_, _, err := enter.HostingPlatform("", dialogInputs.Next())
 			return err
 		},
 	}

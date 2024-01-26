@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const enterSyncBeforeShipHelp = `
+const syncBeforeShipHelp = `
 Should "git ship" sync branches before shipping them?
 
 Guidance: enable when shipping branches locally on your machine
@@ -28,7 +28,7 @@ const (
 	SyncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
 )
 
-func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs dialogcomponents.TestInput) (configdomain.SyncBeforeShip, bool, error) {
+func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs dialogcomponents.TestInput) (configdomain.SyncBeforeShip, bool, error) {
 	entries := []syncBeforeShipEntry{
 		SyncBeforeShipEntryYes,
 		SyncBeforeShipEntryNo,
@@ -39,7 +39,7 @@ func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs dialogcomp
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncBeforeShipHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, syncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnterSyncUpstream(t *testing.T) {
+func TestSyncUpstream(t *testing.T) {
 	t.Parallel()
 
 	t.Run("SyncUpstreamEntry", func(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const enterPerennialBranchesHelp = `
+const perennialBranchesHelp = `
 	Perennial branches are long-lived branches.
 	They are never shipped and don't have ancestors.
 	Typically, perennial branches have names like
@@ -20,9 +20,9 @@ const enterPerennialBranchesHelp = `
 
 `
 
-// EnterPerennialBranches lets the user update the perennial branches.
+// PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput dialogcomponents.TestInput) (gitdomain.LocalBranchNames, bool, error) {
+func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput dialogcomponents.TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
@@ -133,7 +133,7 @@ func (self PerennialBranchesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
-	s.WriteString(enterPerennialBranchesHelp)
+	s.WriteString(perennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
 		checked := self.IsRowChecked(i)

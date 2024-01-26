@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestEnterShipDeleteTrackingBranch(t *testing.T) {
+func TestShipDeleteTrackingBranch(t *testing.T) {
 	t.Parallel()
 
 	t.Run("ShipDeleteTrackingBranchEntry", func(t *testing.T) {

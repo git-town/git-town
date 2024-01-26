@@ -10,7 +10,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const enterAliasesHelp = `
+const aliasesHelp = `
 You can create shorter aliases for frequently used Git Town commands.
 For example, if the "git town sync" command is aliased,
 you can call it as "git sync".
@@ -137,7 +137,7 @@ func (self AliasesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
-	s.WriteString(enterAliasesHelp)
+	s.WriteString(aliasesHelp)
 	for i, branch := range self.Entries {
 		s.WriteString(self.EntryNumberStr(i))
 		highlighted := self.Cursor == i

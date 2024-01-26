@@ -9,7 +9,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestPerennialBranchesModel(t *testing.T) {
+func TestPerennialBranches(t *testing.T) {
 	t.Parallel()
 
 	t.Run("disableCurrentEntry", func(t *testing.T) {

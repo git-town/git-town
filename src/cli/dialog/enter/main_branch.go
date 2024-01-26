@@ -16,8 +16,8 @@ In most repositories, this branch is called "main", "master", or "development".
 
 `
 
-// EnterMainBranch lets the user select a new main branch for this repo.
-func EnterMainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchName, bool, error) {
+// MainBranch lets the user select a new main branch for this repo.
+func MainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs dialogcomponents.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	cursor := stringers.IndexOrStart(localBranches, oldMainBranch)
 	selection, aborted, err := dialogcomponents.RadioList(localBranches, cursor, enterBranchHelp, inputs)
 	fmt.Printf("Main branch: %s\n", dialogcomponents.FormattedSelection(selection.String(), aborted))

@@ -23,7 +23,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		if !hasParent { //nolint:nestif
 			var aborted bool
 			var err error
-			parent, aborted, err = enter.EnterParent(enter.EnterParentArgs{
+			parent, aborted, err = enter.Parent(enter.EnterParentArgs{
 				Branch:          currentBranch,
 				DialogTestInput: args.DialogTestInputs.Next(),
 				LocalBranches:   args.LocalBranches,
