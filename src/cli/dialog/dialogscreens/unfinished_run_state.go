@@ -5,6 +5,7 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 )
@@ -39,7 +40,7 @@ func (self unfinishedRunstateDialogEntry) String() string {
 }
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput TestInput) (Response, bool, error) {
+func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalBranchName, endTime time.Time, canSkip bool, dialogTestInput dialogcomponents.TestInput) (Response, bool, error) {
 	options := []unfinishedRunstateDialogEntry{
 		{response: ResponseQuit, text: messages.UnfinishedRunStateQuit},
 		{response: ResponseContinue, text: fmt.Sprintf(messages.UnfinishedRunStateContinue, command)},
@@ -51,7 +52,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		unfinishedRunstateDialogEntry{response: ResponseUndo, text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command)},
 		unfinishedRunstateDialogEntry{response: ResponseDiscard, text: messages.UnfinishedRunStateDiscard},
 	)
-	selection, aborted, err := radioList(options, 0, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
-	fmt.Printf("Handle unfinished command: %s\n", formattedSelection(selection.response.String(), aborted))
+	selection, aborted, err := dialogcomponents.RadioList(options, 0, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
+	fmt.Printf("Handle unfinished command: %s\n", dialogcomponents.FormattedSelection(selection.response.String(), aborted))
 	return selection.response, aborted, err
 }
