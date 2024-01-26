@@ -3,7 +3,8 @@ package debug
 import (
 	"os"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +13,7 @@ func enterGitHubToken() *cobra.Command {
 		Use: "github-token",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dialogInputs := dialog.LoadTestInputs(os.Environ())
-			_, err := dialog.EnterGitHubToken(dialogInputs.Next())
+			_, err := enter.GitHubToken(dialogInputs.Next())
 			return err
 		},
 	}

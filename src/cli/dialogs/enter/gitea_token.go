@@ -18,8 +18,8 @@ It's okay to leave this empty.
 
 Your Gitea API token: `
 
-// EnterGiteaToken lets the user enter the Gitea API token.
-func EnterGiteaToken(inputs dialog.TestInput) (configdomain.GiteaToken, error) {
+// GiteaToken lets the user enter the Gitea API token.
+func GiteaToken(inputs dialog.TestInput) (configdomain.GiteaToken, error) {
 	fmt.Print(enterGiteaTokenHelp)
 	reader := bufio.NewReader(os.Stdin)
 	if len(inputs) > 0 {

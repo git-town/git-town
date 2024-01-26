@@ -17,8 +17,8 @@ It's okay to leave this empty.
 
 `
 
-// EnterGitHubToken lets the user enter the GitHub API token.
-func EnterGitHubToken(inputs dialog.TestInput) (configdomain.GitHubToken, error) {
+// GitHubToken lets the user enter the GitHub API token.
+func GitHubToken(inputs dialog.TestInput) (configdomain.GitHubToken, error) {
 	fmt.Print(enterGitHubTokenHelp)
 	token, _, err := textInput("existing", enterGitHubTokenHelp, "placeholder", nil)
 	// reader := bufio.NewReader(os.Stdin)

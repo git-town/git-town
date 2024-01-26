@@ -18,8 +18,8 @@ It's okay to leave this empty.
 
 Your GitLab API token: `
 
-// EnterGitLabToken lets the user enter the GitLab API token.
-func EnterGitLabToken(inputs dialog.TestInput) (configdomain.GitLabToken, error) {
+// GitLabToken lets the user enter the GitLab API token.
+func GitLabToken(inputs dialog.TestInput) (configdomain.GitLabToken, error) {
 	fmt.Print(enterGitLabTokenHelp)
 	reader := bufio.NewReader(os.Stdin)
 	if len(inputs) > 0 {
