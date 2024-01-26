@@ -75,7 +75,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPushNewBranches(config.NewBranchPush, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPushNewBranches(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -189,8 +189,8 @@ func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, 
 	return aborted, runner.SetPushHookLocally(newPushHook)
 }
 
-func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.PushNewBranches(existingValue, inputs)
+func setupPushNewBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
