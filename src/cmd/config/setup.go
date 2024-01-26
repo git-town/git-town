@@ -47,7 +47,8 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := enterAliases(repo.Runner, &config)
+	var aborted bool
+	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), repo.Runner.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -55,11 +56,11 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = enterPerennialBranches(repo.Runner, &config)
+	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = enterHostingPlatform(repo.Runner, &config)
+	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(repo.Runner.HostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -100,27 +101,12 @@ type setupConfig struct {
 	userInput     configdomain.FullConfig
 }
 
-func enterAliases(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
-	return aborted, err
-}
-
-func enterHostingPlatform(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.dialogInputs.Next())
-	return aborted, err
-}
-
 func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
 	existingValue := runner.MainBranch
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
 	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
-	return aborted, err
-}
-
-func enterPerennialBranches(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
 	return aborted, err
 }
 
