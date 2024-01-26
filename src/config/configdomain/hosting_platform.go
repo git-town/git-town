@@ -23,7 +23,7 @@ const (
 // NewHosting provides the HostingService enum matching the given text.
 func NewHosting(platformName string) (HostingPlatform, error) {
 	text := strings.ToLower(platformName)
-	for _, hostingService := range hostings() {
+	for _, hostingService := range hostingPlatforms() {
 		if strings.ToLower(text) == hostingService.String() {
 			return hostingService, nil
 		}
@@ -37,8 +37,8 @@ func NewHostingRef(platformName string) (*HostingPlatform, error) {
 	return &result, err
 }
 
-// hostings provides all legal values for HostingService.
-func hostings() []HostingPlatform {
+// hostingPlatforms provides all legal values for HostingService.
+func hostingPlatforms() []HostingPlatform {
 	return []HostingPlatform{
 		HostingPlatformNone,
 		HostingPlatformBitbucket,
