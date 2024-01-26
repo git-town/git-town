@@ -40,10 +40,6 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) HostingPlatformName() string {
-	return "GitLab"
-}
-
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
