@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
@@ -195,7 +194,6 @@ func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfi
 }
 
 func savePushHook(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	fmt.Println("11111111111111111", newConfig.PushHook)
 	if newConfig.PushHook != runner.PushHook {
 		return runner.SetPushHookLocally(newConfig.PushHook)
 	}
