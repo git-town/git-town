@@ -97,7 +97,6 @@ func executeConfigSetup(verbose bool) error {
 type setupConfig struct {
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
-	newConfig     configdomain.PartialConfig // configuration entered by the user
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -113,7 +112,6 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
-		newConfig:     configdomain.PartialConfig{},
 	}, exit, err
 }
 
