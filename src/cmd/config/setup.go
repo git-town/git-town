@@ -63,7 +63,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncFeatureStrategy(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -213,8 +213,8 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
 }
 
-func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncFeatureStrategy(existingValue, inputs)
+func setupSyncFeatureStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
