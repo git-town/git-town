@@ -29,6 +29,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "true"
     And local Git Town setting "sync-before-ship" is now "false"
 
+  @debug  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -40,6 +41,7 @@ Feature: enter Git Town configuration
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
+      | set github as hosting service             | up up enter            |
       | set a hosting platform                    | up up enter            |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |

@@ -14,6 +14,10 @@ const TestInputKey = "GITTOWN_DIALOG_INPUT"
 // TestInput contains the input for a single dialog in an end-to-end test.
 type TestInput []tea.Msg
 
+func (self TestInput) ForReadline() string {
+	return ""
+}
+
 // TestInputs contains the input for all dialogs in an end-to-end test.
 type TestInputs []TestInput
 

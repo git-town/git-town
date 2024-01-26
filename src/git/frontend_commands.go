@@ -228,6 +228,11 @@ func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.Aliasabl
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
 }
 
+// SetCodeHostingToken sets the given code hosting platform.
+func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
+	return self.Run("git", "config", "git-town.github-token", value.String())
+}
+
 // SetHostingPlatform sets the given code hosting platform.
 func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
 	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
