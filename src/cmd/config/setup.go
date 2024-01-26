@@ -51,7 +51,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupMainBranch(repo.Runner, &config)
+	aborted, err = enterMainBranch(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -91,18 +91,32 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	saveUserInput(repo.Runner, config.newConfig)
+	saveUserInput(repo.Runner, config.userInput)
 	return nil
 }
 
 type setupConfig struct {
 	localBranches gitdomain.BranchInfos
 	inputs        dialog.TestInputs
-	newConfig     configdomain.FullConfig
+	userInput     configdomain.FullConfig
 }
 
 func enterAliases(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.newConfig.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.inputs.Next())
+	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.inputs.Next())
+	return aborted, err
+}
+
+func enterHostingPlatform(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.inputs.Next())
+	return aborted, err
+}
+
+func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	existingValue := runner.MainBranch
+	if existingValue.IsEmpty() {
+		existingValue, _ = runner.Backend.DefaultBranch()
+	}
+	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.inputs.Next())
 	return aborted, err
 }
 
@@ -119,7 +133,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
 		inputs:        dialogInputs,
-		newConfig:     configdomain.FullConfig{},
+		userInput:     configdomain.FullConfig{},
 	}, exit, err
 }
 
@@ -140,23 +154,6 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err
 	return nil
 }
 
-func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	err := saveAliases(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	err = saveHostingPlatform(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func enterHostingPlatform(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.newConfig.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.inputs.Next())
-	return aborted, err
-}
-
 func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {
 	oldValue := runner.HostingPlatform
 	newValue := userInput.HostingPlatform
@@ -171,16 +168,23 @@ func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConf
 	return nil
 }
 
-func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	existingValue := runner.MainBranch
-	if existingValue.IsEmpty() {
-		existingValue, _ = runner.Backend.DefaultBranch()
+func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.MainBranch == runner.MainBranch {
+		return nil
 	}
-	newMainBranch, aborted, err := enter.MainBranch(config.localBranches.Names(), existingValue, config.inputs.Next())
-	if err != nil || aborted {
-		return aborted, err
+	return runner.SetMainBranch(newConfig.MainBranch)
+}
+
+func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	err := saveAliases(runner, newConfig)
+	if err != nil {
+		return err
 	}
-	return aborted, runner.SetMainBranch(newMainBranch)
+	err = saveHostingPlatform(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func setupPerennialBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
