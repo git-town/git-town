@@ -80,7 +80,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = enterPushHook(repo.Runner, &config)
+	config.userInput.PushHook, aborted, err = enter.PushHook(repo.Runner.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -107,11 +107,6 @@ func enterMainBranch(runner *git.ProdRunner, config *setupConfig) (aborted bool,
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
 	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
-	return aborted, err
-}
-
-func enterPushHook(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.userInput.PushHook, aborted, err = enter.PushHook(runner.PushHook, config.dialogInputs.Next())
 	return aborted, err
 }
 
