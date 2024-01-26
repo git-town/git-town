@@ -47,47 +47,47 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
+	aborted, err := setupAliases(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupMainBranch(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPerennialBranches(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupHostingPlatform(config.HostingPlatform, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupHostingPlatform(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncFeatureStrategy(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncPerennialStrategy(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncUpstream(config.SyncUpstream, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncUpstream(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPushNewBranches(config.NewBranchPush, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPushNewBranches(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPushHook(config.PushHook, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPushHook(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncBeforeShip(config.SyncBeforeShip, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncBeforeShip(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupShipDeleteTrackingBranch(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -95,7 +95,6 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupConfig struct {
-	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
 }
@@ -111,20 +110,20 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		FullConfig:    &repo.Runner.FullConfig,
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
 }
 
-func setupAliases(existingValue configdomain.Aliases, allAliasableCommands configdomain.AliasableCommands, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newAliases, aborted, err := enter.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
+func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	aliasableCommands := configdomain.AllAliasableCommands()
+	newAliases, aborted, err := enter.Aliases(aliasableCommands, runner.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	for _, aliasableCommand := range allAliasableCommands {
+	for _, aliasableCommand := range aliasableCommands {
 		newAlias, hasNew := newAliases[aliasableCommand]
-		oldAlias, hasOld := existingValue[aliasableCommand]
+		oldAlias, hasOld := runner.Aliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
 			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
@@ -141,8 +140,9 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 	return aborted, nil
 }
 
-func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.HostingPlatform(existingValue, inputs)
+func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	existingValue := runner.HostingPlatform
+	newValue, aborted, err := enter.HostingPlatform(existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -157,19 +157,20 @@ func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *gi
 	return aborted, nil
 }
 
-func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	existingValue := runner.MainBranch
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := enter.MainBranch(allBranches, existingValue, inputs)
+	newMainBranch, aborted, err := enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetMainBranch(newMainBranch)
 }
 
-func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.PerennialBranches(allBranches, existingValue, mainBranch, inputs)
+func setupPerennialBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, runner.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -179,56 +180,56 @@ func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch
 	return aborted, err
 }
 
-func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newPushHook, aborted, err := enter.PushHook(existingValue, inputs)
+func setupPushHook(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newPushHook, aborted, err := enter.PushHook(runner.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetPushHookLocally(newPushHook)
 }
 
-func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.PushNewBranches(existingValue, inputs)
+func setupPushNewBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetNewBranchPush(newValue, false)
 }
 
-func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.ShipDeleteTrackingBranch(existingValue, inputs)
+func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
 }
 
-func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncBeforeShip(existingValue, inputs)
+func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
 }
 
-func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncFeatureStrategy(existingValue, inputs)
+func setupSyncFeatureStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetSyncFeatureStrategy(newValue)
 }
 
-func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncPerennialStrategy(existingValue, inputs)
+func setupSyncPerennialStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	return aborted, runner.SetSyncPerennialStrategy(newValue)
 }
 
-func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncUpstream(existingValue, inputs)
+func setupSyncUpstream(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
