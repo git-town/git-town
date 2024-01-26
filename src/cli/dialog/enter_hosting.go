@@ -32,11 +32,11 @@ func EnterHostingPlatform(existingValue configdomain.Hosting, inputs TestInput) 
 type hostingPlatform string
 
 const (
-	hostingPlatformAutoDetect = "auto-detect"
-	hostingPlatformBitBucket  = "BitBucket"
-	hostingPlatformGitea      = "Gitea"
-	hostingPlatformGitHub     = "Github"
-	hostingPlatformGitLab     = "GitLab"
+	hostingPlatformAutoDetect hostingPlatform = "auto-detect"
+	hostingPlatformBitBucket  hostingPlatform = "BitBucket"
+	hostingPlatformGitea      hostingPlatform = "Gitea"
+	hostingPlatformGitHub     hostingPlatform = "Github"
+	hostingPlatformGitLab     hostingPlatform = "GitLab"
 )
 
 func (self hostingPlatform) Hosting() configdomain.Hosting {
