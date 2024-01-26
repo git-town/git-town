@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -27,7 +28,7 @@ const (
 	SyncBeforeShipEntryNo  syncBeforeShipEntry = `no, "git ship" should not sync the branch`
 )
 
-func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput) (configdomain.SyncBeforeShip, bool, error) {
+func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs dialogcomponents.TestInput) (configdomain.SyncBeforeShip, bool, error) {
 	entries := []syncBeforeShipEntry{
 		SyncBeforeShipEntryYes,
 		SyncBeforeShipEntryNo,
@@ -38,11 +39,11 @@ func EnterSyncBeforeShip(existing configdomain.SyncBeforeShip, inputs TestInput)
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := radioList(entries, defaultPos, enterSyncBeforeShipHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Sync before ship: %s\n", formattedSelection(selection.Short(), aborted))
+	fmt.Printf("Sync before ship: %s\n", dialogcomponents.FormattedSelection(selection.Short(), aborted))
 	return selection.SyncBeforeShip(), aborted, err
 }
 
