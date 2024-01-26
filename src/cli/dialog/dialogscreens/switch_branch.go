@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"golang.org/x/exp/maps"
@@ -14,7 +15,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProcess := tea.NewProgram(SwitchModel{
-		BubbleList:       newBubbleList(entries, cursor),
+		BubbleList:       dialogcomponents.NewBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
 	})
 	dialogResult, err := dialogProcess.Run()
@@ -22,12 +23,12 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedEntry := result.BubbleList.selectedEntry()
-	return selectedEntry.Branch, result.aborted(), nil
+	selectedEntry := result.BubbleList.SelectedEntry()
+	return selectedEntry.Branch, result.Aborted(), nil
 }
 
 type SwitchModel struct {
-	BubbleList[SwitchBranchEntry]
+	dialogcomponents.BubbleList[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -40,31 +41,31 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.BubbleList.handleKey(keyMsg); handled {
+	if handled, code := self.BubbleList.HandleKey(keyMsg); handled {
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialogStatusDone
+		self.Status = dialogcomponents.DialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialogStatusDone
+		self.Status = dialogcomponents.DialogStatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != dialogStatusActive {
+	if self.Status != dialogcomponents.DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}
 	for i, branch := range self.Entries {
 		switch {
 		case i == self.Cursor:
-			s.WriteString(self.Colors.selection.Styled("> " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		case i == self.InitialBranchPos:
-			s.WriteString(self.Colors.initial.Styled("* " + branch.String()))
+			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
 		default:
 			s.WriteString("  " + branch.String())
 		}
@@ -72,27 +73,27 @@ func (self SwitchModel) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.Colors.helpKey.Styled("↑"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("k"))
-	s.WriteString(self.Colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↑"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("k"))
+	s.WriteString(self.Colors.Help.Styled(" up   "))
 	// down
-	s.WriteString(self.Colors.helpKey.Styled("↓"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("j"))
-	s.WriteString(self.Colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↓"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("j"))
+	s.WriteString(self.Colors.Help.Styled(" down   "))
 	// accept
-	s.WriteString(self.Colors.helpKey.Styled("enter"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("o"))
-	s.WriteString(self.Colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.HelpKey.Styled("enter"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("o"))
+	s.WriteString(self.Colors.Help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("q"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("esc"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.HelpKey.Styled("q"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("esc"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
+	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
 }
 
