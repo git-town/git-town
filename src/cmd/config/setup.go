@@ -55,7 +55,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPerennialBranches(repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPerennialBranches(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -170,8 +170,8 @@ func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) 
 	return aborted, runner.SetMainBranch(newMainBranch)
 }
 
-func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.PerennialBranches(allBranches, existingValue, mainBranch, inputs)
+func setupPerennialBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, runner.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
