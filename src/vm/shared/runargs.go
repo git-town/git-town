@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -10,7 +10,7 @@ import (
 
 type RunArgs struct {
 	Connector                       hostingdomain.Connector
-	DialogTestInputs                *dialogcomponents.TestInputs
+	DialogTestInputs                *dialog.TestInputs
 	Lineage                         configdomain.Lineage
 	PrependOpcodes                  func(...Opcode)
 	RegisterUndoablePerennialCommit func(gitdomain.SHA)

@@ -1,7 +1,7 @@
 package interpreter
 
 import (
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -42,7 +42,7 @@ func Execute(args ExecuteArgs) error {
 type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
-	DialogTestInputs        *dialogcomponents.TestInputs
+	DialogTestInputs        *dialog.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize

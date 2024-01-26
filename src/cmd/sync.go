@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -110,7 +110,7 @@ type syncConfig struct {
 	*configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	dialogTestInputs dialogcomponents.TestInputs
+	dialogTestInputs dialog.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName

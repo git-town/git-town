@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -77,7 +77,7 @@ func executeUndo(verbose bool) error {
 type undoConfig struct {
 	*configdomain.FullConfig
 	connector               hostingdomain.Connector
-	dialogTestInputs        dialogcomponents.TestInputs
+	dialogTestInputs        dialog.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesStatus
 	previousBranch          gitdomain.LocalBranchName

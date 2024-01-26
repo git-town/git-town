@@ -3,7 +3,7 @@ package enter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
@@ -23,14 +23,14 @@ func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	entries := ParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
 	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)
-	selection, aborted, err := dialogcomponents.RadioList(entries, cursor, help, args.DialogTestInput)
-	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, dialogcomponents.FormattedSelection(selection.String(), aborted))
+	selection, aborted, err := dialog.RadioList(entries, cursor, help, args.DialogTestInput)
+	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, dialog.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }
 
 type ParentArgs struct {
 	Branch          gitdomain.LocalBranchName
-	DialogTestInput dialogcomponents.TestInput
+	DialogTestInput dialog.TestInput
 	LocalBranches   gitdomain.LocalBranchNames
 	Lineage         configdomain.Lineage
 	MainBranch      gitdomain.LocalBranchName

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"golang.org/x/exp/maps"
@@ -15,7 +15,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProcess := tea.NewProgram(SwitchModel{
-		BubbleList:       dialogcomponents.NewBubbleList(entries, cursor),
+		BubbleList:       dialog.NewBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
 	})
 	dialogResult, err := dialogProcess.Run()
@@ -28,7 +28,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 }
 
 type SwitchModel struct {
-	dialogcomponents.BubbleList[SwitchBranchEntry]
+	dialog.BubbleList[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -45,18 +45,18 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialogcomponents.DialogStatusDone
+		self.Status = dialog.DialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialogcomponents.DialogStatusDone
+		self.Status = dialog.DialogStatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != dialogcomponents.DialogStatusActive {
+	if self.Status != dialog.DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

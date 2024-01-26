@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/muesli/termenv"
 )
@@ -22,10 +22,10 @@ If you are not sure, select all :)
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput dialogcomponents.TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput dialog.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           dialogcomponents.NewBubbleList(allAliasableCommands, 0),
+		BubbleList:           dialog.NewBubbleList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
@@ -44,12 +44,12 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	}
 	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf("Aliased commands: %s\n", dialogcomponents.FormattedSelection(selectionText, result.Aborted()))
+	fmt.Printf("Aliased commands: %s\n", dialog.FormattedSelection(selectionText, result.Aborted()))
 	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Aborted(), err
 }
 
 type AliasesModel struct {
-	dialogcomponents.BubbleList[configdomain.AliasableCommand]
+	dialog.BubbleList[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
@@ -117,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialogcomponents.DialogStatusDone
+		self.Status = dialog.DialogStatusDone
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
@@ -133,7 +133,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 }
 
 func (self AliasesModel) View() string {
-	if self.Status != dialogcomponents.DialogStatusActive {
+	if self.Status != dialog.DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}

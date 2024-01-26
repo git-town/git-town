@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -111,7 +111,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 type continueConfig struct {
 	connector hostingdomain.Connector
 	*configdomain.FullConfig
-	dialogTestInputs dialogcomponents.TestInputs
+	dialogTestInputs dialog.TestInputs
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -24,7 +24,7 @@ const (
 	syncFeatureStrategyEntryRebase syncFeatureStrategyEntry = `rebase feature branches against their parent branch`
 )
 
-func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
+func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialog.TestInput) (configdomain.SyncFeatureStrategy, bool, error) {
 	entries := []syncFeatureStrategyEntry{
 		syncFeatureStrategyEntryMerge,
 		syncFeatureStrategyEntryRebase,
@@ -38,12 +38,12 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs dialo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, syncFeatureStrategyHelp, inputs)
+	selection, aborted, err := dialog.RadioList(entries, defaultPos, syncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
-	fmt.Printf("Sync feature branches: %s\n", dialogcomponents.FormattedSelection(cutSelection, aborted))
+	fmt.Printf("Sync feature branches: %s\n", dialog.FormattedSelection(cutSelection, aborted))
 	return selection.SyncFeatureStrategy(), aborted, err
 }
 

@@ -3,7 +3,7 @@ package enter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -24,7 +24,7 @@ const (
 	pushHookEntryDisabled pushHookEntry = "disabled"
 )
 
-func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput) (configdomain.PushHook, bool, error) {
+func PushHook(existing configdomain.PushHook, inputs dialog.TestInput) (configdomain.PushHook, bool, error) {
 	entries := []pushHookEntry{
 		pushHookEntryEnabled,
 		pushHookEntryDisabled,
@@ -35,11 +35,11 @@ func PushHook(existing configdomain.PushHook, inputs dialogcomponents.TestInput)
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, pushHookHelp, inputs)
+	selection, aborted, err := dialog.RadioList(entries, defaultPos, pushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push hook: %s\n", dialogcomponents.FormattedSelection(selection.String(), aborted))
+	fmt.Printf("Push hook: %s\n", dialog.FormattedSelection(selection.String(), aborted))
 	return selection.PushHook(), aborted, err
 }
 

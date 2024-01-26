@@ -3,7 +3,7 @@ package validate
 import (
 	"os"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
@@ -62,7 +62,7 @@ type KnowsBranchAncestorsArgs struct {
 	LocalBranches    gitdomain.LocalBranchNames
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialogcomponents.TestInputs
+	DialogTestInputs *dialog.TestInputs
 	MainBranch       gitdomain.LocalBranchName
 }
 
@@ -94,5 +94,5 @@ type KnowsBranchesAncestorsArgs struct {
 	LocalBranches    gitdomain.BranchInfos
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialogcomponents.TestInputs
+	DialogTestInputs *dialog.TestInputs
 }

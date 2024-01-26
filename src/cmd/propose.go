@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -92,7 +92,7 @@ type proposeConfig struct {
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
 	connector        hostingdomain.Connector
-	dialogTestInputs dialogcomponents.TestInputs
+	dialogTestInputs dialog.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

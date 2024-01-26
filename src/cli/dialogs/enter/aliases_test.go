@@ -3,7 +3,7 @@ package enter_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/shoenig/test/must"
@@ -129,7 +129,7 @@ func TestAliases(t *testing.T) {
 					enter.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -158,7 +158,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
-				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -187,7 +187,7 @@ func TestAliases(t *testing.T) {
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
@@ -215,7 +215,7 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
 		model := enter.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
@@ -240,7 +240,7 @@ func TestAliases(t *testing.T) {
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
 		model := enter.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,

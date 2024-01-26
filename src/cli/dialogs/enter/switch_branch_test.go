@@ -3,7 +3,7 @@ package enter_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -106,7 +106,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
 			model := enter.SwitchModel{
-				BubbleList: dialogcomponents.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
 					Entries:      []enter.SwitchBranchEntry{{Branch: "main", Indentation: ""}},
 					MaxDigits:    1,
@@ -126,7 +126,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
 			model := enter.SwitchModel{
-				BubbleList: dialogcomponents.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []enter.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},
@@ -152,7 +152,7 @@ func TestSwitchBranch(t *testing.T) {
 		t.Run("nested branches", func(t *testing.T) {
 			t.Parallel()
 			model := enter.SwitchModel{
-				BubbleList: dialogcomponents.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+				BubbleList: dialog.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
 					Entries: []enter.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},

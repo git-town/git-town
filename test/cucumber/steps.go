@@ -15,7 +15,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
@@ -475,7 +475,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s_%02d=%s", dialogcomponents.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", dialog.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
@@ -490,7 +490,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s%d=%s", dialogcomponents.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s%d=%s", dialog.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()

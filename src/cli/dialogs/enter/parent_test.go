@@ -3,7 +3,7 @@ package enter_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -29,7 +29,7 @@ func TestParent(t *testing.T) {
 			}
 			have := enter.ParentEntries(enter.ParentArgs{
 				Branch:          branch2,
-				DialogTestInput: dialogcomponents.TestInput{},
+				DialogTestInput: dialog.TestInput{},
 				LocalBranches:   localBranches,
 				Lineage:         lineage,
 				MainBranch:      main,
@@ -55,7 +55,7 @@ func TestParent(t *testing.T) {
 			}
 			have := enter.ParentEntries(enter.ParentArgs{
 				Branch:          branch2,
-				DialogTestInput: dialogcomponents.TestInput{},
+				DialogTestInput: dialog.TestInput{},
 				LocalBranches:   localBranches,
 				Lineage:         lineage,
 				MainBranch:      main,
