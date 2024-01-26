@@ -45,9 +45,9 @@ func (self *FailureCollector) Fail(format string, a ...any) {
 	self.Check(fmt.Errorf(format, a...))
 }
 
-// Hosting provides the config.Hosting part of the given fallible function result
+// HostingPlatform provides the config.HostingPlatform part of the given fallible function result
 // while registering the given error.
-func (self *FailureCollector) Hosting(value configdomain.HostingPlatform, err error) configdomain.HostingPlatform {
+func (self *FailureCollector) HostingPlatform(value configdomain.HostingPlatform, err error) configdomain.HostingPlatform {
 	self.Check(err)
 	return value
 }

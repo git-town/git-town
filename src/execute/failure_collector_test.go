@@ -107,16 +107,16 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			must.EqOp(t, configdomain.HostingPlatformGitHub, fc.Hosting(configdomain.HostingPlatformGitHub, nil))
-			must.EqOp(t, configdomain.HostingPlatformGitLab, fc.Hosting(configdomain.HostingPlatformGitLab, errors.New("")))
+			must.EqOp(t, configdomain.HostingPlatformGitHub, fc.HostingPlatform(configdomain.HostingPlatformGitHub, nil))
+			must.EqOp(t, configdomain.HostingPlatformGitLab, fc.HostingPlatform(configdomain.HostingPlatformGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			fc.Hosting(configdomain.HostingPlatformNone, nil)
+			fc.HostingPlatform(configdomain.HostingPlatformNone, nil)
 			must.Nil(t, fc.Err)
-			fc.Hosting(configdomain.HostingPlatformGitHub, errors.New("first"))
-			fc.Hosting(configdomain.HostingPlatformGitHub, errors.New("second"))
+			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("first"))
+			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
