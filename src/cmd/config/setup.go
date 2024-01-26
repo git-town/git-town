@@ -71,7 +71,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncUpstream(config.SyncUpstream, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncUpstream(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -229,8 +229,8 @@ func setupSyncPerennialStrategy(runner *git.ProdRunner, config *setupConfig) (bo
 	return aborted, runner.SetSyncPerennialStrategy(newValue)
 }
 
-func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncUpstream(existingValue, inputs)
+func setupSyncUpstream(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
