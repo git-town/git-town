@@ -85,24 +85,15 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if err != nil || aborted {
-		return aborted, err
-	}
 	config.userInput.SyncPerennialStrategy, aborted, err = enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	if err != nil || aborted {
-		return aborted, err
-	}
-	aborted, err = setupSyncUpstream(runner, config)
+	config.userInput.SyncUpstream, aborted, err = enter.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	config.userInput.NewBranchPush, aborted, err = enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -168,6 +159,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 		return err
 	}
 	err = saveSyncPerennialStrategy(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncUpstream(runner, newConfig)
 	if err != nil {
 		return err
 	}
@@ -249,6 +244,13 @@ func saveSyncPerennialStrategy(runner *git.ProdRunner, newConfig configdomain.Fu
 	return runner.SetSyncPerennialStrategy(newConfig.SyncPerennialStrategy)
 }
 
+func saveSyncUpstream(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncUpstream == runner.SyncUpstream {
+		return nil
+	}
+	return runner.SetSyncUpstream(newConfig.SyncUpstream, false)
+}
+
 func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -263,12 +265,4 @@ func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, err
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
-}
-
-func setupSyncUpstream(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetSyncUpstream(newValue, false)
 }

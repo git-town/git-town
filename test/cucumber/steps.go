@@ -771,6 +771,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-upstream" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
 		wantBool, err := strconv.ParseBool(wantStr)
