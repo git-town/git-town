@@ -67,7 +67,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupSyncPerennialStrategy(config.SyncPerennialStrategy, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupSyncPerennialStrategy(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -221,8 +221,8 @@ func setupSyncFeatureStrategy(runner *git.ProdRunner, config *setupConfig) (bool
 	return aborted, runner.SetSyncFeatureStrategy(newValue)
 }
 
-func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := enter.SyncPerennialStrategy(existingValue, inputs)
+func setupSyncPerennialStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newValue, aborted, err := enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
