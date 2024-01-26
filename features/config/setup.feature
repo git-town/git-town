@@ -22,8 +22,8 @@ Feature: enter Git Town configuration
     And the main branch is now "main"
     And there are still no perennial branches
     And local Git Town setting "code-hosting-platform" is still not set
-    And local Git Town setting "push-new-branches" is not set
-    And local Git Town setting "push-hook" is not set
+    And local Git Town setting "push-new-branches" is still not set
+    And local Git Town setting "push-hook" is still not set
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "rebase"
     And local Git Town setting "sync-upstream" is now "true"

@@ -675,7 +675,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
 	})
 
-	suite.Step(`^local Git Town setting "push-hook" is not set$`, func() error {
+	suite.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
 		if have == nil {
 			return nil
@@ -694,7 +694,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
 	})
 
-	suite.Step(`^local Git Town setting "push-new-branches" is not set$`, func() error {
+	suite.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
 		if have == nil {
 			return nil
