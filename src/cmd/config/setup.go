@@ -118,33 +118,35 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	}, exit, err
 }
 
-func saveEnteredConfig(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
-	//
-}
-
-func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	aliasableCommands := configdomain.AllAliasableCommands()
-	newAliases, aborted, err := enter.Aliases(aliasableCommands, runner.Aliases, config.inputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	for _, aliasableCommand := range aliasableCommands {
-		newAlias, hasNew := newAliases[aliasableCommand]
+func saveAliases(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := runner.Aliases[aliasableCommand]
+		newAlias, hasNew := newConfig.Aliases[aliasableCommand]
+		var err error
 		switch {
 		case hasOld && !hasNew:
-			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
-			if err != nil {
-				return aborted, err
-			}
+			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
 		case newAlias != oldAlias:
-			err := runner.Frontend.SetGitAlias(aliasableCommand)
-			if err != nil {
-				return aborted, err
-			}
+			err = runner.Frontend.SetGitAlias(aliasableCommand)
+		}
+		if err != nil {
+			return err
 		}
 	}
-	return aborted, nil
+	return nil
+}
+
+func saveEnteredConfig(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
+	err := saveAliases(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func setupAliases(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.newConfig.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.inputs.Next())
+	return aborted, err
 }
 
 func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, error) {
