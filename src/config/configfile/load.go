@@ -50,11 +50,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			hosting, err := configdomain.NewHostingPlatform(*data.Hosting.Platform)
-			if err != nil {
-				return result, err
-			}
-			result.HostingPlatform = &hosting
+			result.HostingPlatform, err = configdomain.NewHostingPlatformRef(*data.Hosting.Platform)
 		}
 		if data.Hosting.OriginHostname != nil {
 			result.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(*data.Hosting.OriginHostname)
