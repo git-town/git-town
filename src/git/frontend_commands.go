@@ -223,14 +223,14 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 	return self.Run("git", "revert", sha.String())
 }
 
-// SetHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
-	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
-}
-
 // SetGitAlias sets the given Git alias.
 func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
+	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
