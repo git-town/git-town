@@ -70,8 +70,38 @@ func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames 
 	return result
 }
 
+// disableCurrentEntry unchecks the currently selected list entry.
+func (self *PerennialBranchesModel) DisableCurrentEntry() {
+	self.Selections = slice.Remove(self.Selections, self.Cursor)
+}
+
+// enableCurrentEntry checks the currently selected list entry.
+func (self *PerennialBranchesModel) EnableCurrentEntry() {
+	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
+}
+
 func (self PerennialBranchesModel) Init() tea.Cmd {
 	return nil
+}
+
+// isRowChecked indicates whether the row with the given number is checked or not.
+func (self *PerennialBranchesModel) IsRowChecked(row int) bool {
+	return slices.Contains(self.Selections, row)
+}
+
+// isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
+func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
+	return self.IsRowChecked(self.Cursor)
+}
+
+// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
+// and checks it if it is unchecked.
+func (self *PerennialBranchesModel) ToggleCurrentEntry() {
+	if self.IsRowChecked(self.Cursor) {
+		self.DisableCurrentEntry()
+	} else {
+		self.EnableCurrentEntry()
+	}
 }
 
 func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
@@ -152,34 +182,4 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
 	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
-}
-
-// disableCurrentEntry unchecks the currently selected list entry.
-func (self *PerennialBranchesModel) DisableCurrentEntry() {
-	self.Selections = slice.Remove(self.Selections, self.Cursor)
-}
-
-// enableCurrentEntry checks the currently selected list entry.
-func (self *PerennialBranchesModel) EnableCurrentEntry() {
-	self.Selections = slice.AppendAllMissing(self.Selections, self.Cursor)
-}
-
-// isRowChecked indicates whether the row with the given number is checked or not.
-func (self *PerennialBranchesModel) IsRowChecked(row int) bool {
-	return slices.Contains(self.Selections, row)
-}
-
-// isSelectedRowChecked indicates whether the currently selected list entry is checked or not.
-func (self *PerennialBranchesModel) IsSelectedRowChecked() bool {
-	return self.IsRowChecked(self.Cursor)
-}
-
-// toggleCurrentEntry unchecks the currently selected list entry if it is checked,
-// and checks it if it is unchecked.
-func (self *PerennialBranchesModel) ToggleCurrentEntry() {
-	if self.IsRowChecked(self.Cursor) {
-		self.DisableCurrentEntry()
-	} else {
-		self.EnableCurrentEntry()
-	}
 }
