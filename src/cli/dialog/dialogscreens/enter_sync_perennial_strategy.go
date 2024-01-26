@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -21,7 +22,7 @@ const (
 	SyncPerennialStrategyEntryRebase syncPerennialStrategyEntry = `rebase perennial branches against their tracking branch`
 )
 
-func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
+func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inputs dialogcomponents.TestInput) (configdomain.SyncPerennialStrategy, bool, error) {
 	entries := []syncPerennialStrategyEntry{
 		SyncPerennialStrategyEntryMerge,
 		SyncPerennialStrategyEntryRebase,
@@ -35,11 +36,11 @@ func EnterSyncPerennialStrategy(existing configdomain.SyncPerennialStrategy, inp
 	default:
 		panic("unknown sync-perennial-strategy: " + existing.String())
 	}
-	selection, aborted, err := radioList(entries, defaultPos, enterSyncPerennialStrategyHelp, inputs)
+	selection, aborted, err := dialogcomponents.RadioList(entries, defaultPos, enterSyncPerennialStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncPerennialStrategyRebase, aborted, err
 	}
-	fmt.Printf("Sync perennial branches: %s\n", formattedSelection(selection.Short(), aborted))
+	fmt.Printf("Sync perennial branches: %s\n", dialogcomponents.FormattedSelection(selection.Short(), aborted))
 	return selection.SyncPerennialStrategy(), aborted, err
 }
 
