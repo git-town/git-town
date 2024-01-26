@@ -122,7 +122,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		must.EqOp(t, wantConfig, have.Config)
 	})
 
-	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting platform --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
 			HostingPlatform: configdomain.HostingPlatformNone,

@@ -13,7 +13,7 @@ type Connector interface {
 	// Returns nil if no proposal exists.
 	FindProposal(branch, target gitdomain.LocalBranchName) (*Proposal, error)
 
-	// HostingPlatformName provides the name of the code hosting service
+	// HostingPlatformName provides the name of the code hosting platform
 	// supported by the respective connector implementation.
 	HostingPlatformName() string
 

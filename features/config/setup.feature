@@ -9,7 +9,7 @@ Feature: enter Git Town configuration
       | aliases                     | enter |
       | main development branch     | enter |
       | perennial branches          | enter |
-      | hosting service             | enter |
+      | hosting platform            | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
       | sync-upstream               | enter |
@@ -40,7 +40,7 @@ Feature: enter Git Town configuration
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
-      | set a hosting service                     | up up enter            |
+      | set a hosting platform                    | up up enter            |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -91,7 +91,7 @@ Feature: enter Git Town configuration
       | aliases                     | o enter |
       | main development branch     | enter   |
       | perennial branches          | enter   |
-      | hosting service             | enter   |
+      | hosting platform            | enter   |
       | sync-feature-strategy       | enter   |
       | sync-perennial-strategy     | enter   |
       | sync-upstream               | enter   |
@@ -111,7 +111,7 @@ Feature: enter Git Town configuration
       | aliases                     | enter      |                                             |
       | main development branch     | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
-      | hosting service             | enter      |                                             |
+      | hosting platform            | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |
       | sync-perennial-strategy     | enter      |                                             |
       | sync-upstream               | enter      |                                             |
@@ -129,7 +129,7 @@ Feature: enter Git Town configuration
       | aliases                     | enter          |                                             |
       | main development branch     | down enter     |                                             |
       | perennial branches          |                | no input here since the dialog doesn't show |
-      | hosting service             | up up up enter |                                             |
+      | hosting platform            | up up up enter |                                             |
       | sync-feature-strategy       | enter          |                                             |
       | sync-perennial-strategy     | enter          |                                             |
       | sync-upstream               | enter          |                                             |
