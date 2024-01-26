@@ -3,6 +3,7 @@ package dialogscreens
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
@@ -22,14 +23,14 @@ func EnterParent(args EnterParentArgs) (gitdomain.LocalBranchName, bool, error) 
 	entries := EnterParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
 	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)
-	selection, aborted, err := radioList(entries, cursor, help, args.DialogTestInput)
-	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, formattedSelection(selection.String(), aborted))
+	selection, aborted, err := dialogcomponents.RadioList(entries, cursor, help, args.DialogTestInput)
+	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, dialogcomponents.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }
 
 type EnterParentArgs struct {
 	Branch          gitdomain.LocalBranchName
-	DialogTestInput TestInput
+	DialogTestInput dialogcomponents.TestInput
 	LocalBranches   gitdomain.LocalBranchNames
 	Lineage         configdomain.Lineage
 	MainBranch      gitdomain.LocalBranchName
