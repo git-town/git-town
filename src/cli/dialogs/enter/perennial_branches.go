@@ -117,11 +117,11 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialog.DialogStatusDone
+		self.Status = dialog.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialog.DialogStatusDone
+		self.Status = dialog.StatusDone
 		self.ToggleCurrentEntry()
 		return self, nil
 	}
@@ -129,7 +129,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self PerennialBranchesModel) View() string {
-	if self.Status != dialog.DialogStatusActive {
+	if self.Status != dialog.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

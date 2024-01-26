@@ -46,18 +46,18 @@ func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolin
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = DialogStatusDone
+		self.Status = StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = DialogStatusDone
+		self.Status = StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self radioListModel[S]) View() string {
-	if self.Status != DialogStatusActive {
+	if self.Status != StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

@@ -117,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialog.DialogStatusDone
+		self.Status = dialog.StatusDone
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
@@ -133,7 +133,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 }
 
 func (self AliasesModel) View() string {
-	if self.Status != dialog.DialogStatusActive {
+	if self.Status != dialog.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

@@ -45,18 +45,18 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialog.DialogStatusDone
+		self.Status = dialog.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialog.DialogStatusDone
+		self.Status = dialog.StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != dialog.DialogStatusActive {
+	if self.Status != dialog.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

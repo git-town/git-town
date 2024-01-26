@@ -9,17 +9,17 @@ import (
 	"github.com/muesli/termenv"
 )
 
-type dialogStatus int
+type status int
 
 const (
-	DialogStatusActive  dialogStatus = iota // the user is currently entering data into the dialog
-	DialogStatusDone                        // the user has made a selection
-	DialogStatusAborted                     // the user has aborted the dialog
+	StatusActive  status = iota // the user is currently entering data into the dialog
+	StatusDone                  // the user has made a selection
+	StatusAborted               // the user has aborted the dialog
 )
 
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList[S fmt.Stringer] struct {
-	Status       dialogStatus
+	Status       status
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
@@ -32,7 +32,7 @@ type BubbleList[S fmt.Stringer] struct {
 func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList[S]{
-		Status:       DialogStatusActive,
+		Status:       StatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
 		Dim:          termenv.String().Faint(),
@@ -45,7 +45,7 @@ func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 
 // Aborted indicates whether the user has Aborted this dialog.
 func (self *BubbleList[S]) Aborted() bool {
-	return self.Status == DialogStatusAborted
+	return self.Status == StatusAborted
 }
 
 // EntryNumberStr provides a colorized string to print the given entry number.
@@ -63,7 +63,7 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
-		self.Status = DialogStatusAborted
+		self.Status = StatusAborted
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
@@ -84,7 +84,7 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case "q":
-		self.Status = DialogStatusAborted
+		self.Status = StatusAborted
 		return true, tea.Quit
 	}
 	return false, nil
