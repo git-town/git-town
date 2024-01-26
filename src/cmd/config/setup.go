@@ -113,6 +113,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
+		newConfig:     configdomain.PartialConfig{},
 	}, exit, err
 }
 
