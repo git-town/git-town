@@ -12,7 +12,7 @@ func TestNewHostingService(t *testing.T) {
 
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[configdomain.HostingPlatform]configdomain.Hosting{
+		tests := map[string]configdomain.Hosting{
 			"bitbucket": configdomain.HostingBitbucket,
 			"BitBucket": configdomain.HostingBitbucket,
 			"github":    configdomain.HostingGitHub,
@@ -32,7 +32,7 @@ func TestNewHostingService(t *testing.T) {
 
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
-		for _, give := range []configdomain.HostingPlatform{"github", "GitHub", "GITHUB"} {
+		for _, give := range []string{"github", "GitHub", "GITHUB"} {
 			have, err := configdomain.NewHosting(give)
 			must.NoError(t, err)
 			must.EqOp(t, configdomain.HostingGitHub, have)

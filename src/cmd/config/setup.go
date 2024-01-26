@@ -140,15 +140,15 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 	return aborted, nil
 }
 
-func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+func setupHostingPlatform(existingValue configdomain.Hosting, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
 	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
 	switch {
-	case existingValue == "" && newValue == configdomain.HostingPlatformAutoDetect:
+	case existingValue == "" && newValue == configdomain.HostingNone:
 		// no changes --> do nothing
-	case existingValue != "" && newValue == configdomain.HostingPlatformAutoDetect:
+	case existingValue != "" && newValue == configdomain.HostingNone:
 		return aborted, runner.Frontend.DeleteHostingPlatform()
 	case existingValue != newValue:
 		return aborted, runner.Frontend.SetHostingPlatform(newValue)

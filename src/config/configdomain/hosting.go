@@ -22,14 +22,20 @@ const (
 )
 
 // NewHosting provides the HostingService enum matching the given text.
-func NewHosting(platformName HostingPlatform) (Hosting, error) {
-	text := strings.ToLower(platformName.String())
+func NewHosting(platformName string) (Hosting, error) {
+	text := strings.ToLower(platformName)
 	for _, hostingService := range hostings() {
 		if strings.ToLower(text) == hostingService.String() {
 			return hostingService, nil
 		}
 	}
 	return HostingNone, fmt.Errorf(messages.HostingServiceUnknown, text)
+}
+
+// NewHostingRef provides the HostingService enum matching the given text.
+func NewHostingRef(platformName string) (*Hosting, error) {
+	result, err := NewHosting(platformName)
+	return &result, err
 }
 
 // hostings provides all legal values for HostingService.

@@ -229,7 +229,7 @@ func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.Aliasabl
 }
 
 // SetHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
+func (self *FrontendCommands) SetHostingPlatform(platform configdomain.Hosting) error {
 	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 

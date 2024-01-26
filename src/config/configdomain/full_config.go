@@ -9,7 +9,7 @@ import (
 type FullConfig struct {
 	Aliases                  Aliases
 	HostingOriginHostname    HostingOriginHostname
-	HostingPlatform          HostingPlatform
+	HostingPlatform          Hosting
 	GiteaToken               GiteaToken
 	GitHubToken              GitHubToken
 	GitLabToken              GitLabToken
@@ -31,12 +31,6 @@ type FullConfig struct {
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
-}
-
-// HostingService provides the type-safe name of the code hosting connector to use.
-// This function caches its result and can be queried repeatedly.
-func (self *FullConfig) HostingService() (Hosting, error) {
-	return NewHosting(self.HostingPlatform)
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
