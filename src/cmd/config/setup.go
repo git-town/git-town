@@ -79,7 +79,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupPushHook(config.PushHook, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupPushHook(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -181,8 +181,8 @@ func setupPerennialBranches(runner *git.ProdRunner, config *setupConfig) (bool, 
 	return aborted, err
 }
 
-func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newPushHook, aborted, err := enter.PushHook(existingValue, inputs)
+func setupPushHook(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	newPushHook, aborted, err := enter.PushHook(runner.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
