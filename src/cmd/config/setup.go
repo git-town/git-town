@@ -91,12 +91,14 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
+	saveEnteredConfig(repo.Runner, config.newConfig)
 	return nil
 }
 
 type setupConfig struct {
 	localBranches gitdomain.BranchInfos
 	inputs        dialog.TestInputs
+	newConfig     configdomain.PartialConfig
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -112,7 +114,12 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	return setupConfig{
 		localBranches: branchesSnapshot.Branches,
 		inputs:        dialogInputs,
+		newConfig:     configdomain.PartialConfig{},
 	}, exit, err
+}
+
+func saveEnteredConfig(runner *git.ProdRunner, newConfig configdomain.PartialConfig) error {
+	//
 }
 
 func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
