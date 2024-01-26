@@ -59,11 +59,6 @@ func (self hostingPlatform) String() string {
 	return string(self)
 }
 
-func NewHostingPlatformRef(value string) *hostingPlatform {
-	token := hostingPlatform(value)
-	return &token
-}
-
 func hostingToHostingPlatform(hosting configdomain.Hosting) hostingPlatform {
 	switch hosting {
 	case configdomain.HostingNone:
