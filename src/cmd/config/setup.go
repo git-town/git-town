@@ -51,7 +51,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	return saveUserInput(repo.Runner, config.userInput)
+	return saveAll(repo.Runner, config.userInput)
 }
 
 type setupConfig struct {
@@ -93,7 +93,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = setupPushNewBranches(runner, config)
+	config.userInput.NewBranchPush, aborted, err = enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -127,6 +130,34 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		dialogInputs:  dialogInputs,
 		userInput:     configdomain.FullConfig{},
 	}, exit, err
+}
+
+func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	err := saveAliases(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveHostingPlatform(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveMainBranch(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePerennialBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePushHook(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePushNewBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err error) {
@@ -183,36 +214,11 @@ func savePushHook(runner *git.ProdRunner, newConfig configdomain.FullConfig) err
 	return nil
 }
 
-func saveUserInput(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	err := saveAliases(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	err = saveHostingPlatform(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	err = saveMainBranch(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	err = savePerennialBranches(runner, newConfig)
-	if err != nil {
-		return err
-	}
-	err = savePushHook(runner, newConfig)
-	if err != nil {
-		return err
+func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.NewBranchPush != runner.NewBranchPush {
+		return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
 	}
 	return nil
-}
-
-func setupPushNewBranches(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetNewBranchPush(newValue, false)
 }
 
 func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
