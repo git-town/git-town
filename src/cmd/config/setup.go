@@ -47,7 +47,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	aborted, err := setupAliases(repo.Runner.FullConfig.Aliases, configdomain.AllAliasableCommands(), repo.Runner, config.dialogInputs.Next())
+	aborted, err := setupAliases(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -95,9 +95,9 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupConfig struct {
-	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
+	newConfig     configdomain.PartialConfig // configuration entered by the user
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -111,20 +111,20 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		FullConfig:    &repo.Runner.FullConfig,
 		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
 	}, exit, err
 }
 
-func setupAliases(existingValue configdomain.Aliases, allAliasableCommands configdomain.AliasableCommands, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newAliases, aborted, err := enter.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
+func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	aliasableCommands := configdomain.AllAliasableCommands()
+	newAliases, aborted, err := enter.Aliases(aliasableCommands, runner.FullConfig.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	for _, aliasableCommand := range allAliasableCommands {
+	for _, aliasableCommand := range aliasableCommands {
 		newAlias, hasNew := newAliases[aliasableCommand]
-		oldAlias, hasOld := existingValue[aliasableCommand]
+		oldAlias, hasOld := runner.FullConfig.Aliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
 			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
