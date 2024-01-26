@@ -13,15 +13,15 @@ func TestNewHostingService(t *testing.T) {
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]configdomain.HostingPlatform{
-			"bitbucket": configdomain.HostingBitbucket,
-			"BitBucket": configdomain.HostingBitbucket,
-			"github":    configdomain.HostingGitHub,
-			"GitHub":    configdomain.HostingGitHub,
-			"gitlab":    configdomain.HostingGitLab,
-			"GitLab":    configdomain.HostingGitLab,
-			"gitea":     configdomain.HostingGitea,
-			"Gitea":     configdomain.HostingGitea,
-			"":          configdomain.HostingNone,
+			"bitbucket": configdomain.HostingPlatformBitbucket,
+			"BitBucket": configdomain.HostingPlatformBitbucket,
+			"github":    configdomain.HostingPlatformGitHub,
+			"GitHub":    configdomain.HostingPlatformGitHub,
+			"gitlab":    configdomain.HostingPlatformGitLab,
+			"GitLab":    configdomain.HostingPlatformGitLab,
+			"gitea":     configdomain.HostingPlatformGitea,
+			"Gitea":     configdomain.HostingPlatformGitea,
+			"":          configdomain.HostingPlatformNone,
 		}
 		for give, want := range tests {
 			have, err := configdomain.NewHosting(give)
@@ -35,7 +35,7 @@ func TestNewHostingService(t *testing.T) {
 		for _, give := range []string{"github", "GitHub", "GITHUB"} {
 			have, err := configdomain.NewHosting(give)
 			must.NoError(t, err)
-			must.EqOp(t, configdomain.HostingGitHub, have)
+			must.EqOp(t, configdomain.HostingPlatformGitHub, have)
 		}
 	})
 

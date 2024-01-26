@@ -89,7 +89,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
+			HostingService: configdomain.HostingPlatformNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
@@ -107,7 +107,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: configdomain.HostingGitHub,
+			HostingService: configdomain.HostingPlatformGitHub,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
@@ -125,7 +125,7 @@ func TestNewConnector(t *testing.T) {
 	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
+			HostingService: configdomain.HostingPlatformNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),
@@ -139,7 +139,7 @@ func TestNewConnector(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingService: configdomain.HostingNone,
+			HostingService: configdomain.HostingPlatformNone,
 			OriginURL:      originURL,
 			APIToken:       "",
 			MainBranch:     gitdomain.NewLocalBranchName("mainBranch"),

@@ -42,15 +42,15 @@ const (
 func (self hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform {
 	switch self {
 	case hostingPlatformAutoDetect:
-		return configdomain.HostingNone
+		return configdomain.HostingPlatformNone
 	case hostingPlatformBitBucket:
-		return configdomain.HostingBitbucket
+		return configdomain.HostingPlatformBitbucket
 	case hostingPlatformGitea:
-		return configdomain.HostingGitea
+		return configdomain.HostingPlatformGitea
 	case hostingPlatformGitHub:
-		return configdomain.HostingGitHub
+		return configdomain.HostingPlatformGitHub
 	case hostingPlatformGitLab:
-		return configdomain.HostingGitLab
+		return configdomain.HostingPlatformGitLab
 	}
 	panic("unknown hosting platform: " + self)
 }
@@ -61,15 +61,15 @@ func (self hostingPlatformEntry) String() string {
 
 func newHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatformEntry {
 	switch hosting {
-	case configdomain.HostingNone:
+	case configdomain.HostingPlatformNone:
 		return hostingPlatformAutoDetect
-	case configdomain.HostingBitbucket:
+	case configdomain.HostingPlatformBitbucket:
 		return hostingPlatformBitBucket
-	case configdomain.HostingGitea:
+	case configdomain.HostingPlatformGitea:
 		return hostingPlatformGitea
-	case configdomain.HostingGitHub:
+	case configdomain.HostingPlatformGitHub:
 		return hostingPlatformGitHub
-	case configdomain.HostingGitLab:
+	case configdomain.HostingPlatformGitLab:
 		return hostingPlatformGitLab
 	}
 	panic("unknown hosting: " + hosting)

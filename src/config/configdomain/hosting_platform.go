@@ -14,11 +14,11 @@ type HostingPlatform string
 func (self HostingPlatform) String() string { return string(self) }
 
 const (
-	HostingBitbucket = HostingPlatform("bitbucket")
-	HostingGitHub    = HostingPlatform("github")
-	HostingGitLab    = HostingPlatform("gitlab")
-	HostingGitea     = HostingPlatform("gitea")
-	HostingNone      = HostingPlatform("")
+	HostingPlatformBitbucket = HostingPlatform("bitbucket")
+	HostingPlatformGitHub    = HostingPlatform("github")
+	HostingPlatformGitLab    = HostingPlatform("gitlab")
+	HostingPlatformGitea     = HostingPlatform("gitea")
+	HostingPlatformNone      = HostingPlatform("")
 )
 
 // NewHosting provides the HostingService enum matching the given text.
@@ -29,7 +29,7 @@ func NewHosting(platformName string) (HostingPlatform, error) {
 			return hostingService, nil
 		}
 	}
-	return HostingNone, fmt.Errorf(messages.HostingServiceUnknown, text)
+	return HostingPlatformNone, fmt.Errorf(messages.HostingServiceUnknown, text)
 }
 
 // NewHostingRef provides the HostingService enum matching the given text.
@@ -41,10 +41,10 @@ func NewHostingRef(platformName string) (*HostingPlatform, error) {
 // hostings provides all legal values for HostingService.
 func hostings() []HostingPlatform {
 	return []HostingPlatform{
-		HostingNone,
-		HostingBitbucket,
-		HostingGitHub,
-		HostingGitLab,
-		HostingGitea,
+		HostingPlatformNone,
+		HostingPlatformBitbucket,
+		HostingPlatformGitHub,
+		HostingPlatformGitLab,
+		HostingPlatformGitea,
 	}
 }
