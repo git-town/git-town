@@ -72,6 +72,8 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeySpace} //nolint:exhaustruct
 	case "up":
 		return tea.KeyMsg{Type: tea.KeyUp} //nolint:exhaustruct
+	case "esc":
+		return tea.KeyMsg{Type: tea.KeyEsc} //nolint:exhaustruct
 	case "0":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'0'}} //nolint:exhaustruct
 	case "1":

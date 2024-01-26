@@ -1169,6 +1169,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the main branch is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf("unexpected main branch setting %q", have)
+	})
+
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
 		state.fixture.DevRepo.SetTestOrigin(origin)
 		return nil
