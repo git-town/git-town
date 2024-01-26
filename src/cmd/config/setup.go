@@ -3,7 +3,8 @@ package config
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -117,7 +118,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 }
 
 func setupAliases(existingValue configdomain.Aliases, allAliasableCommands configdomain.AliasableCommands, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newAliases, aborted, err := dialog.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
+	newAliases, aborted, err := enter.Aliases(allAliasableCommands, runner.FullConfig.Aliases, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -141,7 +142,7 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 }
 
 func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
+	newValue, aborted, err := enter.HostingPlatform(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -160,7 +161,7 @@ func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdom
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(allBranches, existingValue, inputs)
+	newMainBranch, aborted, err := enter.MainBranch(allBranches, existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -168,7 +169,7 @@ func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdom
 }
 
 func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterPerennialBranches(allBranches, existingValue, mainBranch, inputs)
+	newValue, aborted, err := enter.PerennialBranches(allBranches, existingValue, mainBranch, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -179,7 +180,7 @@ func setupPerennialBranches(existingValue gitdomain.LocalBranchNames, mainBranch
 }
 
 func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newPushHook, aborted, err := dialog.EnterPushHook(existingValue, inputs)
+	newPushHook, aborted, err := enter.PushHook(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -187,7 +188,7 @@ func setupPushHook(existingValue configdomain.PushHook, runner *git.ProdRunner, 
 }
 
 func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterPushNewBranches(existingValue, inputs)
+	newValue, aborted, err := enter.PushNewBranches(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -195,7 +196,7 @@ func setupPushNewBranches(existingValue configdomain.NewBranchPush, runner *git.
 }
 
 func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTrackingBranch, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterShipDeleteTrackingBranch(existingValue, inputs)
+	newValue, aborted, err := enter.ShipDeleteTrackingBranch(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -203,7 +204,7 @@ func setupShipDeleteTrackingBranch(existingValue configdomain.ShipDeleteTracking
 }
 
 func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterSyncBeforeShip(existingValue, inputs)
+	newValue, aborted, err := enter.SyncBeforeShip(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -211,7 +212,7 @@ func setupSyncBeforeShip(existingValue configdomain.SyncBeforeShip, runner *git.
 }
 
 func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterSyncFeatureStrategy(existingValue, inputs)
+	newValue, aborted, err := enter.SyncFeatureStrategy(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -219,7 +220,7 @@ func setupSyncFeatureStrategy(existingValue configdomain.SyncFeatureStrategy, ru
 }
 
 func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterSyncPerennialStrategy(existingValue, inputs)
+	newValue, aborted, err := enter.SyncPerennialStrategy(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -227,7 +228,7 @@ func setupSyncPerennialStrategy(existingValue configdomain.SyncPerennialStrategy
 }
 
 func setupSyncUpstream(existingValue configdomain.SyncUpstream, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
-	newValue, aborted, err := dialog.EnterSyncUpstream(existingValue, inputs)
+	newValue, aborted, err := enter.SyncUpstream(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
 	}
