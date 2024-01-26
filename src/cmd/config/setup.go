@@ -105,7 +105,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = setupShipDeleteTrackingBranch(runner, config)
+	config.userInput.ShipDeleteTrackingBranch, aborted, err = enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -151,6 +151,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 		return err
 	}
 	err = savePushNewBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveShipDeleteTrackingBranch(runner, newConfig)
 	if err != nil {
 		return err
 	}
@@ -234,6 +238,13 @@ func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConf
 	return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
 }
 
+func saveShipDeleteTrackingBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.ShipDeleteTrackingBranch == runner.ShipDeleteTrackingBranch {
+		return nil
+	}
+	return runner.SetShipDeleteTrackingBranch(newConfig.ShipDeleteTrackingBranch, false)
+}
+
 func saveSyncFeatureStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if newConfig.SyncFeatureStrategy == runner.SyncFeatureStrategy {
 		return nil
@@ -260,12 +271,4 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newConfig configdomain.FullConfi
 		return nil
 	}
 	return runner.SetSyncBeforeShip(newConfig.SyncBeforeShip, false)
-}
-
-func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetShipDeleteTrackingBranch(newValue, false)
 }

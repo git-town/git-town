@@ -713,6 +713,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
 		wantBool, err := strconv.ParseBool(wantStr)
