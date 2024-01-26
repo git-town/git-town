@@ -117,13 +117,13 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 
 func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 	aliasableCommands := configdomain.AllAliasableCommands()
-	newAliases, aborted, err := enter.Aliases(aliasableCommands, runner.FullConfig.Aliases, config.dialogInputs.Next())
+	newAliases, aborted, err := enter.Aliases(aliasableCommands, runner.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
 	for _, aliasableCommand := range aliasableCommands {
 		newAlias, hasNew := newAliases[aliasableCommand]
-		oldAlias, hasOld := runner.FullConfig.Aliases[aliasableCommand]
+		oldAlias, hasOld := runner.Aliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
 			err := runner.Frontend.RemoveGitAlias(aliasableCommand)
@@ -141,7 +141,7 @@ func setupAliases(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 }
 
 func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	existingValue := runner.FullConfig.HostingPlatform
+	existingValue := runner.HostingPlatform
 	newValue, aborted, err := enter.HostingPlatform(existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -158,7 +158,7 @@ func setupHostingPlatform(runner *git.ProdRunner, config *setupConfig) (bool, er
 }
 
 func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	existingValue := runner.FullConfig.MainBranch
+	existingValue := runner.MainBranch
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
