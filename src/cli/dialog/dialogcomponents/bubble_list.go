@@ -1,4 +1,4 @@
-package dialog
+package dialogcomponents
 
 import (
 	"fmt"
@@ -12,9 +12,9 @@ import (
 type dialogStatus int
 
 const (
-	dialogStatusActive  dialogStatus = iota // the user is currently entering data into the dialog
-	dialogStatusDone                        // the user has made a selection
-	dialogStatusAborted                     // the user has aborted the dialog
+	DialogStatusActive  dialogStatus = iota // the user is currently entering data into the dialog
+	DialogStatusDone                        // the user has made a selection
+	DialogStatusAborted                     // the user has aborted the dialog
 )
 
 // BubbleList contains common elements of BubbleTea list implementations.
@@ -29,10 +29,10 @@ type BubbleList[S fmt.Stringer] struct {
 	NumberFormat string        // template for formatting the entry number
 }
 
-func newBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
+func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 	numberLen := gohacks.NumberLength(len(entries))
 	return BubbleList[S]{
-		Status:       dialogStatusActive,
+		Status:       DialogStatusActive,
 		Colors:       createColors(),
 		Cursor:       cursor,
 		Dim:          termenv.String().Faint(),
@@ -43,18 +43,18 @@ func newBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 	}
 }
 
-// Aborted indicates whether the user has aborted this dialog.
-func (self *BubbleList[S]) aborted() bool {
-	return self.Status == dialogStatusAborted
+// Aborted indicates whether the user has Aborted this dialog.
+func (self *BubbleList[S]) Aborted() bool {
+	return self.Status == DialogStatusAborted
 }
 
-// entryNumberStr provides a colorized string to print the given entry number.
-func (self *BubbleList[S]) entryNumberStr(number int) string {
+// EntryNumberStr provides a colorized string to print the given entry number.
+func (self *BubbleList[S]) EntryNumberStr(number int) string {
 	return self.Dim.Styled(fmt.Sprintf(self.NumberFormat, number))
 }
 
-// handleKey handles keypresses that are common for all bubbleLists.
-func (self *BubbleList[S]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
+// HandleKey handles keypresses that are common for all bubbleLists.
+func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	switch key.Type { //nolint:exhaustive
 	case tea.KeyUp, tea.KeyShiftTab:
 		self.moveCursorUp()
@@ -63,7 +63,7 @@ func (self *BubbleList[S]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
-		self.Status = dialogStatusAborted
+		self.Status = DialogStatusAborted
 		return true, tea.Quit
 	}
 	switch keyStr := key.String(); keyStr {
@@ -84,7 +84,7 @@ func (self *BubbleList[S]) handleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case "q":
-		self.Status = dialogStatusAborted
+		self.Status = DialogStatusAborted
 		return true, tea.Quit
 	}
 	return false, nil
@@ -106,6 +106,6 @@ func (self *BubbleList[S]) moveCursorUp() {
 	}
 }
 
-func (self BubbleList[S]) selectedEntry() S { //nolint:ireturn
+func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
 	return self.Entries[self.Cursor]
 }

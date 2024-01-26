@@ -1,10 +1,11 @@
-package dialog
+package dialogscreens
 
 import (
 	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/muesli/termenv"
 )
@@ -21,10 +22,10 @@ If you are not sure, select all :)
 
 // Aliases lets the user select which Git Town commands should have shorter aliases.
 // This includes asking the user and updating the respective settings based on the user selection.
-func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput TestInput) (configdomain.Aliases, bool, error) {
+func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliases configdomain.Aliases, dialogTestInput dialogcomponents.TestInput) (configdomain.Aliases, bool, error) {
 	program := tea.NewProgram(AliasesModel{
 		AllAliasableCommands: allAliasableCommands,
-		BubbleList:           newBubbleList(allAliasableCommands, 0),
+		BubbleList:           dialogcomponents.NewBubbleList(allAliasableCommands, 0),
 		CurrentSelections:    NewAliasSelections(allAliasableCommands, existingAliases),
 		OriginalAliases:      existingAliases,
 		selectedColor:        termenv.String().Foreground(termenv.ANSIGreen),
@@ -38,17 +39,17 @@ func Aliases(allAliasableCommands configdomain.AliasableCommands, existingAliase
 	}
 	dialogResult, err := program.Run()
 	result := dialogResult.(AliasesModel) //nolint:forcetypeassert
-	if err != nil || result.aborted() {
-		return configdomain.Aliases{}, result.aborted(), err
+	if err != nil || result.Aborted() {
+		return configdomain.Aliases{}, result.Aborted(), err
 	}
 	selectedCommands := result.Checked()
 	selectionText := DetermineAliasSelectionText(selectedCommands)
-	fmt.Printf("Aliased commands: %s\n", formattedSelection(selectionText, result.aborted()))
-	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.aborted(), err
+	fmt.Printf("Aliased commands: %s\n", dialogcomponents.FormattedSelection(selectionText, result.Aborted()))
+	return DetermineAliasResult(result.CurrentSelections, allAliasableCommands, existingAliases), result.Aborted(), err
 }
 
 type AliasesModel struct {
-	BubbleList[configdomain.AliasableCommand]
+	dialogcomponents.BubbleList[configdomain.AliasableCommand]
 	AllAliasableCommands configdomain.AliasableCommands // all Git Town commands that can be aliased
 	CurrentSelections    []AliasSelection               // the status of the list entries
 	OriginalAliases      configdomain.Aliases           // the Git Town aliases as they currently exist on disk
@@ -108,7 +109,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.handleKey(keyMsg); handled {
+	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	switch keyMsg.Type { //nolint:exhaustive
@@ -116,7 +117,7 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 		self.RotateCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialogStatusDone
+		self.Status = dialogcomponents.DialogStatusDone
 		return self, tea.Quit
 	}
 	switch keyMsg.String() {
@@ -132,22 +133,22 @@ func (self AliasesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ire
 }
 
 func (self AliasesModel) View() string {
-	if self.Status != dialogStatusActive {
+	if self.Status != dialogcomponents.DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}
 	s.WriteString(enterAliasesHelp)
 	for i, branch := range self.Entries {
-		s.WriteString(self.entryNumberStr(i))
+		s.WriteString(self.EntryNumberStr(i))
 		highlighted := self.Cursor == i
 		selection := self.CurrentSelections[i]
 		switch {
 		case highlighted && selection == AliasSelectionNone:
-			s.WriteString(self.Colors.selection.Styled("> [ ] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [ ] " + branch.String()))
 		case highlighted && selection == AliasSelectionOther:
-			s.WriteString(self.Colors.selection.Styled("> [o] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [o] " + branch.String()))
 		case highlighted && selection == AliasSelectionGT:
-			s.WriteString(self.Colors.selection.Styled("> [x] " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> [x] " + branch.String()))
 		case !highlighted && selection == AliasSelectionNone:
 			s.WriteString("  [ ] " + branch.String())
 		case !highlighted && selection == AliasSelectionOther:
@@ -159,40 +160,40 @@ func (self AliasesModel) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.Colors.helpKey.Styled("↑"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("k"))
-	s.WriteString(self.Colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↑"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("k"))
+	s.WriteString(self.Colors.Help.Styled(" up   "))
 	// down
-	s.WriteString(self.Colors.helpKey.Styled("↓"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("j"))
-	s.WriteString(self.Colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↓"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("j"))
+	s.WriteString(self.Colors.Help.Styled(" down   "))
 	// toggle
-	s.WriteString(self.Colors.helpKey.Styled("space"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("o"))
-	s.WriteString(self.Colors.help.Styled(" toggle   "))
+	s.WriteString(self.Colors.HelpKey.Styled("space"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("o"))
+	s.WriteString(self.Colors.Help.Styled(" toggle   "))
 	// select all/none
-	s.WriteString(self.Colors.helpKey.Styled("a"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("n"))
-	s.WriteString(self.Colors.help.Styled(" select all/none   "))
+	s.WriteString(self.Colors.HelpKey.Styled("a"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("n"))
+	s.WriteString(self.Colors.Help.Styled(" select all/none   "))
 	// numbers
-	s.WriteString(self.Colors.helpKey.Styled("0"))
-	s.WriteString(self.Colors.help.Styled("-"))
-	s.WriteString(self.Colors.helpKey.Styled("9"))
-	s.WriteString(self.Colors.help.Styled(" jump   "))
+	s.WriteString(self.Colors.HelpKey.Styled("0"))
+	s.WriteString(self.Colors.Help.Styled("-"))
+	s.WriteString(self.Colors.HelpKey.Styled("9"))
+	s.WriteString(self.Colors.Help.Styled(" jump   "))
 	// accept
-	s.WriteString(self.Colors.helpKey.Styled("enter"))
-	s.WriteString(self.Colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.HelpKey.Styled("enter"))
+	s.WriteString(self.Colors.Help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("q"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("esc"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.HelpKey.Styled("q"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("esc"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
+	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
 }
 

@@ -1,4 +1,4 @@
-package dialog
+package dialogcomponents
 
 import (
 	"fmt"

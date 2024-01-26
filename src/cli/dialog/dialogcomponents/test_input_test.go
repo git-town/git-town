@@ -1,10 +1,10 @@
-package dialog_test
+package dialogcomponents_test
 
 import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/shoenig/test/must"
 )
 
@@ -19,56 +19,56 @@ func TestTestInputs(t *testing.T) {
 			"GITTOWN_DIALOG_INPUT_2=space|down|space|5|enter",
 			"GITTOWN_DIALOG_INPUT_3=ctrl+c",
 		}
-		have := dialog.LoadTestInputs(give)
-		want := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyEnter}}, //nolint:exhaustruct
-			dialog.TestInput{
+		have := dialogcomponents.LoadTestInputs(give)
+		want := dialogcomponents.TestInputs{
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyEnter}}, //nolint:exhaustruct
+			dialogcomponents.TestInput{
 				tea.KeyMsg{Type: tea.KeySpace},                     //nolint:exhaustruct
 				tea.KeyMsg{Type: tea.KeyDown},                      //nolint:exhaustruct
 				tea.KeyMsg{Type: tea.KeySpace},                     //nolint:exhaustruct
 				tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'5'}}, //nolint:exhaustruct
 				tea.KeyMsg{Type: tea.KeyEnter},                     //nolint:exhaustruct
 			},
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		must.Eq(t, want, have)
 	})
 
 	t.Run("TestInputs.Next", func(t *testing.T) {
 		t.Parallel()
-		testInputs := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}, //nolint:exhaustruct
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
+		testInputs := dialogcomponents.TestInputs{
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}}, //nolint:exhaustruct
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		// request the first entry: A
 		haveNext := testInputs.Next()
-		wantNext := dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}} //nolint:exhaustruct
+		wantNext := dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlA}} //nolint:exhaustruct
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining := dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
+		wantRemaining := dialogcomponents.TestInputs{
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}}, //nolint:exhaustruct
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: B
 		haveNext = testInputs.Next()
-		wantNext = dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}} //nolint:exhaustruct
+		wantNext = dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlB}} //nolint:exhaustruct
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = dialog.TestInputs{
-			dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
+		wantRemaining = dialogcomponents.TestInputs{
+			dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}}, //nolint:exhaustruct
 		}
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: C
 		haveNext = testInputs.Next()
-		wantNext = dialog.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}} //nolint:exhaustruct
+		wantNext = dialogcomponents.TestInput{tea.KeyMsg{Type: tea.KeyCtrlC}} //nolint:exhaustruct
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = dialog.TestInputs{}
+		wantRemaining = dialogcomponents.TestInputs{}
 		must.Eq(t, wantRemaining, testInputs)
 		// request the next entry: empty
 		haveNext = testInputs.Next()
-		wantNext = dialog.TestInput{}
+		wantNext = dialogcomponents.TestInput{}
 		must.Eq(t, wantNext, haveNext)
-		wantRemaining = dialog.TestInputs{}
+		wantRemaining = dialogcomponents.TestInputs{}
 		must.Eq(t, wantRemaining, testInputs)
 	})
 
@@ -76,8 +76,8 @@ func TestTestInputs(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple values", func(t *testing.T) {
 			t.Parallel()
-			have := dialog.ParseTestInput("enter|space|ctrl+c")
-			want := dialog.TestInput{
+			have := dialogcomponents.ParseTestInput("enter|space|ctrl+c")
+			want := dialogcomponents.TestInput{
 				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyEnter,
 				},
@@ -92,8 +92,8 @@ func TestTestInputs(t *testing.T) {
 		})
 		t.Run("single value", func(t *testing.T) {
 			t.Parallel()
-			have := dialog.ParseTestInput("enter")
-			want := dialog.TestInput{
+			have := dialogcomponents.ParseTestInput("enter")
+			want := dialogcomponents.TestInput{
 				tea.KeyMsg{ //nolint:exhaustruct
 					Type: tea.KeyEnter,
 				},
@@ -102,8 +102,8 @@ func TestTestInputs(t *testing.T) {
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			have := dialog.ParseTestInput("")
-			want := dialog.TestInput{}
+			have := dialogcomponents.ParseTestInput("")
+			want := dialogcomponents.TestInput{}
 			must.Eq(t, want, have)
 		})
 	})

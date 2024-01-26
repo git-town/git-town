@@ -1,9 +1,10 @@
-package dialog_test
+package dialogscreens_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/shoenig/test/must"
 )
@@ -25,13 +26,13 @@ func TestEnterAliases(t *testing.T) {
 			configdomain.AliasableCommandPropose: "town propose",
 			configdomain.AliasableCommandSync:    "other sync",
 		}
-		selections := []dialog.AliasSelection{
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionNone,
-			dialog.AliasSelectionOther,
+		selections := []dialogscreens.AliasSelection{
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionNone,
+			dialogscreens.AliasSelectionOther,
 		}
-		have := dialog.DetermineAliasResult(selections, allAliasableCommands, existingAliases)
+		have := dialogscreens.DetermineAliasResult(selections, allAliasableCommands, existingAliases)
 		want := configdomain.Aliases{
 			configdomain.AliasableCommandAppend: "town append",
 			configdomain.AliasableCommandHack:   "town hack",
@@ -45,14 +46,14 @@ func TestEnterAliases(t *testing.T) {
 		t.Run("all commands selected", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AllAliasableCommands()
-			have := dialog.DetermineAliasSelectionText(give)
+			have := dialogscreens.DetermineAliasSelectionText(give)
 			want := "(all)"
 			must.EqOp(t, want, have)
 		})
 		t.Run("no commands selected", func(t *testing.T) {
 			t.Parallel()
 			give := configdomain.AliasableCommands{}
-			have := dialog.DetermineAliasSelectionText(give)
+			have := dialogscreens.DetermineAliasSelectionText(give)
 			want := "(none)"
 			must.EqOp(t, want, have)
 		})
@@ -63,7 +64,7 @@ func TestEnterAliases(t *testing.T) {
 				configdomain.AliasableCommandHack,
 				configdomain.AliasableCommandSync,
 			}
-			have := dialog.DetermineAliasSelectionText(give)
+			have := dialogscreens.DetermineAliasSelectionText(give)
 			want := "append, hack, sync"
 			must.EqOp(t, want, have)
 		})
@@ -71,18 +72,18 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("Checked", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //nolint:exhaustruct
+		model := dialogscreens.AliasesModel{ //nolint:exhaustruct
 			AllAliasableCommands: configdomain.AliasableCommands{
 				configdomain.AliasableCommandAppend,
 				configdomain.AliasableCommandHack,
 				configdomain.AliasableCommandShip,
 				configdomain.AliasableCommandSync,
 			},
-			CurrentSelections: []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
-				dialog.AliasSelectionGT,
-				dialog.AliasSelectionNone,
-				dialog.AliasSelectionOther,
+			CurrentSelections: []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionGT,
+				dialogscreens.AliasSelectionGT,
+				dialogscreens.AliasSelectionNone,
+				dialogscreens.AliasSelectionOther,
 			},
 		}
 		have := model.Checked()
@@ -106,12 +107,12 @@ func TestEnterAliases(t *testing.T) {
 			configdomain.AliasableCommandDiffParent: "town diff-parent",
 			configdomain.AliasableCommandRepo:       "other command",
 		}
-		have := dialog.NewAliasSelections(allAliasableCommands, existingAliases)
-		want := []dialog.AliasSelection{
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionNone,
-			dialog.AliasSelectionOther,
+		have := dialogscreens.NewAliasSelections(allAliasableCommands, existingAliases)
+		want := []dialogscreens.AliasSelection{
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionNone,
+			dialogscreens.AliasSelectionOther,
 		}
 		must.Eq(t, want, have)
 	})
@@ -120,92 +121,92 @@ func TestEnterAliases(t *testing.T) {
 		t.Parallel()
 		t.Run("currently selecting an alias that isn't currently set on disk", func(t *testing.T) {
 			t.Parallel()
-			model := dialog.AliasesModel{
+			model := dialogscreens.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 				},
-				CurrentSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionNone,
+				CurrentSelections: []dialogscreens.AliasSelection{
+					dialogscreens.AliasSelectionNone,
 				},
 				OriginalAliases: configdomain.Aliases{},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
 			// rotate the first time to set to "checked"
 			model.RotateCurrentEntry()
-			want := []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
+			want := []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a second time to set to "unchecked"
 			model.RotateCurrentEntry()
-			want = []dialog.AliasSelection{
-				dialog.AliasSelectionNone,
+			want = []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
 		t.Run("currently selecting an alias that is set on disk to a Git Town command", func(t *testing.T) {
 			t.Parallel()
-			model := dialog.AliasesModel{
+			model := dialogscreens.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 				},
-				CurrentSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionGT,
+				CurrentSelections: []dialogscreens.AliasSelection{
+					dialogscreens.AliasSelectionGT,
 				},
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "town append",
 				},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
 			// rotate the first time to uncheck
 			model.RotateCurrentEntry()
-			want := []dialog.AliasSelection{
-				dialog.AliasSelectionNone,
+			want := []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to check again
 			model.RotateCurrentEntry()
-			want = []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
+			want = []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
 		t.Run("currently selecting an alias that is currently set on disk to an external command", func(t *testing.T) {
 			t.Parallel()
-			model := dialog.AliasesModel{
+			model := dialogscreens.AliasesModel{
 				AllAliasableCommands: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 				},
-				CurrentSelections: []dialog.AliasSelection{
-					dialog.AliasSelectionOther,
+				CurrentSelections: []dialogscreens.AliasSelection{
+					dialogscreens.AliasSelectionOther,
 				},
 				OriginalAliases: configdomain.Aliases{
 					configdomain.AliasableCommandAppend: "other command",
 				},
-				BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+				BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 					Cursor: 0,
 				},
 			}
 			// rotate the first time to check
 			model.RotateCurrentEntry()
-			want := []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
+			want := []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionGT,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate the second time to uncheck
 			model.RotateCurrentEntry()
-			want = []dialog.AliasSelection{
-				dialog.AliasSelectionNone,
+			want = []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionNone,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 			// rotate a third time to set to "other" again
 			model.RotateCurrentEntry()
-			want = []dialog.AliasSelection{
-				dialog.AliasSelectionOther,
+			want = []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionOther,
 			}
 			must.Eq(t, want, model.CurrentSelections)
 		})
@@ -213,50 +214,50 @@ func TestEnterAliases(t *testing.T) {
 
 	t.Run("SelectAll", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+		model := dialogscreens.AliasesModel{ //nolint:exhaustruct
+			BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandSync,
 				},
 			},
-			CurrentSelections: []dialog.AliasSelection{
-				dialog.AliasSelectionNone,
-				dialog.AliasSelectionNone,
-				dialog.AliasSelectionNone,
+			CurrentSelections: []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionNone,
+				dialogscreens.AliasSelectionNone,
+				dialogscreens.AliasSelectionNone,
 			},
 		}
 		model.SelectAll()
-		want := []dialog.AliasSelection{
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionGT,
-			dialog.AliasSelectionGT,
+		want := []dialogscreens.AliasSelection{
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionGT,
+			dialogscreens.AliasSelectionGT,
 		}
 		must.Eq(t, model.CurrentSelections, want)
 	})
 
 	t.Run("SelectNone", func(t *testing.T) {
 		t.Parallel()
-		model := dialog.AliasesModel{ //nolint:exhaustruct
-			BubbleList: dialog.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
+		model := dialogscreens.AliasesModel{ //nolint:exhaustruct
+			BubbleList: dialogcomponents.BubbleList[configdomain.AliasableCommand]{ //nolint:exhaustruct
 				Entries: configdomain.AliasableCommands{
 					configdomain.AliasableCommandAppend,
 					configdomain.AliasableCommandHack,
 					configdomain.AliasableCommandDiffParent,
 				},
 			},
-			CurrentSelections: []dialog.AliasSelection{
-				dialog.AliasSelectionGT,
-				dialog.AliasSelectionOther,
-				dialog.AliasSelectionGT,
+			CurrentSelections: []dialogscreens.AliasSelection{
+				dialogscreens.AliasSelectionGT,
+				dialogscreens.AliasSelectionOther,
+				dialogscreens.AliasSelectionGT,
 			},
 		}
 		model.SelectNone()
-		want := []dialog.AliasSelection{
-			dialog.AliasSelectionNone,
-			dialog.AliasSelectionNone,
-			dialog.AliasSelectionNone,
+		want := []dialogscreens.AliasSelection{
+			dialogscreens.AliasSelectionNone,
+			dialogscreens.AliasSelectionNone,
+			dialogscreens.AliasSelectionNone,
 		}
 		must.Eq(t, model.CurrentSelections, want)
 	})

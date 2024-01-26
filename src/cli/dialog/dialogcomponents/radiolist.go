@@ -1,4 +1,4 @@
-package dialog
+package dialogcomponents
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 // EnterMainBranch lets the user select a new main branch for this repo.
 func radioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
-		BubbleList: newBubbleList(entries, cursor),
+		BubbleList: NewBubbleList(entries, cursor),
 		help:       help,
 	})
 	if len(testInput) > 0 {
@@ -25,7 +25,7 @@ func radioList[S fmt.Stringer](entries []S, cursor int, help string, testInput T
 		return entries[0], false, err
 	}
 	result := dialogResult.(radioListModel[S]) //nolint:forcetypeassert
-	return result.selectedEntry(), result.aborted(), nil
+	return result.SelectedEntry(), result.Aborted(), nil
 }
 
 type radioListModel[S fmt.Stringer] struct {
@@ -42,30 +42,30 @@ func (self radioListModel[S]) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolin
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, cmd := self.BubbleList.handleKey(keyMsg); handled {
+	if handled, cmd := self.BubbleList.HandleKey(keyMsg); handled {
 		return self, cmd
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialogStatusDone
+		self.Status = DialogStatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialogStatusDone
+		self.Status = DialogStatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self radioListModel[S]) View() string {
-	if self.Status != dialogStatusActive {
+	if self.Status != DialogStatusActive {
 		return ""
 	}
 	s := strings.Builder{}
 	s.WriteString(self.help)
 	for i, branch := range self.Entries {
-		s.WriteString(self.entryNumberStr(i))
+		s.WriteString(self.EntryNumberStr(i))
 		if i == self.Cursor {
-			s.WriteString(self.Colors.selection.Styled("> " + branch.String()))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		} else {
 			s.WriteString("  " + branch.String())
 		}
@@ -73,31 +73,31 @@ func (self radioListModel[S]) View() string {
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.Colors.helpKey.Styled("↑"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("k"))
-	s.WriteString(self.Colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↑"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("k"))
+	s.WriteString(self.Colors.Help.Styled(" up   "))
 	// down
-	s.WriteString(self.Colors.helpKey.Styled("↓"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("j"))
-	s.WriteString(self.Colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↓"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("j"))
+	s.WriteString(self.Colors.Help.Styled(" down   "))
 	// numbers
-	s.WriteString(self.Colors.helpKey.Styled("0"))
-	s.WriteString(self.Colors.help.Styled("-"))
-	s.WriteString(self.Colors.helpKey.Styled("9"))
-	s.WriteString(self.Colors.help.Styled(" jump   "))
+	s.WriteString(self.Colors.HelpKey.Styled("0"))
+	s.WriteString(self.Colors.Help.Styled("-"))
+	s.WriteString(self.Colors.HelpKey.Styled("9"))
+	s.WriteString(self.Colors.Help.Styled(" jump   "))
 	// accept
-	s.WriteString(self.Colors.helpKey.Styled("enter"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("o"))
-	s.WriteString(self.Colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.HelpKey.Styled("enter"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("o"))
+	s.WriteString(self.Colors.Help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("q"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("esc"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.HelpKey.Styled("q"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("esc"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
+	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
 }

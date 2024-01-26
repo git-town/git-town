@@ -1,4 +1,4 @@
-package dialog_test
+package dialogscreens_test
 
 import (
 	"testing"

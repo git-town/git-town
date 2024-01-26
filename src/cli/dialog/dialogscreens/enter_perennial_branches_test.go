@@ -1,4 +1,4 @@
-package dialog //nolint:testpackage
+package dialogscreens_test
 
 import (
 	"testing"
