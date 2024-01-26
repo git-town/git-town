@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestNewHostingService(t *testing.T) {
+func TestNewHostingPlatform(t *testing.T) {
 	t.Parallel()
 
 	t.Run("valid content", func(t *testing.T) {

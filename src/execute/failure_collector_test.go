@@ -102,9 +102,9 @@ func TestCollector(t *testing.T) {
 		})
 	})
 
-	t.Run("HostingService", func(t *testing.T) {
+	t.Run("HostingPlatform", func(t *testing.T) {
 		t.Parallel()
-		t.Run("returns the given HostingService value", func(t *testing.T) {
+		t.Run("returns the given HostingPlatform value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
 			must.EqOp(t, configdomain.HostingPlatformGitHub, fc.HostingPlatform(configdomain.HostingPlatformGitHub, nil))

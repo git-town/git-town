@@ -195,10 +195,10 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: repo.Runner.HostingPlatform,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

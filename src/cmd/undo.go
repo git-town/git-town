@@ -103,10 +103,10 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: repo.Runner.Config.HostingPlatform,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	if err != nil {
 		return nil, initialStashSnapshot, repo.Runner.Lineage, err

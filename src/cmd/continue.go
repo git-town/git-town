@@ -96,10 +96,10 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: repo.Runner.HostingPlatform,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	return &continueConfig{
 		connector:        connector,

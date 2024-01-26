@@ -40,6 +40,10 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
+func (self *Connector) HostingPlatformName() string {
+	return "GitLab"
+}
+
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
@@ -76,7 +80,7 @@ func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBr
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != configdomain.HostingPlatformGitLab) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingPlatform != configdomain.HostingPlatformGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := Config{
@@ -102,10 +106,10 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService configdomain.HostingPlatform
-	OriginURL      *giturl.Parts
-	APIToken       configdomain.GitLabToken
-	Log            hostingdomain.Log
+	HostingPlatform configdomain.HostingPlatform
+	OriginURL       *giturl.Parts
+	APIToken        configdomain.GitLabToken
+	Log             hostingdomain.Log
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

@@ -49,7 +49,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) HostingServiceName() string {
+func (self *Connector) HostingPlatformName() string {
 	return "GitHub"
 }
 
@@ -119,7 +119,7 @@ func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubTok
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != configdomain.HostingPlatformGitHub) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingPlatform != configdomain.HostingPlatformGitHub) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
@@ -138,11 +138,11 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService configdomain.HostingPlatform
-	OriginURL      *giturl.Parts
-	APIToken       configdomain.GitHubToken
-	MainBranch     gitdomain.LocalBranchName
-	Log            hostingdomain.Log
+	HostingPlatform configdomain.HostingPlatform
+	OriginURL       *giturl.Parts
+	APIToken        configdomain.GitHubToken
+	MainBranch      gitdomain.LocalBranchName
+	Log             hostingdomain.Log
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

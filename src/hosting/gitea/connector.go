@@ -52,7 +52,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	}, nil
 }
 
-func (self *Connector) HostingServiceName() string {
+func (self *Connector) HostingPlatformName() string {
 	return "Gitea"
 }
 
