@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
+	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ func enterParentCmd() *cobra.Command {
 			lineage := configdomain.Lineage{}
 			localBranches := gitdomain.LocalBranchNames{branch1, branch2, branch3, branch4, branch5, branch6, branch7, branch8, branch9, branchA}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialogscreens.EnterParent(dialogscreens.EnterParentArgs{
+			_, _, err := enter.EnterParent(enter.EnterParentArgs{
 				Branch:          branch2,
 				DialogTestInput: dialogTestInputs.Next(),
 				LocalBranches:   localBranches,

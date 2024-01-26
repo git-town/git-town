@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
+	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +16,7 @@ func unfinishedStateCommitAuthorCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			branch := gitdomain.NewLocalBranchName("feature-branch")
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialogscreens.AskHowToHandleUnfinishedRunState("sync", branch, time.Now().Add(time.Second*-1), true, dialogTestInputs.Next())
+			_, _, err := enter.AskHowToHandleUnfinishedRunState("sync", branch, time.Now().Add(time.Second*-1), true, dialogTestInputs.Next())
 			return err
 		},
 	}

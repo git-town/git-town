@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
+	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +20,7 @@ func enterAliases() *cobra.Command {
 				configdomain.AliasableCommandRepo:   "other command",
 			}
 			dialogTestInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialogscreens.Aliases(all, existing, dialogTestInputs.Next())
+			_, _, err := enter.Aliases(all, existing, dialogTestInputs.Next())
 			return err
 		},
 	}

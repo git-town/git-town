@@ -1,4 +1,4 @@
-package dialogscreens
+package enter
 
 import (
 	"fmt"

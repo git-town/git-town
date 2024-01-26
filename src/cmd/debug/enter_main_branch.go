@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
+	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +16,7 @@ func enterMainBranchCmd() *cobra.Command {
 			localBranches := gitdomain.NewLocalBranchNames("main", "branch-1", "branch-2", "branch-3", "branch-4", "branch-5", "branch-6", "branch-7", "branch-8", "branch-9", "branch-A", "branch-B")
 			main := gitdomain.NewLocalBranchName("main")
 			dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
-			_, _, err := dialogscreens.EnterMainBranch(localBranches, main, dialogInputs.Next())
+			_, _, err := enter.EnterMainBranch(localBranches, main, dialogInputs.Next())
 			return err
 		},
 	}

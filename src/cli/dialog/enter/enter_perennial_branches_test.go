@@ -1,10 +1,10 @@
-package dialogscreens_test
+package enter_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
-	"github.com/git-town/git-town/v11/src/cli/dialog/dialogscreens"
+	"github.com/git-town/git-town/v11/src/cli/dialog/enter"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
@@ -16,7 +16,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
@@ -28,7 +28,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
@@ -44,7 +44,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("entry is disabled", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
@@ -56,7 +56,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 		t.Run("entry is enabled", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
@@ -72,7 +72,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		t.Parallel()
 		t.Run("selected row is checked", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 2,
 				},
@@ -82,7 +82,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 		})
 		t.Run("selected row is not checked", func(t *testing.T) {
 			t.Parallel()
-			model := dialogscreens.PerennialBranchesModel{
+			model := enter.PerennialBranchesModel{
 				BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 					Cursor: 1,
 				},
@@ -94,7 +94,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 
 	t.Run("isRowChecked", func(t *testing.T) {
 		t.Parallel()
-		model := dialogscreens.PerennialBranchesModel{ //nolint:exhaustruct
+		model := enter.PerennialBranchesModel{ //nolint:exhaustruct
 			Selections: []int{2},
 		}
 		must.False(t, model.IsRowChecked(1))
@@ -104,7 +104,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 
 	t.Run("checkedEntries", func(t *testing.T) {
 		t.Parallel()
-		model := dialogscreens.PerennialBranchesModel{
+		model := enter.PerennialBranchesModel{
 			BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 				Entries: gitdomain.NewLocalBranchNames("zero", "one", "two", "three"),
 			},
@@ -117,7 +117,7 @@ func TestPerennialBranchesModel(t *testing.T) {
 
 	t.Run("toggleCurrentEntry", func(t *testing.T) {
 		t.Parallel()
-		model := dialogscreens.PerennialBranchesModel{
+		model := enter.PerennialBranchesModel{
 			BubbleList: dialogcomponents.BubbleList[gitdomain.LocalBranchName]{ //nolint:exhaustruct
 				Cursor: 2,
 			},
