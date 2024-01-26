@@ -24,7 +24,7 @@ func TestNewHostingService(t *testing.T) {
 			"":          configdomain.HostingPlatformNone,
 		}
 		for give, want := range tests {
-			have, err := configdomain.NewHosting(give)
+			have, err := configdomain.NewHostingPlatform(give)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		}
@@ -33,7 +33,7 @@ func TestNewHostingService(t *testing.T) {
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"github", "GitHub", "GITHUB"} {
-			have, err := configdomain.NewHosting(give)
+			have, err := configdomain.NewHostingPlatform(give)
 			must.NoError(t, err)
 			must.EqOp(t, configdomain.HostingPlatformGitHub, have)
 		}
@@ -41,7 +41,7 @@ func TestNewHostingService(t *testing.T) {
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
-		_, err := configdomain.NewHosting("zonk")
+		_, err := configdomain.NewHostingPlatform("zonk")
 		must.Error(t, err)
 	})
 }

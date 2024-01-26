@@ -50,7 +50,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 	}
 	if data.Hosting != nil {
 		if data.Hosting.Platform != nil {
-			hosting, err := configdomain.NewHosting(*data.Hosting.Platform)
+			hosting, err := configdomain.NewHostingPlatform(*data.Hosting.Platform)
 			if err != nil {
 				return result, err
 			}

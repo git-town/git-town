@@ -20,8 +20,8 @@ const (
 	HostingPlatformNone      = HostingPlatform("")
 )
 
-// NewHosting provides the HostingService enum matching the given text.
-func NewHosting(platformName string) (HostingPlatform, error) {
+// NewHostingPlatform provides the HostingService enum matching the given text.
+func NewHostingPlatform(platformName string) (HostingPlatform, error) {
 	text := strings.ToLower(platformName)
 	for _, hostingService := range hostingPlatforms() {
 		if strings.ToLower(text) == hostingService.String() {
@@ -31,9 +31,9 @@ func NewHosting(platformName string) (HostingPlatform, error) {
 	return HostingPlatformNone, fmt.Errorf(messages.HostingServiceUnknown, text)
 }
 
-// NewHostingRef provides the HostingService enum matching the given text.
-func NewHostingRef(platformName string) (*HostingPlatform, error) {
-	result, err := NewHosting(platformName)
+// NewHostingPlatformRef provides the HostingService enum matching the given text.
+func NewHostingPlatformRef(platformName string) (*HostingPlatform, error) {
+	result, err := NewHostingPlatform(platformName)
 	return &result, err
 }
 
