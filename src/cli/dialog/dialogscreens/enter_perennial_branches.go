@@ -59,6 +59,17 @@ type PerennialBranchesModel struct {
 	selectedColor termenv.Style
 }
 
+// checkedEntries provides all checked list entries.
+func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
+	result := gitdomain.LocalBranchNames{}
+	for e, entry := range self.Entries {
+		if self.IsRowChecked(e) {
+			result = append(result, entry)
+		}
+	}
+	return result
+}
+
 func (self PerennialBranchesModel) Init() tea.Cmd {
 	return nil
 }
@@ -141,17 +152,6 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
 	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
-}
-
-// checkedEntries provides all checked list entries.
-func (self *PerennialBranchesModel) CheckedEntries() gitdomain.LocalBranchNames {
-	result := gitdomain.LocalBranchNames{}
-	for e, entry := range self.Entries {
-		if self.IsRowChecked(e) {
-			result = append(result, entry)
-		}
-	}
-	return result
 }
 
 // disableCurrentEntry unchecks the currently selected list entry.

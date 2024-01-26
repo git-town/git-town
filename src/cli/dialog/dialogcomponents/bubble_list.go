@@ -9,7 +9,6 @@ import (
 	"github.com/muesli/termenv"
 )
 
-// TODO: rename to BubbleListStatus
 type dialogStatus int
 
 const (
@@ -91,6 +90,10 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	return false, nil
 }
 
+func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
+	return self.Entries[self.Cursor]
+}
+
 func (self *BubbleList[S]) moveCursorDown() {
 	if self.Cursor < len(self.Entries)-1 {
 		self.Cursor++
@@ -105,8 +108,4 @@ func (self *BubbleList[S]) moveCursorUp() {
 	} else {
 		self.Cursor = len(self.Entries) - 1
 	}
-}
-
-func (self BubbleList[S]) SelectedEntry() S { //nolint:ireturn
-	return self.Entries[self.Cursor]
 }

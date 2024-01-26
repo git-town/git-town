@@ -10,6 +10,13 @@ type dialogColors struct {
 	Selection termenv.Style // color for the currently selected entry
 }
 
+func FormattedSelection(selection string, aborted bool) string {
+	if aborted {
+		return red().Styled("(aborted)")
+	}
+	return green().Styled(selection)
+}
+
 func createColors() dialogColors {
 	return dialogColors{
 		Help:      termenv.String().Faint(),
@@ -17,13 +24,6 @@ func createColors() dialogColors {
 		Initial:   termenv.String().Foreground(termenv.ANSIGreen),
 		Selection: termenv.String().Foreground(termenv.ANSICyan),
 	}
-}
-
-func FormattedSelection(selection string, aborted bool) string {
-	if aborted {
-		return red().Styled("(aborted)")
-	}
-	return green().Styled(selection)
 }
 
 func green() termenv.Style {
