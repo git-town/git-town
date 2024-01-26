@@ -51,7 +51,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupMainBranch(config.MainBranch, config.localBranches.Names(), repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupMainBranch(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
@@ -157,11 +157,12 @@ func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *gi
 	return aborted, nil
 }
 
-func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+func setupMainBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
+	existingValue := runner.FullConfig.MainBranch
 	if existingValue.IsEmpty() {
 		existingValue, _ = runner.Backend.DefaultBranch()
 	}
-	newMainBranch, aborted, err := enter.MainBranch(allBranches, existingValue, inputs)
+	newMainBranch, aborted, err := enter.MainBranch(config.localBranches.Names(), existingValue, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
