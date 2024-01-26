@@ -12,7 +12,7 @@ func TestNewHostingService(t *testing.T) {
 
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]configdomain.Hosting{
+		tests := map[string]configdomain.HostingPlatform{
 			"bitbucket": configdomain.HostingBitbucket,
 			"BitBucket": configdomain.HostingBitbucket,
 			"github":    configdomain.HostingGitHub,

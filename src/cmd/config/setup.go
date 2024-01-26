@@ -140,7 +140,7 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 	return aborted, nil
 }
 
-func setupHostingPlatform(existingValue configdomain.Hosting, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
 	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err

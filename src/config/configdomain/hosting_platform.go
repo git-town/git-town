@@ -7,22 +7,22 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-// Hosting defines legal values for the "git-town.code-hosting-platform" config setting.
+// HostingPlatform defines legal values for the "git-town.code-hosting-platform" config setting.
 // This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
-type Hosting string
+type HostingPlatform string
 
-func (self Hosting) String() string { return string(self) }
+func (self HostingPlatform) String() string { return string(self) }
 
 const (
-	HostingBitbucket = Hosting("bitbucket")
-	HostingGitHub    = Hosting("github")
-	HostingGitLab    = Hosting("gitlab")
-	HostingGitea     = Hosting("gitea")
-	HostingNone      = Hosting("")
+	HostingBitbucket = HostingPlatform("bitbucket")
+	HostingGitHub    = HostingPlatform("github")
+	HostingGitLab    = HostingPlatform("gitlab")
+	HostingGitea     = HostingPlatform("gitea")
+	HostingNone      = HostingPlatform("")
 )
 
 // NewHosting provides the HostingService enum matching the given text.
-func NewHosting(platformName string) (Hosting, error) {
+func NewHosting(platformName string) (HostingPlatform, error) {
 	text := strings.ToLower(platformName)
 	for _, hostingService := range hostings() {
 		if strings.ToLower(text) == hostingService.String() {
@@ -33,14 +33,14 @@ func NewHosting(platformName string) (Hosting, error) {
 }
 
 // NewHostingRef provides the HostingService enum matching the given text.
-func NewHostingRef(platformName string) (*Hosting, error) {
+func NewHostingRef(platformName string) (*HostingPlatform, error) {
 	result, err := NewHosting(platformName)
 	return &result, err
 }
 
 // hostings provides all legal values for HostingService.
-func hostings() []Hosting {
-	return []Hosting{
+func hostings() []HostingPlatform {
+	return []HostingPlatform{
 		HostingNone,
 		HostingBitbucket,
 		HostingGitHub,

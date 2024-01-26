@@ -138,7 +138,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService configdomain.Hosting
+	HostingService configdomain.HostingPlatform
 	OriginURL      *giturl.Parts
 	APIToken       configdomain.GitHubToken
 	MainBranch     gitdomain.LocalBranchName

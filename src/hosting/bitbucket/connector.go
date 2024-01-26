@@ -34,7 +34,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 
 type NewConnectorArgs struct {
 	OriginURL      *giturl.Parts
-	HostingService configdomain.Hosting
+	HostingService configdomain.HostingPlatform
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {

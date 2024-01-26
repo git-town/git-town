@@ -15,7 +15,7 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(existingValue configdomain.Hosting, inputs TestInput) (configdomain.Hosting, bool, error) {
+func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs TestInput) (configdomain.HostingPlatform, bool, error) {
 	entries := []hostingPlatform{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
@@ -26,7 +26,7 @@ func EnterHostingPlatform(existingValue configdomain.Hosting, inputs TestInput) 
 	cursor := indexOfHosting(existingValue, entries)
 	newValue, aborted, err := radioList(entries, cursor, enterHostingPlatformHelp, inputs)
 	fmt.Printf("Code hosting: %s\n", formattedSelection(newValue.String(), aborted))
-	return newValue.Hosting(), aborted, err
+	return newValue.HostingPlatform(), aborted, err
 }
 
 type hostingPlatform string
@@ -39,7 +39,7 @@ const (
 	hostingPlatformGitLab     hostingPlatform = "GitLab"
 )
 
-func (self hostingPlatform) Hosting() configdomain.Hosting {
+func (self hostingPlatform) HostingPlatform() configdomain.HostingPlatform {
 	switch self {
 	case hostingPlatformAutoDetect:
 		return configdomain.HostingNone
@@ -59,7 +59,7 @@ func (self hostingPlatform) String() string {
 	return string(self)
 }
 
-func hostingToHostingPlatform(hosting configdomain.Hosting) hostingPlatform {
+func hostingToHostingPlatform(hosting configdomain.HostingPlatform) hostingPlatform {
 	switch hosting {
 	case configdomain.HostingNone:
 		return hostingPlatformAutoDetect
@@ -75,7 +75,7 @@ func hostingToHostingPlatform(hosting configdomain.Hosting) hostingPlatform {
 	panic("unknown hosting: " + hosting)
 }
 
-func indexOfHosting(hosting configdomain.Hosting, entries []hostingPlatform) int {
+func indexOfHosting(hosting configdomain.HostingPlatform, entries []hostingPlatform) int {
 	hostingPlatform := hostingToHostingPlatform(hosting)
 	return stringers.IndexOrStart(entries, hostingPlatform)
 }
