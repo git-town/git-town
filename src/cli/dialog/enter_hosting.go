@@ -15,16 +15,67 @@ Only change this setting if the auto-detection does not work for you.
 `
 
 // EnterMainBranch lets the user select a new main branch for this repo.
-func EnterHostingPlatform(platformName configdomain.HostingPlatform, inputs TestInput) (configdomain.HostingPlatform, bool, error) {
-	entries := []configdomain.HostingPlatform{
-		configdomain.HostingPlatformAutoDetect,
-		configdomain.HostingPlatformBitBucket,
-		configdomain.HostingPlatformGitea,
-		configdomain.HostingPlatformGitHub,
-		configdomain.HostingPlatformGitLab,
+func EnterHostingPlatform(existingValue configdomain.HostingPlatform, inputs TestInput) (configdomain.HostingPlatform, bool, error) {
+	entries := []hostingPlatformEntry{
+		hostingPlatformAutoDetect,
+		hostingPlatformBitBucket,
+		hostingPlatformGitea,
+		hostingPlatformGitHub,
+		hostingPlatformGitLab,
 	}
-	cursor := stringers.IndexOrStart(entries, platformName)
-	selection, aborted, err := radioList(entries, cursor, enterHostingPlatformHelp, inputs)
-	fmt.Printf("Code hosting: %s\n", formattedSelection(selection.String(), aborted))
-	return selection, aborted, err
+	cursor := indexOfHostingPlatform(existingValue, entries)
+	newValue, aborted, err := radioList(entries, cursor, enterHostingPlatformHelp, inputs)
+	fmt.Printf("Code hosting: %s\n", formattedSelection(newValue.String(), aborted))
+	return newValue.HostingPlatform(), aborted, err
+}
+
+type hostingPlatformEntry string
+
+const (
+	hostingPlatformAutoDetect hostingPlatformEntry = "auto-detect"
+	hostingPlatformBitBucket  hostingPlatformEntry = "BitBucket"
+	hostingPlatformGitea      hostingPlatformEntry = "Gitea"
+	hostingPlatformGitHub     hostingPlatformEntry = "Github"
+	hostingPlatformGitLab     hostingPlatformEntry = "GitLab"
+)
+
+func (self hostingPlatformEntry) HostingPlatform() configdomain.HostingPlatform {
+	switch self {
+	case hostingPlatformAutoDetect:
+		return configdomain.HostingPlatformNone
+	case hostingPlatformBitBucket:
+		return configdomain.HostingPlatformBitbucket
+	case hostingPlatformGitea:
+		return configdomain.HostingPlatformGitea
+	case hostingPlatformGitHub:
+		return configdomain.HostingPlatformGitHub
+	case hostingPlatformGitLab:
+		return configdomain.HostingPlatformGitLab
+	}
+	panic("unknown hosting platform: " + self)
+}
+
+func (self hostingPlatformEntry) String() string {
+	return string(self)
+}
+
+func indexOfHostingPlatform(hostingPlatform configdomain.HostingPlatform, entries []hostingPlatformEntry) int {
+	entry := newHostingPlatformEntry(hostingPlatform)
+	return stringers.IndexOrStart(entries, entry)
+}
+
+func newHostingPlatformEntry(hosting configdomain.HostingPlatform) hostingPlatformEntry {
+	switch hosting {
+	case configdomain.HostingPlatformNone:
+		return hostingPlatformAutoDetect
+	case configdomain.HostingPlatformBitbucket:
+		return hostingPlatformBitBucket
+	case configdomain.HostingPlatformGitea:
+		return hostingPlatformGitea
+	case configdomain.HostingPlatformGitHub:
+		return hostingPlatformGitHub
+	case configdomain.HostingPlatformGitLab:
+		return hostingPlatformGitLab
+	}
+	panic("unknown hosting: " + hosting)
 }

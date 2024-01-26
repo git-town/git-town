@@ -133,15 +133,11 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
-	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
-	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: hostingService,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSnapshot, false, err

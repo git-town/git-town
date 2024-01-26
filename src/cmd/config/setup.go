@@ -146,9 +146,9 @@ func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *gi
 		return aborted, err
 	}
 	switch {
-	case existingValue == "" && newValue == configdomain.HostingPlatformAutoDetect:
+	case existingValue == "" && newValue == configdomain.HostingPlatformNone:
 		// no changes --> do nothing
-	case existingValue != "" && newValue == configdomain.HostingPlatformAutoDetect:
+	case existingValue != "" && newValue == configdomain.HostingPlatformNone:
 		return aborted, runner.Frontend.DeleteHostingPlatform()
 	case existingValue != newValue:
 		return aborted, runner.Frontend.SetHostingPlatform(newValue)

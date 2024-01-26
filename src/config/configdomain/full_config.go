@@ -33,12 +33,6 @@ func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
-// HostingService provides the type-safe name of the code hosting connector to use.
-// This function caches its result and can be queried repeatedly.
-func (self *FullConfig) HostingService() (Hosting, error) {
-	return NewHosting(self.HostingPlatform)
-}
-
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
 	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch)
 }

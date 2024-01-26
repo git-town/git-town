@@ -76,7 +76,7 @@ func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBr
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != configdomain.HostingGitLab) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingPlatform != configdomain.HostingPlatformGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := Config{
@@ -102,10 +102,10 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService configdomain.Hosting
-	OriginURL      *giturl.Parts
-	APIToken       configdomain.GitLabToken
-	Log            hostingdomain.Log
+	HostingPlatform configdomain.HostingPlatform
+	OriginURL       *giturl.Parts
+	APIToken        configdomain.GitLabToken
+	Log             hostingdomain.Log
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

@@ -21,7 +21,7 @@ via the CLI.
 ### Configuration
 
 If you use GitHub, GitLab or Gitea, have enabled
-[API access to your hosting provider](../quick-configuration.md#api-access-to-your-hosting-provider),
+[API access to your hosting platform](../quick-configuration.md#api-access-to-your-hosting-platform),
 and the branch to be shipped has an open proposal, this command merges the
 proposal for the current branch on your origin server rather than on the local
 Git workspace.
