@@ -24,7 +24,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "code-hosting-platform" is still not set
     And local Git Town setting "push-new-branches" is still not set
     And local Git Town setting "push-hook" is still not set
-    And local Git Town setting "sync-feature-strategy" is now "merge"
+    And local Git Town setting "sync-feature-strategy" is still not set
     And local Git Town setting "sync-perennial-strategy" is now "rebase"
     And local Git Town setting "sync-upstream" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "true"

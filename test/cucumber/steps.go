@@ -735,6 +735,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "sync-feature-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)

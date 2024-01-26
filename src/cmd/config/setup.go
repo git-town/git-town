@@ -81,7 +81,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	aborted, err = setupSyncFeatureStrategy(runner, config)
+	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -157,6 +160,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveSyncFeatureStrategy(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -221,6 +228,13 @@ func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConf
 	return nil
 }
 
+func saveSyncFeatureStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncFeatureStrategy != runner.SyncFeatureStrategy {
+		return runner.SetSyncFeatureStrategy(newConfig.SyncFeatureStrategy)
+	}
+	return nil
+}
+
 func setupShipDeleteTrackingBranch(runner *git.ProdRunner, config *setupConfig) (bool, error) {
 	newValue, aborted, err := enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -235,14 +249,6 @@ func setupSyncBeforeShip(runner *git.ProdRunner, config *setupConfig) (bool, err
 		return aborted, err
 	}
 	return aborted, runner.SetSyncBeforeShip(newValue, false)
-}
-
-func setupSyncFeatureStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
-	newValue, aborted, err := enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return aborted, err
-	}
-	return aborted, runner.SetSyncFeatureStrategy(newValue)
 }
 
 func setupSyncPerennialStrategy(runner *git.ProdRunner, config *setupConfig) (bool, error) {
