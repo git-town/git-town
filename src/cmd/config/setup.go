@@ -62,20 +62,10 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-
-	// CODE HOSTING TOKEN
-	switch newCodeHostingPlatform {
-	case configdomain.CodeHostingPlatformAutoDetect:
-		newToken, err := dialog.EnterHostingToken(newCodeHostingPlatform, config.dialogInputs.Next())
-		if err != nil {
-			return err
-		}
-		err = repo.Runner.Frontend.SetCodeHostingToken(newCodeHostingToken)
-		if err != nil {
-			return err
-		}
+	aborted, err = setupHostingToken(config, repo.Runner, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return err
 	}
-
 	aborted, err = setupSyncFeatureStrategy(config.SyncFeatureStrategy, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
@@ -168,6 +158,20 @@ func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *gi
 		return aborted, runner.Frontend.SetHostingPlatform(newValue)
 	}
 	return aborted, nil
+}
+
+func setupHostingToken() (bool, error) {
+	switch newCodeHostingPlatform {
+	case configdomain.CodeHostingPlatformAutoDetect:
+		newToken, err := dialog.EnterHostingToken(newCodeHostingPlatform, config.dialogInputs.Next())
+		if err != nil {
+			return err
+		}
+		err = repo.Runner.Frontend.SetCodeHostingToken(newCodeHostingToken)
+		if err != nil {
+			return err
+		}
+	}
 }
 
 func setupMainBranch(existingValue gitdomain.LocalBranchName, allBranches gitdomain.LocalBranchNames, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
