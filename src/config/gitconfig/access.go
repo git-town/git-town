@@ -65,10 +65,10 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		config.Aliases[configdomain.AliasableCommandShip] = value
 	case KeyAliasSync:
 		config.Aliases[configdomain.AliasableCommandSync] = value
-	case KeyCodeHostingOriginHostname:
-		config.CodeHostingOriginHostname = configdomain.NewCodeHostingOriginHostnameRef(value)
-	case KeyCodeHostingPlatform:
-		config.CodeHostingPlatform = configdomain.NewHostingPlatformRef(value)
+	case KeyHostingOriginHostname:
+		config.HostingOriginHostname = configdomain.NewHostingOriginHostnameRef(value)
+	case KeyHostingPlatform:
+		config.HostingPlatform = configdomain.NewHostingPlatformRef(value)
 	case KeyGiteaToken:
 		config.GiteaToken = configdomain.NewGiteaTokenRef(value)
 	case KeyGithubToken:

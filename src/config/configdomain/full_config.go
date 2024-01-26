@@ -7,25 +7,25 @@ import (
 
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
-	Aliases                   Aliases
-	CodeHostingOriginHostname CodeHostingOriginHostname
-	CodeHostingPlatform       HostingPlatform
-	GiteaToken                GiteaToken
-	GitHubToken               GitHubToken
-	GitLabToken               GitLabToken
-	GitUserEmail              string
-	GitUserName               string
-	Lineage                   Lineage
-	MainBranch                gitdomain.LocalBranchName
-	NewBranchPush             NewBranchPush
-	Offline                   Offline
-	PerennialBranches         gitdomain.LocalBranchNames
-	PushHook                  PushHook
-	ShipDeleteTrackingBranch  ShipDeleteTrackingBranch
-	SyncBeforeShip            SyncBeforeShip
-	SyncFeatureStrategy       SyncFeatureStrategy
-	SyncPerennialStrategy     SyncPerennialStrategy
-	SyncUpstream              SyncUpstream
+	Aliases                  Aliases
+	HostingOriginHostname    HostingOriginHostname
+	HostingPlatform          HostingPlatform
+	GiteaToken               GiteaToken
+	GitHubToken              GitHubToken
+	GitLabToken              GitLabToken
+	GitUserEmail             string
+	GitUserName              string
+	Lineage                  Lineage
+	MainBranch               gitdomain.LocalBranchName
+	NewBranchPush            NewBranchPush
+	Offline                  Offline
+	PerennialBranches        gitdomain.LocalBranchNames
+	PushHook                 PushHook
+	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
+	SyncBeforeShip           SyncBeforeShip
+	SyncFeatureStrategy      SyncFeatureStrategy
+	SyncPerennialStrategy    SyncPerennialStrategy
+	SyncUpstream             SyncUpstream
 }
 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
@@ -36,7 +36,7 @@ func (self *FullConfig) ContainsLineage() bool {
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (self *FullConfig) HostingService() (Hosting, error) {
-	return NewHosting(self.CodeHostingPlatform)
+	return NewHosting(self.HostingPlatform)
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
@@ -71,11 +71,11 @@ func (self *FullConfig) Merge(other PartialConfig) {
 			self.Lineage[child] = parent
 		}
 	}
-	if other.CodeHostingOriginHostname != nil {
-		self.CodeHostingOriginHostname = *other.CodeHostingOriginHostname
+	if other.HostingOriginHostname != nil {
+		self.HostingOriginHostname = *other.HostingOriginHostname
 	}
-	if other.CodeHostingPlatform != nil {
-		self.CodeHostingPlatform = *other.CodeHostingPlatform
+	if other.HostingPlatform != nil {
+		self.HostingPlatform = *other.HostingPlatform
 	}
 	if other.GiteaToken != nil {
 		self.GiteaToken = *other.GiteaToken
@@ -139,24 +139,24 @@ func (self *FullConfig) ShouldNewBranchPush() bool {
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() FullConfig {
 	return FullConfig{
-		Aliases:                   Aliases{},
-		CodeHostingOriginHostname: "",
-		CodeHostingPlatform:       "",
-		GiteaToken:                "",
-		GitLabToken:               "",
-		GitHubToken:               "",
-		GitUserEmail:              "",
-		GitUserName:               "",
-		Lineage:                   Lineage{},
-		MainBranch:                gitdomain.EmptyLocalBranchName(),
-		NewBranchPush:             false,
-		Offline:                   false,
-		PerennialBranches:         gitdomain.NewLocalBranchNames(),
-		PushHook:                  true,
-		ShipDeleteTrackingBranch:  true,
-		SyncBeforeShip:            false,
-		SyncFeatureStrategy:       SyncFeatureStrategyMerge,
-		SyncPerennialStrategy:     SyncPerennialStrategyRebase,
-		SyncUpstream:              true,
+		Aliases:                  Aliases{},
+		HostingOriginHostname:    "",
+		HostingPlatform:          "",
+		GiteaToken:               "",
+		GitLabToken:              "",
+		GitHubToken:              "",
+		GitUserEmail:             "",
+		GitUserName:              "",
+		Lineage:                  Lineage{},
+		MainBranch:               gitdomain.EmptyLocalBranchName(),
+		NewBranchPush:            false,
+		Offline:                  false,
+		PerennialBranches:        gitdomain.NewLocalBranchNames(),
+		PushHook:                 true,
+		ShipDeleteTrackingBranch: true,
+		SyncBeforeShip:           false,
+		SyncFeatureStrategy:      SyncFeatureStrategyMerge,
+		SyncPerennialStrategy:    SyncPerennialStrategyRebase,
+		SyncUpstream:             true,
 	}
 }

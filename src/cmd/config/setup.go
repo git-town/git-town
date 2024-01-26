@@ -58,7 +58,7 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	aborted, err = setupCodeHosting(config.CodeHostingPlatform, repo.Runner, config.dialogInputs.Next())
+	aborted, err = setupHostingPlatform(config.HostingPlatform, repo.Runner, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
@@ -140,7 +140,7 @@ func setupAliases(existingValue configdomain.Aliases, allAliasableCommands confi
 	return aborted, nil
 }
 
-func setupCodeHosting(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
+func setupHostingPlatform(existingValue configdomain.HostingPlatform, runner *git.ProdRunner, inputs dialog.TestInput) (bool, error) {
 	newValue, aborted, err := dialog.EnterHostingPlatform(existingValue, inputs)
 	if err != nil || aborted {
 		return aborted, err
@@ -149,9 +149,9 @@ func setupCodeHosting(existingValue configdomain.HostingPlatform, runner *git.Pr
 	case existingValue == "" && newValue == configdomain.HostingPlatformAutoDetect:
 		// no changes --> do nothing
 	case existingValue != "" && newValue == configdomain.HostingPlatformAutoDetect:
-		return aborted, runner.Frontend.DeleteCodeHostingPlatform()
+		return aborted, runner.Frontend.DeleteHostingPlatform()
 	case existingValue != newValue:
-		return aborted, runner.Frontend.SetCodeHostingPlatform(newValue)
+		return aborted, runner.Frontend.SetHostingPlatform(newValue)
 	}
 	return aborted, nil
 }

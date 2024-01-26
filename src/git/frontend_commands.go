@@ -103,9 +103,9 @@ func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchN
 	return self.Run("git", args...)
 }
 
-// SetCodeHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) DeleteCodeHostingPlatform() error {
-	return self.Run("git", "config", "--unset", gitconfig.KeyCodeHostingPlatform.String())
+// DeleteHostingPlatform removes the hosting platform config entry.
+func (self *FrontendCommands) DeleteHostingPlatform() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -223,14 +223,14 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 	return self.Run("git", "revert", sha.String())
 }
 
-// SetCodeHostingPlatform sets the given code hosting platform.
-func (self *FrontendCommands) SetCodeHostingPlatform(platform configdomain.HostingPlatform) error {
-	return self.Run("git", "config", gitconfig.KeyCodeHostingPlatform.String(), platform.String())
-}
-
 // SetGitAlias sets the given Git alias.
 func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
+	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

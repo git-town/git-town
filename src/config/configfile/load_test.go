@@ -25,7 +25,7 @@ sync-upstream = true
 main = "main"
 perennials = [ "public", "release" ]
 
-[code-hosting]
+[hosting]
 platform = "github"
 origin-hostname = "github.com"
 
@@ -50,7 +50,7 @@ perennial-branches = "rebase"
 					Main:       &main,
 					Perennials: []string{"public", "release"},
 				},
-				CodeHosting: &configfile.CodeHosting{
+				Hosting: &configfile.Hosting{
 					Platform:       &github,
 					OriginHostname: &githubCom,
 				},
@@ -81,7 +81,7 @@ main = "main"
 					Main:       &main,
 					Perennials: nil,
 				},
-				CodeHosting:              nil,
+				Hosting:                  nil,
 				SyncStrategy:             nil,
 				PushNewbranches:          nil,
 				PushHook:                 nil,

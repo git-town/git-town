@@ -39,7 +39,7 @@ Feature: show the configuration
       main = "main"
       perennials = [ "public", "release" ]
 
-      [code-hosting]
+      [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
@@ -89,7 +89,7 @@ Feature: show the configuration
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
 
-      [code-hosting]
+      [hosting]
       platform = "github"
       origin-hostname = "github.com"
 
