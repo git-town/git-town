@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -61,7 +62,7 @@ type KnowsBranchAncestorsArgs struct {
 	LocalBranches    gitdomain.LocalBranchNames
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialog.TestInputs
+	DialogTestInputs *dialogcomponents.TestInputs
 	MainBranch       gitdomain.LocalBranchName
 }
 
@@ -93,5 +94,5 @@ type KnowsBranchesAncestorsArgs struct {
 	LocalBranches    gitdomain.BranchInfos
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialog.TestInputs
+	DialogTestInputs *dialogcomponents.TestInputs
 }

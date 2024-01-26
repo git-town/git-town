@@ -4,6 +4,7 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -96,7 +97,7 @@ func executeConfigSetup(verbose bool) error {
 type setupConfig struct {
 	*configdomain.FullConfig
 	localBranches gitdomain.BranchInfos
-	dialogInputs  dialog.TestInputs
+	dialogInputs  dialogcomponents.TestInputs
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {

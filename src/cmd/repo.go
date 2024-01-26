@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/browser"
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -65,7 +65,7 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	dialogInputs := dialog.LoadTestInputs(os.Environ())
+	dialogInputs := dialogcomponents.LoadTestInputs(os.Environ())
 	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
 	if err != nil {
 		return nil, err

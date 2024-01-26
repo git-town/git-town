@@ -5,13 +5,14 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames, dialogInputs *dialog.TestInputs) error {
+func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames, dialogInputs *dialogcomponents.TestInputs) error {
 	mainBranch := config.MainBranch
 	if mainBranch.IsEmpty() {
 		// TODO: extract text

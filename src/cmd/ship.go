@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -120,7 +120,7 @@ type shipConfig struct {
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
 	connector                hostingdomain.Connector
-	dialogTestInputs         dialog.TestInputs
+	dialogTestInputs         dialogcomponents.TestInputs
 	dryRun                   bool
 	initialBranch            gitdomain.LocalBranchName
 	targetBranch             gitdomain.BranchInfo

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/dialogcomponents"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -55,7 +56,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
-	DialogTestInputs        dialog.TestInputs
+	DialogTestInputs        dialogcomponents.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesStatus
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
