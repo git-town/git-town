@@ -62,24 +62,29 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 		if !ok {
 			return true
 		}
-		pos := fileSet.Position(node.Pos())
-		structName := typeSpec.Name.Name
-		switch typedNode := typeSpec.Type.(type) {
-		case *ast.StructType:
-			if !sort.StringsAreSorted(structDefFieldNames(typedNode)) {
-				result = append(result, issue{pos, structName})
-			}
-		case *ast.CompositeLit:
-			if _, ok := typedNode.Type.(*ast.Ident); !ok {
-				return true
-			}
-			if !sort.StringsAreSorted(structInstFieldNames(typedNode)) {
-				result = append(result, issue{pos, structName})
-			}
+		fieldNames := fieldNames(typeSpec)
+		if !sort.StringsAreSorted(fieldNames) {
+			result = append(result, issue{
+				pos:        fileSet.Position(node.Pos()),
+				structName: typeSpec.Name.Name,
+			})
 		}
 		return true
 	})
 	return result
+}
+
+func fieldNames(typeSpec *ast.TypeSpec) []string {
+	switch typedNode := typeSpec.Type.(type) {
+	case *ast.StructType:
+		return structDefFieldNames(typedNode)
+	case *ast.CompositeLit:
+		if _, ok := typedNode.Type.(*ast.Ident); !ok {
+			return []string{}
+		}
+		return structInstFieldNames(typedNode)
+	}
+	return []string{}
 }
 
 func structDefFieldNames(structType *ast.StructType) []string {
