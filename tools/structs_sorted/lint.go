@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	filepath.Walk("src", func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
