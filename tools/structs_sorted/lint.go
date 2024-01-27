@@ -37,7 +37,7 @@ type issue struct {
 
 func (self issue) String() string {
 	return fmt.Sprintf(
-		"%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n",
+		"%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n\n",
 		self.pos.Filename,
 		self.pos.Line,
 		self.pos.Column,
@@ -101,7 +101,7 @@ func lintFiles() {
 
 func printIssues(issues issues) {
 	for _, issue := range issues {
-		fmt.Println(issue.String() + "\n")
+		fmt.Println(issue.String())
 	}
 }
 
@@ -213,6 +213,7 @@ test.go:4:6 unsorted fields in Unsorted. Expected order:
 
 field1
 field2
+
 `[1:]
 	assertEqual(want, have, "testUnsortedDefinition")
 }
