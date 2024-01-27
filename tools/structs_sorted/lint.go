@@ -1,51 +1,44 @@
 package main
 
 import (
+	"fmt"
 	"go/ast"
-	"go/format"
 	"go/parser"
 	"go/token"
-	"os"
-	"path/filepath"
 	"sort"
 )
 
 func main() {
-	filepath.Walk(".", func(filePath string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || filepath.Ext(filePath) != ".go" {
-			return err
+	set := token.NewFileSet()
+	packs, err := parser.ParseDir(set, ".", nil, 0)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, pack := range packs {
+		for _, file := range pack.Files {
+			ast.Inspect(file, func(n ast.Node) bool {
+				if structType, ok := n.(*ast.StructType); ok {
+					checkStructFields(structType, set)
+				}
+				return true
+			})
 		}
-		fileSet := token.NewFileSet()
-		astFile, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
-		if err != nil {
-			return err
-		}
-		ast.Inspect(astFile, func(node ast.Node) bool {
-			switch nodeType := node.(type) {
-			case *ast.StructType:
-				sortStructFields(nodeType)
-			case *ast.CompositeLit:
-				sortCompositeLitFields(nodeType)
-			}
-			return true
-		})
-		file, err := os.Create(filePath)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-		return format.Node(file, fileSet, astFile)
-	})
+	}
 }
 
-func sortStructFields(structType *ast.StructType) {
-	sort.Slice(structType.Fields.List, func(a, b int) bool {
-		return structType.Fields.List[a].Names[0].Name < structType.Fields.List[b].Names[0].Name
-	})
-}
+func checkStructFields(structType *ast.StructType, set *token.FileSet) {
+	var fieldNames []string
+	for _, field := range structType.Fields.List {
+		if field.Names != nil {
+			fieldNames = append(fieldNames, field.Names[0].Name)
+		}
+	}
 
-func sortCompositeLitFields(x *ast.CompositeLit) {
-	sort.Slice(x.Elts, func(i, j int) bool {
-		return x.Elts[i].(*ast.KeyValueExpr).Key.(*ast.Ident).Name < x.Elts[j].(*ast.KeyValueExpr).Key.(*ast.Ident).Name
-	})
+	if !sort.StringsAreSorted(fieldNames) {
+		fmt.Printf("Struct fields are not in alphabetical order in file %s at line %d\n",
+			set.Position(structType.Pos()).Filename,
+			set.Position(structType.Pos()).Line)
+	}
 }
