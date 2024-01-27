@@ -43,7 +43,7 @@ func main() {
 	})
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(255)
+		os.Exit(1)
 	}
 	printIssues(issues)
 	os.Exit(len(issues))

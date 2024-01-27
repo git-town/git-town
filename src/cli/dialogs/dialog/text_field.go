@@ -43,10 +43,10 @@ type TextFieldArgs struct {
 }
 
 type textFieldModel struct {
-	textInput textinput.Model
 	colors    dialogColors // colors to use for help text
 	help      string
 	status    status
+	textInput textinput.Model
 }
 
 func (self textFieldModel) Init() tea.Cmd {
