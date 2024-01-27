@@ -196,8 +196,8 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
  */
 
 func runTests() {
-	// testUnsortedDefinition()
-	testUnsortedCall()
+	testUnsortedDefinition()
+	// testUnsortedCall()
 	fmt.Println()
 }
 
