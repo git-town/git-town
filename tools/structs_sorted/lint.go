@@ -12,7 +12,10 @@ import (
 )
 
 // file paths to ignore
-var ignore_paths = []string{"vendor/"}
+var (
+	ignore_paths = []string{"vendor/"}
+	ignore_types = []string{}
+)
 
 type issue struct {
 	pos        token.Position
