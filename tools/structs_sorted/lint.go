@@ -171,7 +171,11 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 		if !ok {
 			continue
 		}
-		fieldName := kvExpr.Key.(*ast.Ident).Name
+		ident, ok := kvExpr.Key.(*ast.Ident)
+		if !ok {
+			continue
+		}
+		fieldName := ident.Name
 		fieldNames = append(fieldNames, fieldName)
 	}
 	if len(fieldNames) == 0 {
