@@ -77,7 +77,7 @@ This tool lints Go code for alphabetic sorting of struct fields.
 Usage: lint <command>
 
 Available commands:
-   run   Formats the test files
+   run   Lints the files
    test  Verifies that this tool works
 `[1:])
 }
