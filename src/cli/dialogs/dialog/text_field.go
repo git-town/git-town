@@ -7,12 +7,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func TextInput(existingValue string, help string, prompt string, testInput TestInput) (string, bool, error) {
+func TextField(existingValue string, help string, prompt string, testInput TestInput) (string, bool, error) {
 	textInput := textinput.New()
 	textInput.SetValue(existingValue)
 	textInput.Prompt = prompt
 	textInput.Focus()
-	model := textInputModel{
+	model := textFieldModel{
 		textInput: textInput,
 		colors:    createColors(),
 		help:      help,
@@ -30,22 +30,22 @@ func TextInput(existingValue string, help string, prompt string, testInput TestI
 	if err != nil {
 		return existingValue, false, err
 	}
-	result := dialogResult.(textInputModel) //nolint:forcetypeassert
+	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
 	return result.textInput.Value(), result.status == StatusAborted, nil
 }
 
-type textInputModel struct {
+type textFieldModel struct {
 	textInput textinput.Model
 	colors    dialogColors // colors to use for help text
 	help      string
 	status    status
 }
 
-func (self textInputModel) Init() tea.Cmd {
+func (self textFieldModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
+func (self textFieldModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type { //nolint:exhaustive
@@ -64,7 +64,7 @@ func (self textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:i
 	return self, cmd
 }
 
-func (self textInputModel) View() string {
+func (self textFieldModel) View() string {
 	if self.status != StatusActive {
 		return ""
 	}
