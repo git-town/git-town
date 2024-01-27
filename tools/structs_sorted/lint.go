@@ -12,10 +12,12 @@ import (
 	"strings"
 )
 
-// file paths to ignore
 var (
-	ignore_paths = []string{"vendor/", "tools/structs_sorted/test.go"}
-	ignore_types = []string{"BranchSpan", "Change", "InconsistentChange", "Parts", "ProdRunner"}
+	// file paths to ignore
+	ignorePaths = []string{"vendor/", "tools/structs_sorted/test.go"} //nolint:gochecknoglobals
+
+	// struct types to ignore
+	ignoreTypes = []string{"BranchSpan", "Change", "InconsistentChange", "Parts", "ProdRunner"} //nolint:gochecknoglobals
 )
 
 type issue struct {
@@ -30,7 +32,7 @@ func main() {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
 			return err
 		}
-		for _, ignore := range ignore_paths {
+		for _, ignore := range ignorePaths {
 			if strings.HasPrefix(path, ignore) {
 				return nil
 			}
@@ -65,7 +67,7 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 			return true
 		}
 		structName := typeSpec.Name.Name
-		if slices.Contains(ignore_types, structName) {
+		if slices.Contains(ignoreTypes, structName) {
 			return true
 		}
 		fields := fieldNames(typeSpec)

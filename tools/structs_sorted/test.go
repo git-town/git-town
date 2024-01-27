@@ -1,4 +1,8 @@
 // This file is test data.
+
+//go:build !codeanalysis
+// +build !codeanalysis
+
 package main
 
 // Test1 is an unsorted struct definition.
