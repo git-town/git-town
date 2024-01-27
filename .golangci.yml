@@ -48,11 +48,6 @@ linters-settings:
       rules:
         json: pascal # set to pascal to maintain backwards compatibility
 
-run:
-  # see https://stackoverflow.com/a/59865597
-  build-tags:
-    - codeanalysis
-
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
