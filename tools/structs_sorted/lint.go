@@ -7,7 +7,8 @@ import (
 	"go/token"
 	"os"
 	"path/filepath"
-	"sort"
+	"reflect"
+	"slices"
 	"strings"
 )
 
@@ -20,6 +21,7 @@ var (
 type issue struct {
 	pos        token.Position
 	structName string
+	expected   []string
 }
 
 func main() {
@@ -51,7 +53,7 @@ func main() {
 
 func printIssues(issues []issue) {
 	for _, issue := range issues {
-		fmt.Printf("%s:%d:%d unsorted fields in %s\n", issue.pos.Filename, issue.pos.Line, issue.pos.Column, issue.structName)
+		fmt.Printf("%s:%d:%d unsorted fields in %s, expected:\n        %s\n", issue.pos.Filename, issue.pos.Line, issue.pos.Column, issue.structName, strings.Join(issue.expected, " | "))
 	}
 }
 
@@ -62,11 +64,18 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 		if !ok {
 			return true
 		}
-		fieldNames := fieldNames(typeSpec)
-		if !sort.StringsAreSorted(fieldNames) {
+		fields := fieldNames(typeSpec)
+		if len(fields) == 0 {
+			return true
+		}
+		sortedFields := make([]string, len(fields))
+		copy(sortedFields, fields)
+		slices.Sort(sortedFields)
+		if !reflect.DeepEqual(fields, sortedFields) {
 			result = append(result, issue{
 				pos:        fileSet.Position(node.Pos()),
 				structName: typeSpec.Name.Name,
+				expected:   sortedFields,
 			})
 		}
 		return true
