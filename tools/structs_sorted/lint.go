@@ -38,11 +38,8 @@ type issue struct {
 func main() {
 	issues := []issue{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnored(path) {
 			return err
-		}
-		if isIgnored(path) {
-			return nil
 		}
 		issues = append(issues, checkFile(path)...)
 		return nil
