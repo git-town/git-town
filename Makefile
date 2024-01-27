@@ -62,13 +62,13 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # runs only the linters
-	@go run tools/structs_sorted/lint.go src
+	@go run tools/structs_sorted/lint.go
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta actionlint &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@tools/rta deadcode -test github.com/git-town/git-town/... | grep -v tools/structs_sorted/test.go &
 	@tools/rta golangci-lint run
 
 smoke: build  # run the smoke tests
