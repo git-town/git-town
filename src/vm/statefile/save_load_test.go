@@ -164,10 +164,12 @@ func TestLoadSave(t *testing.T) {
 
 		wantJSON := `
 {
+  "AbortProgram": [],
   "Command": "command",
   "DryRun": true,
+  "FinalUndoProgram": [],
+  "InitialActiveBranch": "initial",
   "IsUndo": true,
-  "AbortProgram": [],
   "RunProgram": [
     {
       "data": {},
@@ -413,21 +415,19 @@ func TestLoadSave(t *testing.T) {
     },
     {
       "data": {
-        "ProposalNumber": 123,
-        "NewTarget": "new-target"
+        "NewTarget": "new-target",
+        "ProposalNumber": 123
       },
       "type": "UpdateProposalTarget"
     }
   ],
   "UndoProgram": [],
-  "InitialActiveBranch": "initial",
-  "FinalUndoProgram": [],
+  "UndoablePerennialCommits": [],
   "UnfinishedDetails": {
     "CanSkip": true,
     "EndBranch": "end-branch",
     "EndTime": "0001-01-01T00:00:00Z"
-  },
-  "UndoablePerennialCommits": []
+  }
 }`[1:]
 
 		repoRoot := gitdomain.NewRepoRootDir("/path/to/git-town-unit-tests")
