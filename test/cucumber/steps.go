@@ -657,6 +657,33 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GiteaToken
+		want := configdomain.GiteaToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "gitea-token" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
+		want := configdomain.GitHubToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "github-token" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "gitlab-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitLabToken
+		want := configdomain.GitLabToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "gitlab-token" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
 		want := gitdomain.NewLocalBranchName(wantStr)
