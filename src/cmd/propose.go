@@ -156,8 +156,8 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		remotes:          remotes,
 		previousBranch:   previousBranch,
+		remotes:          remotes,
 	}, branchesSnapshot, stashSnapshot, false, err
 }
 

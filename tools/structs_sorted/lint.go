@@ -211,18 +211,6 @@ func structDefFieldNames(structType *ast.StructType) []string {
 	return result
 }
 
-func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
-	var result []string
-	for _, expr := range compositeLit.Elts {
-		if kvExpr, ok := expr.(*ast.KeyValueExpr); ok {
-			if ident, ok := kvExpr.Key.(*ast.Ident); ok {
-				result = append(result, ident.Name)
-			}
-		}
-	}
-	return result
-}
-
 /************************************************************************************
  * TESTS
  */

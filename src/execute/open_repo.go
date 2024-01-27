@@ -63,11 +63,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
-				omitBranchNames:  args.OmitBranchNames,
-				printCommands:    args.PrintCommands,
+				counter:          &commandsCounter,
 				dryRun:           args.DryRun,
 				getCurrentBranch: backendCommands.CurrentBranch,
-				counter:          &commandsCounter,
+				omitBranchNames:  args.OmitBranchNames,
+				printCommands:    args.PrintCommands,
 			}),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
@@ -98,10 +98,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		}
 	}
 	return &OpenRepoResult{
-		Runner:         &prodRunner,
-		RootDir:        rootDir,
-		IsOffline:      isOffline,
 		ConfigSnapshot: configSnapshot,
+		IsOffline:      isOffline,
+		RootDir:        rootDir,
+		Runner:         &prodRunner,
 	}, err
 }
 

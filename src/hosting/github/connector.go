@@ -125,7 +125,6 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &Connector{
-		client:   github.NewClient(httpClient),
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
@@ -133,6 +132,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 			Repository:   args.OriginURL.Repo,
 		},
 		MainBranch: args.MainBranch,
+		client:     github.NewClient(httpClient),
 		log:        args.Log,
 	}, nil
 }

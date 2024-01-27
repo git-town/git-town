@@ -15,7 +15,7 @@ type ConfigDiff struct {
 func EmptyConfigDiff() ConfigDiff {
 	return ConfigDiff{
 		Added:   []gitconfig.Key{},
-		Removed: map[gitconfig.Key]string{},
 		Changed: map[gitconfig.Key]undodomain.Change[string]{},
+		Removed: map[gitconfig.Key]string{},
 	}
 }

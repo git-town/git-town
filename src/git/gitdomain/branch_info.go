@@ -22,9 +22,9 @@ func EmptyBranchInfo() BranchInfo {
 	return BranchInfo{
 		LocalName:  EmptyLocalBranchName(),
 		LocalSHA:   EmptySHA(),
-		SyncStatus: SyncStatusUpToDate,
 		RemoteName: EmptyRemoteBranchName(),
 		RemoteSHA:  EmptySHA(),
+		SyncStatus: SyncStatusUpToDate,
 	}
 }
 

@@ -229,21 +229,21 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	return &shipConfig{
 		FullConfig:               &repo.Runner.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
-		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
-		initialBranch:            branchesSnapshot.Active,
-		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		proposalMessage:          proposalMessage,
+		connector:                connector,
+		dialogTestInputs:         dialogTestInputs,
+		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
-		remotes:                  remotes,
+		initialBranch:            branchesSnapshot.Active,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposal,
+		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
+		remotes:                  remotes,
+		targetBranch:             *targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 

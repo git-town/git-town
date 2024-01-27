@@ -236,12 +236,12 @@ func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool
 	config.Merge(globalConfig)
 	config.Merge(localConfig)
 	return &Config{
-		GitConfig:       gitconfig.Access{Runner: runner},
+		DryRun:          dryRun,
 		FullConfig:      config,
-		configFile:      configFile,
+		GitConfig:       gitconfig.Access{Runner: runner},
 		GlobalGitConfig: globalConfig,
 		LocalGitConfig:  localConfig,
-		DryRun:          dryRun,
+		configFile:      configFile,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, nil
 }

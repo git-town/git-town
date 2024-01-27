@@ -13,8 +13,8 @@ type BranchesStatus struct {
 
 func EmptyBranchesSnapshot() BranchesStatus {
 	return BranchesStatus{
-		Branches: BranchInfos{},
 		Active:   EmptyLocalBranchName(),
+		Branches: BranchInfos{},
 	}
 }
 

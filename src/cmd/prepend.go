@@ -145,10 +145,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		remotes:                   remotes,
 		newBranchParentCandidates: parentAndAncestors,
-		previousBranch:            previousBranch,
 		parentBranch:              parent,
+		previousBranch:            previousBranch,
+		remotes:                   remotes,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

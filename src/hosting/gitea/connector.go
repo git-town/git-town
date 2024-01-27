@@ -120,13 +120,13 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &Connector{
 		APIToken: args.APIToken,
-		client:   giteaClient,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		log: args.Log,
+		client: giteaClient,
+		log:    args.Log,
 	}, nil
 }
 

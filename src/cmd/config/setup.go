@@ -144,8 +144,8 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
+		localBranches: branchesSnapshot.Branches,
 		userInput:     configdomain.FullConfig{}, //nolint:exhaustruct
 	}, exit, err
 }
