@@ -62,7 +62,7 @@ Feature: enter Git Town configuration
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
       | set github as hosting service             | up up enter            |
-      | github token                              | 1 2 3 enter            |
+      | github token                              | 1 2 3 4 5 6 enter      |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -84,7 +84,7 @@ Feature: enter Git Town configuration
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
       | git config git-town.code-hosting-platform github             |
-      | git config git-town.github-token 123                         |
+      | git config git-town.github-token 123456                      |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -99,7 +99,7 @@ Feature: enter Git Town configuration
     And the main branch is now "main"
     And the perennial branches are now "production"
     And local Git Town setting "code-hosting-platform" is now "github"
-    And local Git Town setting "github-token" is now "123"
+    And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
@@ -168,44 +168,44 @@ Feature: enter Git Town configuration
 
   Scenario: enter a GitLab token
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS        | DESCRIPTION                                 |
-      | aliases                     | enter       |                                             |
-      | main development branch     | enter       |                                             |
-      | perennial branches          |             | no input here since the dialog doesn't show |
-      | hosting platform            | up enter    |                                             |
-      | gitlab token                | 1 2 3 enter |                                             |
-      | sync-feature-strategy       | enter       |                                             |
-      | sync-perennial-strategy     | enter       |                                             |
-      | sync-upstream               | enter       |                                             |
-      | push-new-branches           | enter       |                                             |
-      | push-hook                   | enter       |                                             |
-      | ship-delete-tracking-branch | enter       |                                             |
-      | sync-before-ship            | enter       |                                             |
+      | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | aliases                     | enter             |                                             |
+      | main development branch     | enter             |                                             |
+      | perennial branches          |                   | no input here since the dialog doesn't show |
+      | hosting platform            | up enter          |                                             |
+      | gitlab token                | 1 2 3 4 5 6 enter |                                             |
+      | sync-feature-strategy       | enter             |                                             |
+      | sync-perennial-strategy     | enter             |                                             |
+      | sync-upstream               | enter             |                                             |
+      | push-new-branches           | enter             |                                             |
+      | push-hook                   | enter             |                                             |
+      | ship-delete-tracking-branch | enter             |                                             |
+      | sync-before-ship            | enter             |                                             |
     Then it runs the commands
       | COMMAND                                          |
       | git config git-town.code-hosting-platform gitlab |
-      | git config git-town.gitlab-token 123             |
+      | git config git-town.gitlab-token 123456          |
     And local Git Town setting "code-hosting-platform" is now "gitlab"
-    And local Git Town setting "gitlab-token" is now "123"
+    And local Git Town setting "gitlab-token" is now "123456"
 
   Scenario: enter a Gitea token
     When I run "git-town config setup" and enter into the dialog:
-      | DIALOG                      | KEYS            | DESCRIPTION                                 |
-      | aliases                     | enter           |                                             |
-      | main development branch     | enter           |                                             |
-      | perennial branches          |                 | no input here since the dialog doesn't show |
-      | hosting platform            | down down enter |                                             |
-      | gitea token                 | 1 2 3 enter     |                                             |
-      | sync-feature-strategy       | enter           |                                             |
-      | sync-perennial-strategy     | enter           |                                             |
-      | sync-upstream               | enter           |                                             |
-      | push-new-branches           | enter           |                                             |
-      | push-hook                   | enter           |                                             |
-      | ship-delete-tracking-branch | enter           |                                             |
-      | sync-before-ship            | enter           |                                             |
+      | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | aliases                     | enter             |                                             |
+      | main development branch     | enter             |                                             |
+      | perennial branches          |                   | no input here since the dialog doesn't show |
+      | hosting platform            | down down enter   |                                             |
+      | gitea token                 | 1 2 3 4 5 6 enter |                                             |
+      | sync-feature-strategy       | enter             |                                             |
+      | sync-perennial-strategy     | enter             |                                             |
+      | sync-upstream               | enter             |                                             |
+      | push-new-branches           | enter             |                                             |
+      | push-hook                   | enter             |                                             |
+      | ship-delete-tracking-branch | enter             |                                             |
+      | sync-before-ship            | enter             |                                             |
     Then it runs the commands
       | COMMAND                                         |
       | git config git-town.code-hosting-platform gitea |
-      | git config git-town.gitea-token 123             |
+      | git config git-town.gitea-token 123456          |
     And local Git Town setting "code-hosting-platform" is now "gitea"
-    And local Git Town setting "gitea-token" is now "123"
+    And local Git Town setting "gitea-token" is now "123456"
