@@ -234,7 +234,7 @@ type Unsorted struct {
 }
 `
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
@@ -255,7 +255,7 @@ func testDefinitionWithoutFields() {
 package main
 type Foo struct {}`
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
@@ -274,7 +274,7 @@ type Change struct {
 }
 `
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
@@ -299,7 +299,7 @@ func main() {
 }
 `
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
@@ -325,7 +325,7 @@ func main() {
 }
 `
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
@@ -350,7 +350,7 @@ func main() {
 }
 `
 	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0644)
+	file := os.WriteFile(path, []byte(give), 0o644)
 	if file != nil {
 		panic(file.Error())
 	}
