@@ -187,3 +187,26 @@ Feature: enter Git Town configuration
       | git config git-town.gitlab-token 123             |
     And local Git Town setting "code-hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123"
+
+  @this
+  Scenario: enter a Gitea token
+    When I run "git-town config setup" and enter into the dialog:
+      | DIALOG                      | KEYS            | DESCRIPTION                                 |
+      | aliases                     | enter           |                                             |
+      | main development branch     | enter           |                                             |
+      | perennial branches          |                 | no input here since the dialog doesn't show |
+      | hosting platform            | down down enter |                                             |
+      | gitea token                 | 1 2 3 enter     |                                             |
+      | sync-feature-strategy       | enter           |                                             |
+      | sync-perennial-strategy     | enter           |                                             |
+      | sync-upstream               | enter           |                                             |
+      | push-new-branches           | enter           |                                             |
+      | push-hook                   | enter           |                                             |
+      | ship-delete-tracking-branch | enter           |                                             |
+      | sync-before-ship            | enter           |                                             |
+    Then it runs the commands
+      | COMMAND                                         |
+      | git config git-town.code-hosting-platform gitea |
+      | git config git-town.gitea-token 123             |
+    And local Git Town setting "code-hosting-platform" is now "gitea"
+    And local Git Town setting "gitea-token" is now "123"
