@@ -37,11 +37,9 @@ func checkStructDefinition(structType *ast.StructType, set *token.FileSet) {
 			fieldNames = append(fieldNames, field.Names[0].Name)
 		}
 	}
-
 	if !sort.StringsAreSorted(fieldNames) {
-		fmt.Printf("%s:%d unsorted struct fields\n",
-			set.Position(structType.Pos()).Filename,
-			set.Position(structType.Pos()).Line)
+		pos := set.Position(structType.Pos())
+		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
 	}
 }
 
