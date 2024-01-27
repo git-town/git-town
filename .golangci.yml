@@ -49,6 +49,7 @@ linters-settings:
         json: pascal # set to pascal to maintain backwards compatibility
 
 run:
+  # see https://stackoverflow.com/a/59865597
   build-tags:
     - codeanalysis
 
