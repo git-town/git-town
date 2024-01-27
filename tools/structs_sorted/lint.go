@@ -113,31 +113,38 @@ func lintFile(path string) issues {
 		return result
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
-		typeSpec, ok := node.(*ast.TypeSpec)
-		if !ok {
-			return true
-		}
-		structName := typeSpec.Name.Name
-		if slices.Contains(ignoreTypes, structName) {
-			return true
-		}
-		fields := fieldNames(typeSpec)
-		if len(fields) == 0 {
-			return true
-		}
-		sortedFields := make([]string, len(fields))
-		copy(sortedFields, fields)
-		slices.Sort(sortedFields)
-		if !reflect.DeepEqual(fields, sortedFields) {
-			result = append(result, issue{
-				pos:        fileSet.Position(node.Pos()),
-				structName: structName,
-				expected:   sortedFields,
-			})
-		}
+		result = append(result, lintStructDefinitions(node, fileSet)...)
 		return true
 	})
 	return result
+}
+
+func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
+	typeSpec, ok := node.(*ast.TypeSpec)
+	if !ok {
+		return issues{}
+	}
+	structName := typeSpec.Name.Name
+	if slices.Contains(ignoreTypes, structName) {
+		return issues{}
+	}
+	fields := fieldNames(typeSpec)
+	if len(fields) == 0 {
+		return issues{}
+	}
+	sortedFields := make([]string, len(fields))
+	copy(sortedFields, fields)
+	slices.Sort(sortedFields)
+	if reflect.DeepEqual(fields, sortedFields) {
+		return issues{}
+	}
+	return issues{
+		issue{
+			pos:        fileSet.Position(node.Pos()),
+			structName: structName,
+			expected:   sortedFields,
+		},
+	}
 }
 
 func fieldNames(typeSpec *ast.TypeSpec) []string {
@@ -189,7 +196,8 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
  */
 
 func runTests() {
-	testUnsortedDefinition()
+	// testUnsortedDefinition()
+	testUnsortedCall()
 	fmt.Println()
 }
 
@@ -201,6 +209,39 @@ type Unsorted struct {
 	field2 int // this field should not be first
 	field1 int // this field should be first
 }`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := `
+test.go:4:6 unsorted fields in Unsorted. Expected order:
+
+field1
+field2
+
+`[1:]
+	assertEqual(want, have, "testUnsortedDefinition")
+}
+
+func testUnsortedCall() {
+	give := `
+package main
+
+type Foo struct {
+	field1 int
+	field2 int
+}
+
+func main() {
+	foo := Foo{
+		field2: 2,
+		field1: 1,
+	}
+}
+`
 	path := "test.go"
 	file := os.WriteFile(path, []byte(give), 0644)
 	if file != nil {
