@@ -161,6 +161,10 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	if !ok {
 		return issues{}
 	}
+	structName := structType.Name
+	if slices.Contains(ignoreTypes, structName) {
+		return issues{}
+	}
 	var fieldNames []string
 	for _, elt := range compositeLit.Elts {
 		kvExpr, ok := elt.(*ast.KeyValueExpr)
@@ -183,7 +187,7 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 		issue{
 			expected:   sortedFields,
 			pos:        fileSet.Position(node.Pos()),
-			structName: structType.Name,
+			structName: structName,
 		},
 	}
 }
@@ -226,8 +230,10 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
 func runTests() {
 	testUnsortedDefinition()
 	testDefinitionWithoutFields()
-	testUnsortedCall()
+	testIgnoredDefinition()
+	testUnsortedInstantiation()
 	testInstantiationWithoutFields()
+	testIgnoredInstantiation()
 	fmt.Println()
 }
 
@@ -271,7 +277,26 @@ type Foo struct {}`
 	assertEqual(want, have, "testDefinitionWithoutFields")
 }
 
-func testUnsortedCall() {
+func testIgnoredDefinition() {
+	give := `
+package main
+type Change struct {
+	field2 int
+	field1 int
+}
+`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := ""
+	assertEqual(want, have, "testIgnoredDefinition")
+}
+
+func testUnsortedInstantiation() {
 	give := `
 package main
 type Foo struct {
@@ -299,7 +324,7 @@ field1
 field2
 
 `[1:]
-	assertEqual(want, have, "testUnsortedDefinition")
+	assertEqual(want, have, "testUnsortedInstantiation")
 }
 
 func testInstantiationWithoutFields() {
@@ -320,6 +345,31 @@ func main() {
 	have := lintFile(path).String()
 	want := ""
 	assertEqual(want, have, "testInstantiationWithoutFields")
+}
+
+func testIgnoredInstantiation() {
+	give := `
+package main
+type Change struct {
+	field1 int
+	field2 int
+}
+func main() {
+	foo := Change{
+		field2: 2,
+		field1: 1,
+	}
+}
+`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := ""
+	assertEqual(want, have, "testIgnoredInstantiation")
 }
 
 func assertEqual[T comparable](want, have T, testName string) {
