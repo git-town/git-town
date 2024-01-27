@@ -114,6 +114,7 @@ func lintFile(path string) issues {
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
 		result = append(result, lintStructDefinitions(node, fileSet)...)
+		result = append(result, lintStructLiteral(node, fileSet)...)
 		return true
 	})
 	return result
@@ -143,6 +144,39 @@ func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
 			pos:        fileSet.Position(node.Pos()),
 			structName: structName,
 			expected:   sortedFields,
+		},
+	}
+}
+
+func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
+	compositeLit, ok := node.(*ast.CompositeLit)
+	if !ok {
+		return issues{}
+	}
+	structType, ok := compositeLit.Type.(*ast.Ident)
+	if !ok {
+		return issues{}
+	}
+	var fieldNames []string
+	for _, elt := range compositeLit.Elts {
+		kvExpr, ok := elt.(*ast.KeyValueExpr)
+		if !ok {
+			continue
+		}
+		fieldName := kvExpr.Key.(*ast.Ident).Name
+		fieldNames = append(fieldNames, fieldName)
+	}
+	sortedFields := make([]string, len(fieldNames))
+	copy(sortedFields, fieldNames)
+	slices.Sort(sortedFields)
+	if reflect.DeepEqual(fieldNames, sortedFields) {
+		return issues{}
+	}
+	return issues{
+		issue{
+			expected:   sortedFields,
+			pos:        fileSet.Position(node.Pos()),
+			structName: structType.Name,
 		},
 	}
 }
@@ -197,7 +231,7 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
 
 func runTests() {
 	testUnsortedDefinition()
-	// testUnsortedCall()
+	testUnsortedCall()
 	fmt.Println()
 }
 
@@ -250,7 +284,7 @@ func main() {
 	defer os.Remove(path)
 	have := lintFile(path).String()
 	want := `
-test.go:4:6 unsorted fields in Unsorted. Expected order:
+test.go:10:9 unsorted fields in Foo. Expected order:
 
 field1
 field2
