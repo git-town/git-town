@@ -35,13 +35,53 @@ type issue struct {
 	structName string
 }
 
+func (self issue) String() string {
+	return fmt.Sprintf("%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n", self.pos.Filename, self.pos.Line, self.pos.Column, self.structName, strings.Join(self.expected, "\n"))
+}
+
+type issues []issue
+
+func (self issues) String() string {
+	result := strings.Builder{}
+	for _, issue := range self {
+		result.WriteString(issue.String())
+	}
+	return result.String()
+}
+
 func main() {
+	switch {
+	case len(os.Args) == 1 || len(os.Args) > 2:
+		displayUsage()
+	case len(os.Args) == 2 && os.Args[1] == "run":
+		lintFiles()
+	case len(os.Args) == 2 && os.Args[1] == "test":
+		runTests()
+	default:
+		fmt.Printf("Error: unknown argument: %s", os.Args[1])
+		os.Exit(1)
+	}
+}
+
+func displayUsage() {
+	fmt.Println(`
+This tool lints Go code for alphabetic sorting.
+
+Usage: lint <command>
+
+Available commands:
+   run   Formats the test files
+   test  Verifies that this tool works
+`[1:])
+}
+
+func lintFiles() {
 	issues := []issue{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnored(path) {
 			return err
 		}
-		issues = append(issues, checkFile(path)...)
+		issues = append(issues, lintFile(path)...)
 		return nil
 	})
 	if err != nil {
@@ -52,14 +92,14 @@ func main() {
 	os.Exit(len(issues))
 }
 
-func printIssues(issues []issue) {
+func printIssues(issues issues) {
 	for _, issue := range issues {
-		fmt.Printf("%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n\n", issue.pos.Filename, issue.pos.Line, issue.pos.Column, issue.structName, strings.Join(issue.expected, "\n"))
+		fmt.Println(issue.String() + "\n")
 	}
 }
 
-func checkFile(path string) []issue {
-	result := []issue{}
+func lintFile(path string) issues {
+	result := issues{}
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
 	if err != nil {
@@ -135,4 +175,51 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
 		}
 	}
 	return result
+}
+
+/************************************************************************************
+ * TESTS
+ */
+
+func runTests() {
+	testUnsortedDefinition()
+	fmt.Println()
+}
+
+func testUnsortedDefinition() {
+	give := `
+package main
+
+type Unsorted struct {
+	field2 int // this field should not be first
+	field1 int // this field should be first
+}`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := `
+test.go:4:6 unsorted fields in Unsorted. Expected order:
+
+field1
+field2
+`[1:]
+	assertEqual(want, have, "testUnsortedDefinition")
+}
+
+func assertEqual[T comparable](want, have T, testName string) {
+	fmt.Print(".")
+	if have != want {
+		fmt.Printf("\nTEST FAILURE in %q\n", testName)
+		fmt.Println("\n\nWANT")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(want)
+		fmt.Println("\n\nHAVE")
+		fmt.Println("--------------------------------------------------------")
+		fmt.Println(have)
+		os.Exit(1)
+	}
 }
