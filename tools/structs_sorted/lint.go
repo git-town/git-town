@@ -5,48 +5,72 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"log"
+	"os"
 	"sort"
 )
 
 func main() {
-	fileSet := token.NewFileSet()
-	packs, err := parser.ParseDir(fileSet, ".", nil, 0)
-	if err != nil {
-		log.Fatalln(err)
+	folder := "."
+	if len(os.Args) > 1 {
+		folder = os.Args[1]
 	}
+	fileSet := token.NewFileSet()
+	packs, err := parser.ParseDir(fileSet, folder, nil, 0)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	issues := []string{}
 	for _, pack := range packs {
 		for _, file := range pack.Files {
-			ast.Inspect(file, func(node ast.Node) bool {
-				switch typedNode := node.(type) {
-				case *ast.StructType:
-					checkStructDefinition(typedNode, fileSet)
-				case *ast.CompositeLit:
-					checkStructInstantiation(typedNode, fileSet)
-				}
-				return true
-			})
+			issues = append(issues, checkFile(file, fileSet)...)
 		}
+	}
+	printIssues(issues)
+	os.Exit(len(issues))
+}
+
+func printIssues(issues []string) {
+	for _, issue := range issues {
+		fmt.Println(issue)
 	}
 }
 
-func checkStructDefinition(structType *ast.StructType, fileSet *token.FileSet) {
+func checkFile(file *ast.File, fileSet *token.FileSet) []string {
+	result := []string{}
+	ast.Inspect(file, func(node ast.Node) bool {
+		switch typedNode := node.(type) {
+		case *ast.StructType:
+			result = append(result, checkStructDefinition(typedNode, fileSet)...)
+		case *ast.CompositeLit:
+			result = append(result, checkStructInstantiation(typedNode, fileSet)...)
+		}
+		return true
+	})
+	return result
+}
+
+func checkStructDefinition(structType *ast.StructType, fileSet *token.FileSet) []string {
+	result := []string{}
 	structFieldNames := structDefFieldNames(structType)
 	if !sort.StringsAreSorted(structFieldNames) {
 		pos := fileSet.Position(structType.Pos())
-		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
+		result = append(result, fmt.Sprintf("%s:%d unsorted struct fields", pos.Filename, pos.Line))
 	}
+	return result
 }
 
-func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.FileSet) {
+func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.FileSet) []string {
+	result := []string{}
 	if _, ok := compositeLit.Type.(*ast.Ident); !ok {
-		return
+		return result
 	}
 	structFields := structInstFieldNames(compositeLit)
 	if !sort.StringsAreSorted(structFields) {
 		pos := fileSet.Position(compositeLit.Pos())
-		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
+		result = append(result, fmt.Sprintf("%s:%d unsorted struct fields", pos.Filename, pos.Line))
 	}
+	return result
 }
 
 func structDefFieldNames(structType *ast.StructType) []string {
