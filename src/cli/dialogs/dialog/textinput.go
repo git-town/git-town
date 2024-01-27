@@ -41,14 +41,14 @@ type textInputModel struct {
 	status    status
 }
 
-func (m textInputModel) Init() tea.Cmd {
+func (self textInputModel) Init() tea.Cmd {
 	return nil
 }
 
-func (self textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (self textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.Type {
+		switch msg.Type { //nolint:exhaustive
 		case tea.KeyEnter:
 			self.status = StatusDone
 			return self, tea.Quit

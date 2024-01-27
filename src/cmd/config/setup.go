@@ -97,6 +97,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		if err != nil || aborted {
 			return aborted, err
 		}
+	case configdomain.HostingPlatformBitbucket:
+		// BitBucket API isn't supported yet
+	case configdomain.HostingPlatformNone:
+		// nothing to do here
 	}
 	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
