@@ -20,3 +20,15 @@ type Sorted struct {
 	fieldA int // this field is okay
 	fieldB int // this field is also okay
 }
+
+func test() {
+	_ = Unsorted1{
+		field2: 2,
+		field1: 1,
+	}
+
+	_ = Sorted{
+		fieldA: 1,
+		fieldB: 2,
+	}
+}
