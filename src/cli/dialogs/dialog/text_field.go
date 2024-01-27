@@ -19,6 +19,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 		status:    StatusActive,
 	}
 	program := tea.NewProgram(model)
+	// TODO: extract into helper function.
 	if len(args.TestInput) > 0 {
 		go func() {
 			for _, input := range args.TestInput {
