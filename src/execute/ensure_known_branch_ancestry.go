@@ -33,9 +33,9 @@ func EnsureKnownBranchAncestry(branch gitdomain.LocalBranchName, args EnsureKnow
 }
 
 type EnsureKnownBranchAncestryArgs struct {
-	Config           *configdomain.FullConfig
-	DialogTestInputs *dialog.TestInputs
 	AllBranches      gitdomain.BranchInfos
+	Config           *configdomain.FullConfig
 	DefaultBranch    gitdomain.LocalBranchName
+	DialogTestInputs *dialog.TestInputs
 	Runner           *git.ProdRunner
 }

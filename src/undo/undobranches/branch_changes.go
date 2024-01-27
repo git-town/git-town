@@ -14,20 +14,20 @@ import (
 // BranchChanges describes the changes made to the branches in a Git repo.
 // Various types of changes are distinguished.
 type BranchChanges struct {
-	LocalAdded    gitdomain.LocalBranchNames
-	LocalRemoved  LocalBranchesSHAs
-	LocalChanged  LocalBranchChange
-	RemoteAdded   gitdomain.RemoteBranchNames
-	RemoteRemoved RemoteBranchesSHAs
-	RemoteChanged RemoteBranchChange
-	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
-	OmniRemoved LocalBranchesSHAs
-	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
-	OmniChanged LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
 	// Inconsistent changes are changes on both local and tracking branch, but where the local and tracking branch
 	// don't have the same SHA before or after.
 	// These changes cannot be undone for perennial branches because there is no way to reset the remote branch to the SHA it had before.
 	InconsistentlyChanged undodomain.InconsistentChanges
+	LocalAdded            gitdomain.LocalBranchNames
+	LocalChanged          LocalBranchChange
+	LocalRemoved          LocalBranchesSHAs
+	// OmniChanges are changes where the local SHA and the remote SHA are identical before the change as well as after the change,
+	OmniChanged LocalBranchChange // a branch had the same SHA locally and remotely, now it has a new SHA locally and remotely, the local and remote SHA are still equal
+	// OmniRemoved is when a branch that has the same SHA on its local and tracking branch gets removed.
+	OmniRemoved   LocalBranchesSHAs
+	RemoteAdded   gitdomain.RemoteBranchNames
+	RemoteChanged RemoteBranchChange
+	RemoteRemoved RemoteBranchesSHAs
 }
 
 // EmptyBranchChanges provides a properly initialized empty Changes instance.
@@ -196,7 +196,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 type BranchChangesUndoProgramArgs struct {
 	Config                   *configdomain.FullConfig
-	InitialBranch            gitdomain.LocalBranchName
 	FinalBranch              gitdomain.LocalBranchName
+	InitialBranch            gitdomain.LocalBranchName
 	UndoablePerennialCommits []gitdomain.SHA
 }

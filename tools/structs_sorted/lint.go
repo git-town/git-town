@@ -14,14 +14,14 @@ import (
 
 // file paths to ignore
 var (
-	ignore_paths = []string{"vendor/"}
-	ignore_types = []string{}
+	ignore_paths = []string{"vendor/", "tools/structs_sorted/test.go"}
+	ignore_types = []string{"BranchSpan", "Change", "InconsistentChange", "Parts", "ProdRunner"}
 )
 
 type issue struct {
+	expected   []string
 	pos        token.Position
 	structName string
-	expected   []string
 }
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 
 func printIssues(issues []issue) {
 	for _, issue := range issues {
-		fmt.Printf("%s:%d:%d unsorted fields in %s, expected:\n        %s\n", issue.pos.Filename, issue.pos.Line, issue.pos.Column, issue.structName, strings.Join(issue.expected, " | "))
+		fmt.Printf("%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n\n", issue.pos.Filename, issue.pos.Line, issue.pos.Column, issue.structName, strings.Join(issue.expected, "\n"))
 	}
 }
 
@@ -62,6 +62,10 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 	ast.Inspect(file, func(node ast.Node) bool {
 		typeSpec, ok := node.(*ast.TypeSpec)
 		if !ok {
+			return true
+		}
+		structName := typeSpec.Name.Name
+		if slices.Contains(ignore_types, structName) {
 			return true
 		}
 		fields := fieldNames(typeSpec)
@@ -74,7 +78,7 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 		if !reflect.DeepEqual(fields, sortedFields) {
 			result = append(result, issue{
 				pos:        fileSet.Position(node.Pos()),
-				structName: typeSpec.Name.Name,
+				structName: structName,
 				expected:   sortedFields,
 			})
 		}

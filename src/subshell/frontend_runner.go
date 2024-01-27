@@ -15,10 +15,10 @@ import (
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
+	CommandsCounter  *gohacks.Counter
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	PrintCommands    bool
-	CommandsCounter  *gohacks.Counter
 }
 
 type GetCurrentBranchFunc func() (gitdomain.LocalBranchName, error)

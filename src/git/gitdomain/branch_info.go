@@ -8,14 +8,14 @@ type BranchInfo struct {
 	// LocalSHA contains the SHA that this branch had locally before Git Town ran.
 	LocalSHA SHA
 
-	// SyncStatus of the branch
-	SyncStatus SyncStatus
-
 	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
 	RemoteName RemoteBranchName
 
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
 	RemoteSHA SHA
+
+	// SyncStatus of the branch
+	SyncStatus SyncStatus
 }
 
 func EmptyBranchInfo() BranchInfo {

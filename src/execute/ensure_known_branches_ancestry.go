@@ -32,7 +32,7 @@ func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 
 type EnsureKnownBranchesAncestryArgs struct {
 	Config           *configdomain.FullConfig
-	LocalBranches    gitdomain.BranchInfos
 	DialogTestInputs *dialog.TestInputs
+	LocalBranches    gitdomain.BranchInfos
 	Runner           *git.ProdRunner
 }

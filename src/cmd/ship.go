@@ -119,20 +119,20 @@ type shipConfig struct {
 	*configdomain.FullConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
+	canShipViaAPI            bool
+	childBranches            gitdomain.LocalBranchNames
 	connector                hostingdomain.Connector
 	dialogTestInputs         dialog.TestInputs
 	dryRun                   bool
-	initialBranch            gitdomain.LocalBranchName
-	targetBranch             gitdomain.BranchInfo
-	canShipViaAPI            bool
-	childBranches            gitdomain.LocalBranchNames
-	proposalMessage          string
 	hasOpenChanges           bool
-	remotes                  gitdomain.Remotes
+	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           gitdomain.LocalBranchName
 	proposal                 *hostingdomain.Proposal
+	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
+	remotes                  gitdomain.Remotes
+	targetBranch             gitdomain.BranchInfo
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {

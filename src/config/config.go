@@ -19,12 +19,12 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
+	configdomain.FullConfig // the merged configuration data
+	DryRun                  bool
 	GitConfig               gitconfig.Access            // access to the Git configuration settings
-	configdomain.FullConfig                             // the merged configuration data
-	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
 	GlobalGitConfig         configdomain.PartialConfig  // content of the global Git configuration
 	LocalGitConfig          configdomain.PartialConfig  // content of the local Git configuration
-	DryRun                  bool
+	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
 	originURLCache          configdomain.OriginURLCache
 }
 

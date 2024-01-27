@@ -87,10 +87,10 @@ type appendConfig struct {
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
-	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
+	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
 

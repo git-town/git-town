@@ -19,10 +19,10 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	client *github.Client
 	hostingdomain.Config
 	APIToken   configdomain.GitHubToken
 	MainBranch gitdomain.LocalBranchName
+	client     *github.Client
 	log        hostingdomain.Log
 }
 
@@ -138,11 +138,11 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingPlatform configdomain.HostingPlatform
-	OriginURL       *giturl.Parts
 	APIToken        configdomain.GitHubToken
-	MainBranch      gitdomain.LocalBranchName
+	HostingPlatform configdomain.HostingPlatform
 	Log             hostingdomain.Log
+	MainBranch      gitdomain.LocalBranchName
+	OriginURL       *giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

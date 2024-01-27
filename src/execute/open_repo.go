@@ -106,19 +106,19 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 }
 
 type OpenRepoArgs struct {
-	Verbose          bool
 	DryRun           bool
 	OmitBranchNames  bool
 	PrintCommands    bool
 	ValidateGitRepo  bool
 	ValidateIsOnline bool
+	Verbose          bool
 }
 
 type OpenRepoResult struct {
-	Runner         *git.ProdRunner
-	RootDir        gitdomain.RepoRootDir
-	IsOffline      configdomain.Offline
 	ConfigSnapshot undoconfig.ConfigSnapshot
+	IsOffline      configdomain.Offline
+	RootDir        gitdomain.RepoRootDir
+	Runner         *git.ProdRunner
 }
 
 // newFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
@@ -140,9 +140,9 @@ func newFrontendRunner(args newFrontendRunnerArgs) git.FrontendRunner {
 }
 
 type newFrontendRunnerArgs struct {
-	omitBranchNames  bool
-	printCommands    bool
+	counter          *gohacks.Counter
 	dryRun           bool
 	getCurrentBranch subshell.GetCurrentBranchFunc
-	counter          *gohacks.Counter
+	omitBranchNames  bool
+	printCommands    bool
 }

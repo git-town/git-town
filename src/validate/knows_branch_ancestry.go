@@ -59,10 +59,10 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	LocalBranches    gitdomain.LocalBranchNames
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
 	DialogTestInputs *dialog.TestInputs
+	LocalBranches    gitdomain.LocalBranchNames
 	MainBranch       gitdomain.LocalBranchName
 }
 
@@ -91,8 +91,8 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	LocalBranches    gitdomain.BranchInfos
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
 	DialogTestInputs *dialog.TestInputs
+	LocalBranches    gitdomain.BranchInfos
 }

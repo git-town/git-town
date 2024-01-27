@@ -96,8 +96,8 @@ type proposeConfig struct {
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
-	remotes          gitdomain.Remotes
 	previousBranch   gitdomain.LocalBranchName
+	remotes          gitdomain.Remotes
 }
 
 func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {

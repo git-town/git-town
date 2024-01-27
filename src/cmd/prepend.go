@@ -88,10 +88,10 @@ type prependConfig struct {
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
-	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	previousBranch            gitdomain.LocalBranchName
 	parentBranch              gitdomain.LocalBranchName
+	previousBranch            gitdomain.LocalBranchName
+	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
 

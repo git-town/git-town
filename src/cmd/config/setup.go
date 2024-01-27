@@ -55,8 +55,8 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupConfig struct {
-	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
+	localBranches gitdomain.BranchInfos
 	userInput     configdomain.FullConfig
 }
 
