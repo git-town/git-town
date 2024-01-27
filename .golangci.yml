@@ -12,6 +12,7 @@ linters:
     - gocognit # we keep track of this via code reviews
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
     - gocyclo # we keep track of this via code reviews
+    - godot # comments don't really need to read like prose, we don't use the godoc web UI
     - godox # we allow todo comments
     - golint # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
