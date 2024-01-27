@@ -30,9 +30,9 @@ var (
 )
 
 type issue struct {
-	expected   []string
-	pos        token.Position
-	structName string
+	expected   []string       // the expected order of fields
+	pos        token.Position // file, line, and column of the issue
+	structName string         // name of the struct that has the problem described by this issue
 }
 
 func (self issue) String() string {
