@@ -10,11 +10,23 @@ type dialogColors struct {
 	Selection termenv.Style // color for the currently selected entry
 }
 
+// FormattedSelection provides the given dialog choice in a printable format.
 func FormattedSelection(selection string, aborted bool) string {
 	if aborted {
 		return red().Styled("(aborted)")
 	}
 	return green().Styled(selection)
+}
+
+// FormattedToken provides the given API token in a printable format.
+func FormattedToken(token string, aborted bool) string {
+	if aborted {
+		return red().Styled("(aborted)")
+	}
+	if token == "" {
+		return red().Styled("(not provided)")
+	}
+	return green().Styled("(provided)")
 }
 
 func createColors() dialogColors {

@@ -81,6 +81,27 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
+	switch config.userInput.HostingPlatform {
+	case configdomain.HostingPlatformBitbucket:
+		// BitBucket API isn't supported yet
+	case configdomain.HostingPlatformGitea:
+		config.userInput.GiteaToken, aborted, err = enter.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformGitHub:
+		config.userInput.GitHubToken, aborted, err = enter.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformGitLab:
+		config.userInput.GitLabToken, aborted, err = enter.GitLabToken(runner.GitLabToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformNone:
+		// nothing to do here
+	}
 	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -138,6 +159,18 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveGiteaToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveGitHubToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveGitLabToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	err = saveMainBranch(runner, newConfig)
 	if err != nil {
 		return err
@@ -192,6 +225,27 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err
 		}
 	}
 	return nil
+}
+
+func saveGiteaToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GiteaToken == runner.GiteaToken {
+		return nil
+	}
+	return runner.Frontend.SetGiteaToken(newConfig.GiteaToken)
+}
+
+func saveGitHubToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GitHubToken == runner.GitHubToken {
+		return nil
+	}
+	return runner.Frontend.SetGitHubToken(newConfig.GitHubToken)
+}
+
+func saveGitLabToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GitLabToken == runner.GitLabToken {
+		return nil
+	}
+	return runner.Frontend.SetGitLabToken(newConfig.GitLabToken)
 }
 
 func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {
