@@ -166,7 +166,6 @@ Feature: enter Git Town configuration
       | git config --unset git-town.code-hosting-platform |
     And local Git Town setting "code-hosting-platform" is now not set
 
-  @this
   Scenario: enter a GitLab token
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS        | DESCRIPTION                                 |
@@ -183,6 +182,8 @@ Feature: enter Git Town configuration
       | ship-delete-tracking-branch | enter       |                                             |
       | sync-before-ship            | enter       |                                             |
     Then it runs the commands
-      | COMMAND |
+      | COMMAND                                          |
+      | git config git-town.code-hosting-platform gitlab |
+      | git config git-town.gitlab-token 123             |
     And local Git Town setting "code-hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123"

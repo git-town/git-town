@@ -228,9 +228,14 @@ func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.Aliasabl
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
 }
 
-// SetCodeHostingToken sets the given code hosting platform.
+// SetGitHubToken sets the given API token for the GitHub API.
 func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
 	return self.Run("git", "config", "git-town.github-token", value.String())
+}
+
+// SetGitLabToken sets the given API token for the GitHub API.
+func (self *FrontendCommands) SetGitLabToken(value configdomain.GitLabToken) error {
+	return self.Run("git", "config", "git-town.gitlab-token", value.String())
 }
 
 // SetHostingPlatform sets the given code hosting platform.
