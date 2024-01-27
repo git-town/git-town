@@ -129,13 +129,11 @@ func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
 	if slices.Contains(ignoreTypes, structName) {
 		return issues{}
 	}
-	fields := []string{}
-	if typedNode, ok := typeSpec.Type.(*ast.StructType); ok {
-		fields = structDefFieldNames(typedNode)
-	}
-	if len(fields) == 0 {
+	structType, ok := typeSpec.Type.(*ast.StructType)
+	if !ok {
 		return issues{}
 	}
+	fields := structDefFieldNames(structType)
 	sortedFields := make([]string, len(fields))
 	copy(sortedFields, fields)
 	slices.Sort(sortedFields)
