@@ -15,6 +15,11 @@ type Unsorted2 struct {
 	field1 int
 }
 
+type Nested struct {
+	Unsorted1
+	Another Unsorted2
+}
+
 // Test2 is a sorted struct definition.
 type Sorted struct {
 	fieldA int // this field is okay
@@ -30,5 +35,16 @@ func test() {
 	_ = Sorted{
 		fieldA: 1,
 		fieldB: 2,
+	}
+
+	_ = Nested{
+		Unsorted1: Unsorted1{
+			field2: 2,
+			field1: 1,
+		},
+		Another: Unsorted2{
+			field2: 2,
+			field1: 1,
+		},
 	}
 }
