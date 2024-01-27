@@ -118,3 +118,7 @@ issues:
     - linters:
         - predeclared
       text: package name print has same name as predeclared identifier
+    - path: src/cli/dialogs/enter/git.*_token.go
+      text: Potential hardcoded credentials
+      linters:
+        - gosec
