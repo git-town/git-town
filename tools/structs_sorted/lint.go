@@ -5,27 +5,24 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"log"
 	"sort"
 )
 
 func main() {
-	set := token.NewFileSet()
-	packs, err := parser.ParseDir(set, ".", nil, 0)
+	fileSet := token.NewFileSet()
+	packs, err := parser.ParseDir(fileSet, ".", nil, 0)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalln(err)
 	}
-
 	for _, pack := range packs {
 		for _, file := range pack.Files {
-			ast.Inspect(file, func(n ast.Node) bool {
-				switch node := n.(type) {
+			ast.Inspect(file, func(node ast.Node) bool {
+				switch typedNode := node.(type) {
 				case *ast.StructType:
-					checkStructFields(node, set)
+					checkStructDefinition(typedNode, fileSet)
 				case *ast.CompositeLit:
-					if structLit, ok := node.Type.(*ast.Ident); ok {
-						checkStructInstantiation(structLit, node, set)
-					}
+					checkStructInstantiation(typedNode, fileSet)
 				}
 				return true
 			})
@@ -33,7 +30,7 @@ func main() {
 	}
 }
 
-func checkStructFields(structType *ast.StructType, set *token.FileSet) {
+func checkStructDefinition(structType *ast.StructType, set *token.FileSet) {
 	var fieldNames []string
 	for _, field := range structType.Fields.List {
 		if field.Names != nil {
@@ -48,7 +45,11 @@ func checkStructFields(structType *ast.StructType, set *token.FileSet) {
 	}
 }
 
-func checkStructInstantiation(structLit *ast.Ident, compLit *ast.CompositeLit, set *token.FileSet) {
+func checkStructInstantiation(compLit *ast.CompositeLit, set *token.FileSet) {
+	_, ok := compLit.Type.(*ast.Ident)
+	if !ok {
+		return
+	}
 	var fieldNames []string
 	for _, expr := range compLit.Elts {
 		if kvExpr, ok := expr.(*ast.KeyValueExpr); ok {
