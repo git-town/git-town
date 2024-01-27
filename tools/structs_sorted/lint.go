@@ -41,10 +41,8 @@ func main() {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
 			return err
 		}
-		for _, ignore := range ignorePaths {
-			if strings.HasPrefix(path, ignore) {
-				return nil
-			}
+		if isIgnored(path) {
+			return nil
 		}
 		fileSet := token.NewFileSet()
 		file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
@@ -109,6 +107,15 @@ func fieldNames(typeSpec *ast.TypeSpec) []string {
 		return structInstFieldNames(typedNode)
 	}
 	return []string{}
+}
+
+func isIgnored(path string) bool {
+	for _, ignore := range ignorePaths {
+		if strings.HasPrefix(path, ignore) {
+			return true
+		}
+	}
+	return false
 }
 
 func structDefFieldNames(structType *ast.StructType) []string {
