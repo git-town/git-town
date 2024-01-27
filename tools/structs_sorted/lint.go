@@ -38,9 +38,9 @@ func main() {
 	})
 }
 
-func sortStructFields(x *ast.StructType) {
-	sort.Slice(x.Fields.List, func(i, j int) bool {
-		return x.Fields.List[i].Names[0].Name < x.Fields.List[j].Names[0].Name
+func sortStructFields(structType *ast.StructType) {
+	sort.Slice(structType.Fields.List, func(a, b int) bool {
+		return structType.Fields.List[a].Names[0].Name < structType.Fields.List[b].Names[0].Name
 	})
 }
 
