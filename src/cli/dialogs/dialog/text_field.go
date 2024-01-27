@@ -36,8 +36,8 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 }
 
 type TextFieldArgs struct {
-	ExistingValue string
 	Help          string
+	ExistingValue string
 	Prompt        string
 	TestInput     TestInput
 }

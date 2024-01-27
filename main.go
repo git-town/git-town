@@ -14,6 +14,11 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd"
 )
 
+type foo struct {
+	b int
+	a int
+}
+
 func main() {
 	debug.SetGCPercent(-1)
 	color.NoColor = false // Prevent color from auto disable

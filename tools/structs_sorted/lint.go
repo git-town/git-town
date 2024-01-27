@@ -6,7 +6,9 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"path/filepath"
 	"sort"
+	"strings"
 )
 
 func main() {
@@ -14,17 +16,23 @@ func main() {
 	if len(os.Args) > 1 {
 		folder = os.Args[1]
 	}
-	fileSet := token.NewFileSet()
-	packs, err := parser.ParseDir(fileSet, folder, nil, 0)
+	fmt.Printf("scanning folder %q\n", folder)
+	issues := []string{}
+	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
+			return err
+		}
+		fileSet := token.NewFileSet()
+		node, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
+		if err != nil {
+			return err
+		}
+		issues = append(issues, checkFile(node, fileSet)...)
+		return nil
+	})
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
-	}
-	issues := []string{}
-	for _, pack := range packs {
-		for _, file := range pack.Files {
-			issues = append(issues, checkFile(file, fileSet)...)
-		}
+		os.Exit(255)
 	}
 	printIssues(issues)
 	os.Exit(len(issues))
@@ -37,6 +45,7 @@ func printIssues(issues []string) {
 }
 
 func checkFile(file *ast.File, fileSet *token.FileSet) []string {
+	fmt.Println("checking", file.Name)
 	result := []string{}
 	ast.Inspect(file, func(node ast.Node) bool {
 		switch typedNode := node.(type) {
