@@ -72,7 +72,7 @@ func main() {
 
 func displayUsage() {
 	fmt.Println(`
-This tool lints Go code for alphabetic sorting.
+This tool lints Go code for alphabetic sorting of struct fields.
 
 Usage: lint <command>
 
