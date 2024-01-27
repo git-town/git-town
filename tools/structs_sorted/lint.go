@@ -44,12 +44,7 @@ func main() {
 		if isIgnored(path) {
 			return nil
 		}
-		fileSet := token.NewFileSet()
-		file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
-		if err != nil {
-			return err
-		}
-		issues = append(issues, checkFile(file, fileSet)...)
+		issues = append(issues, checkFile(path)...)
 		return nil
 	})
 	if err != nil {
@@ -66,8 +61,13 @@ func printIssues(issues []issue) {
 	}
 }
 
-func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
+func checkFile(path string) []issue {
 	result := []issue{}
+	fileSet := token.NewFileSet()
+	file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
+	if err != nil {
+		return result
+	}
 	ast.Inspect(file, func(node ast.Node) bool {
 		typeSpec, ok := node.(*ast.TypeSpec)
 		if !ok {
