@@ -47,6 +47,14 @@ func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.Fil
 	if _, ok := compositeLit.Type.(*ast.Ident); !ok {
 		return
 	}
+	structFields := structInstantiationFields(compositeLit)
+	if !sort.StringsAreSorted(structFields) {
+		pos := fileSet.Position(compositeLit.Pos())
+		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
+	}
+}
+
+func structInstantiationFields(compositeLit *ast.CompositeLit) []string {
 	var fieldNames []string
 	for _, expr := range compositeLit.Elts {
 		if kvExpr, ok := expr.(*ast.KeyValueExpr); ok {
@@ -55,8 +63,5 @@ func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.Fil
 			}
 		}
 	}
-	if !sort.StringsAreSorted(fieldNames) {
-		pos := fileSet.Position(compositeLit.Pos())
-		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
-	}
+	return fieldNames
 }
