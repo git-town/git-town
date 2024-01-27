@@ -182,14 +182,8 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 }
 
 func fieldNames(typeSpec *ast.TypeSpec) []string {
-	switch typedNode := typeSpec.Type.(type) {
-	case *ast.StructType:
+	if typedNode, ok := typeSpec.Type.(*ast.StructType); ok {
 		return structDefFieldNames(typedNode)
-	case *ast.CompositeLit:
-		if _, ok := typedNode.Type.(*ast.Ident); !ok {
-			return []string{}
-		}
-		return structInstFieldNames(typedNode)
 	}
 	return []string{}
 }
