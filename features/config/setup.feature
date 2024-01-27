@@ -62,7 +62,7 @@ Feature: enter Git Town configuration
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
       | set github as hosting service             | up up enter            |
-      | enter github token                        | 1 2 3 enter            |
+      | github token                              | 1 2 3 enter            |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -165,3 +165,24 @@ Feature: enter Git Town configuration
       | COMMAND                                           |
       | git config --unset git-town.code-hosting-platform |
     And local Git Town setting "code-hosting-platform" is now not set
+
+  @this
+  Scenario: enter a GitLab token
+    When I run "git-town config setup" and enter into the dialog:
+      | DIALOG                      | KEYS        | DESCRIPTION                                 |
+      | aliases                     | enter       |                                             |
+      | main development branch     | enter       |                                             |
+      | perennial branches          |             | no input here since the dialog doesn't show |
+      | hosting platform            | up enter    |                                             |
+      | gitlab token                | 1 2 3 enter |                                             |
+      | sync-feature-strategy       | enter       |                                             |
+      | sync-perennial-strategy     | enter       |                                             |
+      | sync-upstream               | enter       |                                             |
+      | push-new-branches           | enter       |                                             |
+      | push-hook                   | enter       |                                             |
+      | ship-delete-tracking-branch | enter       |                                             |
+      | sync-before-ship            | enter       |                                             |
+    Then it runs the commands
+      | COMMAND |
+    And local Git Town setting "code-hosting-platform" is now "gitlab"
+    And local Git Town setting "gitlab-token" is now "123"

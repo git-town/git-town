@@ -88,6 +88,11 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		if err != nil || aborted {
 			return aborted, err
 		}
+	case configdomain.HostingPlatformGitLab:
+		config.userInput.GitLabToken, aborted, err = enter.GitLabToken(runner.GitLabToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
 	}
 	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {

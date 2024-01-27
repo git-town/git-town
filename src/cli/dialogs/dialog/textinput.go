@@ -1,19 +1,21 @@
-package enter
+package dialog
 
 import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 )
 
-func textInput(existingValue string, help string, testInput dialog.TestInput) (string, bool, error) {
+func TextInput(existingValue string, help string, testInput TestInput) (string, bool, error) {
 	textInput := textinput.New()
 	textInput.SetValue(existingValue)
 	textInput.Focus()
 	model := textInputModel{
 		textInput: textInput,
+		colors:    createColors(),
+		help:      help,
+		aborted:   false,
 	}
 	program := tea.NewProgram(model)
 	if len(testInput) > 0 {
@@ -33,9 +35,9 @@ func textInput(existingValue string, help string, testInput dialog.TestInput) (s
 
 type textInputModel struct {
 	textInput textinput.Model
+	colors    dialogColors // colors to use for help text
 	help      string
 	aborted   bool
-	err       error
 }
 
 func (m textInputModel) Init() tea.Cmd {
@@ -60,10 +62,18 @@ func (m textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m textInputModel) View() string {
+func (self textInputModel) View() string {
 	result := strings.Builder{}
-	result.WriteString(m.help)
-	result.WriteString(m.textInput.View())
-	result.WriteString("\n\n(esc to quit)\n")
+	result.WriteString(self.help)
+	result.WriteString(self.textInput.View())
+	result.WriteString("\n\n  ")
+	// accept
+	result.WriteString(self.colors.HelpKey.Styled("enter"))
+	result.WriteString(self.colors.Help.Styled(" accept   "))
+	// abort
+	result.WriteString(self.colors.HelpKey.Styled("esc"))
+	result.WriteString(self.colors.Help.Styled("/"))
+	result.WriteString(self.colors.HelpKey.Styled("ctrl-c"))
+	result.WriteString(self.colors.Help.Styled(" abort"))
 	return result.String()
 }
