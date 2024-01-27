@@ -68,7 +68,7 @@ lint: tools/rta@${RTA_VERSION}  # runs only the linters
 	@tools/rta actionlint &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... | grep -v tools/structs_sorted/test.go &
+	@tools/rta deadcode -test github.com/git-town/git-town/...
 	@tools/rta golangci-lint run
 
 smoke: build  # run the smoke tests
