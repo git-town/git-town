@@ -165,7 +165,7 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	if slices.Contains(ignoreTypes, structName) {
 		return issues{}
 	}
-	var fieldNames []string
+	fieldNames := make([]string, 0, len(compositeLit.Elts))
 	for _, elt := range compositeLit.Elts {
 		kvExpr, ok := elt.(*ast.KeyValueExpr)
 		if !ok {
