@@ -30,7 +30,7 @@ func main() {
 	}
 }
 
-func checkStructDefinition(structType *ast.StructType, set *token.FileSet) {
+func checkStructDefinition(structType *ast.StructType, fileSet *token.FileSet) {
 	var fieldNames []string
 	for _, field := range structType.Fields.List {
 		if field.Names != nil {
@@ -38,29 +38,26 @@ func checkStructDefinition(structType *ast.StructType, set *token.FileSet) {
 		}
 	}
 	if !sort.StringsAreSorted(fieldNames) {
-		pos := set.Position(structType.Pos())
+		pos := fileSet.Position(structType.Pos())
 		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
 	}
 }
 
-func checkStructInstantiation(compLit *ast.CompositeLit, set *token.FileSet) {
-	_, ok := compLit.Type.(*ast.Ident)
+func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.FileSet) {
+	_, ok := compositeLit.Type.(*ast.Ident)
 	if !ok {
 		return
 	}
 	var fieldNames []string
-	for _, expr := range compLit.Elts {
+	for _, expr := range compositeLit.Elts {
 		if kvExpr, ok := expr.(*ast.KeyValueExpr); ok {
 			if ident, ok := kvExpr.Key.(*ast.Ident); ok {
 				fieldNames = append(fieldNames, ident.Name)
 			}
 		}
 	}
-
 	if !sort.StringsAreSorted(fieldNames) {
-		fmt.Printf("%s:%d unsorted struct fields\n",
-			set.Position(compLit.Pos()).Filename,
-			set.Position(compLit.Pos()).Line,
-		)
+		pos := fileSet.Position(compositeLit.Pos())
+		fmt.Printf("%s:%d unsorted struct fields\n", pos.Filename, pos.Line)
 	}
 }
