@@ -18,7 +18,12 @@ It's okay to leave this empty.
 
 // GiteaToken lets the user enter the Gitea API token.
 func GiteaToken(oldValue configdomain.GiteaToken, inputs dialog.TestInput) (configdomain.GiteaToken, bool, error) {
-	token, aborted, err := dialog.TextField(oldValue.String(), enterGiteaTokenHelp, "Your Gitea API token: ", inputs)
+	token, aborted, err := dialog.TextField(dialog.TextFieldArgs{
+		ExistingValue: oldValue.String(),
+		Help:          enterGiteaTokenHelp,
+		Prompt:        "Your Gitea API token: ",
+		TestInput:     inputs,
+	})
 	fmt.Printf("Gitea token: %s\n", dialog.FormattedToken(token, aborted))
 	return configdomain.GiteaToken(token), aborted, err
 }

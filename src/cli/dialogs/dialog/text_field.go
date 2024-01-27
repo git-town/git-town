@@ -7,31 +7,38 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func TextField(existingValue string, help string, prompt string, testInput TestInput) (string, bool, error) {
+func TextField(args TextFieldArgs) (string, bool, error) {
 	textInput := textinput.New()
-	textInput.SetValue(existingValue)
-	textInput.Prompt = prompt
+	textInput.SetValue(args.ExistingValue)
+	textInput.Prompt = args.Prompt
 	textInput.Focus()
 	model := textFieldModel{
 		textInput: textInput,
 		colors:    createColors(),
-		help:      help,
+		help:      args.Help,
 		status:    StatusActive,
 	}
 	program := tea.NewProgram(model)
-	if len(testInput) > 0 {
+	if len(args.TestInput) > 0 {
 		go func() {
-			for _, input := range testInput {
+			for _, input := range args.TestInput {
 				program.Send(input)
 			}
 		}()
 	}
 	dialogResult, err := program.Run()
 	if err != nil {
-		return existingValue, false, err
+		return args.ExistingValue, false, err
 	}
 	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
 	return result.textInput.Value(), result.status == StatusAborted, nil
+}
+
+type TextFieldArgs struct {
+	ExistingValue string
+	Help          string
+	Prompt        string
+	TestInput     TestInput
 }
 
 type textFieldModel struct {

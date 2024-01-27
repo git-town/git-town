@@ -18,7 +18,12 @@ It's okay to leave this empty.
 
 // GitHubToken lets the user enter the GitHub API token.
 func GitHubToken(oldValue configdomain.GitHubToken, inputs dialog.TestInput) (configdomain.GitHubToken, bool, error) {
-	token, aborted, err := dialog.TextField(oldValue.String(), enterGitHubTokenHelp, "Your GitHub API token: ", inputs)
+	token, aborted, err := dialog.TextField(dialog.TextFieldArgs{
+		ExistingValue: oldValue.String(),
+		Help:          enterGitHubTokenHelp,
+		Prompt:        "Your GitHub API token: ",
+		TestInput:     inputs,
+	})
 	fmt.Printf("GitHub token: %s\n", dialog.FormattedToken(token, aborted))
 	return configdomain.GitHubToken(token), aborted, err
 }
