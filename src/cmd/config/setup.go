@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
@@ -81,6 +82,13 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
+	switch config.userInput.HostingPlatform {
+	case configdomain.HostingPlatformGitHub:
+		config.userInput.GitHubToken, aborted, err = enter.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	}
 	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -138,6 +146,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveGitHubToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	err = saveMainBranch(runner, newConfig)
 	if err != nil {
 		return err
@@ -192,6 +204,14 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err
 		}
 	}
 	return nil
+}
+
+func saveGitHubToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	fmt.Println("1111111111111111", newConfig.GitHubToken)
+	if newConfig.GitHubToken == runner.GitHubToken {
+		return nil
+	}
+	return runner.Frontend.SetGitHubToken(newConfig.GitHubToken)
 }
 
 func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {

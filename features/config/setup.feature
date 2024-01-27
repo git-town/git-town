@@ -1,3 +1,4 @@
+@this
 Feature: enter Git Town configuration
 
   Scenario: unconfigured, accept all default values --> working setup
@@ -50,7 +51,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
 
-  @debug  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -63,7 +63,7 @@ Feature: enter Git Town configuration
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
       | set github as hosting service             | up up enter            |
-      | set a hosting platform                    | up up enter            |
+      | enter github token                        | 1 2 3 enter            |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -85,6 +85,7 @@ Feature: enter Git Town configuration
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
       | git config git-town.code-hosting-platform github             |
+      | git config git-town.github-token 123                         |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -99,6 +100,7 @@ Feature: enter Git Town configuration
     And the main branch is now "main"
     And the perennial branches are now "production"
     And local Git Town setting "code-hosting-platform" is now "github"
+    And local Git Town setting "github-token" is now "123"
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"

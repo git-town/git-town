@@ -8,15 +8,21 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 )
 
-func textInput(existingValue string, help string, placeholder string, testInput dialog.TestInput) (string, bool, error) {
-	ti := textinput.New()
-	ti.SetValue(existingValue)
-	ti.Placeholder = placeholder
-	ti.Focus()
+func textInput(existingValue string, help string, testInput dialog.TestInput) (string, bool, error) {
+	textInput := textinput.New()
+	textInput.SetValue(existingValue)
+	textInput.Focus()
 	model := textInputModel{
-		textInput: ti,
+		textInput: textInput,
 	}
 	program := tea.NewProgram(model)
+	if len(testInput) > 0 {
+		go func() {
+			for _, input := range testInput {
+				program.Send(input)
+			}
+		}()
+	}
 	dialogResult, err := program.Run()
 	if err != nil {
 		return existingValue, false, err
@@ -40,12 +46,14 @@ func (m textInputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
-		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
+		case tea.KeyEnter:
+			return m, tea.Quit
+		case tea.KeyCtrlC, tea.KeyEsc:
 			m.aborted = true
 			return m, tea.Quit
 		}
 	case error:
-		m.err = msg
+		panic(msg.Error())
 	}
 	var cmd tea.Cmd
 	m.textInput, cmd = m.textInput.Update(msg)

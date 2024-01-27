@@ -1,8 +1,6 @@
 package enter
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
@@ -18,16 +16,7 @@ It's okay to leave this empty.
 `
 
 // GitHubToken lets the user enter the GitHub API token.
-func GitHubToken(inputs dialog.TestInput) (configdomain.GitHubToken, error) {
-	fmt.Print(enterGitHubTokenHelp)
-	token, _, err := textInput("existing", enterGitHubTokenHelp, "placeholder", nil)
-	// reader := bufio.NewReader(os.Stdin)
-	// if len(inputs) > 0 {
-	// 	return configdomain.GitHubToken(inputs.ForReadline()), nil
-	// }
-	// input, err := reader.ReadString('\n')
-	// if err != nil {
-	// 	return "", err
-	// }
-	return configdomain.GitHubToken(token), err
+func GitHubToken(oldValue configdomain.GitHubToken, inputs dialog.TestInput) (configdomain.GitHubToken, bool, error) {
+	token, aborted, err := textInput(oldValue.String(), enterGitHubTokenHelp, inputs)
+	return configdomain.GitHubToken(token), aborted, err
 }
