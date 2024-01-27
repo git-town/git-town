@@ -43,7 +43,7 @@ func processFile(path string, fileSet *token.FileSet) error {
 
 func main() {
 	fileSet := token.NewFileSet()
-	err := filepath.Walk("src", func(path string, fileInfo os.FileInfo, err error) error {
+	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
 		if err != nil || fileInfo.IsDir() || filepath.Ext(path) != ".go" {
 			return err
 		}
