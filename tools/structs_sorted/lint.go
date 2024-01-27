@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/format"
 	"go/parser"
@@ -11,46 +10,58 @@ import (
 	"sort"
 )
 
-func processFile(path string, fileSet *token.FileSet) error {
-	astFile, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
-	if err != nil {
-		return err
-	}
-	ast.Inspect(astFile, func(astNode ast.Node) bool {
-		typeSpec, ok := astNode.(*ast.TypeSpec)
-		if !ok || typeSpec.Type == nil {
-			return true
-		}
-		structType, ok := typeSpec.Type.(*ast.StructType)
-		if !ok || structType.Fields == nil {
-			return true
-		}
-		sort.Slice(structType.Fields.List, func(a, b int) bool {
-			if structType.Fields.List[a].Names == nil || structType.Fields.List[b].Names == nil {
-				return false
-			}
-			return structType.Fields.List[a].Names[0].Name < structType.Fields.List[b].Names[0].Name
-		})
-		return true
-	})
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	return format.Node(file, fileSet, astFile)
-}
-
 func main() {
-	fileSet := token.NewFileSet()
-	err := filepath.Walk(".", func(path string, fileInfo os.FileInfo, err error) error {
-		if err != nil || fileInfo.IsDir() || filepath.Ext(path) != ".go" {
+	filepath.Walk("src", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
 			return err
 		}
-		return processFile(path, fileSet)
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(path) != ".go" {
+			return nil
+		}
+
+		fset := token.NewFileSet()
+		node, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
+		if err != nil {
+			return err
+		}
+
+		ast.Inspect(node, func(n ast.Node) bool {
+			switch x := n.(type) {
+			case *ast.StructType:
+				sortStructFields(x)
+			case *ast.CompositeLit:
+				sortCompositeLitFields(x)
+			}
+			return true
+		})
+
+		file, err := os.Create(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		if err := format.Node(file, fset, node); err != nil {
+			return err
+		}
+
+		return nil
 	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+}
+
+func sortStructFields(x *ast.StructType) {
+	sort.Slice(x.Fields.List, func(i, j int) bool {
+		return x.Fields.List[i].Names[0].Name < x.Fields.List[j].Names[0].Name
+	})
+}
+
+func sortCompositeLitFields(x *ast.CompositeLit) {
+	sort.Slice(x.Elts, func(i, j int) bool {
+		return x.Elts[i].(*ast.KeyValueExpr).Key.(*ast.Ident).Name < x.Elts[j].(*ast.KeyValueExpr).Key.(*ast.Ident).Name
+	})
 }
