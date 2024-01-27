@@ -44,8 +44,7 @@ func checkStructDefinition(structType *ast.StructType, fileSet *token.FileSet) {
 }
 
 func checkStructInstantiation(compositeLit *ast.CompositeLit, fileSet *token.FileSet) {
-	_, ok := compositeLit.Type.(*ast.Ident)
-	if !ok {
+	if _, ok := compositeLit.Type.(*ast.Ident); !ok {
 		return
 	}
 	var fieldNames []string
