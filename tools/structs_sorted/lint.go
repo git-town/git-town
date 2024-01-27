@@ -36,7 +36,14 @@ type issue struct {
 }
 
 func (self issue) String() string {
-	return fmt.Sprintf("%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n", self.pos.Filename, self.pos.Line, self.pos.Column, self.structName, strings.Join(self.expected, "\n"))
+	return fmt.Sprintf(
+		"%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n",
+		self.pos.Filename,
+		self.pos.Line,
+		self.pos.Column,
+		self.structName,
+		strings.Join(self.expected, "\n"),
+	)
 }
 
 type issues []issue
