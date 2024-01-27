@@ -11,46 +11,30 @@ import (
 )
 
 func main() {
-	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(".", func(filePath string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() || filepath.Ext(filePath) != ".go" {
+			return err
+		}
+		fileSet := token.NewFileSet()
+		astFile, err := parser.ParseFile(fileSet, filePath, nil, parser.ParseComments)
 		if err != nil {
 			return err
 		}
-
-		if info.IsDir() {
-			return nil
-		}
-
-		if filepath.Ext(path) != ".go" {
-			return nil
-		}
-
-		fset := token.NewFileSet()
-		node, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
-		if err != nil {
-			return err
-		}
-
-		ast.Inspect(node, func(n ast.Node) bool {
-			switch x := n.(type) {
+		ast.Inspect(astFile, func(node ast.Node) bool {
+			switch nodeType := node.(type) {
 			case *ast.StructType:
-				sortStructFields(x)
+				sortStructFields(nodeType)
 			case *ast.CompositeLit:
-				sortCompositeLitFields(x)
+				sortCompositeLitFields(nodeType)
 			}
 			return true
 		})
-
-		file, err := os.Create(path)
+		file, err := os.Create(filePath)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
-
-		if err := format.Node(file, fset, node); err != nil {
-			return err
-		}
-
-		return nil
+		return format.Node(file, fileSet, astFile)
 	})
 }
 
