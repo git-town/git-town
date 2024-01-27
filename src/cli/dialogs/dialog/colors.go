@@ -17,6 +17,16 @@ func FormattedSelection(selection string, aborted bool) string {
 	return green().Styled(selection)
 }
 
+func FormattedToken(token string, aborted bool) string {
+	if aborted {
+		return red().Styled("(aborted)")
+	}
+	if token == "" {
+		return red().Styled("(not provided)")
+	}
+	return green().Styled("(provided)")
+}
+
 func createColors() dialogColors {
 	return dialogColors{
 		Help:      termenv.String().Faint(),
