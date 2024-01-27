@@ -35,7 +35,7 @@ func main() {
 		}
 
 		if !sort.StringsAreSorted(fields) {
-			fmt.Printf("Struct %s has unsorted fields\n", typeSpec.Name.Name)
+			fmt.Printf("Struct %q has unsorted fields\n", typeSpec.Name.Name)
 		}
 
 		return true
