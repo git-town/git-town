@@ -134,6 +134,9 @@ func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
 		return issues{}
 	}
 	fields := structDefFieldNames(structType)
+	if len(fields) == 0 {
+		return issues{}
+	}
 	sortedFields := make([]string, len(fields))
 	copy(sortedFields, fields)
 	slices.Sort(sortedFields)
@@ -166,6 +169,9 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 		}
 		fieldName := kvExpr.Key.(*ast.Ident).Name
 		fieldNames = append(fieldNames, fieldName)
+	}
+	if len(fieldNames) == 0 {
+		return issues{}
 	}
 	sortedFields := make([]string, len(fieldNames))
 	copy(sortedFields, fieldNames)
@@ -219,7 +225,9 @@ func structInstFieldNames(compositeLit *ast.CompositeLit) []string {
 
 func runTests() {
 	testUnsortedDefinition()
+	testDefinitionWithoutFields()
 	testUnsortedCall()
+	testInstantiationWithoutFields()
 	fmt.Println()
 }
 
@@ -246,6 +254,22 @@ field2
 
 `[1:]
 	assertEqual(want, have, "testUnsortedDefinition")
+}
+
+func testDefinitionWithoutFields() {
+	give := `
+package main
+
+type Foo struct {}`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := ""
+	assertEqual(want, have, "testDefinitionWithoutFields")
 }
 
 func testUnsortedCall() {
@@ -279,6 +303,28 @@ field2
 
 `[1:]
 	assertEqual(want, have, "testUnsortedDefinition")
+}
+
+func testInstantiationWithoutFields() {
+	give := `
+package main
+
+type Foo struct {
+}
+
+func main() {
+	foo := Foo{}
+}
+`
+	path := "test.go"
+	file := os.WriteFile(path, []byte(give), 0644)
+	if file != nil {
+		panic(file.Error())
+	}
+	defer os.Remove(path)
+	have := lintFile(path).String()
+	want := ""
+	assertEqual(want, have, "testInstantiationWithoutFields")
 }
 
 func assertEqual[T comparable](want, have T, testName string) {
