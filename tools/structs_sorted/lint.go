@@ -14,10 +14,19 @@ import (
 
 var (
 	// file paths to ignore
-	ignorePaths = []string{"vendor/", "tools/structs_sorted/test.go"} //nolint:gochecknoglobals
+	ignorePaths = []string{ //nolint:gochecknoglobals
+		"vendor/",
+		"tools/structs_sorted/test.go",
+	}
 
 	// struct types to ignore
-	ignoreTypes = []string{"BranchSpan", "Change", "InconsistentChange", "Parts", "ProdRunner"} //nolint:gochecknoglobals
+	ignoreTypes = []string{ //nolint:gochecknoglobals
+		"BranchSpan",
+		"Change",
+		"InconsistentChange",
+		"Parts",
+		"ProdRunner",
+	}
 )
 
 type issue struct {
