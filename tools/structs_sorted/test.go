@@ -16,8 +16,8 @@ type Unsorted2 struct {
 }
 
 type Nested struct {
-	Unsorted1 Unsorted1
-	Another   Unsorted2
+	Unsorted1
+	Another Unsorted2
 }
 
 // Test2 is a sorted struct definition.
