@@ -62,8 +62,8 @@ func (self *RunState) CreateAbortRunState() RunState {
 	return RunState{
 		Command:             self.Command,
 		DryRun:              self.DryRun,
-		IsUndo:              true,
 		InitialActiveBranch: self.InitialActiveBranch,
+		IsUndo:              true,
 		RunProgram:          abortProgram,
 	}
 }

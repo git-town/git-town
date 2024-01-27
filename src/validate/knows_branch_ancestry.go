@@ -74,11 +74,11 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.LocalBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			MainBranch:       args.Config.MainBranch,
 			Backend:          args.Backend,
-			LocalBranches:    args.LocalBranches.Names(),
 			Config:           args.Config,
 			DialogTestInputs: args.DialogTestInputs,
+			LocalBranches:    args.LocalBranches.Names(),
+			MainBranch:       args.Config.MainBranch,
 		})
 		if err != nil {
 			return updated, err

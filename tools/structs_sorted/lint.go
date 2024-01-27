@@ -145,9 +145,9 @@ func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
 	}
 	return issues{
 		issue{
+			expected:   sortedFields,
 			pos:        fileSet.Position(node.Pos()),
 			structName: structName,
-			expected:   sortedFields,
 		},
 	}
 }

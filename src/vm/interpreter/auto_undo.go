@@ -16,16 +16,16 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
-		FullConfig:              args.FullConfig,
-		RunState:                &abortRunState,
-		Run:                     args.Run,
 		Connector:               args.Connector,
 		DialogTestInputs:        args.DialogTestInputs,
-		Verbose:                 args.Verbose,
-		RootDir:                 args.RootDir,
+		FullConfig:              args.FullConfig,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSnapshot:    args.InitialStashSnapshot,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                &abortRunState,
+		Verbose:                 args.Verbose,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)

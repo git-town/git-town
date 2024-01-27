@@ -9,8 +9,8 @@ import (
 func SingleCacheDiff(before, after gitconfig.SingleSnapshot) ConfigDiff {
 	result := ConfigDiff{
 		Added:   []gitconfig.Key{},
-		Removed: map[gitconfig.Key]string{},
 		Changed: map[gitconfig.Key]undodomain.Change[string]{},
+		Removed: map[gitconfig.Key]string{},
 	}
 	for key, beforeValue := range before {
 		afterValue, afterContains := after[key]
