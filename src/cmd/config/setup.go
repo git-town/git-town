@@ -82,6 +82,8 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		return aborted, err
 	}
 	switch config.userInput.HostingPlatform {
+	case configdomain.HostingPlatformBitbucket:
+		// BitBucket API isn't supported yet
 	case configdomain.HostingPlatformGitea:
 		config.userInput.GiteaToken, aborted, err = enter.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
 		if err != nil || aborted {
@@ -97,8 +99,6 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		if err != nil || aborted {
 			return aborted, err
 		}
-	case configdomain.HostingPlatformBitbucket:
-		// BitBucket API isn't supported yet
 	case configdomain.HostingPlatformNone:
 		// nothing to do here
 	}
