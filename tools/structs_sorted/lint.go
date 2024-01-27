@@ -37,7 +37,7 @@ func checkStructFields(structType *ast.StructType, set *token.FileSet) {
 	}
 
 	if !sort.StringsAreSorted(fieldNames) {
-		fmt.Printf("Struct fields are not in alphabetical order in file %s at line %d\n",
+		fmt.Printf("%s:%d  unsorted struct fields\n",
 			set.Position(structType.Pos()).Filename,
 			set.Position(structType.Pos()).Line)
 	}
