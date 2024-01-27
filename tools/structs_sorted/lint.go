@@ -129,7 +129,10 @@ func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
 	if slices.Contains(ignoreTypes, structName) {
 		return issues{}
 	}
-	fields := fieldNames(typeSpec)
+	fields := []string{}
+	if typedNode, ok := typeSpec.Type.(*ast.StructType); ok {
+		fields = structDefFieldNames(typedNode)
+	}
 	if len(fields) == 0 {
 		return issues{}
 	}
@@ -179,13 +182,6 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 			structName: structType.Name,
 		},
 	}
-}
-
-func fieldNames(typeSpec *ast.TypeSpec) []string {
-	if typedNode, ok := typeSpec.Type.(*ast.StructType); ok {
-		return structDefFieldNames(typedNode)
-	}
-	return []string{}
 }
 
 func isIgnored(path string) bool {
