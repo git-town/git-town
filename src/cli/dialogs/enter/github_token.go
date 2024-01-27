@@ -22,11 +22,3 @@ func GitHubToken(oldValue configdomain.GitHubToken, inputs dialog.TestInput) (co
 	fmt.Printf("GitHub token: %s\n", dialog.FormattedToken(token, aborted))
 	return configdomain.GitHubToken(token), aborted, err
 }
-
-func tokenMessage(token string) string {
-	if token == "" {
-		return "(not provided)"
-	} else {
-		return "(provided)"
-	}
-}

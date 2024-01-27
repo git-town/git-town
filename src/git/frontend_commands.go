@@ -228,6 +228,11 @@ func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.Aliasabl
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
 }
 
+// SetGiteaToken sets the given API token for the Gitea API.
+func (self *FrontendCommands) SetGiteaToken(value configdomain.GiteaToken) error {
+	return self.Run("git", "config", "git-town.gitea-token", value.String())
+}
+
 // SetGitHubToken sets the given API token for the GitHub API.
 func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
 	return self.Run("git", "config", "git-town.github-token", value.String())

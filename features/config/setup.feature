@@ -188,7 +188,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "code-hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123"
 
-  @this
   Scenario: enter a Gitea token
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS            | DESCRIPTION                                 |

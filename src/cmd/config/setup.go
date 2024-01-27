@@ -82,6 +82,11 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 		return aborted, err
 	}
 	switch config.userInput.HostingPlatform {
+	case configdomain.HostingPlatformGitea:
+		config.userInput.GiteaToken, aborted, err = enter.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
 	case configdomain.HostingPlatformGitHub:
 		config.userInput.GitHubToken, aborted, err = enter.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
 		if err != nil || aborted {
@@ -150,6 +155,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveGiteaToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	err = saveGitHubToken(runner, newConfig)
 	if err != nil {
 		return err
@@ -212,6 +221,13 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err
 		}
 	}
 	return nil
+}
+
+func saveGiteaToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GiteaToken == runner.GiteaToken {
+		return nil
+	}
+	return runner.Frontend.SetGiteaToken(newConfig.GiteaToken)
 }
 
 func saveGitHubToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
