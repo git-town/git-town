@@ -10,6 +10,7 @@ import (
 func TextInput(existingValue string, help string, testInput TestInput) (string, bool, error) {
 	textInput := textinput.New()
 	textInput.SetValue(existingValue)
+	textInput.Prompt = "Your GitHub token: "
 	textInput.Focus()
 	model := textInputModel{
 		textInput: textInput,
