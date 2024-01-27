@@ -64,7 +64,6 @@ func checkFile(file *ast.File, fileSet *token.FileSet) []issue {
 		}
 		pos := fileSet.Position(node.Pos())
 		structName := typeSpec.Name.Name
-		fmt.Println(node)
 		switch typedNode := typeSpec.Type.(type) {
 		case *ast.StructType:
 			if !sort.StringsAreSorted(structDefFieldNames(typedNode)) {
