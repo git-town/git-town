@@ -109,14 +109,14 @@ func lintFile(path string) issues {
 		return result
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
-		result = append(result, lintStructDefinitions(node, fileSet)...)
+		result = append(result, lintStructDefinition(node, fileSet)...)
 		result = append(result, lintStructLiteral(node, fileSet)...)
 		return true
 	})
 	return result
 }
 
-func lintStructDefinitions(node ast.Node, fileSet *token.FileSet) issues {
+func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	typeSpec, ok := node.(*ast.TypeSpec)
 	if !ok {
 		return issues{}
