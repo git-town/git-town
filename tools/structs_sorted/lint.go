@@ -219,6 +219,8 @@ func structInstantiationFieldNames(compositeLit *ast.CompositeLit) []string {
  * TESTS
  */
 
+const testPath = "test.go"
+
 func runTests() {
 	testUnsortedDefinition()
 	testDefinitionWithoutFields()
@@ -237,13 +239,9 @@ type Unsorted struct {
 	field1 int // this field should be first
 }
 `
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := `
 test.go:3:6 unsorted fields in Unsorted. Expected order:
 
@@ -258,13 +256,9 @@ func testDefinitionWithoutFields() {
 	give := `
 package main
 type Foo struct {}`
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := ""
 	assertEqual(want, have, "testDefinitionWithoutFields")
 }
@@ -277,13 +271,9 @@ type Change struct {
 	field1 int
 }
 `
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := ""
 	assertEqual(want, have, "testIgnoredDefinition")
 }
@@ -302,13 +292,9 @@ func main() {
 	}
 }
 `
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := `
 test.go:8:9 unsorted fields in Foo. Expected order:
 
@@ -328,13 +314,9 @@ func main() {
 	foo := Foo{}
 }
 `
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := ""
 	assertEqual(want, have, "testInstantiationWithoutFields")
 }
@@ -353,13 +335,9 @@ func main() {
 	}
 }
 `
-	path := "test.go"
-	file := os.WriteFile(path, []byte(give), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
-	defer os.Remove(path)
-	have := lintFile(path).String()
+	createGoFile(give, testPath)
+	defer os.Remove(testPath)
+	have := lintFile(testPath).String()
 	want := ""
 	assertEqual(want, have, "testIgnoredInstantiation")
 }
@@ -375,5 +353,12 @@ func assertEqual[T comparable](want, have T, testName string) {
 		fmt.Println("--------------------------------------------------------")
 		fmt.Println(have)
 		os.Exit(1)
+	}
+}
+
+func createGoFile(text string, path string) {
+	file := os.WriteFile(path, []byte(text), 0o600)
+	if file != nil {
+		panic(file.Error())
 	}
 }
