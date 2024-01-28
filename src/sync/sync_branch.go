@@ -22,8 +22,8 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 }
 
 type BranchProgramArgs struct {
-	Config      *configdomain.FullConfig
 	BranchInfos gitdomain.BranchInfos
+	Config      *configdomain.FullConfig
 	Program     *program.Program
 	PushBranch  bool
 	Remotes     gitdomain.Remotes

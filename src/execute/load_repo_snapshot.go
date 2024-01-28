@@ -80,10 +80,10 @@ func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomai
 
 type LoadBranchesArgs struct {
 	*configdomain.FullConfig
-	Repo                  *OpenRepoResult
 	Fetch                 bool
-	Verbose               bool
 	HandleUnfinishedState bool
+	Repo                  *OpenRepoResult
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
+	Verbose               bool
 }

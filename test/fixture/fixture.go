@@ -22,16 +22,16 @@ import (
 
 // Fixture is a complete Git environment for a Cucumber scenario.
 type Fixture struct {
-	// Dir defines the local folder in which this Fixture is stored.
-	// This folder also acts as the HOME directory for tests using this Fixture.
-	// It contains the global Git configuration to use in this test.
-	Dir string
-
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
 	CoworkerRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
+
+	// Dir defines the local folder in which this Fixture is stored.
+	// This folder also acts as the HOME directory for tests using this Fixture.
+	// It contains the global Git configuration to use in this test.
+	Dir string
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
@@ -59,8 +59,8 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := testruntime.New(developerDir, dir, binDir)
 	result := Fixture{
-		Dir:        dir,
 		DevRepo:    devRepo,
+		Dir:        dir,
 		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,

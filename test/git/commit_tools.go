@@ -9,11 +9,11 @@ import (
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
 func DefaultCommit(filenameSuffix string) Commit {
 	return Commit{
-		FileName:    "default_file_name_" + filenameSuffix,
-		Message:     "default commit message",
-		Locations:   []string{"local", gitdomain.OriginRemote.String()},
 		Branch:      gitdomain.NewLocalBranchName("main"),
 		FileContent: "default file content",
+		FileName:    "default_file_name_" + filenameSuffix,
+		Locations:   []string{"local", gitdomain.OriginRemote.String()},
+		Message:     "default commit message",
 	}
 }
 

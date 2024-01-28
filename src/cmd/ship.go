@@ -119,20 +119,20 @@ type shipConfig struct {
 	*configdomain.FullConfig
 	allBranches              gitdomain.BranchInfos
 	branchToShip             gitdomain.BranchInfo
+	canShipViaAPI            bool
+	childBranches            gitdomain.LocalBranchNames
 	connector                hostingdomain.Connector
 	dialogTestInputs         dialog.TestInputs
 	dryRun                   bool
-	initialBranch            gitdomain.LocalBranchName
-	targetBranch             gitdomain.BranchInfo
-	canShipViaAPI            bool
-	childBranches            gitdomain.LocalBranchNames
-	proposalMessage          string
 	hasOpenChanges           bool
-	remotes                  gitdomain.Remotes
+	initialBranch            gitdomain.LocalBranchName
 	isShippingInitialBranch  bool
 	previousBranch           gitdomain.LocalBranchName
 	proposal                 *hostingdomain.Proposal
+	proposalMessage          string
 	proposalsOfChildBranches []hostingdomain.Proposal
+	remotes                  gitdomain.Remotes
+	targetBranch             gitdomain.BranchInfo
 }
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
@@ -229,21 +229,21 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	return &shipConfig{
 		FullConfig:               &repo.Runner.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
-		connector:                connector,
-		dialogTestInputs:         dialogTestInputs,
-		dryRun:                   dryRun,
-		initialBranch:            branchesSnapshot.Active,
-		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		proposalMessage:          proposalMessage,
+		connector:                connector,
+		dialogTestInputs:         dialogTestInputs,
+		dryRun:                   dryRun,
 		hasOpenChanges:           repoStatus.OpenChanges,
-		remotes:                  remotes,
+		initialBranch:            branchesSnapshot.Active,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		previousBranch:           previousBranch,
 		proposal:                 proposal,
+		proposalMessage:          proposalMessage,
 		proposalsOfChildBranches: proposalsOfChildBranches,
+		remotes:                  remotes,
+		targetBranch:             *targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, nil
 }
 

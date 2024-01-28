@@ -88,10 +88,10 @@ type prependConfig struct {
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
-	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	previousBranch            gitdomain.LocalBranchName
 	parentBranch              gitdomain.LocalBranchName
+	previousBranch            gitdomain.LocalBranchName
+	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
 
@@ -145,10 +145,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		remotes:                   remotes,
 		newBranchParentCandidates: parentAndAncestors,
-		previousBranch:            previousBranch,
 		parentBranch:              parent,
+		previousBranch:            previousBranch,
+		remotes:                   remotes,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

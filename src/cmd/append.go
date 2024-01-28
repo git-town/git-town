@@ -87,10 +87,10 @@ type appendConfig struct {
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
-	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
 	parentBranch              gitdomain.LocalBranchName
 	previousBranch            gitdomain.LocalBranchName
+	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
 
@@ -135,17 +135,17 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{
+		FullConfig:                &repo.Runner.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,
-		FullConfig:                &repo.Runner.FullConfig,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		remotes:                   remotes,
 		newBranchParentCandidates: initialAndAncestors,
 		parentBranch:              branchesSnapshot.Active,
 		previousBranch:            previousBranch,
+		remotes:                   remotes,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

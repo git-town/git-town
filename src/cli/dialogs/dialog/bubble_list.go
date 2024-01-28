@@ -19,7 +19,6 @@ const (
 
 // BubbleList contains common elements of BubbleTea list implementations.
 type BubbleList[S fmt.Stringer] struct {
-	Status       status
 	Colors       dialogColors  // colors to use for help text
 	Cursor       int           // index of the currently selected row
 	Dim          termenv.Style // style for dim output
@@ -27,6 +26,7 @@ type BubbleList[S fmt.Stringer] struct {
 	EntryNumber  string        // the manually entered entry number
 	MaxDigits    int           // how many digits make up an entry number
 	NumberFormat string        // template for formatting the entry number
+	Status       status
 }
 
 func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {

@@ -33,8 +33,8 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	OriginURL       *giturl.Parts
 	HostingPlatform configdomain.HostingPlatform
+	OriginURL       *giturl.Parts
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {

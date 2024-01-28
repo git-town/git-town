@@ -10,8 +10,8 @@ import (
 
 // UpdateProposalTarget updates the target of the proposal with the given number at the code hosting platform.
 type UpdateProposalTarget struct {
-	ProposalNumber int
 	NewTarget      gitdomain.LocalBranchName
+	ProposalNumber int
 	undeclaredOpcodeMethods
 }
 
