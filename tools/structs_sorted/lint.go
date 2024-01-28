@@ -85,7 +85,7 @@ Available commands:
 func lintFiles() {
 	issues := issues{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnored(path) {
+		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
 			return err
 		}
 		issues = append(issues, lintFile(path)...)
@@ -180,7 +180,7 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	}
 }
 
-func isIgnored(path string) bool {
+func isIgnoredPath(path string) bool {
 	for _, ignore := range ignorePaths {
 		if strings.HasPrefix(path, ignore) {
 			return true
