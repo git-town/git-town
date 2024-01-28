@@ -161,19 +161,7 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	if slices.Contains(ignoreTypes, structName) {
 		return issues{}
 	}
-	fieldNames := make([]string, 0, len(compositeLit.Elts))
-	for _, elt := range compositeLit.Elts {
-		kvExpr, ok := elt.(*ast.KeyValueExpr)
-		if !ok {
-			continue
-		}
-		ident, ok := kvExpr.Key.(*ast.Ident)
-		if !ok {
-			continue
-		}
-		fieldName := ident.Name
-		fieldNames = append(fieldNames, fieldName)
-	}
+	fieldNames := structInstantiationFieldNames(compositeLit)
 	if len(fieldNames) == 0 {
 		return issues{}
 	}
@@ -207,6 +195,22 @@ func structDefFieldNames(structType *ast.StructType) []string {
 		if field.Names != nil {
 			result = append(result, field.Names[0].Name)
 		}
+	}
+	return result
+}
+
+func structInstantiationFieldNames(compositeLit *ast.CompositeLit) []string {
+	result := make([]string, 0, len(compositeLit.Elts))
+	for _, elt := range compositeLit.Elts {
+		kvExpr, ok := elt.(*ast.KeyValueExpr)
+		if !ok {
+			continue
+		}
+		ident, ok := kvExpr.Key.(*ast.Ident)
+		if !ok {
+			continue
+		}
+		result = append(result, ident.Name)
 	}
 	return result
 }
