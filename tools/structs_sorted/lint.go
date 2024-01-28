@@ -83,7 +83,7 @@ Available commands:
 }
 
 func lintFiles() {
-	issues := []issue{}
+	issues := issues{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnored(path) {
 			return err
@@ -95,7 +95,9 @@ func lintFiles() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println(issues)
+	if len(issues) > 0 {
+		fmt.Println(issues)
+	}
 	os.Exit(len(issues))
 }
 
