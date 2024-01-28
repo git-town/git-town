@@ -239,7 +239,7 @@ type MyStruct struct {
 	field1 int // this field should be first
 }
 `
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := `
@@ -256,7 +256,7 @@ func testDefinitionWithoutFields() {
 	give := `
 package main
 type MyStruct struct {}`
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := ""
@@ -271,7 +271,7 @@ type Change struct {
 	field1 int
 }
 `
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := ""
@@ -292,7 +292,7 @@ func main() {
 	}
 }
 `
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := `
@@ -313,7 +313,7 @@ func main() {
 	foo := MyStruct{}
 }
 `
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := ""
@@ -334,7 +334,7 @@ func main() {
 	}
 }
 `
-	createGoFile(give, testPath)
+	createTestFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := ""
@@ -355,7 +355,7 @@ func assertEqual[T comparable](want, have T, testName string) {
 	}
 }
 
-func createGoFile(text string, path string) {
+func createTestFile(text string, path string) {
 	file := os.WriteFile(path, []byte(text), 0o600)
 	if file != nil {
 		panic(file.Error())
