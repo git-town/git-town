@@ -234,7 +234,7 @@ func runTests() {
 func testUnsortedDefinition() {
 	give := `
 package main
-type Unsorted struct {
+type MyStruct struct {
 	field2 int // this field should not be first
 	field1 int // this field should be first
 }
@@ -243,7 +243,7 @@ type Unsorted struct {
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := `
-test.go:3:6 unsorted fields in Unsorted. Expected order:
+test.go:3:6 unsorted fields in MyStruct. Expected order:
 
 field1
 field2
@@ -255,7 +255,7 @@ field2
 func testDefinitionWithoutFields() {
 	give := `
 package main
-type Foo struct {}`
+type MyStruct struct {}`
 	createGoFile(give, testPath)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
@@ -281,12 +281,12 @@ type Change struct {
 func testUnsortedInstantiation() {
 	give := `
 package main
-type Foo struct {
+type MyStruct struct {
 	field1 int
 	field2 int
 }
 func main() {
-	foo := Foo{
+	foo := MyStruct{
 		field2: 2,
 		field1: 1,
 	}
@@ -296,7 +296,7 @@ func main() {
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
 	want := `
-test.go:8:9 unsorted fields in Foo. Expected order:
+test.go:8:9 unsorted fields in MyStruct. Expected order:
 
 field1
 field2
@@ -308,10 +308,9 @@ field2
 func testInstantiationWithoutFields() {
 	give := `
 package main
-type Foo struct {
-}
+type MyStruct struct {}
 func main() {
-	foo := Foo{}
+	foo := MyStruct{}
 }
 `
 	createGoFile(give, testPath)
