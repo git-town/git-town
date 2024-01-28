@@ -95,14 +95,8 @@ func lintFiles() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	printIssues(issues)
+	fmt.Println(issues)
 	os.Exit(len(issues))
-}
-
-func printIssues(issues issues) {
-	for _, issue := range issues {
-		fmt.Println(issue.String())
-	}
 }
 
 func lintFile(path string) issues {
