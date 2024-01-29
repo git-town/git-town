@@ -30,9 +30,9 @@ var (
 )
 
 type issue struct {
-	expected []string       // the expected order of fields
-	position token.Position // file, line, and column of the issue
-	name     string         // name of the struct that has the problem described by this issue
+	expected   []string       // the expected order of fields
+	position   token.Position // file, line, and column of the issue
+	structName string         // name of the struct that has the problem described by this issue
 }
 
 func (self issue) String() string {
@@ -41,7 +41,7 @@ func (self issue) String() string {
 		self.position.Filename,
 		self.position.Line,
 		self.position.Column,
-		self.name,
+		self.structName,
 		strings.Join(self.expected, "\n"),
 	)
 }
@@ -141,9 +141,9 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	}
 	return issues{
 		issue{
-			expected: sortedFields,
-			position: fileSet.Position(node.Pos()),
-			name:     structName,
+			expected:   sortedFields,
+			position:   fileSet.Position(node.Pos()),
+			structName: structName,
 		},
 	}
 }
@@ -173,9 +173,9 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	}
 	return issues{
 		issue{
-			expected: sortedFields,
-			position: fileSet.Position(node.Pos()),
-			name:     structName,
+			expected:   sortedFields,
+			position:   fileSet.Position(node.Pos()),
+			structName: structName,
 		},
 	}
 }
