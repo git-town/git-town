@@ -122,6 +122,11 @@ func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, 
 	return self.Run("git", args...)
 }
 
+// DeleteOriginHostname removes the orgin hostname override
+func (self *FrontendCommands) DeleteOriginHostname() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyHostingOriginHostname.String())
+}
+
 // DeleteTrackingBranch removes the tracking branch of the given local branch.
 func (self *FrontendCommands) DeleteTrackingBranch(name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()

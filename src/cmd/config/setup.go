@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -220,7 +221,9 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := runner.Aliases[aliasableCommand]
+		fmt.Println("1111111111111", hasOld, oldAlias)
 		newAlias, hasNew := newConfig.Aliases[aliasableCommand]
+		fmt.Println("2222222222222", hasNew, newAlias)
 		switch {
 		case hasOld && !hasNew:
 			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
@@ -279,6 +282,9 @@ func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) e
 func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
 		return nil
+	}
+	if runner.HostingOriginHostname != "" && newConfig.HostingOriginHostname == "" {
+		return runner.Frontend.DeleteOriginHostname()
 	}
 	return runner.Frontend.SetOriginHostname(newConfig.HostingOriginHostname)
 }
