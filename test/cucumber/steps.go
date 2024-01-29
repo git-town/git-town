@@ -261,11 +261,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(name, value string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
-			return fmt.Errorf("key not found")
+			return fmt.Errorf("no key found for %q", name)
 		}
 		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
 		if aliasableCommand == nil {
-			return fmt.Errorf("aliasableCommand not found for key %q", *key)
+			return fmt.Errorf("no aliasableCommand found for key %q", *key)
 		}
 		state.fixture.DevRepo.SetGitAlias(name, value)
 		return nil
