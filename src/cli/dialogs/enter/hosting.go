@@ -3,7 +3,7 @@ package enter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
@@ -15,7 +15,7 @@ Only change this setting if the auto-detection does not work for you.
 
 `
 
-func HostingPlatform(existingValue configdomain.HostingPlatform, inputs dialog.TestInput) (configdomain.HostingPlatform, bool, error) {
+func HostingPlatform(existingValue configdomain.HostingPlatform, inputs components.TestInput) (configdomain.HostingPlatform, bool, error) {
 	entries := []hostingPlatformEntry{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
@@ -24,8 +24,8 @@ func HostingPlatform(existingValue configdomain.HostingPlatform, inputs dialog.T
 		hostingPlatformGitLab,
 	}
 	cursor := indexOfHostingPlatform(existingValue, entries)
-	newValue, aborted, err := dialog.RadioList(entries, cursor, enterHostingPlatformHelp, inputs)
-	fmt.Printf("Code hosting: %s\n", dialog.FormattedSelection(newValue.String(), aborted))
+	newValue, aborted, err := components.RadioList(entries, cursor, enterHostingPlatformHelp, inputs)
+	fmt.Printf("Code hosting: %s\n", components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }
 

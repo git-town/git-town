@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"golang.org/x/exp/maps"
@@ -15,7 +15,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
 	dialogProcess := tea.NewProgram(SwitchModel{
-		BubbleList:       dialog.NewBubbleList(entries, cursor),
+		BubbleList:       components.NewBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
 	})
 	dialogResult, err := dialogProcess.Run()
@@ -28,7 +28,7 @@ func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdom
 }
 
 type SwitchModel struct {
-	dialog.BubbleList[SwitchBranchEntry]
+	components.BubbleList[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -45,18 +45,18 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialog.StatusDone
+		self.Status = components.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialog.StatusDone
+		self.Status = components.StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != dialog.StatusActive {
+	if self.Status != components.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}
@@ -97,7 +97,7 @@ func (self SwitchModel) View() string {
 	return s.String()
 }
 
-// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" dialog.
+// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
 func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
 	for e, entry := range entries {
 		if entry.Branch == initialBranch {
@@ -107,7 +107,7 @@ func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.
 	return 0
 }
 
-// SwitchBranchEntries provides the entries for the "switch branch" dialog.
+// SwitchBranchEntries provides the entries for the "switch branch" components.
 func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []SwitchBranchEntry {
 	entries := make([]SwitchBranchEntry, 0, len(lineage))
 	roots := lineage.Roots()

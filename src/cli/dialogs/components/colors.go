@@ -1,4 +1,4 @@
-package dialog
+package components
 
 import "github.com/muesli/termenv"
 
