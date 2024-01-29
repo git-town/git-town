@@ -3,7 +3,7 @@ package opcode
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/messages"
 	"github.com/git-town/git-town/v11/src/vm/shared"
@@ -36,7 +36,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	author, aborted, err := enter.SelectSquashCommitAuthor(self.Branch, branchAuthors, args.DialogTestInputs.Next())
+	author, aborted, err := dialog.SelectSquashCommitAuthor(self.Branch, branchAuthors, args.DialogTestInputs.Next())
 	if err != nil {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}

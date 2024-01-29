@@ -3,8 +3,8 @@ package config
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -61,7 +61,7 @@ type setupConfig struct {
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
-	config.userInput.Aliases, aborted, err = enter.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
+	config.userInput.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -69,15 +69,15 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if existingMainBranch.IsEmpty() {
 		existingMainBranch, _ = runner.Backend.DefaultBranch()
 	}
-	config.userInput.MainBranch, aborted, err = enter.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
+	config.userInput.MainBranch, aborted, err = dialog.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PerennialBranches, aborted, err = enter.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
+	config.userInput.PerennialBranches, aborted, err = dialog.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.HostingPlatform, aborted, err = enter.HostingPlatform(runner.HostingPlatform, config.dialogInputs.Next())
+	config.userInput.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.HostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -85,48 +85,48 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	case configdomain.HostingPlatformBitbucket:
 		// BitBucket API isn't supported yet
 	case configdomain.HostingPlatformGitea:
-		config.userInput.GiteaToken, aborted, err = enter.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
+		config.userInput.GiteaToken, aborted, err = dialog.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, err
 		}
 	case configdomain.HostingPlatformGitHub:
-		config.userInput.GitHubToken, aborted, err = enter.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
+		config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, err
 		}
 	case configdomain.HostingPlatformGitLab:
-		config.userInput.GitLabToken, aborted, err = enter.GitLabToken(runner.GitLabToken, config.dialogInputs.Next())
+		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.GitLabToken, config.dialogInputs.Next())
 		if err != nil || aborted {
 			return aborted, err
 		}
 	case configdomain.HostingPlatformNone:
 		// nothing to do here
 	}
-	config.userInput.SyncFeatureStrategy, aborted, err = enter.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
+	config.userInput.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncPerennialStrategy, aborted, err = enter.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
+	config.userInput.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncUpstream, aborted, err = enter.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
+	config.userInput.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.NewBranchPush, aborted, err = enter.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
+	config.userInput.NewBranchPush, aborted, err = dialog.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.PushHook, aborted, err = enter.PushHook(runner.PushHook, config.dialogInputs.Next())
+	config.userInput.PushHook, aborted, err = dialog.PushHook(runner.PushHook, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.SyncBeforeShip, aborted, err = enter.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
+	config.userInput.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.ShipDeleteTrackingBranch, aborted, err = enter.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}

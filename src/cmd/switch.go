@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
@@ -47,7 +47,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := enter.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Lineage)
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Lineage)
 	if err != nil || abort {
 		return err
 	}
