@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
 	"github.com/muesli/termenv"
@@ -22,13 +22,13 @@ const perennialBranchesHelp = `
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput dialog.TestInput) (gitdomain.LocalBranchNames, bool, error) {
+func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput components.TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
 	}
 	program := tea.NewProgram(PerennialBranchesModel{
-		BubbleList:    dialog.NewBubbleList(perennialCandidates, 0),
+		BubbleList:    components.NewBubbleList(perennialCandidates, 0),
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	})
@@ -49,12 +49,12 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf("Perennial branches: %s\n", dialog.FormattedSelection(selectionText, result.Aborted()))
+	fmt.Printf("Perennial branches: %s\n", components.FormattedSelection(selectionText, result.Aborted()))
 	return selectedBranches, result.Aborted(), nil
 }
 
 type PerennialBranchesModel struct {
-	dialog.BubbleList[gitdomain.LocalBranchName]
+	components.BubbleList[gitdomain.LocalBranchName]
 	Selections    []int
 	selectedColor termenv.Style
 }
@@ -117,11 +117,11 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		self.ToggleCurrentEntry()
 		return self, nil
 	case tea.KeyEnter:
-		self.Status = dialog.StatusDone
+		self.Status = components.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialog.StatusDone
+		self.Status = components.StatusDone
 		self.ToggleCurrentEntry()
 		return self, nil
 	}
@@ -129,7 +129,7 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 }
 
 func (self PerennialBranchesModel) View() string {
-	if self.Status != dialog.StatusActive {
+	if self.Status != components.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}

@@ -3,7 +3,7 @@ package enter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -17,13 +17,13 @@ It's okay to leave this empty.
 `
 
 // GiteaToken lets the user enter the Gitea API token.
-func GiteaToken(oldValue configdomain.GiteaToken, inputs dialog.TestInput) (configdomain.GiteaToken, bool, error) {
-	token, aborted, err := dialog.TextField(dialog.TextFieldArgs{
+func GiteaToken(oldValue configdomain.GiteaToken, inputs components.TestInput) (configdomain.GiteaToken, bool, error) {
+	token, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          enterGiteaTokenHelp,
 		Prompt:        "Your Gitea API token: ",
 		TestInput:     inputs,
 	})
-	fmt.Printf("Gitea token: %s\n", dialog.FormattedToken(token, aborted))
+	fmt.Printf("Gitea token: %s\n", components.FormattedToken(token, aborted))
 	return configdomain.GiteaToken(token), aborted, err
 }

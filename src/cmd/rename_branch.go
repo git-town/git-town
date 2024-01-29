@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -93,7 +93,7 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 
 type renameBranchConfig struct {
 	*configdomain.FullConfig
-	dialogTestInputs dialog.TestInputs
+	dialogTestInputs components.TestInputs
 	dryRun           bool
 	initialBranch    gitdomain.LocalBranchName
 	newBranch        gitdomain.LocalBranchName

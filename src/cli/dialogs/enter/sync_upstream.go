@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
@@ -25,7 +25,7 @@ const (
 	SyncUpstreamEntryNo  syncUpstreamEntry = `no, don't receive updates from upstream`
 )
 
-func SyncUpstream(existing configdomain.SyncUpstream, inputs dialog.TestInput) (configdomain.SyncUpstream, bool, error) {
+func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInput) (configdomain.SyncUpstream, bool, error) {
 	entries := []syncUpstreamEntry{
 		SyncUpstreamEntryYes,
 		SyncUpstreamEntryNo,
@@ -36,11 +36,11 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs dialog.TestInput) (
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := dialog.RadioList(entries, defaultPos, syncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Sync with upstream: %s\n", dialog.FormattedSelection(selection.Short(), aborted))
+	fmt.Printf("Sync with upstream: %s\n", components.FormattedSelection(selection.Short(), aborted))
 	return selection.SyncUpstream(), aborted, err
 }
 

@@ -3,7 +3,7 @@ package config
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -55,7 +55,7 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupConfig struct {
-	dialogInputs  dialog.TestInputs
+	dialogInputs  components.TestInputs
 	localBranches gitdomain.BranchInfos
 	userInput     configdomain.FullConfig
 }
