@@ -42,7 +42,7 @@ func shouldIgnorePath(path string) bool {
 		path == "src/config/configdomain/push_hook.go" ||
 		path == "src/config/configdomain/offline.go" ||
 		path == "src/cli/print/logger.go" ||
-		path == "src/cli/dialogs/enter/switch_branch.go"
+		path == "src/cli/dialogs/switch_branch.go"
 }
 
 func formatFiles() {
