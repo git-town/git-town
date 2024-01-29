@@ -1,10 +1,10 @@
-package enter_test
+package dialogs_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/cli/dialogs"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -27,14 +27,14 @@ func TestParent(t *testing.T) {
 				branch2: main,
 				branch3: main,
 			}
-			have := enter.ParentEntries(enter.ParentArgs{
+			have := dialogs.ParentEntries(dialogs.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
 				LocalBranches:   localBranches,
 				Lineage:         lineage,
 				MainBranch:      main,
 			})
-			want := gitdomain.LocalBranchNames{enter.PerennialBranchOption, main, branch1, branch3}
+			want := gitdomain.LocalBranchNames{dialogs.PerennialBranchOption, main, branch1, branch3}
 			must.Eq(t, want, have)
 		})
 		t.Run("omits all descendents of the branch for which to select the parent", func(t *testing.T) {
@@ -53,14 +53,14 @@ func TestParent(t *testing.T) {
 				branch2a: branch2,
 				branch3:  main,
 			}
-			have := enter.ParentEntries(enter.ParentArgs{
+			have := dialogs.ParentEntries(dialogs.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
 				LocalBranches:   localBranches,
 				Lineage:         lineage,
 				MainBranch:      main,
 			})
-			want := gitdomain.LocalBranchNames{enter.PerennialBranchOption, main, branch1, branch1a, branch3}
+			want := gitdomain.LocalBranchNames{dialogs.PerennialBranchOption, main, branch1, branch1a, branch3}
 			must.Eq(t, want, have)
 		})
 	})

@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -23,7 +22,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		if !hasParent { //nolint:nestif
 			var aborted bool
 			var err error
-			parent, aborted, err = enter.Parent(enter.ParentArgs{
+			parent, aborted, err = dialogs.Parent(dialogs.ParentArgs{
 				Branch:          currentBranch,
 				DialogTestInput: args.DialogTestInputs.Next(),
 				LocalBranches:   args.LocalBranches,
@@ -36,7 +35,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			if aborted {
 				os.Exit(0)
 			}
-			if parent == enter.PerennialBranchOption {
+			if parent == dialogs.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err

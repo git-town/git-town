@@ -1,10 +1,9 @@
-package enter_test
+package dialogs_test
 
 import (
 	"testing"
 
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -17,26 +16,26 @@ func TestSwitchBranch(t *testing.T) {
 		t.Parallel()
 		t.Run("initialBranch is in the entry list", func(t *testing.T) {
 			t.Parallel()
-			entries := []enter.SwitchBranchEntry{
+			entries := []dialogs.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: ""},
 				{Branch: "alpha1", Indentation: ""},
 				{Branch: "beta", Indentation: ""},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("alpha1")
-			have := enter.SwitchBranchCursorPos(entries, initialBranch)
+			have := dialogs.SwitchBranchCursorPos(entries, initialBranch)
 			want := 2
 			must.EqOp(t, want, have)
 		})
 		t.Run("initialBranch is not in the entry list", func(t *testing.T) {
 			t.Parallel()
-			entries := []enter.SwitchBranchEntry{
+			entries := []dialogs.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: ""},
 				{Branch: "beta", Indentation: ""},
 			}
 			initialBranch := gitdomain.NewLocalBranchName("other")
-			have := enter.SwitchBranchCursorPos(entries, initialBranch)
+			have := dialogs.SwitchBranchCursorPos(entries, initialBranch)
 			want := 0
 			must.EqOp(t, want, have)
 		})
@@ -54,8 +53,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchB: main,
 			}
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main}
-			have := enter.SwitchBranchEntries(localBranches, lineage)
-			want := []enter.SwitchBranchEntry{
+			have := dialogs.SwitchBranchEntries(localBranches, lineage)
+			want := []dialogs.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: "  "},
 				{Branch: "beta", Indentation: "  "},
@@ -73,8 +72,8 @@ func TestSwitchBranch(t *testing.T) {
 				branchB: main,
 			}
 			localBranches := gitdomain.LocalBranchNames{branchA, branchB, main, perennial1}
-			have := enter.SwitchBranchEntries(localBranches, lineage)
-			want := []enter.SwitchBranchEntry{
+			have := dialogs.SwitchBranchEntries(localBranches, lineage)
+			want := []dialogs.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "alpha", Indentation: "  "},
 				{Branch: "beta", Indentation: "  "},
@@ -92,8 +91,8 @@ func TestSwitchBranch(t *testing.T) {
 				grandchild: child,
 			}
 			localBranches := gitdomain.LocalBranchNames{grandchild, main}
-			have := enter.SwitchBranchEntries(localBranches, lineage)
-			want := []enter.SwitchBranchEntry{
+			have := dialogs.SwitchBranchEntries(localBranches, lineage)
+			want := []dialogs.SwitchBranchEntry{
 				{Branch: "main", Indentation: ""},
 				{Branch: "child", Indentation: "  "},
 				{Branch: "grandchild", Indentation: "    "},
@@ -105,10 +104,10 @@ func TestSwitchBranch(t *testing.T) {
 	t.Run("View", func(t *testing.T) {
 		t.Run("only the main branch exists", func(t *testing.T) {
 			t.Parallel()
-			model := enter.SwitchModel{
-				BubbleList: components.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+			model := dialogs.SwitchModel{
+				BubbleList: components.BubbleList[dialogs.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor:       0,
-					Entries:      []enter.SwitchBranchEntry{{Branch: "main", Indentation: ""}},
+					Entries:      []dialogs.SwitchBranchEntry{{Branch: "main", Indentation: ""}},
 					MaxDigits:    1,
 					NumberFormat: "%d",
 				},
@@ -125,10 +124,10 @@ func TestSwitchBranch(t *testing.T) {
 
 		t.Run("multiple top-level branches", func(t *testing.T) {
 			t.Parallel()
-			model := enter.SwitchModel{
-				BubbleList: components.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+			model := dialogs.SwitchModel{
+				BubbleList: components.BubbleList[dialogs.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []enter.SwitchBranchEntry{
+					Entries: []dialogs.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},
 						{Branch: "one", Indentation: ""},
 						{Branch: "two", Indentation: ""},
@@ -151,10 +150,10 @@ func TestSwitchBranch(t *testing.T) {
 
 		t.Run("nested branches", func(t *testing.T) {
 			t.Parallel()
-			model := enter.SwitchModel{
-				BubbleList: components.BubbleList[enter.SwitchBranchEntry]{ //nolint:exhaustruct
+			model := dialogs.SwitchModel{
+				BubbleList: components.BubbleList[dialogs.SwitchBranchEntry]{ //nolint:exhaustruct
 					Cursor: 0,
-					Entries: []enter.SwitchBranchEntry{
+					Entries: []dialogs.SwitchBranchEntry{
 						{Branch: "main", Indentation: ""},
 						{Branch: "alpha", Indentation: "  "},
 						{Branch: "alpha1", Indentation: "    "},

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -25,7 +24,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
 	}
-	response, aborted, err := enter.AskHowToHandleUnfinishedRunState(
+	response, aborted, err := dialogs.AskHowToHandleUnfinishedRunState(
 		runState.Command,
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
@@ -39,15 +38,15 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return quit, fmt.Errorf("user aborted")
 	}
 	switch response {
-	case enter.ResponseDiscard:
+	case dialogs.ResponseDiscard:
 		return discardRunstate(args.RootDir)
-	case enter.ResponseContinue:
+	case dialogs.ResponseContinue:
 		return continueRunstate(runState, args)
-	case enter.ResponseUndo:
+	case dialogs.ResponseUndo:
 		return abortRunstate(runState, args)
-	case enter.ResponseSkip:
+	case dialogs.ResponseSkip:
 		return skipRunstate(runState, args)
-	case enter.ResponseQuit:
+	case dialogs.ResponseQuit:
 		return true, nil
 	default:
 		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)

@@ -1,4 +1,4 @@
-package enter
+package dialogs
 
 import (
 	"slices"
