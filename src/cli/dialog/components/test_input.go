@@ -48,7 +48,7 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 }
 
 // ParseTestInput converts the given input data in the environment variable format
-// into the format understood by Git Town's dialog.
+// into the format understood by Git Town's dialogs.
 func ParseTestInput(envData string) TestInput {
 	result := TestInput{}
 	for _, input := range strings.Split(envData, "|") {
