@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	prodgit "github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -373,8 +374,8 @@ func (self *TestCommands) SHAForCommit(name string) gitdomain.SHA {
 }
 
 // SetGitAlias sets the Git alias with the given name to the given value.
-func (self *TestCommands) SetGitAlias(name, value string) error {
-	return self.Run("git", "config", "--global", "alias."+name, value)
+func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
+	return self.Run("git", "config", "--global", "alias."+name.String(), value)
 }
 
 // SetColorUI configures whether Git output contains color codes.
