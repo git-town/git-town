@@ -3,7 +3,7 @@ package perennialbranches
 import (
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs"
+	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
@@ -51,7 +51,7 @@ func executeUpdate(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newPerennialBranches, aborted, err := dialogs.PerennialBranches(branchesSnapshot.Branches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, dialogTestInputs.Next())
+	newPerennialBranches, aborted, err := dialog.PerennialBranches(branchesSnapshot.Branches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, dialogTestInputs.Next())
 	if err != nil || aborted {
 		return err
 	}
