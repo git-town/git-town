@@ -24,6 +24,6 @@ func GiteaToken(oldValue configdomain.GiteaToken, inputs components.TestInput) (
 		Prompt:        "Your Gitea API token: ",
 		TestInput:     inputs,
 	})
-	fmt.Printf("Gitea token: %s\n", components.FormattedToken(token, aborted))
+	fmt.Printf("Gitea token: %s\n", components.FormattedSecret(token, aborted))
 	return configdomain.GiteaToken(token), aborted, err
 }

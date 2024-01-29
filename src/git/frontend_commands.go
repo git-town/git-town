@@ -122,6 +122,11 @@ func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, 
 	return self.Run("git", args...)
 }
 
+// DeleteOriginHostname removes the origin hostname override
+func (self *FrontendCommands) DeleteOriginHostname() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyHostingOriginHostname.String())
+}
+
 // DeleteTrackingBranch removes the tracking branch of the given local branch.
 func (self *FrontendCommands) DeleteTrackingBranch(name gitdomain.RemoteBranchName) error {
 	remote, localBranchName := name.Parts()
@@ -246,6 +251,11 @@ func (self *FrontendCommands) SetGiteaToken(value configdomain.GiteaToken) error
 // SetHostingPlatform sets the given code hosting platform.
 func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
 	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetOriginHostname(hostname configdomain.HostingOriginHostname) error {
+	return self.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

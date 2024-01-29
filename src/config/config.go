@@ -114,6 +114,18 @@ func (self *Config) SetOffline(value configdomain.Offline) error {
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
+// SetOriginHostname marks the given branch as the main branch
+// in the Git Town configuration.
+func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
+	self.HostingOriginHostname = hostName
+	if self.configFile != nil {
+		self.configFile.HostingOriginHostname = &hostName
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.HostingOriginHostname = &hostName
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
+}
+
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) error {

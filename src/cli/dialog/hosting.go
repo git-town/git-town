@@ -9,9 +9,11 @@ import (
 )
 
 const enterHostingPlatformHelp = `
-Git Town needs to know on which code hosting platform you host your code.
-This allows it to open the right browser URLs and talk to the right API endpoints.
-Only change this setting if the auto-detection does not work for you.
+Knowing the type of code hosting platform allows Git Town
+to open browser URLs and talk to the code hosting API.
+
+If your code hosting platform uses as custom URL,
+please set it below. Otherwise leave it on "auto-detect".
 
 `
 
