@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -277,10 +278,13 @@ func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) e
 }
 
 func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	fmt.Println("111111111")
 	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
+		fmt.Println("2222222222222")
 		return nil
 	}
-	return runner.SetOriginHostname(newConfig.HostingOriginHostname)
+	fmt.Println("3333333333333")
+	return runner.Frontend.SetOriginHostname(newConfig.HostingOriginHostname)
 }
 
 func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {

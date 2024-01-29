@@ -24,6 +24,6 @@ func GitHubToken(oldValue configdomain.GitHubToken, inputs components.TestInput)
 		Prompt:        "Your GitHub API token: ",
 		TestInput:     inputs,
 	})
-	fmt.Printf("GitHub token: %s\n", components.FormattedToken(token, aborted))
+	fmt.Printf("GitHub token: %s\n", components.FormattedSecret(token, aborted))
 	return configdomain.GitHubToken(token), aborted, err
 }

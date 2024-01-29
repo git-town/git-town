@@ -248,6 +248,11 @@ func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPl
 	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
 }
 
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetOriginHostname(hostname configdomain.HostingOriginHostname) error {
+	return self.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
+}
+
 // SquashMerge squash-merges the given branch into the current branch.
 func (self *FrontendCommands) SquashMerge(branch gitdomain.LocalBranchName) error {
 	return self.Run("git", "merge", "--squash", branch.String())
