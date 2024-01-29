@@ -1,4 +1,4 @@
-package dialog
+package components
 
 import (
 	"fmt"
@@ -43,7 +43,7 @@ func NewBubbleList[S fmt.Stringer](entries []S, cursor int) BubbleList[S] {
 	}
 }
 
-// Aborted indicates whether the user has Aborted this dialog.
+// Aborted indicates whether the user has Aborted this components.
 func (self *BubbleList[S]) Aborted() bool {
 	return self.Status == StatusAborted
 }

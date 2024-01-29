@@ -3,7 +3,7 @@ package enter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
@@ -17,9 +17,9 @@ In most repositories, this branch is called "main", "master", or "development".
 `
 
 // MainBranch lets the user select a new main branch for this repo.
-func MainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs dialog.TestInput) (gitdomain.LocalBranchName, bool, error) {
+func MainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	cursor := stringers.IndexOrStart(localBranches, oldMainBranch)
-	selection, aborted, err := dialog.RadioList(localBranches, cursor, enterBranchHelp, inputs)
-	fmt.Printf("Main branch: %s\n", dialog.FormattedSelection(selection.String(), aborted))
+	selection, aborted, err := components.RadioList(localBranches, cursor, enterBranchHelp, inputs)
+	fmt.Printf("Main branch: %s\n", components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

@@ -1,7 +1,7 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v11/src/cli/dialogs/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -36,6 +36,6 @@ type EnsureKnownBranchAncestryArgs struct {
 	AllBranches      gitdomain.BranchInfos
 	Config           *configdomain.FullConfig
 	DefaultBranch    gitdomain.LocalBranchName
-	DialogTestInputs *dialog.TestInputs
+	DialogTestInputs *components.TestInputs
 	Runner           *git.ProdRunner
 }
