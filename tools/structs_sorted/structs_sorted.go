@@ -30,18 +30,18 @@ var (
 )
 
 type issue struct {
-	expected   []string       // the expected order of fields
-	pos        token.Position // file, line, and column of the issue
-	structName string         // name of the struct that has the problem described by this issue
+	expected []string       // the expected order of fields
+	position token.Position // file, line, and column of the issue
+	name     string         // name of the struct that has the problem described by this issue
 }
 
 func (self issue) String() string {
 	return fmt.Sprintf(
 		"%s:%d:%d unsorted fields in %s. Expected order:\n\n%s\n\n",
-		self.pos.Filename,
-		self.pos.Line,
-		self.pos.Column,
-		self.structName,
+		self.position.Filename,
+		self.position.Line,
+		self.position.Column,
+		self.name,
 		strings.Join(self.expected, "\n"),
 	)
 }
@@ -72,9 +72,9 @@ func main() {
 
 func displayUsage() {
 	fmt.Println(`
-This tool lints Go code for alphabetic sorting of struct fields.
+Linter for alphabetic sorting of struct fields in Go code.
 
-Usage: lint <command>
+Usage: structs_sorted <command>
 
 Available commands:
    run   Lints all files Go in the current directory and subdirectories
@@ -129,7 +129,7 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	if !ok {
 		return issues{}
 	}
-	fields := structDefFieldNames(structType)
+	fields := structDefinitionFieldNames(structType)
 	if len(fields) == 0 {
 		return issues{}
 	}
@@ -141,9 +141,9 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	}
 	return issues{
 		issue{
-			expected:   sortedFields,
-			pos:        fileSet.Position(node.Pos()),
-			structName: structName,
+			expected: sortedFields,
+			position: fileSet.Position(node.Pos()),
+			name:     structName,
 		},
 	}
 }
@@ -173,9 +173,9 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
 	}
 	return issues{
 		issue{
-			expected:   sortedFields,
-			pos:        fileSet.Position(node.Pos()),
-			structName: structName,
+			expected: sortedFields,
+			position: fileSet.Position(node.Pos()),
+			name:     structName,
 		},
 	}
 }
@@ -189,7 +189,7 @@ func isIgnoredPath(path string) bool {
 	return false
 }
 
-func structDefFieldNames(structType *ast.StructType) []string {
+func structDefinitionFieldNames(structType *ast.StructType) []string {
 	var result []string
 	for _, field := range structType.Fields.List {
 		if field.Names != nil {
@@ -201,8 +201,8 @@ func structDefFieldNames(structType *ast.StructType) []string {
 
 func structInstantiationFieldNames(compositeLit *ast.CompositeLit) []string {
 	result := make([]string, 0, len(compositeLit.Elts))
-	for _, elt := range compositeLit.Elts {
-		kvExpr, ok := elt.(*ast.KeyValueExpr)
+	for _, expr := range compositeLit.Elts {
+		kvExpr, ok := expr.(*ast.KeyValueExpr)
 		if !ok {
 			continue
 		}
@@ -255,7 +255,8 @@ field2
 func testDefinitionWithoutFields() {
 	give := `
 package main
-type MyStruct struct {}`
+type MyStruct struct {}
+`
 	createTestFile(give)
 	defer os.Remove(testPath)
 	have := lintFile(testPath).String()
