@@ -129,7 +129,7 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	if !ok {
 		return issues{}
 	}
-	fields := structDefinitionFieldNames(structType)
+	fields := structDefFieldNames(structType)
 	if len(fields) == 0 {
 		return issues{}
 	}
@@ -189,7 +189,7 @@ func isIgnoredPath(path string) bool {
 	return false
 }
 
-func structDefinitionFieldNames(structType *ast.StructType) []string {
+func structDefFieldNames(structType *ast.StructType) []string {
 	var result []string
 	for _, field := range structType.Fields.List {
 		if field.Names != nil {
