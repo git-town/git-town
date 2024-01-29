@@ -372,7 +372,7 @@ func (self *TestCommands) SHAForCommit(name string) gitdomain.SHA {
 	return gitdomain.NewSHA(strings.Split(output, "\n")[0])
 }
 
-// SetColorUI configures whether Git output contains color codes.
+// SetGitAlias sets the Git alias with the given name to the given value.
 func (self *TestCommands) SetGitAlias(name, value string) error {
 	return self.Run("git", "config", "--global", "alias."+name, value)
 }
