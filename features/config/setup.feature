@@ -133,6 +133,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "code-hosting-origin-hostname" is "code"
     And local Git Town setting "sync-feature-strategy" is "rebase"
+    And local Git Town setting "sync-perennial-strategy" is "rebase"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
       | add all aliases                         | n enter                                       |
