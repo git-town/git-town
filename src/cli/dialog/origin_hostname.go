@@ -8,16 +8,14 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
 
-const enterHostingPlatformHelp = `
-Knowing the type of code hosting platform allows Git Town
-to open browser URLs and talk to the code hosting API.
+const enterOriginHostnameHelp = `
+When using SSH identities, define the hostname of your source code repository.
 
-If your code hosting platform uses as custom URL,
-please set it below. Otherwise leave it on "auto-detect".
+Only change this setting if the auto-detection does not work for you.
 
 `
 
-func HostingPlatform(existingValue configdomain.HostingPlatform, inputs components.TestInput) (configdomain.HostingPlatform, bool, error) {
+func OriginHostname(existingValue configdomain.HostingOriginHostname, inputs components.TestInput) (configdomain.HostingPlatform, bool, error) {
 	entries := []hostingPlatformEntry{
 		hostingPlatformAutoDetect,
 		hostingPlatformBitBucket,
