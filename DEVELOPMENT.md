@@ -157,7 +157,7 @@ in the Git repo under test. Example: `And display "git status"`.
 
 To manually inspect the local and remote Git repositories used in an end-to-end
 test, insert the step `And inspect the repo`. This step will make Cucumber print
-the path of the workspace and wait until you hit dialog.
+the path of the workspace and wait until you hit ENTER.
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
@@ -180,7 +180,7 @@ make fix
 
 ## debug the dialogs
 
-Run `git town debug` to see the commands to display Git Town's dialog.
+Run `git town debug` to see the commands to display Git Town's dialogs.
 
 ## learn about the code and test architecture
 
