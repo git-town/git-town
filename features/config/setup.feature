@@ -112,7 +112,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  @this
   Scenario: remove existing configuration
     Given a perennial branch "qa"
     And a branch "production"
