@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
