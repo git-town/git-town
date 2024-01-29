@@ -96,6 +96,12 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //nolint:exhaustruct
 	case "a":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //nolint:exhaustruct
+	case "c":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'c'}} //nolint:exhaustruct
+	case "d":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //nolint:exhaustruct
+	case "e":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //nolint:exhaustruct
 	case "o":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //nolint:exhaustruct
 	case "q":

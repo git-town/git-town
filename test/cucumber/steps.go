@@ -641,6 +641,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
 	})
 
+	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
+		if have.String() != want {
+			return fmt.Errorf(`expected local setting "code-hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
 		if have.String() != want {

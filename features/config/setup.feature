@@ -10,6 +10,7 @@ Feature: enter Git Town configuration
       | main development branch     | enter |
       | perennial branches          | enter |
       | hosting platform            | enter |
+      | origin hostname             | enter |
       | sync-feature-strategy       | enter |
       | sync-perennial-strategy     | enter |
       | sync-upstream               | enter |
@@ -50,6 +51,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
 
+  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -63,6 +65,7 @@ Feature: enter Git Town configuration
       | configure the perennial branches          | space down space enter |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
+      | origin hostname                           | c o d e enter          |
       | sync-feature-strategy                     | down enter             |
       | sync-perennial-strategy                   | down enter             |
       | sync-upstream                             | down enter             |
@@ -85,6 +88,7 @@ Feature: enter Git Town configuration
       | git config --global alias.sync "town sync"                   |
       | git config git-town.code-hosting-platform github             |
       | git config git-town.github-token 123456                      |
+      | git config git-town.code-hosting-origin-hostname code        |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"
@@ -100,6 +104,7 @@ Feature: enter Git Town configuration
     And the perennial branches are now "production"
     And local Git Town setting "code-hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
+    And local Git Town setting "code-hosting-origin-hostname" is now "code"
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"

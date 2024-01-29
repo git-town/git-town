@@ -174,6 +174,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 	if err != nil {
 		return err
 	}
+	err = saveOriginHostname(runner, newConfig)
+	if err != nil {
+		return err
+	}
 	err = saveMainBranch(runner, newConfig)
 	if err != nil {
 		return err
@@ -270,6 +274,13 @@ func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) e
 		return nil
 	}
 	return runner.SetMainBranch(newConfig.MainBranch)
+}
+
+func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
+		return nil
+	}
+	return runner.SetOriginHostname(newConfig.HostingOriginHostname)
 }
 
 func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {
