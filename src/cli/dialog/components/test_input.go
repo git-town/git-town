@@ -62,6 +62,8 @@ func ParseTestInput(envData string) TestInput {
 // recognizeTestInput provides the matching BubbleTea message for the given string.
 func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 	switch input {
+	case "backspace":
+		return tea.KeyMsg{Type: tea.KeyBackspace} //nolint:exhaustruct
 	case "ctrl+c":
 		return tea.KeyMsg{Type: tea.KeyCtrlC} //nolint:exhaustruct
 	case "down":
@@ -96,6 +98,14 @@ func recognizeTestInput(input string) tea.Msg { //nolint:ireturn
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'9'}} //nolint:exhaustruct
 	case "a":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'a'}} //nolint:exhaustruct
+	case "c":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'c'}} //nolint:exhaustruct
+	case "d":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}} //nolint:exhaustruct
+	case "e":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'e'}} //nolint:exhaustruct
+	case "n":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'n'}} //nolint:exhaustruct
 	case "o":
 		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'o'}} //nolint:exhaustruct
 	case "q":

@@ -100,7 +100,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 			return aborted, err
 		}
 	case configdomain.HostingPlatformNone:
-		// nothing to do here
+	}
+	config.userInput.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.HostingOriginHostname, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
 	}
 	config.userInput.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -168,6 +171,10 @@ func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
 		return err
 	}
 	err = saveGitLabToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveOriginHostname(runner, newConfig)
 	if err != nil {
 		return err
 	}
@@ -267,6 +274,16 @@ func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) e
 		return nil
 	}
 	return runner.SetMainBranch(newConfig.MainBranch)
+}
+
+func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
+		return nil
+	}
+	if runner.HostingOriginHostname != "" && newConfig.HostingOriginHostname == "" {
+		return runner.Frontend.DeleteOriginHostname()
+	}
+	return runner.Frontend.SetOriginHostname(newConfig.HostingOriginHostname)
 }
 
 func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {

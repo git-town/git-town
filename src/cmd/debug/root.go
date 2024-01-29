@@ -17,6 +17,7 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterGitLabToken())
 	debugCommand.AddCommand(enterMainBranchCmd())
 	debugCommand.AddCommand(enterParentCmd())
+	debugCommand.AddCommand(enterOriginHostname())
 	debugCommand.AddCommand(enterPerennialBranchesCmd())
 	debugCommand.AddCommand(enterSyncFeatureStrategy())
 	debugCommand.AddCommand(enterSyncPerennialStrategy())

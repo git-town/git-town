@@ -24,6 +24,6 @@ func GitLabToken(oldValue configdomain.GitLabToken, inputs components.TestInput)
 		Prompt:        "Your GitLab API token: ",
 		TestInput:     inputs,
 	})
-	fmt.Printf("GitLab token: %s\n", components.FormattedToken(token, aborted))
+	fmt.Printf("GitLab token: %s\n", components.FormattedSecret(token, aborted))
 	return configdomain.GitLabToken(token), aborted, err
 }
