@@ -3,6 +3,7 @@ package debug
 import (
 	"os"
 
+	"github.com/git-town/git-town/v11/src/cli/dialogs"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"

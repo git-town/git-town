@@ -3,6 +3,7 @@ package dialogs_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v11/src/cli/dialogs"
 	"github.com/git-town/git-town/v11/src/cli/dialogs/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"

@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/git-town/git-town/v11/src/cli/dialogs/enter"
+	"github.com/git-town/git-town/v11/src/cli/dialogs"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
