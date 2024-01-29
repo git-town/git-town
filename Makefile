@@ -62,7 +62,7 @@ help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: tools/rta@${RTA_VERSION}  # runs only the linters
-	@go run tools/structs_sorted/lint.go run
+	@go run tools/structs_sorted/structs_sorted.go run
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta actionlint &
