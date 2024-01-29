@@ -134,6 +134,11 @@ Feature: enter Git Town configuration
     And local Git Town setting "code-hosting-origin-hostname" is "code"
     And local Git Town setting "sync-feature-strategy" is "rebase"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
+    And local Git Town setting "sync-upstream" is "true"
+    And local Git Town setting "push-new-branches" is "true"
+    And local Git Town setting "push-hook" is "true"
+    And local Git Town setting "ship-delete-tracking-branch" is "false"
+    And local Git Town setting "sync-before-ship" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
       | add all aliases                         | n enter                                       |
@@ -141,13 +146,13 @@ Feature: enter Git Town configuration
       | change the perennial branches           | space down space enter                        |
       | remove hosting service override         | up up up enter                                |
       | remove origin hostname                  | backspace backspace backspace backspace enter |
-      | sync-feature-strategy                   | up enter                                      |
-      | sync-perennial-strategy                 | up enter                                      |
-      | sync-upstream                           | up enter                                      |
-      | enable push-new-branches                | up enter                                      |
-      | disable the push hook                   | up enter                                      |
-      | disable ship-delete-tracking-branch     | up enter                                      |
-      | sync-before-ship                        | up enter                                      |
+      | sync-feature-strategy                   | down enter                                    |
+      | sync-perennial-strategy                 | down enter                                    |
+      | sync-upstream                           | down enter                                    |
+      | enable push-new-branches                | down enter                                    |
+      | disable the push hook                   | down enter                                    |
+      | disable ship-delete-tracking-branch     | down enter                                    |
+      | sync-before-ship                        | down enter                                    |
     Then it runs the commands
       | COMMAND                                                  |
       | git config --global --unset alias.append                 |
@@ -182,10 +187,10 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
-    And local Git Town setting "push-new-branches" is now "true"
-    And local Git Town setting "push-hook" is now "true"
-    And local Git Town setting "ship-delete-tracking-branch" is now "false"
-    And local Git Town setting "sync-before-ship" is now "true"
+    And local Git Town setting "push-new-branches" is now "false"
+    And local Git Town setting "push-hook" is now "false"
+    And local Git Town setting "ship-delete-tracking-branch" is now "true"
+    And local Git Town setting "sync-before-ship" is now "false"
 
   Scenario: override an existing Git alias
     Given I ran "git config --global alias.append checkout"
