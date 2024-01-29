@@ -31,8 +31,8 @@ func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 type ParentArgs struct {
 	Branch          gitdomain.LocalBranchName
 	DialogTestInput dialog.TestInput
-	LocalBranches   gitdomain.LocalBranchNames
 	Lineage         configdomain.Lineage
+	LocalBranches   gitdomain.LocalBranchNames
 	MainBranch      gitdomain.LocalBranchName
 }
 

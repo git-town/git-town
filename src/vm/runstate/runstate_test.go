@@ -47,9 +47,6 @@ func TestRunState(t *testing.T) {
 		must.NoError(t, err)
 		want := `
 {
-  "Command": "sync",
-  "DryRun": true,
-  "IsUndo": false,
   "AbortProgram": [
     {
       "data": {
@@ -60,6 +57,11 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
+  "Command": "sync",
+  "DryRun": true,
+  "FinalUndoProgram": [],
+  "InitialActiveBranch": "initial",
+  "IsUndo": false,
   "RunProgram": [
     {
       "data": {
@@ -80,10 +82,8 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
-  "InitialActiveBranch": "initial",
-  "FinalUndoProgram": [],
-  "UnfinishedDetails": null,
-  "UndoablePerennialCommits": []
+  "UndoablePerennialCommits": [],
+  "UnfinishedDetails": null
 }`[1:]
 		must.EqOp(t, want, string(encoded))
 		newRunState := runstate.EmptyRunState()

@@ -18,6 +18,6 @@ func RemoveBranchFromLineage(args RemoveBranchFromLineageArgs) {
 type RemoveBranchFromLineageArgs struct {
 	Branch  gitdomain.LocalBranchName
 	Lineage configdomain.Lineage
-	Program *program.Program
 	Parent  gitdomain.LocalBranchName
+	Program *program.Program
 }

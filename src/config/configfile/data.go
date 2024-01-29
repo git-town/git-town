@@ -4,11 +4,11 @@ package configfile
 type Data struct {
 	Branches                 *Branches     `toml:"branches"`
 	Hosting                  *Hosting      `toml:"hosting"`
-	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	PushHook                 *bool         `toml:"push-hook"`
 	PushNewbranches          *bool         `toml:"push-new-branches"`
 	ShipDeleteTrackingBranch *bool         `toml:"ship-delete-tracking-branch"`
 	SyncBeforeShip           *bool         `toml:"sync-before-ship"`
+	SyncStrategy             *SyncStrategy `toml:"sync-strategy"`
 	SyncUpstream             *bool         `toml:"sync-upstream"`
 }
 
@@ -22,8 +22,8 @@ func (self Branches) IsEmpty() bool {
 }
 
 type Hosting struct {
-	Platform       *string `toml:"platform"`
 	OriginHostname *string `toml:"origin-hostname"`
+	Platform       *string `toml:"platform"`
 }
 
 func (self Hosting) IsEmpty() bool {

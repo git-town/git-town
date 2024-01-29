@@ -16,11 +16,11 @@ type ScenarioState struct {
 	// the Fixture used in the current scenario
 	fixture fixture.Fixture
 
-	// initialLocalBranches contains the local branches before the WHEN steps run
-	initialLocalBranches gitdomain.LocalBranchNames
+	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
+	initialCommits *messages.PickleStepArgument_PickleTable
 
-	// initialRemoteBranches contains the remote branches before the WHEN steps run
-	initialRemoteBranches gitdomain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
+	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
+	initialCurrentBranch gitdomain.LocalBranchName
 
 	// initialDevSHAs is only for looking up SHAs that existed at the developer repo before the first Git Town command ran.
 	// It's not a source of truth for which branches existed at that time
@@ -29,17 +29,17 @@ type ScenarioState struct {
 	// because the developer workspace hasn't fetched updates yet.
 	initialDevSHAs map[string]gitdomain.SHA
 
-	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
-	initialOriginSHAs map[string]gitdomain.SHA
-
-	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
-	initialCommits *messages.PickleStepArgument_PickleTable
-
 	// initialLineage describes the lineage before the WHEN steps ran.
 	initialLineage datatable.DataTable
 
-	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
-	initialCurrentBranch gitdomain.LocalBranchName
+	// initialLocalBranches contains the local branches before the WHEN steps run
+	initialLocalBranches gitdomain.LocalBranchNames
+
+	// initialOriginSHAs is only for looking up SHAs that existed at the origin repo before the first Git Town command was run.
+	initialOriginSHAs map[string]gitdomain.SHA
+
+	// initialRemoteBranches contains the remote branches before the WHEN steps run
+	initialRemoteBranches gitdomain.LocalBranchNames // the remote branches are tracked as local branches in the remote repo
 
 	// insideGitRepo indicates whether the developer workspace contains a Git repository
 	insideGitRepo bool

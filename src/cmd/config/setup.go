@@ -55,8 +55,8 @@ func executeConfigSetup(verbose bool) error {
 }
 
 type setupConfig struct {
-	localBranches gitdomain.BranchInfos
 	dialogInputs  dialog.TestInputs
+	localBranches gitdomain.BranchInfos
 	userInput     configdomain.FullConfig
 }
 
@@ -144,8 +144,8 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
+		localBranches: branchesSnapshot.Branches,
 		userInput:     configdomain.FullConfig{}, //nolint:exhaustruct
 	}, exit, err
 }

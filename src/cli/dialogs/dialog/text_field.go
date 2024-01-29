@@ -13,10 +13,10 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 	textInput.Prompt = args.Prompt
 	textInput.Focus()
 	model := textFieldModel{
-		textInput: textInput,
 		colors:    createColors(),
 		help:      args.Help,
 		status:    StatusActive,
+		textInput: textInput,
 	}
 	program := tea.NewProgram(model)
 	// TODO: extract into helper function.
@@ -43,10 +43,10 @@ type TextFieldArgs struct {
 }
 
 type textFieldModel struct {
-	textInput textinput.Model
 	colors    dialogColors // colors to use for help text
 	help      string
 	status    status
+	textInput textinput.Model
 }
 
 func (self textFieldModel) Init() tea.Cmd {

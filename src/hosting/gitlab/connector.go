@@ -80,12 +80,12 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := Config{
+		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		APIToken: args.APIToken,
 	}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
@@ -94,18 +94,18 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 		return nil, err
 	}
 	connector := Connector{
-		client: client,
 		Config: gitlabConfig,
+		client: client,
 		log:    args.Log,
 	}
 	return &connector, nil
 }
 
 type NewConnectorArgs struct {
-	HostingPlatform configdomain.HostingPlatform
-	OriginURL       *giturl.Parts
 	APIToken        configdomain.GitLabToken
+	HostingPlatform configdomain.HostingPlatform
 	Log             hostingdomain.Log
+	OriginURL       *giturl.Parts
 }
 
 func parseMergeRequest(mergeRequest *gitlab.MergeRequest) hostingdomain.Proposal {

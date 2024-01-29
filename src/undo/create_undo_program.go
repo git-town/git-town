@@ -30,10 +30,10 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 
 type CreateUndoProgramArgs struct {
 	DryRun                   bool
-	Run                      *git.ProdRunner
 	InitialBranchesSnapshot  gitdomain.BranchesStatus
 	InitialConfigSnapshot    undoconfig.ConfigSnapshot
 	InitialStashSnapshot     gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook
+	Run                      *git.ProdRunner
 	UndoablePerennialCommits []gitdomain.SHA
 }

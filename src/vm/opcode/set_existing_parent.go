@@ -7,8 +7,8 @@ import (
 
 // SetExistingParent sets the first existing entry in the given ancestor list as the parent branch of the given branch.
 type SetExistingParent struct {
-	Branch    gitdomain.LocalBranchName
 	Ancestors gitdomain.LocalBranchNames
+	Branch    gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

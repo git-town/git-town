@@ -13,9 +13,9 @@ type ConnectorMergeProposal struct {
 	Branch                    gitdomain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
+	ProposalNumber            int
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	ProposalNumber            int
 }
 
 func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {

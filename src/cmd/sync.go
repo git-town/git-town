@@ -178,8 +178,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		remotes:          remotes,
 		previousBranch:   previousBranch,
+		remotes:          remotes,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSnapshot, false, err
 }

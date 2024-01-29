@@ -98,11 +98,11 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		RemotesCache:       &cache.Remotes{},
 	}
 	testCommands := commands.TestCommands{
-		TestRunner:      &runner,
 		BackendCommands: &backendCommands,
+		TestRunner:      &runner,
 	}
 	return TestRuntime{
-		TestCommands: testCommands,
 		Backend:      backendCommands,
+		TestCommands: testCommands,
 	}
 }

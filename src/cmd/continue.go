@@ -102,8 +102,8 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		Log:             print.Logger{},
 	})
 	return &continueConfig{
-		connector:        connector,
 		FullConfig:       &repo.Runner.FullConfig,
+		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }

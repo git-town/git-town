@@ -28,10 +28,10 @@ func syncDeletedFeatureBranchProgram(list *program.Program, branch gitdomain.Bra
 
 func syncDeletedPerennialBranchProgram(list *program.Program, branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	RemoveBranchFromLineage(RemoveBranchFromLineageArgs{
-		Program: list,
 		Branch:  branch.LocalName,
-		Parent:  args.Config.MainBranch,
 		Lineage: args.Config.Lineage,
+		Parent:  args.Config.MainBranch,
+		Program: list,
 	})
 	list.Add(&opcode.RemoveFromPerennialBranches{Branch: branch.LocalName})
 	list.Add(&opcode.Checkout{Branch: args.Config.MainBranch})

@@ -16,16 +16,16 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
+	AbortProgram             program.Program `exhaustruct:"optional"`
 	Command                  string
 	DryRun                   bool
-	IsUndo                   bool            `exhaustruct:"optional"`
-	AbortProgram             program.Program `exhaustruct:"optional"`
-	RunProgram               program.Program
-	UndoProgram              program.Program `exhaustruct:"optional"`
+	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	InitialActiveBranch      gitdomain.LocalBranchName
-	FinalUndoProgram         program.Program            `exhaustruct:"optional"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
+	IsUndo                   bool `exhaustruct:"optional"`
+	RunProgram               program.Program
+	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
+	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
@@ -62,8 +62,8 @@ func (self *RunState) CreateAbortRunState() RunState {
 	return RunState{
 		Command:             self.Command,
 		DryRun:              self.DryRun,
-		IsUndo:              true,
 		InitialActiveBranch: self.InitialActiveBranch,
+		IsUndo:              true,
 		RunProgram:          abortProgram,
 	}
 }
