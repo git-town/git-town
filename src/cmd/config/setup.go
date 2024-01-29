@@ -100,7 +100,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 			return aborted, err
 		}
 	case configdomain.HostingPlatformNone:
-		// nothing to do here
+	}
+	config.userInput.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.HostingOriginHostname, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
 	}
 	config.userInput.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
 	if err != nil || aborted {
