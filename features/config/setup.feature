@@ -52,6 +52,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-before-ship" is still not set
 
   @this
+  @debug
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
