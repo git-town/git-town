@@ -147,37 +147,36 @@ Feature: enter Git Town configuration
       | disable ship-delete-tracking-branch     | up enter                                      |
       | sync-before-ship                        | up enter                                      |
     Then it runs the commands
-      | COMMAND                                               |
-      | git config --global --unset alias.append              |
-      | git config --global --unset alias.diff-parent         |
-      | git config --global --unset alias.hack                |
-      | git config --global --unset alias.kill                |
-      | git config --global --unset alias.prepend             |
-      | git config --global --unset alias.propose             |
-      | git config --global --unset alias.rename-branch       |
-      | git config --global --unset alias.repo                |
-      | git config --global --unset alias.set-parent          |
-      | git config --global --unset alias.ship                |
-      | git config --global --unset alias.sync                |
-      | git config git-town.code-hosting-platform github      |
-      | git config git-town.github-token 123456               |
-      | git config git-town.code-hosting-origin-hostname code |
-    And global Git setting "alias.append" is now "town append"
-    And global Git setting "alias.diff-parent" is now "town diff-parent"
-    And global Git setting "alias.hack" is now "town hack"
-    And global Git setting "alias.kill" is now "town kill"
-    And global Git setting "alias.prepend" is now "town prepend"
-    And global Git setting "alias.propose" is now "town propose"
-    And global Git setting "alias.rename-branch" is now "town rename-branch"
-    And global Git setting "alias.repo" is now "town repo"
-    And global Git setting "alias.set-parent" is now "town set-parent"
-    And global Git setting "alias.ship" is now "town ship"
-    And global Git setting "alias.sync" is now "town sync"
-    And the main branch is now "main"
+      | COMMAND                                                  |
+      | git config --global --unset alias.append                 |
+      | git config --global --unset alias.diff-parent            |
+      | git config --global --unset alias.hack                   |
+      | git config --global --unset alias.kill                   |
+      | git config --global --unset alias.prepend                |
+      | git config --global --unset alias.propose                |
+      | git config --global --unset alias.rename-branch          |
+      | git config --global --unset alias.repo                   |
+      | git config --global --unset alias.set-parent             |
+      | git config --global --unset alias.ship                   |
+      | git config --global --unset alias.sync                   |
+      | git config --unset git-town.code-hosting-platform        |
+      | git config --unset git-town.code-hosting-origin-hostname |
+    And global Git setting "alias.append" no longer exists
+    And global Git setting "alias.diff-parent" no longer exists
+    And global Git setting "alias.hack" no longer exists
+    And global Git setting "alias.kill" no longer exists
+    And global Git setting "alias.prepend" no longer exists
+    And global Git setting "alias.propose" no longer exists
+    And global Git setting "alias.rename-branch" no longer exists
+    And global Git setting "alias.repo" no longer exists
+    And global Git setting "alias.set-parent" no longer exists
+    And global Git setting "alias.ship" no longer exists
+    And global Git setting "alias.sync" no longer exists
+    And the main branch is still "main"
     And the perennial branches are now "production"
-    And local Git Town setting "code-hosting-platform" is now "github"
-    And local Git Town setting "github-token" is now "123456"
-    And local Git Town setting "code-hosting-origin-hostname" is now "code"
+    And local Git Town setting "code-hosting-platform" no longer exists
+    And local Git Town setting "github-token" no longer exists
+    And local Git Town setting "code-hosting-origin-hostname" no longer exists
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
