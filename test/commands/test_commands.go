@@ -373,11 +373,6 @@ func (self *TestCommands) SHAForCommit(name string) gitdomain.SHA {
 	return gitdomain.NewSHA(strings.Split(output, "\n")[0])
 }
 
-// SetGitAlias sets the Git alias with the given name to the given value.
-func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
-	return self.Run("git", "config", "--global", "alias."+name.String(), value)
-}
-
 // SetColorUI configures whether Git output contains color codes.
 func (self *TestCommands) SetColorUI(value string) error {
 	return self.Run("git", "config", "color.ui", value)
@@ -385,6 +380,11 @@ func (self *TestCommands) SetColorUI(value string) error {
 
 func (self *TestCommands) SetDefaultGitBranch(value gitdomain.LocalBranchName) {
 	self.MustRun("git", "config", "init.defaultbranch", value.String())
+}
+
+// SetGitAlias sets the Git alias with the given name to the given value.
+func (self *TestCommands) SetGitAlias(name configdomain.AliasableCommand, value string) error {
+	return self.Run("git", "config", "--global", "alias."+name.String(), value)
 }
 
 // StageFiles adds the file with the given name to the Git index.

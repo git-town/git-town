@@ -267,8 +267,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if aliasableCommand == nil {
 			return fmt.Errorf("no aliasableCommand found for key %q", *key)
 		}
-		state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
-		return nil
+		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
 	})
 
 	suite.Step(`^global Git setting "alias\.(.*?)" no longer exists$`, func(name string) error {
