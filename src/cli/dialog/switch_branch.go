@@ -143,6 +143,6 @@ type SwitchBranchEntry struct {
 	Indentation string
 }
 
-func (sbe SwitchBranchEntry) String() string {
-	return sbe.Indentation + sbe.Branch.String()
+func (self SwitchBranchEntry) String() string {
+	return self.Indentation + self.Branch.String()
 }
