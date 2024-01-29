@@ -112,7 +112,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  @debug @this
+  @this
   Scenario: remove existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -132,6 +132,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "code-hosting-origin-hostname" is "code"
+    And local Git Town setting "sync-feature-strategy" is "rebase"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
       | add all aliases                         | n enter                                       |
@@ -177,7 +178,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "code-hosting-platform" no longer exists
     And local Git Town setting "github-token" no longer exists
     And local Git Town setting "code-hosting-origin-hostname" no longer exists
-    And local Git Town setting "sync-feature-strategy" is now "rebase"
+    And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
     And local Git Town setting "push-new-branches" is now "true"
