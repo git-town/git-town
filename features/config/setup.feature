@@ -51,8 +51,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
 
-  @this
-  @debug
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -122,6 +120,7 @@ Feature: enter Git Town configuration
       | main development branch     | enter   |
       | perennial branches          | enter   |
       | hosting platform            | enter   |
+      | origin hostname             | enter   |
       | sync-feature-strategy       | enter   |
       | sync-perennial-strategy     | enter   |
       | sync-upstream               | enter   |
@@ -142,6 +141,7 @@ Feature: enter Git Town configuration
       | main development branch     | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
       | hosting platform            | enter      |                                             |
+      | origin hostname             | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |
       | sync-perennial-strategy     | enter      |                                             |
       | sync-upstream               | enter      |                                             |
@@ -160,6 +160,7 @@ Feature: enter Git Town configuration
       | main development branch     | down enter     |                                             |
       | perennial branches          |                | no input here since the dialog doesn't show |
       | hosting platform            | up up up enter |                                             |
+      | origin hostname             | enter          |                                             |
       | sync-feature-strategy       | enter          |                                             |
       | sync-perennial-strategy     | enter          |                                             |
       | sync-upstream               | enter          |                                             |
@@ -180,6 +181,7 @@ Feature: enter Git Town configuration
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | hosting platform            | up enter          |                                             |
       | gitlab token                | 1 2 3 4 5 6 enter |                                             |
+      | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
@@ -202,6 +204,7 @@ Feature: enter Git Town configuration
       | perennial branches          |                   | no input here since the dialog doesn't show |
       | hosting platform            | down down enter   |                                             |
       | gitea token                 | 1 2 3 4 5 6 enter |                                             |
+      | origin hostname             | enter             |                                             |
       | sync-feature-strategy       | enter             |                                             |
       | sync-perennial-strategy     | enter             |                                             |
       | sync-upstream               | enter             |                                             |
