@@ -63,7 +63,7 @@ type setupConfig struct {
 
 type userInput struct {
 	configdomain.FullConfig
-	createConfigFile bool
+	configStorage dialog.ConfigStorageOption
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
@@ -143,7 +143,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ConfigStorage(config.hasConfigFile, config.dialogInputs.Next())
+	config.userInput.configStorage, aborted, err = dialog.ConfigStorage(config.hasConfigFile, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}

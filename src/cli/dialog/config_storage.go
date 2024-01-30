@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
 const (
@@ -32,15 +31,16 @@ const (
 	ConfigStorageOptionGit  ConfigStorageOption = `Git metadata`
 )
 
-func ConfigStorage(hasConfigFile, inputs components.TestInput) (ConfigStorageOption, bool, error) {
+func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStorageOption, bool, error) {
+	if hasConfigFile {
+		return ConfigStorageOptionFile, false, nil
+	}
 	entries := []ConfigStorageOption{
 		ConfigStorageOptionFile,
 		ConfigStorageOptionGit,
 	}
 	selection, aborted, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
-	if err == nil && !aborted {
-		fmt.Printf("Config storage: %s\n", components.FormattedSelection(selection.Short(), aborted))
-	}
+	fmt.Printf("Config storage: %s\n", components.FormattedSelection(selection.Short(), aborted))
 	return selection, aborted, err
 }
 
@@ -53,14 +53,4 @@ func (self ConfigStorageOption) Short() string {
 
 func (self ConfigStorageOption) String() string {
 	return string(self)
-}
-
-func (self syncUpstreamEntry) SyncUpstream() configdomain.SyncUpstream {
-	switch self {
-	case SyncUpstreamEntryYes:
-		return configdomain.SyncUpstream(true)
-	case SyncUpstreamEntryNo:
-		return configdomain.SyncUpstream(false)
-	}
-	panic("unhandled syncUpstreamEntry: " + self)
 }
