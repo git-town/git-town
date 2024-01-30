@@ -61,6 +61,10 @@ type setupConfig struct {
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	aborted, err = dialog.Welcome(config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	config.userInput.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
