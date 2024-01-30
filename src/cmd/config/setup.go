@@ -143,7 +143,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ConfigFileOrGit(config.hasConfigFile, config.dialogInputs.Next())
+	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ConfigStorage(config.hasConfigFile, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
