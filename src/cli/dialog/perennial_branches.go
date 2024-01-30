@@ -12,13 +12,16 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const perennialBranchesHelp = `
-	Perennial branches are long-lived branches.
-	They are never shipped and don't have ancestors.
-	Typically, perennial branches have names like
-	"development", "staging", "qa", "production", etc.
+const (
+	perennialBranchesTitle = `Perennial branches`
+	perennialBranchesHelp  = `
+Perennial branches are long-lived branches.
+They are never shipped and have no ancestors.
+Typically, perennial branches have names like
+"development", "staging", "qa", "production", etc.
 
 `
+)
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
@@ -133,6 +136,9 @@ func (self PerennialBranchesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
+	s.WriteRune('\n')
+	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
+	s.WriteRune('\n')
 	s.WriteString(perennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i

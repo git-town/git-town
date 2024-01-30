@@ -8,16 +8,17 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncFeatureStrategyHelp = `
+const (
+	syncFeatureStrategyTitle = `Sync-feature strategy`
+	syncFeatureStrategyHelp  = `
 How should Git Town synchronize feature branches?
-
-Feature branches are short-lived branches cut from the main branch
-and shipped back into the main branch.
-Typically you develop features and bug fixes on them, hence their name.
-
-How should Git Town update feature branches?
+Feature branches are short-lived branches cut from
+the main branch and shipped back into the main branch.
+Typically you develop features and bug fixes on them,
+hence their name.
 
 `
+)
 
 const (
 	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`
@@ -38,7 +39,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, syncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}

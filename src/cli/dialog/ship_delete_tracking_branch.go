@@ -8,14 +8,16 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const shipDeleteTrackingBranchHelp = `
+const (
+	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
+	shipDeleteTrackingBranchHelp  = `
 Should "git ship" delete the tracking branch?
-
 You want to disable this if your code hosting system
 (GitHub, GitLab, etc) deletes head branches when
 merging pull requests through its UI.
 
 `
+)
 
 const (
 	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`
@@ -33,7 +35,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchHelp, shipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
