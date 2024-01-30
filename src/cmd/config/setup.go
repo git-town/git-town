@@ -168,7 +168,17 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	}, exit, err
 }
 
-func saveAll(runner *git.ProdRunner, userInput userInput) error {
+func saveAll(storage dialog.ConfigStorageOption, runner *git.ProdRunner, userInput userInput) error {
+	switch storage {
+	case dialog.ConfigStorageOptionFile:
+		return saveToFile(userInput)
+	case dialog.ConfigStorageOptionGit:
+		return saveToGit(runner, userInput)
+	}
+	panic("unknown configStorage: " + storage)
+}
+
+func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	err := saveAliases(runner, userInput)
 	if err != nil {
 		return err
