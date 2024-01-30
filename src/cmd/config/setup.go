@@ -368,3 +368,7 @@ func saveSyncBeforeShip(runner *git.ProdRunner, userInput userInput) error {
 	}
 	return runner.SetSyncBeforeShip(userInput.SyncBeforeShip, false)
 }
+
+func saveToFile(userInput userInput) error {
+	return nil
+}
