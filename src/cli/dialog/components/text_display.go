@@ -6,9 +6,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func TextDisplay(text string, inputs TestInput) (bool, error) {
+func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	model := textDisplayModel{
 		colors: createColors(),
+		title:  title,
 		text:   text,
 		status: StatusActive,
 	}
@@ -31,6 +32,7 @@ func TextDisplay(text string, inputs TestInput) (bool, error) {
 
 type textDisplayModel struct {
 	colors dialogColors // colors to use for help text
+	title  string
 	text   string
 	status status
 }
@@ -69,6 +71,9 @@ func (self textDisplayModel) View() string {
 		return ""
 	}
 	result := strings.Builder{}
+	result.WriteString("\n")
+	result.WriteString(self.colors.Title.Styled(self.title))
+	result.WriteString("\n")
 	result.WriteString(self.text)
 	result.WriteString("\n\n  ")
 	// accept

@@ -8,9 +8,8 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+const syncUpstreamTitle = `Should "git sync" also fetch updates from the upstream remote?`
 const syncUpstreamHelp = `
-Should "git sync" also fetch updates from the upstream remote?
-
 If an "upstream" remote exists, and this setting is enabled,
 "git sync" will also update the local main branch
 with commits from the main branch at the upstream remote.
