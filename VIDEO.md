@@ -11,5 +11,5 @@ gource --load-config .gource.conf
 Create a video file:
 
 ```bash
-gource --load-config .gource.conf -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset veryslow -pix_fmt yuv420p -threads 0 -bf 3 -crf 18 git-town.mp4
+gource --load-config .gource.conf -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset veryslow -pix_fmt yuv420p -threads 0 -bf 0 -crf 18 git-town.mp4
 ```
