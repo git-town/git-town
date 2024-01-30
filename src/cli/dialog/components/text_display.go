@@ -9,9 +9,9 @@ import (
 func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 	model := textDisplayModel{
 		colors: createColors(),
-		title:  title,
-		text:   text,
 		status: StatusActive,
+		text:   text,
+		title:  title,
 	}
 	program := tea.NewProgram(model)
 	// TODO: extract into helper function.
@@ -32,9 +32,9 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 
 type textDisplayModel struct {
 	colors dialogColors // colors to use for help text
-	title  string
-	text   string
 	status status
+	text   string
+	title  string
 }
 
 func (self textDisplayModel) Init() tea.Cmd {
