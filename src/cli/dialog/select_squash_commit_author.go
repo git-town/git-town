@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const squashCommitAuthorTitle = `squash commit author`
+const squashCommitAuthorTitle = `Squash commit author`
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
 func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string, dialogTestInputs components.TestInput) (string, bool, error) {
