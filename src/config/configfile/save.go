@@ -11,13 +11,7 @@ func Save(config *configdomain.PartialConfig) error {
 	if err != nil {
 		return err
 	}
-	file, err := os.WriteFile(FileName)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	_, err = file.WriteString(text)
-	return err
+	return os.WriteFile(FileName, []byte(text), 0o600)
 }
 
 func toData(config *configdomain.PartialConfig) Data {
