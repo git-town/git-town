@@ -71,9 +71,9 @@ func (self textDisplayModel) View() string {
 		return ""
 	}
 	result := strings.Builder{}
-	result.WriteString("\n")
+	result.WriteRune('\n')
 	result.WriteString(self.colors.Title.Styled(self.title))
-	result.WriteString("\n")
+	result.WriteRune('\n')
 	result.WriteString(self.text)
 	result.WriteString("\n\n  ")
 	// accept

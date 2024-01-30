@@ -138,9 +138,9 @@ func (self AliasesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
-	s.WriteString("\n")
+	s.WriteRune('\n')
 	s.WriteString(self.Colors.Title.Styled(aliasesTitle))
-	s.WriteString("\n")
+	s.WriteRune('\n')
 	s.WriteString(aliasesHelp)
 	for i, branch := range self.Entries {
 		s.WriteString(self.EntryNumberStr(i))

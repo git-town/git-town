@@ -65,7 +65,7 @@ func (self radioListModel[S]) View() string {
 	s := strings.Builder{}
 	s.WriteRune('\n')
 	s.WriteString(self.Colors.Title.Styled(self.title))
-	s.WriteString("\n")
+	s.WriteRune('\n')
 	s.WriteString(self.help)
 	for i, branch := range self.Entries {
 		s.WriteString(self.EntryNumberStr(i))
