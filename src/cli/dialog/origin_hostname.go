@@ -7,12 +7,15 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const originHostnameHelp = `
-When using SSH identities, define the hostname of your source code repository.
-
-Only change this setting if the auto-detection does not work for you.
+const (
+	originHostnameTitle = `Origin hostname`
+	originHostnameHelp  = `
+When using SSH identities, define the hostname
+of your source code repository. Only change this
+if the auto-detection does not work for you.
 
 `
+)
 
 // GitHubToken lets the user enter the GitHub API token.
 func OriginHostname(oldValue configdomain.HostingOriginHostname, inputs components.TestInput) (configdomain.HostingOriginHostname, bool, error) {
@@ -21,6 +24,7 @@ func OriginHostname(oldValue configdomain.HostingOriginHostname, inputs componen
 		Help:          originHostnameHelp,
 		Prompt:        "Origin hostname override: ",
 		TestInput:     inputs,
+		Title:         originHostnameTitle,
 	})
 	fmt.Printf("Origin hostname: %s\n", components.FormattedToken(token, aborted))
 	return configdomain.HostingOriginHostname(token), aborted, err
