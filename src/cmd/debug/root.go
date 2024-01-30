@@ -28,5 +28,6 @@ func RootCmd() *cobra.Command {
 	debugCommand.AddCommand(enterSyncBeforeShip())
 	debugCommand.AddCommand(selectCommitAuthorCmd())
 	debugCommand.AddCommand(unfinishedStateCommitAuthorCmd())
+	debugCommand.AddCommand(welcome())
 	return debugCommand
 }

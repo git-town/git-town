@@ -25,13 +25,8 @@ func TextDisplay(text string, inputs TestInput) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	result := dialogResult.(textFieldModel) //nolint:forcetypeassert
+	result := dialogResult.(textDisplayModel) //nolint:forcetypeassert
 	return result.status == StatusAborted, nil
-}
-
-type TextDisplayArgs struct {
-	Text      string
-	TestInput TestInput
 }
 
 type textDisplayModel struct {
@@ -53,6 +48,10 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 			return self, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
 			self.status = StatusAborted
+			return self, tea.Quit
+		}
+		if msg.String() == "o" {
+			self.status = StatusDone
 			return self, tea.Quit
 		}
 	case error:

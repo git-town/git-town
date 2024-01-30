@@ -5,9 +5,9 @@ import (
 )
 
 const welcomeText = `
-Welcome to the Git Town setup assistant!
-I will walk you through all configuration options for Git Town.
-I'll explain what they do and give you a chance to modify them.
+Welcome to the Git Town setup assistant! It will walk you
+step by step through the configuration options for Git Town.
+It explains what each option does and lets you modify it.
 
 You can use the UP and DOWN keys to change the selection and
 ENTER to accept it and go to the next screen.  Vim motion keys
