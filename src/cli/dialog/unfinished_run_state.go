@@ -10,14 +10,16 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const unfinishedRunstateTitle = `unfinished Git Town command`
-const unfinishedRunstateHelp = `
+const (
+	unfinishedRunstateTitle = `unfinished Git Town command`
+	unfinishedRunstateHelp  = `
 You have an unfinished %q command
 that ended on the %q branch
 %s. Please choose how to proceed.
 
 
 `
+)
 
 type Response string
 

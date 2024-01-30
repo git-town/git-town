@@ -8,14 +8,16 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncPerennialStrategyTitle = `Sync-perennial strategy`
-const syncPerennialStrategyHelp = `
+const (
+	syncPerennialStrategyTitle = `Sync-perennial strategy`
+	syncPerennialStrategyHelp  = `
 How should Git Town synchronize perennial branches?
 Perennial branches have no parent branch.
 The only updates they receive are additional commits
 made to their tracking branch somewhere else.
 
 `
+)
 
 const (
 	SyncPerennialStrategyEntryMerge  syncPerennialStrategyEntry = `merge updates from the tracking branch into perennial branches`

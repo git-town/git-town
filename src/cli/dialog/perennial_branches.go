@@ -12,14 +12,16 @@ import (
 	"github.com/muesli/termenv"
 )
 
-const perennialBranchesTitle = `Perennial branches`
-const perennialBranchesHelp = `
+const (
+	perennialBranchesTitle = `Perennial branches`
+	perennialBranchesHelp  = `
 Perennial branches are long-lived branches.
 They are never shipped and have no ancestors.
 Typically, perennial branches have names like
 "development", "staging", "qa", "production", etc.
 
 `
+)
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.

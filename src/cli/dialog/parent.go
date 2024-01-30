@@ -11,13 +11,15 @@ import (
 
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)") //nolint:gochecknoglobals
 
-const parentBranchTitleTemplate = `Parent Branch for %s`
-const parentBranchHelpTemplate = `
+const (
+	parentBranchTitleTemplate = `Parent Branch for %s`
+	parentBranchHelpTemplate  = `
 Please select the parent of branch %q or enter its number.
 Most of the time this is the main development branch (%v).
 
 
 `
+)
 
 // Parent lets the user select the parent branch for the given branch.
 func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {

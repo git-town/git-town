@@ -8,14 +8,16 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
-const shipDeleteTrackingBranchHelp = `
+const (
+	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
+	shipDeleteTrackingBranchHelp  = `
 Should "git ship" delete the tracking branch?
 You want to disable this if your code hosting system
 (GitHub, GitLab, etc) deletes head branches when
 merging pull requests through its UI.
 
 `
+)
 
 const (
 	ShipDeleteTrackingBranchEntryYes shipDeleteTrackingBranchEntry = `yes, "git ship" should delete tracking branches`

@@ -8,13 +8,15 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
 
-const mainBranchTitle = `Main branch`
-const mainBranchHelp = `
+const (
+	mainBranchTitle = `Main branch`
+	mainBranchHelp  = `
 The main branch is the branch from which you cut new feature branches,
 and into which you ship feature branches when they are done.
 This branch is often called "main", "master", or "development".
 
 `
+)
 
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {

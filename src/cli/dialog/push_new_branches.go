@@ -8,8 +8,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const pushNewBranchesTitle = `Push new branches`
-const pushNewBranchesHelp = `
+const (
+	pushNewBranchesTitle = `Push new branches`
+	pushNewBranchesHelp  = `
 Should Git Town push the new branches it creates
 immediately to origin even if they are empty?
 
@@ -22,6 +23,7 @@ and Git Town will create the missing tracking branch
 on the first run of "git sync".
 
 `
+)
 
 const (
 	PushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"

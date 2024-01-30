@@ -7,8 +7,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const pushHookTitle = `Push hook`
-const pushHookHelp = `
+const (
+	pushHookTitle = `Push hook`
+	pushHookHelp  = `
 The "push-hook" setting determines whether Git Town
 permits or prevents Git hooks while pushing branches.
 Hooks are enabled by default. If your Git hooks are slow,
@@ -19,6 +20,7 @@ More info at https://www.git-town.com/preferences/push-hook.
 
 Push hooks in Git Town are:
 `
+)
 
 const (
 	pushHookEntryEnabled  pushHookEntry = "enabled"

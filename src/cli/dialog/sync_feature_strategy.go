@@ -8,8 +8,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncFeatureStrategyTitle = `Sync-feature strategy`
-const syncFeatureStrategyHelp = `
+const (
+	syncFeatureStrategyTitle = `Sync-feature strategy`
+	syncFeatureStrategyHelp  = `
 How should Git Town synchronize feature branches?
 Feature branches are short-lived branches cut from
 the main branch and shipped back into the main branch.
@@ -17,6 +18,7 @@ Typically you develop features and bug fixes on them,
 hence their name.
 
 `
+)
 
 const (
 	syncFeatureStrategyEntryMerge  syncFeatureStrategyEntry = `merge updates from the parent branch into feature branches`

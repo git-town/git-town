@@ -7,13 +7,15 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const originHostnameTitle = `Origin hostname`
-const originHostnameHelp = `
+const (
+	originHostnameTitle = `Origin hostname`
+	originHostnameHelp  = `
 When using SSH identities, define the hostname
 of your source code repository. Only change this
 if the auto-detection does not work for you.
 
 `
+)
 
 // GitHubToken lets the user enter the GitHub API token.
 func OriginHostname(oldValue configdomain.HostingOriginHostname, inputs components.TestInput) (configdomain.HostingOriginHostname, bool, error) {

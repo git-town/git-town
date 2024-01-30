@@ -8,8 +8,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncBeforeShipTitle = `Sync before ship`
-const syncBeforeShipHelp = `
+const (
+	syncBeforeShipTitle = `Sync before ship`
+	syncBeforeShipHelp  = `
 Should "git ship" sync branches before shipping them?
 
 Guidance: enable when shipping branches locally on your machine
@@ -23,6 +24,7 @@ on the feature branch. This helps keep the main branch green.
 But this also triggers another CI run and delays shipping.
 
 `
+)
 
 const (
 	SyncBeforeShipEntryYes syncBeforeShipEntry = `yes, "git ship" should also sync the branch`
