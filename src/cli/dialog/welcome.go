@@ -5,16 +5,16 @@ import (
 )
 
 const welcomeText = `
-Welcome to the Git Town setup assistant! It will walk you
-step by step through the configuration options for Git Town.
-It explains what each option does and lets you modify it.
+Welcome to the Git Town setup assistant! It helps you configure
+Git Town for your system.
 
-You can use the UP and DOWN keys to change the selection and
-ENTER to accept it and go to the next screen.  Vim motion keys
-("j" and "k" for DOWN and UP and "o" to accept) also work!
+Change the selection with UP and DOWN or by entering the entry number.
+ENTER accepts the current selection and goes to the next screen.
+Vim motion commands like j, k, o also work.
 
-I only persist changes at the end. You can try this assistant
-and exit safely at any time by pressing ESC or Ctrl-C.
+This assistant only writes changes to disk at the end. You can
+try it out safely and exit any time by pressing ESC, Ctrl-C, or q.
+
 Please press ENTER or "o" to go to the next screen.
 
 `

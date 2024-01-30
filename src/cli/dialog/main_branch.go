@@ -11,8 +11,7 @@ import (
 const enterBranchHelp = `
 The main branch is the branch from which you cut new feature branches,
 and into which you ship feature branches when they are done.
-In most repositories, this branch is called "main", "master", or "development".
-
+This branch is often called "main", "master", or "development".
 
 `
 

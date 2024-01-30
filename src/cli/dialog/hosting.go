@@ -11,9 +11,8 @@ import (
 const enterHostingPlatformHelp = `
 Knowing the type of code hosting platform allows Git Town
 to open browser URLs and talk to the code hosting API.
-
-If your code hosting platform uses as custom URL,
-please set it below. Otherwise leave it on "auto-detect".
+Most people can leave this on "auto-detect".
+Only change this if your code hosting server uses as custom URL.
 
 `
 

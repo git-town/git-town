@@ -8,9 +8,9 @@ import (
 )
 
 const originHostnameHelp = `
-When using SSH identities, define the hostname of your source code repository.
-
-Only change this setting if the auto-detection does not work for you.
+When using SSH identities, define the hostname
+of your source code repository. Only change this
+if the auto-detection does not work for you.
 
 `
 

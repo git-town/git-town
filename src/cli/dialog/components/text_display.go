@@ -50,8 +50,12 @@ func (self textDisplayModel) Update(msg tea.Msg) (model tea.Model, cmd tea.Cmd) 
 			self.status = StatusAborted
 			return self, tea.Quit
 		}
-		if msg.String() == "o" {
+		switch msg.String() {
+		case "o":
 			self.status = StatusDone
+			return self, tea.Quit
+		case "q":
+			self.status = StatusAborted
 			return self, tea.Quit
 		}
 	case error:

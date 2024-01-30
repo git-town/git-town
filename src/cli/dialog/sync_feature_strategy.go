@@ -10,12 +10,10 @@ import (
 
 const syncFeatureStrategyHelp = `
 How should Git Town synchronize feature branches?
-
-Feature branches are short-lived branches cut from the main branch
-and shipped back into the main branch.
-Typically you develop features and bug fixes on them, hence their name.
-
-How should Git Town update feature branches?
+Feature branches are short-lived branches cut from
+the main branch and shipped back into the main branch.
+Typically you develop features and bug fixes on them,
+hence their name.
 
 `
 
