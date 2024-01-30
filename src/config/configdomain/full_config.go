@@ -130,6 +130,30 @@ func (self *FullConfig) ShouldNewBranchPush() bool {
 	return self.NewBranchPush.Bool()
 }
 
+func (self *FullConfig) ToPartialConfig() PartialConfig {
+	return PartialConfig{
+		Aliases:                  self.Aliases,
+		GitHubToken:              &self.GitHubToken,
+		GitLabToken:              &self.GitLabToken,
+		GitUserEmail:             &self.GitUserEmail,
+		GitUserName:              &self.GitUserName,
+		GiteaToken:               &self.GiteaToken,
+		HostingOriginHostname:    &self.HostingOriginHostname,
+		HostingPlatform:          &self.HostingPlatform,
+		Lineage:                  &self.Lineage,
+		MainBranch:               &self.MainBranch,
+		NewBranchPush:            &self.NewBranchPush,
+		Offline:                  &self.Offline,
+		PerennialBranches:        &self.PerennialBranches,
+		PushHook:                 &self.PushHook,
+		ShipDeleteTrackingBranch: &self.ShipDeleteTrackingBranch,
+		SyncBeforeShip:           &self.SyncBeforeShip,
+		SyncFeatureStrategy:      &self.SyncFeatureStrategy,
+		SyncPerennialStrategy:    &self.SyncPerennialStrategy,
+		SyncUpstream:             &self.SyncUpstream,
+	}
+}
+
 // DefaultConfig provides the default configuration data to use when nothing is configured.
 func DefaultConfig() FullConfig {
 	return FullConfig{

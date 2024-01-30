@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -370,5 +371,6 @@ func saveSyncBeforeShip(runner *git.ProdRunner, userInput userInput) error {
 }
 
 func saveToFile(userInput userInput) error {
-	return nil
+	partialConfig := userInput.FullConfig.ToPartialConfig()
+	return configfile.Save(&partialConfig)
 }
