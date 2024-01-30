@@ -32,7 +32,7 @@ func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, test
 type radioListModel[S fmt.Stringer] struct {
 	BubbleList[S]
 	help  string // help text to display before the radio list
-	title string // title to dis-play before the help text
+	title string // title to display before the help text
 }
 
 func (self radioListModel[S]) Init() tea.Cmd {
