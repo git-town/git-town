@@ -1,5 +1,12 @@
 package configfile
 
+import (
+	"fmt"
+	"strings"
+
+	"github.com/git-town/git-town/v11/src/cli/dialog"
+)
+
 // Data defines the Go equivalent of the TOML file content.
 type Data struct {
 	Branches                 *Branches     `toml:"branches"`
@@ -37,4 +44,14 @@ type SyncStrategy struct {
 
 func (self SyncStrategy) IsEmpty() bool {
 	return self.FeatureBranches == nil && self.PerennialBranches == nil
+}
+
+func (self Data) Render() string {
+	result := strings.Builder{} //nolint:exhaustruct
+	// main branch
+	result.WriteString(fmt.Sprintf(`
+	  %s
+		mainbranch = %s
+	`, dialog.MainBranchHelp, self.Branches.Main))
+	return result.String()
 }
