@@ -371,6 +371,5 @@ func saveSyncBeforeShip(runner *git.ProdRunner, userInput userInput) error {
 }
 
 func saveToFile(userInput userInput) error {
-	partialConfig := userInput.FullConfig.ToPartialConfig()
-	return configfile.Save(&partialConfig)
+	return configfile.Save(&userInput.FullConfig)
 }
