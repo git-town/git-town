@@ -31,7 +31,7 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 }
 
 type textDisplayModel struct {
-	colors dialogColors // colors to use for help text
+	colors dialogColors
 	status status
 	text   string
 	title  string
