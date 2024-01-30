@@ -6,6 +6,7 @@ Feature: enter Git Town configuration
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS  |
+      | welcome                     | enter |
       | aliases                     | enter |
       | main development branch     | enter |
       | perennial branches          | enter |
@@ -35,6 +36,7 @@ Feature: enter Git Town configuration
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                  | KEYS  |
+      | welcome                 | enter |
       | aliases                 | enter |
       | main development branch | enter |
       | perennial branches      | enter |
@@ -59,6 +61,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "push-hook" is "false"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                               | KEYS                   |
+      | welcome                                   | enter                  |
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | configure the perennial branches          | space down space enter |
@@ -140,6 +143,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-before-ship" is "true"
     When I run "git-town config setup" and enter into the dialogs:
       | DESCRIPTION                             | KEYS                                          |
+      | welcome                                 | enter                                         |
       | add all aliases                         | n enter                                       |
       | keep the already configured main branch | enter                                         |
       | change the perennial branches           | space down space enter                        |
@@ -195,6 +199,7 @@ Feature: enter Git Town configuration
     Given I ran "git config --global alias.append checkout"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    |
+      | welcome                     | enter   |
       | aliases                     | o enter |
       | main development branch     | enter   |
       | perennial branches          | enter   |
@@ -216,6 +221,7 @@ Feature: enter Git Town configuration
     Given Git Town is not configured
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS       | DESCRIPTION                                 |
+      | welcome                     | enter      |                                             |
       | aliases                     | enter      |                                             |
       | main development branch     | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
@@ -235,6 +241,7 @@ Feature: enter Git Town configuration
     Given local Git Town setting "code-hosting-platform" is "github"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS           | DESCRIPTION                                 |
+      | welcome                     | enter          |                                             |
       | aliases                     | enter          |                                             |
       | main development branch     | down enter     |                                             |
       | perennial branches          |                | no input here since the dialog doesn't show |
@@ -255,6 +262,7 @@ Feature: enter Git Town configuration
   Scenario: enter a GitLab token
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
       | main development branch     | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
@@ -278,6 +286,7 @@ Feature: enter Git Town configuration
   Scenario: enter a Gitea token
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
+      | welcome                     | enter             |                                             |
       | aliases                     | enter             |                                             |
       | main development branch     | enter             |                                             |
       | perennial branches          |                   | no input here since the dialog doesn't show |
