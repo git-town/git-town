@@ -77,11 +77,13 @@ func (self textDisplayModel) View() string {
 	result.WriteString(self.text)
 	result.WriteString("\n\n  ")
 	// accept
-	result.WriteString(self.colors.HelpKey.Styled("enter"))
-	result.WriteString(self.colors.Help.Styled("/"))
 	result.WriteString(self.colors.HelpKey.Styled("o"))
+	result.WriteString(self.colors.Help.Styled("/"))
+	result.WriteString(self.colors.HelpKey.Styled("enter"))
 	result.WriteString(self.colors.Help.Styled(" continue   "))
 	// abort
+	result.WriteString(self.colors.HelpKey.Styled("q"))
+	result.WriteString(self.colors.Help.Styled("/"))
 	result.WriteString(self.colors.HelpKey.Styled("esc"))
 	result.WriteString(self.colors.Help.Styled("/"))
 	result.WriteString(self.colors.HelpKey.Styled("ctrl-c"))
