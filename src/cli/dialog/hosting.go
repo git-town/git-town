@@ -8,7 +8,8 @@ import (
 	"github.com/git-town/git-town/v11/src/gohacks/stringers"
 )
 
-const enterHostingPlatformHelp = `
+const hostingPlatformTitle = `Hosting platform`
+const hostingPlatformHelp = `
 Knowing the type of code hosting platform allows Git Town
 to open browser URLs and talk to the code hosting API.
 Most people can leave this on "auto-detect".
@@ -25,7 +26,7 @@ func HostingPlatform(existingValue configdomain.HostingPlatform, inputs componen
 		hostingPlatformGitLab,
 	}
 	cursor := indexOfHostingPlatform(existingValue, entries)
-	newValue, aborted, err := components.RadioList(entries, cursor, enterHostingPlatformHelp, inputs)
+	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, hostingPlatformHelp, inputs)
 	fmt.Printf("Code hosting: %s\n", components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }

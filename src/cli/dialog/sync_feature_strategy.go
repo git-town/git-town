@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+const syncFeatureStrategyTitle = `Sync-feature strategy`
 const syncFeatureStrategyHelp = `
 How should Git Town synchronize feature branches?
 Feature branches are short-lived branches cut from
@@ -36,7 +37,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, syncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}

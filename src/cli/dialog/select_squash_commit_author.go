@@ -8,13 +8,15 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
+const squashCommitAuthorTitle = `squash commit author`
+
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
 func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string, dialogTestInputs components.TestInput) (string, bool, error) {
 	if len(authors) == 1 {
 		return authors[0], false, nil
 	}
 	authorsList := squashCommitAuthorList(authors)
-	selection, aborted, err := components.RadioList(authorsList, 0, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
+	selection, aborted, err := components.RadioList(authorsList, 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
 	fmt.Printf("Selected squash commit author: %s\n", components.FormattedSelection(selection.String(), aborted))
 	return selection.String(), aborted, err
 }

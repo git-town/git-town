@@ -11,7 +11,8 @@ import (
 
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)") //nolint:gochecknoglobals
 
-const enterParentHelpTemplate = `
+const parentBranchTitleTemplate = `Parent Branch for %s`
+const parentBranchHelpTemplate = `
 Please select the parent of branch %q or enter its number.
 Most of the time this is the main development branch (%v).
 
@@ -22,8 +23,9 @@ Most of the time this is the main development branch (%v).
 func Parent(args ParentArgs) (gitdomain.LocalBranchName, bool, error) {
 	entries := ParentEntries(args)
 	cursor := stringers.IndexOrStart(entries, args.MainBranch)
-	help := fmt.Sprintf(enterParentHelpTemplate, args.Branch, args.MainBranch)
-	selection, aborted, err := components.RadioList(entries, cursor, help, args.DialogTestInput)
+	title := fmt.Sprintf(parentBranchTitleTemplate, args.Branch)
+	help := fmt.Sprintf(parentBranchHelpTemplate, args.Branch, args.MainBranch)
+	selection, aborted, err := components.RadioList(entries, cursor, title, help, args.DialogTestInput)
 	fmt.Printf("Selected parent branch for %q: %s\n", args.Branch, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

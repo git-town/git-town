@@ -8,8 +8,10 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncUpstreamTitle = `Should "git sync" also fetch updates from the upstream remote?`
+const syncUpstreamTitle = `Sync-upstream strategy`
 const syncUpstreamHelp = `
+Should "git sync" also fetch updates from the upstream remote?
+
 If an "upstream" remote exists, and this setting is enabled,
 "git sync" will also update the local main branch
 with commits from the main branch at the upstream remote.
@@ -35,7 +37,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, syncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+const syncBeforeShipTitle = `Sync before ship`
 const syncBeforeShipHelp = `
 Should "git ship" sync branches before shipping them?
 
@@ -39,7 +40,7 @@ func SyncBeforeShip(existing configdomain.SyncBeforeShip, inputs components.Test
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncBeforeShipHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncBeforeShipTitle, syncBeforeShipHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

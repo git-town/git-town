@@ -12,6 +12,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
+const perennialBranchesTitle = `Perennial branches`
 const perennialBranchesHelp = `
 Perennial branches are long-lived branches.
 They are never shipped and have no ancestors.
@@ -133,6 +134,9 @@ func (self PerennialBranchesModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
+	s.WriteRune('\n')
+	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
+	s.WriteRune('\n')
 	s.WriteString(perennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i

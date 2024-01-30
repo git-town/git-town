@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+const pushHookTitle = `Push hook`
 const pushHookHelp = `
 The "push-hook" setting determines whether Git Town
 permits or prevents Git hooks while pushing branches.
@@ -35,7 +36,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushHookHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, pushHookTitle, pushHookHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

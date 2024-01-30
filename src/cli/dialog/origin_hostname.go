@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
+const originHostnameTitle = `Origin hostname`
 const originHostnameHelp = `
 When using SSH identities, define the hostname
 of your source code repository. Only change this
@@ -21,6 +22,7 @@ func OriginHostname(oldValue configdomain.HostingOriginHostname, inputs componen
 		Help:          originHostnameHelp,
 		Prompt:        "Origin hostname override: ",
 		TestInput:     inputs,
+		Title:         originHostnameTitle,
 	})
 	fmt.Printf("Origin hostname: %s\n", components.FormattedToken(token, aborted))
 	return configdomain.HostingOriginHostname(token), aborted, err

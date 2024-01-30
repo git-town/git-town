@@ -8,10 +8,11 @@ import (
 )
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries []S, cursor int, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		BubbleList: NewBubbleList(entries, cursor),
 		help:       help,
+		title:      title,
 	})
 	if len(testInput) > 0 {
 		go func() {
@@ -30,7 +31,8 @@ func RadioList[S fmt.Stringer](entries []S, cursor int, help string, testInput T
 
 type radioListModel[S fmt.Stringer] struct {
 	BubbleList[S]
-	help string // help text to display before the radio list
+	help  string // help text to display before the radio list
+	title string
 }
 
 func (self radioListModel[S]) Init() tea.Cmd {
@@ -61,6 +63,9 @@ func (self radioListModel[S]) View() string {
 		return ""
 	}
 	s := strings.Builder{}
+	s.WriteRune('\n')
+	s.WriteString(self.Colors.Title.Styled(self.title))
+	s.WriteString("\n")
 	s.WriteString(self.help)
 	for i, branch := range self.Entries {
 		s.WriteString(self.EntryNumberStr(i))
