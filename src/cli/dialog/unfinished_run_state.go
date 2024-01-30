@@ -10,13 +10,16 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-const unfinishedRunstateHelp = `
+const (
+	unfinishedRunstateTitle = `unfinished Git Town command`
+	unfinishedRunstateHelp  = `
 You have an unfinished %q command
 that ended on the %q branch
 %s. Please choose how to proceed.
 
 
 `
+)
 
 type Response string
 
@@ -52,7 +55,7 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch gitdomain.LocalB
 		unfinishedRunstateDialogEntry{response: ResponseUndo, text: fmt.Sprintf(messages.UnfinishedRunStateUndo, command)},
 		unfinishedRunstateDialogEntry{response: ResponseDiscard, text: messages.UnfinishedRunStateDiscard},
 	)
-	selection, aborted, err := components.RadioList(options, 0, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
+	selection, aborted, err := components.RadioList(options, 0, unfinishedRunstateTitle, fmt.Sprintf(unfinishedRunstateHelp, command, endBranch, humanize.Time(endTime)), dialogTestInput)
 	fmt.Printf("Handle unfinished command: %s\n", components.FormattedSelection(selection.response.String(), aborted))
 	return selection.response, aborted, err
 }

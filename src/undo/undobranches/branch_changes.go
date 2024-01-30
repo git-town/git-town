@@ -66,7 +66,7 @@ func (self BranchChanges) String() string {
 	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
 	s.WriteString("\n  InconsistentlyChanged: ")
 	s.WriteString(strings.Join(self.InconsistentlyChanged.BranchNames().Strings(), ", "))
-	s.WriteString("\n")
+	s.WriteRune('\n')
 	return s.String()
 }
 

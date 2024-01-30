@@ -8,6 +8,7 @@ type dialogColors struct {
 	HelpKey   termenv.Style // color of key names in help text
 	Initial   termenv.Style // color for the row containing the currently checked out branch
 	Selection termenv.Style // color for the currently selected entry
+	Title     termenv.Style // color for the title of the current screen
 }
 
 // FormattedToken provides the given API token in a printable format.
@@ -46,6 +47,7 @@ func createColors() dialogColors {
 		HelpKey:   termenv.String().Faint().Bold(),
 		Initial:   termenv.String().Foreground(termenv.ANSIGreen),
 		Selection: termenv.String().Foreground(termenv.ANSICyan),
+		Title:     termenv.String().Bold(),
 	}
 }
 
