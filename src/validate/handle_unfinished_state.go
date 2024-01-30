@@ -49,9 +49,8 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
 		return true, nil
-	default:
-		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 	}
+	return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 }
 
 type UnfinishedStateArgs struct {
