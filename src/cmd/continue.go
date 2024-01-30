@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -95,19 +95,15 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUntrackedChanges)
 	}
 	originURL := repo.Runner.Config.OriginURL()
-	hostingService, err := repo.Runner.Config.HostingService()
-	if err != nil {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
-	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: hostingService,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	return &continueConfig{
-		connector:        connector,
 		FullConfig:       &repo.Runner.FullConfig,
+		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 	}, initialBranchesSnapshot, initialStashSnapshot, false, err
 }
@@ -115,7 +111,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 type continueConfig struct {
 	connector hostingdomain.Connector
 	*configdomain.FullConfig
-	dialogTestInputs dialog.TestInputs
+	dialogTestInputs components.TestInputs
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {

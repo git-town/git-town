@@ -7,20 +7,24 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestNewHostingService(t *testing.T) {
+func TestNewHostingPlatform(t *testing.T) {
 	t.Parallel()
 
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[configdomain.CodeHostingPlatformName]configdomain.Hosting{
-			"bitbucket": configdomain.HostingBitbucket,
-			"github":    configdomain.HostingGitHub,
-			"gitlab":    configdomain.HostingGitLab,
-			"gitea":     configdomain.HostingGitea,
-			"":          configdomain.HostingNone,
+		tests := map[string]configdomain.HostingPlatform{
+			"bitbucket": configdomain.HostingPlatformBitbucket,
+			"BitBucket": configdomain.HostingPlatformBitbucket,
+			"github":    configdomain.HostingPlatformGitHub,
+			"GitHub":    configdomain.HostingPlatformGitHub,
+			"gitlab":    configdomain.HostingPlatformGitLab,
+			"GitLab":    configdomain.HostingPlatformGitLab,
+			"gitea":     configdomain.HostingPlatformGitea,
+			"Gitea":     configdomain.HostingPlatformGitea,
+			"":          configdomain.HostingPlatformNone,
 		}
 		for give, want := range tests {
-			have, err := configdomain.NewHosting(give)
+			have, err := configdomain.NewHostingPlatform(give)
 			must.NoError(t, err)
 			must.EqOp(t, want, have)
 		}
@@ -28,16 +32,16 @@ func TestNewHostingService(t *testing.T) {
 
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
-		for _, give := range []configdomain.CodeHostingPlatformName{"github", "GitHub", "GITHUB"} {
-			have, err := configdomain.NewHosting(give)
+		for _, give := range []string{"github", "GitHub", "GITHUB"} {
+			have, err := configdomain.NewHostingPlatform(give)
 			must.NoError(t, err)
-			must.EqOp(t, configdomain.HostingGitHub, have)
+			must.EqOp(t, configdomain.HostingPlatformGitHub, have)
 		}
 	})
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
-		_, err := configdomain.NewHosting("zonk")
+		_, err := configdomain.NewHostingPlatform("zonk")
 		must.Error(t, err)
 	})
 }

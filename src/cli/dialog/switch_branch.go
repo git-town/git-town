@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"golang.org/x/exp/maps"
@@ -13,24 +14,21 @@ import (
 func SwitchBranch(localBranches gitdomain.LocalBranchNames, initialBranch gitdomain.LocalBranchName, lineage configdomain.Lineage) (gitdomain.LocalBranchName, bool, error) {
 	entries := SwitchBranchEntries(localBranches, lineage)
 	cursor := SwitchBranchCursorPos(entries, initialBranch)
-	dialogData := SwitchModel{
-		BubbleList:       newBubbleList(entries, cursor),
+	dialogProcess := tea.NewProgram(SwitchModel{
+		BubbleList:       components.NewBubbleList(entries, cursor),
 		InitialBranchPos: cursor,
-	}
-	dialogProcess := tea.NewProgram(dialogData)
+	})
 	dialogResult, err := dialogProcess.Run()
 	if err != nil {
 		return "", false, err
 	}
 	result := dialogResult.(SwitchModel) //nolint:forcetypeassert
-	selectedEntry := result.BubbleList.selectedEntry()
-	selectedEntry = strings.TrimSpace(selectedEntry)
-	selectedBranch := gitdomain.NewLocalBranchName(selectedEntry)
-	return selectedBranch, result.Status == dialogStatusAborted, nil
+	selectedEntry := result.BubbleList.SelectedEntry()
+	return selectedEntry.Branch, result.Aborted(), nil
 }
 
 type SwitchModel struct {
-	BubbleList
+	components.BubbleList[SwitchBranchEntry]
 	InitialBranchPos int // position of the currently checked out branch in the list
 }
 
@@ -43,76 +41,75 @@ func (self SwitchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:iret
 	if !isKeyMsg {
 		return self, nil
 	}
-	if handled, code := self.BubbleList.handleKey(keyMsg); handled {
+	if handled, code := self.BubbleList.HandleKey(keyMsg); handled {
 		return self, code
 	}
 	if keyMsg.Type == tea.KeyEnter {
-		self.Status = dialogStatusDone
+		self.Status = components.StatusDone
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = dialogStatusDone
+		self.Status = components.StatusDone
 		return self, tea.Quit
 	}
 	return self, nil
 }
 
 func (self SwitchModel) View() string {
-	if self.Status != dialogStatusActive {
+	if self.Status != components.StatusActive {
 		return ""
 	}
 	s := strings.Builder{}
 	for i, branch := range self.Entries {
 		switch {
 		case i == self.Cursor:
-			s.WriteString(self.Colors.selection.Styled("> " + branch))
+			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		case i == self.InitialBranchPos:
-			s.WriteString(self.Colors.initial.Styled("* " + branch))
+			s.WriteString(self.Colors.Initial.Styled("* " + branch.String()))
 		default:
-			s.WriteString("  " + branch)
+			s.WriteString("  " + branch.String())
 		}
 		s.WriteRune('\n')
 	}
 	s.WriteString("\n\n  ")
 	// up
-	s.WriteString(self.Colors.helpKey.Styled("↑"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("k"))
-	s.WriteString(self.Colors.help.Styled(" up   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↑"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("k"))
+	s.WriteString(self.Colors.Help.Styled(" up   "))
 	// down
-	s.WriteString(self.Colors.helpKey.Styled("↓"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("j"))
-	s.WriteString(self.Colors.help.Styled(" down   "))
+	s.WriteString(self.Colors.HelpKey.Styled("↓"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("j"))
+	s.WriteString(self.Colors.Help.Styled(" down   "))
 	// accept
-	s.WriteString(self.Colors.helpKey.Styled("enter"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("o"))
-	s.WriteString(self.Colors.help.Styled(" accept   "))
+	s.WriteString(self.Colors.HelpKey.Styled("enter"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("o"))
+	s.WriteString(self.Colors.Help.Styled(" accept   "))
 	// abort
-	s.WriteString(self.Colors.helpKey.Styled("q"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("esc"))
-	s.WriteString(self.Colors.help.Styled("/"))
-	s.WriteString(self.Colors.helpKey.Styled("ctrl-c"))
-	s.WriteString(self.Colors.help.Styled(" abort"))
+	s.WriteString(self.Colors.HelpKey.Styled("q"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("esc"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("ctrl-c"))
+	s.WriteString(self.Colors.Help.Styled(" abort"))
 	return s.String()
 }
 
-// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" dialog.
-func SwitchBranchCursorPos(entries []string, initialBranch gitdomain.LocalBranchName) int {
-	initialBranchName := initialBranch.String()
+// SwitchBranchCursorPos provides the initial cursor position for the "switch branch" components.
+func SwitchBranchCursorPos(entries []SwitchBranchEntry, initialBranch gitdomain.LocalBranchName) int {
 	for e, entry := range entries {
-		if strings.TrimSpace(entry) == initialBranchName {
+		if entry.Branch == initialBranch {
 			return e
 		}
 	}
 	return 0
 }
 
-// SwitchBranchEntries provides the entries for the "switch branch" dialog.
-func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []string {
-	entries := make([]string, 0, len(lineage))
+// SwitchBranchEntries provides the entries for the "switch branch" components.
+func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage configdomain.Lineage) []SwitchBranchEntry {
+	entries := make([]SwitchBranchEntry, 0, len(lineage))
 	roots := lineage.Roots()
 	// add all entries from the lineage
 	for _, root := range roots {
@@ -127,16 +124,25 @@ func SwitchBranchEntries(localBranches gitdomain.LocalBranchNames, lineage confi
 		if slices.Contains(branchesInLineage, localBranch) {
 			continue
 		}
-		entries = append(entries, localBranch.String())
+		entries = append(entries, SwitchBranchEntry{Branch: localBranch, Indentation: ""})
 	}
 	return entries
 }
 
 // layoutBranches adds entries for the given branch and its children to the given entry list.
 // The entries are indented according to their position in the given lineage.
-func layoutBranches(result *[]string, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
-	*result = append(*result, indentation+branch.String())
+func layoutBranches(result *[]SwitchBranchEntry, branch gitdomain.LocalBranchName, indentation string, lineage configdomain.Lineage) {
+	*result = append(*result, SwitchBranchEntry{Branch: branch, Indentation: indentation})
 	for _, child := range lineage.Children(branch) {
 		layoutBranches(result, child, indentation+"  ", lineage)
 	}
+}
+
+type SwitchBranchEntry struct {
+	Branch      gitdomain.LocalBranchName
+	Indentation string
+}
+
+func (sbe SwitchBranchEntry) String() string {
+	return sbe.Indentation + sbe.Branch.String()
 }

@@ -4,11 +4,11 @@ Git Town prompts for all the configuration information it needs. The commands
 below set additional configuration options that might be helpful in your use
 case. We will cover the full list of options [later](configuration-commands.md).
 
-## API access to your hosting provider
+## API access to your hosting platform
 
 Git Town can ship branches that have an open proposal by merging this proposal
-via your code hosting service's API. To enable it, create an API token for your
-account at your code hosting provider.
+via your code hosting platform's API. To enable it, create an API token for your
+account at your code hosting platform.
 
 - [instructions for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - [instructions for GitLab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
@@ -31,7 +31,7 @@ Provide the token to Git Town as an environment variable with name
 
 ## Delete tracking branches
 
-Some code hosting providers
+Some code hosting platforms
 [automatically delete feature branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
 after merging them. This is a useful feature that you should enable if possible.
 It can interfere with Git Town's attempts to also delete this branch after

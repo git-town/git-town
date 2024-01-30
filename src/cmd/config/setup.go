@@ -4,10 +4,12 @@ import (
 	"slices"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/spf13/cobra"
 )
@@ -45,91 +47,93 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	defaultMainBranch := repo.Runner.MainBranch
-	if defaultMainBranch.IsEmpty() {
-		defaultMainBranch, _ = repo.Runner.Backend.DefaultBranch()
-	}
-	newMainBranch, aborted, err := dialog.EnterMainBranch(config.localBranches.Names(), defaultMainBranch, config.dialogInputs.Next())
+	aborted, err := enterData(repo.Runner, &config)
 	if err != nil || aborted {
 		return err
 	}
-	err = repo.Runner.SetMainBranch(newMainBranch)
-	if err != nil {
-		return err
-	}
-	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(config.localBranches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	if slices.Compare(repo.Runner.PerennialBranches, newPerennialBranches) != 0 || repo.Runner.LocalGitConfig.PerennialBranches == nil {
-		err = repo.Runner.SetPerennialBranches(newPerennialBranches)
-		if err != nil {
-			return err
-		}
-	}
-	newSyncFeatureStrategy, aborted, err := dialog.EnterSyncFeatureStrategy(config.SyncFeatureStrategy, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetSyncFeatureStrategy(newSyncFeatureStrategy)
-	if err != nil {
-		return err
-	}
-	newSyncPerennialStrategy, aborted, err := dialog.EnterSyncPerennialStrategy(config.SyncPerennialStrategy, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetSyncPerennialStrategy(newSyncPerennialStrategy)
-	if err != nil {
-		return err
-	}
-	newSyncUpstream, aborted, err := dialog.EnterSyncUpstream(config.SyncUpstream, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetSyncUpstream(newSyncUpstream, false)
-	if err != nil {
-		return err
-	}
-	newPushNewBranches, aborted, err := dialog.EnterPushNewBranches(config.NewBranchPush, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetNewBranchPush(newPushNewBranches, false)
-	if err != nil {
-		return err
-	}
-	newPushHook, aborted, err := dialog.EnterPushHook(config.PushHook, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetPushHookLocally(newPushHook)
-	if err != nil {
-		return err
-	}
-	newSyncBeforeShip, aborted, err := dialog.EnterSyncBeforeShip(config.SyncBeforeShip, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetSyncBeforeShip(newSyncBeforeShip, false)
-	if err != nil {
-		return err
-	}
-	newShipDeleteTrackingBranch, aborted, err := dialog.EnterShipDeleteTrackingBranch(config.ShipDeleteTrackingBranch, config.dialogInputs.Next())
-	if err != nil || aborted {
-		return err
-	}
-	err = repo.Runner.SetShipDeleteTrackingBranch(newShipDeleteTrackingBranch, false)
-	if err != nil {
-		return err
-	}
-	return nil
+	return saveAll(repo.Runner, config.userInput)
 }
 
 type setupConfig struct {
-	*configdomain.FullConfig
+	dialogInputs  components.TestInputs
 	localBranches gitdomain.BranchInfos
-	dialogInputs  dialog.TestInputs
+	userInput     configdomain.FullConfig
+}
+
+func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
+	config.userInput.Aliases, aborted, err = dialog.Aliases(configdomain.AllAliasableCommands(), runner.Aliases, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	existingMainBranch := runner.MainBranch
+	if existingMainBranch.IsEmpty() {
+		existingMainBranch, _ = runner.Backend.DefaultBranch()
+	}
+	config.userInput.MainBranch, aborted, err = dialog.MainBranch(config.localBranches.Names(), existingMainBranch, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.PerennialBranches, aborted, err = dialog.PerennialBranches(config.localBranches.Names(), runner.PerennialBranches, config.userInput.MainBranch, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.HostingPlatform, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	switch config.userInput.HostingPlatform {
+	case configdomain.HostingPlatformBitbucket:
+		// BitBucket API isn't supported yet
+	case configdomain.HostingPlatformGitea:
+		config.userInput.GiteaToken, aborted, err = dialog.GiteaToken(runner.GiteaToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformGitHub:
+		config.userInput.GitHubToken, aborted, err = dialog.GitHubToken(runner.GitHubToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformGitLab:
+		config.userInput.GitLabToken, aborted, err = dialog.GitLabToken(runner.GitLabToken, config.dialogInputs.Next())
+		if err != nil || aborted {
+			return aborted, err
+		}
+	case configdomain.HostingPlatformNone:
+	}
+	config.userInput.HostingOriginHostname, aborted, err = dialog.OriginHostname(runner.HostingOriginHostname, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.SyncFeatureStrategy, aborted, err = dialog.SyncFeatureStrategy(runner.SyncFeatureStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.SyncPerennialStrategy, aborted, err = dialog.SyncPerennialStrategy(runner.SyncPerennialStrategy, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.SyncUpstream, aborted, err = dialog.SyncUpstream(runner.SyncUpstream, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.NewBranchPush, aborted, err = dialog.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.PushHook, aborted, err = dialog.PushHook(runner.PushHook, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.SyncBeforeShip, aborted, err = dialog.SyncBeforeShip(runner.SyncBeforeShip, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	config.userInput.ShipDeleteTrackingBranch, aborted, err = dialog.ShipDeleteTrackingBranch(runner.ShipDeleteTrackingBranch, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
+	return false, nil
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
@@ -143,8 +147,199 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		FullConfig:    &repo.Runner.FullConfig,
-		localBranches: branchesSnapshot.Branches,
 		dialogInputs:  dialogInputs,
+		localBranches: branchesSnapshot.Branches,
+		userInput:     configdomain.FullConfig{}, //nolint:exhaustruct
 	}, exit, err
+}
+
+func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	err := saveAliases(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveHostingPlatform(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveGiteaToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveGitHubToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveGitLabToken(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveOriginHostname(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveMainBranch(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePerennialBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePushHook(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = savePushNewBranches(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveShipDeleteTrackingBranch(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncFeatureStrategy(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncPerennialStrategy(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncUpstream(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	err = saveSyncBeforeShip(runner, newConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err error) {
+	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
+		oldAlias, hasOld := runner.Aliases[aliasableCommand]
+		newAlias, hasNew := newConfig.Aliases[aliasableCommand]
+		switch {
+		case hasOld && !hasNew:
+			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
+		case newAlias != oldAlias:
+			err = runner.Frontend.SetGitAlias(aliasableCommand)
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func saveGiteaToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GiteaToken == runner.GiteaToken {
+		return nil
+	}
+	return runner.Frontend.SetGiteaToken(newConfig.GiteaToken)
+}
+
+func saveGitHubToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GitHubToken == runner.GitHubToken {
+		return nil
+	}
+	return runner.Frontend.SetGitHubToken(newConfig.GitHubToken)
+}
+
+func saveGitLabToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.GitLabToken == runner.GitLabToken {
+		return nil
+	}
+	return runner.Frontend.SetGitLabToken(newConfig.GitLabToken)
+}
+
+func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {
+	oldValue := runner.HostingPlatform
+	newValue := userInput.HostingPlatform
+	switch {
+	case oldValue == "" && newValue == configdomain.HostingPlatformNone:
+		// no changes --> do nothing
+	case oldValue != "" && newValue == configdomain.HostingPlatformNone:
+		return runner.Frontend.DeleteHostingPlatform()
+	case oldValue != newValue:
+		return runner.Frontend.SetHostingPlatform(newValue)
+	}
+	return nil
+}
+
+func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.MainBranch == runner.MainBranch {
+		return nil
+	}
+	return runner.SetMainBranch(newConfig.MainBranch)
+}
+
+func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
+		return nil
+	}
+	if runner.HostingOriginHostname != "" && newConfig.HostingOriginHostname == "" {
+		return runner.Frontend.DeleteOriginHostname()
+	}
+	return runner.Frontend.SetOriginHostname(newConfig.HostingOriginHostname)
+}
+
+func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {
+	oldSetting := runner.PerennialBranches
+	newSetting := config.PerennialBranches
+	if slices.Compare(oldSetting, newSetting) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
+		return runner.SetPerennialBranches(newSetting)
+	}
+	return nil
+}
+
+func savePushHook(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.PushHook == runner.PushHook {
+		return nil
+	}
+	return runner.SetPushHookLocally(newConfig.PushHook)
+}
+
+func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.NewBranchPush == runner.NewBranchPush {
+		return nil
+	}
+	return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
+}
+
+func saveShipDeleteTrackingBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.ShipDeleteTrackingBranch == runner.ShipDeleteTrackingBranch {
+		return nil
+	}
+	return runner.SetShipDeleteTrackingBranch(newConfig.ShipDeleteTrackingBranch, false)
+}
+
+func saveSyncFeatureStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncFeatureStrategy == runner.SyncFeatureStrategy {
+		return nil
+	}
+	return runner.SetSyncFeatureStrategy(newConfig.SyncFeatureStrategy)
+}
+
+func saveSyncPerennialStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncPerennialStrategy == runner.SyncPerennialStrategy {
+		return nil
+	}
+	return runner.SetSyncPerennialStrategy(newConfig.SyncPerennialStrategy)
+}
+
+func saveSyncUpstream(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncUpstream == runner.SyncUpstream {
+		return nil
+	}
+	return runner.SetSyncUpstream(newConfig.SyncUpstream, false)
+}
+
+func saveSyncBeforeShip(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
+	if newConfig.SyncBeforeShip == runner.SyncBeforeShip {
+		return nil
+	}
+	return runner.SetSyncBeforeShip(newConfig.SyncBeforeShip, false)
 }

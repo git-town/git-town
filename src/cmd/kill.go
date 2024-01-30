@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -86,7 +86,7 @@ type killConfig struct {
 	*configdomain.FullConfig
 	branchToKill     gitdomain.BranchInfo
 	branchWhenDone   gitdomain.LocalBranchName
-	dialogTestInputs dialog.TestInputs
+	dialogTestInputs components.TestInputs
 	dryRun           bool
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName

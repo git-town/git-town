@@ -19,12 +19,12 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
+	configdomain.FullConfig // the merged configuration data
+	DryRun                  bool
 	GitConfig               gitconfig.Access            // access to the Git configuration settings
-	configdomain.FullConfig                             // the merged configuration data
-	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
 	GlobalGitConfig         configdomain.PartialConfig  // content of the global Git configuration
 	LocalGitConfig          configdomain.PartialConfig  // content of the local Git configuration
-	DryRun                  bool
+	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
 	originURLCache          configdomain.OriginURLCache
 }
 
@@ -42,7 +42,7 @@ func (self *Config) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	return confighelpers.DetermineOriginURL(text, self.CodeHostingOriginHostname, self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.HostingOriginHostname, self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
@@ -112,6 +112,18 @@ func (self *Config) SetNewBranchPush(value configdomain.NewBranchPush, global bo
 func (self *Config) SetOffline(value configdomain.Offline) error {
 	self.FullConfig.Offline = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
+}
+
+// SetOriginHostname marks the given branch as the main branch
+// in the Git Town configuration.
+func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
+	self.HostingOriginHostname = hostName
+	if self.configFile != nil {
+		self.configFile.HostingOriginHostname = &hostName
+		return configfile.Save(self.configFile)
+	}
+	self.LocalGitConfig.HostingOriginHostname = &hostName
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
 }
 
 // SetParent marks the given branch as the direct parent of the other given branch
@@ -236,12 +248,12 @@ func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool
 	config.Merge(globalConfig)
 	config.Merge(localConfig)
 	return &Config{
-		GitConfig:       gitconfig.Access{Runner: runner},
+		DryRun:          dryRun,
 		FullConfig:      config,
-		configFile:      configFile,
+		GitConfig:       gitconfig.Access{Runner: runner},
 		GlobalGitConfig: globalConfig,
 		LocalGitConfig:  localConfig,
-		DryRun:          dryRun,
+		configFile:      configFile,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, nil
 }

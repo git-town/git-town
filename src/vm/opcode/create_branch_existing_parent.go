@@ -7,8 +7,8 @@ import (
 
 // CreateBranchExistingParent creates a new branch with the first existing entry from the given ancestor list as its parent.
 type CreateBranchExistingParent struct {
-	Branch    gitdomain.LocalBranchName
 	Ancestors gitdomain.LocalBranchNames // list of ancestors - uses the first existing ancestor in this list
+	Branch    gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
 }
 

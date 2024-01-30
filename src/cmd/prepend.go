@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -84,14 +84,14 @@ type prependConfig struct {
 	*configdomain.FullConfig
 	allBranches               gitdomain.BranchInfos
 	branchesToSync            gitdomain.BranchInfos
-	dialogTestInputs          dialog.TestInputs
+	dialogTestInputs          components.TestInputs
 	dryRun                    bool
 	hasOpenChanges            bool
 	initialBranch             gitdomain.LocalBranchName
-	remotes                   gitdomain.Remotes
 	newBranchParentCandidates gitdomain.LocalBranchNames
-	previousBranch            gitdomain.LocalBranchName
 	parentBranch              gitdomain.LocalBranchName
+	previousBranch            gitdomain.LocalBranchName
+	remotes                   gitdomain.Remotes
 	targetBranch              gitdomain.LocalBranchName
 }
 
@@ -145,10 +145,10 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		remotes:                   remotes,
 		newBranchParentCandidates: parentAndAncestors,
-		previousBranch:            previousBranch,
 		parentBranch:              parent,
+		previousBranch:            previousBranch,
+		remotes:                   remotes,
 		targetBranch:              targetBranch,
 	}, branchesSnapshot, stashSnapshot, false, fc.Err
 }

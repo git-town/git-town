@@ -19,10 +19,10 @@ import (
 // Connector provides standardized connectivity for the given repository (github.com/owner/repo)
 // via the GitHub API.
 type Connector struct {
-	client *github.Client
 	hostingdomain.Config
 	APIToken   configdomain.GitHubToken
 	MainBranch gitdomain.LocalBranchName
+	client     *github.Client
 	log        hostingdomain.Log
 }
 
@@ -49,7 +49,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) HostingServiceName() string {
+func (self *Connector) HostingPlatformName() string {
 	return "GitHub"
 }
 
@@ -119,13 +119,12 @@ func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubTok
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != configdomain.HostingGitHub) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingPlatform != configdomain.HostingPlatformGitHub) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &Connector{
-		client:   github.NewClient(httpClient),
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
@@ -133,16 +132,17 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 			Repository:   args.OriginURL.Repo,
 		},
 		MainBranch: args.MainBranch,
+		client:     github.NewClient(httpClient),
 		log:        args.Log,
 	}, nil
 }
 
 type NewConnectorArgs struct {
-	HostingService configdomain.Hosting
-	OriginURL      *giturl.Parts
-	APIToken       configdomain.GitHubToken
-	MainBranch     gitdomain.LocalBranchName
-	Log            hostingdomain.Log
+	APIToken        configdomain.GitHubToken
+	HostingPlatform configdomain.HostingPlatform
+	Log             hostingdomain.Log
+	MainBranch      gitdomain.LocalBranchName
+	OriginURL       *giturl.Parts
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

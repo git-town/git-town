@@ -64,7 +64,7 @@ const (
 	HostingGiteaUpdatePRViaAPI         = "Gitea API: Updating base branch for PR #%d to #%s"
 	HostingGithubMergingViaAPI         = "GitHub API: merging PR #%d ... "
 	HostingGithubUpdatePRViaAPI        = "GitHub API: updating base branch for PR #%d ... "
-	HostingServiceUnknown              = "unknown hosting service: %q"
+	HostingPlatformUnknown             = "unknown hosting platform: %q"
 	InputAddOrRemove                   = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                       = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	KillBranchOtherWorktree            = `branch %q is active in another worktree`

@@ -44,15 +44,15 @@ func toData(config *configdomain.PartialConfig) Data {
 		result.Branches = &branches
 	}
 	// codehosting
-	codeHosting := CodeHosting{} //nolint:exhaustruct
-	if config.CodeHostingOriginHostname != nil {
-		codeHosting.OriginHostname = (*string)(config.CodeHostingOriginHostname)
+	codeHosting := Hosting{} //nolint:exhaustruct
+	if config.HostingOriginHostname != nil {
+		codeHosting.OriginHostname = (*string)(config.HostingOriginHostname)
 	}
-	if config.CodeHostingPlatformName != nil {
-		codeHosting.Platform = (*string)(config.CodeHostingPlatformName)
+	if config.HostingPlatform != nil {
+		codeHosting.Platform = (*string)(config.HostingPlatform)
 	}
 	if !codeHosting.IsEmpty() {
-		result.CodeHosting = &codeHosting
+		result.Hosting = &codeHosting
 	}
 	// sync-strategy
 	syncStrategy := SyncStrategy{} //nolint:exhaustruct

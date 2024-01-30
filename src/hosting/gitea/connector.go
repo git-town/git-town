@@ -16,10 +16,10 @@ import (
 )
 
 type Connector struct {
-	client   *gitea.Client
-	APIToken configdomain.GiteaToken
 	hostingdomain.Config
-	log hostingdomain.Log
+	APIToken configdomain.GiteaToken
+	client   *gitea.Client
+	log      hostingdomain.Log
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -52,7 +52,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	}, nil
 }
 
-func (self *Connector) HostingServiceName() string {
+func (self *Connector) HostingPlatformName() string {
 	return "Gitea"
 }
 
@@ -112,7 +112,7 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != configdomain.HostingGitea) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingPlatform != configdomain.HostingPlatformGitea) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
@@ -120,19 +120,19 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &Connector{
 		APIToken: args.APIToken,
-		client:   giteaClient,
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
 			Organization: args.OriginURL.Org,
 			Repository:   args.OriginURL.Repo,
 		},
-		log: args.Log,
+		client: giteaClient,
+		log:    args.Log,
 	}, nil
 }
 
 type NewConnectorArgs struct {
-	OriginURL      *giturl.Parts
-	HostingService configdomain.Hosting
-	APIToken       configdomain.GiteaToken
-	Log            hostingdomain.Log
+	APIToken        configdomain.GiteaToken
+	HostingPlatform configdomain.HostingPlatform
+	Log             hostingdomain.Log
+	OriginURL       *giturl.Parts
 }

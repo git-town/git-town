@@ -8,10 +8,10 @@ import (
 	"github.com/git-town/git-town/v11/src/vm/shared"
 )
 
-// UpdateProposalTarget updates the target of the proposal with the given number at the code hosting service.
+// UpdateProposalTarget updates the target of the proposal with the given number at the code hosting platform.
 type UpdateProposalTarget struct {
-	ProposalNumber int
 	NewTarget      gitdomain.LocalBranchName
+	ProposalNumber int
 	undeclaredOpcodeMethods
 }
 

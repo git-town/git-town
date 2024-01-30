@@ -103,6 +103,11 @@ func (self *FrontendCommands) CreateTrackingBranch(branch gitdomain.LocalBranchN
 	return self.Run("git", args...)
 }
 
+// DeleteHostingPlatform removes the hosting platform config entry.
+func (self *FrontendCommands) DeleteHostingPlatform() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyHostingPlatform.String())
+}
+
 // DeleteLastCommit resets HEAD to the previous commit.
 func (self *FrontendCommands) DeleteLastCommit() error {
 	return self.Run("git", "reset", "--hard", "HEAD~1")
@@ -115,6 +120,11 @@ func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, 
 		args[1] = "-D"
 	}
 	return self.Run("git", args...)
+}
+
+// DeleteOriginHostname removes the origin hostname override
+func (self *FrontendCommands) DeleteOriginHostname() error {
+	return self.Run("git", "config", "--unset", gitconfig.KeyHostingOriginHostname.String())
 }
 
 // DeleteTrackingBranch removes the tracking branch of the given local branch.
@@ -221,6 +231,31 @@ func (self *FrontendCommands) RevertCommit(sha gitdomain.SHA) error {
 // SetGitAlias sets the given Git alias.
 func (self *FrontendCommands) SetGitAlias(aliasableCommand configdomain.AliasableCommand) error {
 	return self.Run("git", "config", "--global", gitconfig.KeyForAliasableCommand(aliasableCommand).String(), "town "+aliasableCommand.String())
+}
+
+// SetGitHubToken sets the given API token for the GitHub API.
+func (self *FrontendCommands) SetGitHubToken(value configdomain.GitHubToken) error {
+	return self.Run("git", "config", "git-town.github-token", value.String())
+}
+
+// SetGitLabToken sets the given API token for the GitHub API.
+func (self *FrontendCommands) SetGitLabToken(value configdomain.GitLabToken) error {
+	return self.Run("git", "config", "git-town.gitlab-token", value.String())
+}
+
+// SetGiteaToken sets the given API token for the Gitea API.
+func (self *FrontendCommands) SetGiteaToken(value configdomain.GiteaToken) error {
+	return self.Run("git", "config", "git-town.gitea-token", value.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetHostingPlatform(platform configdomain.HostingPlatform) error {
+	return self.Run("git", "config", gitconfig.KeyHostingPlatform.String(), platform.String())
+}
+
+// SetHostingPlatform sets the given code hosting platform.
+func (self *FrontendCommands) SetOriginHostname(hostname configdomain.HostingOriginHostname) error {
+	return self.Run("git", "config", gitconfig.KeyHostingOriginHostname.String(), hostname.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

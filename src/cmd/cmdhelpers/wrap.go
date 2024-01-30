@@ -25,7 +25,7 @@ func Wrap(program *program.Program, options WrapOptions) {
 // WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	DryRun                   bool
+	PreviousBranchCandidates gitdomain.LocalBranchNames
 	RunInGitRoot             bool
 	StashOpenChanges         bool
-	PreviousBranchCandidates gitdomain.LocalBranchNames
 }

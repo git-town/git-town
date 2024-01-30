@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
@@ -110,7 +110,7 @@ type syncConfig struct {
 	*configdomain.FullConfig
 	allBranches      gitdomain.BranchInfos
 	branchesToSync   gitdomain.BranchInfos
-	dialogTestInputs dialog.TestInputs
+	dialogTestInputs components.TestInputs
 	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	previousBranch   gitdomain.LocalBranchName
@@ -178,8 +178,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
-		remotes:          remotes,
 		previousBranch:   previousBranch,
+		remotes:          remotes,
 		shouldPushTags:   shouldPushTags,
 	}, branchesSnapshot, stashSnapshot, false, err
 }

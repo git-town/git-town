@@ -20,7 +20,7 @@ type Connector struct {
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != configdomain.HostingBitbucket) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingPlatform != configdomain.HostingPlatformBitbucket) {
 		return nil, nil //nolint:nilnil
 	}
 	return &Connector{
@@ -33,8 +33,8 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	OriginURL      *giturl.Parts
-	HostingService configdomain.Hosting
+	HostingPlatform configdomain.HostingPlatform
+	OriginURL       *giturl.Parts
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -45,7 +45,7 @@ func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*hostingdom
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
-func (self *Connector) HostingServiceName() string {
+func (self *Connector) HostingPlatformName() string {
 	return "Bitbucket"
 }
 

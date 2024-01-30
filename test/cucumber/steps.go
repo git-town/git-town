@@ -15,7 +15,7 @@ import (
 	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
@@ -258,6 +258,31 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git setting "alias\.(.*?)" is "([^"]*)"$`, func(name, value string) error {
+		key := gitconfig.ParseKey("alias." + name)
+		if key == nil {
+			return fmt.Errorf("no key found for %q", name)
+		}
+		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
+		if aliasableCommand == nil {
+			return fmt.Errorf("no aliasableCommand found for key %q", *key)
+		}
+		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
+	})
+
+	suite.Step(`^global Git setting "alias\.(.*?)" no longer exists$`, func(name string) error {
+		key := gitconfig.ParseKey("alias." + name)
+		if key == nil {
+			return fmt.Errorf("key not found")
+		}
+		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
+		command, has := state.fixture.DevRepo.Config.Aliases[*aliasableCommand]
+		if !has {
+			return nil
+		}
+		return fmt.Errorf("unexpected aliasableCommand %q: %q", *key, command)
+	})
+
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
@@ -292,7 +317,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.CodeHostingPlatformName
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingPlatform
 		if have.String() != want {
 			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, *have)
 		}
@@ -475,7 +500,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s_%d=%s", dialog.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s_%02d=%s", components.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
@@ -490,7 +515,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		for dialogNumber, answer := range answers {
-			env = append(env, fmt.Sprintf("%s%d=%s", dialog.TestInputKey, dialogNumber, answer))
+			env = append(env, fmt.Sprintf("%s%d=%s", components.TestInputKey, dialogNumber, answer))
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		state.fixture.DevRepo.Config.Reload()
@@ -641,10 +666,77 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
 	})
 
+	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
+		if have.String() != want {
+			return fmt.Errorf(`expected local setting "code-hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" no longer exists$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, *have)
+	})
+
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.CodeHostingPlatformName
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
 		if have.String() != want {
 			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "code-hosting-platform" no longer exists$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "code-hosting-platform" with value %q`, *have)
+	})
+
+	suite.Step(`^local Git Town setting "code-hosting-platform" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
+		if have != nil {
+			return fmt.Errorf(`expected local setting "code-hosting-platform" to not exist but was %q`, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "gitea-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GiteaToken
+		want := configdomain.GiteaToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "gitea-token" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "github-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
+		want := configdomain.GitHubToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "github-token" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "github-token" no longer exists$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "github-token" with value %q`, have)
+	})
+
+	suite.Step(`^local Git Town setting "gitlab-token" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.GitLabToken
+		want := configdomain.GitLabToken(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "gitlab-token" to be %q, but was %q`, want, have)
 		}
 		return nil
 	})
@@ -667,6 +759,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "push-hook" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "push-hook" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
 		wantBool, err := strconv.ParseBool(wantStr)
@@ -676,6 +776,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf(`expected local setting "push-hook" to be %v, but was %v`, want, have)
+	})
+
+	suite.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "push-new-branches" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
@@ -689,6 +797,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "push-new-branches" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "ship-delete-tracking-branch" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "ship-delete-tracking-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.ShipDeleteTrackingBranch
 		wantBool, err := strconv.ParseBool(wantStr)
@@ -698,6 +814,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "ship-delete-tracking-branch" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-before-ship" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncBeforeShip
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-before-ship" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "sync-before-ship" is now "([^"]*)"$`, func(wantStr string) error {
@@ -711,6 +835,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-feature-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`expected local setting "sync-feature-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-feature-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncFeatureStrategy
 		want, err := configdomain.NewSyncFeatureStrategy(wantStr)
@@ -721,6 +853,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^local Git Town setting "sync-perennial-strategy" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-perennial-strategy" %v`, have)
+	})
+
 	suite.Step(`^local Git Town setting "sync-perennial-strategy" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncPerennialStrategy
 		want, err := configdomain.NewSyncPerennialStrategy(wantStr)
@@ -729,6 +869,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "sync-perennial-strategy" to be %v, but was %v`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "sync-upstream" is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.SyncUpstream
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "sync-upstream" %v`, have)
 	})
 
 	suite.Step(`^local Git Town setting "sync-upstream" is now "([^"]*)"$`, func(wantStr string) error {
@@ -1097,12 +1245,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(name))
 	})
 
-	suite.Step(`^the main branch is now "([^"]+)"$`, func(want string) error {
+	suite.Step(`^the main branch is (?:now|still) "([^"]+)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^the main branch is still not set$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf("unexpected main branch setting %q", have)
 	})
 
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {

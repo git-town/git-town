@@ -15,10 +15,10 @@ import (
 
 // BackendRunner executes backend shell commands without output to the CLI.
 type BackendRunner struct {
+	CommandsCounter *gohacks.Counter
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir             *string
-	CommandsCounter *gohacks.Counter
+	Dir *string
 	// whether to print the executed commands to the CLI
 	Verbose bool
 }

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -22,7 +23,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 		if !hasParent { //nolint:nestif
 			var aborted bool
 			var err error
-			parent, aborted, err = dialog.EnterParent(dialog.EnterParentArgs{
+			parent, aborted, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          currentBranch,
 				DialogTestInput: args.DialogTestInputs.Next(),
 				LocalBranches:   args.LocalBranches,
@@ -35,7 +36,7 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			if aborted {
 				os.Exit(0)
 			}
-			if parent.String() == dialog.PerennialBranchOption {
+			if parent == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
@@ -58,10 +59,10 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 }
 
 type KnowsBranchAncestorsArgs struct {
-	LocalBranches    gitdomain.LocalBranchNames
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialog.TestInputs
+	DialogTestInputs *components.TestInputs
+	LocalBranches    gitdomain.LocalBranchNames
 	MainBranch       gitdomain.LocalBranchName
 }
 
@@ -73,11 +74,11 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.LocalBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.LocalName, KnowsBranchAncestorsArgs{
-			MainBranch:       args.Config.MainBranch,
 			Backend:          args.Backend,
-			LocalBranches:    args.LocalBranches.Names(),
 			Config:           args.Config,
 			DialogTestInputs: args.DialogTestInputs,
+			LocalBranches:    args.LocalBranches.Names(),
+			MainBranch:       args.Config.MainBranch,
 		})
 		if err != nil {
 			return updated, err
@@ -90,8 +91,8 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	LocalBranches    gitdomain.BranchInfos
 	Backend          *git.BackendCommands
 	Config           *configdomain.FullConfig
-	DialogTestInputs *dialog.TestInputs
+	DialogTestInputs *components.TestInputs
+	LocalBranches    gitdomain.BranchInfos
 }

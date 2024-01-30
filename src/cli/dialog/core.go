@@ -1,2 +1,2 @@
-// Package dialog allows the user to enter configuration data via CLI dialogs and prompts.
+// Package dialog provides high-level screens through which the user can enter data into Git Town.
 package dialog

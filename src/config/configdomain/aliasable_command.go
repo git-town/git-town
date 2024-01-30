@@ -5,6 +5,16 @@ type AliasableCommand string
 
 func (self AliasableCommand) String() string { return string(self) }
 
+type AliasableCommands []AliasableCommand
+
+func (self AliasableCommands) Strings() []string {
+	result := make([]string, len(self))
+	for c, command := range self {
+		result[c] = command.String()
+	}
+	return result
+}
+
 const (
 	AliasableCommandAppend       = AliasableCommand("append")
 	AliasableCommandDiffParent   = AliasableCommand("diff-parent")
@@ -19,8 +29,8 @@ const (
 	AliasableCommandSync         = AliasableCommand("sync")
 )
 
-// AliasableCommands provides all AliasType values.
-func AliasableCommands() []AliasableCommand {
+// AllAliasableCommands provides all AliasType values.
+func AllAliasableCommands() AliasableCommands {
 	return []AliasableCommand{
 		AliasableCommandAppend,
 		AliasableCommandDiffParent,
@@ -34,4 +44,21 @@ func AliasableCommands() []AliasableCommand {
 		AliasableCommandShip,
 		AliasableCommandSync,
 	}
+}
+
+func NewAliasableCommand(command string) AliasableCommand {
+	for _, aliasableCommand := range AllAliasableCommands() {
+		if command == aliasableCommand.String() {
+			return aliasableCommand
+		}
+	}
+	panic("unknown aliasable command: " + command)
+}
+
+func NewAliasableCommands(commands ...string) AliasableCommands {
+	result := make(AliasableCommands, len(commands))
+	for c, command := range commands {
+		result[c] = NewAliasableCommand(command)
+	}
+	return result
 }

@@ -3,16 +3,16 @@ package execute
 import (
 	"os"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/validate"
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, dialog.TestInputs, bool, error) {
+func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomain.StashSize, components.TestInputs, bool, error) {
 	var branchesSnapshot gitdomain.BranchesStatus
-	dialogInputs := dialog.LoadTestInputs(os.Environ())
+	dialogInputs := components.LoadTestInputs(os.Environ())
 	var err error
 	stashSnapshot, err := args.Repo.Runner.Backend.StashSize()
 	if err != nil {
@@ -80,10 +80,10 @@ func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesStatus, gitdomai
 
 type LoadBranchesArgs struct {
 	*configdomain.FullConfig
-	Repo                  *OpenRepoResult
 	Fetch                 bool
-	Verbose               bool
 	HandleUnfinishedState bool
+	Repo                  *OpenRepoResult
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
+	Verbose               bool
 }

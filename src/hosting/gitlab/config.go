@@ -18,7 +18,7 @@ func (self *Config) DefaultProposalMessage(proposal hostingdomain.Proposal) stri
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Config) HostingServiceName() string {
+func (self *Config) HostingPlatformName() string {
 	return "GitLab"
 }
 

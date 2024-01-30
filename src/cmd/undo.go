@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
+	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
@@ -77,7 +77,7 @@ func executeUndo(verbose bool) error {
 type undoConfig struct {
 	*configdomain.FullConfig
 	connector               hostingdomain.Connector
-	dialogTestInputs        dialog.TestInputs
+	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
 	initialBranchesSnapshot gitdomain.BranchesStatus
 	previousBranch          gitdomain.LocalBranchName
@@ -101,16 +101,12 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	if err != nil {
 		return nil, initialStashSnapshot, repo.Runner.Lineage, err
 	}
-	hostingService, err := repo.Runner.Config.HostingService()
-	if err != nil {
-		return nil, initialStashSnapshot, repo.Runner.Lineage, err
-	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:     &repo.Runner.FullConfig,
-		HostingService: hostingService,
-		OriginURL:      originURL,
-		Log:            print.Logger{},
+		FullConfig:      &repo.Runner.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
+		OriginURL:       originURL,
+		Log:             print.Logger{},
 	})
 	if err != nil {
 		return nil, initialStashSnapshot, repo.Runner.Lineage, err

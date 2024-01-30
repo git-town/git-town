@@ -51,7 +51,7 @@ func executeUpdate(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	newPerennialBranches, aborted, err := dialog.EnterPerennialBranches(branchesSnapshot.Branches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, dialogTestInputs.Next())
+	newPerennialBranches, aborted, err := dialog.PerennialBranches(branchesSnapshot.Branches.Names(), repo.Runner.PerennialBranches, repo.Runner.MainBranch, dialogTestInputs.Next())
 	if err != nil || aborted {
 		return err
 	}

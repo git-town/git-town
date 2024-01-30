@@ -11,10 +11,10 @@ import (
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
 // but does not execute them.
 type FrontendDryRunner struct {
+	CommandsCounter  *gohacks.Counter
 	GetCurrentBranch GetCurrentBranchFunc
 	OmitBranchNames  bool
 	PrintCommands    bool
-	CommandsCounter  *gohacks.Counter
 }
 
 // Run runs the given command in this ShellRunner's directory.
