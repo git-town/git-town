@@ -22,6 +22,6 @@ func (self UnfinishedRunStateDetails) String() string {
 	result.WriteString(fmt.Sprintf("%t\n", self.CanSkip))
 	result.WriteString("  EndBranch: ")
 	result.WriteString(self.EndBranch.String())
-	result.WriteString("\n")
+	result.WriteRune('\n')
 	return result.String()
 }

@@ -8,7 +8,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const syncUpstreamHelp = `
+const (
+	syncUpstreamTitle = `Sync-upstream strategy`
+	syncUpstreamHelp  = `
 Should "git sync" also fetch updates from the upstream remote?
 
 If an "upstream" remote exists, and this setting is enabled,
@@ -19,6 +21,7 @@ This is useful if the repository you work on is a fork,
 and you want to keep it in sync with the repo it was forked from.
 
 `
+)
 
 const (
 	SyncUpstreamEntryYes syncUpstreamEntry = `yes, receive updates from the upstream repo`
@@ -36,7 +39,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, syncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

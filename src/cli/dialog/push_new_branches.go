@@ -8,7 +8,9 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-const pushNewBranchesHelp = `
+const (
+	pushNewBranchesTitle = `Push new branches`
+	pushNewBranchesHelp  = `
 Should Git Town push the new branches it creates
 immediately to origin even if they are empty?
 
@@ -21,6 +23,7 @@ and Git Town will create the missing tracking branch
 on the first run of "git sync".
 
 `
+)
 
 const (
 	PushNewBranchesEntryYes pushNewBranchesEntry = "yes, push new branches to origin"
@@ -38,7 +41,7 @@ func PushNewBranches(existing configdomain.NewBranchPush, inputs components.Test
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, pushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

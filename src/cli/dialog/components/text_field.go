@@ -17,6 +17,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 		help:      args.Help,
 		status:    StatusActive,
 		textInput: textInput,
+		title:     args.Title,
 	}
 	program := tea.NewProgram(model)
 	// TODO: extract into helper function.
@@ -40,6 +41,7 @@ type TextFieldArgs struct {
 	Help          string
 	Prompt        string
 	TestInput     TestInput
+	Title         string
 }
 
 type textFieldModel struct {
@@ -47,6 +49,7 @@ type textFieldModel struct {
 	help      string
 	status    status
 	textInput textinput.Model
+	title     string
 }
 
 func (self textFieldModel) Init() tea.Cmd {
@@ -76,6 +79,9 @@ func (self textFieldModel) View() string {
 		return ""
 	}
 	result := strings.Builder{}
+	result.WriteRune('\n')
+	result.WriteString(self.colors.Title.Styled(self.title))
+	result.WriteRune('\n')
 	result.WriteString(self.help)
 	result.WriteString(self.textInput.View())
 	result.WriteString("\n\n  ")
