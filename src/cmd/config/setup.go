@@ -168,14 +168,14 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	}, exit, err
 }
 
-func saveAll(storage dialog.ConfigStorageOption, runner *git.ProdRunner, userInput userInput) error {
-	switch storage {
+func saveAll(runner *git.ProdRunner, userInput userInput) error {
+	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(runner, userInput)
 	}
-	panic("unknown configStorage: " + storage)
+	panic("unknown configStorage: " + userInput.configStorage)
 }
 
 func saveToGit(runner *git.ProdRunner, userInput userInput) error {
