@@ -232,8 +232,8 @@ sync-upstream = true
 		})
 		t.Run("single line without prefix", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1", "  ")
-			want := "  # line 1"
+			have := configfile.TOMLComment("line 1", "")
+			want := "# line 1"
 			must.Eq(t, want, have)
 		})
 		t.Run("single line with prefix", func(t *testing.T) {
