@@ -182,15 +182,15 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(runner, userInput)
+	err = saveGiteaToken(runner, userInput.GiteaToken)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(runner, userInput)
+	err = saveGitHubToken(runner, userInput.GitHubToken)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(runner, userInput)
+	err = saveGitLabToken(runner, userInput.GitLabToken)
 	if err != nil {
 		return err
 	}
@@ -204,47 +204,47 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 }
 
 func saveToGit(runner *git.ProdRunner, userInput userInput) error {
-	err := saveHostingPlatform(runner, userInput)
+	err := saveHostingPlatform(runner, userInput.HostingPlatform)
 	if err != nil {
 		return err
 	}
-	err = saveOriginHostname(runner, userInput)
+	err = saveOriginHostname(runner, userInput.HostingOriginHostname)
 	if err != nil {
 		return err
 	}
-	err = saveMainBranch(runner, userInput)
+	err = saveMainBranch(runner, userInput.MainBranch)
 	if err != nil {
 		return err
 	}
-	err = savePerennialBranches(runner, userInput)
+	err = savePerennialBranches(runner, userInput.PerennialBranches)
 	if err != nil {
 		return err
 	}
-	err = savePushHook(runner, userInput)
+	err = savePushHook(runner, userInput.PushHook)
 	if err != nil {
 		return err
 	}
-	err = savePushNewBranches(runner, userInput)
+	err = savePushNewBranches(runner, userInput.NewBranchPush)
 	if err != nil {
 		return err
 	}
-	err = saveShipDeleteTrackingBranch(runner, userInput)
+	err = saveShipDeleteTrackingBranch(runner, userInput.ShipDeleteTrackingBranch)
 	if err != nil {
 		return err
 	}
-	err = saveSyncFeatureStrategy(runner, userInput)
+	err = saveSyncFeatureStrategy(runner, userInput.SyncFeatureStrategy)
 	if err != nil {
 		return err
 	}
-	err = saveSyncPerennialStrategy(runner, userInput)
+	err = saveSyncPerennialStrategy(runner, userInput.SyncPerennialStrategy)
 	if err != nil {
 		return err
 	}
-	err = saveSyncUpstream(runner, userInput)
+	err = saveSyncUpstream(runner, userInput.SyncUpstream)
 	if err != nil {
 		return err
 	}
-	err = saveSyncBeforeShip(runner, userInput)
+	err = saveSyncBeforeShip(runner, userInput.SyncBeforeShip)
 	if err != nil {
 		return err
 	}
