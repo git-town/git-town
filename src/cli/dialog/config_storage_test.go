@@ -9,6 +9,7 @@ import (
 
 func TestConfigStorage(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Short", func(t *testing.T) {
 		t.Parallel()
 		must.EqOp(t, "file", dialog.ConfigStorageOptionFile.Short())

@@ -31,6 +31,7 @@ func SetupCommand() *cobra.Command {
 	addVerboseFlag(&cmd)
 	return &cmd
 }
+
 func defaultUserInput() userInput {
 	return userInput{
 		FullConfig:    configdomain.DefaultConfig(),
