@@ -2,7 +2,6 @@ package dialog
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
 )
@@ -46,8 +45,13 @@ func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStora
 type ConfigStorageOption string
 
 func (self ConfigStorageOption) Short() string {
-	start, _, _ := strings.Cut(self.String(), " ")
-	return start
+	switch self {
+	case ConfigStorageOptionFile:
+		return "file"
+	case ConfigStorageOptionGit:
+		return "git"
+	}
+	panic("unhandled config storage option: " + self)
 }
 
 func (self ConfigStorageOption) String() string {
