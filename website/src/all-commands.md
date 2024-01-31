@@ -74,7 +74,7 @@ _Commands that help adapt Git Town's behavior to your preferences._
 - [git town offline](commands/config-offline.md) - enable/disable offline mode
 - [git town perennial-branches](commands/config-perennial-branches.md) - display
   or update the perennial branches for the current repo
-- [git town sync-perennial-strategy](commands/config-sync-perennial-strategy.md) -
-  display or set the strategy to update perennial branches
-- [git town sync-feature-strategy](commands/config-sync-feature-strategy.md) -
-  display or update whether feature branches get rebased or merged
+- git town sync-perennial-strategy - display or set the strategy to update
+  perennial branches
+- git town sync-feature-strategy - display or update whether feature branches
+  get rebased or merged

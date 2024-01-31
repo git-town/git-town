@@ -35,10 +35,10 @@
     - [main-branch](commands/config-main-branch.md)
     - [offline](commands/config-offline.md)
     - [perennial-branches](commands/config-perennial-branches.md)
-    - [ship-delete-tracking-branch](commands/config-ship-delete-tracking-branch.md)
-    - [sync-before-ship](commands/config-sync-before-ship.md)
-    - [sync-perennial-strategy](commands/config-sync-perennial-strategy.md)
-    - [sync-feature-strategy](commands/config-sync-feature-strategy.md)
+    - ship-delete-tracking-branch
+    - sync-before-ship
+    - sync-perennial-strategy
+    - sync-feature-strategy
 - [Preferences](preferences.md)
   - [code-hosting-platform](preferences/code-hosting-platform.md)
   - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
