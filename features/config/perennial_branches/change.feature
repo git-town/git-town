@@ -32,7 +32,7 @@ Feature: change the perennial branches
     When I run "git-town config perennial-branches change" and enter into the dialog:
       | DIALOG             | KEYS        |
       | perennial branches | space enter |
-    And the configuration file is now:
+    Then the configuration file is now:
       """
       [branches]
         perennials = ["qa"]
@@ -49,7 +49,7 @@ Feature: change the perennial branches
     When I run "git-town config perennial-branches change" and enter into the dialog:
       | DIALOG             | KEYS        |
       | perennial branches | space enter |
-    And the configuration file is now:
+    Then the configuration file is now:
       """
       [branches]
         perennials = ["qa", "staging"]
@@ -66,7 +66,7 @@ Feature: change the perennial branches
     When I run "git-town config perennial-branches change" and enter into the dialog:
       | DIALOG             | KEYS        |
       | perennial branches | space enter |
-    And the configuration file is now:
+    Then the configuration file is now:
       """
       [branches]
         perennials = ["staging"]
