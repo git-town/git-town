@@ -17,7 +17,7 @@ import (
 
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
-func setupCommand() *cobra.Command {
+func SetupCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
@@ -30,6 +30,12 @@ func setupCommand() *cobra.Command {
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+func defaultUserInput() userInput {
+	return userInput{
+		FullConfig:    configdomain.DefaultConfig(),
+		configStorage: dialog.ConfigStorageOptionFile,
+	}
 }
 
 func executeConfigSetup(verbose bool) error {
@@ -165,7 +171,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		dialogInputs:  dialogInputs,
 		hasConfigFile: repo.Runner.Config.ConfigFile != nil,
 		localBranches: branchesSnapshot.Branches,
-		userInput:     userInput{}, //nolint:exhaustruct
+		userInput:     defaultUserInput(),
 	}, exit, err
 }
 
