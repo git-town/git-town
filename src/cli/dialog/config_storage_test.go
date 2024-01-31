@@ -11,13 +11,7 @@ func TestConfigStorage(t *testing.T) {
 	t.Parallel()
 	t.Run("Short", func(t *testing.T) {
 		t.Parallel()
-		tests := map[dialog.ConfigStorageOption]string{
-			dialog.ConfigStorageOptionFile: "file",
-			dialog.ConfigStorageOptionGit:  "git",
-		}
-		for give, want := range tests {
-			have := give.Short()
-			must.EqOp(t, want, have)
-		}
+		must.EqOp(t, "file", dialog.ConfigStorageOptionFile.Short())
+		must.EqOp(t, "git", dialog.ConfigStorageOptionGit.Short())
 	})
 }
