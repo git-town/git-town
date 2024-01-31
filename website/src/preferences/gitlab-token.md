@@ -6,9 +6,11 @@ git-town.gitlab-token=<token>
 
 To interact with the GitLab API in your name, Git Town needs a
 [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
-with `api` scope. After you created your token, run
-`git config git-town.gitlab-token <token>` inside your code repository to store
-it in the Git Town configuration for the current repository.
+with `api` scope. After you created your token, run the
+[setup assistant](../commands/config-setup.md) and enter it there.
+
+Alternatively, you can set the token manually by running
+`git config git-town.gitlab-token <token>` inside your code repository.
 
 GitLab supports different
 [merge methods](https://docs.gitlab.com/ee/user/project/merge_requests/methods/)
