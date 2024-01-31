@@ -10,7 +10,7 @@ import (
 const (
 	configStorageTitle = `Configuration storage`
 	configStorageHelp  = `
-You have two options to store your configuration data.
+How do you want to store the configuration data?
 
 You can store it as a configuration file
 (.git-branches.toml), which you commit
