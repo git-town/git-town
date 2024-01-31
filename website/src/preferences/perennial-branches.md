@@ -9,5 +9,6 @@ Perennial branches are long-lived branches. They are never shipped. Examples for
 perennial branches are `master`, `main`, `development`, `production`, or
 `staging`.
 
-You can see and update the configured perennial branches via the
-[git town perennial-branches](../commands/config-perennial-branches.md) command.
+You can see the configured perennial branches via the
+[config](../commands/config.md) command and change them via the
+[setup assistant](../commands/setup.md)
