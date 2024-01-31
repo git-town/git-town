@@ -12,16 +12,15 @@ const (
 	configStorageHelp  = `
 You have two options to store your configuration data.
 
-You can store it as a configuration file (.git-branches.toml)
-and commit it to your repository. This shares the
-Git Town configuration with your team, i.e. your team can
-use Git Town without having to run the setup assistant.
-Personal data like your API tokens remain on this machine only.
+You can store it as a configuration file
+(.git-branches.toml), which you commit
+to the repository. This sets up Git Town
+for all people working on this codebase.
+Personal data like your API tokens
+remain on this machine only.
 
-If you cannot or don't want to commit another configuration file,
-you can store the Git Town configuration as Git metadata.
-This way all of it remains on this machine and you don't have
-to commit anything.
+You can also store the Git Town configuration
+as Git metadata on this machine only.
 
 `
 )
