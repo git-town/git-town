@@ -9,7 +9,7 @@ import (
 
 const (
 	originHostnameTitle = `Origin hostname`
-	originHostnameHelp  = `
+	OriginHostnameHelp  = `
 When using SSH identities, define the hostname
 of your source code repository. Only change this
 if the auto-detection does not work for you.
@@ -21,7 +21,7 @@ if the auto-detection does not work for you.
 func OriginHostname(oldValue configdomain.HostingOriginHostname, inputs components.TestInput) (configdomain.HostingOriginHostname, bool, error) {
 	token, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
-		Help:          originHostnameHelp,
+		Help:          OriginHostnameHelp,
 		Prompt:        "Origin hostname override: ",
 		TestInput:     inputs,
 		Title:         originHostnameTitle,

@@ -10,7 +10,7 @@ import (
 
 const (
 	syncUpstreamTitle = `Sync-upstream strategy`
-	syncUpstreamHelp  = `
+	SyncUpstreamHelp  = `
 Should "git sync" also fetch updates from the upstream remote?
 
 If an "upstream" remote exists, and this setting is enabled,
@@ -39,7 +39,7 @@ func SyncUpstream(existing configdomain.SyncUpstream, inputs components.TestInpu
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, syncUpstreamHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncUpstreamTitle, SyncUpstreamHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

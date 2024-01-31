@@ -10,7 +10,7 @@ import (
 
 const (
 	shipDeleteTrackingBranchTitle = `Ship delete tracking branch`
-	shipDeleteTrackingBranchHelp  = `
+	ShipDeleteTrackingBranchHelp  = `
 Should "git ship" delete the tracking branch?
 You want to disable this if your code hosting system
 (GitHub, GitLab, etc) deletes head branches when
@@ -35,7 +35,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, shipDeleteTrackingBranchHelp, shipDeleteTrackingBranchHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, ShipDeleteTrackingBranchHelp, ShipDeleteTrackingBranchHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}
