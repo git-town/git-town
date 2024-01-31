@@ -1030,12 +1030,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have = strings.TrimSpace(have)
 		want := strings.TrimSpace(content.Content)
 		if have != want {
-			fmt.Println("\n\nEXISTING CONFIG FILE:")
-			fmt.Println(have)
-			fmt.Println("EXPECTED CONFIG FILE:")
-			fmt.Println(want)
-			fmt.Println("EXPECTED CONFIG FILE END")
-			fmt.Println()
+			fmt.Println(cmp.Diff(want, have))
+			// fmt.Println("\n\nEXISTING CONFIG FILE:")
+			// fmt.Println(have)
+			// fmt.Println("EXPECTED CONFIG FILE:")
+			// fmt.Println(want)
+			// fmt.Println("EXPECTED CONFIG FILE END")
+			// fmt.Println()
 			return fmt.Errorf("mismatching config file content")
 		}
 		return nil
