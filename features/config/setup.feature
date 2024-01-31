@@ -1,6 +1,6 @@
 Feature: enter Git Town configuration
 
-  Scenario: unconfigured, accept all default values --> working setup
+  Scenario: unconfigured, accept all default values --> working setup with config file
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
