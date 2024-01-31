@@ -199,7 +199,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  Scenario: remove existing configuration
+  Scenario: remove existing configuration in Git metadata
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
@@ -240,6 +240,7 @@ Feature: enter Git Town configuration
       | disable the push hook                   | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
       | sync-before-ship                        | down enter                                    |
+      | save config file                        | down enter                                    |
     Then it runs the commands
       | COMMAND                                                  |
       | git config --global --unset alias.append                 |
@@ -296,6 +297,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter   |
       | ship-delete-tracking-branch | enter   |
       | sync-before-ship            | enter   |
+      | save config file            | enter   |
     Then it runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
@@ -318,6 +320,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
       | sync-before-ship            | enter      |                                             |
+      | save config file            | down enter |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
 
@@ -338,6 +341,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter          |                                             |
       | ship-delete-tracking-branch | enter          |                                             |
       | sync-before-ship            | enter          |                                             |
+      | save config file            | down enter     |                                             |
     Then it runs the commands
       | COMMAND                                           |
       | git config --unset git-town.code-hosting-platform |
@@ -360,10 +364,11 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
+      | save config file            | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                          |
-      | git config git-town.code-hosting-platform gitlab |
       | git config git-town.gitlab-token 123456          |
+      | git config git-town.code-hosting-platform gitlab |
     And local Git Town setting "code-hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123456"
 
@@ -384,9 +389,10 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
+      | save config file            | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                         |
-      | git config git-town.code-hosting-platform gitea |
       | git config git-town.gitea-token 123456          |
+      | git config git-town.code-hosting-platform gitea |
     And local Git Town setting "code-hosting-platform" is now "gitea"
     And local Git Town setting "gitea-token" is now "123456"
