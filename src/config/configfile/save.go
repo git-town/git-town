@@ -9,11 +9,6 @@ import (
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 )
 
-func Save(config *configdomain.FullConfig) error {
-	toml := RenderTOML(config)
-	return os.WriteFile(FileName, []byte(toml), 0o600)
-}
-
 func RenderTOML(config *configdomain.FullConfig) string {
 	result := strings.Builder{}
 	result.WriteString("# Git Town configuration file\n#\n")
@@ -38,6 +33,11 @@ func RenderTOML(config *configdomain.FullConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncPerennialStrategyHelp), "  ") + "\n")
 	result.WriteString(fmt.Sprintf("  perennial-branches = %q\n", config.SyncPerennialStrategy))
 	return result.String()
+}
+
+func Save(config *configdomain.FullConfig) error {
+	toml := RenderTOML(config)
+	return os.WriteFile(FileName, []byte(toml), 0o600)
 }
 
 func TOMLComment(text string, linePrefix string) string {

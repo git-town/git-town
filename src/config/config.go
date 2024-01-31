@@ -19,12 +19,12 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
-	configdomain.FullConfig // the merged configuration data
-	DryRun                  bool
-	GitConfig               gitconfig.Access            // access to the Git configuration settings
-	GlobalGitConfig         configdomain.PartialConfig  // content of the global Git configuration
-	LocalGitConfig          configdomain.PartialConfig  // content of the local Git configuration
+	configdomain.FullConfig                             // the merged configuration data
 	ConfigFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
+	DryRun                  bool
+	GitConfig               gitconfig.Access           // access to the Git configuration settings
+	GlobalGitConfig         configdomain.PartialConfig // content of the global Git configuration
+	LocalGitConfig          configdomain.PartialConfig // content of the local Git configuration
 	originURLCache          configdomain.OriginURLCache
 }
 
@@ -248,12 +248,12 @@ func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool
 	config.Merge(globalConfig)
 	config.Merge(localConfig)
 	return &Config{
+		ConfigFile:      configFile,
 		DryRun:          dryRun,
 		FullConfig:      config,
 		GitConfig:       gitconfig.Access{Runner: runner},
 		GlobalGitConfig: globalConfig,
 		LocalGitConfig:  localConfig,
-		ConfigFile:      configFile,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, nil
 }
