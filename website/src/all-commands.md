@@ -67,14 +67,5 @@ _Commands that help adapt Git Town's behavior to your preferences._
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town push-new-branches](commands/config-push-new-branches.md) - configure
-  whether to push new empty branches to origin
-- [git town main-branch](commands/config-main-branch.md) - display/set the main
-  development branch for the current repo
+- [git town config setup](commands/config-offline.md) - setup assistant
 - [git town offline](commands/config-offline.md) - enable/disable offline mode
-- [git town perennial-branches](commands/config-perennial-branches.md) - display
-  or update the perennial branches for the current repo
-- git town sync-perennial-strategy - display or set the strategy to update
-  perennial branches
-- git town sync-feature-strategy - display or update whether feature branches
-  get rebased or merged

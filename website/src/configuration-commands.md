@@ -12,14 +12,10 @@ to run Git configuration commands manually:
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town config main-branch](commands/config-main-branch.md) - display/set
-  the main development branch for the current repo
-- [git town config push-new-branches](commands/config-push-new-branches.md) -
-  configure whether to push new empty branches to origin
+- [git town config setup](commands/config-setup.md) - setup assistant for all
+  config settings
 - [git town config offline](commands/config-offline.md) - enable/disable offline
   mode
-- [git town config perennial-branches](commands/config-perennial-branches.md) -
-  display or update the perennial branches for the current repo
 - git town config sync-perennial-strategy - display or set the strategy to
   update perennial branches
 - git town config sync-feature-strategy - display or set the strategy to sync

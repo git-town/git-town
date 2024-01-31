@@ -11,4 +11,4 @@ perennial branches are `master`, `main`, `development`, `production`, or
 
 You can see the configured perennial branches via the
 [config](../commands/config.md) command and change them via the
-[setup assistant](../commands/setup.md)
+[setup assistant](../commands/config-setup.md)

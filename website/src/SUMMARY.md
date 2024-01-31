@@ -30,15 +30,9 @@
     - [completions](commands/completions.md)
     - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)
-    - [config](commands/config.md)
-    - [push-new-branches](commands/config-push-new-branches.md)
-    - [main-branch](commands/config-main-branch.md)
+    - [display](commands/config.md)
+    - [setup](commands/config-setup.md)
     - [offline](commands/config-offline.md)
-    - [perennial-branches](commands/config-perennial-branches.md)
-    - ship-delete-tracking-branch
-    - sync-before-ship
-    - sync-perennial-strategy
-    - sync-feature-strategy
 - [Preferences](preferences.md)
   - [code-hosting-platform](preferences/code-hosting-platform.md)
   - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
