@@ -148,7 +148,7 @@ Feature: enter Git Town configuration
       | welcome                                   | enter                  |
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
-      | configure the perennial branches          | space down space enter |
+      | change the perennial branches             | space down space enter |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | origin hostname                           | c o d e enter          |
@@ -161,6 +161,7 @@ Feature: enter Git Town configuration
       | sync-before-ship                          | down enter             |
       | save config file                          | enter                  |
     Then it runs the commands
+      | COMMAND                                                      |
       | git config --global alias.append "town append"               |
       | git config --global alias.diff-parent "town diff-parent"     |
       | git config --global alias.hack "town hack"                   |

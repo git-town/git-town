@@ -174,6 +174,18 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 	if err != nil {
 		return err
 	}
+	err = saveGiteaToken(runner, userInput)
+	if err != nil {
+		return err
+	}
+	err = saveGitHubToken(runner, userInput)
+	if err != nil {
+		return err
+	}
+	err = saveGitLabToken(runner, userInput)
+	if err != nil {
+		return err
+	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput)
@@ -185,18 +197,6 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 
 func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	err := saveHostingPlatform(runner, userInput)
-	if err != nil {
-		return err
-	}
-	err = saveGiteaToken(runner, userInput)
-	if err != nil {
-		return err
-	}
-	err = saveGitHubToken(runner, userInput)
-	if err != nil {
-		return err
-	}
-	err = saveGitLabToken(runner, userInput)
 	if err != nil {
 		return err
 	}
