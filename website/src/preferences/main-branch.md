@@ -9,6 +9,5 @@ parent branch for new feature branches created with
 [git hack](../commands/hack.md) and the default branch into which Git Town
 [ships](../commands/ship.md) finished feature branches.
 
-Git Town automatically asks for this setting if needed. You can run the
-[git town config main-branch](../commands/config-main-branch.md) command to see
-or update the configured main branch.
+You can see the configured main branch via the [config](../commands/config.md)
+command and change it via the [setup assistant](../commands/config-setup.md)

@@ -14,7 +14,7 @@ import (
 
 const (
 	perennialBranchesTitle = `Perennial branches`
-	perennialBranchesHelp  = `
+	PerennialBranchesHelp  = `
 Perennial branches are long-lived branches.
 They are never shipped and have no ancestors.
 Typically, perennial branches have names like
@@ -139,7 +139,7 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteRune('\n')
 	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
 	s.WriteRune('\n')
-	s.WriteString(perennialBranchesHelp)
+	s.WriteString(PerennialBranchesHelp)
 	for i, branch := range self.Entries {
 		selected := self.Cursor == i
 		checked := self.IsRowChecked(i)

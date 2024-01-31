@@ -10,13 +10,11 @@ Feature: require a Git repository
       """
 
     Examples:
-      | COMMAND                            |
-      | git-town config                    |
-      | git-town config main-branch        |
-      | git-town config perennial-branches |
-      | git-town hack feature              |
-      | git-town kill                      |
-      | git-town propose                   |
-      | git-town repo                      |
-      | git-town ship                      |
-      | git-town sync                      |
+      | COMMAND               |
+      | git-town config       |
+      | git-town hack feature |
+      | git-town kill         |
+      | git-town propose      |
+      | git-town repo         |
+      | git-town ship         |
+      | git-town sync         |
