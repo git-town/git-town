@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -16,7 +17,7 @@ import (
 
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
-func setupCommand() *cobra.Command {
+func SetupCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:   "setup",
@@ -29,6 +30,14 @@ func setupCommand() *cobra.Command {
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
+}
+
+// the config settings to be used if the user accepts all default options
+func defaultUserInput() userInput {
+	return userInput{
+		FullConfig:    configdomain.DefaultConfig(),
+		configStorage: dialog.ConfigStorageOptionFile,
+	}
 }
 
 func executeConfigSetup(verbose bool) error {
@@ -56,8 +65,14 @@ func executeConfigSetup(verbose bool) error {
 
 type setupConfig struct {
 	dialogInputs  components.TestInputs
+	hasConfigFile bool
 	localBranches gitdomain.BranchInfos
-	userInput     configdomain.FullConfig
+	userInput     userInput
+}
+
+type userInput struct {
+	configdomain.FullConfig
+	configStorage dialog.ConfigStorageOption
 }
 
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
@@ -137,6 +152,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
+	config.userInput.configStorage, aborted, err = dialog.ConfigStorage(config.hasConfigFile, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	return false, nil
 }
 
@@ -152,79 +171,90 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	})
 	return setupConfig{
 		dialogInputs:  dialogInputs,
+		hasConfigFile: repo.Runner.Config.ConfigFile != nil,
 		localBranches: branchesSnapshot.Branches,
-		userInput:     configdomain.FullConfig{}, //nolint:exhaustruct
+		userInput:     defaultUserInput(),
 	}, exit, err
 }
 
-func saveAll(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	err := saveAliases(runner, newConfig)
+func saveAll(runner *git.ProdRunner, userInput userInput) error {
+	err := saveAliases(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveHostingPlatform(runner, newConfig)
+	err = saveGiteaToken(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveGiteaToken(runner, newConfig)
+	err = saveGitHubToken(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveGitHubToken(runner, newConfig)
+	err = saveGitLabToken(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveGitLabToken(runner, newConfig)
+	switch userInput.configStorage {
+	case dialog.ConfigStorageOptionFile:
+		return saveToFile(userInput)
+	case dialog.ConfigStorageOptionGit:
+		return saveToGit(runner, userInput)
+	}
+	panic("unknown configStorage: " + userInput.configStorage)
+}
+
+func saveToGit(runner *git.ProdRunner, userInput userInput) error {
+	err := saveHostingPlatform(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveOriginHostname(runner, newConfig)
+	err = saveOriginHostname(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveMainBranch(runner, newConfig)
+	err = saveMainBranch(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = savePerennialBranches(runner, newConfig)
+	err = savePerennialBranches(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = savePushHook(runner, newConfig)
+	err = savePushHook(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = savePushNewBranches(runner, newConfig)
+	err = savePushNewBranches(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveShipDeleteTrackingBranch(runner, newConfig)
+	err = saveShipDeleteTrackingBranch(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveSyncFeatureStrategy(runner, newConfig)
+	err = saveSyncFeatureStrategy(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveSyncPerennialStrategy(runner, newConfig)
+	err = saveSyncPerennialStrategy(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveSyncUpstream(runner, newConfig)
+	err = saveSyncUpstream(runner, userInput)
 	if err != nil {
 		return err
 	}
-	err = saveSyncBeforeShip(runner, newConfig)
+	err = saveSyncBeforeShip(runner, userInput)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err error) {
+func saveAliases(runner *git.ProdRunner, userInput userInput) (err error) {
 	for _, aliasableCommand := range configdomain.AllAliasableCommands() {
 		oldAlias, hasOld := runner.Aliases[aliasableCommand]
-		newAlias, hasNew := newConfig.Aliases[aliasableCommand]
+		newAlias, hasNew := userInput.Aliases[aliasableCommand]
 		switch {
 		case hasOld && !hasNew:
 			err = runner.Frontend.RemoveGitAlias(aliasableCommand)
@@ -238,28 +268,28 @@ func saveAliases(runner *git.ProdRunner, newConfig configdomain.FullConfig) (err
 	return nil
 }
 
-func saveGiteaToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.GiteaToken == runner.GiteaToken {
+func saveGiteaToken(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.GiteaToken == runner.GiteaToken {
 		return nil
 	}
-	return runner.Frontend.SetGiteaToken(newConfig.GiteaToken)
+	return runner.Frontend.SetGiteaToken(userInput.GiteaToken)
 }
 
-func saveGitHubToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.GitHubToken == runner.GitHubToken {
+func saveGitHubToken(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.GitHubToken == runner.GitHubToken {
 		return nil
 	}
-	return runner.Frontend.SetGitHubToken(newConfig.GitHubToken)
+	return runner.Frontend.SetGitHubToken(userInput.GitHubToken)
 }
 
-func saveGitLabToken(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.GitLabToken == runner.GitLabToken {
+func saveGitLabToken(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.GitLabToken == runner.GitLabToken {
 		return nil
 	}
-	return runner.Frontend.SetGitLabToken(newConfig.GitLabToken)
+	return runner.Frontend.SetGitLabToken(userInput.GitLabToken)
 }
 
-func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConfig) (err error) {
+func saveHostingPlatform(runner *git.ProdRunner, userInput userInput) (err error) {
 	oldValue := runner.HostingPlatform
 	newValue := userInput.HostingPlatform
 	switch {
@@ -273,24 +303,24 @@ func saveHostingPlatform(runner *git.ProdRunner, userInput configdomain.FullConf
 	return nil
 }
 
-func saveMainBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.MainBranch == runner.MainBranch {
+func saveMainBranch(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.MainBranch == runner.MainBranch {
 		return nil
 	}
-	return runner.SetMainBranch(newConfig.MainBranch)
+	return runner.SetMainBranch(userInput.MainBranch)
 }
 
-func saveOriginHostname(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.HostingOriginHostname == runner.HostingOriginHostname {
+func saveOriginHostname(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.HostingOriginHostname == runner.HostingOriginHostname {
 		return nil
 	}
-	if runner.HostingOriginHostname != "" && newConfig.HostingOriginHostname == "" {
+	if runner.HostingOriginHostname != "" && userInput.HostingOriginHostname == "" {
 		return runner.Frontend.DeleteOriginHostname()
 	}
-	return runner.Frontend.SetOriginHostname(newConfig.HostingOriginHostname)
+	return runner.Frontend.SetOriginHostname(userInput.HostingOriginHostname)
 }
 
-func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfig) error {
+func savePerennialBranches(runner *git.ProdRunner, config userInput) error {
 	oldSetting := runner.PerennialBranches
 	newSetting := config.PerennialBranches
 	if slices.Compare(oldSetting, newSetting) != 0 || runner.LocalGitConfig.PerennialBranches == nil {
@@ -299,51 +329,55 @@ func savePerennialBranches(runner *git.ProdRunner, config configdomain.FullConfi
 	return nil
 }
 
-func savePushHook(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.PushHook == runner.PushHook {
+func savePushHook(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.PushHook == runner.PushHook {
 		return nil
 	}
-	return runner.SetPushHookLocally(newConfig.PushHook)
+	return runner.SetPushHookLocally(userInput.PushHook)
 }
 
-func savePushNewBranches(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.NewBranchPush == runner.NewBranchPush {
+func savePushNewBranches(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.NewBranchPush == runner.NewBranchPush {
 		return nil
 	}
-	return runner.SetNewBranchPush(newConfig.NewBranchPush, false)
+	return runner.SetNewBranchPush(userInput.NewBranchPush, false)
 }
 
-func saveShipDeleteTrackingBranch(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.ShipDeleteTrackingBranch == runner.ShipDeleteTrackingBranch {
+func saveShipDeleteTrackingBranch(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.ShipDeleteTrackingBranch == runner.ShipDeleteTrackingBranch {
 		return nil
 	}
-	return runner.SetShipDeleteTrackingBranch(newConfig.ShipDeleteTrackingBranch, false)
+	return runner.SetShipDeleteTrackingBranch(userInput.ShipDeleteTrackingBranch, false)
 }
 
-func saveSyncFeatureStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.SyncFeatureStrategy == runner.SyncFeatureStrategy {
+func saveSyncFeatureStrategy(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.SyncFeatureStrategy == runner.SyncFeatureStrategy {
 		return nil
 	}
-	return runner.SetSyncFeatureStrategy(newConfig.SyncFeatureStrategy)
+	return runner.SetSyncFeatureStrategy(userInput.SyncFeatureStrategy)
 }
 
-func saveSyncPerennialStrategy(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.SyncPerennialStrategy == runner.SyncPerennialStrategy {
+func saveSyncPerennialStrategy(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.SyncPerennialStrategy == runner.SyncPerennialStrategy {
 		return nil
 	}
-	return runner.SetSyncPerennialStrategy(newConfig.SyncPerennialStrategy)
+	return runner.SetSyncPerennialStrategy(userInput.SyncPerennialStrategy)
 }
 
-func saveSyncUpstream(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.SyncUpstream == runner.SyncUpstream {
+func saveSyncUpstream(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.SyncUpstream == runner.SyncUpstream {
 		return nil
 	}
-	return runner.SetSyncUpstream(newConfig.SyncUpstream, false)
+	return runner.SetSyncUpstream(userInput.SyncUpstream, false)
 }
 
-func saveSyncBeforeShip(runner *git.ProdRunner, newConfig configdomain.FullConfig) error {
-	if newConfig.SyncBeforeShip == runner.SyncBeforeShip {
+func saveSyncBeforeShip(runner *git.ProdRunner, userInput userInput) error {
+	if userInput.SyncBeforeShip == runner.SyncBeforeShip {
 		return nil
 	}
-	return runner.SetSyncBeforeShip(newConfig.SyncBeforeShip, false)
+	return runner.SetSyncBeforeShip(userInput.SyncBeforeShip, false)
+}
+
+func saveToFile(userInput userInput) error {
+	return configfile.Save(&userInput.FullConfig)
 }

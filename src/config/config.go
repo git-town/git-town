@@ -19,12 +19,12 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
-	configdomain.FullConfig // the merged configuration data
+	configdomain.FullConfig                             // the merged configuration data
+	ConfigFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
 	DryRun                  bool
-	GitConfig               gitconfig.Access            // access to the Git configuration settings
-	GlobalGitConfig         configdomain.PartialConfig  // content of the global Git configuration
-	LocalGitConfig          configdomain.PartialConfig  // content of the local Git configuration
-	configFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
+	GitConfig               gitconfig.Access           // access to the Git configuration settings
+	GlobalGitConfig         configdomain.PartialConfig // content of the global Git configuration
+	LocalGitConfig          configdomain.PartialConfig // content of the local Git configuration
 	originURLCache          configdomain.OriginURLCache
 }
 
@@ -60,8 +60,8 @@ func (self *Config) Reload() {
 	_, self.LocalGitConfig, _ = self.GitConfig.LoadLocal()   // we ignore the Git cache here because reloading a config in the middle of a Git Town command doesn't change the cached initial state of the repo
 	self.FullConfig = configdomain.DefaultConfig()
 	// TODO: merge this code with the similar code in NewConfig.
-	if self.configFile != nil {
-		self.FullConfig.Merge(*self.configFile)
+	if self.ConfigFile != nil {
+		self.FullConfig.Merge(*self.ConfigFile)
 	}
 	self.FullConfig.Merge(self.GlobalGitConfig)
 	self.FullConfig.Merge(self.LocalGitConfig)
@@ -82,10 +82,10 @@ func (self *Config) RemoveParent(branch gitdomain.LocalBranchName) {
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
-	self.MainBranch = branch
-	if self.configFile != nil {
-		self.configFile.MainBranch = &branch
-		return configfile.Save(self.configFile)
+	self.FullConfig.MainBranch = branch
+	if self.ConfigFile != nil {
+		self.ConfigFile.MainBranch = &branch
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.MainBranch = &branch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
@@ -95,14 +95,14 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 // freshly created branches to origin.
 func (self *Config) SetNewBranchPush(value configdomain.NewBranchPush, global bool) error {
 	setting := strconv.FormatBool(bool(value))
-	self.NewBranchPush = value
+	self.FullConfig.NewBranchPush = value
 	if global {
 		self.GlobalGitConfig.NewBranchPush = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
 	}
-	if self.configFile != nil {
-		self.configFile.NewBranchPush = &value
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.NewBranchPush = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.NewBranchPush = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
@@ -117,10 +117,10 @@ func (self *Config) SetOffline(value configdomain.Offline) error {
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
-	self.HostingOriginHostname = hostName
-	if self.configFile != nil {
-		self.configFile.HostingOriginHostname = &hostName
-		return configfile.Save(self.configFile)
+	self.FullConfig.HostingOriginHostname = hostName
+	if self.ConfigFile != nil {
+		self.ConfigFile.HostingOriginHostname = &hostName
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.HostingOriginHostname = &hostName
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyHostingOriginHostname, hostName.String())
@@ -138,10 +138,10 @@ func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) er
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) error {
-	self.PerennialBranches = branches
-	if self.configFile != nil {
-		self.configFile.PerennialBranches = &branches
-		return configfile.Save(self.configFile)
+	self.FullConfig.PerennialBranches = branches
+	if self.ConfigFile != nil {
+		self.ConfigFile.PerennialBranches = &branches
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.PerennialBranches = &branches
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
@@ -157,10 +157,10 @@ func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 // SetPushHookLocally updates the locally configured push-hook strategy.
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	self.LocalGitConfig.PushHook = &value
-	self.PushHook = value
-	if self.configFile != nil {
-		self.configFile.PushHook = &value
-		return configfile.Save(self.configFile)
+	self.FullConfig.PushHook = value
+	if self.ConfigFile != nil {
+		self.ConfigFile.PushHook = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
@@ -173,9 +173,9 @@ func (self *Config) SetShipDeleteTrackingBranch(value configdomain.ShipDeleteTra
 		self.GlobalGitConfig.ShipDeleteTrackingBranch = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
 	}
-	if self.configFile != nil {
-		self.configFile.ShipDeleteTrackingBranch = &value
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.ShipDeleteTrackingBranch = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.ShipDeleteTrackingBranch = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch, strconv.FormatBool(value.Bool()))
@@ -187,9 +187,9 @@ func (self *Config) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global 
 		self.GlobalGitConfig.SyncBeforeShip = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
 	}
-	if self.configFile != nil {
-		self.configFile.SyncBeforeShip = &value
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.SyncBeforeShip = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.SyncBeforeShip = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncBeforeShip, strconv.FormatBool(value.Bool()))
@@ -197,9 +197,9 @@ func (self *Config) SetSyncBeforeShip(value configdomain.SyncBeforeShip, global 
 
 func (self *Config) SetSyncFeatureStrategy(value configdomain.SyncFeatureStrategy) error {
 	self.FullConfig.SyncFeatureStrategy = value
-	if self.configFile != nil {
-		self.configFile.SyncFeatureStrategy = &value
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.SyncFeatureStrategy = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.SyncFeatureStrategy = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncFeatureStrategy, value.String())
@@ -214,9 +214,9 @@ func (self *Config) SetSyncFeatureStrategyGlobal(value configdomain.SyncFeatureS
 // SetSyncPerennialStrategy updates the configured sync-perennial strategy.
 func (self *Config) SetSyncPerennialStrategy(strategy configdomain.SyncPerennialStrategy) error {
 	self.FullConfig.SyncPerennialStrategy = strategy
-	if self.configFile != nil {
-		self.configFile.SyncPerennialStrategy = &strategy
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.SyncPerennialStrategy = &strategy
+		return configfile.Save(&self.FullConfig)
 	}
 	self.LocalGitConfig.SyncPerennialStrategy = &strategy
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncPerennialStrategy, strategy.String())
@@ -229,9 +229,9 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 		self.GlobalGitConfig.SyncUpstream = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 	}
-	if self.configFile != nil {
-		self.configFile.SyncUpstream = &value
-		return configfile.Save(self.configFile)
+	if self.ConfigFile != nil {
+		self.ConfigFile.SyncUpstream = &value
+		return configfile.Save(&self.FullConfig)
 	}
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
@@ -248,12 +248,12 @@ func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool
 	config.Merge(globalConfig)
 	config.Merge(localConfig)
 	return &Config{
+		ConfigFile:      configFile,
 		DryRun:          dryRun,
 		FullConfig:      config,
 		GitConfig:       gitconfig.Access{Runner: runner},
 		GlobalGitConfig: globalConfig,
 		LocalGitConfig:  localConfig,
-		configFile:      configFile,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, nil
 }

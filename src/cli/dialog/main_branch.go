@@ -10,7 +10,7 @@ import (
 
 const (
 	mainBranchTitle = `Main branch`
-	mainBranchHelp  = `
+	MainBranchHelp  = `
 The main branch is the branch from which you cut new feature branches,
 and into which you ship feature branches when they are done.
 This branch is often called "main", "master", or "development".
@@ -21,7 +21,7 @@ This branch is often called "main", "master", or "development".
 // MainBranch lets the user select a new main branch for this repo.
 func MainBranch(localBranches gitdomain.LocalBranchNames, oldMainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	cursor := stringers.IndexOrStart(localBranches, oldMainBranch)
-	selection, aborted, err := components.RadioList(localBranches, cursor, mainBranchTitle, mainBranchHelp, inputs)
+	selection, aborted, err := components.RadioList(localBranches, cursor, mainBranchTitle, MainBranchHelp, inputs)
 	fmt.Printf("Main branch: %s\n", components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

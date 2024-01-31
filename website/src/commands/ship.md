@@ -20,8 +20,9 @@ via the CLI.
 
 ### Configuration
 
-If you use GitHub, GitLab or Gitea, have enabled
-[API access to your hosting platform](../quick-configuration.md#api-access-to-your-hosting-platform),
+If you have configured the API tokens for
+[GitHub](../preferences/github-token.md),
+[GitLab](../preferences/gitlab-token.md), or [Gitea](../preferences/gitea-toke
 and the branch to be shipped has an open proposal, this command merges the
 proposal for the current branch on your origin server rather than on the local
 Git workspace.

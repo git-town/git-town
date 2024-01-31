@@ -10,7 +10,7 @@ import (
 
 const (
 	syncFeatureStrategyTitle = `Sync-feature strategy`
-	syncFeatureStrategyHelp  = `
+	SyncFeatureStrategyHelp  = `
 How should Git Town synchronize feature branches?
 Feature branches are short-lived branches cut from
 the main branch and shipped back into the main branch.
@@ -39,7 +39,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 	default:
 		panic("unknown sync-feature-strategy: " + existing.String())
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, syncFeatureStrategyHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, syncFeatureStrategyTitle, SyncFeatureStrategyHelp, inputs)
 	if err != nil || aborted {
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}

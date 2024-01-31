@@ -10,7 +10,7 @@ import (
 
 const (
 	pushNewBranchesTitle = `Push new branches`
-	pushNewBranchesHelp  = `
+	PushNewBranchesHelp  = `
 Should Git Town push the new branches it creates
 immediately to origin even if they are empty?
 
@@ -41,7 +41,7 @@ func PushNewBranches(existing configdomain.NewBranchPush, inputs components.Test
 	} else {
 		defaultPos = 1
 	}
-	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, pushNewBranchesHelp, inputs)
+	selection, aborted, err := components.RadioList(entries, defaultPos, pushNewBranchesTitle, PushNewBranchesHelp, inputs)
 	if err != nil || aborted {
 		return true, aborted, err
 	}

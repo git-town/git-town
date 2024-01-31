@@ -1,6 +1,6 @@
 Feature: enter Git Town configuration
 
-  Scenario: unconfigured, accept all default values --> working setup
+  Scenario: unconfigured, accept all default values --> working setup with config file
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
@@ -19,8 +19,9 @@ Feature: enter Git Town configuration
       | push-hook                   | enter |
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
+      | save config to config file  | enter |
     Then it runs no commands
-    And the main branch is now "main"
+    And the main branch is still not set
     And there are still no perennial branches
     And local Git Town setting "code-hosting-platform" is still not set
     And local Git Town setting "push-new-branches" is still not set
@@ -30,6 +31,88 @@ Feature: enter Git Town configuration
     And local Git Town setting "sync-upstream" is still not set
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
+    And the configuration file is now:
+      """
+      # Git Town configuration file
+      #
+      # The "push-hook" setting determines whether Git Town
+      # permits or prevents Git hooks while pushing branches.
+      # Hooks are enabled by default. If your Git hooks are slow,
+      # you can disable them to speed up branch syncing.
+      #
+      # When disabled, Git Town pushes using the "--no-verify" switch.
+      # More info at https://www.git-town.com/preferences/push-hook.
+      push-hook = true
+
+      # Should Git Town push the new branches it creates
+      # immediately to origin even if they are empty?
+      #
+      # When enabled, you can run "git push" right away
+      # but creating new branches is slower and
+      # it triggers an unnecessary CI run on the empty branch.
+      #
+      # When disabled, many Git Town commands execute faster
+      # and Git Town will create the missing tracking branch
+      # on the first run of "git sync".
+      push-new-branches = false
+
+      # Should "git ship" delete the tracking branch?
+      # You want to disable this if your code hosting system
+      # (GitHub, GitLab, etc) deletes head branches when
+      # merging pull requests through its UI.
+      ship-delete-tracking-branch = true
+
+      # Should "git ship" sync branches before shipping them?
+      #
+      # Guidance: enable when shipping branches locally on your machine
+      # and disable when shipping feature branches via the code hosting
+      # API or web UI.
+      #
+      # When enabled, branches are always fully up to date when shipped
+      # and you get a chance to resolve merge conflicts
+      # between the feature branch to ship and the main development branch
+      # on the feature branch. This helps keep the main branch green.
+      # But this also triggers another CI run and delays shipping.
+      sync-before-ship = false
+
+      # Should "git sync" also fetch updates from the upstream remote?
+      #
+      # If an "upstream" remote exists, and this setting is enabled,
+      # "git sync" will also update the local main branch
+      # with commits from the main branch at the upstream remote.
+      #
+      # This is useful if the repository you work on is a fork,
+      # and you want to keep it in sync with the repo it was forked from.
+      sync-upstream = true
+
+      [branches]
+
+        # The main branch is the branch from which you cut new feature branches,
+        # and into which you ship feature branches when they are done.
+        # This branch is often called "main", "master", or "development".
+        main = "main"
+
+        # Perennial branches are long-lived branches.
+        # They are never shipped and have no ancestors.
+        # Typically, perennial branches have names like
+        # "development", "staging", "qa", "production", etc.
+        perennials = []
+
+      [sync-strategy]
+
+        # How should Git Town synchronize feature branches?
+        # Feature branches are short-lived branches cut from
+        # the main branch and shipped back into the main branch.
+        # Typically you develop features and bug fixes on them,
+        # hence their name.
+        feature-branches = "merge"
+
+        # How should Git Town synchronize perennial branches?
+        # Perennial branches have no parent branch.
+        # The only updates they receive are additional commits
+        # made to their tracking branch somewhere else.
+        perennial-branches = "rebase"
+      """
 
   Scenario: unconfigured, enter some values and hit ESC --> does not save
     And local Git setting "init.defaultbranch" is "main"
@@ -53,7 +136,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
 
-  Scenario: change existing configuration
+  Scenario: change existing configuration in Git metadata
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
@@ -64,7 +147,7 @@ Feature: enter Git Town configuration
       | welcome                                   | enter                  |
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
-      | configure the perennial branches          | space down space enter |
+      | change the perennial branches             | space down space enter |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | origin hostname                           | c o d e enter          |
@@ -75,6 +158,7 @@ Feature: enter Git Town configuration
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
+      | save config to Git metadata               | down enter             |
     Then it runs the commands
       | COMMAND                                                      |
       | git config --global alias.append "town append"               |
@@ -88,8 +172,8 @@ Feature: enter Git Town configuration
       | git config --global alias.set-parent "town set-parent"       |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
-      | git config git-town.code-hosting-platform github             |
       | git config git-town.github-token 123456                      |
+      | git config git-town.code-hosting-platform github             |
       | git config git-town.code-hosting-origin-hostname code        |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
@@ -115,7 +199,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  Scenario: remove existing configuration
+  Scenario: remove existing configuration in Git metadata
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
@@ -156,6 +240,7 @@ Feature: enter Git Town configuration
       | disable the push hook                   | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
       | sync-before-ship                        | down enter                                    |
+      | save config to Git metadata             | down enter                                    |
     Then it runs the commands
       | COMMAND                                                  |
       | git config --global --unset alias.append                 |
@@ -212,6 +297,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter   |
       | ship-delete-tracking-branch | enter   |
       | sync-before-ship            | enter   |
+      | save config to config file  | enter   |
     Then it runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
@@ -234,6 +320,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
       | sync-before-ship            | enter      |                                             |
+      | save config to Git metadata | down enter |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
 
@@ -254,6 +341,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter          |                                             |
       | ship-delete-tracking-branch | enter          |                                             |
       | sync-before-ship            | enter          |                                             |
+      | save config to Git metadata | down enter     |                                             |
     Then it runs the commands
       | COMMAND                                           |
       | git config --unset git-town.code-hosting-platform |
@@ -276,10 +364,11 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                          |
-      | git config git-town.code-hosting-platform gitlab |
       | git config git-town.gitlab-token 123456          |
+      | git config git-town.code-hosting-platform gitlab |
     And local Git Town setting "code-hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123456"
 
@@ -300,9 +389,10 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                         |
-      | git config git-town.code-hosting-platform gitea |
       | git config git-town.gitea-token 123456          |
+      | git config git-town.code-hosting-platform gitea |
     And local Git Town setting "code-hosting-platform" is now "gitea"
     And local Git Town setting "gitea-token" is now "123456"
