@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/configfile"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,15 +16,63 @@ func TestSave(t *testing.T) {
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.DefaultConfig()
+		give.MainBranch = gitdomain.NewLocalBranchName("main")
 		have := configfile.RenderTOML(&give)
 		want := `
+# The "push-hook" setting determines whether Git Town
+# permits or prevents Git hooks while pushing branches.
+# Hooks are enabled by default. If your Git hooks are slow,
+# you can disable them to speed up branch syncing.
+#
+# When disabled, Git Town pushes using the "--no-verify" switch.
+# More info at https://www.git-town.com/preferences/push-hook.
 push-hook = true
+
+# Should Git Town push the new branches it creates
+# immediately to origin even if they are empty?
+#
+# When enabled, you can run "git push" right away
+# but creating new branches is slower and
+# it triggers an unnecessary CI run on the empty branch.
+#
+# When disabled, many Git Town commands execute faster
+# and Git Town will create the missing tracking branch
+# on the first run of "git sync".
 push-new-branches = false
-ship-delete-tracking-branch = false
+
+# Should "git ship" delete the tracking branch?
+# You want to disable this if your code hosting system
+# (GitHub, GitLab, etc) deletes head branches when
+# merging pull requests through its UI.
+ship-delete-tracking-branch = true
+
+# Should "git ship" sync branches before shipping them?
+#
+# Guidance: enable when shipping branches locally on your machine
+# and disable when shipping feature branches via the code hosting
+# API or web UI.
+#
+# When enabled, branches are always fully up to date when shipped
+# and you get a chance to resolve merge conflicts
+# between the feature branch to ship and the main development branch
+# on the feature branch. This helps keep the main branch green.
+# But this also triggers another CI run and delays shipping.
 sync-before-ship = false
+
+# Should "git sync" also fetch updates from the upstream remote?
+#
+# If an "upstream" remote exists, and this setting is enabled,
+# "git sync" will also update the local main branch
+# with commits from the main branch at the upstream remote.
+#
+# This is useful if the repository you work on is a fork,
+# and you want to keep it in sync with the repo it was forked from.
 sync-upstream = true
 
 [branches]
+  # The main branch is the branch from which you cut new feature branches,
+  # and into which you ship feature branches when they are done.
+  # This branch is often called "main", "master", or "development".
   main = "main"
   perennials = ["one", "two"]
 
@@ -65,20 +114,44 @@ sync-upstream = true
 		t.Parallel()
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("")
+			have := configfile.TOMLComment("", "  ")
 			want := ""
 			must.Eq(t, want, have)
 		})
-		t.Run("single line", func(t *testing.T) {
+		t.Run("single line without prefix", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1")
-			want := "# line 1"
+			have := configfile.TOMLComment("line 1", "  ")
+			want := "  # line 1"
 			must.Eq(t, want, have)
 		})
-		t.Run("multiple lines", func(t *testing.T) {
+		t.Run("single line with prefix", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3")
+			have := configfile.TOMLComment("line 1", "  ")
+			want := "  # line 1"
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple lines without prefix", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.TOMLComment("line 1\nline 2\nline 3", "")
 			want := "# line 1\n# line 2\n# line 3"
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple lines with prefix", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.TOMLComment("line 1\nline 2\nline 3", "  ")
+			want := "  # line 1\n  # line 2\n  # line 3"
+			must.Eq(t, want, have)
+		})
+		t.Run("multiple lines with terminating newline", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.TOMLComment("line 1\nline 2\nline 3\n", "  ")
+			want := "  # line 1\n  # line 2\n  # line 3\n"
+			must.Eq(t, want, have)
+		})
+		t.Run("don't comment initial empty line", func(t *testing.T) {
+			t.Parallel()
+			have := configfile.TOMLComment("\nline 1\nline 2\nline 3\n", "  ")
+			want := "\n  # line 1\n  # line 2\n  # line 3\n"
 			must.Eq(t, want, have)
 		})
 	})

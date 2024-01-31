@@ -18,7 +18,6 @@ you can disable them to speed up branch syncing.
 When disabled, Git Town pushes using the "--no-verify" switch.
 More info at https://www.git-town.com/preferences/push-hook.
 
-Push hooks in Git Town are:
 `
 )
 
