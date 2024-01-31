@@ -132,7 +132,6 @@ sync-upstream = true
 		t.Parallel()
 		give := configdomain.DefaultConfig()
 		give.MainBranch = gitdomain.NewLocalBranchName("main")
-		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
 		err := configfile.Save(&give)
 		defer os.Remove(configfile.FileName)
 		must.NoError(t, err)
@@ -203,7 +202,7 @@ sync-upstream = true
   # They are never shipped and have no ancestors.
   # Typically, perennial branches have names like
   # "development", "staging", "qa", "production", etc.
-  perennials = ["one", "two"]
+  perennials = []
 
 [sync-strategy]
 
