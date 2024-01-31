@@ -13,6 +13,31 @@ import (
 func TestSave(t *testing.T) {
 	t.Parallel()
 
+	t.Run("RenderPerennialBranches", func(t *testing.T) {
+		t.Parallel()
+		t.Run("no perennial branches", func(t *testing.T) {
+			t.Parallel()
+			give := gitdomain.NewLocalBranchNames()
+			have := configfile.RenderPerennialBranches(give)
+			want := "[]"
+			must.EqOp(t, want, have)
+		})
+		t.Run("one perennial branch", func(t *testing.T) {
+			t.Parallel()
+			give := gitdomain.NewLocalBranchNames("one")
+			have := configfile.RenderPerennialBranches(give)
+			want := `["one"]`
+			must.EqOp(t, want, have)
+		})
+		t.Run("multiple perennial branches", func(t *testing.T) {
+			t.Parallel()
+			give := gitdomain.NewLocalBranchNames("one", "two")
+			have := configfile.RenderPerennialBranches(give)
+			want := `["one", "two"]`
+			must.EqOp(t, want, have)
+		})
+	})
+
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
 		t.Run("default values", func(t *testing.T) {

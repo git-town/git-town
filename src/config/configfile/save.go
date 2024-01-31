@@ -7,7 +7,15 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
+
+func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
+	if len(perennials) == 0 {
+		return "[]"
+	}
+	return fmt.Sprintf(`["%s"]`, perennials.Join(`", "`))
+}
 
 func RenderTOML(config *configdomain.FullConfig) string {
 	result := strings.Builder{}
@@ -26,7 +34,7 @@ func RenderTOML(config *configdomain.FullConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.MainBranchHelp), "  ") + "\n")
 	result.WriteString(fmt.Sprintf("  main = %q\n\n", config.MainBranch))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialBranchesHelp), "  ") + "\n")
-	result.WriteString(fmt.Sprintf("  perennials = [\"%s\"]\n", config.PerennialBranches.Join(`", "`)))
+	result.WriteString(fmt.Sprintf("  perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)))
 	result.WriteString("\n[sync-strategy]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncFeatureStrategyHelp), "  ") + "\n")
 	result.WriteString(fmt.Sprintf("  feature-branches = %q\n\n", config.SyncFeatureStrategy))
