@@ -73,6 +73,7 @@ sync-before-ship = false
 sync-upstream = true
 
 [branches]
+
   # The main branch is the branch from which you cut new feature branches,
   # and into which you ship feature branches when they are done.
   # This branch is often called "main", "master", or "development".
@@ -85,6 +86,7 @@ sync-upstream = true
   perennials = ["one", "two"]
 
 [sync-strategy]
+
   # How should Git Town synchronize feature branches?
   # Feature branches are short-lived branches cut from
   # the main branch and shipped back into the main branch.
