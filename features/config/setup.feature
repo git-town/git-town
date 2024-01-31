@@ -1,6 +1,5 @@
 Feature: enter Git Town configuration
 
-  @this
   Scenario: unconfigured, accept all default values --> working setup
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
@@ -137,6 +136,7 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is still not set
     And local Git Town setting "sync-before-ship" is still not set
 
+  @this
   Scenario: change existing configuration
     Given a perennial branch "qa"
     And a branch "production"
@@ -159,8 +159,8 @@ Feature: enter Git Town configuration
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
+      | save config file                          | enter                  |
     Then it runs the commands
-      | COMMAND                                                      |
       | git config --global alias.append "town append"               |
       | git config --global alias.diff-parent "town diff-parent"     |
       | git config --global alias.hack "town hack"                   |
@@ -172,9 +172,7 @@ Feature: enter Git Town configuration
       | git config --global alias.set-parent "town set-parent"       |
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
-      | git config git-town.code-hosting-platform github             |
       | git config git-town.github-token 123456                      |
-      | git config git-town.code-hosting-origin-hostname code        |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
     And global Git setting "alias.hack" is now "town hack"

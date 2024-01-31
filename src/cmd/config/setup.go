@@ -170,6 +170,10 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 }
 
 func saveAll(runner *git.ProdRunner, userInput userInput) error {
+	err := saveAliases(runner, userInput)
+	if err != nil {
+		return err
+	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
 		return saveToFile(userInput)
@@ -180,11 +184,7 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 }
 
 func saveToGit(runner *git.ProdRunner, userInput userInput) error {
-	err := saveAliases(runner, userInput)
-	if err != nil {
-		return err
-	}
-	err = saveHostingPlatform(runner, userInput)
+	err := saveHostingPlatform(runner, userInput)
 	if err != nil {
 		return err
 	}
