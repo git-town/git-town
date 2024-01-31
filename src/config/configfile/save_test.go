@@ -40,12 +40,11 @@ func TestSave(t *testing.T) {
 
 	t.Run("RenderTOML", func(t *testing.T) {
 		t.Parallel()
-		t.Run("default values", func(t *testing.T) {
-			give := configdomain.DefaultConfig()
-			give.MainBranch = gitdomain.NewLocalBranchName("main")
-			give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
-			have := configfile.RenderTOML(&give)
-			want := `
+		give := configdomain.DefaultConfig()
+		give.MainBranch = gitdomain.NewLocalBranchName("main")
+		give.PerennialBranches = gitdomain.NewLocalBranchNames("one", "two")
+		have := configfile.RenderTOML(&give)
+		want := `
 # Git Town configuration file
 #
 # The "push-hook" setting determines whether Git Town
@@ -126,8 +125,7 @@ sync-upstream = true
   # made to their tracking branch somewhere else.
   perennial-branches = "rebase"
 `[1:]
-			must.EqOp(t, want, have)
-		})
+		must.EqOp(t, want, have)
 	})
 
 	t.Run("Save", func(t *testing.T) {
