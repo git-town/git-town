@@ -32,6 +32,7 @@ func SetupCommand() *cobra.Command {
 	return &cmd
 }
 
+// the config settings to be used if the user accepts all default options
 func defaultUserInput() userInput {
 	return userInput{
 		FullConfig:    configdomain.DefaultConfig(),
