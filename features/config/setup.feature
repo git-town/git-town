@@ -19,7 +19,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter |
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
-      | save config file            | enter |
+      | save config to config file  | enter |
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches
@@ -158,7 +158,7 @@ Feature: enter Git Town configuration
       | disable the push hook                     | down enter             |
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
-      | save config file                          | down enter             |
+      | save config to Git metadata               | down enter             |
     Then it runs the commands
       | COMMAND                                                      |
       | git config --global alias.append "town append"               |
@@ -240,7 +240,7 @@ Feature: enter Git Town configuration
       | disable the push hook                   | down enter                                    |
       | disable ship-delete-tracking-branch     | down enter                                    |
       | sync-before-ship                        | down enter                                    |
-      | save config file                        | down enter                                    |
+      | save config to Git metadata             | down enter                                    |
     Then it runs the commands
       | COMMAND                                                  |
       | git config --global --unset alias.append                 |
@@ -297,7 +297,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter   |
       | ship-delete-tracking-branch | enter   |
       | sync-before-ship            | enter   |
-      | save config file            | enter   |
+      | save config to config file  | enter   |
     Then it runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |
@@ -320,7 +320,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter      |                                             |
       | ship-delete-tracking-branch | enter      |                                             |
       | sync-before-ship            | enter      |                                             |
-      | save config file            | down enter |                                             |
+      | save config to Git metadata | down enter |                                             |
     Then the main branch is now "main"
     And there are still no perennial branches
 
@@ -341,7 +341,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter          |                                             |
       | ship-delete-tracking-branch | enter          |                                             |
       | sync-before-ship            | enter          |                                             |
-      | save config file            | down enter     |                                             |
+      | save config to Git metadata | down enter     |                                             |
     Then it runs the commands
       | COMMAND                                           |
       | git config --unset git-town.code-hosting-platform |
@@ -364,7 +364,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
-      | save config file            | down enter        |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                          |
       | git config git-town.gitlab-token 123456          |
@@ -389,7 +389,7 @@ Feature: enter Git Town configuration
       | push-hook                   | enter             |                                             |
       | ship-delete-tracking-branch | enter             |                                             |
       | sync-before-ship            | enter             |                                             |
-      | save config file            | down enter        |                                             |
+      | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
       | COMMAND                                         |
       | git config git-town.gitea-token 123456          |
