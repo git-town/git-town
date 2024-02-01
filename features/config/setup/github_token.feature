@@ -21,6 +21,6 @@ Feature: enter the GitHub API token
     Then it runs the commands
       | COMMAND                                          |
       | git config git-town.github-token 123456          |
-      | git config git-town.code-hosting-platform gitlab |
-    And local Git Town setting "code-hosting-platform" is now "gitlab"
+      | git config git-town.code-hosting-platform github |
+    And local Git Town setting "code-hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
