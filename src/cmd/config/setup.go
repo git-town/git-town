@@ -381,21 +381,9 @@ func saveToFile(userInput userInput, runner *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
-	err = runner.Config.RemoveMainBranch()
-	if err != nil {
-		return err
-	}
-	err = runner.Config.RemovePerennialBranches()
-	if err != nil {
-		return err
-	}
-	err = runner.Config.RemovePushNewBranches()
-	if err != nil {
-		return err
-	}
-	err = runner.Config.RemovePushHook()
-	if err != nil {
-		return err
-	}
+	runner.Config.RemoveMainBranch()
+	runner.Config.RemovePerennialBranches()
+	runner.Config.RemovePushNewBranches()
+	runner.Config.RemovePushHook()
 	return nil
 }

@@ -1,5 +1,6 @@
 Feature: enter Git Town configuration
 
+  @debug @this
   Scenario: unconfigured, accept all default values --> working setup with config file
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
