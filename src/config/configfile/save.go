@@ -37,9 +37,17 @@ func RenderTOML(config *configdomain.FullConfig) string {
 	result.WriteString(fmt.Sprintf("  perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)))
 	result.WriteString("\n[hosting]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.HostingPlatformHelp), "  ") + "\n")
-	result.WriteString(fmt.Sprintf("  platform = %q\n\n", config.HostingPlatform))
+	if config.HostingPlatform == configdomain.HostingPlatformNone {
+		result.WriteString("  # platform = \"\"\n\n")
+	} else {
+		result.WriteString(fmt.Sprintf("  platform = %q\n\n", config.HostingPlatform))
+	}
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.OriginHostnameHelp), "  ") + "\n")
-	result.WriteString(fmt.Sprintf("  origin-hostname = %q\n", config.HostingOriginHostname))
+	if config.HostingOriginHostname == "" {
+		result.WriteString("  # origin-hostname = \"\"\n")
+	} else {
+		result.WriteString(fmt.Sprintf("  origin-hostname = %q\n", config.HostingOriginHostname))
+	}
 	result.WriteString("\n[sync-strategy]\n\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncFeatureStrategyHelp), "  ") + "\n")
 	result.WriteString(fmt.Sprintf("  feature-branches = %q\n\n", config.SyncFeatureStrategy))

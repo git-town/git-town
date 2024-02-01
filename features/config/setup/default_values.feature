@@ -100,6 +100,19 @@ Feature: Accepting all default values leads to a working setup
         # "development", "staging", "qa", "production", etc.
         perennials = []
 
+      [hosting]
+
+        # Knowing the type of code hosting platform allows Git Town
+        # to open browser URLs and talk to the code hosting API.
+        # Most people can leave this on "auto-detect".
+        # Only change this if your code hosting server uses as custom URL.
+        # platform = ""
+
+        # When using SSH identities, define the hostname
+        # of your source code repository. Only change this
+        # if the auto-detection does not work for you.
+        # origin-hostname = ""
+
       [sync-strategy]
 
         # How should Git Town synchronize feature branches?
