@@ -73,10 +73,26 @@ func (self *Config) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName
 	return self.SetPerennialBranches(self.FullConfig.PerennialBranches)
 }
 
+func (self *Config) RemoveMainBranch() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyMainBranch)
+}
+
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *Config) RemoveParent(branch gitdomain.LocalBranchName) {
 	self.LocalGitConfig.Lineage.RemoveBranch(branch)
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
+}
+
+func (self *Config) RemovePerennialBranches() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
+}
+
+func (self *Config) RemovePushHook() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
+}
+
+func (self *Config) RemovePushNewBranches() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
 }
 
 // SetMainBranch marks the given branch as the main branch
