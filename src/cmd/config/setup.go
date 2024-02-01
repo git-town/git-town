@@ -393,5 +393,9 @@ func saveToFile(userInput userInput, runner *git.ProdRunner) error {
 	if err != nil {
 		return err
 	}
+	err = runner.Config.RemovePushHook()
+	if err != nil {
+		return err
+	}
 	return nil
 }

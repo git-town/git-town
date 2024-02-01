@@ -283,7 +283,7 @@ Feature: enter Git Town configuration
       # When disabled, many Git Town commands execute faster
       # and Git Town will create the missing tracking branch
       # on the first run of "git sync".
-      push-new-branches = false
+      push-new-branches = true
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting system
