@@ -895,7 +895,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo's "([^"]*)" is "([^"]*)"$`, func(remoteName, remoteURL string) error {
+	suite.Step(`^my repo's "([^"]*)" remote is "([^"]*)"$`, func(remoteName, remoteURL string) error {
 		state.fixture.DevRepo.RemoveRemote(gitdomain.Remote(remoteName))
 		state.fixture.DevRepo.AddRemote(gitdomain.Remote(remoteName), remoteURL)
 		return nil

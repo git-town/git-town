@@ -1,6 +1,5 @@
 Feature: enter the GitHub API token
 
-  @this
   Scenario: auto-detected GitHub
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
@@ -23,7 +22,7 @@ Feature: enter the GitHub API token
     Then it runs the commands
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
-    And local Git Town setting "code-hosting-platform" still does not exist
+    And local Git Town setting "code-hosting-platform" still doesn't exist
     And local Git Town setting "github-token" is now "123456"
 
   Scenario: manually selected GitHub
