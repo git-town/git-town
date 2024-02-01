@@ -87,12 +87,12 @@ func (self *Config) RemovePerennialBranches() error {
 	return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
 
-func (self *Config) RemovePushNewBranches() error {
-	return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
-}
-
 func (self *Config) RemovePushHook() error {
 	return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
+}
+
+func (self *Config) RemovePushNewBranches() error {
+	return self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
 }
 
 // SetMainBranch marks the given branch as the main branch
