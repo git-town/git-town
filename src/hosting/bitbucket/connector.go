@@ -45,10 +45,6 @@ func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*hostingdom
 	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
-func (self *Connector) HostingPlatformName() string {
-	return "Bitbucket"
-}
-
 func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	return fmt.Sprintf("%s/pull-requests/new?source=%s&dest=%s%%2F%s%%3A%s",
 			self.RepositoryURL(),

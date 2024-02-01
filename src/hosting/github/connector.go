@@ -49,10 +49,6 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) HostingPlatformName() string {
-	return "GitHub"
-}
-
 func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != self.MainBranch {
