@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.push-hook".
       """
     And <LOCATION> Git Town setting "push-hook" is now "true"
-    And <LOCATION> Git Town setting "push-verify" no longer exists
+    And <LOCATION> Git Town setting "push-verify" now doesn't exist
 
     Examples:
       | COMMAND  | LOCATION |

@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.sync-perennial-strategy".
       """
     And <LOCATION> Git Town setting "sync-perennial-strategy" is now "rebase"
-    And <LOCATION> Git Town setting "pull-branch-strategy" no longer exists
+    And <LOCATION> Git Town setting "pull-branch-strategy" now doesn't exist
 
     Examples:
       | COMMAND | LOCATION |

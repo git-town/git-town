@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.perennial-branches".
       """
     And <LOCATION> Git Town setting "perennial-branches" is now "one two"
-    And <LOCATION> Git Town setting "perennial-branch-names" no longer exists
+    And <LOCATION> Git Town setting "perennial-branch-names" now doesn't exist
 
     Examples:
       | COMMAND | LOCATION |
