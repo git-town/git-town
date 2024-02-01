@@ -690,15 +690,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "code-hosting-platform" no longer exists$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
-		if have == nil {
-			return nil
-		}
-		return fmt.Errorf(`unexpected local setting "code-hosting-platform" with value %q`, *have)
-	})
-
-	suite.Step(`^local Git Town setting "code-hosting-platform" is (:?now|still) not set$`, func() error {
+	suite.Step(`^local Git Town setting "code-hosting-platform" (:?now|still) doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
 		if have != nil {
 			return fmt.Errorf(`expected local setting "code-hosting-platform" to not exist but was %q`, *have)

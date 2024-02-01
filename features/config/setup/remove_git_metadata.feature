@@ -72,7 +72,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" no longer exists
     And the main branch is still "main"
     And the perennial branches are now "production"
-    And local Git Town setting "code-hosting-platform" no longer exists
+    And local Git Town setting "code-hosting-platform" now doesn't exist
     And local Git Town setting "github-token" no longer exists
     And local Git Town setting "code-hosting-origin-hostname" no longer exists
     And local Git Town setting "sync-feature-strategy" is now "merge"
