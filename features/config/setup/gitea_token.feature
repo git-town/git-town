@@ -1,6 +1,6 @@
 Feature: enter the Gitea API token
 
-  Scenario: auto-detected gitea
+  Scenario: auto-detected Gitea platform
     Given my repo's "origin" remote is "git@gitea.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                        | KEYS              | DESCRIPTION                                 |

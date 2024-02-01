@@ -1,6 +1,6 @@
 Feature: enter the GitHub API token
 
-  Scenario: auto-detected GitHub
+  Scenario: auto-detected GitHub platform
     Given my repo's "origin" remote is "git@github.com:git-town/git-town.git"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                        | KEYS              | DESCRIPTION                                 |
