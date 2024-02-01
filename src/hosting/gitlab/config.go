@@ -18,10 +18,6 @@ func (self *Config) DefaultProposalMessage(proposal hostingdomain.Proposal) stri
 	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
-func (self *Config) HostingPlatformName() string {
-	return "GitLab"
-}
-
 func (self *Config) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch.String())

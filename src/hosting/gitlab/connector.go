@@ -76,9 +76,6 @@ func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBr
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingPlatform != configdomain.HostingPlatformGitLab) {
-		return nil, nil //nolint:nilnil
-	}
 	gitlabConfig := Config{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{

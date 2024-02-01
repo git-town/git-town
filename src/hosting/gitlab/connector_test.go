@@ -121,29 +121,4 @@ func TestNewGitlabConnector(t *testing.T) {
 		}
 		must.EqOp(t, wantConfig, have.Config)
 	})
-
-	t.Run("repo is hosted by another hosting platform --> no connector", func(t *testing.T) {
-		t.Parallel()
-		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformNone,
-			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
-			APIToken:        "",
-			Log:             print.NoLogger{},
-		})
-		must.Nil(t, have)
-		must.NoError(t, err)
-	})
-
-	t.Run("no origin remote --> no connector", func(t *testing.T) {
-		t.Parallel()
-		var originURL *giturl.Parts
-		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformNone,
-			OriginURL:       originURL,
-			APIToken:        "",
-			Log:             print.NoLogger{},
-		})
-		must.Nil(t, have)
-		must.NoError(t, err)
-	})
 }
