@@ -54,7 +54,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And there are now no perennial branches
     And local Git Town setting "code-hosting-platform" now doesn't exist
     And local Git Town setting "github-token" is now "123456"
-    And local Git Town setting "code-hosting-origin-hostname" no longer exists
+    And local Git Town setting "code-hosting-origin-hostname" now doesn't exist
     And local Git Town setting "sync-feature-strategy" no longer exists
     And local Git Town setting "sync-perennial-strategy" no longer exists
     And local Git Town setting "sync-upstream" no longer exists

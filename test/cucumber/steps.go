@@ -674,7 +674,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" no longer exists$`, func() error {
+	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
 		if have == nil {
 			return nil
