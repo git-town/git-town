@@ -196,7 +196,7 @@ func saveAll(runner *git.ProdRunner, userInput userInput) error {
 	}
 	switch userInput.configStorage {
 	case dialog.ConfigStorageOptionFile:
-		return saveToFile(userInput)
+		return saveToFile(userInput, runner)
 	case dialog.ConfigStorageOptionGit:
 		return saveToGit(runner, userInput)
 	}
@@ -376,6 +376,22 @@ func saveSyncBeforeShip(runner *git.ProdRunner, newValue configdomain.SyncBefore
 	return runner.SetSyncBeforeShip(newValue, false)
 }
 
-func saveToFile(userInput userInput) error {
-	return configfile.Save(&userInput.FullConfig)
+func saveToFile(userInput userInput, runner *git.ProdRunner) error {
+	err := configfile.Save(&userInput.FullConfig)
+	if err != nil {
+		return err
+	}
+	err = runner.Config.RemoveMainBranch()
+	if err != nil {
+		return err
+	}
+	err = runner.Config.RemovePerennialBranches()
+	if err != nil {
+		return err
+	}
+	err = runner.Config.RemovePushNewBranches()
+	if err != nil {
+		return err
+	}
+	return nil
 }

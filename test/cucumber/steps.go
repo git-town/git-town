@@ -1248,7 +1248,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the main branch is still not set$`, func() error {
+	suite.Step(`^the main branch is (?:now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.MainBranch
 		if have == nil {
 			return nil
@@ -1303,7 +1303,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^there are still no perennial branches$`, func() error {
+	suite.Step(`^there are (?:now|still) no perennial branches$`, func() error {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.PerennialBranches
 		if branches != nil && len(*branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
