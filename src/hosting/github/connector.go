@@ -49,10 +49,6 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) HostingPlatformName() string {
-	return "GitHub"
-}
-
 func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := branch.String()
 	if parentBranch != self.MainBranch {
@@ -119,9 +115,6 @@ func GetAPIToken(gitConfigToken configdomain.GitHubToken) configdomain.GitHubTok
 // NewConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingPlatform != configdomain.HostingPlatformGitHub) {
-		return nil, nil //nolint:nilnil
-	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &Connector{

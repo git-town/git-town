@@ -52,10 +52,6 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	}, nil
 }
 
-func (self *Connector) HostingPlatformName() string {
-	return "Gitea"
-}
-
 func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {
 	toCompare := parentBranch.String() + "..." + branch.String()
 	return fmt.Sprintf("%s/compare/%s", self.RepositoryURL(), url.PathEscape(toCompare)), nil
@@ -112,9 +108,6 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingPlatform != configdomain.HostingPlatformGitea) {
-		return nil, nil //nolint:nilnil
-	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
