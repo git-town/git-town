@@ -199,7 +199,6 @@ Feature: enter Git Town configuration
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
 
-  @this
   Scenario: move existing configuration in Git metadata to config file
     Given a perennial branch "qa"
     And a branch "production"
@@ -289,7 +288,7 @@ Feature: enter Git Town configuration
       # You want to disable this if your code hosting system
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
-      ship-delete-tracking-branch = true
+      ship-delete-tracking-branch = false
 
       # Should "git ship" sync branches before shipping them?
       #
@@ -302,7 +301,7 @@ Feature: enter Git Town configuration
       # between the feature branch to ship and the main development branch
       # on the feature branch. This helps keep the main branch green.
       # But this also triggers another CI run and delays shipping.
-      sync-before-ship = false
+      sync-before-ship = true
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -312,7 +311,7 @@ Feature: enter Git Town configuration
       #
       # This is useful if the repository you work on is a fork,
       # and you want to keep it in sync with the repo it was forked from.
-      sync-upstream = true
+      sync-upstream = false
 
       [branches]
 
@@ -325,7 +324,7 @@ Feature: enter Git Town configuration
         # They are never shipped and have no ancestors.
         # Typically, perennial branches have names like
         # "development", "staging", "qa", "production", etc.
-        perennials = []
+        perennials = ["production"]
 
       [sync-strategy]
 
@@ -334,13 +333,13 @@ Feature: enter Git Town configuration
         # the main branch and shipped back into the main branch.
         # Typically you develop features and bug fixes on them,
         # hence their name.
-        feature-branches = "merge"
+        feature-branches = "rebase"
 
         # How should Git Town synchronize perennial branches?
         # Perennial branches have no parent branch.
         # The only updates they receive are additional commits
         # made to their tracking branch somewhere else.
-        perennial-branches = "rebase"
+        perennial-branches = "merge"
       """
 
   Scenario: remove existing configuration in Git metadata
