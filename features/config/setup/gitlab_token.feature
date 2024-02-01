@@ -25,7 +25,6 @@ Feature: enter the GitLab API token
     And local Git Town setting "code-hosting-platform" still doesn't exist
     And local Git Town setting "gitlab-token" is now "123456"
 
-
   Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
