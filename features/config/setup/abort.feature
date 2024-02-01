@@ -1,6 +1,6 @@
 Feature: aborting the setup assistant
 
-  Scenario: enter some values and abort
+  Background:
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
     When I run "git-town config setup" and enter into the dialogs:
@@ -10,6 +10,8 @@ Feature: aborting the setup assistant
       | main development branch | enter |
       | perennial branches      | enter |
       | hosting platform        | esc   |
+
+  Scenario: result
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches

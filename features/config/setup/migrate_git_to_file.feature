@@ -1,6 +1,6 @@
 Feature: migrate existing configuration in Git metadata to a config file
 
-  Scenario: move existing configuration in Git metadata to config file
+  Background:
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
@@ -23,6 +23,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       | disable ship-delete-tracking-branch       | down enter             |
       | sync-before-ship                          | down enter             |
       | save config to config file                | enter                  |
+
+  Scenario: result
     Then it runs the commands
       | COMMAND                                                      |
       | git config --global alias.append "town append"               |

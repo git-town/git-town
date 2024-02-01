@@ -1,6 +1,6 @@
 Feature: override an existing Git alias
 
-  Scenario: override an existing Git alias
+  Background:
     Given I ran "git config --global alias.append checkout"
     When I run "git-town config setup" and enter into the dialogs:
       | DIALOG                      | KEYS    |
@@ -18,6 +18,8 @@ Feature: override an existing Git alias
       | ship-delete-tracking-branch | enter   |
       | sync-before-ship            | enter   |
       | save config to config file  | enter   |
+
+  Scenario: result
     Then it runs the commands
       | COMMAND                                        |
       | git config --global alias.append "town append" |

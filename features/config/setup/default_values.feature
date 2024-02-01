@@ -1,6 +1,6 @@
 Feature: Accepting all default values leads to a working setup
 
-  Scenario: unconfigured
+  Background:
     Given the branches "dev" and "production"
     And local Git setting "init.defaultbranch" is "main"
     And Git Town is not configured
@@ -20,6 +20,8 @@ Feature: Accepting all default values leads to a working setup
       | ship-delete-tracking-branch | enter |
       | sync-before-ship            | enter |
       | save config to config file  | enter |
+
+  Scenario: result
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches

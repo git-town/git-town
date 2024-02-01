@@ -1,6 +1,6 @@
 Feature: enter the Gitea API token
 
-  Scenario: enter a Gitea token
+  Scenario: select Gitea manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |

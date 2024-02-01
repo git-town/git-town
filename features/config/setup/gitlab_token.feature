@@ -1,6 +1,6 @@
 Feature: enter the GitLab API token
 
-  Scenario:
+  Scenario: select GitLab manually
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS              | DESCRIPTION                                 |
       | welcome                     | enter             |                                             |

@@ -1,6 +1,6 @@
 Feature: remove existing configuration in Git metadata
 
-  Scenario: remove existing configuration in Git metadata
+  Background:
     Given a perennial branch "qa"
     And a branch "production"
     And the main branch is "main"
@@ -42,6 +42,8 @@ Feature: remove existing configuration in Git metadata
       | disable ship-delete-tracking-branch     | down enter                                    |
       | sync-before-ship                        | down enter                                    |
       | save config to Git metadata             | down enter                                    |
+
+  Scenario: result
     Then it runs the commands
       | COMMAND                                                  |
       | git config --global --unset alias.append                 |
