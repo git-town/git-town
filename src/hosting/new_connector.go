@@ -12,21 +12,20 @@ import (
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
-	platform := detect(args.OriginURL, args.HostingPlatform)
-	switch platform {
-	case hostingdomain.PlatformBitbucket:
+	switch Detect(args.OriginURL, args.HostingPlatform) {
+	case configdomain.HostingPlatformBitbucket:
 		return bitbucket.NewConnector(bitbucket.NewConnectorArgs{
 			OriginURL:       args.OriginURL,
 			HostingPlatform: args.HostingPlatform,
 		})
-	case hostingdomain.PlatformGitea:
+	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
 			OriginURL:       args.OriginURL,
 			HostingPlatform: args.HostingPlatform,
 			APIToken:        args.GiteaToken,
 			Log:             args.Log,
 		})
-	case hostingdomain.PlatformGithub:
+	case configdomain.HostingPlatformGitHub:
 		return github.NewConnector(github.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
 			APIToken:        github.GetAPIToken(args.GitHubToken),
@@ -34,14 +33,14 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 			OriginURL:       args.OriginURL,
 			Log:             args.Log,
 		})
-	case hostingdomain.PlatformGitlab:
+	case configdomain.HostingPlatformGitLab:
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
 			HostingPlatform: args.HostingPlatform,
 			OriginURL:       args.OriginURL,
 			APIToken:        args.GitLabToken,
 			Log:             args.Log,
 		})
-	case hostingdomain.PlatformNone:
+	case configdomain.HostingPlatformNone:
 		return nil, nil
 	}
 	return nil, nil

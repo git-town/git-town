@@ -17,7 +17,7 @@ const (
 	HostingPlatformGitHub    = HostingPlatform("github")
 	HostingPlatformGitLab    = HostingPlatform("gitlab")
 	HostingPlatformGitea     = HostingPlatform("gitea")
-	HostingPlatformNone      = HostingPlatform("")
+	HostingPlatformNone      = HostingPlatform("") // no hosting or auto-detect
 )
 
 // NewHostingPlatform provides the HostingPlatform enum matching the given text.
