@@ -11,14 +11,17 @@ import (
 
 func TestDetect(t *testing.T) {
 	t.Parallel()
+
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		must.True(t, gitea.Detect(giturl.Parse("git@custom-url.com:git-town/docs.git"), configdomain.HostingPlatformGitea))
 	})
+
 	t.Run("repo is hosted by another hosting platform", func(t *testing.T) {
 		t.Parallel()
 		must.False(t, gitea.Detect(giturl.Parse("git@github.com:git-town/git-town.git"), configdomain.HostingPlatformNone))
 	})
+
 	t.Run("no origin remote", func(t *testing.T) {
 		t.Parallel()
 		var originURL *giturl.Parts

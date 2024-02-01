@@ -11,6 +11,7 @@ import (
 
 func TestDetect(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Bitbucket SaaS", func(t *testing.T) {
 		t.Parallel()
 		t.Run("Bitbucket SaaS", func(t *testing.T) {
