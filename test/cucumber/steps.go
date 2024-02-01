@@ -270,7 +270,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
 	})
 
-	suite.Step(`^global Git setting "alias\.(.*?)" no longer exists$`, func(name string) error {
+	suite.Step(`^global Git setting "alias\.(.*?)" now doesn't exist$`, func(name string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
 			return fmt.Errorf("key not found")

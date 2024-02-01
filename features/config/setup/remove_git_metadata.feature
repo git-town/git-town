@@ -59,17 +59,17 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.sync                   |
       | git config --unset git-town.code-hosting-platform        |
       | git config --unset git-town.code-hosting-origin-hostname |
-    And global Git setting "alias.append" no longer exists
-    And global Git setting "alias.diff-parent" no longer exists
-    And global Git setting "alias.hack" no longer exists
-    And global Git setting "alias.kill" no longer exists
-    And global Git setting "alias.prepend" no longer exists
-    And global Git setting "alias.propose" no longer exists
-    And global Git setting "alias.rename-branch" no longer exists
-    And global Git setting "alias.repo" no longer exists
-    And global Git setting "alias.set-parent" no longer exists
-    And global Git setting "alias.ship" no longer exists
-    And global Git setting "alias.sync" no longer exists
+    And global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.diff-parent" now doesn't exist
+    And global Git setting "alias.hack" now doesn't exist
+    And global Git setting "alias.kill" now doesn't exist
+    And global Git setting "alias.prepend" now doesn't exist
+    And global Git setting "alias.propose" now doesn't exist
+    And global Git setting "alias.rename-branch" now doesn't exist
+    And global Git setting "alias.repo" now doesn't exist
+    And global Git setting "alias.set-parent" now doesn't exist
+    And global Git setting "alias.ship" now doesn't exist
+    And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And the perennial branches are now "production"
     And local Git Town setting "code-hosting-platform" now doesn't exist
