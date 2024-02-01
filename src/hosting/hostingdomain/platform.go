@@ -7,6 +7,7 @@ const (
 	PlatformGithub    Platform = "GitHub"
 	PlatformGitlab    Platform = "GitLab"
 	PlatformBitbucket Platform = "Bitbucket"
+	PlatformNone      Platform = "None"
 )
 
 func (self Platform) String() string {
