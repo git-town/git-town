@@ -895,6 +895,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^my repo's "([^"]*)" remote is "([^"]*)"$`, func(remoteName, remoteURL string) error {
+		remote := gitdomain.Remote(remoteName)
+		state.fixture.DevRepo.RemoveRemote(remote)
+		state.fixture.DevRepo.AddRemote(remote, remoteURL)
+		return nil
+	})
+
 	suite.Step(`^still no configuration file exists$`, func() error {
 		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err == nil {

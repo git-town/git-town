@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
+	"github.com/git-town/git-town/v11/src/hosting"
 	"github.com/spf13/cobra"
 )
 
@@ -75,6 +76,13 @@ type userInput struct {
 	configStorage dialog.ConfigStorageOption
 }
 
+func determineHostingPlatform(runner *git.ProdRunner, userChoice configdomain.HostingPlatform) configdomain.HostingPlatform {
+	if userChoice != configdomain.HostingPlatformNone {
+		return userChoice
+	}
+	return hosting.Detect(runner.Config.OriginURL(), userChoice)
+}
+
 func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err error) {
 	aborted, err = dialog.Welcome(config.dialogInputs.Next())
 	if err != nil || aborted {
@@ -100,7 +108,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	switch config.userInput.HostingPlatform {
+	switch determineHostingPlatform(runner, config.userInput.HostingPlatform) {
 	case configdomain.HostingPlatformBitbucket:
 		// BitBucket API isn't supported yet
 	case configdomain.HostingPlatformGitea:
