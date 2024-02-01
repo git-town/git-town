@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.main-branch".
       """
     And <LOCATION> Git Town setting "main-branch" is now "main"
-    And <LOCATION> Git Town setting "main-branch-name" no longer exists
+    And <LOCATION> Git Town setting "main-branch-name" now doesn't exist
 
     Examples:
       | LOCATION |

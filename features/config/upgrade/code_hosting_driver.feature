@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.code-hosting-platform".
       """
     And <LOCATION> Git Town setting "code-hosting-platform" is now "github"
-    And <LOCATION> Git Town setting "code-hosting-driver" no longer exists
+    And <LOCATION> Git Town setting "code-hosting-driver" now doesn't exist
 
     Examples:
       | LOCATION |

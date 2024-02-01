@@ -10,7 +10,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.push-new-branches".
       """
     And <LOCATION> Git Town setting "push-new-branches" is now "true"
-    And <LOCATION> Git Town setting "new-branch-push-flag" no longer exists
+    And <LOCATION> Git Town setting "new-branch-push-flag" now doesn't exist
 
     Examples:
       | COMMAND  | LOCATION |
