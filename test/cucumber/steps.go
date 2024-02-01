@@ -716,7 +716,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "github-token" no longer exists$`, func() error {
+	suite.Step(`^local Git Town setting "github-token" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.GitHubToken
 		if have == nil {
 			return nil
