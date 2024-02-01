@@ -9,7 +9,3 @@ const (
 	PlatformBitbucket Platform = "Bitbucket"
 	PlatformNone      Platform = "None"
 )
-
-func (self Platform) String() string {
-	return string(self)
-}

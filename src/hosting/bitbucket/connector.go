@@ -20,9 +20,6 @@ type Connector struct {
 // NewConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingPlatform != configdomain.HostingPlatformBitbucket) {
-		return nil, nil //nolint:nilnil
-	}
 	return &Connector{
 		Config: hostingdomain.Config{
 			Hostname:     args.OriginURL.Host,
