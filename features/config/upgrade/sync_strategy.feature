@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.sync-feature-strategy".
       """
     And <LOCATION> Git Town setting "sync-feature-strategy" is now "rebase"
-    And <LOCATION> Git Town setting "sync-strategy" no longer exists
+    And <LOCATION> Git Town setting "sync-strategy" now doesn't exist
 
     Examples:
       | COMMAND | LOCATION |

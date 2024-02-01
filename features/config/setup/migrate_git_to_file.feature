@@ -52,16 +52,16 @@ Feature: migrate existing configuration in Git metadata to a config file
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now not set
     And there are now no perennial branches
-    And local Git Town setting "code-hosting-platform" no longer exists
+    And local Git Town setting "code-hosting-platform" now doesn't exist
     And local Git Town setting "github-token" is now "123456"
-    And local Git Town setting "code-hosting-origin-hostname" no longer exists
-    And local Git Town setting "sync-feature-strategy" no longer exists
-    And local Git Town setting "sync-perennial-strategy" no longer exists
-    And local Git Town setting "sync-upstream" no longer exists
-    And local Git Town setting "push-new-branches" no longer exists
-    And local Git Town setting "push-hook" no longer exists
-    And local Git Town setting "ship-delete-tracking-branch" no longer exists
-    And local Git Town setting "sync-before-ship" no longer exists
+    And local Git Town setting "code-hosting-origin-hostname" now doesn't exist
+    And local Git Town setting "sync-feature-strategy" now doesn't exist
+    And local Git Town setting "sync-perennial-strategy" now doesn't exist
+    And local Git Town setting "sync-upstream" now doesn't exist
+    And local Git Town setting "push-new-branches" now doesn't exist
+    And local Git Town setting "push-hook" now doesn't exist
+    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
+    And local Git Town setting "sync-before-ship" now doesn't exist
     And the configuration file is now:
       """
       # Git Town configuration file
