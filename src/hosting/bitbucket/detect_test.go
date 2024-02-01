@@ -26,7 +26,7 @@ func TestDetect(t *testing.T) {
 			t.Parallel()
 			must.False(t, bitbucket.Detect(giturl.Parse("git@github.com:git-town/git-town.git"), configdomain.HostingPlatformNone))
 		})
-		t.Run(" no origin remote", func(t *testing.T) {
+		t.Run("no origin remote", func(t *testing.T) {
 			t.Parallel()
 			var originURL *giturl.Parts
 			must.False(t, bitbucket.Detect(originURL, configdomain.HostingPlatformNone))
