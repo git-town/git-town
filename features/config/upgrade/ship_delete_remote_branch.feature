@@ -9,7 +9,7 @@ Feature: automatically upgrade outdated configuration
       I am upgrading this setting to the new format "git-town.ship-delete-tracking-branch".
       """
     And <LOCATION> Git Town setting "ship-delete-tracking-branch" is now "true"
-    And <LOCATION> Git Town setting "ship-delete-remote-branch" no longer exists
+    And <LOCATION> Git Town setting "ship-delete-remote-branch" now doesn't exist
 
     Examples:
       | COMMAND | LOCATION |
