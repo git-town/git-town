@@ -1,4 +1,3 @@
-@this
 Feature: change offline mode
 
   Scenario Outline: writing to local Git metadata

@@ -24,10 +24,11 @@ Git Town avoids network operations in offline mode.`
 func offlineCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "offline [(yes | no)]",
-		Args:  cobra.MaximumNArgs(1),
-		Short: offlineDesc,
-		Long:  cmdhelpers.Long(offlineDesc, offlineHelp),
+		Use:     "offline [(yes | no)]",
+		Args:    cobra.MaximumNArgs(1),
+		GroupID: "setup",
+		Short:   offlineDesc,
+		Long:    cmdhelpers.Long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executeOffline(args, readVerboseFlag(cmd))
 		},
