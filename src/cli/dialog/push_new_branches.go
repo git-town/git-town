@@ -46,12 +46,12 @@ func PushNewBranches(existing configdomain.PushNewBranches, inputs components.Te
 		return true, aborted, err
 	}
 	fmt.Printf("Push new branches: %s\n", components.FormattedSelection(selection.Short(), aborted))
-	return selection.NewBranchPush(), aborted, err
+	return selection.PushNewBranches(), aborted, err
 }
 
 type pushNewBranchesEntry string
 
-func (self pushNewBranchesEntry) NewBranchPush() configdomain.PushNewBranches {
+func (self pushNewBranchesEntry) PushNewBranches() configdomain.PushNewBranches {
 	switch self {
 	case PushNewBranchesEntryYes:
 		return configdomain.PushNewBranches(true)
