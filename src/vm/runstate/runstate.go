@@ -79,6 +79,11 @@ func (self *RunState) CreateSkipRunState() RunState {
 	}
 	// first undo the changes made to the current branch
 	// TODO: instead of using the undo opcodes here, reset the branch to the SHA from the snapshot
+	result.RunProgram.Add(&opcode.ResetCurrentBranchToSHA{
+		Hard:        true,
+		MustHaveSHA: "",
+		SetToSHA:    self,
+	})
 	for _, opcode := range self.UndoProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			break

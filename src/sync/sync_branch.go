@@ -19,6 +19,7 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 	default:
 		ExistingBranchProgram(args.Program, branch, parentOtherWorktree, args)
 	}
+	args.Program.Add(&opcode.EndOfBranch{})
 }
 
 type BranchProgramArgs struct {
