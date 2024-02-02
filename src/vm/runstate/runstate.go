@@ -77,6 +77,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          self.AbortProgram,
 	}
+	// undo
 	for _, opcode := range self.UndoProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			break

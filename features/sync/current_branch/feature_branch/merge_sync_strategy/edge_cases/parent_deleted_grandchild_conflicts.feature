@@ -41,19 +41,19 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
   Scenario: skip the grandchild merge conflict and kill the grandchild branch
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH     | COMMAND                                     |
-      | grandchild | git merge --abort                           |
-      |            | git branch child {{ sha 'initial commit' }} |
-      |            | git checkout child                          |
-      | child      | git push --tags                             |
-    And the current branch is now "child"
-    When I run "git-town kill"
+      | BRANCH     | COMMAND           |
+      | grandchild | git merge --abort |
+      # |            | git reset {{ sha 'conflicting grandchild commit' }} |
+      |            | git checkout main |
+      | main       | git push --tags   |
+    And the current branch is now "main"
+    When I run "git checkout grandchild"
+    And I run "git-town kill"
     Then it runs the commands
       | BRANCH     | COMMAND                  |
-      | child      | git fetch --prune --tags |
-      |            | git checkout grandchild  |
-      | grandchild | git branch -d child      |
+      | grandchild | git fetch --prune --tags |
+      |            | git branch -d child      |
     And it prints:
       """
-      branch "grandchild" is now a child of "main"
+      xxx
       """
