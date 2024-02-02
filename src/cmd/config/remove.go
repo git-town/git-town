@@ -7,24 +7,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const resetConfigDesc = "Resets your Git Town configuration"
+const removeConfigDesc = "Removes the Git Town configuration"
 
-func resetConfigCommand() *cobra.Command {
+func removeConfigCommand() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:   "reset",
+		Use:   "remove",
 		Args:  cobra.NoArgs,
-		Short: resetConfigDesc,
-		Long:  cmdhelpers.Long(resetConfigDesc),
+		Short: removeConfigDesc,
+		Long:  cmdhelpers.Long(removeConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeConfigResetStatus(readVerboseFlag(cmd))
+			return executeRemoveConfig(readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeConfigResetStatus(verbose bool) error {
+func executeRemoveConfig(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -37,4 +37,5 @@ func executeConfigResetStatus(verbose bool) error {
 		return err
 	}
 	return repo.Runner.GitConfig.RemoveLocalGitConfiguration(repo.Runner.Lineage)
+	// TODO: also remove the aliases
 }
