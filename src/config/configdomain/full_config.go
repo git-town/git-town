@@ -89,8 +89,8 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.MainBranch != nil {
 		self.MainBranch = *other.MainBranch
 	}
-	if other.NewBranchPush != nil {
-		self.PushNewBranches = *other.NewBranchPush
+	if other.PushNewBranches != nil {
+		self.PushNewBranches = *other.PushNewBranches
 	}
 	if other.Offline != nil {
 		self.Offline = *other.Offline

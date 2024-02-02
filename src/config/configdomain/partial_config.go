@@ -16,10 +16,10 @@ type PartialConfig struct {
 	HostingPlatform          *HostingPlatform
 	Lineage                  *Lineage
 	MainBranch               *gitdomain.LocalBranchName
-	NewBranchPush            *PushNewBranches
 	Offline                  *Offline
 	PerennialBranches        *gitdomain.LocalBranchNames
 	PushHook                 *PushHook
+	PushNewBranches          *PushNewBranches
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch
 	SyncBeforeShip           *SyncBeforeShip
 	SyncFeatureStrategy      *SyncFeatureStrategy

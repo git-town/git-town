@@ -107,20 +107,20 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
-// SetNewBranchPush updates whether the current repository is configured to push
+// SetPushNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
-func (self *Config) SetNewBranchPush(value configdomain.PushNewBranches, global bool) error {
+func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
 	setting := strconv.FormatBool(bool(value))
 	self.FullConfig.PushNewBranches = value
 	if global {
-		self.GlobalGitConfig.NewBranchPush = &value
+		self.GlobalGitConfig.PushNewBranches = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
 	}
 	if self.ConfigFile != nil {
-		self.ConfigFile.NewBranchPush = &value
+		self.ConfigFile.PushNewBranches = &value
 		return configfile.Save(&self.FullConfig)
 	}
-	self.LocalGitConfig.NewBranchPush = &value
+	self.LocalGitConfig.PushNewBranches = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
 }
 

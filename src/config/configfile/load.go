@@ -65,7 +65,7 @@ func Validate(data Data) (configdomain.PartialConfig, error) {
 		}
 	}
 	if data.PushNewbranches != nil {
-		result.NewBranchPush = configdomain.NewNewBranchPushRef(*data.PushNewbranches)
+		result.PushNewBranches = configdomain.NewNewBranchPushRef(*data.PushNewbranches)
 	}
 	if data.ShipDeleteTrackingBranch != nil {
 		result.ShipDeleteTrackingBranch = configdomain.NewShipDeleteTrackingBranchRef(*data.ShipDeleteTrackingBranch)

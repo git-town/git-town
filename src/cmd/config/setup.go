@@ -346,7 +346,7 @@ func savePushNewBranches(runner *git.ProdRunner, newValue configdomain.PushNewBr
 	if newValue == runner.PushNewBranches {
 		return nil
 	}
-	return runner.SetNewBranchPush(newValue, false)
+	return runner.SetPushNewBranches(newValue, false)
 }
 
 func saveShipDeleteTrackingBranch(runner *git.ProdRunner, newValue configdomain.ShipDeleteTrackingBranch) error {
