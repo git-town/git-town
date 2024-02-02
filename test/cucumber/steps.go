@@ -324,6 +324,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingOriginHostname
+		if have.String() != want {
+			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.MainBranch
 		want := gitdomain.LocalBranchName(wantStr)

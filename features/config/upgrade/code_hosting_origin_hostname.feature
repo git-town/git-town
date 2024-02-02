@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
   Scenario Outline:
     Given <LOCATION> Git Town setting "code-hosting-origin-hostname" is "git.acme.com"
     When I run "git-town config"
@@ -14,5 +13,5 @@ Feature: automatically upgrade outdated configuration
 
     Examples:
       | LOCATION |
-      # | local    |
+      | local    |
       | global   |
