@@ -39,7 +39,7 @@ perennial-branches = "rebase"
 			githubCom := "github.com"
 			main := "main"
 			merge := "merge"
-			newBranchPush := true
+			pushNewBranches := true
 			pushHook := true
 			rebase := "rebase"
 			shipDeleteTrackingBranch := false
@@ -59,7 +59,7 @@ perennial-branches = "rebase"
 					PerennialBranches: &rebase,
 				},
 				PushHook:                 &pushHook,
-				PushNewbranches:          &newBranchPush,
+				PushNewbranches:          &pushNewBranches,
 				ShipDeleteTrackingBranch: &shipDeleteTrackingBranch,
 				SyncBeforeShip:           &syncBeforeShip,
 				SyncUpstream:             &syncUpstream,
