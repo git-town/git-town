@@ -14,10 +14,10 @@ Feature: require minimum Git version
       | aliases true      |
       | append foo        |
       | config            |
-      | config offline    |
       | diff-parent       |
       | hack foo          |
       | kill              |
+      | offline           |
       | propose           |
       | prepend foo       |
       | rename-branch foo |
