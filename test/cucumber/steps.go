@@ -324,6 +324,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingOriginHostname
+		if have.String() != want {
+			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
 	suite.Step(`^global Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.MainBranch
 		want := gitdomain.LocalBranchName(wantStr)
@@ -666,14 +674,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.GitConfig.SetLocalConfigValue(*configKey, value)
 	})
 
-	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
-		if have.String() != want {
-			return fmt.Errorf(`expected local setting "code-hosting-origin-hostname" to be %q, but was %q`, want, *have)
-		}
-		return nil
-	})
-
 	suite.Step(`^local Git Town setting "code-hosting-origin-hostname" now doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
 		if have == nil {
@@ -731,6 +731,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf(`expected local setting "gitlab-token" to be %q, but was %q`, want, have)
 		}
 		return nil
+	})
+
+	suite.Step(`^local Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
+		if have.String() != want {
+			return fmt.Errorf(`expected local setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^local Git Town setting "hosting-origin-hostname" now doesn't exist$`, func() error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingOriginHostname
+		if have == nil {
+			return nil
+		}
+		return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, *have)
 	})
 
 	suite.Step(`^local Git Town setting "main-branch" is now "([^"]*)"$`, func(wantStr string) error {

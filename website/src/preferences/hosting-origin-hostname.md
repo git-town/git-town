@@ -1,14 +1,14 @@
-# code-hosting-origin-hostname
+# hosting-origin-hostname
 
 ```
-git-town.code-hosting-origin-hostname=<hostname>
+git-town.hosting-origin-hostname=<hostname>
 ```
 
 When using SSH identities, you can use this configuration setting to define the
 hostname of your source code repository by running:
 
 ```
-git config [--global] git-town.code-hosting-origin-hostname <hostname>
+git config [--global] git-town.hosting-origin-hostname <hostname>
 ```
 
 `<hostname>` should match the hostname in your ssh config file. The optional

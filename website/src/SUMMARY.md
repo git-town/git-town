@@ -34,7 +34,7 @@
     - [offline](commands/config-offline.md)
 - [Preferences](preferences.md)
   - [code-hosting-platform](preferences/code-hosting-platform.md)
-  - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
+  - [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
   - [github-token](preferences/github-token.md)
   - [gitlab-token](preferences/gitlab-token.md)
   - [main-branch](preferences/main-branch.md)
