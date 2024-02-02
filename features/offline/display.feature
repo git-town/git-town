@@ -1,7 +1,7 @@
 Feature: display the current offline status
 
   Scenario: default value
-    When I run "git-town config offline"
+    When I run "git-town offline"
     Then it prints:
       """
       no
@@ -9,7 +9,7 @@ Feature: display the current offline status
 
   Scenario Outline: configured in local Git metadata
     Given global Git Town setting "offline" is "<VALUE>"
-    When I run "git-town config offline"
+    When I run "git-town offline"
     Then it prints:
       """
       <OUTPUT>
@@ -29,7 +29,7 @@ Feature: display the current offline status
 
   Scenario: invalid value in Git metadata
     Given global Git Town setting "offline" is "zonk"
-    When I run "git-town config offline"
+    When I run "git-town offline"
     Then it prints the error:
       """
       invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
