@@ -13,6 +13,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	rw "github.com/mattn/go-runewidth"
+	"github.com/rivo/uniseg"
 )
 
 // Internal messages for clipboard operations.
@@ -259,10 +260,9 @@ func (m *Model) Reset() {
 
 // SetSuggestions sets the suggestions for the input.
 func (m *Model) SetSuggestions(suggestions []string) {
-	m.suggestions = [][]rune{}
-
-	for _, s := range suggestions {
-		m.suggestions = append(m.suggestions, []rune(s))
+	m.suggestions = make([][]rune, len(suggestions))
+	for i, s := range suggestions {
+		m.suggestions[i] = []rune(s)
 	}
 
 	m.updateSuggestions()
@@ -297,7 +297,7 @@ func (m *Model) insertRunesFromUserInput(v []rune) {
 		// If there's not enough space to paste the whole thing cut the pasted
 		// runes down so they'll fit.
 		if availSpace < len(paste) {
-			paste = paste[:len(paste)-availSpace]
+			paste = paste[:availSpace]
 		}
 	}
 
@@ -333,7 +333,7 @@ func (m *Model) insertRunesFromUserInput(v []rune) {
 // If a max width is defined, perform some logic to treat the visible area
 // as a horizontally scrolling viewport.
 func (m *Model) handleOverflow() {
-	if m.Width <= 0 || rw.StringWidth(string(m.value)) <= m.Width {
+	if m.Width <= 0 || uniseg.StringWidth(string(m.value)) <= m.Width {
 		m.offset = 0
 		m.offsetRight = len(m.value)
 		return
@@ -542,7 +542,7 @@ func (m *Model) wordForward() {
 func (m Model) echoTransform(v string) string {
 	switch m.EchoMode {
 	case EchoPassword:
-		return strings.Repeat(string(m.EchoCharacter), rw.StringWidth(v))
+		return strings.Repeat(string(m.EchoCharacter), uniseg.StringWidth(v))
 	case EchoNone:
 		return ""
 	case EchoNormal:
@@ -689,7 +689,7 @@ func (m Model) View() string {
 
 	// If a max width and background color were set fill the empty spaces with
 	// the background color.
-	valWidth := rw.StringWidth(string(value))
+	valWidth := uniseg.StringWidth(string(value))
 	if m.Width > 0 && valWidth <= m.Width {
 		padding := max(0, m.Width-valWidth)
 		if valWidth+padding <= m.Width && pos < len(value) {
@@ -713,8 +713,29 @@ func (m Model) placeholderView() string {
 	m.Cursor.SetChar(string(p[:1]))
 	v += m.Cursor.View()
 
-	// The rest of the placeholder text
-	v += style(string(p[1:]))
+	// If the entire placeholder is already set and no padding is needed, finish
+	if m.Width < 1 && len(p) <= 1 {
+		return m.PromptStyle.Render(m.Prompt) + v
+	}
+
+	// If Width is set then size placeholder accordingly
+	if m.Width > 0 {
+		// available width is width - len + cursor offset of 1
+		minWidth := lipgloss.Width(m.Placeholder)
+		availWidth := m.Width - minWidth + 1
+
+		// if width < len, 'subtract'(add) number to len and dont add padding
+		if availWidth < 0 {
+			minWidth += availWidth
+			availWidth = 0
+		}
+		// append placeholder[len] - cursor, append padding
+		v += style(string(p[1:minWidth]))
+		v += style(strings.Repeat(" ", availWidth))
+	} else {
+		// if there is no width, the placeholder can be any length
+		v += style(string(p[1:]))
+	}
 
 	return m.PromptStyle.Render(m.Prompt) + v
 }
@@ -799,9 +820,9 @@ func (m Model) completionView(offset int) string {
 
 // AvailableSuggestions returns the list of available suggestions.
 func (m *Model) AvailableSuggestions() []string {
-	suggestions := []string{}
-	for _, s := range m.suggestions {
-		suggestions = append(suggestions, string(s))
+	suggestions := make([]string, len(m.suggestions))
+	for i, s := range m.suggestions {
+		suggestions[i] = string(s)
 	}
 
 	return suggestions

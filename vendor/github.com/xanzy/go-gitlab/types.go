@@ -17,12 +17,14 @@
 package gitlab
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -421,6 +423,35 @@ func (t *ISOTime) EncodeValues(key string, v *url.Values) error {
 // String implements the Stringer interface.
 func (t ISOTime) String() string {
 	return time.Time(t).Format(iso8601)
+}
+
+// Labels represents a list of labels.
+type Labels []string
+
+// LabelOptions is a custom type with specific marshaling characteristics.
+type LabelOptions []string
+
+// MarshalJSON implements the json.Marshaler interface.
+func (l *LabelOptions) MarshalJSON() ([]byte, error) {
+	if *l == nil {
+		return []byte(`null`), nil
+	}
+	return json.Marshal(strings.Join(*l, ","))
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (l *LabelOptions) UnmarshalJSON(data []byte) error {
+	type alias LabelOptions
+	if !bytes.HasPrefix(data, []byte("[")) {
+		data = []byte(fmt.Sprintf("[%s]", string(data)))
+	}
+	return json.Unmarshal(data, (*alias)(l))
+}
+
+// EncodeValues implements the query.EncodeValues interface
+func (l *LabelOptions) EncodeValues(key string, v *url.Values) error {
+	v.Set(key, strings.Join(*l, ","))
+	return nil
 }
 
 // LinkTypeValue represents a release link type.

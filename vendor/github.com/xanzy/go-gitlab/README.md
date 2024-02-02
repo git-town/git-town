@@ -6,6 +6,7 @@ A GitLab API client enabling Go programs to interact with GitLab in a simple and
 [![Sourcegraph](https://sourcegraph.com/github.com/xanzy/go-gitlab/-/badge.svg)](https://sourcegraph.com/github.com/xanzy/go-gitlab?badge)
 [![GoDoc](https://godoc.org/github.com/xanzy/go-gitlab?status.svg)](https://godoc.org/github.com/xanzy/go-gitlab)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xanzy/go-gitlab)](https://goreportcard.com/report/github.com/xanzy/go-gitlab)
+[![Coverage](https://github.com/xanzy/go-gitlab/wiki/coverage.svg)](https://raw.githack.com/wiki/xanzy/go-gitlab/coverage.html)
 
 ## NOTE
 

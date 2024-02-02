@@ -103,6 +103,7 @@ type User struct {
 	UsingLicenseSeat               bool               `json:"using_license_seat"`
 	CustomAttributes               []*CustomAttribute `json:"custom_attributes"`
 	NamespaceID                    int                `json:"namespace_id"`
+	Locked                         bool               `json:"locked"`
 }
 
 // UserIdentity represents a user identity.
@@ -1487,4 +1488,22 @@ func (s *UsersService) CreateUserRunner(opts *CreateUserRunnerOptions, options .
 	}
 
 	return r, resp, nil
+}
+
+// CreateServiceAccountUser creates a new service account user. Note only administrators can create new service account users.
+//
+// GitLab API docs: https://docs.gitlab.com/ee/api/users.html#create-service-account-user
+func (s *UsersService) CreateServiceAccountUser(options ...RequestOptionFunc) (*User, *Response, error) {
+	req, err := s.client.NewRequest(http.MethodPost, "service_accounts", nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	usr := new(User)
+	resp, err := s.client.Do(req, usr)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return usr, resp, nil
 }
