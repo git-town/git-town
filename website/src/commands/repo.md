@@ -9,7 +9,7 @@ repository in your default browser. Git Town can display repositories hosted on
 
 Git Town automatically identifies the hosting platform type through the `origin`
 remote. You can override the type of hosting server with the
-[code-hosting-platform](../preferences/code-hosting-platform.md) setting.
+[hosting-platform](../preferences/hosting-platform.md) setting.
 
 Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)
 setting to tell Git Town about the hostname when using ssh identities.

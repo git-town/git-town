@@ -39,7 +39,7 @@ Feature: change existing information in Git metadata
       | git config --global alias.ship "town ship"                   |
       | git config --global alias.sync "town sync"                   |
       | git config git-town.github-token 123456                      |
-      | git config git-town.code-hosting-platform github             |
+      | git config git-town.hosting-platform github                  |
       | git config git-town.hosting-origin-hostname code             |
     And global Git setting "alias.append" is now "town append"
     And global Git setting "alias.diff-parent" is now "town diff-parent"
@@ -54,7 +54,7 @@ Feature: change existing information in Git metadata
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now "main"
     And the perennial branches are now "production"
-    And local Git Town setting "code-hosting-platform" is now "github"
+    And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "hosting-origin-hostname" is now "code"
     And local Git Town setting "sync-feature-strategy" is now "rebase"

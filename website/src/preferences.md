@@ -2,10 +2,10 @@
 
 Git Town uses these configuration settings:
 
-- [code-hosting-platform](preferences/code-hosting-platform.md)
-- [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
 - [github-token](preferences/github-token.md)
 - [gitlab-token](preferences/gitlab-token.md)
+- [hosting-platform](preferences/hosting-platform.md)
+- [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
 - [main-branch](preferences/main-branch.md)
 - [push-new-branches](preferences/push-new-branches.md)
 - [offline](preferences/offline.md)

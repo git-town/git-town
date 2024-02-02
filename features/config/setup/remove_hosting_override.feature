@@ -1,7 +1,7 @@
 Feature: remove an existing code hosting override
 
   Background:
-    Given local Git Town setting "code-hosting-platform" is "github"
+    Given local Git Town setting "hosting-platform" is "github"
     When I run "git-town config setup" and enter into the dialog:
       | DIALOG                      | KEYS           | DESCRIPTION                                 |
       | welcome                     | enter          |                                             |
@@ -21,6 +21,6 @@ Feature: remove an existing code hosting override
 
   Scenario: result
     Then it runs the commands
-      | COMMAND                                           |
-      | git config --unset git-town.code-hosting-platform |
-    And local Git Town setting "code-hosting-platform" now doesn't exist
+      | COMMAND                                      |
+      | git config --unset git-town.hosting-platform |
+    And local Git Town setting "hosting-platform" now doesn't exist
