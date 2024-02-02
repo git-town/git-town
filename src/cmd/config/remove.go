@@ -43,8 +43,7 @@ func executeRemoveConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	aliasNames := maps.Keys(repo.Runner.Aliases)
-	for _, aliasName := range aliasNames {
+	for _, aliasName := range maps.Keys(repo.Runner.Aliases) {
 		if strings.HasPrefix(repo.Runner.Aliases[aliasName], "town ") {
 			err = repo.Runner.Frontend.RemoveGitAlias(aliasName)
 			if err != nil {
