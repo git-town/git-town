@@ -50,7 +50,7 @@ const (
 	KeyGiteaToken                       = Key("git-town.gitea-token")
 	KeyGithubToken                      = Key("git-town.github-token")
 	KeyGitlabToken                      = Key("git-town.gitlab-token")
-	KeyHostingOriginHostname            = Key("git-town.code-hosting-origin-hostname")
+	KeyHostingOriginHostname            = Key("git-town.hosting-origin-hostname")
 	KeyHostingPlatform                  = Key("git-town.code-hosting-platform")
 	KeyMainBranch                       = Key("git-town.main-branch")
 	KeyOffline                          = Key("git-town.offline")

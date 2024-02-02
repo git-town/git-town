@@ -18,7 +18,7 @@ Feature: remove existing configuration in Git metadata
     And local Git Town setting "code-hosting-platform" is "github"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
-    And local Git Town setting "code-hosting-origin-hostname" is "code"
+    And local Git Town setting "hosting-origin-hostname" is "code"
     And local Git Town setting "sync-feature-strategy" is "rebase"
     And local Git Town setting "sync-perennial-strategy" is "rebase"
     And local Git Town setting "sync-upstream" is "true"
@@ -45,20 +45,20 @@ Feature: remove existing configuration in Git metadata
 
   Scenario: result
     Then it runs the commands
-      | COMMAND                                                  |
-      | git config --global --unset alias.append                 |
-      | git config --global --unset alias.diff-parent            |
-      | git config --global --unset alias.hack                   |
-      | git config --global --unset alias.kill                   |
-      | git config --global --unset alias.prepend                |
-      | git config --global --unset alias.propose                |
-      | git config --global --unset alias.rename-branch          |
-      | git config --global --unset alias.repo                   |
-      | git config --global --unset alias.set-parent             |
-      | git config --global --unset alias.ship                   |
-      | git config --global --unset alias.sync                   |
-      | git config --unset git-town.code-hosting-platform        |
-      | git config --unset git-town.code-hosting-origin-hostname |
+      | COMMAND                                             |
+      | git config --global --unset alias.append            |
+      | git config --global --unset alias.diff-parent       |
+      | git config --global --unset alias.hack              |
+      | git config --global --unset alias.kill              |
+      | git config --global --unset alias.prepend           |
+      | git config --global --unset alias.propose           |
+      | git config --global --unset alias.rename-branch     |
+      | git config --global --unset alias.repo              |
+      | git config --global --unset alias.set-parent        |
+      | git config --global --unset alias.ship              |
+      | git config --global --unset alias.sync              |
+      | git config --unset git-town.code-hosting-platform   |
+      | git config --unset git-town.hosting-origin-hostname |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
     And global Git setting "alias.hack" now doesn't exist
@@ -74,7 +74,7 @@ Feature: remove existing configuration in Git metadata
     And the perennial branches are now "production"
     And local Git Town setting "code-hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
-    And local Git Town setting "code-hosting-origin-hostname" now doesn't exist
+    And local Git Town setting "hosting-origin-hostname" now doesn't exist
     And local Git Town setting "sync-feature-strategy" is now "merge"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
