@@ -113,23 +113,6 @@ func (self *Config) SetOffline(value configdomain.Offline) error {
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
-// SetPushNewBranches updates whether the current repository is configured to push
-// freshly created branches to origin.
-func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
-	setting := strconv.FormatBool(bool(value))
-	self.FullConfig.PushNewBranches = value
-	if global {
-		self.GlobalGitConfig.PushNewBranches = &value
-		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
-	}
-	if self.ConfigFile != nil {
-		self.ConfigFile.PushNewBranches = &value
-		return configfile.Save(&self.FullConfig)
-	}
-	self.LocalGitConfig.PushNewBranches = &value
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
-}
-
 // SetOriginHostname marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetOriginHostname(hostName configdomain.HostingOriginHostname) error {
@@ -180,6 +163,23 @@ func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	}
 	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
+}
+
+// SetPushNewBranches updates whether the current repository is configured to push
+// freshly created branches to origin.
+func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
+	setting := strconv.FormatBool(bool(value))
+	self.FullConfig.PushNewBranches = value
+	if global {
+		self.GlobalGitConfig.PushNewBranches = &value
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
+	}
+	if self.ConfigFile != nil {
+		self.ConfigFile.PushNewBranches = &value
+		return configfile.Save(&self.FullConfig)
+	}
+	self.LocalGitConfig.PushNewBranches = &value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.
