@@ -1,6 +1,7 @@
 package config
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
@@ -43,7 +44,9 @@ func executeRemoveConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	for _, aliasName := range maps.Keys(repo.Runner.Aliases) {
+	aliasNames := maps.Keys(repo.Runner.Aliases)
+	slices.Sort(aliasNames)
+	for _, aliasName := range aliasNames {
 		if strings.HasPrefix(repo.Runner.Aliases[aliasName], "town ") {
 			err = repo.Runner.Frontend.RemoveGitAlias(aliasName)
 			if err != nil {
