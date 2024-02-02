@@ -1,7 +1,6 @@
 @smoke
 Feature: require minimum Git version
 
-  @this
   Scenario Outline: using an unsupported Git Version
     Given Git has version "2.6.2"
     When I run "git-town <COMMAND>"
