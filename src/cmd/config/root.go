@@ -27,7 +27,6 @@ func RootCmd() *cobra.Command {
 		},
 	}
 	addVerboseFlag(&configCmd)
-	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(SetupCommand())
 	return &configCmd

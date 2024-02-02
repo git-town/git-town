@@ -16,10 +16,10 @@ Feature: too few or many parameters
       | append arg1 arg2             | accepts 1 arg(s), received 2                     |
       | completions arg1             | unknown completion type: "arg1"                  |
       | config arg1                  | unknown command "arg1" for "git-town config"     |
-      | config offline arg1 arg2     | accepts at most 1 arg(s), received 2             |
       | hack                         | accepts 1 arg(s), received 0                     |
       | hack arg1 arg2               | accepts 1 arg(s), received 2                     |
       | kill arg1 arg2               | accepts at most 1 arg(s), received 2             |
+      | offline arg1 arg2            | accepts at most 1 arg(s), received 2             |
       | propose arg1                 | unknown command "arg1" for "git-town propose"    |
       | prepend                      | accepts 1 arg(s), received 0                     |
       | rename-branch                | accepts between 1 and 2 arg(s), received 0       |
