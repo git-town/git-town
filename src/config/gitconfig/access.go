@@ -101,6 +101,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		config.SyncUpstream, err = configdomain.ParseSyncUpstreamRef(value, KeySyncUpstream.String())
 	case KeyDeprecatedCodeHostingDriver,
 		KeyDeprecatedCodeHostingOriginHostname,
+		KeyDeprecatedCodeHostingPlatform,
 		KeyDeprecatedMainBranchName,
 		KeyDeprecatedNewBranchPushFlag,
 		KeyDeprecatedPerennialBranchNames,
