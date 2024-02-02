@@ -170,7 +170,7 @@ func appendProgram(config *appendConfig) program.Program {
 		Ancestors: config.newBranchParentCandidates,
 	})
 	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
-	if config.remotes.HasOrigin() && config.ShouldNewBranchPush() && config.IsOnline() {
+	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
 		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{

@@ -107,23 +107,6 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
-// SetNewBranchPush updates whether the current repository is configured to push
-// freshly created branches to origin.
-func (self *Config) SetNewBranchPush(value configdomain.NewBranchPush, global bool) error {
-	setting := strconv.FormatBool(bool(value))
-	self.FullConfig.NewBranchPush = value
-	if global {
-		self.GlobalGitConfig.NewBranchPush = &value
-		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
-	}
-	if self.ConfigFile != nil {
-		self.ConfigFile.NewBranchPush = &value
-		return configfile.Save(&self.FullConfig)
-	}
-	self.LocalGitConfig.NewBranchPush = &value
-	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
-}
-
 // SetOffline updates whether Git Town is in offline mode.
 func (self *Config) SetOffline(value configdomain.Offline) error {
 	self.FullConfig.Offline = value
@@ -180,6 +163,23 @@ func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	}
 	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
+}
+
+// SetPushNewBranches updates whether the current repository is configured to push
+// freshly created branches to origin.
+func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
+	setting := strconv.FormatBool(bool(value))
+	self.FullConfig.PushNewBranches = value
+	if global {
+		self.GlobalGitConfig.PushNewBranches = &value
+		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
+	}
+	if self.ConfigFile != nil {
+		self.ConfigFile.PushNewBranches = &value
+		return configfile.Save(&self.FullConfig)
+	}
+	self.LocalGitConfig.PushNewBranches = &value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
 }
 
 // SetShipDeleteTrackingBranch updates the configured delete-tracking-branch strategy.

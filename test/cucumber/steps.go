@@ -373,10 +373,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global Git Town setting "push-new-branches" is (?:now|still) "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.NewBranchPush
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.PushNewBranches
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.NewBranchPush(wantBool)
+		want := configdomain.PushNewBranches(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
 		}
@@ -787,7 +787,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is (:?now|still) not set$`, func() error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushNewBranches
 		if have == nil {
 			return nil
 		}
@@ -795,10 +795,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local Git Town setting "push-new-branches" is now "([^"]*)"$`, func(wantStr string) error {
-		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PushNewBranches
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.NewBranchPush(wantBool)
+		want := configdomain.PushNewBranches(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
 		}

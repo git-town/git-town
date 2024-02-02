@@ -57,7 +57,7 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.Offline.Bool()))
 	print.Entry("run pre-push hook", format.Bool(bool(config.PushHook)))
-	print.Entry("push new branches", format.Bool(config.ShouldNewBranchPush()))
+	print.Entry("push new branches", format.Bool(config.ShouldPushNewBranches()))
 	print.Entry("ship deletes the tracking branch", format.Bool(config.ShipDeleteTrackingBranch.Bool()))
 	print.Entry("sync-feature strategy", config.SyncFeatureStrategy.String())
 	print.Entry("sync-perennial strategy", config.SyncPerennialStrategy.String())
