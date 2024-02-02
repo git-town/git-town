@@ -376,7 +376,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.NewBranchPush(wantBool)
+		want := configdomain.PushNewBranches(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
 		}
@@ -798,7 +798,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.NewBranchPush
 		wantBool, err := strconv.ParseBool(wantStr)
 		asserts.NoError(err)
-		want := configdomain.NewBranchPush(wantBool)
+		want := configdomain.PushNewBranches(wantBool)
 		if cmp.Equal(*have, want) {
 			return nil
 		}

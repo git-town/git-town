@@ -30,7 +30,7 @@ const (
 	PushNewBranchesEntryNo  pushNewBranchesEntry = "no, new branches remain local until synced"
 )
 
-func PushNewBranches(existing configdomain.NewBranchPush, inputs components.TestInput) (configdomain.NewBranchPush, bool, error) {
+func PushNewBranches(existing configdomain.PushNewBranches, inputs components.TestInput) (configdomain.PushNewBranches, bool, error) {
 	entries := []pushNewBranchesEntry{
 		PushNewBranchesEntryYes,
 		PushNewBranchesEntryNo,
@@ -51,12 +51,12 @@ func PushNewBranches(existing configdomain.NewBranchPush, inputs components.Test
 
 type pushNewBranchesEntry string
 
-func (self pushNewBranchesEntry) NewBranchPush() configdomain.NewBranchPush {
+func (self pushNewBranchesEntry) NewBranchPush() configdomain.PushNewBranches {
 	switch self {
 	case PushNewBranchesEntryYes:
-		return configdomain.NewBranchPush(true)
+		return configdomain.PushNewBranches(true)
 	case PushNewBranchesEntryNo:
-		return configdomain.NewBranchPush(false)
+		return configdomain.PushNewBranches(false)
 	}
 	panic("unhandled pushNewBranchesEntry: " + self)
 }

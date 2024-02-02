@@ -17,7 +17,7 @@ type FullConfig struct {
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
-	NewBranchPush            NewBranchPush
+	NewBranchPush            PushNewBranches
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PushHook                 PushHook

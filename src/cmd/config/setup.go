@@ -342,7 +342,7 @@ func savePushHook(runner *git.ProdRunner, newValue configdomain.PushHook) error 
 	return runner.SetPushHookLocally(newValue)
 }
 
-func savePushNewBranches(runner *git.ProdRunner, newValue configdomain.NewBranchPush) error {
+func savePushNewBranches(runner *git.ProdRunner, newValue configdomain.PushNewBranches) error {
 	if newValue == runner.NewBranchPush {
 		return nil
 	}
