@@ -1166,6 +1166,97 @@ type SetMattermostServiceOptions struct {
 	WikiPageChannel           *string `url:"wiki_page_channel,omitempty" json:"wiki_page_channel,omitempty"`
 }
 
+// MattermostSlashCommandsService represents Mattermost slash commands settings.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#mattermost-slash-commands
+type MattermostSlashCommandsService struct {
+	Service
+	Properties *MattermostSlashCommandsProperties `json:"properties"`
+}
+
+// MattermostSlashCommandsProperties represents Mattermost slash commands specific properties.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#mattermost-slash-commands
+type MattermostSlashCommandsProperties struct {
+	Token    string `json:"token"`
+	Username string `json:"username,omitempty"`
+}
+
+// GetMattermostSlashCommandsService gets Slack Mattermost commands service settings for a project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#get-mattermost-slash-command-integration-settings
+func (s *ServicesService) GetMattermostSlashCommandsService(pid interface{}, options ...RequestOptionFunc) (*MattermostSlashCommandsService, *Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, nil, err
+	}
+	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	svc := new(MattermostSlashCommandsService)
+	resp, err := s.client.Do(req, svc)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return svc, resp, nil
+}
+
+// SetMattermostSlashCommandsServiceOptions represents the available SetSlackSlashCommandsService()
+// options.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#get-mattermost-slash-command-integration-settings
+type SetMattermostSlashCommandsServiceOptions struct {
+	Token    *string `url:"token,omitempty" json:"token,omitempty"`
+	Username *string `url:"username,omitempty" json:"username,omitempty"`
+}
+
+// SetMattermostSlashCommandsService sets Mattermost slash commands service for a project
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#createedit-mattermost-slash-command-integration
+func (s *ServicesService) SetMattermostSlashCommandsService(pid interface{}, opt *SetMattermostSlashCommandsServiceOptions, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+// DeleteMattermostSlashCommandsService deletes Mattermost slash commands service for project.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#disable-mattermost-slash-command-integration
+func (s *ServicesService) DeleteMattermostSlashCommandsService(pid interface{}, options ...RequestOptionFunc) (*Response, error) {
+	project, err := parseID(pid)
+	if err != nil {
+		return nil, err
+	}
+	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+
+	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
 // SetMattermostService sets Mattermost service for a project.
 //
 // GitLab API docs:
@@ -1725,41 +1816,42 @@ func (s *ServicesService) DeleteSlackSlashCommandsService(pid interface{}, optio
 	return s.client.Do(req, nil)
 }
 
-// MattermostSlashCommandsService represents Mattermost slash commands settings.
+// TelegramService represents Telegram service settings.
 //
-// GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#mattermost-slash-commands
-type MattermostSlashCommandsService struct {
+// Gitlab API docs:
+// https://docs.gitlab.com/ee/api/integrations.html#telegram
+type TelegramService struct {
 	Service
-	Properties *MattermostSlashCommandsProperties `json:"properties"`
+	Properties *TelegramServiceProperties `json:"properties"`
 }
 
-// MattermostSlashCommandsProperties represents Mattermost slash commands specific properties.
+// TelegramServiceProperties represents Telegram specific properties.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#mattermost-slash-commands
-type MattermostSlashCommandsProperties struct {
-	Token    string `json:"token"`
-	Username string `json:"username,omitempty"`
+// https://docs.gitlab.com/ee/api/integrations.html#set-up-telegram
+type TelegramServiceProperties struct {
+	Room                      string `json:"room"`
+	NotifyOnlyBrokenPipelines bool   `json:"notify_only_broken_pipelines"`
+	BranchesToBeNotified      string `json:"branches_to_be_notified"`
 }
 
-// GetMattermostSlashCommandsService gets Slack Mattermost commands service settings for a project.
+// GetTelegramService gets MicrosoftTeams service settings for a project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#get-mattermost-slash-command-integration-settings
-func (s *ServicesService) GetMattermostSlashCommandsService(pid interface{}, options ...RequestOptionFunc) (*MattermostSlashCommandsService, *Response, error) {
+// https://docs.gitlab.com/ee/api/integrations.html#get-telegram-settings
+func (s *ServicesService) GetTelegramService(pid interface{}, options ...RequestOptionFunc) (*TelegramService, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/services/telegram", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	svc := new(MattermostSlashCommandsService)
+	svc := new(TelegramService)
 	resp, err := s.client.Do(req, svc)
 	if err != nil {
 		return nil, resp, err
@@ -1768,26 +1860,37 @@ func (s *ServicesService) GetMattermostSlashCommandsService(pid interface{}, opt
 	return svc, resp, nil
 }
 
-// SetMattermostSlashCommandsServiceOptions represents the available SetSlackSlashCommandsService()
+// SetTelegramServiceOptions represents the available SetTelegramService()
 // options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#get-mattermost-slash-command-integration-settings
-type SetMattermostSlashCommandsServiceOptions struct {
-	Token    *string `url:"token,omitempty" json:"token,omitempty"`
-	Username *string `url:"username,omitempty" json:"username,omitempty"`
+// https://docs.gitlab.com/ee/api/integrations.html#set-up-telegram
+type SetTelegramServiceOptions struct {
+	Token                     *string `url:"token,omitempty" json:"token,omitempty"`
+	Room                      *string `url:"room,omitempty" json:"room,omitempty"`
+	NotifyOnlyBrokenPipelines *bool   `url:"notify_only_broken_pipelines,omitempty" json:"notify_only_broken_pipelines,omitempty"`
+	BranchesToBeNotified      *string `url:"branches_to_be_notified,omitempty" json:"branches_to_be_notified,omitempty"`
+	PushEvents                *bool   `url:"push_events,omitempty" json:"push_events,omitempty"`
+	IssuesEvents              *bool   `url:"issues_events,omitempty" json:"issues_events,omitempty"`
+	ConfidentialIssuesEvents  *bool   `url:"confidential_issues_events,omitempty" json:"confidential_issues_events,omitempty"`
+	MergeRequestsEvents       *bool   `url:"merge_requests_events,omitempty" json:"merge_requests_events,omitempty"`
+	TagPushEvents             *bool   `url:"tag_push_events,omitempty" json:"tag_push_events,omitempty"`
+	NoteEvents                *bool   `url:"note_events,omitempty" json:"note_events,omitempty"`
+	ConfidentialNoteEvents    *bool   `url:"confidential_note_events,omitempty" json:"confidential_note_events,omitempty"`
+	PipelineEvents            *bool   `url:"pipeline_events,omitempty" json:"pipeline_events,omitempty"`
+	WikiPageEvents            *bool   `url:"wiki_page_events,omitempty" json:"wiki_page_events,omitempty"`
 }
 
-// SetMattermostSlashCommandsService sets Mattermost slash commands service for a project
+// SetTelegramService sets Telegram service for a project
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#createedit-mattermost-slash-command-integration
-func (s *ServicesService) SetMattermostSlashCommandsService(pid interface{}, opt *SetMattermostSlashCommandsServiceOptions, options ...RequestOptionFunc) (*Response, error) {
+// https://docs.gitlab.com/ee/api/integrations.html#set-up-telegram
+func (s *ServicesService) SetTelegramService(pid interface{}, opt *SetTelegramServiceOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/services/telegram", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
 	if err != nil {
@@ -1797,16 +1900,16 @@ func (s *ServicesService) SetMattermostSlashCommandsService(pid interface{}, opt
 	return s.client.Do(req, nil)
 }
 
-// DeleteMattermostSlashCommandsService deletes Mattermost slash commands service for project.
+// DeleteTelegramService deletes Telegram service for project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/integrations.html#disable-mattermost-slash-command-integration
-func (s *ServicesService) DeleteMattermostSlashCommandsService(pid interface{}, options ...RequestOptionFunc) (*Response, error) {
+// https://docs.gitlab.com/ee/api/integrations.html#disable-telegram
+func (s *ServicesService) DeleteTelegramService(pid interface{}, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
 	}
-	u := fmt.Sprintf("projects/%s/services/mattermost-slash-commands", PathEscape(project))
+	u := fmt.Sprintf("projects/%s/services/telegram", PathEscape(project))
 
 	req, err := s.client.NewRequest(http.MethodDelete, u, nil, options)
 	if err != nil {
