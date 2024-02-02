@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
-// HostingPlatform defines legal values for the "git-town.code-hosting-platform" config setting.
+// HostingPlatform defines legal values for the "git-town.hosting-platform" config setting.
 type HostingPlatform string
 
 func (self HostingPlatform) String() string { return string(self) }

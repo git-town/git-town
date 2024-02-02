@@ -16,7 +16,7 @@ You can create new pull requests for repositories hosted on:
 ### Configuration
 
 You can configure the hosting platform type with the
-[code-hosting-platform](../preferences/code-hosting-platform.md) setting.
+[hosting-platform](../preferences/hosting-platform.md) setting.
 
 When using SSH identities, this command uses the hostname in the
 [hosting-origin-hostname](../preferences/hosting-origin-hostname.md) setting.

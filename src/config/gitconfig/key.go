@@ -41,6 +41,7 @@ const (
 	KeyAliasSync                           = Key("alias.sync")
 	KeyDeprecatedCodeHostingDriver         = Key("git-town.code-hosting-driver")
 	KeyDeprecatedCodeHostingOriginHostname = Key("git-town.code-hosting-origin-hostname")
+	KeyDeprecatedCodeHostingPlatform       = Key("git-town.code-hosting-platform")
 	KeyDeprecatedMainBranchName            = Key("git-town.main-branch-name")
 	KeyDeprecatedNewBranchPushFlag         = Key("git-town.new-branch-push-flag")
 	KeyDeprecatedPerennialBranchNames      = Key("git-town.perennial-branch-names")
@@ -52,7 +53,7 @@ const (
 	KeyGithubToken                         = Key("git-town.github-token")
 	KeyGitlabToken                         = Key("git-town.gitlab-token")
 	KeyHostingOriginHostname               = Key("git-town.hosting-origin-hostname")
-	KeyHostingPlatform                     = Key("git-town.code-hosting-platform")
+	KeyHostingPlatform                     = Key("git-town.hosting-platform")
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyOffline                             = Key("git-town.offline")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
@@ -73,6 +74,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingPlatform,
 	KeyDeprecatedCodeHostingDriver,
 	KeyDeprecatedCodeHostingOriginHostname,
+	KeyDeprecatedCodeHostingPlatform,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
@@ -170,6 +172,7 @@ func parseLineageKey(key string) *Key {
 var DeprecatedKeys = map[Key]Key{ //nolint:gochecknoglobals
 	KeyDeprecatedCodeHostingDriver:         KeyHostingPlatform,
 	KeyDeprecatedCodeHostingOriginHostname: KeyHostingOriginHostname,
+	KeyDeprecatedCodeHostingPlatform:       KeyHostingPlatform,
 	KeyDeprecatedMainBranchName:            KeyMainBranch,
 	KeyDeprecatedNewBranchPushFlag:         KeyPushNewBranches,
 	KeyDeprecatedPerennialBranchNames:      KeyPerennialBranches,

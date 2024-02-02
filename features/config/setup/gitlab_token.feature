@@ -22,7 +22,7 @@ Feature: enter the GitLab API token
     Then it runs the commands
       | COMMAND                                 |
       | git config git-town.gitlab-token 123456 |
-    And local Git Town setting "code-hosting-platform" still doesn't exist
+    And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "gitlab-token" is now "123456"
 
   Scenario: select GitLab manually
@@ -44,8 +44,8 @@ Feature: enter the GitLab API token
       | sync-before-ship            | enter             |                                             |
       | save config to Git metadata | down enter        |                                             |
     Then it runs the commands
-      | COMMAND                                          |
-      | git config git-town.gitlab-token 123456          |
-      | git config git-town.code-hosting-platform gitlab |
-    And local Git Town setting "code-hosting-platform" is now "gitlab"
+      | COMMAND                                     |
+      | git config git-town.gitlab-token 123456     |
+      | git config git-town.hosting-platform gitlab |
+    And local Git Town setting "hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123456"

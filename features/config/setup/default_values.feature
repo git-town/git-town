@@ -25,7 +25,7 @@ Feature: Accepting all default values leads to a working setup
     Then it runs no commands
     And the main branch is still not set
     And there are still no perennial branches
-    And local Git Town setting "code-hosting-platform" still doesn't exist
+    And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "push-new-branches" is still not set
     And local Git Town setting "push-hook" is still not set
     And local Git Town setting "sync-feature-strategy" is still not set
