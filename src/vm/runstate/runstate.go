@@ -77,13 +77,16 @@ func (self *RunState) CreateSkipRunState() RunState {
 		InitialActiveBranch: self.InitialActiveBranch,
 		RunProgram:          self.AbortProgram,
 	}
-	// undo
+	// first undo the changes made to the current branch
+	// TODO: instead of using the undo opcodes here, reset the branch to the SHA from the snapshot
 	for _, opcode := range self.UndoProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			break
 		}
 		result.RunProgram.Add(opcode)
 	}
+	// skip all remaining opcodes for the current branch (to skip),
+	// then copy the opcode for the remaining branches into the result
 	skipping := true
 	for _, opcode := range self.RunProgram {
 		if shared.IsCheckoutOpcode(opcode) {
