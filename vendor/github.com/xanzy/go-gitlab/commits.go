@@ -255,7 +255,10 @@ func (d Diff) String() string {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/commits.html#get-the-diff-of-a-commit
-type GetCommitDiffOptions ListOptions
+type GetCommitDiffOptions struct {
+	ListOptions
+	Unidiff *bool `url:"unidiff,omitempty" json:"unidiff,omitempty"`
+}
 
 // GetCommitDiff gets the diff of a commit in a project..
 //

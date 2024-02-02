@@ -223,6 +223,7 @@ type CompareOptions struct {
 	From     *string `url:"from,omitempty" json:"from,omitempty"`
 	To       *string `url:"to,omitempty" json:"to,omitempty"`
 	Straight *bool   `url:"straight,omitempty" json:"straight,omitempty"`
+	Unidiff  *bool   `url:"unidiff,omitempty" json:"unidiff,omitempty"`
 }
 
 // Compare compares branches, tags or commits.

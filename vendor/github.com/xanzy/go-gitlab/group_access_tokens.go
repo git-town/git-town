@@ -145,18 +145,27 @@ func (s *GroupAccessTokensService) CreateGroupAccessToken(gid interface{}, opt *
 	return pat, resp, nil
 }
 
-// RotateGroupAccessToken revokes a group access token and returns a new group
-// access token that expires in one week.
+// RotateGroupAccessTokenOptions represents the available RotateGroupAccessToken()
+// options.
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/group_access_tokens.html#rotate-a-group-access-token
-func (s *GroupAccessTokensService) RotateGroupAccessToken(gid interface{}, id int, options ...RequestOptionFunc) (*GroupAccessToken, *Response, error) {
+type RotateGroupAccessTokenOptions struct {
+	ExpiresAt *ISOTime `url:"expires_at,omitempty" json:"expires_at,omitempty"`
+}
+
+// RotateGroupAccessToken revokes a group access token and returns a new group
+// access token that expires in one week per default.
+//
+// GitLab API docs:
+// https://docs.gitlab.com/ee/api/group_access_tokens.html#rotate-a-group-access-token
+func (s *GroupAccessTokensService) RotateGroupAccessToken(gid interface{}, id int, opt *RotateGroupAccessTokenOptions, options ...RequestOptionFunc) (*GroupAccessToken, *Response, error) {
 	groups, err := parseID(gid)
 	if err != nil {
 		return nil, nil, err
 	}
 	u := fmt.Sprintf("groups/%s/access_tokens/%d/rotate", PathEscape(groups), id)
-	req, err := s.client.NewRequest(http.MethodPost, u, nil, options)
+	req, err := s.client.NewRequest(http.MethodPost, u, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}

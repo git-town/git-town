@@ -114,6 +114,7 @@ type ListProjectPackagesOptions struct {
 	Sort               *string `url:"sort,omitempty" json:"sort,omitempty"`
 	PackageType        *string `url:"package_type,omitempty" json:"package_type,omitempty"`
 	PackageName        *string `url:"package_name,omitempty" json:"package_name,omitempty"`
+	PackageVersion     *string `url:"package_version,omitempty" json:"package_version,omitempty"`
 	IncludeVersionless *bool   `url:"include_versionless,omitempty" json:"include_versionless,omitempty"`
 	Status             *string `url:"status,omitempty" json:"status,omitempty"`
 }
