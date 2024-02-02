@@ -3,7 +3,8 @@
 Run `git town` for an overview of all Git Town commands and
 `git town help <command>` for help with individual commands. You can call each
 Git Town command like `git town <command>`. This user manual displays the
-commands in the shorter form available after running git town aliases.
+commands in the shorter form available after enabling aliases through the
+[setup assistant](commands/config-setup.md).
 
 ### Basic workflow
 
