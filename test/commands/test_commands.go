@@ -431,13 +431,19 @@ func (self *TestCommands) UnstashOpenFiles() error {
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (self *TestCommands) VerifyNoGitTownConfiguration() error {
-	output, _ := self.Query("git", "config", "--local", "--get-regex", "git-town")
+	output, _ := self.Query("git", "config", "--get-regex", "git-town")
 	if output != "" {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
-	output, _ = self.Query("git", "config", "--local", "--get-regex", "git-town-branch")
+	output, _ = self.Query("git", "config", "--get-regex", "git-town-branch")
 	if output != "" {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
+	}
+	self.Config.Reload()
+	for aliasName, aliasValue := range self.Config.Aliases {
+		if strings.HasPrefix(aliasValue, "town ") {
+			return fmt.Errorf("unexpected Git Town alias %q with value %q", aliasName, aliasValue)
+		}
 	}
 	return nil
 }

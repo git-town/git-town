@@ -11,7 +11,6 @@ Feature: help for commands
 
     Examples:
       | COMMAND       |
-      | aliases       |
       | append        |
       | completions   |
       | config        |

@@ -11,9 +11,9 @@ Feature: require minimum Git version
 
     Examples:
       | COMMAND           |
-      | aliases true      |
       | append foo        |
       | config            |
+      | config setup      |
       | diff-parent       |
       | hack foo          |
       | kill              |

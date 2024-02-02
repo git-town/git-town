@@ -12,7 +12,6 @@ Feature: continue after successful command
     Examples:
       | COMMAND                 |
       |                         |
-      | aliases true            |
       | append new              |
       | completions fish        |
       | config                  |

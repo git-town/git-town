@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
@@ -36,6 +38,17 @@ func executeRemoveConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	return repo.Runner.GitConfig.RemoveLocalGitConfiguration(repo.Runner.Lineage)
-	// TODO: also remove the aliases
+	err = repo.Runner.GitConfig.RemoveLocalGitConfiguration(repo.Runner.Lineage)
+	if err != nil {
+		return err
+	}
+	for aliasName, aliasValue := range repo.Runner.Aliases {
+		if strings.HasPrefix(aliasValue, "town ") {
+			err = repo.Runner.Frontend.RemoveGitAlias(aliasName)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
