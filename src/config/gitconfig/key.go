@@ -72,6 +72,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyHostingOriginHostname,
 	KeyHostingPlatform,
 	KeyDeprecatedCodeHostingDriver,
+	KeyDeprecatedCodeHostingOriginHostname,
 	KeyDeprecatedMainBranchName,
 	KeyDeprecatedNewBranchPushFlag,
 	KeyDeprecatedPerennialBranchNames,
