@@ -15,7 +15,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.set-parent" is "town set-parent"
     And global Git setting "alias.ship" is "town ship"
     And global Git setting "alias.sync" is "town sync"
-    And local Git Town setting "code-hosting-platform" is "github"
+    And local Git Town setting "hosting-platform" is "github"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "false"
     And local Git Town setting "hosting-origin-hostname" is "code"
@@ -57,7 +57,7 @@ Feature: remove existing configuration in Git metadata
       | git config --global --unset alias.set-parent        |
       | git config --global --unset alias.ship              |
       | git config --global --unset alias.sync              |
-      | git config --unset git-town.code-hosting-platform   |
+      | git config --unset git-town.hosting-platform        |
       | git config --unset git-town.hosting-origin-hostname |
     And global Git setting "alias.append" now doesn't exist
     And global Git setting "alias.diff-parent" now doesn't exist
@@ -72,7 +72,7 @@ Feature: remove existing configuration in Git metadata
     And global Git setting "alias.sync" now doesn't exist
     And the main branch is still "main"
     And the perennial branches are now "production"
-    And local Git Town setting "code-hosting-platform" now doesn't exist
+    And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" now doesn't exist
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
     And local Git Town setting "sync-feature-strategy" is now "merge"

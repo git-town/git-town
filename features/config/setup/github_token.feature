@@ -22,7 +22,7 @@ Feature: enter the GitHub API token
     Then it runs the commands
       | COMMAND                                 |
       | git config git-town.github-token 123456 |
-    And local Git Town setting "code-hosting-platform" still doesn't exist
+    And local Git Town setting "hosting-platform" still doesn't exist
     And local Git Town setting "github-token" is now "123456"
 
   Scenario: manually selected GitHub
@@ -44,8 +44,8 @@ Feature: enter the GitHub API token
       | sync-before-ship            | enter                |                                             |
       | save config to Git metadata | down enter           |                                             |
     Then it runs the commands
-      | COMMAND                                          |
-      | git config git-town.github-token 123456          |
-      | git config git-town.code-hosting-platform github |
-    And local Git Town setting "code-hosting-platform" is now "github"
+      | COMMAND                                     |
+      | git config git-town.github-token 123456     |
+      | git config git-town.hosting-platform github |
+    And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"

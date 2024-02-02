@@ -52,7 +52,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And global Git setting "alias.sync" is now "town sync"
     And the main branch is now not set
     And there are now no perennial branches
-    And local Git Town setting "code-hosting-platform" now doesn't exist
+    And local Git Town setting "hosting-platform" now doesn't exist
     And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
     And local Git Town setting "sync-feature-strategy" now doesn't exist

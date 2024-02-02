@@ -316,18 +316,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^global Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingPlatform
-		if have.String() != want {
-			return fmt.Errorf(`expected global setting "code-hosting-platform" to be %q, but was %q`, want, *have)
-		}
-		return nil
-	})
-
 	suite.Step(`^global Git Town setting "hosting-origin-hostname" is now "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingOriginHostname
 		if have.String() != want {
 			return fmt.Errorf(`expected global setting "hosting-origin-hostname" to be %q, but was %q`, want, *have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global Git Town setting "hosting-platform" is now "([^"]*)"$`, func(want string) error {
+		have := state.fixture.DevRepo.Config.GlobalGitConfig.HostingPlatform
+		if have.String() != want {
+			return fmt.Errorf(`expected global setting "hosting-platform" to be %q, but was %q`, want, *have)
 		}
 		return nil
 	})
@@ -682,18 +682,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, *have)
 	})
 
-	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
+	suite.Step(`^local Git Town setting "hosting-platform" is now "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
 		if have.String() != want {
-			return fmt.Errorf(`expected local setting "code-hosting-platform" to be %q, but was %q`, want, *have)
+			return fmt.Errorf(`expected local setting "hosting-platform" to be %q, but was %q`, want, *have)
 		}
 		return nil
 	})
 
-	suite.Step(`^local Git Town setting "code-hosting-platform" (:?now|still) doesn't exist$`, func() error {
+	suite.Step(`^local Git Town setting "hosting-platform" (:?now|still) doesn't exist$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.HostingPlatform
 		if have != nil {
-			return fmt.Errorf(`expected local setting "code-hosting-platform" to not exist but was %q`, *have)
+			return fmt.Errorf(`expected local setting "hosting-platform" to not exist but was %q`, *have)
 		}
 		return nil
 	})

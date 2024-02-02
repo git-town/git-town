@@ -4,7 +4,7 @@ Feature: self-hosted service
   Scenario Outline: self hosted
     Given tool "open" is installed
     And the origin is "git@self-hosted:git-town/git-town.git"
-    And Git Town setting "code-hosting-platform" is "<PLATFORM>"
+    And Git Town setting "hosting-platform" is "<PLATFORM>"
     And the current branch is a feature branch "feature"
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
@@ -21,7 +21,7 @@ Feature: self-hosted service
 
   Scenario: GitLab with custom port
     Given the origin is "ssh://git@git.example.com:4022/a/b.git"
-    And Git Town setting "code-hosting-platform" is "gitlab"
+    And Git Town setting "hosting-platform" is "gitlab"
     And tool "open" is installed
     When I run "git-town propose"
     Then "open" launches a new proposal with this url in my browser:
