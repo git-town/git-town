@@ -1,3 +1,3 @@
-# git town version
+# git town --version
 
-The _version_ command displays the installed version of Git Town.
+Running `git town --version` displays the installed version of Git Town.

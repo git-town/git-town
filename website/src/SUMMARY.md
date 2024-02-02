@@ -26,7 +26,6 @@
     - [status](commands/status.md)
     - [undo](commands/undo.md)
   - [Installation commands](installation-commands.md)
-    - [aliases](commands/aliases.md)
     - [completions](commands/completions.md)
     - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)

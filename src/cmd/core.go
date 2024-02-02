@@ -9,7 +9,6 @@ import (
 // Execute runs the Cobra stack.
 func Execute() error {
 	rootCmd := rootCmd()
-	rootCmd.AddCommand(aliasesCommand())
 	rootCmd.AddCommand(appendCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(config.RootCmd())
