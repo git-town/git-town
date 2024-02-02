@@ -17,10 +17,10 @@ type FullConfig struct {
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
-	NewBranchPush            PushNewBranches
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PushHook                 PushHook
+	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
 	SyncBeforeShip           SyncBeforeShip
 	SyncFeatureStrategy      SyncFeatureStrategy
@@ -90,7 +90,7 @@ func (self *FullConfig) Merge(other PartialConfig) {
 		self.MainBranch = *other.MainBranch
 	}
 	if other.NewBranchPush != nil {
-		self.NewBranchPush = *other.NewBranchPush
+		self.PushNewBranches = *other.NewBranchPush
 	}
 	if other.Offline != nil {
 		self.Offline = *other.Offline
@@ -126,8 +126,8 @@ func (self *FullConfig) Online() Online {
 	return self.Offline.ToOnline()
 }
 
-func (self *FullConfig) ShouldNewBranchPush() bool {
-	return self.NewBranchPush.Bool()
+func (self *FullConfig) ShouldPushNewBranches() bool {
+	return self.PushNewBranches.Bool()
 }
 
 // DefaultConfig provides the default configuration data to use when nothing is configured.
@@ -143,7 +143,7 @@ func DefaultConfig() FullConfig {
 		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
-		NewBranchPush:            false,
+		PushNewBranches:          false,
 		Offline:                  false,
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PushHook:                 true,

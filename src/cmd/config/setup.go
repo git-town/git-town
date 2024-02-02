@@ -144,7 +144,7 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
-	config.userInput.NewBranchPush, aborted, err = dialog.PushNewBranches(runner.NewBranchPush, config.dialogInputs.Next())
+	config.userInput.PushNewBranches, aborted, err = dialog.PushNewBranches(runner.PushNewBranches, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
 	}
@@ -232,7 +232,7 @@ func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	if err != nil {
 		return err
 	}
-	err = savePushNewBranches(runner, userInput.NewBranchPush)
+	err = savePushNewBranches(runner, userInput.PushNewBranches)
 	if err != nil {
 		return err
 	}
@@ -343,7 +343,7 @@ func savePushHook(runner *git.ProdRunner, newValue configdomain.PushHook) error 
 }
 
 func savePushNewBranches(runner *git.ProdRunner, newValue configdomain.PushNewBranches) error {
-	if newValue == runner.NewBranchPush {
+	if newValue == runner.PushNewBranches {
 		return nil
 	}
 	return runner.SetNewBranchPush(newValue, false)

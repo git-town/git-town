@@ -23,7 +23,7 @@ func RenderTOML(config *configdomain.FullConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushHookHelp), "") + "\n")
 	result.WriteString(fmt.Sprintf("push-hook = %t\n\n", config.PushHook))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PushNewBranchesHelp), "") + "\n")
-	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.NewBranchPush))
+	result.WriteString(fmt.Sprintf("push-new-branches = %t\n\n", config.PushNewBranches))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.ShipDeleteTrackingBranchHelp), "") + "\n")
 	result.WriteString(fmt.Sprintf("ship-delete-tracking-branch = %t\n\n", config.ShipDeleteTrackingBranch))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.SyncBeforeShipHelp), "") + "\n")

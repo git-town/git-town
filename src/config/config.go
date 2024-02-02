@@ -111,7 +111,7 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 // freshly created branches to origin.
 func (self *Config) SetNewBranchPush(value configdomain.PushNewBranches, global bool) error {
 	setting := strconv.FormatBool(bool(value))
-	self.FullConfig.NewBranchPush = value
+	self.FullConfig.PushNewBranches = value
 	if global {
 		self.GlobalGitConfig.NewBranchPush = &value
 		return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushNewBranches, setting)
