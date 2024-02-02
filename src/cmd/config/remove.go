@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/spf13/cobra"
+	"golang.org/x/exp/maps"
 )
 
 const removeConfigDesc = "Removes the Git Town configuration"
@@ -42,8 +43,9 @@ func executeRemoveConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	for aliasName, aliasValue := range repo.Runner.Aliases {
-		if strings.HasPrefix(aliasValue, "town ") {
+	aliasNames := maps.Keys(repo.Runner.Aliases)
+	for _, aliasName := range aliasNames {
+		if strings.HasPrefix(repo.Runner.Aliases[aliasName], "town ") {
 			err = repo.Runner.Frontend.RemoveGitAlias(aliasName)
 			if err != nil {
 				return err
