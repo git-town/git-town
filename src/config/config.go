@@ -107,6 +107,12 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
+// SetOffline updates whether Git Town is in offline mode.
+func (self *Config) SetOffline(value configdomain.Offline) error {
+	self.FullConfig.Offline = value
+	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
+}
+
 // SetPushNewBranches updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, global bool) error {
@@ -122,12 +128,6 @@ func (self *Config) SetPushNewBranches(value configdomain.PushNewBranches, globa
 	}
 	self.LocalGitConfig.PushNewBranches = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushNewBranches, setting)
-}
-
-// SetOffline updates whether Git Town is in offline mode.
-func (self *Config) SetOffline(value configdomain.Offline) error {
-	self.FullConfig.Offline = value
-	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyOffline, value.String())
 }
 
 // SetOriginHostname marks the given branch as the main branch
