@@ -679,7 +679,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if have == nil {
 			return nil
 		}
-		return fmt.Errorf(`unexpected local setting "hosting-origin-hostname" with value %q`, *have)
+		return fmt.Errorf(`unexpected local setting "code-hosting-origin-hostname" with value %q`, *have)
 	})
 
 	suite.Step(`^local Git Town setting "code-hosting-platform" is now "([^"]*)"$`, func(want string) error {
