@@ -11,6 +11,5 @@ Git Town automatically identifies the hosting platform type through the `origin`
 remote. You can override the type of hosting server with the
 [code-hosting-platform](../preferences/code-hosting-platform.md) setting.
 
-Set the
-[code-hosting-origin-hostname](../preferences/code-hosting-origin-hostname.md)
+Set the [hosting-origin-hostname](../preferences/hosting-origin-hostname.md)
 setting to tell Git Town about the hostname when using ssh identities.
