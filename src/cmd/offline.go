@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
 	"github.com/git-town/git-town/v11/src/cli/format"
-	"github.com/git-town/git-town/v11/src/cli/io"
 	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
@@ -56,7 +55,7 @@ func executeOffline(args []string, verbose bool) error {
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {
-	io.Println(format.Bool(run.Config.Offline.Bool()))
+	fmt.Println(format.Bool(run.Config.Offline.Bool()))
 	return nil
 }
 
