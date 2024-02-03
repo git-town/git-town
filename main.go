@@ -9,14 +9,12 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/fatih/color"
 	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/cmd"
 )
 
 func main() {
 	debug.SetGCPercent(-1)
-	color.NoColor = false // Prevent color from auto disable
 	err := cmd.Execute()
 	if err != nil {
 		print.Error(err)

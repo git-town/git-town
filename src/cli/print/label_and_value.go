@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/format"
-	"github.com/git-town/git-town/v11/src/cli/io"
 )
 
 // LabelAndValue prints the label bolded and underlined
@@ -12,6 +11,6 @@ import (
 // followed by an empty line.
 func LabelAndValue(label, value string) {
 	Header(label)
-	io.Println(format.Indent(value))
+	fmt.Println(format.Indent(value))
 	fmt.Println()
 }

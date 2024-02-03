@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/fatih/color"
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks"
 	"github.com/git-town/git-town/v11/src/messages"
@@ -48,10 +48,7 @@ func FormatCommand(currentBranch gitdomain.LocalBranchName, omitBranch bool, exe
 func PrintCommand(branch gitdomain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
 	header := FormatCommand(branch, omitBranch, cmd, args...)
 	fmt.Println()
-	_, err := color.New(color.Bold).Println(header)
-	if err != nil {
-		fmt.Println(header)
-	}
+	fmt.Println(print.Bold.Styled(header))
 }
 
 // Run runs the given command in this ShellRunner's directory.
