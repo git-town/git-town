@@ -57,6 +57,7 @@ func lineContainsFrontendCommand(line string) bool {
 
 func parseBackendLine(line string) ExecutedGitCommand {
 	command := strings.TrimPrefix(line, backendCommandLineBeginning)
+	command = stripansi.Strip(command)
 	return ExecutedGitCommand{
 		Branch:      "",
 		Command:     command,
