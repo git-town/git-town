@@ -2,6 +2,8 @@ package output
 
 import (
 	"strings"
+
+	"github.com/acarl005/stripansi"
 )
 
 // ExecutedGitCommand describes a Git command that was executed by Git Town during testing.
@@ -41,7 +43,7 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	return result
 }
 
-const backendCommandLineBeginning = "(verbose) " // "\e[1m"
+const backendCommandLineBeginning = "(verbose) "
 
 func lineContainsBackendCommand(line string) bool {
 	return strings.HasPrefix(line, backendCommandLineBeginning)
@@ -55,6 +57,7 @@ func lineContainsFrontendCommand(line string) bool {
 
 func parseBackendLine(line string) ExecutedGitCommand {
 	command := strings.TrimPrefix(line, backendCommandLineBeginning)
+	command = stripansi.Strip(command)
 	return ExecutedGitCommand{
 		Branch:      "",
 		Command:     command,
@@ -63,7 +66,7 @@ func parseBackendLine(line string) ExecutedGitCommand {
 }
 
 func parseFrontendLine(line string) *ExecutedGitCommand {
-	line = strings.TrimPrefix(line, frontendCommandLineBeginning)
+	line = stripansi.Strip(line)
 	if line == "" {
 		return nil
 	}
