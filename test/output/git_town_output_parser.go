@@ -2,6 +2,8 @@ package output
 
 import (
 	"strings"
+
+	"github.com/acarl005/stripansi"
 )
 
 // ExecutedGitCommand describes a Git command that was executed by Git Town during testing.
@@ -63,7 +65,7 @@ func parseBackendLine(line string) ExecutedGitCommand {
 }
 
 func parseFrontendLine(line string) *ExecutedGitCommand {
-	line = strings.TrimPrefix(line, frontendCommandLineBeginning)
+	line = stripansi.Strip(line)
 	if line == "" {
 		return nil
 	}
