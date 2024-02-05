@@ -44,6 +44,9 @@ Feature: migrate existing configuration in Git metadata to a config file
       """
       # Git Town configuration file
       #
+      # Run "git town config setup" to add additional entries
+      # to this file after updating Git Town.
+      #
       # The "push-hook" setting determines whether Git Town
       # permits or prevents Git hooks while pushing branches.
       # Hooks are enabled by default. If your Git hooks are slow,
