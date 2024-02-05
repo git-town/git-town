@@ -1277,11 +1277,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.Config.AddToPerennialBranches(gitdomain.NewLocalBranchName(name))
+		return state.fixture.DevRepo.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames(name))
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		return state.fixture.DevRepo.Config.AddToPerennialBranches(gitdomain.NewLocalBranchName(branch1), gitdomain.NewLocalBranchName(branch2))
+		return state.fixture.DevRepo.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
