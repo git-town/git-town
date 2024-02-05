@@ -25,10 +25,10 @@ _Commands to deal with edge cases._
 - [git rename-branch](commands/rename-branch.md) - rename a branch
 - [git repo](commands/repo.md) - view the Git repository in the browser
 
-### Nested feature branches
+### Stacked changes
 
-_Commands to develop, review, and ship parts of a larger feature simultaneously
-in multiple branches._
+_Commands to develop, review, and ship parts of a larger feature as multiple
+connected branches._
 
 - [git append](commands/append.md) - create a new feature branch as a child of
   the current branch

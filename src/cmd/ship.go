@@ -38,7 +38,7 @@ Squash-merges the current branch, or <branch_name> if given, into the main branc
 - pushes the main branch to the origin repository
 - deletes <branch_name> from the local and origin repositories
 
-Ships direct children of the main branch. To ship a nested child branch, ship or kill all ancestor branches first.
+Ships direct children of the main branch. To ship a child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 

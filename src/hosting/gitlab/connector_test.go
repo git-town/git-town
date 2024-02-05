@@ -48,7 +48,7 @@ func TestGitlabConnector(t *testing.T) {
 				parent: gitdomain.NewLocalBranchName("main"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
 			},
-			"nested branch": {
+			"stacked change": {
 				branch: gitdomain.NewLocalBranchName("feature-3"),
 				parent: gitdomain.NewLocalBranchName("feature-2"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-3&merge_request%5Btarget_branch%5D=feature-2",

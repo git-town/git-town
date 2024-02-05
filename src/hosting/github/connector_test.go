@@ -39,7 +39,7 @@ func TestConnector(t *testing.T) {
 				parent: gitdomain.NewLocalBranchName("main"),
 				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
-			"nested branch": {
+			"stacked change": {
 				branch: gitdomain.NewLocalBranchName("feature-3"),
 				parent: gitdomain.NewLocalBranchName("feature-2"),
 				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",

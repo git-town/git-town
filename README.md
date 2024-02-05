@@ -38,7 +38,7 @@ Flow, and trunk-based development. Check out
 - [git repo](https://www.git-town.com/commands/repo.html) - view the repository
   homepage
 
-#### Nested feature branches
+#### Stacked changes
 
 - [git append](https://www.git-town.com/commands/append.html) - insert a new
   branch as a child of the current branch
