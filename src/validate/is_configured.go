@@ -16,7 +16,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 	mainBranch := config.MainBranch
 	if mainBranch.IsEmpty() {
 		if backend.ConfigFile != nil {
-			return fmt.Errorf("Please configure the main branch in the config file")
+			return fmt.Errorf("please configure the main branch in the config file")
 		}
 		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
