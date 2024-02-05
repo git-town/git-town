@@ -11,9 +11,7 @@ import (
 const rootDesc = "Branching and workflow support for Git"
 
 const rootHelp = `
-Git Town makes software development in large teams Git even more productive and happy.
-
-It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly, and it allows you to perform many common Git operations faster and easier.`
+Git Town helps create, sync, and ship changes efficiently and with minimal conflicts.`
 
 // The current Git Town version (set at compile time).
 var version string
