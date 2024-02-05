@@ -1,27 +1,29 @@
-# Nested feature branches
+# Stacked Changes
 
-Nested feature branches are an alternative to having multiple commits in Git
-branches, with each commit performing one change, being reviewed in isolation,
-and then not squash-merging the commits when shipping. The advantage of using
-nested feature branches is that reviewing the different changes in the different
-commits can happen more naturally, and parts of a change that are already agreed
-on can get shipped separately from other parts that are still under review. This
-reduces merge conflicts and work in progress.
+[Stacked changes](https://newsletter.pragmaticengineer.com/p/stacked-diffs) are
+a way to implement and review a complex change as a series of smaller changes
+that build on top of each other. Benefits of stacked changes are:
+
+- developer and reviewer maintain momentum because they now block less on each
+  other
+- breaking up the problem of developer/reviewing a complex problem into
+  developing/reviewing many smaller problems
+- minimize work in progress and thereby merge conflicts by shipping parts of a
+  complex change that are already approved separately from parts still under
+  review
 
 The
 [single responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
-applies to feature branches the same way it applies to code architecture. Like
-classes and functions, feature branches should also do only one thing.
-Implementing, refactoring, reviewing, and resolving merge conflicts on such
-single-responsibility branches is more straightforward than on branches that
-combine unrelated changes.
+applies to feature branches the same way it applies to code architecture.
+Feature branches should also perform only one change. Implementing, refactoring,
+reviewing, and resolving merge conflicts on such single-responsibility branches
+is easier than with branches that combine unrelated changes.
 
-Git Town's _branch chain_ feature automates working with multiple
-single-responsibility feature branches that form a chain in which changes from
-parent branches are visible in their child branches. This helps make complex
-changes as a series of smaller steps. As an example, let's say we want to add a
-new feature to an existing codebase. Before we can do that cleanly, we need to
-get the code base ready:
+Git Town supports stacked changes naturally as part of its bigger picture about
+branch ancestry.
+
+As an example, let's say we want to add a new feature to an existing codebase.
+Before we can do that cleanly, we need to get the code base ready:
 
 1. Make the architecture more flexible so that we can add the new feature in a
    clean way.
