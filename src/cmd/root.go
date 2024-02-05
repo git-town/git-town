@@ -11,7 +11,7 @@ import (
 const rootDesc = "Branching and workflow support for Git"
 
 const rootHelp = `
-Git Town helps create, sync, and ship changes efficiently and with minimal conflicts.`
+Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
 
 // The current Git Town version (set at compile time).
 var version string
