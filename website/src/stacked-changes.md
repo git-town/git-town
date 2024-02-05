@@ -5,7 +5,7 @@ implement and review a complex change as a series of smaller feature branches
 that build on top of each other. Benefits of stacked changes are:
 
 - developer and reviewer maintain momentum and block less on each other
-- breaking up the problem of developer/reviewing a complex problem into
+- breaking up the problem of developing/reviewing a complex problem into
   developing/reviewing many smaller problems
 - minimize merge conflicts by shipping parts of a complex change that are
   already approved separately from parts still under review
