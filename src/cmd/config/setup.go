@@ -393,5 +393,10 @@ func saveToFile(userInput userInput, runner *git.ProdRunner) error {
 	runner.Config.RemovePerennialBranches()
 	runner.Config.RemovePushNewBranches()
 	runner.Config.RemovePushHook()
+	runner.Config.RemoveSyncBeforeShip()
+	runner.Config.RemoveShipDeleteTrackingBranch()
+	runner.Config.RemoveSyncFeatureStrategy()
+	runner.Config.RemoveSyncPerennialStrategy()
+	runner.Config.RemoveSyncUpstream()
 	return nil
 }
