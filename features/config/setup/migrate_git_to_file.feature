@@ -27,7 +27,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       | sync-before-ship                          | enter |
       | save config to config file                | enter |
 
-  @this
   Scenario: result
     Then it runs the commands
       | COMMAND |
