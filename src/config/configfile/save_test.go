@@ -102,44 +102,44 @@ sync-upstream = true
 
 [branches]
 
-  # The main branch is the branch from which you cut new feature branches,
-  # and into which you ship feature branches when they are done.
-  # This branch is often called "main", "master", or "development".
-  main = "main"
+# The main branch is the branch from which you cut new feature branches,
+# and into which you ship feature branches when they are done.
+# This branch is often called "main", "master", or "development".
+main = "main"
 
-  # Perennial branches are long-lived branches.
-  # They are never shipped and have no ancestors.
-  # Typically, perennial branches have names like
-  # "development", "staging", "qa", "production", etc.
-  perennials = ["one", "two"]
+# Perennial branches are long-lived branches.
+# They are never shipped and have no ancestors.
+# Typically, perennial branches have names like
+# "development", "staging", "qa", "production", etc.
+perennials = ["one", "two"]
 
 [hosting]
 
-  # Knowing the type of code hosting platform allows Git Town
-  # to open browser URLs and talk to the code hosting API.
-  # Most people can leave this on "auto-detect".
-  # Only change this if your code hosting server uses as custom URL.
-  # platform = ""
+# Knowing the type of code hosting platform allows Git Town
+# to open browser URLs and talk to the code hosting API.
+# Most people can leave this on "auto-detect".
+# Only change this if your code hosting server uses as custom URL.
+# platform = ""
 
-  # When using SSH identities, define the hostname
-  # of your source code repository. Only change this
-  # if the auto-detection does not work for you.
-  # origin-hostname = ""
+# When using SSH identities, define the hostname
+# of your source code repository. Only change this
+# if the auto-detection does not work for you.
+# origin-hostname = ""
 
 [sync-strategy]
 
-  # How should Git Town synchronize feature branches?
-  # Feature branches are short-lived branches cut from
-  # the main branch and shipped back into the main branch.
-  # Typically you develop features and bug fixes on them,
-  # hence their name.
-  feature-branches = "merge"
+# How should Git Town synchronize feature branches?
+# Feature branches are short-lived branches cut from
+# the main branch and shipped back into the main branch.
+# Typically you develop features and bug fixes on them,
+# hence their name.
+feature-branches = "merge"
 
-  # How should Git Town synchronize perennial branches?
-  # Perennial branches have no parent branch.
-  # The only updates they receive are additional commits
-  # made to their tracking branch somewhere else.
-  perennial-branches = "rebase"
+# How should Git Town synchronize perennial branches?
+# Perennial branches have no parent branch.
+# The only updates they receive are additional commits
+# made to their tracking branch somewhere else.
+perennial-branches = "rebase"
 `[1:]
 		must.EqOp(t, want, have)
 	})
@@ -212,44 +212,44 @@ sync-upstream = true
 
 [branches]
 
-  # The main branch is the branch from which you cut new feature branches,
-  # and into which you ship feature branches when they are done.
-  # This branch is often called "main", "master", or "development".
-  main = "main"
+# The main branch is the branch from which you cut new feature branches,
+# and into which you ship feature branches when they are done.
+# This branch is often called "main", "master", or "development".
+main = "main"
 
-  # Perennial branches are long-lived branches.
-  # They are never shipped and have no ancestors.
-  # Typically, perennial branches have names like
-  # "development", "staging", "qa", "production", etc.
-  perennials = []
+# Perennial branches are long-lived branches.
+# They are never shipped and have no ancestors.
+# Typically, perennial branches have names like
+# "development", "staging", "qa", "production", etc.
+perennials = []
 
 [hosting]
 
-  # Knowing the type of code hosting platform allows Git Town
-  # to open browser URLs and talk to the code hosting API.
-  # Most people can leave this on "auto-detect".
-  # Only change this if your code hosting server uses as custom URL.
-  # platform = ""
+# Knowing the type of code hosting platform allows Git Town
+# to open browser URLs and talk to the code hosting API.
+# Most people can leave this on "auto-detect".
+# Only change this if your code hosting server uses as custom URL.
+# platform = ""
 
-  # When using SSH identities, define the hostname
-  # of your source code repository. Only change this
-  # if the auto-detection does not work for you.
-  # origin-hostname = ""
+# When using SSH identities, define the hostname
+# of your source code repository. Only change this
+# if the auto-detection does not work for you.
+# origin-hostname = ""
 
 [sync-strategy]
 
-  # How should Git Town synchronize feature branches?
-  # Feature branches are short-lived branches cut from
-  # the main branch and shipped back into the main branch.
-  # Typically you develop features and bug fixes on them,
-  # hence their name.
-  feature-branches = "merge"
+# How should Git Town synchronize feature branches?
+# Feature branches are short-lived branches cut from
+# the main branch and shipped back into the main branch.
+# Typically you develop features and bug fixes on them,
+# hence their name.
+feature-branches = "merge"
 
-  # How should Git Town synchronize perennial branches?
-  # Perennial branches have no parent branch.
-  # The only updates they receive are additional commits
-  # made to their tracking branch somewhere else.
-  perennial-branches = "rebase"
+# How should Git Town synchronize perennial branches?
+# Perennial branches have no parent branch.
+# The only updates they receive are additional commits
+# made to their tracking branch somewhere else.
+perennial-branches = "rebase"
 `[1:]
 		must.EqOp(t, want, have)
 	})
@@ -258,38 +258,26 @@ sync-upstream = true
 		t.Parallel()
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("", "  ")
+			have := configfile.TOMLComment("")
 			want := ""
 			must.Eq(t, want, have)
 		})
-		t.Run("single line without prefix", func(t *testing.T) {
+		t.Run("single line", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1", "")
+			have := configfile.TOMLComment("line 1")
 			want := "# line 1"
 			must.Eq(t, want, have)
 		})
-		t.Run("single line with prefix", func(t *testing.T) {
+		t.Run("multiple lines", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1", "  ")
-			want := "  # line 1"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines without prefix", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3", "")
+			have := configfile.TOMLComment("line 1\nline 2\nline 3")
 			want := "# line 1\n# line 2\n# line 3"
-			must.Eq(t, want, have)
-		})
-		t.Run("multiple lines with prefix", func(t *testing.T) {
-			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3", "  ")
-			want := "  # line 1\n  # line 2\n  # line 3"
 			must.Eq(t, want, have)
 		})
 		t.Run("multiple lines with terminating newline", func(t *testing.T) {
 			t.Parallel()
-			have := configfile.TOMLComment("line 1\nline 2\nline 3\n", "  ")
-			want := "  # line 1\n  # line 2\n  # line 3\n  #"
+			have := configfile.TOMLComment("line 1\nline 2\nline 3\n")
+			want := "# line 1\n# line 2\n# line 3\n#"
 			must.Eq(t, want, have)
 		})
 	})
