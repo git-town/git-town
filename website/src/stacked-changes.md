@@ -12,10 +12,11 @@ that build on top of each other. Benefits of stacked changes are:
 
 The
 [single responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
-applies to feature branches the same way it applies to code architecture.
-Feature branches should also perform only one change. Implementing, refactoring,
-reviewing, and resolving merge conflicts on such single-responsibility branches
-is easier than with branches that combine unrelated changes.
+applies to feature branches the same way it applies to functions, classes, and
+methods. Feature branches should also perform only one change. Implementing,
+refactoring, reviewing, and resolving merge conflicts on such
+single-responsibility branches is easier than with branches that combine
+unrelated changes.
 
 Git Town supports stacked changes naturally as part of its bigger picture about
 branch ancestry.
