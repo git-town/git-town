@@ -95,12 +95,12 @@ func (self *Config) RemovePushNewBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
 }
 
-func (self *Config) RemoveSyncBeforeShip() {
-	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncBeforeShip)
-}
-
 func (self *Config) RemoveShipDeleteTrackingBranch() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch)
+}
+
+func (self *Config) RemoveSyncBeforeShip() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncBeforeShip)
 }
 
 func (self *Config) RemoveSyncFeatureStrategy() {
