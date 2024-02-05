@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 12.0.0 (2023-01-05)
+
+#### BREAKING CHANGES
+
+- Nested feature branches are now called "stacked changes" to match the emerging industry term ([#3062](https://github.com/git-town/git-town/pull/3062))
+
 ## 11.1.0 (2023-12-12)
 
 #### New Features
