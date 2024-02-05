@@ -66,7 +66,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       push-new-branches = false
 
       # Should "git ship" delete the tracking branch?
-      # You want to disable this if your code hosting system
+      # You want to disable this if your code hosting platform
       # (GitHub, GitLab, etc) deletes head branches when
       # merging pull requests through its UI.
       ship-delete-tracking-branch = false
