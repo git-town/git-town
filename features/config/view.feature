@@ -1,7 +1,7 @@
 @smoke
 Feature: show the configuration
 
-  Scenario: all configured in Git, no nested branches
+  Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
     When I run "git-town config"
@@ -121,7 +121,7 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  Scenario: all configured, with nested branches
+  Scenario: all configured, with stacked changes
     Given the perennial branches "qa" and "staging"
     And the feature branches "alpha" and "beta"
     And a feature branch "child" as a child of "alpha"

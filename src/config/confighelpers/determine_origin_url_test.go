@@ -47,7 +47,7 @@ func TestDetermineOriginURL(t *testing.T) {
 			}
 			must.EqOp(t, *want, *have)
 		})
-		t.Run("GitLab repository nested inside a group", func(t *testing.T) {
+		t.Run("GitLab repository inside a group", func(t *testing.T) {
 			t.Parallel()
 			have := confighelpers.DetermineOriginURL("git@gitlab.com:gitlab-org/quality/triage-ops.git", "", configdomain.OriginURLCache{})
 			want := &giturl.Parts{

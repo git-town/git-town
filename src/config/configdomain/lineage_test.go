@@ -295,7 +295,7 @@ func TestLineage(t *testing.T) {
 
 	t.Run("Roots", func(t *testing.T) {
 		t.Parallel()
-		t.Run("multiple roots with nested child branches", func(t *testing.T) {
+		t.Run("multiple roots with child branches", func(t *testing.T) {
 			t.Parallel()
 			prod := gitdomain.NewLocalBranchName("prod")
 			hotfix1 := gitdomain.NewLocalBranchName("hotfix1")
@@ -309,7 +309,7 @@ func TestLineage(t *testing.T) {
 			want := gitdomain.LocalBranchNames{main, prod}
 			must.Eq(t, want, have)
 		})
-		t.Run("no nested branches", func(t *testing.T) {
+		t.Run("no stacked changes", func(t *testing.T) {
 			t.Parallel()
 			lineage := configdomain.Lineage{}
 			lineage[one] = main

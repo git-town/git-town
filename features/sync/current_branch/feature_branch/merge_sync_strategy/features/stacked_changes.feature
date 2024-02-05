@@ -1,4 +1,4 @@
-Feature: nested feature branches
+Feature: stacked changes
 
   Scenario:
     Given a feature branch "parent"

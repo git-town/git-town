@@ -19,7 +19,7 @@ Feature: GitLab support
       | git@gitlab.com:kadu/kadu.git                 | https://gitlab.com/kadu/kadu/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main                 |
       | git@gitlab.com:gitlab-com/www-gitlab-com.git | https://gitlab.com/gitlab-com/www-gitlab-com/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
 
-  Scenario: nested feature branch with known parent
+  Scenario: stacked change with known parent
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the origin is "git@gitlab.com:kadu/kadu.git"

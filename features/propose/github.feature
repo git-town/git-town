@@ -58,7 +58,7 @@ Feature: GitHub support
       | fix-#2         | https://github.com/git-town/git-town/compare/fix-%232?expand=1       |
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
-  Scenario: nested feature branch with known parent
+  Scenario: stacked change with known parent
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the origin is "git@github.com:git-town/git-town.git"
