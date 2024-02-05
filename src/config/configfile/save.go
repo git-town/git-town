@@ -19,7 +19,7 @@ func RenderPerennialBranches(perennials gitdomain.LocalBranchNames) string {
 
 func RenderTOML(config *configdomain.FullConfig) string {
 	result := strings.Builder{}
-	result.WriteString("# Git Town configuration file\n#\n")
+	result.WriteString("# Git Town configuration file\n")
 	result.WriteString("#\n")
 	result.WriteString("# Run \"git town config setup\" to add additional entries\n")
 	result.WriteString("# to this file after updating Git Town.\n")
