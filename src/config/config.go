@@ -95,6 +95,26 @@ func (self *Config) RemovePushNewBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushNewBranches)
 }
 
+func (self *Config) RemoveSyncBeforeShip() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncBeforeShip)
+}
+
+func (self *Config) RemoveShipDeleteTrackingBranch() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyShipDeleteTrackingBranch)
+}
+
+func (self *Config) RemoveSyncFeatureStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncFeatureStrategy)
+}
+
+func (self *Config) RemoveSyncPerennialStrategy() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncPerennialStrategy)
+}
+
+func (self *Config) RemoveSyncUpstream() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
