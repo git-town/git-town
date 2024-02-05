@@ -9,9 +9,8 @@ Git ship opens the default editor with a prepopulated commit message that you
 can modify. You can submit an empty commit message to abort the shipping
 process.
 
-This command ships only direct children of the main branch. To ship a nested
-feature branch, you need to first ship or [kill](kill.md) all its ancestor
-branches.
+This command ships only direct children of the main branch. To ship a child
+branch, you need to first ship or [kill](kill.md) all its ancestor branches.
 
 ### Arguments
 

@@ -58,7 +58,7 @@ Feature: Gitea support
       | fix-#2         | https://gitea.com/git-town/git-town/compare/main...fix-%232       |
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
-  Scenario: nested feature branch with known parent
+  Scenario: stacked change with known parent
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the origin is "git@gitea.com:git-town/git-town.git"

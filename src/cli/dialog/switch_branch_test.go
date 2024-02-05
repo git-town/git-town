@@ -149,7 +149,7 @@ func TestSwitchBranch(t *testing.T) {
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("nested branches", func(t *testing.T) {
+		t.Run("stacked changes", func(t *testing.T) {
 			t.Parallel()
 			model := dialog.SwitchModel{
 				BubbleList: components.BubbleList[dialog.SwitchBranchEntry]{ //nolint:exhaustruct

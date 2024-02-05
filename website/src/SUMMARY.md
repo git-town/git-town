@@ -15,7 +15,7 @@
     - [kill](commands/kill.md)
     - [rename-branch](commands/rename-branch.md)
     - [repo](commands/repo.md)
-  - [Nested feature branches](nested-feature-branches.md)
+  - [Stacked changes](stacked-changes.md)
     - [append](commands/append.md)
     - [prepend](commands/prepend.md)
     - [set-parent](commands/set-parent.md)

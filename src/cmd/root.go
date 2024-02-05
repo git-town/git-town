@@ -8,12 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const rootDesc = "Generic, high-level Git workflow support"
+const rootDesc = "Branching and workflow support for Git"
 
 const rootHelp = `
-Git Town makes software development teams who use Git even more productive and happy.
-
-It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly, and it allows you to perform many common Git operations faster and easier.`
+Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
 
 // The current Git Town version (set at compile time).
 var version string
@@ -41,7 +39,7 @@ func rootCmd() cobra.Command {
 		Title: "Commands to deal with errors:",
 	}, &cobra.Group{
 		ID:    "lineage",
-		Title: "Commands for nested feature branches:",
+		Title: "Commands for stacked changes:",
 	}, &cobra.Group{
 		ID:    "setup",
 		Title: "Commands to set up Git Town on your computer:",

@@ -1,4 +1,4 @@
-Feature: nested feature branches
+Feature: stacked changes
 
   Background:
     Given Git Town setting "sync-feature-strategy" is "rebase"
