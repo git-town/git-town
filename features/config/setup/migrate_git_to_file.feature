@@ -2,58 +2,36 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Background:
     Given a perennial branch "qa"
-    And a branch "production"
     And the main branch is "main"
     And local Git Town setting "push-new-branches" is "false"
-    And local Git Town setting "push-hook" is "false"
+    And local Git Town setting "push-hook" is "true"
+    And local Git Town setting "sync-before-ship" is "false"
+    And local Git Town setting "ship-delete-tracking-branch" is "false"
+    And local Git Town setting "sync-feature-strategy" is "merge"
+    And local Git Town setting "sync-perennial-strategy" is "rebase"
+    And local Git Town setting "sync-upstream" is "true"
     When I run "git-town config setup" and enter into the dialogs:
-      | DESCRIPTION                               | KEYS                   |
-      | welcome                                   | enter                  |
-      | add all aliases                           | a enter                |
-      | accept the already configured main branch | enter                  |
-      | change the perennial branches             | space down space enter |
-      | set github as hosting service             | up up enter            |
-      | github token                              | 1 2 3 4 5 6 enter      |
-      | origin hostname                           | c o d e enter          |
-      | sync-feature-strategy                     | down enter             |
-      | sync-perennial-strategy                   | down enter             |
-      | sync-upstream                             | down enter             |
-      | enable push-new-branches                  | down enter             |
-      | disable the push hook                     | down enter             |
-      | disable ship-delete-tracking-branch       | down enter             |
-      | sync-before-ship                          | down enter             |
-      | save config to config file                | enter                  |
+      | DESCRIPTION                               | KEYS  |
+      | welcome                                   | enter |
+      | add all aliases                           | enter |
+      | accept the already configured main branch | enter |
+      | perennial branches                        | enter |
+      | hosting service                           | enter |
+      | origin hostname                           | enter |
+      | sync-feature-strategy                     | enter |
+      | sync-perennial-strategy                   | enter |
+      | sync-upstream                             | enter |
+      | enable push-new-branches                  | enter |
+      | disable the push hook                     | enter |
+      | disable ship-delete-tracking-branch       | enter |
+      | sync-before-ship                          | enter |
+      | save config to config file                | enter |
 
   Scenario: result
-    Then it runs the commands
-      | COMMAND                                                      |
-      | git config --global alias.append "town append"               |
-      | git config --global alias.diff-parent "town diff-parent"     |
-      | git config --global alias.hack "town hack"                   |
-      | git config --global alias.kill "town kill"                   |
-      | git config --global alias.prepend "town prepend"             |
-      | git config --global alias.propose "town propose"             |
-      | git config --global alias.rename-branch "town rename-branch" |
-      | git config --global alias.repo "town repo"                   |
-      | git config --global alias.set-parent "town set-parent"       |
-      | git config --global alias.ship "town ship"                   |
-      | git config --global alias.sync "town sync"                   |
-      | git config git-town.github-token 123456                      |
-    And global Git setting "alias.append" is now "town append"
-    And global Git setting "alias.diff-parent" is now "town diff-parent"
-    And global Git setting "alias.hack" is now "town hack"
-    And global Git setting "alias.kill" is now "town kill"
-    And global Git setting "alias.prepend" is now "town prepend"
-    And global Git setting "alias.propose" is now "town propose"
-    And global Git setting "alias.rename-branch" is now "town rename-branch"
-    And global Git setting "alias.repo" is now "town repo"
-    And global Git setting "alias.set-parent" is now "town set-parent"
-    And global Git setting "alias.ship" is now "town ship"
-    And global Git setting "alias.sync" is now "town sync"
+    Then it runs no commands
     And the main branch is now not set
     And there are now no perennial branches
     And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "github-token" is now "123456"
     And local Git Town setting "hosting-origin-hostname" now doesn't exist
     And local Git Town setting "sync-feature-strategy" now doesn't exist
     And local Git Town setting "sync-perennial-strategy" now doesn't exist
@@ -85,7 +63,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # When disabled, many Git Town commands execute faster
       # and Git Town will create the missing tracking branch
       # on the first run of "git sync".
-      push-new-branches = true
+      push-new-branches = false
 
       # Should "git ship" delete the tracking branch?
       # You want to disable this if your code hosting system
@@ -104,7 +82,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # between the feature branch to ship and the main development branch
       # on the feature branch. This helps keep the main branch green.
       # But this also triggers another CI run and delays shipping.
-      sync-before-ship = true
+      sync-before-ship = false
 
       # Should "git sync" also fetch updates from the upstream remote?
       #
@@ -114,7 +92,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # This is useful if the repository you work on is a fork,
       # and you want to keep it in sync with the repo it was forked from.
-      sync-upstream = false
+      sync-upstream = true
 
       [branches]
 
@@ -127,7 +105,7 @@ Feature: migrate existing configuration in Git metadata to a config file
         # They are never shipped and have no ancestors.
         # Typically, perennial branches have names like
         # "development", "staging", "qa", "production", etc.
-        perennials = ["production"]
+        perennials = ["qa"]
 
       [hosting]
 
@@ -135,12 +113,12 @@ Feature: migrate existing configuration in Git metadata to a config file
         # to open browser URLs and talk to the code hosting API.
         # Most people can leave this on "auto-detect".
         # Only change this if your code hosting server uses as custom URL.
-        platform = "github"
+        # platform = ""
 
         # When using SSH identities, define the hostname
         # of your source code repository. Only change this
         # if the auto-detection does not work for you.
-        origin-hostname = "code"
+        # origin-hostname = ""
 
       [sync-strategy]
 
@@ -149,11 +127,11 @@ Feature: migrate existing configuration in Git metadata to a config file
         # the main branch and shipped back into the main branch.
         # Typically you develop features and bug fixes on them,
         # hence their name.
-        feature-branches = "rebase"
+        feature-branches = "merge"
 
         # How should Git Town synchronize perennial branches?
         # Perennial branches have no parent branch.
         # The only updates they receive are additional commits
         # made to their tracking branch somewhere else.
-        perennial-branches = "merge"
+        perennial-branches = "rebase"
       """
