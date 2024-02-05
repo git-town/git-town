@@ -157,7 +157,7 @@ func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranch
 	for _, name := range names {
 		self.CreateBranch(name, gitdomain.NewLocalBranchName("main"))
 	}
-	asserts.NoError(self.Config.AddToPerennialBranches(names...))
+	asserts.NoError(self.Config.SetPerennialBranches(names))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
