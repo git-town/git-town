@@ -1,15 +1,20 @@
 # github-token
 
-To interact with the GitHub API, Git Town needs a
+Git Town can interact with GitHub in your name, for example to update pull
+requests as branches get created, shipped, or deleted. To do so, Git Town needs
+a
 [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 with the `repo` scope. You can create one in your
 [account settings](https://github.com/settings/tokens/new).
 
 The best way to enter your token is via the
-[setup assistant](../configuration.md). Since your API token is confidential,
-you cannot enter it into the config file.
+[setup assistant](../configuration.md).
 
-## via Git metadata
+## config file
+
+Since your API token is confidential, you cannot add it to the config file.
+
+## Git metadata
 
 You can configure the API token manually by running:
 

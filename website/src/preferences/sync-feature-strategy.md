@@ -1,7 +1,7 @@
 # sync-feature-strategy
 
-The sync-feature-strategy setting specifies how to update local feature branches
-with changes from their parent and tracking branches.
+The `sync-feature-strategy` setting specifies how to update local feature
+branches with changes from their parent and tracking branches.
 
 ## options
 

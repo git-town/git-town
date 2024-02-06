@@ -1,14 +1,16 @@
 # gitlab-token
 
-To interact with the GitLab API, Git Town needs a
+Git Town can interact with GitLab in your name, for example to update pull
+requests as branches get created, shipped, or deleted. To do so, Git Town needs
+a
+
 [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
-with `api` scope.
+with `api` scope. You can create one in your account settings.
 
 The best way to enter your token is via the
-[setup assistant](../configuration.md). Since your API token is confidential,
-you cannot enter it into the config file.
+[setup assistant](../configuration.md).
 
-## in Git metadata
+Since your API token is confidential, you cannot add it to the config file.
 
 You can configure the API token manually by running:
 
