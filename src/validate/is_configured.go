@@ -21,7 +21,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 		// TODO: extract text
 		fmt.Print("Git Town needs to be configured\n\n")
 		var err error
-		newMainBranch, aborted, err := dialog.MainBranch(localBranches, mainBranch, dialogInputs.Next())
+		newMainBranch, aborted, err := dialog.MainBranch(localBranches, backend.DefaultBranch(), dialogInputs.Next())
 		if err != nil || aborted {
 			return err
 		}
