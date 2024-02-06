@@ -1,21 +1,21 @@
 # sync-feature-strategy
 
-The sync-feature-strategy setting specifies how to merge changes from their
-tracking branch into feature branches.
+The sync-feature-strategy setting specifies how to update local feature branches
+with changes from their parent and tracking branches.
 
-## values
+## options
 
-When set to `merge` (the default value), it merges these changes. When set to
-`rebase`, it updates local perennial branches by rebasing them against their
-remote branch.
+When set to `merge` (the default value), Git Town merges the parent and tracking
+branches into local feature branches. When set to `rebase`, it rebases local
+feature branches against their parent and tracking branches.
 
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
 
 ## in config file
 
-In the [config file](../configuration-file.md) the hosting platform is part of
-the `[hosting]` section:
+In the [config file](../configuration-file.md) the sync-feature-strategy is part
+of the `[sync-strategy]` section:
 
 ```toml
 [sync-strategy]
