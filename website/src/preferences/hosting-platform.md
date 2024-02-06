@@ -34,7 +34,7 @@ your local machine. When not present, the setting applies to the current repo.
 
 ## values
 
-The setting can have these values:
+You can use one of these values for the hosting platform setting:
 
 - remove the entry or leave it empty for auto-detection
 - `github`
