@@ -30,7 +30,7 @@ git config [--global] git-town.hosting-platform <value>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your local machine. When not present, the setting applies to the current repo.
+your machine. Without it, this setting applies to the current Git repo.
 
 ## values
 

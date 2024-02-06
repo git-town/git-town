@@ -9,7 +9,7 @@ The best way to enter your token is via the
 [setup assistant](../configuration.md). Since your API token is confidential,
 you cannot enter it into the config file.
 
-## in Git metadata
+## via Git metadata
 
 You can configure the API token manually by running:
 
