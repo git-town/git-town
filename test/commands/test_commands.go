@@ -154,8 +154,9 @@ func (self *TestCommands) CreateFile(name, content string) {
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranchName) {
+	main := gitdomain.NewLocalBranchName("main")
 	for _, name := range names {
-		self.CreateBranch(name, gitdomain.NewLocalBranchName("main"))
+		self.CreateBranch(name, main)
 	}
 	asserts.NoError(self.Config.AddToPerennialBranches(names...))
 }
