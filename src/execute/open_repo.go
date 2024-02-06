@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v11/src/config"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
 	"github.com/git-town/git-town/v11/src/git"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -53,7 +54,11 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	config, err := config.NewConfig(globalConfig, localConfig, args.DryRun, backendRunner)
+	configFile, err := configfile.Load()
+	if err != nil {
+		return nil, err
+	}
+	config, err := config.NewConfig(globalConfig, localConfig, configFile, args.DryRun, backendRunner)
 	if err != nil {
 		return nil, err
 	}
