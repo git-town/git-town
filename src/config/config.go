@@ -231,20 +231,28 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-func NewConfig(globalConfig, localConfig configdomain.PartialConfig, configFile *configdomain.PartialConfig, dryRun bool, runner gitconfig.Runner) (*Config, error) {
+func NewConfig(args NewConfigArgs) (*Config, error) {
 	config := configdomain.DefaultConfig()
-	if configFile != nil {
-		config.Merge(*configFile)
+	if args.ConfigFile != nil {
+		config.Merge(*args.ConfigFile)
 	}
-	config.Merge(globalConfig)
-	config.Merge(localConfig)
+	config.Merge(args.GlobalConfig)
+	config.Merge(args.LocalConfig)
 	return &Config{
-		ConfigFile:      configFile,
-		DryRun:          dryRun,
+		ConfigFile:      args.ConfigFile,
+		DryRun:          args.DryRun,
 		FullConfig:      config,
-		GitConfig:       gitconfig.Access{Runner: runner},
-		GlobalGitConfig: globalConfig,
-		LocalGitConfig:  localConfig,
+		GitConfig:       gitconfig.Access{Runner: args.Runner},
+		GlobalGitConfig: args.GlobalConfig,
+		LocalGitConfig:  args.LocalConfig,
 		originURLCache:  configdomain.OriginURLCache{},
 	}, nil
+}
+
+type NewConfigArgs struct {
+	GlobalConfig configdomain.PartialConfig
+	LocalConfig  configdomain.PartialConfig
+	ConfigFile   *configdomain.PartialConfig
+	DryRun       bool
+	Runner       gitconfig.Runner
 }
