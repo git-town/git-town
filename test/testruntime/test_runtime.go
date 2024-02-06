@@ -77,15 +77,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	// configGitAccess := gitconfig.Access{Runner: &runner}
-	// _, globalConfig, err := configGitAccess.LoadGlobal()
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// _, localConfig, err := configGitAccess.LoadLocal()
-	// if err != nil {
-	// 	panic(err)
-	// }
 	globalConfig := configdomain.EmptyPartialConfig()
 	localConfig := configdomain.EmptyPartialConfig()
 	config, err := config.NewConfig(globalConfig, localConfig, false, &runner)
