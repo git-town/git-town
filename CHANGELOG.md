@@ -2,9 +2,31 @@
 
 ## 12.0.0 (2023-01-05)
 
+Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive. It focuses on modernizing Git Town's configuration system.
+
 #### BREAKING CHANGES
 
-- Nested feature branches are now called "stacked changes" to match the emerging industry term ([#3062](https://github.com/git-town/git-town/pull/3062))
+- Git Town v12 has a setup assistant that guides you through all configuration settings including setting up the shorter aliases for Git Town commands. This assistant replaces the old configuration commands, the `alias` command, and the old "quick configuration" process. Run it by executing `git town config setup` ([#2941](https://github.com/git-town/git-town/issues/2941)).
+- Removing the Git Town configuration is now done by running `git town config remove` instead of `git town config reset` ([#3051](https://github.com/git-town/git-town/pull/3051)).
+- More intuitive names for the following configuration options. Git Town automatically updates the configuration, so no action needed on your end.
+  - `code-hosting-platform` is now `hosting-platform` ([#3054](https://github.com/git-town/git-town/pull/3054))
+  - `code-hosting-origin-hostname` is now `hosting-origin-hostname` ([#3053](https://github.com/git-town/git-town/pull/3053))
+  - `ship-delete-remote-branch` is now `ship-delete-tracking-branch` ([#2929](https://github.com/git-town/git-town/pull/2929))
+- Putting Git Town into offline mode is a top-level command again. Run `git town offline true` to enable offline mode instead of `git town config offline true` ([#3049](https://github.com/git-town/git-town/pull/3049)).
+- All dialogs use a modern UI framework that fixes all rendering issues ([#2964](https://github.com/git-town/git-town/issues/2964)).
+- Nested feature branches are now called "stacked changes" to match the emerging industry term ([#3062](https://github.com/git-town/git-town/pull/3062)).
+
+#### New Features
+
+- You can now create a configuration file (.git-branches.toml) containing the non-confidential parts of Git Town's configuration. Migrate your existing configuration by running the setup assistant. ([#2748](https://github.com/git-town/git-town/issues/2748))
+- All commands now support the `--dry-run` flag to try them out safely ([#2859](https://github.com/git-town/git-town/pull/2859)).
+- You can install Git Town using Chocolatey now: `choco install git-town` ([#763](https://github.com/git-town/git-town/issues/763)).
+- Big performance improvements (200% faster) on Windows thanks to not executing Git through the CMD shell anymore ([#2881](https://github.com/git-town/git-town/pull/2881)).
+- The undo commands execute faster ([#2863](https://github.com/git-town/git-town/pull/2863)).
+
+#### Bug Fixes
+
+- Fix the version command on Windows ([#2900](https://github.com/git-town/git-town/pull/2900/files)).
 
 ## 11.1.0 (2023-12-12)
 
