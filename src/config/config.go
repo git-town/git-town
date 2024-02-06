@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/configfile"
 	"github.com/git-town/git-town/v11/src/config/confighelpers"
 	"github.com/git-town/git-town/v11/src/config/envconfig"
 	"github.com/git-town/git-town/v11/src/config/gitconfig"
@@ -232,11 +231,7 @@ func (self *Config) SetSyncUpstream(value configdomain.SyncUpstream, global bool
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeySyncUpstream, strconv.FormatBool(value.Bool()))
 }
 
-func NewConfig(globalConfig, localConfig configdomain.PartialConfig, dryRun bool, runner gitconfig.Runner) (*Config, error) {
-	configFile, err := configfile.Load()
-	if err != nil {
-		return nil, err
-	}
+func NewConfig(globalConfig, localConfig configdomain.PartialConfig, configFile *configdomain.PartialConfig, dryRun bool, runner gitconfig.Runner) (*Config, error) {
 	config := configdomain.DefaultConfig()
 	if configFile != nil {
 		config.Merge(*configFile)
