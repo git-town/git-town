@@ -1,4 +1,4 @@
-# Hosting platform
+# hosting.platform
 
 To talk to the API of your code hosting platform, Git Town needs to know which
 platform (GitHub, Gitlab, Bitbucket, etc) you use.
@@ -11,7 +11,7 @@ configuration setting which code hosting platform you use.
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
 
-## format in config file
+## in config file
 
 In the [config file](../configuration-file.md) the hosting platform is part of
 the `[hosting]` section:
@@ -21,7 +21,7 @@ the `[hosting]` section:
 platform = "<value>"
 ```
 
-## via Git
+## in Git metadata
 
 To configure the hosting platform in Git, run this command:
 
