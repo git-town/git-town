@@ -9,27 +9,23 @@ import (
 )
 
 func main() {
-	switch {
-	case len(os.Args) == 1 || len(os.Args) > 2:
-		displayUsage()
-	case len(os.Args) == 2 && os.Args[1] == "run":
-		formatFiles()
-	default:
-		fmt.Printf("Error: unknown argument: %s", os.Args[1])
+	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
+		if err != nil || dirEntry.IsDir() || !IsGoTestFile(path) || shouldIgnorePath(path) {
+			return err
+		}
+		fmt.Print(".")
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		newContent := FormatFileContent(string(content))
+		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
+	})
+	fmt.Println()
+	if err != nil {
+		fmt.Printf("ERROR: %s\n", err)
 		os.Exit(1)
 	}
-}
-
-func displayUsage() {
-	fmt.Println(`
-This tool formats Go unit tests to have an empty line before top-level subtests.
-
-Usage: format <command>
-
-Available commands:
-   run   Formats the test files
-   test  Verifies that this tool works
-`[1:])
 }
 
 // shouldIgnorePath indicates whether the file with the given path should be ignored (not formatted).
@@ -61,24 +57,4 @@ func FormatFileContent(content string) string {
 		previousLineEmpty = isEmptyLine(line)
 	}
 	return strings.Join(newLines, "\n")
-}
-
-func formatFiles() {
-	err := filepath.WalkDir(".", func(path string, dirEntry fs.DirEntry, err error) error {
-		if err != nil || dirEntry.IsDir() || !IsGoTestFile(path) || shouldIgnorePath(path) {
-			return err
-		}
-		fmt.Print(".")
-		content, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		newContent := FormatFileContent(string(content))
-		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
-	})
-	fmt.Println()
-	if err != nil {
-		fmt.Printf("ERROR: %s\n", err)
-		os.Exit(1)
-	}
 }
