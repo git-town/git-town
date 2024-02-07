@@ -14,7 +14,7 @@ func TestStructsSorted(t *testing.T) {
 	t.Parallel()
 	t.Run("LintFile", func(t *testing.T) {
 		t.Parallel()
-		t.Run("UnsortedDefinition", func(t *testing.T) {
+		t.Run("unsorted definition", func(t *testing.T) {
 			give := `
 package main
 type MyStruct struct {
@@ -35,7 +35,7 @@ field2
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("DefinitionWithoutFields", func(t *testing.T) {
+		t.Run("definition without fields", func(t *testing.T) {
 			give := `
 package main
 type MyStruct struct {}
@@ -47,7 +47,7 @@ type MyStruct struct {}
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("IgnoredDefinition", func(t *testing.T) {
+		t.Run("ignored definition", func(t *testing.T) {
 			give := `
 package main
 type Change struct {
@@ -62,7 +62,7 @@ type Change struct {
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("UnsortedInstantiation", func(t *testing.T) {
+		t.Run("unsorted instantiation", func(t *testing.T) {
 			give := `
 package main
 type MyStruct struct {
@@ -89,7 +89,7 @@ field2
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("InstantiationWithoutFields", func(t *testing.T) {
+		t.Run("instantiation without fields", func(t *testing.T) {
 			give := `
 package main
 type MyStruct struct {}
@@ -104,7 +104,7 @@ func main() {
 			must.EqOp(t, want, have)
 		})
 
-		t.Run("IgnoredInstantiation", func(t *testing.T) {
+		t.Run("ignored instantiation", func(t *testing.T) {
 			give := `
 package main
 type Change struct {
