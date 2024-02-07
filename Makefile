@@ -44,6 +44,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	git diff --check
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
+	go run tools/structs_sorted/structs_sorted.go
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
@@ -75,10 +76,10 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	                          github.com/git-town/git-town/tools/format_self/... \
 														github.com/git-town/git-town/tools/format_unittests... \
 														github.com/git-town/git-town/tools/structs_sorted/... &
+	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
 	@tools/rta golangci-lint run
-	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
-	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
-	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 smoke: build  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
