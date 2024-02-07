@@ -13,38 +13,34 @@ func TestXX(t *testing.T) {
 	t.Run("FormatFileContent", func(t *testing.T) {
 		t.Run("unformatted, non-pointer receiver", func(t *testing.T) {
 			give := `
-			package main
-			type Foo struct{}
-			func (f Foo) Bar() {
-				// ...
-			}`
+package main
+type Foo struct{}
+func (f Foo) Bar() {
+	// ...
+}`
 			want := `
-			package main
-			type Foo struct{}
-			func (self Foo) Bar() {
-				// ...
-			}`
+package main
+type Foo struct{}
+func (self Foo) Bar() {
+	// ...
+}`
 			have := formatSelf.FormatFileContent(give)
 			must.EqOp(t, want, have)
 		})
 		t.Run("unformatted, pointer receiver", func(t *testing.T) {
 			give := `
-			package main
-
-			type Foo struct{}
-
-			func (f *Foo) Bar() {
-				fmt.Println("")
-			}`
+package main
+type Foo struct{}
+func (f *Foo) Bar() {
+	fmt.Println("")
+}`
 			have := formatSelf.FormatFileContent(give)
 			want := `
-			package main
-
-			type Foo struct{}
-
-			func (self *Foo) Bar() {
-				fmt.Println("")
-			}`
+package main
+type Foo struct{}
+func (self *Foo) Bar() {
+	fmt.Println("")
+}`
 			must.EqOp(t, want, have)
 		})
 		t.Run("already formatted", func(t *testing.T) {

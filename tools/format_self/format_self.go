@@ -40,10 +40,11 @@ func shouldIgnorePath(path string) bool {
 
 func FormatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
+	result := make([]string, len(lines))
 	for l, line := range lines {
-		lines[l] = FormatLine(line)
+		result[l] = FormatLine(line)
 	}
-	return strings.Join(lines, "\n")
+	return strings.Join(result, "\n")
 }
 
 func FormatLine(line string) string {
