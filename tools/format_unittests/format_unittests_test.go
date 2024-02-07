@@ -8,7 +8,9 @@ import (
 )
 
 func TestFormatUnittests(t *testing.T) {
+	t.Parallel()
 	t.Run("IsTopLevelRunLine", func(t *testing.T) {
+		t.Parallel()
 		tests := map[string]bool{
 			"\tt.Run(\"HasLocalBranch\", func(t *testing.T) {":   true,
 			"\t\tt.Run(\"HasLocalBranch\", func(t *testing.T) {": false,
@@ -20,7 +22,9 @@ func TestFormatUnittests(t *testing.T) {
 	})
 
 	t.Run("FormatFileContent", func(t *testing.T) {
+		t.Parallel()
 		t.Run("top-level subtests", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package hosting_test
 
@@ -66,6 +70,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		})
 
 		t.Run("nested subtests", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package hosting_test
 
@@ -139,6 +144,7 @@ func TestNewGiteaConnector(t *testing.T) {
 		})
 
 		t.Run("no subtests", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package hosting_test
 
@@ -167,6 +173,7 @@ func TestNewGiteaConnector(t *testing.T) {
 	})
 
 	t.Run("IsGoTestFile", func(t *testing.T) {
+		t.Parallel()
 		tests := map[string]bool{
 			"/one/two/three_test.go": true,
 			"/one/two/three.go":      false,

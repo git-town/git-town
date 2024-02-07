@@ -11,6 +11,7 @@ func TestFormatSelf(t *testing.T) {
 	t.Parallel()
 
 	t.Run("FormatFileContent", func(t *testing.T) {
+		t.Parallel()
 		t.Run("unformatted, non-pointer receiver", func(t *testing.T) {
 			give := `
 package main
@@ -28,6 +29,7 @@ func (self Foo) Bar() {
 			must.EqOp(t, want, have)
 		})
 		t.Run("unformatted, pointer receiver", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Foo struct{}
@@ -44,6 +46,7 @@ func (self *Foo) Bar() {
 			must.EqOp(t, want, have)
 		})
 		t.Run("already formatted", func(t *testing.T) {
+			t.Parallel()
 			give := `
 			package main
 			type Foo struct{}
@@ -57,6 +60,7 @@ func (self *Foo) Bar() {
 	})
 
 	t.Run("FormatLine", func(t *testing.T) {
+		t.Parallel()
 		tests := map[string]string{
 			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
 			"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
@@ -69,6 +73,7 @@ func (self *Foo) Bar() {
 	})
 
 	t.Run("IsGoFile", func(t *testing.T) {
+		t.Parallel()
 		tests := map[string]bool{
 			"/foo/bar.go":      true,
 			"/foo/bar_test.go": false,
