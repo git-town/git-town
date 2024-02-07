@@ -40,10 +40,11 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
+fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
 	git diff --check
-	go run tools/format_unittests/format.go run
-	go run tools/format_self/format.go run
+	go run tools/format_unittests/format_unittests.go
+	go run tools/format_self/format_self.go
+	go run tools/structs_sorted/structs_sorted.go
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
@@ -56,19 +57,28 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in al
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	tools/rta deadcode -test github.com/git-town/git-town/...
+	tools/rta deadcode -test github.com/git-town/git-town/... \
+	                         github.com/git-town/git-town/tools/format_self/... \
+	                         github.com/git-town/git-town/tools/format_unittests... \
+	                         github.com/git-town/git-town/tools/structs_sorted/... &
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: tools/rta@${RTA_VERSION}  # runs only the linters
-	@go run tools/structs_sorted/structs_sorted.go run
+lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
+	@go run tools/structs_sorted/structs_sorted.go
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
 	@tools/rta actionlint &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@tools/rta deadcode -test github.com/git-town/git-town/... \
+	                          github.com/git-town/git-town/tools/format_self/... \
+	                          github.com/git-town/git-town/tools/format_unittests... \
+	                          github.com/git-town/git-town/tools/structs_sorted/... &
+	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
 	@tools/rta golangci-lint run
 
 smoke: build  # run the smoke tests
@@ -83,24 +93,20 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active development on Go code
-	@tools/rta gofumpt -l -w . &
+test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
-	@go run tools/format_unittests/format.go test &
-	@go run tools/format_self/format.go test &
-	@tools/ensure_no_files_with_dashes.sh &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@tools/rta deadcode -test github.com/git-town/git-town/... \
+	                          github.com/git-town/git-town/tools/format_self/... \
+	                          github.com/git-town/git-town/tools/format_unittests... \
+	                          github.com/git-town/git-town/tools/structs_sorted/... &
 	@make --no-print-directory unit
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
 
 unit: build  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout 30s ./src/... ./test/...
-	@go run tools/format_unittests/format.go test
-	@go run tools/format_self/format.go test
+	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/structs_sorted/...
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
