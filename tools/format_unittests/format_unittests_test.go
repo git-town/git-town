@@ -30,10 +30,12 @@ import (
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
 		give := 123
 	})
+
 	t.Run("top-level test 2", func(t *testing.T) {
 		t.Parallel()
 		give := 123
@@ -73,6 +75,7 @@ import (
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
+
 	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
 		t.Run("nested test 1a", func(t *testing.T) {
@@ -84,6 +87,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			give := 123
 		})
 	})
+
 	t.Run("top-level test 2", func(t *testing.T) {
 		t.Parallel()
 		t.Run("nested test 2a", func(t *testing.T) {

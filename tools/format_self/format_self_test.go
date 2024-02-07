@@ -55,6 +55,7 @@ func (self *Foo) Bar() {
 			must.EqOp(t, give, have)
 		})
 	})
+
 	t.Run("FormatLine", func(t *testing.T) {
 		tests := map[string]string{
 			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
@@ -66,6 +67,7 @@ func (self *Foo) Bar() {
 			must.EqOp(t, want, have)
 		}
 	})
+
 	t.Run("IsGoFile", func(t *testing.T) {
 		tests := map[string]bool{
 			"/foo/bar.go":      true,
