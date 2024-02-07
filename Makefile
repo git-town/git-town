@@ -42,7 +42,7 @@ docs: build tools/node_modules  # tests the documentation
 
 fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
 	git diff --check
-	go run tools/format_unittests/format.go run
+	go run tools/format_unittests/format_unittests.go run
 	go run tools/format_self/format_self.go run
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
