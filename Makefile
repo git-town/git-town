@@ -97,8 +97,8 @@ test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active develop
 	@tools/rta gofumpt -l -w . &
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
-	@go run tools/format_unittests/format.go test &
-	@go run tools/format_self/format_self.go test &
+	@go run tools/format_unittests/format_unittests.go &
+	@go run tools/format_self/format_self.go &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@tools/rta deadcode -test github.com/git-town/git-town/... \
