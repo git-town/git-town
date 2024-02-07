@@ -7,7 +7,7 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestXX(t *testing.T) {
+func TestFormatSelf(t *testing.T) {
 	t.Parallel()
 
 	t.Run("FormatFileContent", func(t *testing.T) {
