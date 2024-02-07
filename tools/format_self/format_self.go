@@ -15,8 +15,6 @@ func main() {
 		displayUsage()
 	case len(os.Args) == 2 && os.Args[1] == "run":
 		formatFiles()
-	case len(os.Args) == 2 && os.Args[1] == "test":
-		runTests()
 	default:
 		fmt.Printf("Error: unknown argument: %s", os.Args[1])
 		os.Exit(1)
@@ -68,12 +66,12 @@ func formatFiles() {
 func formatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
 	for l, line := range lines {
-		lines[l] = formatLine(line)
+		lines[l] = FormatLine(line)
 	}
 	return strings.Join(lines, "\n")
 }
 
-func formatLine(line string) string {
+func FormatLine(line string) string {
 	if !strings.HasPrefix(line, "func (") {
 		return line
 	}
@@ -91,39 +89,4 @@ func isGoFile(path string) bool {
 		return false
 	}
 	return strings.HasSuffix(path, ".go")
-}
-
-/************************************************************************************
- * TESTS
- */
-
-func runTests() {
-	testFormatLine()
-	fmt.Println()
-}
-
-func testFormatLine() {
-	tests := map[string]string{
-		"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
-		"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
-		"	if err != nil {":                                                                 "	if err != nil {",
-	}
-	for give, want := range tests {
-		have := formatLine(give)
-		assertEqual(want, have, "testFormatLine")
-	}
-}
-
-func assertEqual[T comparable](want, have T, testName string) {
-	fmt.Print(".")
-	if have != want {
-		fmt.Printf("\nTEST FAILURE in %q\n", testName)
-		fmt.Println("\n\nWANT")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(want)
-		fmt.Println("\n\nHAVE")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(have)
-		os.Exit(1)
-	}
 }
