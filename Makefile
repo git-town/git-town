@@ -88,7 +88,7 @@ test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active develop
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
 	@go run tools/format_unittests/format.go test &
-	@go run tools/format_self/format.go test &
+	@go run tools/format_self/format_self.go test &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@tools/rta deadcode -test github.com/git-town/git-town/... &
@@ -100,7 +100,7 @@ todo:  # displays all TODO items
 unit: build  # runs only the unit tests for changed code
 	@env GOGC=off go test -timeout 30s ./src/... ./test/...
 	@go run tools/format_unittests/format.go test
-	@go run tools/format_self/format.go test
+	@go run tools/format_self/format_self.go test
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...

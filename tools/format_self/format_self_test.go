@@ -18,4 +18,5 @@ func TestXX(t *testing.T) {
 		have := formatSelf.FormatLine(give)
 		must.EqOp(t, want, have)
 	}
+	panic("BOOM")
 }
