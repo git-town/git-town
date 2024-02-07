@@ -3,7 +3,7 @@ package main_test
 import (
 	"testing"
 
-	main "github.com/git-town/git-town/tools/format_self"
+	formatSelf "github.com/git-town/git-town/tools/format_self"
 	"github.com/shoenig/test/must"
 )
 
@@ -15,7 +15,7 @@ func TestXX(t *testing.T) {
 		"	if err != nil {":                                                                 "	if err != nil {",
 	}
 	for give, want := range tests {
-		have := main.FormatLine(give)
+		have := formatSelf.FormatLine(give)
 		must.EqOp(t, want, have)
 	}
 }
