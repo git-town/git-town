@@ -19,8 +19,9 @@ func TestFormatUnittests(t *testing.T) {
 		}
 	})
 
-	t.Run("FormatContentWithSubtests", func(t *testing.T) {
-		give := `
+	t.Run("FormatFileContent", func(t *testing.T) {
+		t.Run("top-level subtests", func(t *testing.T) {
+			give := `
 	package hosting_test
 
 	import (
@@ -38,7 +39,7 @@ func TestFormatUnittests(t *testing.T) {
 			give := 123
 		})
 	}`
-		want := `
+			want := `
 	package hosting_test
 
 	import (
@@ -58,12 +59,12 @@ func TestFormatUnittests(t *testing.T) {
 			give := 123
 		})
 	}`
-		have := formatUnittests.FormatFileContent(give)
-		must.EqOp(t, want, have)
-	})
+			have := formatUnittests.FormatFileContent(give)
+			must.EqOp(t, want, have)
+		})
 
-	t.Run("FormatContentWithNestedSubtests", func(t *testing.T) {
-		give := `
+		t.Run("nested subtests", func(t *testing.T) {
+			give := `
 	package hosting_test
 
 	import (
@@ -95,7 +96,7 @@ func TestFormatUnittests(t *testing.T) {
 			})
 		})
 	}`
-		want := `
+			want := `
 	package hosting_test
 
 	import (
@@ -129,12 +130,12 @@ func TestFormatUnittests(t *testing.T) {
 			})
 		})
 	}`
-		have := formatUnittests.FormatFileContent(give)
-		must.EqOp(t, want, have)
-	})
+			have := formatUnittests.FormatFileContent(give)
+			must.EqOp(t, want, have)
+		})
 
-	t.Run("FormatContentWithoutSubTests", func(t *testing.T) {
-		give := `
+		t.Run("no subtests", func(t *testing.T) {
+			give := `
 	package hosting_test
 
 	import (
@@ -145,7 +146,7 @@ func TestFormatUnittests(t *testing.T) {
 		t.Parallel()
 		give := "123"
 	}`
-		want := `
+			want := `
 	package hosting_test
 
 	import (
@@ -156,8 +157,9 @@ func TestFormatUnittests(t *testing.T) {
 		t.Parallel()
 		give := "123"
 	}`
-		have := formatUnittests.FormatFileContent(give)
-		must.EqOp(t, want, have)
+			have := formatUnittests.FormatFileContent(give)
+			must.EqOp(t, want, have)
+		})
 	})
 
 	t.Run("IsGoTestFile", func(t *testing.T) {
