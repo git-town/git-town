@@ -57,38 +57,12 @@ func (self issues) String() string {
 }
 
 func main() {
-	switch {
-	case len(os.Args) == 1 || len(os.Args) > 2:
-		displayUsage()
-	case len(os.Args) == 2 && os.Args[1] == "run":
-		lintFiles()
-	case len(os.Args) == 2 && os.Args[1] == "test":
-		runTests()
-	default:
-		fmt.Printf("Error: unknown argument: %s", os.Args[1])
-		os.Exit(1)
-	}
-}
-
-func displayUsage() {
-	fmt.Println(`
-Linter for alphabetic sorting of struct fields in Go code.
-
-Usage: structs_sorted <command>
-
-Available commands:
-   run   Lints all files Go in the current directory and subdirectories
-   test  Verifies that this tool works
-`[1:])
-}
-
-func lintFiles() {
 	issues := issues{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
 			return err
 		}
-		issues = append(issues, lintFile(path)...)
+		issues = append(issues, LintFile(path)...)
 		return nil
 	})
 	if err != nil {
@@ -101,7 +75,7 @@ func lintFiles() {
 	os.Exit(len(issues))
 }
 
-func lintFile(path string) issues {
+func LintFile(path string) issues {
 	result := issues{}
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
@@ -213,152 +187,4 @@ func structInstantiationFieldNames(compositeLit *ast.CompositeLit) []string {
 		result = append(result, ident.Name)
 	}
 	return result
-}
-
-/************************************************************************************
- * TESTS
- */
-
-const testPath = "test.go"
-
-func runTests() {
-	testUnsortedDefinition()
-	testDefinitionWithoutFields()
-	testIgnoredDefinition()
-	testUnsortedInstantiation()
-	testInstantiationWithoutFields()
-	testIgnoredInstantiation()
-	fmt.Println()
-}
-
-func testUnsortedDefinition() {
-	give := `
-package main
-type MyStruct struct {
-	field2 int // this field should not be first
-	field1 int // this field should be first
-}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := `
-test.go:3:6 unsorted fields in MyStruct. Expected order:
-
-field1
-field2
-
-`[1:]
-	assertEqual(want, have, "testUnsortedDefinition")
-}
-
-func testDefinitionWithoutFields() {
-	give := `
-package main
-type MyStruct struct {}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := ""
-	assertEqual(want, have, "testDefinitionWithoutFields")
-}
-
-func testIgnoredDefinition() {
-	give := `
-package main
-type Change struct {
-	field2 int
-	field1 int
-}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := ""
-	assertEqual(want, have, "testIgnoredDefinition")
-}
-
-func testUnsortedInstantiation() {
-	give := `
-package main
-type MyStruct struct {
-	field1 int
-	field2 int
-}
-func main() {
-	foo := MyStruct{
-		field2: 2,
-		field1: 1,
-	}
-}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := `
-test.go:8:9 unsorted fields in MyStruct. Expected order:
-
-field1
-field2
-
-`[1:]
-	assertEqual(want, have, "testUnsortedInstantiation")
-}
-
-func testInstantiationWithoutFields() {
-	give := `
-package main
-type MyStruct struct {}
-func main() {
-	foo := MyStruct{}
-}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := ""
-	assertEqual(want, have, "testInstantiationWithoutFields")
-}
-
-func testIgnoredInstantiation() {
-	give := `
-package main
-type Change struct {
-	field1 int
-	field2 int
-}
-func main() {
-	foo := Change{
-		field2: 2,
-		field1: 1,
-	}
-}
-`
-	createTestFile(give)
-	defer os.Remove(testPath)
-	have := lintFile(testPath).String()
-	want := ""
-	assertEqual(want, have, "testIgnoredInstantiation")
-}
-
-func assertEqual[T comparable](want, have T, testName string) {
-	fmt.Print(".")
-	if have != want {
-		fmt.Printf("\nTEST FAILURE in %q\n", testName)
-		fmt.Println("\n\nWANT")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(want)
-		fmt.Println("\n\nHAVE")
-		fmt.Println("--------------------------------------------------------")
-		fmt.Println(have)
-		os.Exit(1)
-	}
-}
-
-func createTestFile(text string) {
-	file := os.WriteFile(testPath, []byte(text), 0o600)
-	if file != nil {
-		panic(file.Error())
-	}
 }

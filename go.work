@@ -4,4 +4,5 @@ use (
 	.
 	./tools/format_self
 	./tools/format_unittests
+	./tools/structs_sorted
 )
