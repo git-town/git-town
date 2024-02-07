@@ -4,5 +4,6 @@ use (
 	.
 	./tools/format_self
 	./tools/format_unittests
+	./tools/list_contributors
 	./tools/structs_sorted
 )
