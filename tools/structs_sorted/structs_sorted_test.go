@@ -12,6 +12,7 @@ const testPath = "test.go"
 
 func TestStructsSorted(t *testing.T) {
 	t.Parallel()
+
 	t.Run("LintFile", func(t *testing.T) {
 		t.Parallel()
 		t.Run("unsorted definition", func(t *testing.T) {

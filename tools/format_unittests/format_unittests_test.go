@@ -9,6 +9,7 @@ import (
 
 func TestFormatUnittests(t *testing.T) {
 	t.Parallel()
+
 	t.Run("IsTopLevelRunLine", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]bool{
