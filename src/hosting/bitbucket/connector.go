@@ -39,7 +39,7 @@ func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) s
 }
 
 func (self *Connector) FindProposal(_, _ gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
-	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
+	return nil, errors.New(messages.HostingBitBucketNotImplemented)
 }
 
 func (self *Connector) NewProposalURL(branch, parentBranch gitdomain.LocalBranchName) (string, error) {

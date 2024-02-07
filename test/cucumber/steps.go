@@ -107,7 +107,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a merge is now in progress$`, func() error {
 		if !state.fixture.DevRepo.HasMergeInProgress() {
-			return fmt.Errorf("expected merge in progress")
+			return errors.New("expected merge in progress")
 		}
 		return nil
 	})
@@ -139,7 +139,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		repoStatus, err := state.fixture.DevRepo.RepoStatus()
 		asserts.NoError(err)
 		if !repoStatus.RebaseInProgress {
-			return fmt.Errorf("expected rebase in progress")
+			return errors.New("expected rebase in progress")
 		}
 		return nil
 	})
@@ -159,7 +159,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
 		if state.fixture.DevRepo.HasBranchesOutOfSync() {
-			return fmt.Errorf("expected no branches out of sync")
+			return errors.New("expected no branches out of sync")
 		}
 		return nil
 	})
@@ -175,7 +175,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
-		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
+		state.uncommittedFileName = folder + "/uncommitted file"
 		state.fixture.DevRepo.CreateFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
@@ -273,7 +273,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^global Git setting "alias\.(.*?)" now doesn't exist$`, func(name string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
-			return fmt.Errorf("key not found")
+			return errors.New("key not found")
 		}
 		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
 		command, has := state.fixture.DevRepo.Config.Aliases[*aliasableCommand]
@@ -286,7 +286,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^global Git setting "alias\.(.*?)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
-			return fmt.Errorf("key not found")
+			return errors.New("key not found")
 		}
 		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
 		if aliasableCommand == nil {
@@ -568,7 +568,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Println("ACTUAL OUTPUT END ================================================")
 			fmt.Println("==================================================================")
 			fmt.Println()
-			return fmt.Errorf("expected text not found")
+			return errors.New("expected text not found")
 		}
 		return nil
 	})
@@ -629,7 +629,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching commands run, see diff above")
+			return errors.New("mismatching commands run, see diff above")
 		}
 		return nil
 	})
@@ -921,7 +921,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^still no configuration file exists$`, func() error {
 		_, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err == nil {
-			return fmt.Errorf("expected no configuration file but found one")
+			return errors.New("expected no configuration file but found one")
 		}
 		return nil
 	})
@@ -936,7 +936,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^no merge is in progress$`, func() error {
 		if state.fixture.DevRepo.HasMergeInProgress() {
-			return fmt.Errorf("expected no merge in progress")
+			return errors.New("expected no merge in progress")
 		}
 		return nil
 	})
@@ -947,7 +947,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		if repoStatus.RebaseInProgress {
-			return fmt.Errorf("expected no rebase in progress")
+			return errors.New("expected no rebase in progress")
 		}
 		return nil
 	})
@@ -968,7 +968,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^offline mode is disabled$`, func() error {
 		isOffline := state.fixture.DevRepo.Config.Offline
 		if isOffline {
-			return fmt.Errorf("expected to not be offline but am")
+			return errors.New("expected to not be offline but am")
 		}
 		return nil
 	})
@@ -1009,7 +1009,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
@@ -1040,13 +1040,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the configuration file is (?:now|still):$`, func(content *messages.PickleStepArgument_PickleDocString) error {
 		have, err := state.fixture.DevRepo.FileContentErr(configfile.FileName)
 		if err != nil {
-			return fmt.Errorf("no configuration file found")
+			return errors.New("no configuration file found")
 		}
 		have = strings.TrimSpace(have)
 		want := strings.TrimSpace(content.Content)
 		if have != want {
 			fmt.Println(cmp.Diff(want, have))
-			return fmt.Errorf("mismatching config file content")
+			return errors.New("mismatching config file content")
 		}
 		return nil
 	})
@@ -1148,7 +1148,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("INITIAL LINEAGE:\n%s\n", state.initialLineage.String())
 			fmt.Printf("CURRENT LINEAGE:\n%s\n", have.String())
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
@@ -1161,7 +1161,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see diff above")
+			return errors.New("mismatching branches found, see diff above")
 		}
 		// verify initial lineage
 		state.initialLineage.Sort()
@@ -1170,7 +1170,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCnt)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching lineage found, see the diff above")
+			return errors.New("mismatching lineage found, see the diff above")
 		}
 		return nil
 	})
@@ -1184,7 +1184,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see diff above")
+			return errors.New("mismatching branches found, see diff above")
 		}
 		return nil
 	})
@@ -1332,7 +1332,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching files found, see diff above")
+			return errors.New("mismatching files found, see diff above")
 		}
 		return nil
 	})
@@ -1347,7 +1347,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching tags found, see diff above")
+			return errors.New("mismatching tags found, see diff above")
 		}
 		return nil
 	})
@@ -1391,7 +1391,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the lineage\n\n", errCount)
 			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see the diff above")
+			return errors.New("mismatching branches found, see the diff above")
 		}
 		return nil
 	})

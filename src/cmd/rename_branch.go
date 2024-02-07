@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
@@ -125,7 +126,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
 	if repo.Runner.IsMainBranch(oldBranchName) {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameMainBranch)
+		return nil, branchesSnapshot, stashSnapshot, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if repo.Runner.IsPerennialBranch(oldBranchName) {
@@ -133,7 +134,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		}
 	}
 	if oldBranchName == newBranchName {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.RenameToSameName)
+		return nil, branchesSnapshot, stashSnapshot, false, errors.New(messages.RenameToSameName)
 	}
 	oldBranch := branchesSnapshot.Branches.FindByLocalName(oldBranchName)
 	if oldBranch == nil {

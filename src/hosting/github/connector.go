@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -63,7 +64,7 @@ func (self *Connector) RepositoryURL() string {
 
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
 	commitMessageParts := commitmessage.Split(message)

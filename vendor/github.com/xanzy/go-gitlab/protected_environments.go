@@ -242,7 +242,7 @@ func (s *ProtectedEnvironmentsService) UpdateProtectedEnvironments(pid interface
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/protected_environments/%s", PathEscape(project), environment)
+	u := fmt.Sprintf("projects/%s/protected_environments/%s", PathEscape(project), PathEscape(environment))
 
 	req, err := s.client.NewRequest(http.MethodPut, u, opt, options)
 	if err != nil {

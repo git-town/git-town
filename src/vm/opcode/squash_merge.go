@@ -1,6 +1,7 @@
 package opcode
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -24,7 +25,7 @@ func (self *SquashMerge) CreateAbortProgram() []shared.Opcode {
 }
 
 func (self *SquashMerge) CreateAutomaticUndoError() error {
-	return fmt.Errorf(messages.ShipAbortedMergeError)
+	return errors.New(messages.ShipAbortedMergeError)
 }
 
 func (self *SquashMerge) Run(args shared.RunArgs) error {
@@ -41,7 +42,7 @@ func (self *SquashMerge) Run(args shared.RunArgs) error {
 		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
 	if aborted {
-		return fmt.Errorf("aborted by user")
+		return errors.New("aborted by user")
 	}
 	repoAuthor, err := args.Runner.Backend.Author()
 	if err != nil {

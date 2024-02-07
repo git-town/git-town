@@ -1,6 +1,7 @@
 package opcode
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -27,7 +28,7 @@ func (self *ConnectorMergeProposal) CreateAbortProgram() []shared.Opcode {
 
 func (self *ConnectorMergeProposal) CreateAutomaticUndoError() error {
 	if self.enteredEmptyCommitMessage {
-		return fmt.Errorf(messages.ShipAbortedMergeError)
+		return errors.New(messages.ShipAbortedMergeError)
 	}
 	return self.mergeError
 }

@@ -1,6 +1,7 @@
 package cucumber
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
@@ -107,7 +108,7 @@ func (self *ScenarioState) compareTable(table *messages.PickleStepArgument_Pickl
 	if errorCount != 0 {
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
 		fmt.Println(diff)
-		return fmt.Errorf("mismatching commits found, see diff above")
+		return errors.New("mismatching commits found, see diff above")
 	}
 	return nil
 }

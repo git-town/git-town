@@ -1,6 +1,7 @@
 package gitlab
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -42,7 +43,7 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body

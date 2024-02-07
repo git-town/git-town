@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
@@ -28,5 +28,5 @@ func detectKeysColumn(row *messages.PickleStepArgument_PickleTable_PickleTableRo
 			return i, nil
 		}
 	}
-	return 0, fmt.Errorf(`no table column with header "KEYS" detected`)
+	return 0, errors.New(`no table column with header "KEYS" detected`)
 }
