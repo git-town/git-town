@@ -250,9 +250,9 @@ func NewConfig(args NewConfigArgs) (*Config, error) {
 }
 
 type NewConfigArgs struct {
-	GlobalConfig configdomain.PartialConfig
-	LocalConfig  configdomain.PartialConfig
 	ConfigFile   *configdomain.PartialConfig
 	DryRun       bool
+	GlobalConfig configdomain.PartialConfig
+	LocalConfig  configdomain.PartialConfig
 	Runner       gitconfig.Runner
 }
