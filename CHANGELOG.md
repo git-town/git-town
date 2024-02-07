@@ -2,7 +2,7 @@
 
 ## 12.0.0 (2023-01-05)
 
-Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive by modernizing Git Town's configuration system and user experience.
+Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive by modernizing Git Town's configuration system.
 
 #### BREAKING CHANGES
 
