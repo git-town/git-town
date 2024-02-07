@@ -1,7 +1,6 @@
 package envvars
 
 import (
-	"fmt"
 	"os"
 	"strings"
 )
@@ -16,5 +15,5 @@ func PrependPath(envVars []string, directory string) []string {
 			return envVars
 		}
 	}
-	return append(envVars, fmt.Sprintf("PATH=%s", directory))
+	return append(envVars, "PATH="+directory)
 }

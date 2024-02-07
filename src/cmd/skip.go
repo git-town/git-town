@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
@@ -59,10 +60,10 @@ func executeSkip(verbose bool) error {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.SkipNothingToDo)
+		return errors.New(messages.SkipNothingToDo)
 	}
 	if !runState.UnfinishedDetails.CanSkip {
-		return fmt.Errorf(messages.SkipBranchHasConflicts)
+		return errors.New(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
 	return interpreter.Execute(interpreter.ExecuteArgs{

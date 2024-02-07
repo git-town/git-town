@@ -139,6 +139,7 @@ type Project struct {
 	CIJobTokenScopeEnabled                   bool               `json:"ci_job_token_scope_enabled"`
 	CIOptInJWT                               bool               `json:"ci_opt_in_jwt"`
 	CIAllowForkPipelinesToRunInParentProject bool               `json:"ci_allow_fork_pipelines_to_run_in_parent_project"`
+	CIRestrictPipelineCancellationRole       AccessControlValue `json:"ci_restrict_pipeline_cancellation_role"`
 	PublicJobs                               bool               `json:"public_jobs"`
 	BuildTimeout                             int                `json:"build_timeout"`
 	AutoCancelPendingPipelines               string             `json:"auto_cancel_pending_pipelines"`
@@ -842,6 +843,7 @@ type EditProjectOptions struct {
 	CIDefaultGitDepth                         *int                                 `url:"ci_default_git_depth,omitempty" json:"ci_default_git_depth,omitempty"`
 	CIForwardDeploymentEnabled                *bool                                `url:"ci_forward_deployment_enabled,omitempty" json:"ci_forward_deployment_enabled,omitempty"`
 	CISeperateCache                           *bool                                `url:"ci_separated_caches,omitempty" json:"ci_separated_caches,omitempty"`
+	CIRestrictPipelineCancellationRole        *AccessControlValue                  `url:"ci_restrict_pipeline_cancellation_role,omitempty" json:"ci_restrict_pipeline_cancellation_role,omitempty"`
 	ContainerExpirationPolicyAttributes       *ContainerExpirationPolicyAttributes `url:"container_expiration_policy_attributes,omitempty" json:"container_expiration_policy_attributes,omitempty"`
 	ContainerRegistryAccessLevel              *AccessControlValue                  `url:"container_registry_access_level,omitempty" json:"container_registry_access_level,omitempty"`
 	DefaultBranch                             *string                              `url:"default_branch,omitempty" json:"default_branch,omitempty"`

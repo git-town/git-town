@@ -1,14 +1,14 @@
 package validate
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/git-town/git-town/v11/src/messages"
 )
 
 func NoOpenChanges(hasOpenChanges bool) error {
 	if hasOpenChanges {
-		return fmt.Errorf(messages.ShipOpenChanges)
+		return errors.New(messages.ShipOpenChanges)
 	}
 	return nil
 }
