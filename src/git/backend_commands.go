@@ -1,6 +1,7 @@
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -37,11 +38,11 @@ type BackendCommands struct {
 func (self *BackendCommands) Author() (string, error) {
 	email := self.GitUserEmail
 	if email == "" {
-		return "", fmt.Errorf(messages.GitUserEmailMissing)
+		return "", errors.New(messages.GitUserEmailMissing)
 	}
 	name := self.GitUserName
 	if name == "" {
-		return "", fmt.Errorf(messages.GitUserEmailMissing)
+		return "", errors.New(messages.GitUserEmailMissing)
 	}
 	return name + " <" + email + ">", nil
 }
