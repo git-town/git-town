@@ -93,14 +93,9 @@ stats: tools/rta@${RTA_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active development on Go code
-	@tools/rta gofumpt -l -w . &
+test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
-	@go run tools/format_unittests/format_unittests.go &
-	@go run tools/format_self/format_self.go &
-	@tools/ensure_no_files_with_dashes.sh &
-	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@tools/rta deadcode -test github.com/git-town/git-town/... \
 	                          github.com/git-town/git-town/tools/format_self/... \
 														github.com/git-town/git-town/tools/format_unittests... \
