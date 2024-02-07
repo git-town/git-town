@@ -1,28 +1,17 @@
-# Welcome 💖
+## About to contribute?
 
-Before anything else, thank you for taking some of your precious time to help this project move forward. ❤️
+We appreciate that. But before you do, please learn our basic rules:
 
-If you're new to open source and feeling a bit nervous 😳, we understand! We recommend watching [this excellent guide](https://egghead.io/talks/git-how-to-make-your-first-open-source-contribution)
-to give you a grounding in some of the basic concepts. You could also watch [this talk](https://www.youtube.com/watch?v=tuSk6dMoTIs) from our very own wonderful [Marit van Dijk](https://github.com/mlvandijk) on her experiences contributing to Cucumber.
+* Do you have a feature request? Then don't expect it to be implemented unless
+  you or someone else sends a [pull request](https://help.github.com/articles/using-pull-requests).
+* We love [pull requests](https://help.github.com/articles/using-pull-requests),
+  but if you don't have a test to go with it we probably won't merge it.
+* Before making significant contribution consider discussing the outline of
+  your solution first. This may avoid a duplication of efforts.
 
-We want you to feel safe to make mistakes, and ask questions. If anything in this guide or anywhere else in the codebase doesn't make sense to you, please let us know! It's through your feedback that we can make this codebase more welcoming, so we'll be glad to hear thoughts.
-
-You can chat with us in the [#committers-go](https://cucumberbdd.slack.com/archives/CA5NJPDJ4) channel in our [community Slack], or feel free to [raise an issue] if you're experiencing any friction trying make your contribution.
-
-## Setup
-
-To get your development environment set up, you'll need to [install Go]. We're currently using version 1.17 for development.
-
-Once that's done, try running the tests:
-
-    make test
-
-If everything passes, you're ready to hack!
-
-[install go]: https://golang.org/doc/install
-[community Slack]: https://cucumber.io/community#slack
-[raise an issue]: https://github.com/cucumber/godog/issues/new/choose
-
-## Changing dependencies
-
-If dependencies have changed, you will also need to update the _examples module. `go mod tidy` should be sufficient.
+Please do *not* add @author tags - this project embraces collective code
+ownership. If you want to know who wrote some code, look in git. When you are
+done, send a [pull request](http://help.github.com/send-pull-requests/).
+If we get a pull request where an entire file is changed because of
+insignificant whitespace changes we cannot see what you have changed, and your
+contribution might get rejected.

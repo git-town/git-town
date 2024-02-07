@@ -4,23 +4,19 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"sort"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/cucumber/godog/colors"
-	"github.com/cucumber/godog/internal/utils"
 )
-
-// repeats a space n times
-var s = utils.S
 
 var descFeaturesArgument = "Optional feature(s) to run. Can be:\n" +
 	s(4) + "- dir " + colors.Yellow("(features/)") + "\n" +
 	s(4) + "- feature " + colors.Yellow("(*.feature)") + "\n" +
 	s(4) + "- scenario at specific line " + colors.Yellow("(*.feature:10)") + "\n" +
-	"If no feature paths are listed, suite tries " + colors.Yellow("features") + " path by default.\n" +
-	"Multiple comma-separated values can be provided.\n"
+	"If no feature paths are listed, suite tries " + colors.Yellow("features") + " path by default.\n"
 
 var descConcurrencyOption = "Run the test suite with concurrency level:\n" +
 	s(4) + "- " + colors.Yellow(`= 1`) + ": supports all types of formats.\n" +
@@ -39,8 +35,6 @@ var descRandomOption = "Randomly shuffle the scenario execution order.\n" +
 
 // FlagSet allows to manage flags by external suite runner
 // builds flag.FlagSet with godog flags binded
-//
-// Deprecated:
 func FlagSet(opt *Options) *flag.FlagSet {
 	set := flag.NewFlagSet("godog", flag.ExitOnError)
 	BindFlags("", set, opt)
@@ -51,29 +45,11 @@ func FlagSet(opt *Options) *flag.FlagSet {
 // BindFlags binds godog flags to given flag set prefixed
 // by given prefix, without overriding usage
 func BindFlags(prefix string, set *flag.FlagSet, opt *Options) {
-	set.Usage = usage(set, set.Output())
-
 	descFormatOption := "How to format tests output. Built-in formats:\n"
-
-	type fm struct {
-		name string
-		desc string
-	}
-	var fms []fm
+	// @TODO: sort by name
 	for name, desc := range AvailableFormatters() {
-		fms = append(fms, fm{
-			name: name,
-			desc: desc,
-		})
+		descFormatOption += s(4) + "- " + colors.Yellow(name) + ": " + desc + "\n"
 	}
-	sort.Slice(fms, func(i, j int) bool {
-		return fms[i].name < fms[j].name
-	})
-
-	for _, fm := range fms {
-		descFormatOption += s(4) + "- " + colors.Yellow(fm.name) + ": " + fm.desc + "\n"
-	}
-
 	descFormatOption = strings.TrimSpace(descFormatOption)
 
 	// override flag defaults if any corresponding properties were supplied on the incoming `opt`
@@ -81,32 +57,26 @@ func BindFlags(prefix string, set *flag.FlagSet, opt *Options) {
 	if opt.Format != "" {
 		defFormatOption = opt.Format
 	}
-
 	defTagsOption := ""
 	if opt.Tags != "" {
 		defTagsOption = opt.Tags
 	}
-
 	defConcurrencyOption := 1
 	if opt.Concurrency != 0 {
 		defConcurrencyOption = opt.Concurrency
 	}
-
 	defShowStepDefinitions := false
 	if opt.ShowStepDefinitions {
 		defShowStepDefinitions = opt.ShowStepDefinitions
 	}
-
 	defStopOnFailure := false
 	if opt.StopOnFailure {
 		defStopOnFailure = opt.StopOnFailure
 	}
-
 	defStrict := false
 	if opt.Strict {
 		defStrict = opt.Strict
 	}
-
 	defNoColors := false
 	if opt.NoColors {
 		defNoColors = opt.NoColors
@@ -124,14 +94,6 @@ func BindFlags(prefix string, set *flag.FlagSet, opt *Options) {
 	set.BoolVar(&opt.Strict, prefix+"strict", defStrict, "Fail suite when there are pending or undefined steps.")
 	set.BoolVar(&opt.NoColors, prefix+"no-colors", defNoColors, "Disable ansi colors.")
 	set.Var(&randomSeed{&opt.Randomize}, prefix+"random", descRandomOption)
-	set.BoolVar(&opt.ShowHelp, "godog.help", false, "Show usage help.")
-	set.Func(prefix+"paths", descFeaturesArgument, func(paths string) error {
-		if paths != "" {
-			opt.Paths = strings.Split(paths, ",")
-		}
-
-		return nil
-	})
 }
 
 type flagged struct {
@@ -208,7 +170,15 @@ func usage(set *flag.FlagSet, w io.Writer) func() {
 
 		// --- GENERAL ---
 		fmt.Fprintln(w, colors.Yellow("Usage:"))
-		fmt.Fprintf(w, s(2)+"go test [options]\n\n")
+		fmt.Fprintf(w, s(2)+"godog [options] [<features>]\n\n")
+		// description
+		fmt.Fprintln(w, "Builds a test package and runs given feature files.")
+		fmt.Fprintf(w, "Command should be run from the directory of tested package and contain buildable go source.\n\n")
+
+		// --- ARGUMENTS ---
+		fmt.Fprintln(w, colors.Yellow("Arguments:"))
+		// --> features
+		fmt.Fprintln(w, opt("features", descFeaturesArgument))
 
 		// --- OPTIONS ---
 		fmt.Fprintln(w, colors.Yellow("Options:"))
@@ -222,6 +192,12 @@ func usage(set *flag.FlagSet, w io.Writer) func() {
 // randomSeed implements `flag.Value`, see https://golang.org/pkg/flag/#Value
 type randomSeed struct {
 	ref *int64
+}
+
+// Choose randomly assigns a convenient pseudo-random seed value.
+// The resulting seed will be between `1-99999` for later ease of specification.
+func makeRandomSeed() int64 {
+	return rand.New(rand.NewSource(time.Now().UTC().UnixNano())).Int63n(99998) + 1
 }
 
 func (rs *randomSeed) Set(s string) error {
