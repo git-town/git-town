@@ -99,8 +99,8 @@ todo:  # displays all TODO items
 
 unit: build  # runs only the unit tests for changed code
 	@env GOGC=off go test -timeout 30s ./src/... ./test/...
-	@go run tools/format_unittests/format.go test
-	@go run tools/format_self/format_self.go test
+	@(cd tools/format_unittests && go test ./...)
+	@(cd tools/format_self && go test ./...)
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...

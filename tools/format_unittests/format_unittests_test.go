@@ -22,141 +22,141 @@ func TestFormatUnittests(t *testing.T) {
 	t.Run("FormatFileContent", func(t *testing.T) {
 		t.Run("top-level subtests", func(t *testing.T) {
 			give := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
-		t.Run("top-level test 1", func(t *testing.T) {
-			t.Parallel()
-			give := 123
-		})
-		t.Run("top-level test 2", func(t *testing.T) {
-			t.Parallel()
-			give := 123
-		})
-	}`
+		give := 123
+	})
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		give := 123
+	})
+}`
 			want := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+
+	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
+		give := 123
+	})
 
-		t.Run("top-level test 1", func(t *testing.T) {
-			t.Parallel()
-			give := 123
-		})
-
-		t.Run("top-level test 2", func(t *testing.T) {
-			t.Parallel()
-			give := 123
-		})
-	}`
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		give := 123
+	})
+}`
 			have := formatUnittests.FormatFileContent(give)
 			must.EqOp(t, want, have)
 		})
 
 		t.Run("nested subtests", func(t *testing.T) {
 			give := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
-		t.Run("top-level test 1", func(t *testing.T) {
+		t.Run("nested test 1a", func(t *testing.T) {
 			t.Parallel()
-			t.Run("nested test 1a", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
-			t.Run("nested test 1b", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
+			give := 123
 		})
-		t.Run("top-level test 2", func(t *testing.T) {
+		t.Run("nested test 1b", func(t *testing.T) {
 			t.Parallel()
-			t.Run("nested test 2a", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
-			t.Run("nested test 2b", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
+			give := 123
 		})
-	}`
+	})
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 2a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 2b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+}`
 			want := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+
+	t.Run("top-level test 1", func(t *testing.T) {
 		t.Parallel()
-
-		t.Run("top-level test 1", func(t *testing.T) {
+		t.Run("nested test 1a", func(t *testing.T) {
 			t.Parallel()
-			t.Run("nested test 1a", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
-			t.Run("nested test 1b", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
+			give := 123
 		})
-
-		t.Run("top-level test 2", func(t *testing.T) {
+		t.Run("nested test 1b", func(t *testing.T) {
 			t.Parallel()
-			t.Run("nested test 2a", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
-			t.Run("nested test 2b", func(t *testing.T) {
-				t.Parallel()
-				give := 123
-			})
+			give := 123
 		})
-	}`
+	})
+
+	t.Run("top-level test 2", func(t *testing.T) {
+		t.Parallel()
+		t.Run("nested test 2a", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+		t.Run("nested test 2b", func(t *testing.T) {
+			t.Parallel()
+			give := 123
+		})
+	})
+}`
 			have := formatUnittests.FormatFileContent(give)
 			must.EqOp(t, want, have)
 		})
 
 		t.Run("no subtests", func(t *testing.T) {
 			give := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
-		t.Parallel()
-		give := "123"
-	}`
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	give := "123"
+}`
 			want := `
-	package hosting_test
+package hosting_test
 
-	import (
-		"code.gitea.io/sdk/gitea"
-	)
+import (
+	"code.gitea.io/sdk/gitea"
+)
 
-	func TestNewGiteaConnector(t *testing.T) {
-		t.Parallel()
-		give := "123"
-	}`
+func TestNewGiteaConnector(t *testing.T) {
+	t.Parallel()
+	give := "123"
+}`
 			have := formatUnittests.FormatFileContent(give)
 			must.EqOp(t, want, have)
 		})
