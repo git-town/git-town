@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/google/go-github/v58/github"
+	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
 
