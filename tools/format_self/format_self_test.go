@@ -9,6 +9,56 @@ import (
 
 func TestXX(t *testing.T) {
 	t.Parallel()
+
+	t.Run("FormatFileContent", func(t *testing.T) {
+		t.Run("identifier isn't self, non-pointer receiver", func(t *testing.T) {
+			give := `
+			package main
+			type Foo struct{}
+			func (f Foo) Bar() {
+				// ...
+			}`
+			want := `
+			package main
+			type Foo struct{}
+			func (self Foo) Bar() {
+				// ...
+			}`
+			have := formatSelf.FormatFileContent(give)
+			must.EqOp(t, want, have)
+		})
+		t.Run("identifier isn't self, pointer receiver", func(t *testing.T) {
+			give := `
+			package main
+
+			type Foo struct{}
+
+			func (f *Foo) Bar() {
+				fmt.Println("")
+			}`
+			have := formatSelf.FormatFileContent(give)
+			want := `
+			package main
+
+			type Foo struct{}
+
+			func (self *Foo) Bar() {
+				fmt.Println("")
+			}`
+			must.EqOp(t, want, have)
+		})
+		t.Run("already properly formatted", func(t *testing.T) {
+			give := `
+			package main
+			type Foo struct{}
+			func (self Foo) Bar() {
+				fmt.Println("")
+			}
+			`
+			have := formatSelf.FormatFileContent(give)
+			must.EqOp(t, give, have)
+		})
+	})
 	t.Run("FormatLine", func(t *testing.T) {
 		tests := map[string]string{
 			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
@@ -19,6 +69,17 @@ func TestXX(t *testing.T) {
 			have := formatSelf.FormatLine(give)
 			must.EqOp(t, want, have)
 		}
-		panic("BOOM")
+	})
+	t.Run("IsGoFile", func(t *testing.T) {
+		tests := map[string]bool{
+			"/foo/bar.go":      true,
+			"/foo/bar_test.go": false,
+			"/foo/bar.md":      false,
+			"/foo/bar.go.md":   false,
+		}
+		for give, want := range tests {
+			have := formatSelf.IsGoFile(give)
+			must.EqOp(t, want, have)
+		}
 	})
 }

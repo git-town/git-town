@@ -19,7 +19,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		newContent := formatFileContent(string(content))
+		newContent := FormatFileContent(string(content))
 		return os.WriteFile(path, []byte(newContent), dirEntry.Type().Perm())
 	})
 	fmt.Println()
@@ -38,7 +38,7 @@ func shouldIgnorePath(path string) bool {
 		path == "src/cli/dialog/switch_branch.go"
 }
 
-func formatFileContent(content string) string {
+func FormatFileContent(content string) string {
 	lines := strings.Split(content, "\n")
 	for l, line := range lines {
 		lines[l] = FormatLine(line)
