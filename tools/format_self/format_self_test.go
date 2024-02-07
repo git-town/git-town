@@ -9,14 +9,16 @@ import (
 
 func TestXX(t *testing.T) {
 	t.Parallel()
-	tests := map[string]string{
-		"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
-		"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
-		"	if err != nil {":                                                                 "	if err != nil {",
-	}
-	for give, want := range tests {
-		have := formatSelf.FormatLine(give)
-		must.EqOp(t, want, have)
-	}
-	panic("BOOM")
+	t.Run("FormatLine", func(t *testing.T) {
+		tests := map[string]string{
+			"func (bcs *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {": "func (self *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {",
+			"func (c *Counter) Count() int {":                                                  "func (self *Counter) Count() int {",
+			"	if err != nil {":                                                                 "	if err != nil {",
+		}
+		for give, want := range tests {
+			have := formatSelf.FormatLine(give)
+			must.EqOp(t, want, have)
+		}
+		panic("BOOM")
+	})
 }
