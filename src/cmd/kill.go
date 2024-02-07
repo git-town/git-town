@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
@@ -127,7 +128,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	if !repo.Runner.IsFeatureBranch(branchToKill.LocalName) {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
+		return nil, branchesSnapshot, stashSnapshot, false, errors.New(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()

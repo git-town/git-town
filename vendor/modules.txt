@@ -60,7 +60,7 @@ github.com/cloudflare/circl/math/mlsbset
 github.com/cloudflare/circl/sign
 github.com/cloudflare/circl/sign/ed25519
 github.com/cloudflare/circl/sign/ed448
-# github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81
+# github.com/containerd/console v1.0.4
 ## explicit; go 1.13
 github.com/containerd/console
 # github.com/cucumber/gherkin-go/v11 v11.0.0
@@ -172,10 +172,12 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/xanzy/go-gitlab v0.96.0
+# github.com/stretchr/testify v1.8.2
+## explicit; go 1.13
+# github.com/xanzy/go-gitlab v0.97.0
 ## explicit; go 1.19
 github.com/xanzy/go-gitlab
-# golang.org/x/crypto v0.18.0
+# golang.org/x/crypto v0.19.0
 ## explicit; go 1.18
 golang.org/x/crypto/argon2
 golang.org/x/crypto/blake2b
@@ -194,7 +196,7 @@ golang.org/x/crypto/sha3
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp v0.0.0-20240119083558-1b970713d09a
+# golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3
 ## explicit; go 1.20
 golang.org/x/exp/maps
 # golang.org/x/oauth2 v0.16.0
@@ -204,13 +206,13 @@ golang.org/x/oauth2/internal
 # golang.org/x/sync v0.6.0
 ## explicit; go 1.18
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.16.0
+# golang.org/x/sys v0.17.0
 ## explicit; go 1.18
 golang.org/x/sys/cpu
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/term v0.16.0
+# golang.org/x/term v0.17.0
 ## explicit; go 1.18
 golang.org/x/term
 # golang.org/x/text v0.14.0

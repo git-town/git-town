@@ -1,6 +1,7 @@
 package interpreter
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/print"
@@ -58,5 +59,5 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		message += messages.ContinueSkipGuidance
 	}
 	message += "\n"
-	return fmt.Errorf(message)
+	return errors.New(message)
 }
