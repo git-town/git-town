@@ -58,9 +58,9 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
 	tools/rta deadcode -test github.com/git-town/git-town/... \
-                           github.com/git-town/git-town/tools/format_self/... \
-                           github.com/git-town/git-town/tools/format_unittests... \
-                           github.com/git-town/git-town/tools/structs_sorted/... &
+	                         github.com/git-town/git-town/tools/format_self/... \
+	                         github.com/git-town/git-town/tools/format_unittests... \
+	                         github.com/git-town/git-town/tools/structs_sorted/... &
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -97,9 +97,9 @@ test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
 	@tools/rta deadcode -test github.com/git-town/git-town/... \
-                            github.com/git-town/git-town/tools/format_self/... \
-                            github.com/git-town/git-town/tools/format_unittests... \
-                            github.com/git-town/git-town/tools/structs_sorted/... &
+	                          github.com/git-town/git-town/tools/format_self/... \
+	                          github.com/git-town/git-town/tools/format_unittests... \
+	                          github.com/git-town/git-town/tools/structs_sorted/... &
 	@make --no-print-directory unit
 
 todo:  # displays all TODO items
