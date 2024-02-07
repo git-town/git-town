@@ -30,7 +30,7 @@ func (self *Config) RepositoryURL() string {
 }
 
 func (self *Config) baseURL() string {
-	return fmt.Sprintf("https://" + self.HostnameWithStandardPort())
+	return "https://" + self.HostnameWithStandardPort()
 }
 
 func (self *Config) projectPath() string {

@@ -2,6 +2,7 @@ package gitea
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 
@@ -63,7 +64,7 @@ func (self *Connector) RepositoryURL() string {
 
 func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := commitmessage.Split(message)
 	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
@@ -90,7 +91,7 @@ func (self *Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) 
 	// 	Base: newBaseName,
 	// })
 	// return err
-	return fmt.Errorf(messages.HostingGiteaNotImplemented)
+	return errors.New(messages.HostingGiteaNotImplemented)
 }
 
 func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, branch, target gitdomain.LocalBranchName) []*gitea.PullRequest {
@@ -110,7 +111,7 @@ func FilterPullRequests(pullRequests []*gitea.PullRequest, organization string, 
 func NewConnector(args NewConnectorArgs) (*Connector, error) {
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken.String()})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://"+args.OriginURL.Host), httpClient)
+	giteaClient := gitea.NewClientWithHTTP("https://"+args.OriginURL.Host, httpClient)
 	return &Connector{
 		APIToken: args.APIToken,
 		Config: hostingdomain.Config{

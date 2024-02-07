@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog"
@@ -36,7 +37,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return quit, err
 	}
 	if aborted {
-		return quit, fmt.Errorf("user aborted")
+		return quit, errors.New("user aborted")
 	}
 	switch response {
 	case dialog.ResponseDiscard:
@@ -88,7 +89,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, err
 	}
 	if repoStatus.Conflicts {
-		return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,

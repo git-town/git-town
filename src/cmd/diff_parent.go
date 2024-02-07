@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/flags"
@@ -86,7 +87,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		}
 	}
 	if !repo.Runner.IsFeatureBranch(branch) {
-		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
+		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.FullConfig,

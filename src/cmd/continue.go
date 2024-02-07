@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
@@ -89,10 +90,10 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
 	}
 	if repoStatus.Conflicts {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, fmt.Errorf(messages.ContinueUntrackedChanges)
+		return nil, initialBranchesSnapshot, initialStashSnapshot, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
