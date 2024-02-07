@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v11/src/cli/dialog/components"
@@ -127,7 +128,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.EmptyRunState(), fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil {
-		return runstate.EmptyRunState(), fmt.Errorf(messages.UndoNothingToDo)
+		return runstate.EmptyRunState(), errors.New(messages.UndoNothingToDo)
 	}
 	var undoRunState runstate.RunState
 	if runState.IsUnfinished() {
