@@ -11,8 +11,11 @@ import (
 const testPath = "test.go"
 
 func TestStructsSorted(t *testing.T) {
+	t.Parallel()
 	t.Run("LintFile", func(t *testing.T) {
+		t.Parallel()
 		t.Run("UnsortedDefinition", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {
@@ -34,6 +37,7 @@ field2
 		})
 
 		t.Run("DefinitionWithoutFields", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {}
@@ -46,6 +50,7 @@ type MyStruct struct {}
 		})
 
 		t.Run("IgnoredDefinition", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Change struct {
@@ -61,6 +66,7 @@ type Change struct {
 		})
 
 		t.Run("UnsortedInstantiation", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {
@@ -88,6 +94,7 @@ field2
 		})
 
 		t.Run("InstantiationWithoutFields", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type MyStruct struct {}
@@ -103,6 +110,7 @@ func main() {
 		})
 
 		t.Run("IgnoredInstantiation", func(t *testing.T) {
+			t.Parallel()
 			give := `
 package main
 type Change struct {

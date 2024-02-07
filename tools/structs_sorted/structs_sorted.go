@@ -46,9 +46,9 @@ func (self issue) String() string {
 	)
 }
 
-type issues []issue
+type Issues []issue
 
-func (self issues) String() string {
+func (self Issues) String() string {
 	result := strings.Builder{}
 	for _, issue := range self {
 		result.WriteString(issue.String())
@@ -57,7 +57,7 @@ func (self issues) String() string {
 }
 
 func main() {
-	issues := issues{}
+	issues := Issues{}
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".go") || isIgnoredPath(path) {
 			return err
@@ -75,8 +75,8 @@ func main() {
 	os.Exit(len(issues))
 }
 
-func LintFile(path string) issues {
-	result := issues{}
+func LintFile(path string) Issues {
+	result := Issues{}
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, path, nil, parser.ParseComments)
 	if err != nil {
@@ -90,30 +90,30 @@ func LintFile(path string) issues {
 	return result
 }
 
-func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
+func lintStructDefinition(node ast.Node, fileSet *token.FileSet) Issues {
 	typeSpec, ok := node.(*ast.TypeSpec)
 	if !ok {
-		return issues{}
+		return Issues{}
 	}
 	structName := typeSpec.Name.Name
 	if slices.Contains(ignoreTypes, structName) {
-		return issues{}
+		return Issues{}
 	}
 	structType, ok := typeSpec.Type.(*ast.StructType)
 	if !ok {
-		return issues{}
+		return Issues{}
 	}
 	fields := structDefFieldNames(structType)
 	if len(fields) == 0 {
-		return issues{}
+		return Issues{}
 	}
 	sortedFields := make([]string, len(fields))
 	copy(sortedFields, fields)
 	slices.Sort(sortedFields)
 	if reflect.DeepEqual(fields, sortedFields) {
-		return issues{}
+		return Issues{}
 	}
-	return issues{
+	return Issues{
 		issue{
 			expected:   sortedFields,
 			position:   fileSet.Position(node.Pos()),
@@ -122,30 +122,30 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) issues {
 	}
 }
 
-func lintStructLiteral(node ast.Node, fileSet *token.FileSet) issues {
+func lintStructLiteral(node ast.Node, fileSet *token.FileSet) Issues {
 	compositeLit, ok := node.(*ast.CompositeLit)
 	if !ok {
-		return issues{}
+		return Issues{}
 	}
 	structType, ok := compositeLit.Type.(*ast.Ident)
 	if !ok {
-		return issues{}
+		return Issues{}
 	}
 	structName := structType.Name
 	if slices.Contains(ignoreTypes, structName) {
-		return issues{}
+		return Issues{}
 	}
 	fieldNames := structInstantiationFieldNames(compositeLit)
 	if len(fieldNames) == 0 {
-		return issues{}
+		return Issues{}
 	}
 	sortedFields := make([]string, len(fieldNames))
 	copy(sortedFields, fieldNames)
 	slices.Sort(sortedFields)
 	if reflect.DeepEqual(fieldNames, sortedFields) {
-		return issues{}
+		return Issues{}
 	}
-	return issues{
+	return Issues{
 		issue{
 			expected:   sortedFields,
 			position:   fileSet.Position(node.Pos()),

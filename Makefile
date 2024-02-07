@@ -75,6 +75,7 @@ lint: tools/rta@${RTA_VERSION}  # runs only the linters
 	@tools/rta golangci-lint run
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 
 smoke: build  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
