@@ -11,7 +11,7 @@ func TestXX(t *testing.T) {
 	t.Parallel()
 
 	t.Run("FormatFileContent", func(t *testing.T) {
-		t.Run("identifier isn't self, non-pointer receiver", func(t *testing.T) {
+		t.Run("unformatted, non-pointer receiver", func(t *testing.T) {
 			give := `
 			package main
 			type Foo struct{}
@@ -27,7 +27,7 @@ func TestXX(t *testing.T) {
 			have := formatSelf.FormatFileContent(give)
 			must.EqOp(t, want, have)
 		})
-		t.Run("identifier isn't self, pointer receiver", func(t *testing.T) {
+		t.Run("unformatted, pointer receiver", func(t *testing.T) {
 			give := `
 			package main
 
@@ -47,7 +47,7 @@ func TestXX(t *testing.T) {
 			}`
 			must.EqOp(t, want, have)
 		})
-		t.Run("already properly formatted", func(t *testing.T) {
+		t.Run("already formatted", func(t *testing.T) {
 			give := `
 			package main
 			type Foo struct{}
