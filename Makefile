@@ -40,7 +40,7 @@ dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the in
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in all languages
+fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fixes
 	git diff --check
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
@@ -56,12 +56,15 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # auto-fixes lint issues in al
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	tools/rta deadcode -test github.com/git-town/git-town/...
+	tools/rta deadcode -test github.com/git-town/git-town/... \
+	                         github.com/git-town/git-town/tools/format_self/... \
+													 github.com/git-town/git-town/tools/format_unittests... \
+													 github.com/git-town/git-town/tools/structs_sorted/... &
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: tools/rta@${RTA_VERSION}  # runs only the linters
+lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@go run tools/structs_sorted/structs_sorted.go
 	@git diff --check &
 	@${CURDIR}/tools/node_modules/.bin/gherkin-lint &
