@@ -101,7 +101,10 @@ test-go: tools/rta@${RTA_VERSION}  # smoke tests to be run during active develop
 	@go run tools/format_self/format_self.go test &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... &
+	@tools/rta deadcode -test github.com/git-town/git-town/... \
+	                          github.com/git-town/git-town/tools/format_self/... \
+														github.com/git-town/git-town/tools/format_unittests... \
+														github.com/git-town/git-town/tools/structs_sorted/... &
 	@make --no-print-directory unit
 
 todo:  # displays all TODO items
