@@ -22,10 +22,7 @@ import (
 	"os"
 )
 
-var (
-	ErrNotAConsole    = errors.New("provided file is not a console")
-	ErrNotImplemented = errors.New("not implemented")
-)
+var ErrNotAConsole = errors.New("provided file is not a console")
 
 type File interface {
 	io.ReadWriteCloser
@@ -48,7 +45,7 @@ type Console interface {
 	SetRaw() error
 	// DisableEcho disables echo on the console
 	DisableEcho() error
-	// Reset restores the console to its original state
+	// Reset restores the console to its orignal state
 	Reset() error
 	// Size returns the window size of the console
 	Size() (WinSize, error)

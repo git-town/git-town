@@ -60,7 +60,7 @@ github.com/cloudflare/circl/math/mlsbset
 github.com/cloudflare/circl/sign
 github.com/cloudflare/circl/sign/ed25519
 github.com/cloudflare/circl/sign/ed448
-# github.com/containerd/console v1.0.4
+# github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81
 ## explicit; go 1.13
 github.com/containerd/console
 # github.com/cucumber/gherkin-go/v11 v11.0.0
@@ -172,8 +172,6 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.8.2
-## explicit; go 1.13
 # github.com/xanzy/go-gitlab v0.97.0
 ## explicit; go 1.19
 github.com/xanzy/go-gitlab
