@@ -8,7 +8,7 @@ You can see the configured perennial branches via the
 [config](../commands/config.md) command and change them via the
 [setup assistant](../commands/config-setup.md).
 
-## in config file
+## configure in config file
 
 In the [config file](../configuration-file.md) the perennial branches are
 defined as part of the `[branches]` section:
@@ -18,7 +18,7 @@ defined as part of the `[branches]` section:
 perennials = [ "branch", "other-branch" ]
 ```
 
-## in Git metadata
+## configure in Git metadata
 
 You can configure the perennial branches manually by running:
 

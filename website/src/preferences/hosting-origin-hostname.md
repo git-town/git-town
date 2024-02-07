@@ -7,7 +7,7 @@ SSH config file.
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
 
-## format in config file
+## config file
 
 In the [config file](../configuration-file.md) the hosting platform is part of
 the `[hosting]` section:
@@ -17,7 +17,7 @@ the `[hosting]` section:
 origin-hostname = "<hostname>"
 ```
 
-## via Git
+## Git metadata
 
 To configure the origin hostname in Git, run this command:
 

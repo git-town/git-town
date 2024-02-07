@@ -9,7 +9,7 @@ The best way to change this setting is via the
 [setup assistant](../configuration.md). Git Town commands also prompt for this
 setting if needed.
 
-## in config file
+## config file
 
 In the [config file](../configuration-file.md) the main branch is part of the
 `[branches]` section:
@@ -19,7 +19,7 @@ In the [config file](../configuration-file.md) the main branch is part of the
 main = "config-main"
 ```
 
-## in Git metadata
+## Git metadata
 
 To configure the main branch in Git, run this command:
 

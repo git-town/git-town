@@ -11,27 +11,6 @@ configuration setting which code hosting platform you use.
 The best way to change this setting is via the
 [setup assistant](../configuration.md).
 
-## in config file
-
-In the [config file](../configuration-file.md) the hosting platform is part of
-the `[hosting]` section:
-
-```toml
-[hosting]
-platform = "<value>"
-```
-
-## in Git metadata
-
-To configure the hosting platform in Git, run this command:
-
-```bash
-git config [--global] git-town.hosting-platform <value>
-```
-
-The optional `--global` flag applies this setting to all Git repositories on
-your machine. Without it, this setting applies to the current Git repo.
-
 ## values
 
 You can use one of these values for the hosting platform setting:
@@ -41,3 +20,24 @@ You can use one of these values for the hosting platform setting:
 - `gitlab`
 - `gitea`
 - `bitbucket`
+
+## config file
+
+In the [config file](../configuration-file.md) the hosting platform is part of
+the `[hosting]` section:
+
+```toml
+[hosting]
+platform = "<value>"
+```
+
+## Git metadata
+
+To configure the hosting platform in Git, run this command:
+
+```bash
+git config [--global] git-town.hosting-platform <value>
+```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your machine. Without it, this setting applies to the current Git repo.

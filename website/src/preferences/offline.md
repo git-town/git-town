@@ -10,12 +10,12 @@ and thereby keeps Git Town working.
 
 This setting applies to all repositories on your local machine.
 
-## via CLI
+## set via CLI
 
 To put Git Town into offline mode, execute the
 [git town offline](../commands/config-offline.md) command.
 
-## in Git metadata
+## Git metadata
 
 ```
 git config --global git-town.offline <true|false>
