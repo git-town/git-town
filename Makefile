@@ -73,9 +73,9 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@tools/rta deadcode -test github.com/git-town/git-town/... \
-                            github.com/git-town/git-town/tools/format_self/... \
-                            github.com/git-town/git-town/tools/format_unittests... \
-                            github.com/git-town/git-town/tools/structs_sorted/... &
+	                          github.com/git-town/git-town/tools/format_self/... \
+	                          github.com/git-town/git-town/tools/format_unittests... \
+	                          github.com/git-town/git-town/tools/structs_sorted/... &
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
