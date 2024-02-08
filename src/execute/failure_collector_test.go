@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -76,25 +75,6 @@ func TestCollector(t *testing.T) {
 			fc := execute.FailureCollector{}
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")
-		})
-	})
-
-	t.Run("HostingPlatform", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given HostingPlatform value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.EqOp(t, configdomain.HostingPlatformGitHub, fc.HostingPlatform(configdomain.HostingPlatformGitHub, nil))
-			must.EqOp(t, configdomain.HostingPlatformGitLab, fc.HostingPlatform(configdomain.HostingPlatformGitLab, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.HostingPlatform(configdomain.HostingPlatformNone, nil)
-			must.Nil(t, fc.Err)
-			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("first"))
-			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 

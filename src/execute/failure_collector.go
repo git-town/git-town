@@ -3,7 +3,6 @@ package execute
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
@@ -36,13 +35,6 @@ func (self *FailureCollector) Check(err error) bool {
 // Fail registers the error constructed using the given format arguments.
 func (self *FailureCollector) Fail(format string, a ...any) {
 	self.Check(fmt.Errorf(format, a...))
-}
-
-// HostingPlatform provides the config.HostingPlatform part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) HostingPlatform(value configdomain.HostingPlatform, err error) configdomain.HostingPlatform {
-	self.Check(err)
-	return value
 }
 
 // Remotes provides the domain.Remotes part of the given fallible function result
