@@ -8,9 +8,9 @@ import (
 
 // all the information we need to know about Git tags in the context of this program
 type Tag struct {
+	ISOTime string
 	Name    string
 	Time    time.Time
-	ISOTime string
 }
 
 // provides the time when the Git tag with the given name was created
@@ -26,8 +26,8 @@ func LoadTag(name string) Tag {
 		panic(err.Error())
 	}
 	return Tag{
+		ISOTime: gitTime.Format("2006-01-02"),
 		Name:    name,
 		Time:    gitTime,
-		ISOTime: gitTime.Format("2006-01-02"),
 	}
 }
