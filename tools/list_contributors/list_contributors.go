@@ -41,7 +41,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%d issues and pull requests were closed since %s\n", len(issues.Issues), tagTime.Format("2006-01-02"))
+	fmt.Printf("%d issues and pull requests were closed since %s\n", *issues.Total, tagTime.Format("2006-01-02"))
+	fmt.Println(issues.IncompleteResults)
 	for _, issue := range issues.Issues {
 		fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
 		users.AddUser(*issue.User.Login)
