@@ -6,18 +6,19 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/tools/release_stats/console"
+	"github.com/git-town/git-town/tools/release_stats/git"
 	"github.com/google/go-github/v58/github"
 )
 
 // provides all users that commented anywhere since the given date
-func (gh Connector) commentsSince(date time.Time) []*github.IssueComment {
+func (gh Connector) commentsSince(tag git.Tag) []*github.IssueComment {
 	created := "created"
 	asc := "asc"
-	fmt.Print("loading comments on issues since %s", console.Cyan.Styled(date))
+	fmt.Printf("loading comments on issues since %s", console.Cyan.Styled(tag.ISOTime))
 	result := []*github.IssueComment{}
 	for page := 0; ; page++ {
-		comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", 0, &github.IssueListCommentsOptions{
-			Since:     &date,
+		comments, _, err := gh.client.Issues.ListComments(gh.context, "git-town", "git-town", 0, &github.IssueListCommentsOptions{
+			Since:     &tag.Time,
 			Sort:      &created,
 			Direction: &asc,
 			ListOptions: github.ListOptions{
@@ -46,7 +47,7 @@ func commentsOnPullRequestsSince(date time.Time, client *github.Client, context 
 			Since: date,
 			ListOptions: github.ListOptions{
 				Page:    page,
-				PerPage: data.pageSize,
+				PerPage: pageSize,
 			},
 		})
 		if err != nil {
