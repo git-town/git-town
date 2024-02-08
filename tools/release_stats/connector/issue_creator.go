@@ -1,10 +1,13 @@
-package main
+package connector
 
-import "github.com/google/go-github/v58/github"
+import (
+	"github.com/git-town/git-town/tools/release_stats/data"
+	"github.com/google/go-github/v58/github"
+)
 
 // provides the users that created the given issues
-func issuesCreators(issues []*github.Issue) Users {
-	result := NewUsers()
+func issuesCreators(issues []*github.Issue) data.Users {
+	result := data.NewUsers()
 	for _, issue := range issues {
 		result.AddUser(issueCreator(issue))
 	}

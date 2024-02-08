@@ -1,4 +1,4 @@
-package main
+package connector
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-func (gh githubConnector) openedIssuesOrPRsSince(date string) []*github.Issue {
+func (gh Connector) OpenedIssuesOrPRsSince(date string) []*github.Issue {
 	// load all issues opened since the last release
 	result := []*github.Issue{}
 	query := fmt.Sprintf("repo:git-town/git-town opened:>=%s", date)

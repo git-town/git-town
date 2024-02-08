@@ -1,4 +1,4 @@
-package main
+package connector
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 // loads all issues and pull requests closed since the given date
-func (gh githubConnector) loadClosedIssues(date string) (closedIssues []*github.Issue, closedPullRequests []*github.Issue) {
+func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, closedPullRequests []*github.Issue) {
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", date)
 	fmt.Print("loading closed issues and pull requests ")
 	for page := 0; ; page++ {
