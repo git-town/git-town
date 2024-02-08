@@ -72,15 +72,17 @@ func main() {
 
 	// register the users involved in the tickets
 	for _, issue := range issues {
-		fmt.Printf("%s submitted issue %d (%s)\n", *issue.User.Login, *issue.Number, *issue.Title)
-		users.AddUser(*issue.User.Login)
+		issueUsers := NewUserCollector()
+		issueUsers.AddUser(*issue.User.Login)
 		comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
 		if err != nil {
 			panic(err)
 		}
 		for _, comment := range comments {
-			users.AddUser(*comment.User.Login)
+			issueUsers.AddUser(*comment.User.Login)
 		}
+		users.AddUsers(issueUsers)
+		fmt.Printf("#%d: %q: %s\n", *issue.Number, *issue.Title, strings.Join(issueUsers.Users(), ", "))
 	}
 	fmt.Println("\nUsers:")
 	fmt.Println()

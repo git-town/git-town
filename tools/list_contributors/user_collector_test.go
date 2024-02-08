@@ -9,11 +9,24 @@ import (
 
 func TestUserCollector(t *testing.T) {
 	t.Parallel()
-	uc := listContributors.NewUserCollector()
-	uc.AddUser("one")
-	uc.AddUser("one")
-	uc.AddUser("two")
-	have := uc.Users()
-	want := []string{"one", "two"}
-	must.Eq(t, want, have)
+	t.Run("AddUser", func(t *testing.T) {
+		users := listContributors.NewUserCollector()
+		users.AddUser("one")
+		users.AddUser("one")
+		users.AddUser("two")
+		have := users.Users()
+		want := []string{"one", "two"}
+		must.Eq(t, want, have)
+	})
+	t.Run("AddUsers", func(t *testing.T) {
+		totalUsers := listContributors.NewUserCollector()
+		totalUsers.AddUser("alpha")
+		issueUsers := listContributors.NewUserCollector()
+		issueUsers.AddUser("beta1")
+		issueUsers.AddUser("beta2")
+		totalUsers.AddUsers(issueUsers)
+		have := totalUsers.Users()
+		want := []string{"alpha", "beta1", "beta2"}
+		must.Eq(t, want, have)
+	})
 }
