@@ -11,11 +11,3 @@ type ConfigDiff struct {
 	Changed map[gitconfig.Key]undodomain.Change[string]
 	Removed map[gitconfig.Key]string
 }
-
-func EmptyConfigDiff() ConfigDiff {
-	return ConfigDiff{
-		Added:   []gitconfig.Key{},
-		Changed: map[gitconfig.Key]undodomain.Change[string]{},
-		Removed: map[gitconfig.Key]string{},
-	}
-}
