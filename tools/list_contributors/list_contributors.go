@@ -22,7 +22,6 @@ const (
 
 func main() {
 	cyan := termenv.String().Foreground(termenv.ANSICyan)
-	green := termenv.String().Foreground(termenv.ANSIGreen)
 	githubToken := loadAccessToken()
 	fmt.Printf("using GitHub token %s\n", cyan.Styled(githubToken))
 	client, context := githubClient(githubToken)
@@ -44,8 +43,8 @@ func main() {
 	pullRequests := []*github.Issue{}
 	page := 0
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
+	fmt.Print("loading issues ")
 	for {
-		fmt.Printf("loading issues %d-%d ... ", (page*pagesize)+1, (page*pagesize)+pagesize)
 		results, _, err := client.Search.Issues(context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
@@ -57,7 +56,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(green.Styled("ok"))
+		fmt.Print(".")
 		if len(results.Issues) == 0 {
 			break
 		}
@@ -70,7 +69,7 @@ func main() {
 		}
 		page += 1
 	}
-	fmt.Printf("found %s issues and %s pull requests\n", cyan.Styled(strconv.Itoa(len(issues))), cyan.Styled(strconv.Itoa(len(pullRequests))))
+	fmt.Printf(" %s issues and %s pull requests\n", cyan.Styled(strconv.Itoa(len(issues))), cyan.Styled(strconv.Itoa(len(pullRequests))))
 
 	// register the creators of pull requests
 	for _, pullRequest := range pullRequests {
