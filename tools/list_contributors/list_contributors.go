@@ -37,7 +37,7 @@ func main() {
 
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
-	fmt.Printf("release %s was made %s\n", cyan.Styled(tag), cyan.Styled(tagTime.Format("2006-01-02")))
+	fmt.Printf("previous release %s was made %s\n", cyan.Styled(tag), cyan.Styled(tagTime.Format("2006-01-02")))
 
 	// load and categorize all closed issues
 	issues := []*github.Issue{}
