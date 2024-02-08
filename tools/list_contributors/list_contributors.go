@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/v58/github"
@@ -24,6 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 	tag := os.Args[1]
+	fmt.Printf("Looking for contributors since %s\n", tag)
 
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
@@ -73,12 +75,13 @@ func githubClient() (*github.Client, context.Context) {
 }
 
 func timeOfTag(tag string) time.Time {
-	cmd := exec.Command("git", "show", "--format=%ci", tag)
-	output, err := cmd.CombinedOutput()
+	cmd := exec.Command("git", "log", "-1", "--format=%cI", tag)
+	outputData, err := cmd.CombinedOutput()
 	if err != nil {
 		panic(err.Error())
 	}
-	result, err := time.Parse(time.RFC3339, string(output))
+	output := strings.TrimSpace(string(outputData))
+	result, err := time.Parse(time.RFC3339, output)
 	if err != nil {
 		panic(err.Error())
 	}
