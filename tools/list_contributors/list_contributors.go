@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/v58/github"
+	"github.com/muesli/termenv"
 	"golang.org/x/oauth2"
 )
 
@@ -16,7 +17,10 @@ const org = "git-town"
 const repo = "git-town"
 
 func main() {
+	cyan := termenv.String().Foreground(termenv.ANSICyan)
+	green := termenv.String().Foreground(termenv.ANSIGreen)
 	githubToken := loadAccessToken()
+	fmt.Printf("using GitHub token %s\n", cyan.Styled(githubToken))
 	client, context := githubClient(githubToken)
 	users := NewUserCollector()
 
@@ -26,11 +30,10 @@ func main() {
 		os.Exit(1)
 	}
 	tag := os.Args[1]
-	fmt.Printf("Looking for contributors since %s\n", tag)
 
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
-	fmt.Printf("release %s was made %s\n", tag, tagTime.Format("2006-01-02"))
+	fmt.Printf("release %s was made %s\n", cyan.Styled(tag), cyan.Styled(tagTime.Format("2006-01-02")))
 
 	// load and categorize all closed issues
 	issues := []*github.Issue{}
@@ -38,7 +41,7 @@ func main() {
 	page := 0
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
 	for {
-		fmt.Printf("loading issues %d-%d ... ", page+1, page+100)
+		fmt.Printf("loading issues %d-%d ... ", (page*100)+1, (page*100)+100)
 		results, _, err := client.Search.Issues(context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
@@ -50,7 +53,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("ok")
+		fmt.Println(green.Styled("ok"))
 		if len(results.Issues) == 0 {
 			break
 		}
@@ -98,7 +101,6 @@ func loadAccessToken() string {
 		panic(err.Error())
 	}
 	result := strings.TrimSpace(string(output))
-	fmt.Printf("using GitHub token %q\n", result)
 	return result
 }
 
