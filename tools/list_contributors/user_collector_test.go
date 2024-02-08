@@ -9,7 +9,7 @@ import (
 
 func TestUserCollector(t *testing.T) {
 	t.Parallel()
-	uc := listContributors.UserCollector{}
+	uc := listContributors.NewUserCollector()
 	uc.AddUser("one")
 	uc.AddUser("one")
 	uc.AddUser("two")

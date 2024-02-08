@@ -16,8 +16,9 @@ const org = "git-town"
 const repo = "git-town"
 
 func main() {
-	client, context := githubClient()
-	users := UserCollector{}
+	githubToken := loadAccessToken()
+	client, context := githubClient(githubToken)
+	users := NewUserCollector()
 
 	// get the tag
 	if len(os.Args) < 2 {
@@ -42,6 +43,7 @@ func main() {
 	}
 	fmt.Printf("%d issues and pull requests were closed since %s\n", len(issues.Issues), tagTime.Format("2006-01-02"))
 	for _, issue := range issues.Issues {
+		fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
 		users.AddUser(*issue.User.Login)
 		comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
 		if err != nil {
@@ -58,18 +60,28 @@ func main() {
 	}
 }
 
+func issueType(isPullRequest bool) string {
+	if isPullRequest {
+		return "pull request"
+	} else {
+		return "issue"
+	}
+}
+
 func loadAccessToken() string {
 	process := exec.Command("git", "config", "--get", "git-town.github-token")
 	output, err := process.Output()
 	if err != nil {
 		panic(err.Error())
 	}
-	return string(output)
+	result := strings.TrimSpace(string(output))
+	fmt.Printf("using GitHub token %q\n", result)
+	return result
 }
 
-func githubClient() (*github.Client, context.Context) {
+func githubClient(token string) (*github.Client, context.Context) {
 	context := context.Background()
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "YourGitHubToken"})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
 	httpClient := oauth2.NewClient(context, tokenSource)
 	return github.NewClient(httpClient), context
 }

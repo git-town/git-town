@@ -10,6 +10,12 @@ type UserCollector struct {
 	users map[string]struct{}
 }
 
+func NewUserCollector() UserCollector {
+	return UserCollector{
+		users: map[string]struct{}{},
+	}
+}
+
 func (self *UserCollector) AddUser(id string) {
 	self.users[id] = struct{}{}
 }
