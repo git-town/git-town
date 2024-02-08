@@ -93,7 +93,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:        "apiToken",
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
-			Log:             print.NoLogger{},
+			Log:             print.Logger{},
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
@@ -111,7 +111,7 @@ func TestNewConnector(t *testing.T) {
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:        "apiToken",
 			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
-			Log:             print.NoLogger{},
+			Log:             print.Logger{},
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
