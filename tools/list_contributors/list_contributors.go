@@ -13,8 +13,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const org = "git-town"
-const repo = "git-town"
+const (
+	org      = "git-town"
+	repo     = "git-town"
+	pagesize = 100
+)
 
 func main() {
 	cyan := termenv.String().Foreground(termenv.ANSICyan)
@@ -41,13 +44,13 @@ func main() {
 	page := 0
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
 	for {
-		fmt.Printf("loading issues %d-%d ... ", (page*100)+1, (page*100)+100)
+		fmt.Printf("loading issues %d-%d ... ", (page*pagesize)+1, (page*pagesize)+pagesize)
 		results, _, err := client.Search.Issues(context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
 			ListOptions: github.ListOptions{
 				Page:    page,
-				PerPage: 100,
+				PerPage: pagesize,
 			},
 		})
 		if err != nil {
