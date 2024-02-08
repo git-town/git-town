@@ -31,12 +31,16 @@ func main() {
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
 	fmt.Printf("release %s was made %s\n", tag, tagTime.Format("2006-01-02"))
-	page := 0
 
+	// load and categorize all closed issues
+	issues := []*github.Issue{}
+	pullRequests := []*github.Issue{}
+	total := 0
+	page := 0
+	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
 	for {
-		// add users that created or commented on issues since the last tag
-		query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
-		issues, _, err := client.Search.Issues(context, query, &github.SearchOptions{
+		fmt.Printf("loading issues %d-%d ... ", page+1, page+100)
+		results, _, err := client.Search.Issues(context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
 			ListOptions: github.ListOptions{
@@ -47,36 +51,44 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		if len(issues.Issues) == 0 {
+		fmt.Println("ok")
+		if len(results.Issues) == 0 {
 			break
 		}
-		fmt.Printf("%d issues and pull requests were closed since %s\n", *issues.Total, tagTime.Format("2006-01-02"))
-		fmt.Println(*issues.IncompleteResults)
-		for _, issue := range issues.Issues {
-			fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
-			users.AddUser(*issue.User.Login)
-			comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
-			if err != nil {
-				panic(err)
-			}
-			for _, comment := range comments {
-				users.AddUser(*comment.User.Login)
+		total = *results.Total
+		for _, issue := range results.Issues {
+			if issue.IsPullRequest() {
+				pullRequests = append(pullRequests, issue)
+			} else {
+				issues = append(issues, issue)
 			}
 		}
 		page += 1
+	}
+	fmt.Printf("found %d issues and %d pull requests (%d total)\n", len(issues), len(pullRequests), total)
+
+	// register the creators of pull requests
+	for _, pullRequest := range pullRequests {
+		fmt.Printf("%s submitted pull request %d (%s)\n", *pullRequest.User.Login, *pullRequest.Number, *pullRequest.Title)
+		users.AddUser(*pullRequest.User.Login)
+	}
+
+	// register the users involved in the tickets
+	for _, issue := range issues {
+		fmt.Printf("%s submitted issue %d (%s)\n", *issue.User.Login, *issue.Number, *issue.Title)
+		users.AddUser(*issue.User.Login)
+		comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
+		if err != nil {
+			panic(err)
+		}
+		for _, comment := range comments {
+			users.AddUser(*comment.User.Login)
+		}
 	}
 	fmt.Println("\nUsers:")
 	fmt.Println()
 	for _, username := range users.Users() {
 		fmt.Println("@" + username)
-	}
-}
-
-func issueType(isPullRequest bool) string {
-	if isPullRequest {
-		return "pull request"
-	} else {
-		return "issue"
 	}
 }
 
