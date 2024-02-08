@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
 )
 
