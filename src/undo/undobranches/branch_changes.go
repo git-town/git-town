@@ -1,8 +1,6 @@
 package undobranches
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/gohacks/slice"
@@ -45,30 +43,31 @@ func EmptyBranchChanges() BranchChanges {
 	}
 }
 
-func (self BranchChanges) String() string {
-	s := strings.Builder{}
-	s.WriteString("BranchChanges {")
-	s.WriteString("\n  LocalAdded: ")
-	s.WriteString(strings.Join(self.LocalAdded.Strings(), ", "))
-	s.WriteString("\n  LocalRemoved: ")
-	s.WriteString(strings.Join(self.LocalRemoved.BranchNames().Strings(), ", "))
-	s.WriteString("\n  LocalChanged: ")
-	s.WriteString(strings.Join(self.LocalChanged.BranchNames().Strings(), ", "))
-	s.WriteString("\n  RemoteAdded: ")
-	s.WriteString(strings.Join(self.RemoteAdded.Strings(), ", "))
-	s.WriteString("\n  RemoteRemoved: ")
-	s.WriteString(strings.Join(self.RemoteRemoved.BranchNames().Strings(), ", "))
-	s.WriteString("\n  RemoteChanged: ")
-	s.WriteString(strings.Join(self.RemoteChanged.BranchNames().Strings(), ", "))
-	s.WriteString("\n  OmniRemoved: ")
-	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
-	s.WriteString("\n  OmniChanged: ")
-	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
-	s.WriteString("\n  InconsistentlyChanged: ")
-	s.WriteString(strings.Join(self.InconsistentlyChanged.BranchNames().Strings(), ", "))
-	s.WriteRune('\n')
-	return s.String()
-}
+// uncomment when debugging the undo logic
+// func (self BranchChanges) String() string {
+// 	s := strings.Builder{}
+// 	s.WriteString("BranchChanges {")
+// 	s.WriteString("\n  LocalAdded: ")
+// 	s.WriteString(strings.Join(self.LocalAdded.Strings(), ", "))
+// 	s.WriteString("\n  LocalRemoved: ")
+// 	s.WriteString(strings.Join(self.LocalRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  LocalChanged: ")
+// 	s.WriteString(strings.Join(self.LocalChanged.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  RemoteAdded: ")
+// 	s.WriteString(strings.Join(self.RemoteAdded.Strings(), ", "))
+// 	s.WriteString("\n  RemoteRemoved: ")
+// 	s.WriteString(strings.Join(self.RemoteRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  RemoteChanged: ")
+// 	s.WriteString(strings.Join(self.RemoteChanged.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  OmniRemoved: ")
+// 	s.WriteString(strings.Join(self.OmniRemoved.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  OmniChanged: ")
+// 	s.WriteString(strings.Join(self.OmniChanged.BranchNames().Strings(), ", "))
+// 	s.WriteString("\n  InconsistentlyChanged: ")
+// 	s.WriteString(strings.Join(self.InconsistentlyChanged.BranchNames().Strings(), ", "))
+// 	s.WriteRune('\n')
+// 	return s.String()
+// }
 
 // UndoProgram provides the steps to undo the changes described by this BranchChanges instance.
 func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program.Program {
