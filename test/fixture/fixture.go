@@ -240,11 +240,6 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	}
 }
 
-// CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (self Fixture) CreateOriginBranch(name, parent string) {
-	self.OriginRepo.CreateBranch(gitdomain.NewLocalBranchName(name), gitdomain.NewLocalBranchName(parent))
-}
-
 // CreateTags creates tags from the given gherkin table.
 func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	columnNames := helpers.TableFields(table)

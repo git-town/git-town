@@ -153,7 +153,7 @@ func TestFixture(t *testing.T) {
 		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the origin branch
-		cloned.CreateOriginBranch("b1", "main")
+		cloned.OriginRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
 		must.NoError(t, err)
