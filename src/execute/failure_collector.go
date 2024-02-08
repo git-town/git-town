@@ -19,13 +19,6 @@ type FailureCollector struct {
 	Err error `exhaustruct:"optional"`
 }
 
-// Bool provides the bool part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) Bool(value bool, err error) bool {
-	self.Check(err)
-	return value
-}
-
 func (self *FailureCollector) BranchesSyncStatus(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
 	self.Check(err)
 	return value

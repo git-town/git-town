@@ -13,29 +13,6 @@ import (
 func TestCollector(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Bool", func(t *testing.T) {
-		t.Run("returns the given bool value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.True(t, fc.Bool(true, nil))
-			must.False(t, fc.Bool(false, nil))
-			err := errors.New("test error")
-			must.True(t, fc.Bool(true, err))
-			must.False(t, fc.Bool(false, err))
-		})
-
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.Bool(true, nil)
-			fc.Bool(false, nil)
-			must.Nil(t, fc.Err)
-			fc.Bool(true, errors.New("first"))
-			fc.Bool(false, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
-
 	t.Run("BranchesSyncStatus", func(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
@@ -66,11 +43,11 @@ func TestCollector(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			fc.Bool(true, nil)
-			fc.Bool(false, nil)
+			fc.String("1", nil)
+			fc.String("0", nil)
 			must.Nil(t, fc.Err)
-			fc.Bool(true, errors.New("first"))
-			fc.Bool(false, errors.New("second"))
+			fc.String("1", errors.New("first"))
+			fc.String("0", errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
