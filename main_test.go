@@ -35,9 +35,7 @@ func TestGodog(t *testing.T) {
 	if os.Getenv("cukethis") != "" {
 		tags = "@this"
 	}
-	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
-		FeatureContext(s)
-	}, godog.Options{
+	status := godog.RunWithOptions("godog", FeatureContext, godog.Options{
 		Format:      "progress",
 		Concurrency: runtime.NumCPU() * concurrency,
 		Strict:      true,
