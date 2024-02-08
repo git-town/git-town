@@ -12,6 +12,18 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+func assertHasGitConfiguration(t *testing.T, dir string) {
+	t.Helper()
+	entries, err := os.ReadDir(dir)
+	must.NoError(t, err)
+	for e := range entries {
+		if entries[e].Name() == ".gitconfig" {
+			return
+		}
+	}
+	t.Fatalf(".gitconfig not found in %q", dir)
+}
+
 func TestFixture(t *testing.T) {
 	t.Parallel()
 
@@ -38,7 +50,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-		asserts.HasGitConfiguration(t, gitEnvRootDir)
+		assertHasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
