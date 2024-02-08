@@ -1,3 +1,3 @@
-module github.com/git-town/git-town/tools/contributors
+module github.com/git-town/git-town/tools/list_contributors
 
 go 1.21.4
