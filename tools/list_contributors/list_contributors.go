@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -69,7 +70,7 @@ func main() {
 		}
 		page += 1
 	}
-	fmt.Printf("found %d issues and %d pull requests\n", len(issues), len(pullRequests))
+	fmt.Printf("found %s issues and %s pull requests\n", cyan.Styled(strconv.Itoa(len(issues))), cyan.Styled(strconv.Itoa(len(pullRequests))))
 
 	// register the creators of pull requests
 	for _, pullRequest := range pullRequests {
