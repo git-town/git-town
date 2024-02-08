@@ -13,7 +13,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dustin/go-humanize v1.0.1
 	github.com/google/go-cmp v0.6.0
-	github.com/google/go-github/v50 v50.2.0
+	github.com/google/go-github/v58 v58.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/muesli/termenv v0.15.2
 	github.com/sergi/go-diff v1.3.1
@@ -25,11 +25,9 @@ require (
 )
 
 require (
-	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/lipgloss v0.9.1 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
