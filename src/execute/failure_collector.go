@@ -48,10 +48,3 @@ func (self *FailureCollector) RepoStatus(value gitdomain.RepoStatus, err error) 
 	self.Check(err)
 	return value
 }
-
-// Strings provides the []string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) Strings(value []string, err error) []string {
-	self.Check(err)
-	return value
-}

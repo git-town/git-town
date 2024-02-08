@@ -77,23 +77,4 @@ func TestCollector(t *testing.T) {
 			must.ErrorContains(t, fc.Err, "failed reason")
 		})
 	})
-
-	t.Run("Strings", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given string slice", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
-			must.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.Strings([]string{}, nil)
-			must.Nil(t, fc.Err)
-			fc.Strings([]string{}, errors.New("first"))
-			fc.Strings([]string{}, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
 }
