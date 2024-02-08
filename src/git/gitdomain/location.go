@@ -4,10 +4,6 @@ package gitdomain
 // Examples for locations are SHA addresses of commits or branch names.
 type Location string
 
-func EmptyLocation() Location {
-	return ""
-}
-
 func NewLocation(id string) Location {
 	return Location(id)
 }
