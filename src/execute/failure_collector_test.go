@@ -42,11 +42,11 @@ func TestCollector(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			fc.String("1", nil)
-			fc.String("0", nil)
+			fc.Check(nil)
+			fc.Check(nil)
 			must.Nil(t, fc.Err)
-			fc.String("1", errors.New("first"))
-			fc.String("0", errors.New("second"))
+			fc.Check(errors.New("first"))
+			fc.Check(errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
@@ -75,25 +75,6 @@ func TestCollector(t *testing.T) {
 			fc := execute.FailureCollector{}
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")
-		})
-	})
-
-	t.Run("String", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given string value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.EqOp(t, "alpha", fc.String("alpha", nil))
-			must.EqOp(t, "beta", fc.String("beta", errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.String("", nil)
-			must.Nil(t, fc.Err)
-			fc.String("", errors.New("first"))
-			fc.String("", errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 
