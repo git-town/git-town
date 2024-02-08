@@ -1,0 +1,16 @@
+package main
+
+import (
+	"os/exec"
+	"strings"
+)
+
+func loadAccessToken() string {
+	process := exec.Command("git", "config", "--get", "git-town.github-token")
+	output, err := process.Output()
+	if err != nil {
+		panic(err.Error())
+	}
+	result := strings.TrimSpace(string(output))
+	return result
+}
