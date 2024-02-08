@@ -89,7 +89,7 @@ func main() {
 			issueUsers.AddUser(*comment.User.Login)
 		}
 		users.AddUsers(issueUsers)
-		fmt.Printf("#%d: %q: %s\n", *issue.Number, *issue.Title, strings.Join(issueUsers.Users(), ", "))
+		fmt.Printf("#%d: %q: %s\n", *issue.Number, *issue.Title, cyan.Styled(strings.Join(issueUsers.Users(), ", ")))
 	}
 	fmt.Println("\nUsers:")
 	fmt.Println()
