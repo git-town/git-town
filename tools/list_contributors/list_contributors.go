@@ -27,7 +27,7 @@ func main() {
 
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
-	fmt.Printf("release %s was made %s\n", tag, tagTime)
+	fmt.Printf("release %s was made %s\n", tag, tagTime.Format("2006-01-02"))
 
 	// add users that created or commented on issues since the last tag
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
