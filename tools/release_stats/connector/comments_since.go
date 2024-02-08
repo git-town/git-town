@@ -10,6 +10,8 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
+func (gh Connector) foo() {}
+
 // provides all users that commented anywhere since the given date
 func (gh Connector) commentsSince(tag git.Tag) []*github.IssueComment {
 	created := "created"
