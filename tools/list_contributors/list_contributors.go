@@ -37,12 +37,16 @@ func main() {
 	issues, _, err := client.Search.Issues(context, query, &github.SearchOptions{
 		Sort:  "closed",
 		Order: "asc",
+		ListOptions: github.ListOptions{
+			Page:    0,
+			PerPage: 10,
+		},
 	})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("%d issues and pull requests were closed since %s\n", *issues.Total, tagTime.Format("2006-01-02"))
-	fmt.Println(issues.IncompleteResults)
+	fmt.Println(*issues.IncompleteResults)
 	for _, issue := range issues.Issues {
 		fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
 		users.AddUser(*issue.User.Login)
@@ -56,7 +60,8 @@ func main() {
 	}
 
 	// Print unique usernames
-	for username := range users.Users() {
+	fmt.Println("Users:")
+	for _, username := range users.Users() {
 		fmt.Println(username)
 	}
 }
