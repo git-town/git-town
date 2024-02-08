@@ -2,6 +2,7 @@ package main
 
 import (
 	"sort"
+	"strings"
 
 	"golang.org/x/exp/maps"
 )
@@ -28,6 +29,6 @@ func (self *UserCollector) AddUsers(users UserCollector) {
 
 func (self *UserCollector) Users() []string {
 	result := maps.Keys(self.users)
-	sort.Strings(result)
+	sort.Slice(result, func(i, j int) bool { return strings.ToLower(result[i]) < strings.ToLower(result[j]) })
 	return result
 }
