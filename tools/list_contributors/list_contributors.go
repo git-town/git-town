@@ -31,34 +31,40 @@ func main() {
 	// determine time of the given tag
 	tagTime := timeOfTag(tag)
 	fmt.Printf("release %s was made %s\n", tag, tagTime.Format("2006-01-02"))
+	page := 0
 
-	// add users that created or commented on issues since the last tag
-	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
-	issues, _, err := client.Search.Issues(context, query, &github.SearchOptions{
-		Sort:  "closed",
-		Order: "asc",
-		ListOptions: github.ListOptions{
-			Page:    0,
-			PerPage: 10,
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%d issues and pull requests were closed since %s\n", *issues.Total, tagTime.Format("2006-01-02"))
-	fmt.Println(*issues.IncompleteResults)
-	for _, issue := range issues.Issues {
-		fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
-		users.AddUser(*issue.User.Login)
-		comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
+	for {
+		// add users that created or commented on issues since the last tag
+		query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", tagTime.Format("2006-01-02"))
+		issues, _, err := client.Search.Issues(context, query, &github.SearchOptions{
+			Sort:  "closed",
+			Order: "asc",
+			ListOptions: github.ListOptions{
+				Page:    page,
+				PerPage: 100,
+			},
+		})
 		if err != nil {
 			panic(err)
 		}
-		for _, comment := range comments {
-			users.AddUser(*comment.User.Login)
+		if len(issues.Issues) == 0 {
+			break
 		}
+		fmt.Printf("%d issues and pull requests were closed since %s\n", *issues.Total, tagTime.Format("2006-01-02"))
+		fmt.Println(*issues.IncompleteResults)
+		for _, issue := range issues.Issues {
+			fmt.Printf("%s %d (%s) created by %q\n", issueType(issue.IsPullRequest()), *issue.Number, *issue.Title, *issue.User.Login)
+			users.AddUser(*issue.User.Login)
+			comments, _, err := client.Issues.ListComments(context, "git-town", "git-town", *issue.Number, nil)
+			if err != nil {
+				panic(err)
+			}
+			for _, comment := range comments {
+				users.AddUser(*comment.User.Login)
+			}
+		}
+		page += 1
 	}
-
 	fmt.Println("\nUsers:")
 	fmt.Println()
 	for _, username := range users.Users() {
