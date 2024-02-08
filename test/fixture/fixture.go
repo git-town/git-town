@@ -260,11 +260,6 @@ func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	}
 }
 
-// Remove deletes all files used by this Fixture from disk.
-func (self Fixture) Remove() {
-	asserts.NoError(os.RemoveAll(self.Dir))
-}
-
 // TagTable provides a table for all tags in this Git environment.
 func (self Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()

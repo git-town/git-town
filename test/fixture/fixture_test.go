@@ -227,17 +227,4 @@ func TestFixture(t *testing.T) {
 			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
-
-	t.Run("Remove", func(t *testing.T) {
-		t.Parallel()
-		// create Fixture instance
-		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		// remove it
-		cloned.Remove()
-		// verify
-		_, err := os.Stat(cloned.Dir)
-		must.True(t, os.IsNotExist(err))
-	})
 }
