@@ -59,10 +59,10 @@ func main() {
 		}
 	}
 
-	// Print unique usernames
-	fmt.Println("Users:")
+	fmt.Println("\nUsers:")
+	fmt.Println()
 	for _, username := range users.Users() {
-		fmt.Println(username)
+		fmt.Println("@" + username)
 	}
 }
 
