@@ -4,7 +4,8 @@ This guide is for maintainers who make releases of Git Town.
 
 - in a branch:
   - update CHANGELOG.md
-  - run `make contributors` and copy the list of contributors into CHANGELOG.md
+  - run `make contributors <previous tag>` and copy the list of contributors
+    into CHANGELOG.md
   - verify that the website content reflects all the changes made
   - search-and-replace the old version with the new version
     - triple-digits: `11.1.0`
