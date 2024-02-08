@@ -16,6 +16,9 @@ buildwin:  # builds the binary on Windows
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
+contributors:  # displays the contributors
+	@(cd tools/list_contributors && go build && ./list_contributors)
+
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
