@@ -93,9 +93,11 @@ func main() {
 	}
 	fmt.Println("\nUsers:")
 	fmt.Println()
+	userNames := []string{}
 	for _, username := range users.Users() {
-		fmt.Println("@" + username)
+		userNames = append(userNames, "@"+username)
 	}
+	fmt.Println(strings.Join(userNames, ", "))
 }
 
 func loadAccessToken() string {
