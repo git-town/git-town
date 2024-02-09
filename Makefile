@@ -2,16 +2,11 @@ RTA_VERSION = 0.3.0 # run-that-app version to use
 
 # internal data and state
 .DEFAULT_GOAL := help
-TODAY = $(shell date +'%Y-%m-%d')
-DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
 RELEASE_VERSION := "12.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	@go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=${TODAY}"
-
-buildwin:  # builds the binary on Windows
-	@go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=1/2/3"
+	@go install
 
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
@@ -31,7 +26,7 @@ cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-cukewin: buildwin  # runs all end-to-end tests on Windows
+cukewin: build  # runs all end-to-end tests on Windows
 	go test . -v -count=1
 
 dependencies: tools/rta@${RTA_VERSION}  # prints the dependencies between the internal Go packages as a tree
@@ -75,7 +70,7 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 smoke: build  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
 
-smokewin: buildwin  # runs the Windows smoke tests
+smokewin: build  # runs the Windows smoke tests
 	@env smoke=1 go test . -v -count=1
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics

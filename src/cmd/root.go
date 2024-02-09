@@ -13,12 +13,6 @@ const rootDesc = "Branching and workflow support for Git"
 const rootHelp = `
 Git Town helps create, sync, and ship changes efficiently and with minimal merge conflicts.`
 
-// The current Git Town version (set at compile time).
-var version string
-
-// The time this Git Town binary was compiled (set at compile time).
-var buildDate string //nolint:gochecknoglobals
-
 func rootCmd() cobra.Command {
 	addVersionFlag, readVersionFlag := flags.Version()
 	rootCmd := cobra.Command{
@@ -51,7 +45,7 @@ func rootCmd() cobra.Command {
 
 func executeRoot(cmd *cobra.Command, showVersion bool) error {
 	if showVersion {
-		fmt.Printf("Git Town %s (%s)\n", version, buildDate)
+		fmt.Println("Git Town 12.0.0")
 		return nil
 	}
 	return cmd.Help()
