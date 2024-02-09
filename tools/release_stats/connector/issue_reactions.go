@@ -8,7 +8,7 @@ import (
 
 func (gh Connector) IssueReactions(issue *github.Issue) []*github.Reaction {
 	result := []*github.Reaction{}
-	fmt.Printf("loading reactions to issue #%d ", issue.GetNumber())
+	fmt.Printf("loading reactions to #%d ", issue.GetNumber())
 	for page := 0; ; page++ {
 		reactions, _, err := gh.client.Reactions.ListIssueReactions(gh.context, org, repo, *issue.Number, &github.ListOptions{
 			Page:    page,
@@ -23,5 +23,6 @@ func (gh Connector) IssueReactions(issue *github.Issue) []*github.Reaction {
 		}
 		result = append(result, reactions...)
 	}
+	fmt.Printf(" %d\n", len(result))
 	return result
 }
