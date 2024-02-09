@@ -7,7 +7,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-// a list of unique GitHub usernames
+// collection of unique GitHub usernames
 type Users struct {
 	users map[string]struct{}
 }
