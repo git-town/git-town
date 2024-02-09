@@ -21,11 +21,12 @@ func main() {
 	contributors := data.NewUsers()
 	gh := connector.NewConnector()
 
-	// Add people who were involved with issues and pull requests that were resolved in this release.
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
+
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED ISSUES")
 	fmt.Println()
 	contributors.AddUsers(gh.IssuesParticipants(closedIssues, "issue"))
+
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
 	fmt.Println()
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests, "PR"))
