@@ -12,7 +12,7 @@ import (
 func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, closedPullRequests []*github.Issue) {
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		results, response, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
@@ -37,5 +37,8 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 		}
 	}
 	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(closedIssues))), console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
+	for _, pr := range closedPullRequests {
+		fmt.Println(*pr.Number)
+	}
 	return
 }

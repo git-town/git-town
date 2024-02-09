@@ -27,7 +27,9 @@ func main() {
 
 	// Add people who were involved with issues and pull requests that were resolved in this release.
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
+	fmt.Println("DETERMINING PARTICIPANTS IN CLOSED ISSUES")
 	contributors.AddUsers(gh.IssuesParticipants(closedIssues))
+	fmt.Println("DETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests))
 
 	// Add people who made any comment on any issue (old or new, open or closed) since the last release

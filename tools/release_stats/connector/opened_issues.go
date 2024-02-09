@@ -10,7 +10,7 @@ func (gh Connector) OpenedIssuesOrPRsSince(date string) []*github.Issue {
 	result := []*github.Issue{}
 	query := fmt.Sprintf("repo:git-town/git-town opened:>=%s", date)
 	fmt.Print("loading opened issues ")
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		results, _, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "opened",
 			Order: "asc",

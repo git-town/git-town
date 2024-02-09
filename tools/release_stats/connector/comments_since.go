@@ -18,7 +18,7 @@ func (gh Connector) CommentsSince(tag git.Tag) []*github.IssueComment {
 	asc := "asc"
 	fmt.Printf("loading comments on issues since %s", console.Cyan.Styled(tag.ISOTime))
 	result := []*github.IssueComment{}
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		comments, _, err := gh.client.Issues.ListComments(gh.context, "git-town", "git-town", 0, &github.IssueListCommentsOptions{
 			Since:     &tag.Time,
 			Sort:      &created,
@@ -44,7 +44,7 @@ func (gh Connector) CommentsSince(tag git.Tag) []*github.IssueComment {
 
 func commentsOnPullRequestsSince(date time.Time, client *github.Client, context context.Context) []*github.PullRequestComment {
 	result := []*github.PullRequestComment{}
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		comments, _, err := client.PullRequests.ListComments(context, "git-town", "git-town", 0, &github.PullRequestListCommentsOptions{
 			Since: date,
 			ListOptions: github.ListOptions{

@@ -22,7 +22,7 @@ func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Rea
 		return result
 	}
 	fmt.Printf("loading reactions to comment #%d ", comment.GetID())
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		reactions, response, err := gh.client.Reactions.ListIssueCommentReactions(gh.context, org, repo, *comment.ID, &github.ListOptions{
 			Page:    page,
 			PerPage: pageSize,

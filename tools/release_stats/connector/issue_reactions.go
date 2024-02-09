@@ -11,7 +11,7 @@ import (
 func (gh Connector) IssueReactions(issue *github.Issue) []*github.Reaction {
 	result := []*github.Reaction{}
 	fmt.Printf("loading reactions to #%d ", issue.GetNumber())
-	for page := 0; ; page++ {
+	for page := 1; ; page++ {
 		reactions, response, err := gh.client.Reactions.ListIssueReactions(gh.context, org, repo, *issue.Number, &github.ListOptions{
 			Page:    page,
 			PerPage: pageSize,
