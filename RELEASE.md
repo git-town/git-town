@@ -44,7 +44,7 @@ requires Windows. It's best to debug it on a Windows machine.
 Test the compile step:
 
 ```powershell
-.\run-that-app goreleaser@1.22.1 --snapshot --skip-publish --clean
+.\rta goreleaser@1.22.1 --snapshot --skip-publish --clean
 ```
 
 Test the entire release pipeline:

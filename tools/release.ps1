@@ -22,7 +22,7 @@ function Main() {
   }
   $env:TODAY = (Get-Date).ToString("yyyy-MM-dd")
   Add-MSI
-  .\run-that-app goreleaser@$GoReleaserVersion --clean
+  .\rta goreleaser@$GoReleaserVersion --clean
 }
 
 # generates the .msi file
