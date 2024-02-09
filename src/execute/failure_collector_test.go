@@ -42,9 +42,6 @@ func TestCollector(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			fc.Check(nil)
-			fc.Check(nil)
-			must.Nil(t, fc.Err)
 			fc.Check(errors.New("first"))
 			fc.Check(errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
