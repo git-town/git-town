@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 type RemoveGlobalConfig struct {

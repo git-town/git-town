@@ -1,11 +1,11 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v11/src/cli/dialog/components"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/validate"
+	"github.com/git-town/git-town/v12/src/cli/dialog/components"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/validate"
 )
 
 // EnsureKnownBranchAncestry makes sure the lineage for the given branch is known.

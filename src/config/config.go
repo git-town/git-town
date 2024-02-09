@@ -6,13 +6,13 @@ package config
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/confighelpers"
-	"github.com/git-town/git-town/v11/src/config/envconfig"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/config/confighelpers"
+	"github.com/git-town/git-town/v12/src/config/envconfig"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/git/giturl"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
 )
 
 // Config provides type-safe access to Git Town configuration settings

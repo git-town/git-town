@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/gohacks/cache"
-	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/gohacks/cache"
+	"github.com/git-town/git-town/v12/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 type BackendRunner interface {

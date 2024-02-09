@@ -8,10 +8,10 @@ RELEASE_VERSION := "12.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=${TODAY}"
+	@go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=${TODAY}"
 
 buildwin:  # builds the binary on Windows
-	@go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+	@go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=1/2/3"
 
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
@@ -23,7 +23,7 @@ cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cukethiswin:  # runs the end-to-end tests that have a @this tag on Windows
-	go install -ldflags "-X github.com/git-town/git-town/v11/src/cmd.version=-dev -X github.com/git-town/git-town/v11/src/cmd.buildDate=1/2/3"
+	go install -ldflags "-X github.com/git-town/git-town/v12/src/cmd.version=-dev -X github.com/git-town/git-town/v12/src/cmd.buildDate=1/2/3"
 	powershell -Command '$$env:cukethis=1 ; go test . -v -count=1'
 
 cuke-prof: build  # creates a flamegraph for the end-to-end tests

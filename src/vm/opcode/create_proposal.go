@@ -1,9 +1,9 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/browser"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/browser"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // CreateProposal creates a new proposal for the current branch.

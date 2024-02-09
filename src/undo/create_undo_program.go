@@ -1,13 +1,13 @@
 package undo
 
 import (
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/undo/undobranches"
-	"github.com/git-town/git-town/v11/src/undo/undoconfig"
-	"github.com/git-town/git-town/v11/src/undo/undostash"
-	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undobranches"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
+	"github.com/git-town/git-town/v12/src/undo/undostash"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {

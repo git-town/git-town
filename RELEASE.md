@@ -12,7 +12,7 @@ This guide is for maintainers who make releases of Git Town.
     - double-digits: `12.0`
     - don't change existing version numbers in CHANGELOG.md
   - if bumping the major version:
-    - update `github.com/git-town/git-town/v11/` everywhere in this repo
+    - update `github.com/git-town/git-town/v12/` everywhere in this repo
     - update `github.com/git-town/git-town/v11` (without trailing slash)
 - ship the branch
 - `git tag v12.0.0 && git push --tags`
