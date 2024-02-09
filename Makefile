@@ -53,11 +53,11 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/rta shfmt -f . | grep -v tools/node_modules | grep -v '^vendor/' | xargs tools/rta --include-path --optional shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/rta actionlint
-	tools/rta golangci-lint run
+	@make --no-print-directory golangcilint
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	@make --no-print-directory deadcode &
+	@make --no-print-directory deadcode
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -70,10 +70,7 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
 	@make --no-print-directory deadcode &
-	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
-	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
-	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
-	@tools/rta golangci-lint run
+	@make --no-print-directory golangcilint
 
 smoke: build  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
@@ -127,6 +124,15 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           | grep -v CreateGitTown \
 	                                                           | grep -v 'Create$$' \
 	                                                           || true
+
+golangcilint: tools/rta@${RTA_VERSION}
+	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/release_stats && ../rta golangci-lint@1.55.2 run) &
+	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
+	@tools/rta golangci-lint run
+
+
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
