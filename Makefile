@@ -130,10 +130,15 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           || true
 
 golangci-lint: tools/rta@${RTA_VERSION}
+	@echo lint tools/format_self
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/stats_release
 	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
+	@echo lint main codebase
 	@tools/rta golangci-lint run
 
 tools/rta@${RTA_VERSION}:
