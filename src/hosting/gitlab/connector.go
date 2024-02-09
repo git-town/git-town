@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
-	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/git/giturl"
+	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/xanzy/go-gitlab"
 )
 

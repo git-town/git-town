@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // RebaseParent rebases the given branch against the branch that is its parent at runtime.

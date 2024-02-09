@@ -1,16 +1,29 @@
-# hosting-origin-hostname
+# hosting.origin-hostname
 
-```
-git-town.hosting-origin-hostname=<hostname>
+If you use SSH identities, you can define the hostname of your source code
+repository with this setting. The given value should match the hostname in your
+SSH config file.
+
+The best way to change this setting is via the
+[setup assistant](../configuration.md).
+
+## config file
+
+In the [config file](../configuration-file.md) the hosting platform is part of
+the `[hosting]` section:
+
+```toml
+[hosting]
+origin-hostname = "<hostname>"
 ```
 
-When using SSH identities, you can use this configuration setting to define the
-hostname of your source code repository by running:
+## Git metadata
 
-```
+To configure the origin hostname in Git, run this command:
+
+```bash
 git config [--global] git-town.hosting-origin-hostname <hostname>
 ```
 
-`<hostname>` should match the hostname in your ssh config file. The optional
-`--global` flag applies this setting to all Git repositories on your local
-machine. When not present, the setting applies to the current repo.
+The optional `--global` flag applies this setting to all Git repositories on
+your local machine. When not present, the setting applies to the current repo.

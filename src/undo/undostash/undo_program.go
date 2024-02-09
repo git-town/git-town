@@ -1,9 +1,9 @@
 package undostash
 
 import (
-	"github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 func DetermineUndoStashProgram(initialStashSnapshot gitdomain.StashSize, backend *git.BackendCommands) (program.Program, error) {

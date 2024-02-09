@@ -3,9 +3,9 @@ package gitea_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/giturl"
-	"github.com/git-town/git-town/v11/src/hosting/gitea"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git/giturl"
+	"github.com/git-town/git-town/v12/src/hosting/gitea"
 	"github.com/shoenig/test/must"
 )
 

@@ -3,10 +3,10 @@ package sync
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/vm/opcode"
-	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 // syncDeletedBranchProgram adds opcodes that sync a branch that was deleted at origin to the given program.
