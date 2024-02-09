@@ -20,13 +20,13 @@ func LoadTag(name string) Tag {
 	if err != nil {
 		panic(err.Error())
 	}
-	gitTime, err := time.Parse(time.RFC3339, strings.TrimSpace(string(output)))
+	tagTime, err := time.Parse(time.RFC3339, strings.TrimSpace(string(output)))
 	if err != nil {
 		panic(err.Error())
 	}
 	return Tag{
-		ISOTime: gitTime.Format("2006-01-02"), // the time this tag was created, in ISO format
+		ISOTime: tagTime.Format("2006-01-02"), // the time this tag was created, in ISO format
 		Name:    name,                         // name of the tag
-		Time:    gitTime,                      // the time this tag was created
+		Time:    tagTime,                      // the time this tag was created
 	}
 }
