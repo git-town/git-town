@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/tools/release_stats/connector"
-	"github.com/git-town/git-town/tools/release_stats/console"
-	"github.com/git-town/git-town/tools/release_stats/data"
-	"github.com/git-town/git-town/tools/release_stats/git"
+	"github.com/git-town/git-town/tools/stats_release/connector"
+	"github.com/git-town/git-town/tools/stats_release/console"
+	"github.com/git-town/git-town/tools/stats_release/data"
+	"github.com/git-town/git-town/tools/stats_release/git"
 )
 
 func main() {

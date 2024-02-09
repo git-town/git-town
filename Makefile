@@ -16,9 +16,6 @@ buildwin:  # builds the binary on Windows
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
-contributors:  # displays the contributors
-	@(cd tools/release_stats && go build && ./release_stats v${RELEASE_VERSION})
-
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
@@ -84,6 +81,9 @@ smokewin: buildwin  # runs the Windows smoke tests
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc
 
+stats-release:  # displays statistics about the changes since the last release
+	@(cd tools/stats_release && go build && ./stats_release v${RELEASE_VERSION})
+
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
@@ -97,7 +97,7 @@ todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
 
 unit: build  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/release_stats/... ./tools/structs_sorted/...
+	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/stats_release/... ./tools/structs_sorted/...
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
@@ -117,7 +117,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
-	@tools/rta deadcode github.com/git-town/git-town/tools/release_stats &
+	@tools/rta deadcode github.com/git-town/git-town/tools/stats_release &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists \
 	                                                           | grep -v Paniced \
@@ -130,10 +130,15 @@ deadcode: tools/rta@${RTA_VERSION}
 	                                                           || true
 
 golangci-lint: tools/rta@${RTA_VERSION}
+	@echo lint tools/format_self
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/format_unittests
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
-	@(cd tools/release_stats && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/stats_release
+	@(cd tools/stats_release && ../rta golangci-lint@1.55.2 run)
+	@echo lint tools/structs_sorted
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
+	@echo lint main codebase
 	@tools/rta golangci-lint run
 
 tools/rta@${RTA_VERSION}:
