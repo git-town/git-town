@@ -7,7 +7,7 @@ tools/alphavet*
 tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
-tools/release_stats/release_stats
+tools/stats_release/stats_release
 tools/rta*
 tools/scc*
 tools/shellcheck*

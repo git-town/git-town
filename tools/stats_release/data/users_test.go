@@ -3,7 +3,7 @@ package data_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/tools/release_stats/data"
+	"github.com/git-town/git-town/tools/stats_release/data"
 	"github.com/shoenig/test/must"
 )
 

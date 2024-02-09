@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/tools/release_stats/console"
+	"github.com/git-town/git-town/tools/stats_release/console"
 	"github.com/google/go-github/v58/github"
 )
 
