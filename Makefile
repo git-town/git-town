@@ -120,6 +120,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
+	@tools/rta deadcode github.com/git-town/git-town/tools/release_stats &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists \
 	                                                           | grep -v Paniced \

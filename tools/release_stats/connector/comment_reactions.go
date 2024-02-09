@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-func (gh Connector) CommentsReactions(comments []*github.IssueComment) []*github.Reaction {
+func (gh Connector) commentsReactions(comments []*github.IssueComment) []*github.Reaction {
 	result := []*github.Reaction{}
 	for _, comment := range comments {
 		result = append(result, gh.CommentReactions(comment)...)
