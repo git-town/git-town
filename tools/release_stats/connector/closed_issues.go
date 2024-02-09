@@ -37,8 +37,5 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 		}
 	}
 	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(closedIssues))), console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
-	for _, pr := range closedPullRequests {
-		fmt.Println(*pr.Number)
-	}
 	return
 }

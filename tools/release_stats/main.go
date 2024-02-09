@@ -27,9 +27,11 @@ func main() {
 
 	// Add people who were involved with issues and pull requests that were resolved in this release.
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
-	fmt.Println("DETERMINING PARTICIPANTS IN CLOSED ISSUES")
+	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED ISSUES")
+	fmt.Println()
 	contributors.AddUsers(gh.IssuesParticipants(closedIssues))
-	fmt.Println("DETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
+	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
+	fmt.Println()
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests))
 
 	// Add people who made any comment on any issue (old or new, open or closed) since the last release
@@ -53,10 +55,10 @@ func main() {
 	//       if the reaction was made since the last tag: register the user
 
 	// print statistics
-	fmt.Printf("%d shipped PRs", len(closedPullRequests))
-	fmt.Printf("%d resolved issues", len(closedIssues))
+	fmt.Printf("%d shipped PRs\n", len(closedPullRequests))
+	fmt.Printf("%d resolved issues\n", len(closedIssues))
 	users := contributors.Users()
-	fmt.Printf("%d contributors:", len(users))
+	fmt.Printf("%d contributors:\n", len(users))
 	userNames := []string{}
 	for _, username := range users {
 		userNames = append(userNames, "@"+username)
