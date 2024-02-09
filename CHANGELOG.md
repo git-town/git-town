@@ -10,7 +10,7 @@ Git Town 12 continues the effort to make the Git Town user experience more consi
 
 #### BREAKING CHANGES
 
-- The new setup assistent (see below) replaces the existing CLI commands to change the configuration.
+- The new setup assistent (see below) replaces the existing CLI and Git commands to change the configuration.
 - Removing the Git Town configuration is now done by running `git town config remove` instead of `git town config reset` ([#3051](https://github.com/git-town/git-town/pull/3051)).
 - More intuitive names for the following configuration options. Git Town automatically updates the configuration, so no action is needed on your end.
   - `code-hosting-platform` is now `hosting-platform` ([#3054](https://github.com/git-town/git-town/pull/3054))
