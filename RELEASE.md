@@ -72,8 +72,8 @@ on a Windows machine using PowerShell.
 
 - run the release script
   ```powershell
-  $env:GITHUB_TOKEN=<token>
-  $env:CHOCOLATEY_API_KEY=<key>
+  $env:GITHUB_TOKEN="<token>"
+  $env:CHOCOLATEY_API_KEY="<key>"
   .\tools\release.ps1
   ```
 
