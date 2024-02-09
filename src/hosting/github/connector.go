@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/commitmessage"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
@@ -24,7 +25,7 @@ type Connector struct {
 	APIToken   configdomain.GitHubToken
 	MainBranch gitdomain.LocalBranchName
 	client     *github.Client
-	log        hostingdomain.Log
+	log        print.Logger
 }
 
 func (self *Connector) DefaultProposalMessage(proposal hostingdomain.Proposal) string {
@@ -134,7 +135,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	APIToken        configdomain.GitHubToken
 	HostingPlatform configdomain.HostingPlatform
-	Log             hostingdomain.Log
+	Log             print.Logger
 	MainBranch      gitdomain.LocalBranchName
 	OriginURL       *giturl.Parts
 }
