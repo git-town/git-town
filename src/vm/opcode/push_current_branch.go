@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // PushCurrentBranch pushes the current branch to its existing tracking branch.

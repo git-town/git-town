@@ -3,9 +3,9 @@ package dialog_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/cli/dialog"
-	"github.com/git-town/git-town/v11/src/cli/dialog/components"
-	"github.com/git-town/git-town/v11/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/cli/dialog"
+	"github.com/git-town/git-town/v12/src/cli/dialog/components"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/shoenig/test/must"
 )
 

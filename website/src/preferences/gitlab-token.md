@@ -1,22 +1,25 @@
 # gitlab-token
 
-```
-git-town.gitlab-token=<token>
-```
-
-To interact with the GitLab API in your name, Git Town needs a
+Git Town can interact with GitLab in your name, for example to update pull
+requests as branches get created, shipped, or deleted. To do so, Git Town needs
+a
 [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
-with `api` scope. After you created your token, run the
-[setup assistant](../commands/config-setup.md) and enter it there.
+with `api` scope. You can create one in your account settings.
 
-Alternatively, you can set the token manually by running
-`git config git-town.gitlab-token <token>` inside your code repository.
+The best way to enter your token is via the
+[setup assistant](../configuration.md).
 
-GitLab supports different
-[merge methods](https://docs.gitlab.com/ee/user/project/merge_requests/methods/)
-that may need additional configuration. With GitLab's default settings, Git Town
-will still create a merge request while shipping. Because shipping will squash
-the commits, GitLab's "merge commit" and "merge commit with semi-linear history"
-will produce the same result, creating two commits (change plus merge commit).
-To get a linear history, the project needs to be configured to use the
-"fast-forward merge" method.
+## config file
+
+Since your API token is confidential, you cannot add it to the config file.
+
+## Git metadata
+
+You can configure the API token manually by running:
+
+```bash
+git config [--global] git-town.gitlab-token <token>
+```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your local machine. When not present, the setting applies to the current repo.

@@ -3,9 +3,9 @@ package interpreter
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // autoUndo performs an automatic undo of the current Git Town command.

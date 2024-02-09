@@ -3,7 +3,7 @@ package print
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 func Footer(verbose bool, commandsCount int, finalMessages []string) {

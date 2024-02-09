@@ -1,8 +1,8 @@
 package undoconfig
 
 import (
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 func DetermineUndoConfigProgram(initialConfigSnapshot ConfigSnapshot, configGit *gitconfig.Access) (program.Program, error) {

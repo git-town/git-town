@@ -1,8 +1,8 @@
 package opcode
 
 import (
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // CreateTrackingBranch pushes the given local branch up to origin

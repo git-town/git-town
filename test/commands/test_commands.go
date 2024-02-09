@@ -6,16 +6,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/config/gitconfig"
-	prodgit "github.com/git-town/git-town/v11/src/git"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/gohacks/stringslice"
-	"github.com/git-town/git-town/v11/test/asserts"
-	"github.com/git-town/git-town/v11/test/datatable"
-	"github.com/git-town/git-town/v11/test/git"
-	"github.com/git-town/git-town/v11/test/subshell"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	prodgit "github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/gohacks/stringslice"
+	"github.com/git-town/git-town/v12/test/asserts"
+	"github.com/git-town/git-town/v12/test/datatable"
+	"github.com/git-town/git-town/v12/test/git"
+	"github.com/git-town/git-town/v12/test/subshell"
 )
 
 // TestCommands defines Git commands used only in test code.

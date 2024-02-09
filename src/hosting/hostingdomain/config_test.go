@@ -3,7 +3,7 @@ package hostingdomain_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/shoenig/test/must"
 )
 

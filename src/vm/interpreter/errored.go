@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/messages"
-	"github.com/git-town/git-town/v11/src/undo"
-	"github.com/git-town/git-town/v11/src/vm/shared"
-	"github.com/git-town/git-town/v11/src/vm/statefile"
+	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo"
+	"github.com/git-town/git-town/v12/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
 // errored is called when the given opcode has resulted in the given error.
