@@ -36,7 +36,7 @@ func shouldIgnorePath(path string) bool {
 		path == "src/config/configdomain/offline.go" ||
 		path == "src/cli/print/logger.go" ||
 		path == "src/cli/dialog/switch_branch.go" ||
-		strings.HasPrefix(path, "tools/release_stats")
+		strings.HasPrefix(path, "tools/stats_release")
 }
 
 func FormatFileContent(content string) string {

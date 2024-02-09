@@ -1,3 +1,3 @@
-module github.com/git-town/git-town/tools/release_stats
+module github.com/git-town/git-town/tools/stats_release
 
 go 1.21.4
