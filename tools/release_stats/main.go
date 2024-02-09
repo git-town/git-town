@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/tools/release_stats/connector"
@@ -32,10 +33,11 @@ func main() {
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests, "PR"))
 
 	// print statistics
-	fmt.Printf("\n%d shipped PRs\n", len(closedPullRequests))
-	fmt.Printf("%d resolved issues\n", len(closedIssues))
+	fmt.Println()
+	fmt.Printf("%s shipped PRs\n", console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
+	fmt.Printf("%s resolved issues\n", console.Green.Styled(strconv.Itoa(len(closedIssues))))
 	users := contributors.Users()
-	fmt.Printf("%d contributors:\n", len(users))
+	fmt.Printf("%d contributors:\n", console.Cyan.Styled(strconv.Itoa(len(users))))
 	userNames := []string{}
 	for _, username := range users {
 		userNames = append(userNames, "@"+username)
