@@ -28,7 +28,6 @@ func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Rea
 		if response.NextPage == 0 {
 			break
 		}
-
 	}
 	if len(result) == 0 {
 		fmt.Println(console.Green.Styled(" ok"))
