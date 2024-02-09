@@ -6,9 +6,8 @@ Git Town can be configured through a configuration file. To create one, execute:
 git town config setup
 ```
 
-This creates a file **.git-branches.toml**.
-
-Here are the default settings:
+This creates a file **.git-branches.toml**. Here is one with the default
+settings:
 
 ```toml
 push-new-branches = false
