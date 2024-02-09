@@ -60,10 +60,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	tools/ensure_no_files_with_dashes.sh
 	tools/rta ghokin fmt replace features/
 	tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/)
-	tools/rta deadcode -test github.com/git-town/git-town/... \
-	                         github.com/git-town/git-town/tools/format_self/... \
-	                         github.com/git-town/git-town/tools/format_unittests... \
-	                         github.com/git-town/git-town/tools/structs_sorted/... &
+	@make --no-print-directory deadcode &
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -75,10 +72,7 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@tools/rta actionlint &
 	@tools/ensure_no_files_with_dashes.sh &
 	@tools/rta --available alphavet && go vet "-vettool=$(shell tools/rta --which alphavet)" $(shell go list ./... | grep -v src/cmd | grep -v /v11/tools/) &
-	@tools/rta deadcode -test github.com/git-town/git-town/... \
-	                          github.com/git-town/git-town/tools/format_self/... \
-	                          github.com/git-town/git-town/tools/format_unittests... \
-	                          github.com/git-town/git-town/tools/structs_sorted/... &
+	@make --no-print-directory deadcode &
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
@@ -99,10 +93,7 @@ test: fix docs unit cuke  # runs all the tests
 test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@make --no-print-directory build &
 	@tools/rta golangci-lint run &
-	@tools/rta deadcode -test github.com/git-town/git-town/... \
-	                          github.com/git-town/git-town/tools/format_self/... \
-	                          github.com/git-town/git-town/tools/format_unittests... \
-	                          github.com/git-town/git-town/tools/structs_sorted/... &
+	@make --no-print-directory deadcode &
 	@make --no-print-directory unit
 
 todo:  # displays all TODO items
@@ -125,6 +116,20 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 	tools/rta --update
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+deadcode: tools/rta@${RTA_VERSION}
+	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
+	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
+	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
+	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists \
+	                                                           | grep -v Paniced \
+	                                                           | grep -v FileExists \
+	                                                           | grep -v FileHasContent \
+	                                                           | grep -v IsGitRepo \
+	                                                           | grep -v CreateFile \
+	                                                           | grep -v CreateGitTown \
+	                                                           | grep -v 'Create$$' \
+	                                                           || true
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*

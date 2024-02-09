@@ -38,7 +38,7 @@ func TestFixture(t *testing.T) {
 		must.EqOp(t, gitdomain.NewLocalBranchName("initial"), branch)
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-		asserts.HasGitConfiguration(t, gitEnvRootDir)
+		assertHasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		must.NoError(t, err)
 		must.EqOp(t, gitdomain.NewLocalBranchName("main"), branch)
@@ -141,7 +141,7 @@ func TestFixture(t *testing.T) {
 		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the origin branch
-		cloned.CreateOriginBranch("b1", "main")
+		cloned.OriginRepo.CreateBranch(gitdomain.NewLocalBranchName("b1"), gitdomain.NewLocalBranchName("main"))
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(gitdomain.NewLocalBranchName("main"))
 		must.NoError(t, err)
@@ -215,17 +215,16 @@ func TestFixture(t *testing.T) {
 			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
+}
 
-	t.Run("Remove", func(t *testing.T) {
-		t.Parallel()
-		// create Fixture instance
-		dir := t.TempDir()
-		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
-		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		// remove it
-		cloned.Remove()
-		// verify
-		_, err := os.Stat(cloned.Dir)
-		must.True(t, os.IsNotExist(err))
-	})
+func assertHasGitConfiguration(t *testing.T, dir string) {
+	t.Helper()
+	entries, err := os.ReadDir(dir)
+	must.NoError(t, err)
+	for e := range entries {
+		if entries[e].Name() == ".gitconfig" {
+			return
+		}
+	}
+	t.Fatalf(".gitconfig not found in %q", dir)
 }

@@ -240,11 +240,6 @@ func (self *Fixture) CreateCommits(commits []testgit.Commit) {
 	}
 }
 
-// CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (self Fixture) CreateOriginBranch(name, parent string) {
-	self.OriginRepo.CreateBranch(gitdomain.NewLocalBranchName(name), gitdomain.NewLocalBranchName(parent))
-}
-
 // CreateTags creates tags from the given gherkin table.
 func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	columnNames := helpers.TableFields(table)
@@ -263,11 +258,6 @@ func (self Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
 	}
-}
-
-// Remove deletes all files used by this Fixture from disk.
-func (self Fixture) Remove() {
-	asserts.NoError(os.RemoveAll(self.Dir))
 }
 
 // TagTable provides a table for all tags in this Git environment.

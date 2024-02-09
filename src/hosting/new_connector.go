@@ -1,6 +1,7 @@
 package hosting
 
 import (
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
 	"github.com/git-town/git-town/v11/src/hosting/bitbucket"
@@ -49,6 +50,6 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 type NewConnectorArgs struct {
 	*configdomain.FullConfig
 	HostingPlatform configdomain.HostingPlatform
-	Log             hostingdomain.Log
+	Log             print.Logger
 	OriginURL       *giturl.Parts
 }
