@@ -4,6 +4,10 @@
 
 Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive by modernizing Git Town's configuration system.
 
+- 294 contributions
+- 31 resolved tickets
+- a heartfelt thanks to the contributors for this release: @alokpr, @brandonaut, @bryanlarsen, @ChrisMM, @eugef, @IGassmann, @Iron-Ham, @jakeleboeuf, @JaKXz, @kevgo, @koppor, @Nezteb, @ruudk, @zeronacer
+
 #### BREAKING CHANGES
 
 - The new setup assistent (see below) replaces the existing CLI commands to change the configuration.
