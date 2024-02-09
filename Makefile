@@ -16,9 +16,6 @@ buildwin:  # builds the binary on Windows
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
-contributors:  # displays the contributors
-	@(cd tools/list_contributors && go build && ./list_contributors v${RELEASE_VERSION})
-
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
@@ -83,6 +80,9 @@ smokewin: buildwin  # runs the Windows smoke tests
 
 stats: tools/rta@${RTA_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/rta scc
+
+stats-release:  # displays statistics about the changes since the last release
+	@(cd tools/release_stats && go build && ./release_stats v${RELEASE_VERSION})
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
