@@ -26,8 +26,8 @@ func LoadTag(name string) Tag {
 		panic(err.Error())
 	}
 	return Tag{
-		ISOTime: gitTime.Format("2006-01-02"),
-		Name:    name,
-		Time:    gitTime,
+		ISOTime: gitTime.Format("2006-01-02"), // the time this tag was created, in ISO format
+		Name:    name,                         // name of the tag
+		Time:    gitTime,                      // the time this tag was created
 	}
 }
