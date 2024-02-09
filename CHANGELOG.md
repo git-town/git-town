@@ -23,9 +23,9 @@ Git Town 12 continues the effort to make the Git Town user experience more consi
 #### New Features
 
 - Git Town v12 introduces Git Town's setup assistant ([#2941](https://github.com/git-town/git-town/issues/2941)). The setup assistant guides you through all of Git Town's configuration settings, including setting up the shorter aliases for Git Town commands. Run it by executing `git town config setup`. This assistant replaces the old configuration commands under `git town config`, the `alias` command, and the old "quick configuration" process.
-- You can now create and edit a **configuration file** that contains the non-confidential parts of Git Town's configuration. ([#2748](https://github.com/git-town/git-town/issues/2748)). The filename is ".git-branches.toml". The best way to create one is the setup assistant. The setup assistant can also migrate your existing Git-based configuration to the config file if needed.
+- You can now create and edit a configuration file that contains the non-confidential parts of Git Town's configuration. ([#2748](https://github.com/git-town/git-town/issues/2748)). The filename is ".git-branches.toml". The best way to create one is the setup assistant. The setup assistant can also migrate your existing Git-based configuration to the config file if needed.
 - All commands now support the `--dry-run` flag to try them out safely ([#2859](https://github.com/git-town/git-town/pull/2859)).
-- You can now install Git Town on Windows using **Chocolatey**: `choco install git-town` ([#763](https://github.com/git-town/git-town/issues/763))
+- You can now install Git Town on Windows using Chocolatey: `choco install git-town` ([#763](https://github.com/git-town/git-town/issues/763))
 - Massive performance improvements (exceeding 200%) on Windows thanks to not executing Git through the CMD shell anymore ([#2881](https://github.com/git-town/git-town/pull/2881)).
 - The undo commands execute faster ([#2863](https://github.com/git-town/git-town/pull/2863)).
 
