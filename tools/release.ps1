@@ -20,7 +20,6 @@ function Main() {
   if ($ci) {
     Install-Tools
   }
-  $env:TODAY = (Get-Date).ToString("yyyy-MM-dd")
   Add-MSI
   .\rta goreleaser@$GoReleaserVersion --clean
 }
