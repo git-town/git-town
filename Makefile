@@ -128,7 +128,6 @@ deadcode: tools/rta@${RTA_VERSION}
 golangcilint: tools/rta@${RTA_VERSION}
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run) &
-	@(cd tools/release_stats && ../rta golangci-lint@1.55.2 run) &
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
 	@tools/rta golangci-lint run
 
