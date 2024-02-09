@@ -10,27 +10,74 @@ import (
 func TestUsers(t *testing.T) {
 	t.Parallel()
 
-	t.Run("AddUser", func(t *testing.T) {
+	t.Run("provides contributors sorted by contribution count", func(t *testing.T) {
 		t.Parallel()
-		users := data.NewUsers()
-		users.AddUser("one")
-		users.AddUser("one")
-		users.AddUser("two")
-		have := users.Users()
-		want := []string{"one", "two"}
+		counter := data.NewContributionCounter()
+		counter.AddUser("one")
+		counter.AddUser("two")
+		counter.AddUser("two")
+		have := counter.Contributors()
+		want := []data.Contributor{
+			data.Contributor{
+				Username:          "two",
+				ContributionCount: 2,
+			},
+			data.Contributor{
+				Username:          "one",
+				ContributionCount: 1,
+			},
+		}
 		must.Eq(t, want, have)
 	})
 
-	t.Run("AddUsers", func(t *testing.T) {
+	t.Run("sorts contributors with the same contribution amount alphabetically", func(t *testing.T) {
 		t.Parallel()
-		allUsers := data.NewUsers()
+		counter := data.NewContributionCounter()
+		counter.AddUser("gamma")
+		counter.AddUser("beta")
+		counter.AddUser("alpha")
+		have := counter.Contributors()
+		want := []data.Contributor{
+			data.Contributor{
+				Username:          "alpha",
+				ContributionCount: 1,
+			},
+			data.Contributor{
+				Username:          "beta",
+				ContributionCount: 1,
+			},
+			data.Contributor{
+				Username:          "gamma",
+				ContributionCount: 1,
+			},
+		}
+		must.Eq(t, want, have)
+	})
+
+	t.Run("allows adding multiple contributions efficiently", func(t *testing.T) {
+		t.Parallel()
+		allUsers := data.NewContributionCounter()
 		allUsers.AddUser("alpha")
-		otherUsers := data.NewUsers()
-		otherUsers.AddUser("beta1")
+		otherUsers := data.NewContributionCounter()
+		otherUsers.AddUser("alpha")
 		otherUsers.AddUser("beta2")
+		otherUsers.AddUser("beta1")
 		allUsers.AddUsers(otherUsers)
-		have := allUsers.Users()
-		want := []string{"alpha", "beta1", "beta2"}
+		have := allUsers.Contributors()
+		want := []data.Contributor{
+			data.Contributor{
+				Username:          "alpha",
+				ContributionCount: 2,
+			},
+			data.Contributor{
+				Username:          "beta1",
+				ContributionCount: 2,
+			},
+			data.Contributor{
+				Username:          "beta2",
+				ContributionCount: 2,
+			},
+		}
 		must.Eq(t, want, have)
 	})
 }

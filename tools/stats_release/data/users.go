@@ -7,29 +7,38 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-// collection of unique GitHub usernames
-type Users struct {
-	list map[string]struct{}
+// counts users and their contributions
+type ContributionCounter struct {
+	list map[string]int
 }
 
-func NewUsers() Users {
-	return Users{
-		list: map[string]struct{}{},
+func NewContributionCounter() ContributionCounter {
+	return ContributionCounter{
+		list: map[string]int{},
 	}
 }
 
-func (self *Users) AddUser(id string) {
-	self.list[id] = struct{}{}
+func (self *ContributionCounter) AddUser(id string) {
+	self.list[id] = self.list[id] + 1
 }
 
-func (self *Users) AddUsers(users Users) {
-	for _, user := range users.Users() {
-		self.AddUser(user)
+func (self *ContributionCounter) AddUsers(users ContributionCounter) {
+	for _, contributor := range users.Contributors() {
+		for i := 0; i < contributor.ContributionCount; i++ {
+			self.AddUser(contributor.Username)
+		}
 	}
 }
 
-func (self *Users) Users() []string {
-	result := maps.Keys(self.list)
-	sort.Slice(result, func(i, j int) bool { return strings.ToLower(result[i]) < strings.ToLower(result[j]) })
+func (self *ContributionCounter) Contributors() []Contributor {
+	usernames := maps.Keys(self.list)
+	sort.Slice(usernames, func(i, j int) bool { return strings.ToLower(usernames[i]) < strings.ToLower(usernames[j]) })
+	result := make([]Contributor, len(self.list))
+	for u, username := range usernames {
+		result[u] = Contributor{
+			Username:          username,
+			ContributionCount: self.list[username],
+		}
+	}
 	return result
 }

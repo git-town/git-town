@@ -19,7 +19,7 @@ func main() {
 	}
 	lastRelease := git.LoadTag(os.Args[1])
 	fmt.Printf("previous release %s was on %s\n", console.Green.Styled(lastRelease.Name), console.Cyan.Styled(lastRelease.ISOTime))
-	contributors := data.NewUsers()
+	contributors := data.NewContributionCounter()
 	gh := connector.NewConnector()
 
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
