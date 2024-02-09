@@ -7,7 +7,7 @@ codebases and want to stay in sync with the codebase they are forked from.
 ## options
 
 When set to `true` (the default value), `git sync` also updates the local
-[main main-branch](main-branch.md) with changes from its counterpart in the
+[main-branch](main-branch.md) with changes from its counterpart in the
 `upstream` remote. When set to `false`, `git sync` does not pull in updates from
 upstream even if that remote exists.
 
