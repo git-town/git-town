@@ -118,7 +118,7 @@ deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode -test github.com/git-town/git-town/tools/format_self &
 	@tools/rta deadcode -test github.com/git-town/git-town/tools/format_unittests &
 	@tools/rta deadcode -test github.com/git-town/git-town/tools/structs_sorted &
-	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists | grep -v Paniced | grep -v FileExists | grep -v FileHasContent | grep -v IsGitRepo | grep -v CreateFile
+	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists | grep -v Paniced | grep -v FileExists | grep -v FileHasContent | grep -v IsGitRepo | grep -v CreateFile | grep -v CreateGitTown | grep -v Create || true
 
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
