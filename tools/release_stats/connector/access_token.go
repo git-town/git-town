@@ -11,6 +11,5 @@ func loadAccessToken() string {
 	if err != nil {
 		panic(err.Error())
 	}
-	result := strings.TrimSpace(string(output))
-	return result
+	return strings.TrimSpace(string(output))
 }
