@@ -1,7 +1,7 @@
 # Installation
 
-Git Town ships as a single self-contained binary. It doesn't bundle a Git client
-but uses the native Git installation on your machine.
+Git Town ships as a single self-contained binary. It calls the Git executable
+that is already installed on your machine.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/git-town.svg)](https://repology.org/project/git-town/versions)
 
@@ -29,7 +29,7 @@ You can install Git Town on Windows using:
   `choco install git-town`
 - [Scoop](https://scoop.sh/#/apps?q=git+town): `scoop install git-town`
 - the
-  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v11.1.0/git-town_windows_intel_64.msi)
+  [Git Town Windows installer](https://github.com/git-town/git-town/releases/download/v12.0.0/git-town_windows_intel_64.msi)
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands

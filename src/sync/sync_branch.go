@@ -1,10 +1,10 @@
 package sync
 
 import (
-	"github.com/git-town/git-town/v11/src/config/configdomain"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/vm/opcode"
-	"github.com/git-town/git-town/v11/src/vm/program"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 // BranchProgram syncs the given branch.

@@ -4,9 +4,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/cli/flags"
-	"github.com/git-town/git-town/v11/src/cmd/cmdhelpers"
-	"github.com/git-town/git-town/v11/src/execute"
+	"github.com/git-town/git-town/v12/src/cli/flags"
+	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
 )

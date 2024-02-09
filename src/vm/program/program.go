@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/gohacks/slice"
-	"github.com/git-town/git-town/v11/src/vm/shared"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
 // Program is a mutable collection of Opcodes.

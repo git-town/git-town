@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/v11/src/gohacks"
-	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v12/src/gohacks"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 // SyncUpstream contains the configuration setting whether to sync with the upstream remote.

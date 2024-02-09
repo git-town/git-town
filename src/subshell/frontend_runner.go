@@ -7,10 +7,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v11/src/cli/print"
-	"github.com/git-town/git-town/v11/src/git/gitdomain"
-	"github.com/git-town/git-town/v11/src/gohacks"
-	"github.com/git-town/git-town/v11/src/messages"
+	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/gohacks"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 // FrontendRunner executes frontend shell commands.
