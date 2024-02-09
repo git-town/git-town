@@ -9,6 +9,7 @@ import (
 
 func TestUsers(t *testing.T) {
 	t.Parallel()
+
 	t.Run("AddUser", func(t *testing.T) {
 		t.Parallel()
 		users := data.NewUsers()
@@ -19,6 +20,7 @@ func TestUsers(t *testing.T) {
 		want := []string{"one", "two"}
 		must.Eq(t, want, have)
 	})
+
 	t.Run("AddUsers", func(t *testing.T) {
 		t.Parallel()
 		allUsers := data.NewUsers()
