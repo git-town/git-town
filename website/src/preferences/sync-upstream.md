@@ -1,7 +1,8 @@
 # sync-upstream
 
-If you The sync-upstream setting configures whether to pull in updates from the
-`upstream` remote. This applies to codebases that are forks of other codebases.
+The sync-upstream setting configures whether to pull in updates from the
+`upstream` remote. This is intended for codebases that are forks of other
+codebases and want to stay in sync with the codebase they are forked from.
 
 ## options
 
