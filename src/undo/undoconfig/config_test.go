@@ -38,7 +38,7 @@ func TestConfigUndo(t *testing.T) {
 				Removed: map[gitconfig.Key]string{},
 				Changed: map[gitconfig.Key]undodomain.Change[string]{},
 			},
-			Local: undoconfig.EmptyConfigDiff(),
+			Local: emptyConfigDiff(),
 		}
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
@@ -151,7 +151,7 @@ func TestConfigUndo(t *testing.T) {
 		}
 		haveDiff := undoconfig.NewConfigDiffs(before, after)
 		wantDiff := undoconfig.ConfigDiffs{
-			Global: undoconfig.EmptyConfigDiff(),
+			Global: emptyConfigDiff(),
 			Local: undoconfig.ConfigDiff{
 				Added: []gitconfig.Key{
 					gitconfig.KeySyncPerennialStrategy,
@@ -335,4 +335,12 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantProgram, haveProgram)
 	})
+}
+
+func emptyConfigDiff() undoconfig.ConfigDiff {
+	return undoconfig.ConfigDiff{
+		Added:   []gitconfig.Key{},
+		Changed: map[gitconfig.Key]undodomain.Change[string]{},
+		Removed: map[gitconfig.Key]string{},
+	}
 }

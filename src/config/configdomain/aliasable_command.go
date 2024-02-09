@@ -45,20 +45,3 @@ func AllAliasableCommands() AliasableCommands {
 		AliasableCommandSync,
 	}
 }
-
-func NewAliasableCommand(command string) AliasableCommand {
-	for _, aliasableCommand := range AllAliasableCommands() {
-		if command == aliasableCommand.String() {
-			return aliasableCommand
-		}
-	}
-	panic("unknown aliasable command: " + command)
-}
-
-func NewAliasableCommands(commands ...string) AliasableCommands {
-	result := make(AliasableCommands, len(commands))
-	for c, command := range commands {
-		result[c] = NewAliasableCommand(command)
-	}
-	return result
-}

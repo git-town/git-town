@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/execute"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/shoenig/test/must"
@@ -12,29 +11,6 @@ import (
 
 func TestCollector(t *testing.T) {
 	t.Parallel()
-
-	t.Run("Bool", func(t *testing.T) {
-		t.Run("returns the given bool value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.True(t, fc.Bool(true, nil))
-			must.False(t, fc.Bool(false, nil))
-			err := errors.New("test error")
-			must.True(t, fc.Bool(true, err))
-			must.False(t, fc.Bool(false, err))
-		})
-
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.Bool(true, nil)
-			fc.Bool(false, nil)
-			must.Nil(t, fc.Err)
-			fc.Bool(true, errors.New("first"))
-			fc.Bool(false, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
 
 	t.Run("BranchesSyncStatus", func(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
@@ -66,11 +42,8 @@ func TestCollector(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			fc.Bool(true, nil)
-			fc.Bool(false, nil)
-			must.Nil(t, fc.Err)
-			fc.Bool(true, errors.New("first"))
-			fc.Bool(false, errors.New("second"))
+			fc.Check(errors.New("first"))
+			fc.Check(errors.New("second"))
 			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
@@ -99,63 +72,6 @@ func TestCollector(t *testing.T) {
 			fc := execute.FailureCollector{}
 			fc.Fail("failed %s", "reason")
 			must.ErrorContains(t, fc.Err, "failed reason")
-		})
-	})
-
-	t.Run("HostingPlatform", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given HostingPlatform value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.EqOp(t, configdomain.HostingPlatformGitHub, fc.HostingPlatform(configdomain.HostingPlatformGitHub, nil))
-			must.EqOp(t, configdomain.HostingPlatformGitLab, fc.HostingPlatform(configdomain.HostingPlatformGitLab, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.HostingPlatform(configdomain.HostingPlatformNone, nil)
-			must.Nil(t, fc.Err)
-			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("first"))
-			fc.HostingPlatform(configdomain.HostingPlatformGitHub, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
-
-	t.Run("String", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given string value", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.EqOp(t, "alpha", fc.String("alpha", nil))
-			must.EqOp(t, "beta", fc.String("beta", errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.String("", nil)
-			must.Nil(t, fc.Err)
-			fc.String("", errors.New("first"))
-			fc.String("", errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
-		})
-	})
-
-	t.Run("Strings", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the given string slice", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			must.Eq(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
-			must.Eq(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
-		})
-		t.Run("captures the first error it receives", func(t *testing.T) {
-			t.Parallel()
-			fc := execute.FailureCollector{}
-			fc.Strings([]string{}, nil)
-			must.Nil(t, fc.Err)
-			fc.Strings([]string{}, errors.New("first"))
-			fc.Strings([]string{}, errors.New("second"))
-			must.ErrorContains(t, fc.Err, "first")
 		})
 	})
 }

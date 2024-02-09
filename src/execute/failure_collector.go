@@ -3,7 +3,6 @@ package execute
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 )
 
@@ -17,13 +16,6 @@ import (
 // This is an anti-pattern in code to work arount an anti-pattern in the language.
 type FailureCollector struct {
 	Err error `exhaustruct:"optional"`
-}
-
-// Bool provides the bool part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) Bool(value bool, err error) bool {
-	self.Check(err)
-	return value
 }
 
 func (self *FailureCollector) BranchesSyncStatus(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
@@ -45,13 +37,6 @@ func (self *FailureCollector) Fail(format string, a ...any) {
 	self.Check(fmt.Errorf(format, a...))
 }
 
-// HostingPlatform provides the config.HostingPlatform part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) HostingPlatform(value configdomain.HostingPlatform, err error) configdomain.HostingPlatform {
-	self.Check(err)
-	return value
-}
-
 // Remotes provides the domain.Remotes part of the given fallible function result
 // while registering the given error.
 func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdomain.Remotes {
@@ -60,20 +45,6 @@ func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdom
 }
 
 func (self *FailureCollector) RepoStatus(value gitdomain.RepoStatus, err error) gitdomain.RepoStatus {
-	self.Check(err)
-	return value
-}
-
-// String provides the string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) String(value string, err error) string {
-	self.Check(err)
-	return value
-}
-
-// Strings provides the []string part of the given fallible function result
-// while registering the given error.
-func (self *FailureCollector) Strings(value []string, err error) []string {
 	self.Check(err)
 	return value
 }

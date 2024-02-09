@@ -88,7 +88,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingPlatform: configdomain.HostingPlatformNone,
 			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
 			APIToken:        "apiToken",
-			Log:             print.NoLogger{},
+			Log:             print.Logger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -108,7 +108,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingPlatform: configdomain.HostingPlatformGitLab,
 			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:        "apiToken",
-			Log:             print.NoLogger{},
+			Log:             print.Logger{},
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{

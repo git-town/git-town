@@ -12,7 +12,6 @@ import (
 
 func IsGitRepo(t *testing.T, dir string) {
 	t.Helper()
-	FolderExists(t, dir)
 	entries, err := os.ReadDir(dir)
 	must.NoError(t, err)
 	must.EqOp(t, ".git", entries[0].Name())
