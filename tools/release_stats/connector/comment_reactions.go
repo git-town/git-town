@@ -2,7 +2,9 @@ package connector
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/git-town/git-town/tools/release_stats/console"
 	"github.com/google/go-github/v58/github"
 )
 
@@ -21,22 +23,29 @@ func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Rea
 	}
 	fmt.Printf("loading reactions for comment %s ", *comment.URL)
 	for page := 0; ; page++ {
-		reactions, _, err := gh.client.Reactions.ListIssueCommentReactions(gh.context, org, repo, *comment.ID, &github.ListOptions{
+		reactions, response, err := gh.client.Reactions.ListIssueCommentReactions(gh.context, org, repo, *comment.ID, &github.ListOptions{
 			Page:    page,
 			PerPage: pageSize,
 		})
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Print(".")
-		if len(reactions) == 0 {
-			break
-		}
 		for _, reaction := range reactions {
 			result = append(result, reaction)
 		}
+		if response.NextPage == 0 {
+			break
+		}
 
 	}
-	fmt.Printf("%d\n", len(result))
+	if len(result) == 0 {
+		fmt.Println(console.Green.Styled(" ok"))
+	} else {
+		texts := make([]string, len(result))
+		for r, reaction := range result {
+			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, *reaction.User.Login)
+		}
+		fmt.Printf(" %s\n  %s\n", console.Green.Styled("ok"), strings.Join(texts, ", "))
+	}
 	return result
 }

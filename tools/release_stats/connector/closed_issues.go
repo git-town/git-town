@@ -2,7 +2,9 @@ package connector
 
 import (
 	"fmt"
+	"strconv"
 
+	"github.com/git-town/git-town/tools/release_stats/console"
 	"github.com/google/go-github/v58/github"
 )
 
@@ -11,7 +13,7 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
 	for page := 0; ; page++ {
-		results, _, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
+		results, response, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
 			Sort:  "closed",
 			Order: "asc",
 			ListOptions: github.ListOptions{
@@ -23,9 +25,6 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 			panic(err)
 		}
 		fmt.Print(".")
-		if len(results.Issues) == 0 {
-			break
-		}
 		for _, issue := range results.Issues {
 			if issue.IsPullRequest() {
 				closedPullRequests = append(closedPullRequests, issue)
@@ -33,7 +32,10 @@ func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, clo
 				closedIssues = append(closedIssues, issue)
 			}
 		}
+		if response.NextPage == 0 {
+			break
+		}
 	}
-	fmt.Printf(" %d issues, %d pull requests\n", len(closedIssues), len(closedPullRequests))
+	fmt.Printf(" %s issues, %s pull requests\n", console.Green.Styled(strconv.Itoa(len(closedIssues))), console.Green.Styled(strconv.Itoa(len(closedPullRequests))))
 	return
 }

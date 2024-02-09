@@ -2,7 +2,9 @@ package connector
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/git-town/git-town/tools/release_stats/console"
 	"github.com/google/go-github/v58/github"
 )
 
@@ -17,12 +19,19 @@ func (gh Connector) IssueReactions(issue *github.Issue) []*github.Reaction {
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Print(".")
 		if len(reactions) == 0 {
 			break
 		}
 		result = append(result, reactions...)
 	}
-	fmt.Printf(" %d\n", len(result))
+	if len(result) == 0 {
+		fmt.Println(console.Green.Styled(" ok"))
+	} else {
+		texts := make([]string, len(result))
+		for r, reaction := range result {
+			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, *reaction.User.Login)
+		}
+		fmt.Printf(" %s\n  %s\n", console.Green.Styled("ok"), strings.Join(texts, ", "))
+	}
 	return result
 }
