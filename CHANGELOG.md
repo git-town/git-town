@@ -17,7 +17,7 @@ Git Town 12 continues the effort to make the Git Town user experience more consi
   - `code-hosting-origin-hostname` is now `hosting-origin-hostname` ([#3053](https://github.com/git-town/git-town/pull/3053))
   - `ship-delete-remote-branch` is now `ship-delete-tracking-branch` ([#2929](https://github.com/git-town/git-town/pull/2929))
 - Putting Git Town into offline mode is a top-level command again. Run `git town offline yes` to enable offline mode instead of `git town config offline yes` ([#3049](https://github.com/git-town/git-town/pull/3049)).
-- All visual dialogs now use a modern UI framework that fixes the rendering issues encountered before ([#2964](https://github.com/git-town/git-town/issues/2964)).
+- All visual dialogs have been rewritten from scratch to use a modern UI framework and avoid the rendering issues encountered before ([#2964](https://github.com/git-town/git-town/issues/2964)).
 - Nested feature branches are now called "stacked changes" to match the emerging industry term ([#3062](https://github.com/git-town/git-town/pull/3062)).
 
 #### New Features
