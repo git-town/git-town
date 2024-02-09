@@ -21,10 +21,6 @@ func main() {
 	contributors := data.NewUsers()
 	gh := connector.NewConnector()
 
-	// Add people who opened issues or pull requests since the last release.
-	// openedIssuesOrPRs := gh.OpenedIssuesOrPRsSince(lastRelease.ISOTime)
-	// contributors.AddUsers(gh.IssuesParticipants(openedIssuesOrPRs))
-
 	// Add people who were involved with issues and pull requests that were resolved in this release.
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED ISSUES")
@@ -33,26 +29,6 @@ func main() {
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
 	fmt.Println()
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests))
-
-	// Add people who made any comment on any issue (old or new, open or closed) since the last release
-	// newComments := gh.CommentsSince(lastRelease)
-	// contributors.AddUsers(connector.CommentsAuthors(newComments))
-
-	// Add people who added a reaction on any issue since the last release.
-	// We only look at open issues + issues that were closed in the last release here.
-	// openIssues := gh.OpenIssues()
-	// allIssues := append(openIssues, closedIssues...)
-	// allIssuesComments := gh.IssuesComments(allIssues)
-	// contributors.AddUsers(connector.CommentsAuthors(allIssuesComments))
-
-	// load all people who commented on pull requests since the last release
-
-	// load all people who reacted since the last release
-	// relevant issues = all open issues and issues closed since the last tag
-	// for each issue:
-	//   for each comment of the issue
-	//     for each reaction to the comment
-	//       if the reaction was made since the last tag: register the user
 
 	// print statistics
 	fmt.Printf("%d shipped PRs\n", len(closedPullRequests))
