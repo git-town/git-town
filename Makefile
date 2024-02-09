@@ -131,8 +131,6 @@ golangci-lint: tools/rta@${RTA_VERSION}
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run) &
 	@tools/rta golangci-lint run
 
-
-
 tools/rta@${RTA_VERSION}:
 	@rm -f tools/rta*
 	@(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh)
