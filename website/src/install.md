@@ -1,7 +1,7 @@
 # Installation
 
-Git Town ships as a single self-contained binary. It doesn't bundle a Git
-client, and uses the native Git installation on your machine.
+Git Town ships as a single self-contained binary. It calls the Git executable
+that is already installed on your machine.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/git-town.svg)](https://repology.org/project/git-town/versions)
 
