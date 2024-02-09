@@ -22,9 +22,7 @@ func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Rea
 		if err != nil {
 			panic(err.Error())
 		}
-		for _, reaction := range reactions {
-			result = append(result, reaction)
-		}
+		result = append(result, reactions...)
 		if response.NextPage == 0 {
 			break
 		}

@@ -18,7 +18,7 @@ const (
 // wrapper around the low-level GitHub connector, provides higher-level functions needed by this program
 type Connector struct {
 	client  *github.Client
-	context context.Context
+	context context.Context //nolint:containedctx // we are sure there is always only one context here, this is just a little script
 }
 
 func NewConnector() Connector {
