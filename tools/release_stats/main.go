@@ -25,13 +25,13 @@ func main() {
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED ISSUES")
 	fmt.Println()
-	contributors.AddUsers(gh.IssuesParticipants(closedIssues))
+	contributors.AddUsers(gh.IssuesParticipants(closedIssues, "issue"))
 	fmt.Println("\n\nDETERMINING PARTICIPANTS IN CLOSED PULL REQUESTS")
 	fmt.Println()
-	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests))
+	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests, "PR"))
 
 	// print statistics
-	fmt.Printf("%d shipped PRs\n", len(closedPullRequests))
+	fmt.Printf("\n%d shipped PRs\n", len(closedPullRequests))
 	fmt.Printf("%d resolved issues\n", len(closedIssues))
 	users := contributors.Users()
 	fmt.Printf("%d contributors:\n", len(users))

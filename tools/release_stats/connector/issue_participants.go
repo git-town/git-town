@@ -5,11 +5,12 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-func (gh Connector) IssuesParticipants(issues []*github.Issue) data.Users {
+func (gh Connector) IssuesParticipants(issues []*github.Issue, issueType string) data.Users {
 	result := data.NewUsers()
-	for _, issue := range issues {
+	total := len(issues)
+	for i, issue := range issues {
 		result.AddUser(*issue.User.Login)
-		for _, reaction := range gh.IssueReactions(issue) {
+		for _, reaction := range gh.IssueReactions(issue, issueType, i+1, total) {
 			result.AddUser(*reaction.User.Login)
 		}
 		for _, comment := range gh.IssueComments(issue) {
