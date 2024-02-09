@@ -25,3 +25,6 @@ To configure this setting in Git, run this command:
 ```
 git config [--global] git-town.ship-delete-tracking-branch <true|false>
 ```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your local machine. When not present, the setting applies to the current repo.

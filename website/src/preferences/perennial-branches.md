@@ -25,3 +25,6 @@ You can configure the perennial branches manually by running:
 ```bash
 git config [--global] git-town.perennial-branches "branch other-branch"
 ```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your local machine. When not present, the setting applies to the current repo.

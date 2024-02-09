@@ -21,3 +21,6 @@ You can configure the API token manually by running:
 ```bash
 git config [--global] git-town.github-token <token>
 ```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your local machine. When not present, the setting applies to the current repo.
