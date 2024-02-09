@@ -16,6 +16,9 @@ buildwin:  # builds the binary on Windows
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
 
+contributors:  # displays the contributors
+	@(cd tools/list_contributors && go build && ./list_contributors v${RELEASE_VERSION})
+
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
@@ -94,7 +97,7 @@ todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
 
 unit: build  # runs only the unit tests for changed code
-	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/structs_sorted/...
+	@env GOGC=off go test -timeout 30s ./src/... ./test/... ./tools/format_self/... ./tools/format_unittests/... ./tools/release_stats/... ./tools/structs_sorted/...
 
 unit-all: build  # runs all the unit tests
 	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
@@ -114,6 +117,7 @@ update: tools/rta@${RTA_VERSION}  # updates all dependencies
 deadcode: tools/rta@${RTA_VERSION}
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_self &
 	@tools/rta deadcode github.com/git-town/git-town/tools/format_unittests &
+	@tools/rta deadcode github.com/git-town/git-town/tools/release_stats &
 	@tools/rta deadcode github.com/git-town/git-town/tools/structs_sorted &
 	@tools/rta deadcode -test github.com/git-town/git-town/v11 | grep -v BranchExists \
 	                                                           | grep -v Paniced \
@@ -128,6 +132,7 @@ deadcode: tools/rta@${RTA_VERSION}
 golangci-lint: tools/rta@${RTA_VERSION}
 	@(cd tools/format_self && ../rta golangci-lint@1.55.2 run)
 	@(cd tools/format_unittests && ../rta golangci-lint@1.55.2 run)
+	@(cd tools/release_stats && ../rta golangci-lint@1.55.2 run)
 	@(cd tools/structs_sorted && ../rta golangci-lint@1.55.2 run)
 	@tools/rta golangci-lint run
 
