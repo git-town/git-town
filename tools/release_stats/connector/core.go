@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/git-town/git-town/tools/release_stats/console"
 	"github.com/google/go-github/v58/github"
 	"golang.org/x/oauth2"
 )
@@ -23,7 +22,7 @@ type Connector struct {
 
 func NewConnector() Connector {
 	githubToken := loadAccessToken()
-	fmt.Printf("using GitHub token %s\n", console.Cyan.Styled(githubToken))
+	fmt.Printf("using GitHub token %s\n", githubToken)
 	context := context.Background()
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: githubToken})
 	httpClient := oauth2.NewClient(context, tokenSource)

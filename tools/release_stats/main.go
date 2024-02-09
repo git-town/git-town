@@ -17,7 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 	lastRelease := git.LoadTag(os.Args[1])
-	fmt.Printf("previous release %s was on %s\n", console.Cyan.Styled(lastRelease.Name), console.Cyan.Styled(lastRelease.ISOTime))
+	fmt.Printf("previous release %s was on %s\n", console.Green.Styled(lastRelease.Name), console.Cyan.Styled(lastRelease.ISOTime))
 	contributors := data.NewUsers()
 	gh := connector.NewConnector()
 
