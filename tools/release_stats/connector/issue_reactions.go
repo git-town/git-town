@@ -24,14 +24,13 @@ func (gh Connector) IssueReactions(issue *github.Issue, issueType string, curren
 			break
 		}
 	}
-	if len(result) == 0 {
-		fmt.Println(console.Green.Styled(" ok"))
-	} else {
+	fmt.Println(console.Green.Styled(" ok"))
+	if len(result) > 0 {
 		texts := make([]string, len(result))
 		for r, reaction := range result {
 			texts[r] = fmt.Sprintf("%s (%s)", *reaction.Content, reactionAuthor(reaction))
 		}
-		fmt.Printf(" %s\n  %s\n", console.Green.Styled("ok"), strings.Join(texts, ", "))
+		fmt.Printf("  %s\n", strings.Join(texts, ", "))
 	}
 	return result
 }
