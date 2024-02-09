@@ -12,18 +12,6 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func assertHasGitConfiguration(t *testing.T, dir string) {
-	t.Helper()
-	entries, err := os.ReadDir(dir)
-	must.NoError(t, err)
-	for e := range entries {
-		if entries[e].Name() == ".gitconfig" {
-			return
-		}
-	}
-	t.Fatalf(".gitconfig not found in %q", dir)
-}
-
 func TestFixture(t *testing.T) {
 	t.Parallel()
 
@@ -227,4 +215,16 @@ func TestFixture(t *testing.T) {
 			must.EqOp(t, table.Cells[2][2], "two")
 		})
 	})
+}
+
+func assertHasGitConfiguration(t *testing.T, dir string) {
+	t.Helper()
+	entries, err := os.ReadDir(dir)
+	must.NoError(t, err)
+	for e := range entries {
+		if entries[e].Name() == ".gitconfig" {
+			return
+		}
+	}
+	t.Fatalf(".gitconfig not found in %q", dir)
 }

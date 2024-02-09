@@ -11,14 +11,6 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func emptyConfigDiff() undoconfig.ConfigDiff {
-	return undoconfig.ConfigDiff{
-		Added:   []gitconfig.Key{},
-		Changed: map[gitconfig.Key]undodomain.Change[string]{},
-		Removed: map[gitconfig.Key]string{},
-	}
-}
-
 func TestConfigUndo(t *testing.T) {
 	t.Parallel()
 
@@ -343,4 +335,12 @@ func TestConfigUndo(t *testing.T) {
 		}
 		must.Eq(t, wantProgram, haveProgram)
 	})
+}
+
+func emptyConfigDiff() undoconfig.ConfigDiff {
+	return undoconfig.ConfigDiff{
+		Added:   []gitconfig.Key{},
+		Changed: map[gitconfig.Key]undodomain.Change[string]{},
+		Removed: map[gitconfig.Key]string{},
+	}
 }
