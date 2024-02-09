@@ -10,25 +10,6 @@ import (
 func TestAliasableCommand(t *testing.T) {
 	t.Parallel()
 
-	t.Run("NewAliasableCommand", func(t *testing.T) {
-		t.Parallel()
-		give := "append"
-		have := configdomain.NewAliasableCommand(give)
-		want := configdomain.AliasableCommandAppend
-		must.Eq(t, want, have)
-	})
-
-	t.Run("NewAliasableCommands", func(t *testing.T) {
-		t.Parallel()
-		give := []string{"append", "diff-parent"}
-		have := configdomain.NewAliasableCommands(give...)
-		want := configdomain.AliasableCommands{
-			configdomain.AliasableCommandAppend,
-			configdomain.AliasableCommandDiffParent,
-		}
-		must.Eq(t, want, have)
-	})
-
 	t.Run("Strings", func(t *testing.T) {
 		t.Parallel()
 		give := configdomain.AliasableCommands{

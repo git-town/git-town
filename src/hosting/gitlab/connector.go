@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/git-town/git-town/v11/src/cli/print"
 	"github.com/git-town/git-town/v11/src/config/configdomain"
 	"github.com/git-town/git-town/v11/src/git/gitdomain"
 	"github.com/git-town/git-town/v11/src/git/giturl"
@@ -18,7 +19,7 @@ import (
 type Connector struct {
 	client *gitlab.Client
 	Config
-	log hostingdomain.Log
+	log print.Logger
 }
 
 func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*hostingdomain.Proposal, error) {
@@ -102,7 +103,7 @@ func NewConnector(args NewConnectorArgs) (*Connector, error) {
 type NewConnectorArgs struct {
 	APIToken        configdomain.GitLabToken
 	HostingPlatform configdomain.HostingPlatform
-	Log             hostingdomain.Log
+	Log             print.Logger
 	OriginURL       *giturl.Parts
 }
 

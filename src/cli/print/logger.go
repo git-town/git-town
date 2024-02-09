@@ -23,10 +23,3 @@ func (l Logger) Success() {
 	boldGreen := termenv.String().Bold().Foreground(termenv.ANSIGreen)
 	fmt.Println(boldGreen.Styled("ok\n"))
 }
-
-// The silent logger acts as a stand-in for loggers when no logging is desired.
-type NoLogger struct{}
-
-func (n NoLogger) Failed(error)                 {}
-func (n NoLogger) Start(string, ...interface{}) {}
-func (n NoLogger) Success()                     {}
