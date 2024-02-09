@@ -12,17 +12,17 @@ func (gh Connector) IssueReactions(issue *github.Issue) []*github.Reaction {
 	result := []*github.Reaction{}
 	fmt.Printf("loading reactions to #%d ", issue.GetNumber())
 	for page := 0; ; page++ {
-		reactions, _, err := gh.client.Reactions.ListIssueReactions(gh.context, org, repo, *issue.Number, &github.ListOptions{
+		reactions, response, err := gh.client.Reactions.ListIssueReactions(gh.context, org, repo, *issue.Number, &github.ListOptions{
 			Page:    page,
 			PerPage: pageSize,
 		})
 		if err != nil {
 			panic(err.Error())
 		}
-		if len(reactions) == 0 {
+		result = append(result, reactions...)
+		if response.NextPage == 0 {
 			break
 		}
-		result = append(result, reactions...)
 	}
 	if len(result) == 0 {
 		fmt.Println(console.Green.Styled(" ok"))

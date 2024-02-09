@@ -21,7 +21,7 @@ func (gh Connector) CommentReactions(comment *github.IssueComment) []*github.Rea
 	if *comment.Reactions.TotalCount == 0 {
 		return result
 	}
-	fmt.Printf("loading reactions for comment %s ", *comment.URL)
+	fmt.Printf("loading reactions to comment #%d ", comment.GetID())
 	for page := 0; ; page++ {
 		reactions, response, err := gh.client.Reactions.ListIssueCommentReactions(gh.context, org, repo, *comment.ID, &github.ListOptions{
 			Page:    page,
