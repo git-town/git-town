@@ -10,7 +10,7 @@ import (
 
 // loads all issues and pull requests closed since the given date
 func (gh Connector) ClosedIssues(date string) (closedIssues []*github.Issue, closedPullRequests []*github.Issue) {
-	query := fmt.Sprintf("repo:git-town/git-town closed:>=%s", date)
+	query := fmt.Sprintf("repo:%s/%s closed:>=%s", org, repo, date)
 	fmt.Printf("loading issues and pull requests closed since %s ", date)
 	for page := 1; ; page++ {
 		results, response, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
