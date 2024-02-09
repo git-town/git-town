@@ -6,13 +6,13 @@ import (
 	"github.com/google/go-github/v58/github"
 )
 
-func (gh Connector) OpenedIssuesOrPRsSince(date string) []*github.Issue {
+func (gh Connector) OpenIssues() []*github.Issue {
 	result := []*github.Issue{}
-	query := fmt.Sprintf("repo:git-town/git-town opened:>=%s", date)
-	fmt.Print("loading opened issues ")
+	query := "repo:git-town/git-town is:issue is:open"
+	fmt.Print("loading open issues ")
 	for page := 0; ; page++ {
 		results, _, err := gh.client.Search.Issues(gh.context, query, &github.SearchOptions{
-			Sort:  "opened",
+			Sort:  "created",
 			Order: "asc",
 			ListOptions: github.ListOptions{
 				Page:    page,

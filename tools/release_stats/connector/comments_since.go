@@ -13,7 +13,7 @@ import (
 func (gh Connector) foo() {}
 
 // provides all users that commented anywhere since the given date
-func (gh Connector) commentsSince(tag git.Tag) []*github.IssueComment {
+func (gh Connector) CommentsSince(tag git.Tag) []*github.IssueComment {
 	created := "created"
 	asc := "asc"
 	fmt.Printf("loading comments on issues since %s", console.Cyan.Styled(tag.ISOTime))

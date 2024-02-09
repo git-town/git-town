@@ -25,16 +25,21 @@ func main() {
 	openedIssuesOrPRs := gh.OpenedIssuesOrPRsSince(lastRelease.ISOTime)
 	contributors.AddUsers(gh.IssuesParticipants(openedIssuesOrPRs))
 
-	// Add people who were involved with issues and pull requests that were closed in this release.
-	// People are counted as contributors to this release even if their interaction was a long time ago,
-	// as long as what they contributed to is a part of this release.
+	// Add people who were involved with issues and pull requests that were resolved in this release.
 	closedIssues, closedPullRequests := gh.ClosedIssues(lastRelease.ISOTime)
 	contributors.AddUsers(gh.IssuesParticipants(closedIssues))
 	contributors.AddUsers(gh.IssuesParticipants(closedPullRequests))
 
-	// people who made any comment on any issue (old or new, open or closed) since the last release
+	// Add people who made any comment on any issue (old or new, open or closed) since the last release
+	newComments := gh.CommentsSince(lastRelease)
+	contributors.AddUsers(connector.CommentsAuthors(newComments))
 
-	// people who added a reaction on anything issue since the last release
+	// people who added a reaction on anything since the last release
+	// anything = open issues + issues that were closed in the last release
+	openIssues := gh.OpenIssues()
+	allIssues := append(openIssues, closedIssues...)
+	allIssuesComments := gh.IssuesComments(allIssues)
+	contributors.AddUsers(connector.CommentsAuthors(allIssuesComments))
 
 	// load all people who commented on pull requests since the last release
 
