@@ -60,10 +60,12 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-			BeforeBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
-			BeforeLocalConfigSnapshot: configdomain.EmptyPartialConfig(),
-			UndoablePerennialCommits:  []gitdomain.SHA{},
+			AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+			BeforeBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
+			BeforeGlobalConfigSnapshot: configdomain.EmptyPartialConfig(),
+			BeforeLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			UndoablePerennialCommits:   []gitdomain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)

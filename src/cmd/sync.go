@@ -88,13 +88,15 @@ func executeSync(all, dryRun, verbose bool) error {
 		ShouldPushTags: config.shouldPushTags,
 	})
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
-		AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		BeforeBranchesSnapshot:    initialBranchesSnapshot,
-		BeforeLocalConfigSnapshot: repo.Runner.LocalGitConfig,
-		Command:                   "sync",
-		DryRun:                    dryRun,
-		RunProgram:                runProgram,
+		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
+		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+		BeforeBranchesSnapshot:     initialBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
+		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
+		Command:                    "sync",
+		DryRun:                     dryRun,
+		RunProgram:                 runProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

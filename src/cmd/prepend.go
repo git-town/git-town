@@ -62,13 +62,15 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
-		AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		BeforeBranchesSnapshot:    initialBranchesSnapshot,
-		BeforeLocalConfigSnapshot: repo.Runner.LocalGitConfig,
-		Command:                   "prepend",
-		DryRun:                    dryRun,
-		RunProgram:                prependProgram(config),
+		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
+		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+		BeforeBranchesSnapshot:     initialBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
+		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
+		Command:                    "prepend",
+		DryRun:                     dryRun,
+		RunProgram:                 prependProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

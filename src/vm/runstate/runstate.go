@@ -120,15 +120,17 @@ func (self *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
-		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
-		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
-		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
-		Command:                   self.Command,
-		DryRun:                    self.DryRun,
-		IsUndo:                    true,
-		RunProgram:                self.UndoProgram,
-		UndoablePerennialCommits:  []gitdomain.SHA{},
+		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
+		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
+		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
+		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		Command:                    self.Command,
+		DryRun:                     self.DryRun,
+		IsUndo:                     true,
+		RunProgram:                 self.UndoProgram,
+		UndoablePerennialCommits:   []gitdomain.SHA{},
 	}
 	result.RunProgram.Add(&opcode.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
 	result.RunProgram.RemoveDuplicateCheckout()

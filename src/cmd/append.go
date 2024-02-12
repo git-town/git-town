@@ -61,13 +61,15 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		BeforeBranchesSnapshot:    initialBranchesSnapshot,
-		BeforeLocalConfigSnapshot: repo.Runner.LocalGitConfig,
-		AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
-		AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		Command:                   "append",
-		DryRun:                    dryRun,
-		RunProgram:                appendProgram(config),
+		BeforeBranchesSnapshot:     initialBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
+		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
+		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
+		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+		Command:                    "append",
+		DryRun:                     dryRun,
+		RunProgram:                 appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

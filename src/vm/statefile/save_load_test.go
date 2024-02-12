@@ -36,14 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:                   "command",
-			IsUndo:                    true,
-			AbortProgram:              program.Program{},
-			AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
-			AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-			BeforeBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
-			BeforeLocalConfigSnapshot: configdomain.EmptyPartialConfig(),
-			DryRun:                    true,
+			Command:                    "command",
+			IsUndo:                     true,
+			AbortProgram:               program.Program{},
+			AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
+			AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+			BeforeBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
+			BeforeGlobalConfigSnapshot: configdomain.EmptyPartialConfig(),
+			BeforeLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			DryRun:                     true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -174,6 +176,27 @@ func TestLoadSave(t *testing.T) {
     "Active": "",
     "Branches": []
   },
+  "AfterGlobalConfigSnapshot": {
+    "Aliases": null,
+    "GitHubToken": null,
+    "GitLabToken": null,
+    "GitUserEmail": null,
+    "GitUserName": null,
+    "GiteaToken": null,
+    "HostingOriginHostname": null,
+    "HostingPlatform": null,
+    "Lineage": null,
+    "MainBranch": null,
+    "Offline": null,
+    "PerennialBranches": null,
+    "PushHook": null,
+    "PushNewBranches": null,
+    "ShipDeleteTrackingBranch": null,
+    "SyncBeforeShip": null,
+    "SyncFeatureStrategy": null,
+    "SyncPerennialStrategy": null,
+    "SyncUpstream": null
+  },
   "AfterLocalConfigSnapshot": {
     "Aliases": null,
     "GitHubToken": null,
@@ -198,6 +221,27 @@ func TestLoadSave(t *testing.T) {
   "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": []
+  },
+  "BeforeGlobalConfigSnapshot": {
+    "Aliases": null,
+    "GitHubToken": null,
+    "GitLabToken": null,
+    "GitUserEmail": null,
+    "GitUserName": null,
+    "GiteaToken": null,
+    "HostingOriginHostname": null,
+    "HostingPlatform": null,
+    "Lineage": null,
+    "MainBranch": null,
+    "Offline": null,
+    "PerennialBranches": null,
+    "PushHook": null,
+    "PushNewBranches": null,
+    "ShipDeleteTrackingBranch": null,
+    "SyncBeforeShip": null,
+    "SyncFeatureStrategy": null,
+    "SyncPerennialStrategy": null,
+    "SyncUpstream": null
   },
   "BeforeLocalConfigSnapshot": {
     "Aliases": null,
