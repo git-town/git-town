@@ -91,7 +91,7 @@ func executeUndo(verbose bool) error {
 	}
 
 	// UNDO CONFIG CHANGES
-	globalConfigSpans := undoconfig.NewConfigDiffs(runState.BeforeGlobalConfigSnapshot, runstate.EmptyRunState().AfterGlobalConfigSnapshot)
+	globalConfigSpans := undoconfig.NewConfigDiffs(runState.BeforeGlobalConfigSnapshot, runState.EmptyRunState().AfterGlobalConfigSnapshot)
 
 	// undoConfigChanges(runState.BeforeGlobalConfigSnapshot, runState.AfterGlobalConfigSnapshot, repo.Runner)
 	// undoStashChanges(runState.BeforeStashSize, runState.AfterStashSize, repo.Runner)
