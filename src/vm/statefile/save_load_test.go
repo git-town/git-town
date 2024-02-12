@@ -171,6 +171,27 @@ func TestLoadSave(t *testing.T) {
     "Active": "",
     "Branches": []
   },
+  "AfterLocalConfigSnapshot": {
+    "Aliases": null,
+    "GitHubToken": null,
+    "GitLabToken": null,
+    "GitUserEmail": null,
+    "GitUserName": null,
+    "GiteaToken": null,
+    "HostingOriginHostname": null,
+    "HostingPlatform": null,
+    "Lineage": null,
+    "MainBranch": null,
+    "Offline": null,
+    "PerennialBranches": null,
+    "PushHook": null,
+    "PushNewBranches": null,
+    "ShipDeleteTrackingBranch": null,
+    "SyncBeforeShip": null,
+    "SyncFeatureStrategy": null,
+    "SyncPerennialStrategy": null,
+    "SyncUpstream": null
+  },
   "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": []
