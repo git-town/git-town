@@ -58,6 +58,15 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	runState, err := statefile.Load(repo.RootDir)
+	if err != nil {
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	undoBranchChanges(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot, repo.Runner)
+	undoConfigChanges(runState.BeforeGlobalConfigSnapshot, runState.AfterGlobalConfigSnapshot, repo.Runner)
+	undoStashChanges(runState.BeforeStashSize, runState.AfterStashSize, repo.Runner)
+
+	// OLD CODE
 	undoRunState, err := determineUndoRunState(config, repo)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
