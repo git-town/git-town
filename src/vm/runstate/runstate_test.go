@@ -53,9 +53,9 @@ func TestRunState(t *testing.T) {
 					gitdomain.BranchInfo{
 						LocalName:  "branch-2",
 						LocalSHA:   "333333",
-						RemoteName: "origin/branch-2",
-						RemoteSHA:  "333333",
-						SyncStatus: gitdomain.SyncStatusUpToDate,
+						RemoteName: gitdomain.EmptyRemoteBranchName(),
+						RemoteSHA:  gitdomain.EmptySHA(),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
 					},
 				},
 			},
@@ -89,9 +89,9 @@ func TestRunState(t *testing.T) {
       {
         "LocalName": "branch-2",
         "LocalSHA": "333333",
-        "RemoteName": "origin/branch-2",
-        "RemoteSHA": "333333",
-        "SyncStatus": "up to date"
+        "RemoteName": "",
+        "RemoteSHA": "",
+        "SyncStatus": "local only"
       }
     ]
   },
