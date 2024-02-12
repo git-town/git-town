@@ -14,6 +14,11 @@ func finished(args ExecuteArgs) error {
 	if args.RunState.IsUndo {
 		return finishedUndoCommand(args)
 	}
+	var err error
+	args.RunState.AfterBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	if err != nil {
+		return err
+	}
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
 	}
