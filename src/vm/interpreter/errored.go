@@ -28,7 +28,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.UndoProgram.AddProgram(undoProgram)
 	if failedOpcode.ShouldAutomaticallyUndoOnError() {
-		return autoUndo(failedOpcode, runErr, args)
+		return autoUndo(failedOpcode, runErr, args, afterBranchesSnapshot)
 	}
 	args.RunState.RunProgram.Prepend(failedOpcode.CreateContinueProgram()...)
 	err = args.RunState.MarkAsUnfinished(&args.Run.Backend)

@@ -60,7 +60,6 @@ func TestRunState(t *testing.T) {
 				},
 			},
 			UndoablePerennialCommits: []gitdomain.SHA{},
-			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)

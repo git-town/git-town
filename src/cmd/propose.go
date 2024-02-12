@@ -68,10 +68,10 @@ func executePropose(dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		Command:             "propose",
-		DryRun:              dryRun,
-		RunProgram:          proposeProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "propose",
+		DryRun:                 dryRun,
+		RunProgram:             proposeProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

@@ -159,7 +159,6 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
-			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 
@@ -177,7 +176,6 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "DryRun": true,
   "FinalUndoProgram": [],
-  "InitialActiveBranch": "initial",
   "IsUndo": true,
   "RunProgram": [
     {

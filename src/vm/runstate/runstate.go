@@ -57,10 +57,11 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
-func (self *RunState) CreateAbortRunState() RunState {
+func (self *RunState) CreateAbortRunState(afterBranchesSnapshot gitdomain.BranchesSnapshot) RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
+		AfterBranchesSnapshot:  afterBranchesSnapshot,
 		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
 		Command:                self.Command,
 		DryRun:                 self.DryRun,
