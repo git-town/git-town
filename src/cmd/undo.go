@@ -53,8 +53,8 @@ func executeUndo(verbose bool) error {
 		return err
 	}
 	var config *undoConfig
-	var initialStashSnaphot gitdomain.StashSize
-	config, initialStashSnaphot, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
+	var initialStashSize gitdomain.StashSize
+	config, initialStashSize, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func executeUndo(verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSnaphot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
