@@ -1,6 +1,7 @@
 dist/
 git-town.exe
 git-town_*
+go.work.sum
 node_modules/
 rta.exe
 tools/alphavet*
