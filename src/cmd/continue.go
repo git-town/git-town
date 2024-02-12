@@ -123,7 +123,7 @@ func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState,
 	if err != nil {
 		return runstate.EmptyRunState(), true, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || !runState.IsUnfinished() {
+	if runState == nil || runState.IsFinished() {
 		fmt.Println(messages.ContinueNothingToDo)
 		return runstate.EmptyRunState(), true, nil
 	}
