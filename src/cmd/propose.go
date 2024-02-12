@@ -100,7 +100,7 @@ type proposeConfig struct {
 	remotes          gitdomain.Remotes
 }
 
-func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,

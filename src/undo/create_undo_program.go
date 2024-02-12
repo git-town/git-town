@@ -30,7 +30,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 
 type CreateUndoProgramArgs struct {
 	DryRun                   bool
-	InitialBranchesSnapshot  gitdomain.BranchesStatus
+	InitialBranchesSnapshot  gitdomain.BranchesSnapshot
 	InitialConfigSnapshot    undoconfig.ConfigSnapshot
 	InitialStashSnapshot     gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook

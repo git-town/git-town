@@ -1,7 +1,7 @@
 package gitdomain
 
-// BranchesStatus is a snapshot of the Git branches at a particular point in time.
-type BranchesStatus struct {
+// BranchesSnapshot is a snapshot of the Git branches at a particular point in time.
+type BranchesSnapshot struct {
 	// the branch that was checked out at the time the snapshot was taken
 	Active LocalBranchName
 
@@ -11,13 +11,13 @@ type BranchesStatus struct {
 	Branches BranchInfos
 }
 
-func EmptyBranchesSnapshot() BranchesStatus {
-	return BranchesStatus{
+func EmptyBranchesSnapshot() BranchesSnapshot {
+	return BranchesSnapshot{
 		Active:   EmptyLocalBranchName(),
 		Branches: BranchInfos{},
 	}
 }
 
-func (self BranchesStatus) IsEmpty() bool {
+func (self BranchesSnapshot) IsEmpty() bool {
 	return len(self.Branches) == 0 && self.Active.IsEmpty()
 }
