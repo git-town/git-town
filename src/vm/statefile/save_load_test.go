@@ -80,6 +80,7 @@ func TestLoadSave(t *testing.T) {
 					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
 				&opcode.DiscardOpenChanges{},
+				&opcode.EndOfBranchProgram{},
 				&opcode.EnsureHasShippableChanges{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
@@ -267,6 +268,10 @@ func TestLoadSave(t *testing.T) {
     {
       "data": {},
       "type": "DiscardOpenChanges"
+    },
+    {
+      "data": {},
+      "type": "EndOfBranchProgram"
     },
     {
       "data": {
