@@ -19,7 +19,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.InitialStashSnapshot, &args.Run.Backend)
+	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.InitialStashSize, &args.Run.Backend)
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -32,7 +32,7 @@ type CreateUndoProgramArgs struct {
 	DryRun                   bool
 	InitialBranchesSnapshot  gitdomain.BranchesSnapshot
 	InitialConfigSnapshot    undoconfig.ConfigSnapshot
-	InitialStashSnapshot     gitdomain.StashSize
+	InitialStashSize         gitdomain.StashSize
 	NoPushHook               configdomain.NoPushHook
 	Run                      *git.ProdRunner
 	UndoablePerennialCommits []gitdomain.SHA

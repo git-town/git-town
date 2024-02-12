@@ -24,7 +24,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Run:                      args.Run,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
-		InitialStashSnapshot:     args.InitialStashSnapshot,
+		InitialStashSize:         args.InitialStashSize,
 		NoPushHook:               args.NoPushHook(),
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})

@@ -82,7 +82,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSize,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
@@ -104,7 +104,7 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -115,13 +115,13 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSnapshot, exit, err
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	if fc.Err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, fc.Err
+		return nil, branchesSnapshot, stashSize, false, fc.Err
 	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -137,7 +137,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 		Runner:           repo.Runner,
 	})
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
@@ -156,7 +156,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,
-	}, branchesSnapshot, stashSnapshot, false, fc.Err
+	}, branchesSnapshot, stashSize, false, fc.Err
 }
 
 func appendProgram(config *appendConfig) program.Program {
