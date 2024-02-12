@@ -95,7 +95,7 @@ func TestRunState(t *testing.T) {
       }
     ]
   },
- 	"BeforeBranchesSnapshot": {
+  "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": null
   },

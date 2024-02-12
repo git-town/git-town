@@ -166,6 +166,14 @@ func TestLoadSave(t *testing.T) {
 		wantJSON := `
 {
   "AbortProgram": [],
+  "AfterBranchesSnapshot": {
+    "Active": "",
+    "Branches": null
+  },
+  "BeforeBranchesSnapshot": {
+    "Active": "",
+    "Branches": null
+  },
   "Command": "command",
   "DryRun": true,
   "FinalUndoProgram": [],
