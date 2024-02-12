@@ -135,9 +135,9 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 	}
 	var undoRunState runstate.RunState
 	if runState.IsFinished() {
-		undoRunState = runState.CreateAbortRunState()
-	} else {
 		undoRunState = runState.CreateUndoRunState()
+	} else {
+		undoRunState = runState.CreateAbortRunState()
 	}
 	if !undoRunState.DryRun {
 		cmdhelpers.Wrap(&undoRunState.RunProgram, cmdhelpers.WrapOptions{

@@ -80,9 +80,9 @@ func displayStatus(config displayStatusConfig) {
 		return
 	}
 	if config.state.IsFinished() {
-		displayUnfinishedStatus(config)
-	} else {
 		displayFinishedStatus(config)
+	} else {
+		displayUnfinishedStatus(config)
 	}
 }
 
