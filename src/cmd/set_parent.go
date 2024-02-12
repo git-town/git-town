@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"errors"
+	"os"
 
+	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
@@ -30,6 +32,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func executeSetParent(verbose bool) error {
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -41,7 +44,8 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSnapshot, _, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,

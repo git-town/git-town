@@ -3,7 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
@@ -68,7 +70,9 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
-	branchesSnapshot, _, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
