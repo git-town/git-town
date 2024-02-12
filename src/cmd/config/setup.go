@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"slices"
 
 	"github.com/git-town/git-town/v12/src/cli/dialog"
@@ -168,7 +169,9 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 }
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
-	branchesSnapshot, _, dialogInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -178,7 +181,7 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 		ValidateNoOpenChanges: false,
 	})
 	return setupConfig{
-		dialogInputs:  dialogInputs,
+		dialogInputs:  dialogTestInputs,
 		hasConfigFile: repo.Runner.Config.ConfigFile != nil,
 		localBranches: branchesSnapshot.Branches,
 		userInput:     defaultUserInput(),
