@@ -45,7 +45,7 @@ type ExecuteArgs struct {
 	DialogTestInputs        *components.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSnapshot    gitdomain.StashSize
+	InitialStashSize        gitdomain.StashSize
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
 	RunState                *runstate.RunState

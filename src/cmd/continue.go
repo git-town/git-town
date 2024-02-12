@@ -51,7 +51,7 @@ func executeContinue(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineContinueConfig(repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineContinueConfig(repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -69,13 +69,13 @@ func executeContinue(verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -86,17 +86,17 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, exit, err
+		return nil, initialBranchesSnapshot, initialStashSize, exit, err
 	}
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, err
+		return nil, initialBranchesSnapshot, initialStashSize, false, err
 	}
 	if repoStatus.Conflicts {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, errors.New(messages.ContinueUnresolvedConflicts)
+		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	if repoStatus.UntrackedChanges {
-		return nil, initialBranchesSnapshot, initialStashSnapshot, false, errors.New(messages.ContinueUntrackedChanges)
+		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUntrackedChanges)
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -109,7 +109,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		FullConfig:       &repo.Runner.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
-	}, initialBranchesSnapshot, initialStashSnapshot, false, err
+	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
 type continueConfig struct {

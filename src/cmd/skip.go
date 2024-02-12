@@ -46,7 +46,7 @@ func executeSkip(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -80,6 +80,6 @@ func executeSkip(verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSize:        initialStashSize,
 	})
 }

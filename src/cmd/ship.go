@@ -82,7 +82,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineShipConfig(args, repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineShipConfig(args, repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -112,7 +112,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
@@ -138,7 +138,7 @@ type shipConfig struct {
 
 func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*shipConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -149,30 +149,30 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSnapshot, exit, err
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	branchNameToShip := gitdomain.NewLocalBranchName(slice.FirstElementOr(args, branchesSnapshot.Active.String()))
 	branchToShip := branchesSnapshot.Branches.FindByLocalName(branchNameToShip)
 	if branchToShip != nil && branchToShip.SyncStatus == gitdomain.SyncStatusOtherWorktree {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipBranchOtherWorktree, branchNameToShip)
 	}
 	isShippingInitialBranch := branchNameToShip == branchesSnapshot.Active
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
-			return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
+			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
 	if !repo.Runner.IsFeatureBranch(branchNameToShip) {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.FullConfig,
@@ -182,16 +182,16 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		Runner:           repo.Runner,
 	})
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.FullConfig, repo.Runner.Lineage)
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	targetBranchName := repo.Runner.Lineage.Parent(branchNameToShip)
 	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	var proposal *hostingdomain.Proposal
 	childBranches := repo.Runner.Lineage.Children(branchNameToShip)
@@ -204,7 +204,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		Log:             print.Logger{},
 	})
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
@@ -212,7 +212,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
-				return nil, branchesSnapshot, stashSnapshot, false, err
+				return nil, branchesSnapshot, stashSize, false, err
 			}
 			if proposal != nil {
 				canShipViaAPI = true
@@ -222,7 +222,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		for _, childBranch := range childBranches {
 			childProposal, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
-				return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
+				return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
 			if childProposal != nil {
 				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
@@ -247,7 +247,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		remotes:                  remotes,
 		targetBranch:             *targetBranch,
-	}, branchesSnapshot, stashSnapshot, false, nil
+	}, branchesSnapshot, stashSize, false, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {

@@ -1364,12 +1364,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSnapshot, err := state.fixture.DevRepo.StashSize()
+		stashSize, err := state.fixture.DevRepo.StashSize()
 		if err != nil {
 			return err
 		}
-		if stashSnapshot != 1 {
-			return fmt.Errorf("expected 1 stash but found %d", stashSnapshot)
+		if stashSize != 1 {
+			return fmt.Errorf("expected 1 stash but found %d", stashSize)
 		}
 		return nil
 	})

@@ -67,7 +67,7 @@ func executeSync(all, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineSyncConfig(all, repo, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineSyncConfig(all, repo, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -103,7 +103,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
@@ -121,7 +121,7 @@ type syncConfig struct {
 
 func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose bool) (*syncConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -132,16 +132,16 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSnapshot, exit, err
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	var branchNamesToSync gitdomain.LocalBranchNames
 	var shouldPushTags bool
@@ -154,7 +154,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			Runner:           repo.Runner,
 		})
 		if err != nil {
-			return nil, branchesSnapshot, stashSnapshot, false, err
+			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
@@ -167,7 +167,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			Runner:           repo.Runner,
 		})
 		if err != nil {
-			return nil, branchesSnapshot, stashSnapshot, false, err
+			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 		shouldPushTags = !repo.Runner.IsFeatureBranch(branchesSnapshot.Active)
@@ -184,5 +184,5 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		previousBranch:   previousBranch,
 		remotes:          remotes,
 		shouldPushTags:   shouldPushTags,
-	}, branchesSnapshot, stashSnapshot, false, err
+	}, branchesSnapshot, stashSize, false, err
 }
