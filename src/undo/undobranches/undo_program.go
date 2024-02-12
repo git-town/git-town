@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
-func DetermineUndoBranchesProgram(initialBranchesSnapshot gitdomain.BranchesStatus, undoablePerennialCommits []gitdomain.SHA, runner *git.ProdRunner) (program.Program, error) {
+func DetermineUndoBranchesProgram(initialBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, runner *git.ProdRunner) (program.Program, error) {
 	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return program.Program{}, err

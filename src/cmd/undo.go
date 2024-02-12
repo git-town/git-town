@@ -80,7 +80,7 @@ type undoConfig struct {
 	connector               hostingdomain.Connector
 	dialogTestInputs        components.TestInputs
 	hasOpenChanges          bool
-	initialBranchesSnapshot gitdomain.BranchesStatus
+	initialBranchesSnapshot gitdomain.BranchesSnapshot
 	previousBranch          gitdomain.LocalBranchName
 }
 

@@ -89,7 +89,7 @@ func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBran
 }
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
-func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesStatus, error) { //nolint:nonamedreturns
+func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := self.Query("git", "branch", "-vva")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
@@ -98,7 +98,7 @@ func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesStatus, error
 	if !currentBranch.IsEmpty() {
 		self.CurrentBranchCache.Set(currentBranch)
 	}
-	return gitdomain.BranchesStatus{
+	return gitdomain.BranchesSnapshot{
 		Branches: branches,
 		Active:   currentBranch,
 	}, nil

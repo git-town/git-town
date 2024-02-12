@@ -17,11 +17,11 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch added", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
@@ -94,7 +94,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch removed", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("branch-1"),
@@ -106,7 +106,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("branch-1"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
@@ -150,7 +150,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch changed", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -170,7 +170,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -247,7 +247,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("local-only branch pushed to origin", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -266,7 +266,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -331,7 +331,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("remote-only branch downloaded", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
@@ -350,7 +350,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -417,11 +417,11 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch added", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{},
 			Active:   gitdomain.NewLocalBranchName("main"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -498,7 +498,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -517,7 +517,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -594,7 +594,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch remote updated", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -613,7 +613,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -685,7 +685,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to same SHA", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -711,7 +711,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -798,7 +798,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("upstream commit downloaded and branch shipped at the same time", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -824,7 +824,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -897,7 +897,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch changed locally and remotely to different SHAs", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -916,7 +916,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1017,7 +1017,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pulled down", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1036,7 +1036,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1113,7 +1113,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch updates pushed up", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1132,7 +1132,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1203,7 +1203,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch deleted locally", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1222,7 +1222,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.EmptyLocalBranchName(),
@@ -1289,7 +1289,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("omnibranch tracking branch deleted", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1308,7 +1308,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("feature-branch"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("perennial-branch"),
@@ -1373,7 +1373,7 @@ func TestChanges(t *testing.T) {
 
 	t.Run("sync with a new upstream remote", func(t *testing.T) {
 		t.Parallel()
-		before := gitdomain.BranchesStatus{
+		before := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
@@ -1385,7 +1385,7 @@ func TestChanges(t *testing.T) {
 			},
 			Active: gitdomain.NewLocalBranchName("main"),
 		}
-		after := gitdomain.BranchesStatus{
+		after := gitdomain.BranchesSnapshot{
 			Branches: gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
 					LocalName:  gitdomain.NewLocalBranchName("main"),
