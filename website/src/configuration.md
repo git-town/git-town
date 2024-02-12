@@ -7,3 +7,6 @@ you through every configuration option and give you a chance to adjust it.
 ```
 git town config setup
 ```
+
+More information about the configuration file including how to create one
+manually are [here](configuration-file.md).
