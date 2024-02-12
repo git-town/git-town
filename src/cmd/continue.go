@@ -75,7 +75,7 @@ func executeContinue(verbose bool) error {
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
