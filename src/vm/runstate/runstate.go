@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
@@ -17,19 +17,19 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortProgram             program.Program `exhaustruct:"optional"`
-	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
-	AfterConfigSnapshot      gitconfig.SingleSnapshot
-	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
-	BeforeConfigSnapshot     gitconfig.SingleSnapshot
-	Command                  string
-	DryRun                   bool
-	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	IsUndo                   bool            `exhaustruct:"optional"`
-	RunProgram               program.Program
-	UndoProgram              program.Program            `exhaustruct:"optional"`
-	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
-	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
+	AbortProgram              program.Program `exhaustruct:"optional"`
+	AfterBranchesSnapshot     gitdomain.BranchesSnapshot
+	AfterLocalConfigSnapshot  configdomain.PartialConfig
+	BeforeBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeforeLocalConfigSnapshot configdomain.PartialConfig
+	Command                   string
+	DryRun                    bool
+	FinalUndoProgram          program.Program `exhaustruct:"optional"`
+	IsUndo                    bool            `exhaustruct:"optional"`
+	RunProgram                program.Program
+	UndoProgram               program.Program            `exhaustruct:"optional"`
+	UndoablePerennialCommits  []gitdomain.SHA            `exhaustruct:"optional"`
+	UnfinishedDetails         *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
@@ -64,14 +64,14 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		IsUndo:                 true,
-		RunProgram:             abortProgram,
+		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
+		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
+		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
+		Command:                   self.Command,
+		DryRun:                    self.DryRun,
+		IsUndo:                    true,
+		RunProgram:                abortProgram,
 	}
 }
 
@@ -79,13 +79,13 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		RunProgram:             self.AbortProgram,
+		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
+		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
+		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
+		Command:                   self.Command,
+		DryRun:                    self.DryRun,
+		RunProgram:                self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
@@ -114,15 +114,15 @@ func (self *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:      self.AfterConfigSnapshot,
-		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
-		Command:                  self.Command,
-		DryRun:                   self.DryRun,
-		IsUndo:                   true,
-		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []gitdomain.SHA{},
+		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
+		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
+		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
+		Command:                   self.Command,
+		DryRun:                    self.DryRun,
+		IsUndo:                    true,
+		RunProgram:                self.UndoProgram,
+		UndoablePerennialCommits:  []gitdomain.SHA{},
 	}
 	result.RunProgram.Add(&opcode.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
 	result.RunProgram.RemoveDuplicateCheckout()
