@@ -15,7 +15,7 @@ import (
 // should they fail.
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs, afterBranchesSnapshot gitdomain.BranchesSnapshot) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
-	abortRunState := args.RunState.CreateAbortRunState(afterBranchesSnapshot)
+	abortRunState := args.RunState.CreateAbortRunState()
 	err := Execute(ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        args.DialogTestInputs,
