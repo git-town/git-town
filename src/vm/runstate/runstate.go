@@ -66,14 +66,16 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
-		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
-		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
-		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
-		Command:                   self.Command,
-		DryRun:                    self.DryRun,
-		IsUndo:                    true,
-		RunProgram:                abortProgram,
+		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
+		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
+		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
+		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		Command:                    self.Command,
+		DryRun:                     self.DryRun,
+		IsUndo:                     true,
+		RunProgram:                 abortProgram,
 	}
 }
 
@@ -81,13 +83,15 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:     self.AfterBranchesSnapshot,
-		AfterLocalConfigSnapshot:  self.AfterLocalConfigSnapshot,
-		BeforeBranchesSnapshot:    self.BeforeBranchesSnapshot,
-		BeforeLocalConfigSnapshot: self.BeforeLocalConfigSnapshot,
-		Command:                   self.Command,
-		DryRun:                    self.DryRun,
-		RunProgram:                self.AbortProgram,
+		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
+		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
+		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
+		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
+		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		Command:                    self.Command,
+		DryRun:                     self.DryRun,
+		RunProgram:                 self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
