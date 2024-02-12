@@ -88,7 +88,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 	// skip the remaining run-opcodes for this branch
 	skipping := true
 	for _, opcode := range self.RunProgram {
-		if shared.IsEndOfBranchProgram(opcode) {
+		if shared.IsEndOfBranchProgramOpcode(opcode) {
 			skipping = false
 		}
 		if !skipping {
