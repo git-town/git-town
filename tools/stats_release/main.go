@@ -40,7 +40,7 @@ func main() {
 	fmt.Printf("%s contributors:\n", console.Cyan.Styled(strconv.Itoa(len(users))))
 	userNames := []string{}
 	for _, username := range users {
-		userNames = append(userNames, "@"+username)
+		userNames = append(userNames, "@"+username.Username)
 	}
 	fmt.Println(strings.Join(userNames, ", "))
 }
