@@ -8,7 +8,7 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	var branchesSnapshot gitdomain.BranchesSnapshot
 	var err error
 	stashSnapshot, err := args.Repo.Runner.Backend.StashSize()
@@ -75,7 +75,7 @@ func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesSnapshot, gitdom
 	return branchesSnapshot, stashSnapshot, false, err
 }
 
-type LoadBranchesArgs struct {
+type LoadRepoSnapshotArgs struct {
 	*configdomain.FullConfig
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool

@@ -87,7 +87,7 @@ type undoConfig struct {
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
