@@ -97,9 +97,9 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
-	dialogInputs := components.LoadTestInputs(os.Environ())
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
-		DialogTestInputs:      &dialogInputs,
+		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
