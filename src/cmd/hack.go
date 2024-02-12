@@ -55,10 +55,10 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "hack",
-		DryRun:              dryRun,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          appendProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "hack",
+		DryRun:                 dryRun,
+		RunProgram:             appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

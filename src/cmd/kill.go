@@ -63,11 +63,11 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "kill",
-		DryRun:              dryRun,
-		RunProgram:          steps,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		FinalUndoProgram:    finalUndoProgram,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "kill",
+		DryRun:                 dryRun,
+		RunProgram:             steps,
+		FinalUndoProgram:       finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

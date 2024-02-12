@@ -73,10 +73,10 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "rename-branch",
-		DryRun:              dryRun,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          renameBranchProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "rename-branch",
+		DryRun:                 dryRun,
+		RunProgram:             renameBranchProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

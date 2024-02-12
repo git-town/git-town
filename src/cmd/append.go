@@ -60,10 +60,10 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "append",
-		DryRun:              dryRun,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          appendProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "append",
+		DryRun:                 dryRun,
+		RunProgram:             appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

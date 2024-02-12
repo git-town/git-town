@@ -22,8 +22,7 @@ type RunState struct {
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	InitialActiveBranch      gitdomain.LocalBranchName
-	IsUndo                   bool `exhaustruct:"optional"`
+	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
 	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
@@ -62,11 +61,11 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		IsUndo:              true,
-		RunProgram:          abortProgram,
+		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
+		Command:                self.Command,
+		DryRun:                 self.DryRun,
+		IsUndo:                 true,
+		RunProgram:             abortProgram,
 	}
 }
 
@@ -74,10 +73,9 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		RunProgram:          self.AbortProgram,
+		Command:    self.Command,
+		DryRun:     self.DryRun,
+		RunProgram: self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
@@ -108,12 +106,11 @@ func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
-		InitialActiveBranch:      self.InitialActiveBranch,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
-	result.RunProgram.Add(&opcode.Checkout{Branch: self.InitialActiveBranch})
+	result.RunProgram.Add(&opcode.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
 	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }

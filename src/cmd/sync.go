@@ -87,10 +87,10 @@ func executeSync(all, dryRun, verbose bool) error {
 		ShouldPushTags: config.shouldPushTags,
 	})
 	runState := runstate.RunState{
-		Command:             "sync",
-		DryRun:              dryRun,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          runProgram,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "sync",
+		DryRun:                 dryRun,
+		RunProgram:             runProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

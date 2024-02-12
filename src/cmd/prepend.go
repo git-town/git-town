@@ -61,10 +61,10 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		Command:             "prepend",
-		DryRun:              dryRun,
-		InitialActiveBranch: initialBranchesSnapshot.Active,
-		RunProgram:          prependProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		Command:                "prepend",
+		DryRun:                 dryRun,
+		RunProgram:             prependProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,
