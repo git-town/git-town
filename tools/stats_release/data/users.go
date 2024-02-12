@@ -36,8 +36,8 @@ func (self *ContributionCounter) Contributors() []Contributor {
 	result := make([]Contributor, len(self.list))
 	for u, username := range usernames {
 		result[u] = Contributor{
-			Username:          username,
 			ContributionCount: self.list[username],
+			Username:          username,
 		}
 	}
 	return result
