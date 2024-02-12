@@ -215,7 +215,7 @@ func TestLoadSave(t *testing.T) {
     "SyncBeforeShip": null,
     "SyncFeatureStrategy": null,
     "SyncPerennialStrategy": null,
-    "SyncUpstream": null    "Branches": []
+    "SyncUpstream": null
   },
   "Command": "command",
   "DryRun": true,
