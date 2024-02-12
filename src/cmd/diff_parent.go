@@ -71,7 +71,7 @@ type diffParentConfig struct {
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (*diffParentConfig, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,

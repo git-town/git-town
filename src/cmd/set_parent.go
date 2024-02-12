@@ -44,7 +44,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,

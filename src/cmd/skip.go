@@ -46,7 +46,7 @@ func executeSkip(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
+	initialBranchesSnapshot, initialStashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
