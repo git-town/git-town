@@ -134,7 +134,7 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
-	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
+	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
 	initialAndAncestors := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	slices.Reverse(initialAndAncestors)
 	return &appendConfig{

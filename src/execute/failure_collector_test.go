@@ -16,7 +16,7 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
 			fc := execute.FailureCollector{}
-			syncStatuses := gitdomain.BranchInfos{
+			branchInfos := gitdomain.BranchInfos{
 				{
 					LocalName:  gitdomain.NewLocalBranchName("branch1"),
 					LocalSHA:   gitdomain.EmptySHA(),
@@ -32,11 +32,11 @@ func TestCollector(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			have := fc.BranchesSyncStatus(syncStatuses, nil)
-			must.Eq(t, syncStatuses, have)
+			have := fc.BranchInfos(branchInfos, nil)
+			must.Eq(t, branchInfos, have)
 			err := errors.New("test error")
-			have = fc.BranchesSyncStatus(syncStatuses, err)
-			must.Eq(t, syncStatuses, have)
+			have = fc.BranchInfos(branchInfos, err)
+			must.Eq(t, branchInfos, have)
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
