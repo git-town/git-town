@@ -86,12 +86,12 @@ func TestRunState(t *testing.T) {
         "RemoteSHA": "222222",
         "SyncStatus": "not in sync"
       },
- 			{
+ 	    {
         "LocalName": "branch-2",
- 				"LocalSHA": "333333",
- 				"RemoteName": "origin/branch-2",
- 				"RemoteSHA": "333333",
- 				"SyncStatus": "up to date"
+ 	      "LocalSHA": "333333",
+ 	      "RemoteName": "origin/branch-2",
+ 	      "RemoteSHA": "333333",
+ 	      "SyncStatus": "up to date"
       }
     ]
   },
