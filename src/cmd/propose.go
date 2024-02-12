@@ -69,6 +69,7 @@ func executePropose(dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
 		Command:                "propose",
 		DryRun:                 dryRun,

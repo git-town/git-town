@@ -62,6 +62,7 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
 		Command:                "prepend",
 		DryRun:                 dryRun,

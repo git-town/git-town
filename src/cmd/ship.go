@@ -97,6 +97,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		}
 	}
 	runState := runstate.RunState{
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
 		Command:                "ship",
 		DryRun:                 dryRun,

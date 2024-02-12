@@ -88,6 +88,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		ShouldPushTags: config.shouldPushTags,
 	})
 	runState := runstate.RunState{
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
 		Command:                "sync",
 		DryRun:                 dryRun,
