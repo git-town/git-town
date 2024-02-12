@@ -21,7 +21,7 @@ type RunState struct {
 	AfterBranchesSnapshot      gitdomain.BranchesSnapshot
 	AfterGlobalConfigSnapshot  configdomain.PartialConfig
 	AfterLocalConfigSnapshot   configdomain.PartialConfig
-	AfterStashSnapshot         gitdomain.StashSize
+	AfterStashSize             gitdomain.StashSize
 	BeforeBranchesSnapshot     gitdomain.BranchesSnapshot
 	BeforeGlobalConfigSnapshot configdomain.PartialConfig
 	BeforeLocalConfigSnapshot  configdomain.PartialConfig
@@ -71,7 +71,7 @@ func (self *RunState) CreateAbortRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
-		AfterStashSnapshot:         self.AfterStashSnapshot,
+		AfterStashSize:             self.AfterStashSize,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
@@ -90,7 +90,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
-		AfterStashSnapshot:         self.AfterStashSnapshot,
+		AfterStashSize:             self.AfterStashSize,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
@@ -129,7 +129,7 @@ func (self *RunState) CreateUndoRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
-		AfterStashSnapshot:         self.AfterStashSnapshot,
+		AfterStashSize:             self.AfterStashSize,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,

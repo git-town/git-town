@@ -67,6 +67,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		BeforeStashSize:            initialStashSize,
 		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
 		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		AfterStashSize:             0,
 		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
 		Command:                    "append",
 		DryRun:                     dryRun,
