@@ -57,7 +57,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
 	DialogTestInputs        components.TestInputs
-	InitialBranchesSnapshot gitdomain.BranchesStatus
+	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	Lineage                 configdomain.Lineage

@@ -94,7 +94,7 @@ type appendConfig struct {
 	targetBranch              gitdomain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesStatus, gitdomain.StashSize, bool, error) {
+func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSnapshot, dialogTestInputs, exit, err := execute.LoadRepoSnapshot(execute.LoadBranchesArgs{
 		FullConfig:            &repo.Runner.FullConfig,
