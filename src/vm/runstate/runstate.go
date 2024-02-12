@@ -16,8 +16,9 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortProgram program.Program `exhaustruct:"optional"`
-	BeforeSnapshot
+	AbortProgram             program.Program `exhaustruct:"optional"`
+	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
