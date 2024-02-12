@@ -18,7 +18,6 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/undo/undostash"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -69,6 +68,7 @@ func executeUndo(verbose bool) error {
 	}
 
 	undoProgram := program.Program{}
+	undoProgram.AddProgram(runState.AbortProgram)
 
 	// undo branch changes
 	branchSpans := undobranches.NewBranchSpans(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot)
@@ -87,9 +87,16 @@ func executeUndo(verbose bool) error {
 	undoProgram.AddProgram(configUndoProgram)
 
 	// UNDO STASH CHANGES
-	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, runState.AfterStashSize)
+	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, initialStashSize)
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
+
+	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
+		DryRun:                   runState.DryRun,
+		RunInGitRoot:             true,
+		StashOpenChanges:         config.hasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+	})
 
 	// execute the undo program
 	for _, opcode := range branchUndoProgram {
@@ -106,24 +113,7 @@ func executeUndo(verbose bool) error {
 			fmt.Println("ERROR: " + err.Error())
 		}
 	}
-
-	// OLD CODE
-	undoRunState, err := determineUndoRunState(config, repo)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &undoRunState,
-		Run:                     repo.Runner,
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
-		InitialBranchesSnapshot: config.initialBranchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
-	})
+	return nil
 }
 
 type undoConfig struct {
