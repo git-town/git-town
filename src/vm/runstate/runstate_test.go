@@ -59,6 +59,7 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
+			BeforeBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")

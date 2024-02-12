@@ -74,9 +74,11 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:    self.Command,
-		DryRun:     self.DryRun,
-		RunProgram: self.AbortProgram,
+		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
+		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
+		Command:                self.Command,
+		DryRun:                 self.DryRun,
+		RunProgram:             self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
