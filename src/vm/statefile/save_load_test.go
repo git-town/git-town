@@ -177,7 +177,7 @@ func TestLoadSave(t *testing.T) {
     "Branches": []
   },
   "AfterGlobalConfigSnapshot": {
-    "Aliases": null,
+    "Aliases": {},
     "GitHubToken": null,
     "GitLabToken": null,
     "GitUserEmail": null,
@@ -198,7 +198,7 @@ func TestLoadSave(t *testing.T) {
     "SyncUpstream": null
   },
   "AfterLocalConfigSnapshot": {
-    "Aliases": null,
+    "Aliases": {},
     "GitHubToken": null,
     "GitLabToken": null,
     "GitUserEmail": null,
@@ -223,7 +223,7 @@ func TestLoadSave(t *testing.T) {
     "Branches": []
   },
   "BeforeGlobalConfigSnapshot": {
-    "Aliases": null,
+    "Aliases": {},
     "GitHubToken": null,
     "GitLabToken": null,
     "GitUserEmail": null,
@@ -244,7 +244,7 @@ func TestLoadSave(t *testing.T) {
     "SyncUpstream": null
   },
   "BeforeLocalConfigSnapshot": {
-    "Aliases": null,
+    "Aliases": {},
     "GitHubToken": null,
     "GitLabToken": null,
     "GitUserEmail": null,
