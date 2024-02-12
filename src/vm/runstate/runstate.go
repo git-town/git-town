@@ -21,9 +21,11 @@ type RunState struct {
 	AfterBranchesSnapshot      gitdomain.BranchesSnapshot
 	AfterGlobalConfigSnapshot  configdomain.PartialConfig
 	AfterLocalConfigSnapshot   configdomain.PartialConfig
+	AfterStashSnapshot         gitdomain.StashSize
 	BeforeBranchesSnapshot     gitdomain.BranchesSnapshot
 	BeforeGlobalConfigSnapshot configdomain.PartialConfig
 	BeforeLocalConfigSnapshot  configdomain.PartialConfig
+	BeforeStashSize            gitdomain.StashSize
 	Command                    string
 	DryRun                     bool
 	FinalUndoProgram           program.Program `exhaustruct:"optional"`
@@ -69,9 +71,11 @@ func (self *RunState) CreateAbortRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		AfterStashSnapshot:         self.AfterStashSnapshot,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		BeforeStashSize:            self.BeforeStashSize,
 		Command:                    self.Command,
 		DryRun:                     self.DryRun,
 		IsUndo:                     true,
@@ -86,9 +90,11 @@ func (self *RunState) CreateSkipRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		AfterStashSnapshot:         self.AfterStashSnapshot,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		BeforeStashSize:            self.BeforeStashSize,
 		Command:                    self.Command,
 		DryRun:                     self.DryRun,
 		RunProgram:                 self.AbortProgram,
@@ -123,9 +129,11 @@ func (self *RunState) CreateUndoRunState() RunState {
 		AfterBranchesSnapshot:      self.AfterBranchesSnapshot,
 		AfterGlobalConfigSnapshot:  self.AfterGlobalConfigSnapshot,
 		AfterLocalConfigSnapshot:   self.AfterLocalConfigSnapshot,
+		AfterStashSnapshot:         self.AfterStashSnapshot,
 		BeforeBranchesSnapshot:     self.BeforeBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: self.BeforeGlobalConfigSnapshot,
 		BeforeLocalConfigSnapshot:  self.BeforeLocalConfigSnapshot,
+		BeforeStashSize:            self.BeforeStashSize,
 		Command:                    self.Command,
 		DryRun:                     self.DryRun,
 		IsUndo:                     true,

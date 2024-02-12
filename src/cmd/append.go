@@ -56,7 +56,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineAppendConfig(gitdomain.NewLocalBranchName(arg), repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -64,6 +64,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		BeforeBranchesSnapshot:     initialBranchesSnapshot,
 		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
 		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
+		BeforeStashSize:            initialStashSize,
 		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
 		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
 		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
@@ -81,7 +82,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSnapshot:    initialStashSize,
 	})
 }
 
