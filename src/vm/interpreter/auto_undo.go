@@ -21,7 +21,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		FullConfig:              args.FullConfig,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &abortRunState,

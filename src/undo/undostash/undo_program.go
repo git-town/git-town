@@ -6,11 +6,11 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
-func DetermineUndoStashProgram(initialStashSnapshot gitdomain.StashSize, backend *git.BackendCommands) (program.Program, error) {
-	finalStashSnapshot, err := backend.StashSize()
+func DetermineUndoStashProgram(initialStashSize gitdomain.StashSize, backend *git.BackendCommands) (program.Program, error) {
+	finalStashSize, err := backend.StashSize()
 	if err != nil {
 		return program.Program{}, err
 	}
-	stashDiff := NewStashDiff(initialStashSnapshot, finalStashSnapshot)
+	stashDiff := NewStashDiff(initialStashSize, finalStashSize)
 	return stashDiff.Program(), nil
 }

@@ -61,7 +61,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialBranchesSnapshot, initialStashSnapshot, exit, err := determineProposeConfig(repo, dryRun, verbose)
+	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeConfig(repo, dryRun, verbose)
 	if err != nil || exit {
 		return err
 	}
@@ -84,7 +84,7 @@ func executePropose(dryRun, verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnapshot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
@@ -103,7 +103,7 @@ type proposeConfig struct {
 
 func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) (*proposeConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSnapshot, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -114,16 +114,16 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
-		return nil, branchesSnapshot, stashSnapshot, exit, err
+		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.FullConfig,
@@ -133,7 +133,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		Runner:           repo.Runner,
 	})
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -143,10 +143,10 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		Log:             print.Logger{},
 	})
 	if err != nil {
-		return nil, branchesSnapshot, stashSnapshot, false, err
+		return nil, branchesSnapshot, stashSize, false, err
 	}
 	if connector == nil {
-		return nil, branchesSnapshot, stashSnapshot, false, hostingdomain.UnsupportedServiceError()
+		return nil, branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
 	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync)
@@ -161,7 +161,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		initialBranch:    branchesSnapshot.Active,
 		previousBranch:   previousBranch,
 		remotes:          remotes,
-	}, branchesSnapshot, stashSnapshot, false, err
+	}, branchesSnapshot, stashSize, false, err
 }
 
 func proposeProgram(config *proposeConfig) program.Program {

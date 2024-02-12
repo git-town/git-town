@@ -59,7 +59,7 @@ type UnfinishedStateArgs struct {
 	DialogTestInputs        components.TestInputs
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSnapshot    gitdomain.StashSize
+	InitialStashSize        gitdomain.StashSize
 	Lineage                 configdomain.Lineage
 	PushHook                configdomain.PushHook
 	RootDir                 gitdomain.RepoRootDir
@@ -75,7 +75,7 @@ func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool,
 		DialogTestInputs:        &args.DialogTestInputs,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &abortRunState,
@@ -97,7 +97,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		DialogTestInputs:        &args.DialogTestInputs,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                runState,
@@ -119,7 +119,7 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 		Verbose:                 args.Verbose,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSnapshot:    args.InitialStashSnapshot,
+		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &skipRunState,

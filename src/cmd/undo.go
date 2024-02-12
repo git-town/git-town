@@ -53,8 +53,8 @@ func executeUndo(verbose bool) error {
 		return err
 	}
 	var config *undoConfig
-	var initialStashSnaphot gitdomain.StashSize
-	config, initialStashSnaphot, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
+	var initialStashSize gitdomain.StashSize
+	config, initialStashSize, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func executeUndo(verbose bool) error {
 		RootDir:                 repo.RootDir,
 		InitialBranchesSnapshot: config.initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSnapshot:    initialStashSnaphot,
+		InitialStashSize:        initialStashSize,
 	})
 }
 
@@ -87,7 +87,7 @@ type undoConfig struct {
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSnapshot, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -98,12 +98,12 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, repo.Runner.Lineage, err
+		return nil, initialStashSize, repo.Runner.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	repoStatus, err := repo.Runner.Backend.RepoStatus()
 	if err != nil {
-		return nil, initialStashSnapshot, repo.Runner.Lineage, err
+		return nil, initialStashSize, repo.Runner.Lineage, err
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
@@ -113,7 +113,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		Log:             print.Logger{},
 	})
 	if err != nil {
-		return nil, initialStashSnapshot, repo.Runner.Lineage, err
+		return nil, initialStashSize, repo.Runner.Lineage, err
 	}
 	return &undoConfig{
 		FullConfig:              &repo.Runner.FullConfig,
@@ -122,7 +122,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSnapshot, repo.Runner.Lineage, nil
+	}, initialStashSize, repo.Runner.Lineage, nil
 }
 
 func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
