@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -59,8 +60,10 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			BeforeBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-			UndoablePerennialCommits: []gitdomain.SHA{},
+			AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			BeforeBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
+			BeforeLocalConfigSnapshot: configdomain.EmptyPartialConfig(),
+			UndoablePerennialCommits:  []gitdomain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)

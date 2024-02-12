@@ -97,11 +97,13 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		}
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		Command:                "ship",
-		DryRun:                 dryRun,
-		RunProgram:             shipProgram(config, message),
+		AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
+		AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		BeforeBranchesSnapshot:    initialBranchesSnapshot,
+		BeforeLocalConfigSnapshot: repo.Runner.LocalGitConfig,
+		Command:                   "ship",
+		DryRun:                    dryRun,
+		RunProgram:                shipProgram(config, message),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

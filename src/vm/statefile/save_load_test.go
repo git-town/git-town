@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
@@ -35,12 +36,14 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:                "command",
-			IsUndo:                 true,
-			AbortProgram:           program.Program{},
-			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-			BeforeBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			DryRun:                 true,
+			Command:                   "command",
+			IsUndo:                    true,
+			AbortProgram:              program.Program{},
+			AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
+			AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			BeforeBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
+			BeforeLocalConfigSnapshot: configdomain.EmptyPartialConfig(),
+			DryRun:                    true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},

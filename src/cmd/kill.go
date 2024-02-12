@@ -64,12 +64,14 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		Command:                "kill",
-		DryRun:                 dryRun,
-		RunProgram:             steps,
-		FinalUndoProgram:       finalUndoProgram,
+		AfterBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
+		AfterLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+		BeforeBranchesSnapshot:    initialBranchesSnapshot,
+		BeforeLocalConfigSnapshot: repo.Runner.LocalGitConfig,
+		Command:                   "kill",
+		DryRun:                    dryRun,
+		RunProgram:                steps,
+		FinalUndoProgram:          finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,
