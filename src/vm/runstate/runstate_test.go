@@ -101,7 +101,6 @@ func TestRunState(t *testing.T) {
   "Command": "sync",
   "DryRun": true,
   "FinalUndoProgram": [],
-  "InitialActiveBranch": "initial",
   "IsUndo": false,
   "RunProgram": [
     {
