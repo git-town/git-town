@@ -33,6 +33,7 @@
     - [setup](commands/config-setup.md)
     - [offline](commands/config-offline.md)
 - [Preferences](preferences.md)
+  - [Configuration File](configuration-file.md)
   - [hosting-platform](preferences/hosting-platform.md)
   - [hosting-origin-hostname](preferences/hosting-origin-hostname.md)
   - [github-token](preferences/github-token.md)
