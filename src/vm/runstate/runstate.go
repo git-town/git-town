@@ -38,7 +38,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 	popped := program.Program{}
 	for {
 		nextOpcode := self.RunProgram.Peek()
-		if !shared.IsCheckoutOpcode(nextOpcode) {
+		if !shared.IsEndOfBranchProgramOpcode(nextOpcode) {
 			popped.Add(self.RunProgram.Pop())
 		} else {
 			currentBranch, err := backend.CurrentBranch()
