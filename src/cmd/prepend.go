@@ -137,7 +137,7 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		return nil, branchesSnapshot, stashSnapshot, false, err
 	}
 	branchNamesToSync := repo.Runner.Lineage.BranchAndAncestors(branchesSnapshot.Active)
-	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
+	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
 	parent := repo.Runner.Lineage.Parent(branchesSnapshot.Active)
 	parentAndAncestors := repo.Runner.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
