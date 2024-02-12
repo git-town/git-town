@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/sync"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -61,17 +62,15 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		BeforeBranchesSnapshot:     initialBranchesSnapshot,
-		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
-		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
-		BeforeStashSize:            initialStashSize,
-		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		AfterStashSize:             0,
-		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-		Command:                    "append",
-		DryRun:                     dryRun,
-		RunProgram:                 appendProgram(config),
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   repo.ConfigSnapshot,
+		BeforeStashSize:        initialStashSize,
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
+		AfterStashSize:         0,
+		Command:                "append",
+		DryRun:                 dryRun,
+		RunProgram:             appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

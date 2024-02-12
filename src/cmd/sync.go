@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/sync"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -88,17 +89,15 @@ func executeSync(all, dryRun, verbose bool) error {
 		ShouldPushTags: config.shouldPushTags,
 	})
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-		AfterStashSize:             0,
-		BeforeBranchesSnapshot:     initialBranchesSnapshot,
-		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
-		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
-		BeforeStashSize:            0,
-		Command:                    "sync",
-		DryRun:                     dryRun,
-		RunProgram:                 runProgram,
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    repo.ConfigSnapshot,
+		AfterStashSize:         0,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		BeforeStashSize:        0,
+		Command:                "sync",
+		DryRun:                 dryRun,
+		RunProgram:             runProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

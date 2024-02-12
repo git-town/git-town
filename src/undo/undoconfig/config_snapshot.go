@@ -7,3 +7,10 @@ type ConfigSnapshot struct {
 	Global gitconfig.SingleSnapshot
 	Local  gitconfig.SingleSnapshot
 }
+
+func EmptyConfigSnapshot() ConfigSnapshot {
+	return ConfigSnapshot{
+		Global: map[gitconfig.Key]string{},
+		Local:  map[gitconfig.Key]string{},
+	}
+}

@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/sync"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/validate"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
@@ -97,17 +98,15 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		}
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-		AfterStashSize:             0,
-		BeforeBranchesSnapshot:     initialBranchesSnapshot,
-		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
-		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
-		BeforeStashSize:            initialStashSize,
-		Command:                    "ship",
-		DryRun:                     dryRun,
-		RunProgram:                 shipProgram(config, message),
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    repo.ConfigSnapshot,
+		AfterStashSize:         0,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		BeforeStashSize:        initialStashSize,
+		Command:                "ship",
+		DryRun:                 dryRun,
+		RunProgram:             shipProgram(config, message),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,

@@ -14,6 +14,7 @@ import (
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/sync"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -64,18 +65,16 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-		AfterStashSize:             0,
-		BeforeBranchesSnapshot:     initialBranchesSnapshot,
-		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
-		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
-		BeforeStashSize:            initialStashSize,
-		Command:                    "kill",
-		DryRun:                     dryRun,
-		RunProgram:                 steps,
-		FinalUndoProgram:           finalUndoProgram,
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    repo.ConfigSnapshot,
+		AfterStashSize:         0,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		BeforeStashSize:        initialStashSize,
+		Command:                "kill",
+		DryRun:                 dryRun,
+		RunProgram:             steps,
+		FinalUndoProgram:       finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,
