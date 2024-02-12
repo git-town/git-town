@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -89,7 +90,9 @@ func executeUndo(verbose bool) error {
 		}
 	}
 
-	// undoBranchChanges(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot, repo.Runner)
+	// UNDO CONFIG CHANGES
+	globalConfigSpans := undoconfig.NewConfigDiffs(runState.BeforeGlobalConfigSnapshot, runstate.EmptyRunState().AfterGlobalConfigSnapshot)
+
 	// undoConfigChanges(runState.BeforeGlobalConfigSnapshot, runState.AfterGlobalConfigSnapshot, repo.Runner)
 	// undoStashChanges(runState.BeforeStashSize, runState.AfterStashSize, repo.Runner)
 
