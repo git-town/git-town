@@ -10,16 +10,12 @@ import (
 
 func TestIsEndOfBranchProgramOpcode(t *testing.T) {
 	t.Parallel()
-
-	t.Run("given an opcode.EndOfBranchProgram", func(t *testing.T) {
-		t.Parallel()
-		give := &opcode.EndOfBranchProgram{}
-		must.True(t, shared.IsEndOfBranchProgramOpcode(give))
-	})
-
-	t.Run("given another opcode", func(t *testing.T) {
-		t.Parallel()
-		give := &opcode.AbortMerge{}
-		must.False(t, shared.IsEndOfBranchProgramOpcode(give))
-	})
+	tests := map[shared.Opcode]bool{
+		&opcode.EndOfBranchProgram{}: true,
+		&opcode.AbortMerge{}:         false,
+	}
+	for give, want := range tests {
+		have := shared.IsEndOfBranchProgramOpcode(give)
+		must.Eq(t, want, have)
+	}
 }
