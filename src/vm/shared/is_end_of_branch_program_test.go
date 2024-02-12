@@ -20,6 +20,6 @@ func TestIsEndOfBranchProgramOpcode(t *testing.T) {
 	t.Run("given another opcode", func(t *testing.T) {
 		t.Parallel()
 		give := &opcode.AbortMerge{}
-		must.False(t, shared.IsCheckoutOpcode(give))
+		must.False(t, shared.IsEndOfBranchProgramOpcode(give))
 	})
 }
