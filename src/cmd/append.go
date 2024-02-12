@@ -62,6 +62,7 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		Command:                "append",
 		DryRun:                 dryRun,
 		RunProgram:             appendProgram(config),

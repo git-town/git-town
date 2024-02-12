@@ -64,6 +64,7 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
 		Command:                "kill",
 		DryRun:                 dryRun,

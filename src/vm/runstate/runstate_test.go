@@ -97,7 +97,7 @@ func TestRunState(t *testing.T) {
   },
   "BeforeBranchesSnapshot": {
     "Active": "",
-    "Branches": null
+    "Branches": []
   },
   "Command": "sync",
   "DryRun": true,

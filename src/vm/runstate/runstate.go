@@ -107,6 +107,8 @@ func (self *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
+		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
+		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
 		IsUndo:                   true,

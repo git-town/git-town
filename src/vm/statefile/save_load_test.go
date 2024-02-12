@@ -35,10 +35,12 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:      "command",
-			IsUndo:       true,
-			AbortProgram: program.Program{},
-			DryRun:       true,
+			Command:                "command",
+			IsUndo:                 true,
+			AbortProgram:           program.Program{},
+			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+			BeforeBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			DryRun:                 true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -167,11 +169,11 @@ func TestLoadSave(t *testing.T) {
   "AbortProgram": [],
   "AfterBranchesSnapshot": {
     "Active": "",
-    "Branches": null
+    "Branches": []
   },
   "BeforeBranchesSnapshot": {
     "Active": "",
-    "Branches": null
+    "Branches": []
   },
   "Command": "command",
   "DryRun": true,
