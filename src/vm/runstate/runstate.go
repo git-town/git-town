@@ -17,19 +17,21 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortProgram              program.Program `exhaustruct:"optional"`
-	AfterBranchesSnapshot     gitdomain.BranchesSnapshot
-	AfterLocalConfigSnapshot  configdomain.PartialConfig
-	BeforeBranchesSnapshot    gitdomain.BranchesSnapshot
-	BeforeLocalConfigSnapshot configdomain.PartialConfig
-	Command                   string
-	DryRun                    bool
-	FinalUndoProgram          program.Program `exhaustruct:"optional"`
-	IsUndo                    bool            `exhaustruct:"optional"`
-	RunProgram                program.Program
-	UndoProgram               program.Program            `exhaustruct:"optional"`
-	UndoablePerennialCommits  []gitdomain.SHA            `exhaustruct:"optional"`
-	UnfinishedDetails         *UnfinishedRunStateDetails `exhaustruct:"optional"`
+	AbortProgram               program.Program `exhaustruct:"optional"`
+	AfterBranchesSnapshot      gitdomain.BranchesSnapshot
+	AfterGlobalConfigSnapshot  configdomain.PartialConfig
+	AfterLocalConfigSnapshot   configdomain.PartialConfig
+	BeforeBranchesSnapshot     gitdomain.BranchesSnapshot
+	BeforeGlobalConfigSnapshot configdomain.PartialConfig
+	BeforeLocalConfigSnapshot  configdomain.PartialConfig
+	Command                    string
+	DryRun                     bool
+	FinalUndoProgram           program.Program `exhaustruct:"optional"`
+	IsUndo                     bool            `exhaustruct:"optional"`
+	RunProgram                 program.Program
+	UndoProgram                program.Program            `exhaustruct:"optional"`
+	UndoablePerennialCommits   []gitdomain.SHA            `exhaustruct:"optional"`
+	UnfinishedDetails          *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
 
 func EmptyRunState() RunState {
