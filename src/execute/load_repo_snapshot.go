@@ -77,8 +77,8 @@ func LoadRepoSnapshot(args LoadBranchesArgs) (gitdomain.BranchesSnapshot, gitdom
 
 type LoadBranchesArgs struct {
 	*configdomain.FullConfig
-	Fetch                 bool
 	DialogTestInputs      components.TestInputs
+	Fetch                 bool
 	HandleUnfinishedState bool
 	Repo                  *OpenRepoResult
 	ValidateIsConfigured  bool
