@@ -134,7 +134,7 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		return runstate.EmptyRunState(), errors.New(messages.UndoNothingToDo)
 	}
 	var undoRunState runstate.RunState
-	if runState.IsUnfinished() {
+	if runState.IsFinished() {
 		undoRunState = runState.CreateAbortRunState()
 	} else {
 		undoRunState = runState.CreateUndoRunState()

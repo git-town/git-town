@@ -79,7 +79,7 @@ func displayStatus(config displayStatusConfig) {
 		fmt.Println("No status file found for this repository.")
 		return
 	}
-	if config.state.IsUnfinished() {
+	if config.state.IsFinished() {
 		displayUnfinishedStatus(config)
 	} else {
 		displayFinishedStatus(config)
