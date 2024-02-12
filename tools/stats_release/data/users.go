@@ -19,7 +19,7 @@ func NewContributionCounter() ContributionCounter {
 }
 
 func (self *ContributionCounter) AddUser(id string) {
-	self.list[id] = self.list[id] + 1
+	self.list[id]++
 }
 
 func (self *ContributionCounter) AddUsers(users ContributionCounter) {

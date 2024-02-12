@@ -18,11 +18,11 @@ func TestUsers(t *testing.T) {
 		counter.AddUser("two")
 		have := counter.Contributors()
 		want := []data.Contributor{
-			data.Contributor{
+			{
 				Username:          "two",
 				ContributionCount: 2,
 			},
-			data.Contributor{
+			{
 				Username:          "one",
 				ContributionCount: 1,
 			},
@@ -38,15 +38,15 @@ func TestUsers(t *testing.T) {
 		counter.AddUser("alpha")
 		have := counter.Contributors()
 		want := []data.Contributor{
-			data.Contributor{
+			{
 				Username:          "alpha",
 				ContributionCount: 1,
 			},
-			data.Contributor{
+			{
 				Username:          "beta",
 				ContributionCount: 1,
 			},
-			data.Contributor{
+			{
 				Username:          "gamma",
 				ContributionCount: 1,
 			},
@@ -65,15 +65,15 @@ func TestUsers(t *testing.T) {
 		allUsers.AddUsers(otherUsers)
 		have := allUsers.Contributors()
 		want := []data.Contributor{
-			data.Contributor{
+			{
 				Username:          "alpha",
 				ContributionCount: 2,
 			},
-			data.Contributor{
+			{
 				Username:          "beta1",
 				ContributionCount: 2,
 			},
-			data.Contributor{
+			{
 				Username:          "beta2",
 				ContributionCount: 2,
 			},
