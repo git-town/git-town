@@ -16,7 +16,8 @@ import (
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortProgram             program.Program `exhaustruct:"optional"`
+	AbortProgram program.Program `exhaustruct:"optional"`
+	BeforeSnapshot
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
