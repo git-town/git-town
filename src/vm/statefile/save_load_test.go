@@ -42,9 +42,11 @@ func TestLoadSave(t *testing.T) {
 			AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
 			AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
 			AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+			AfterStashSize:             1,
 			BeforeBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
 			BeforeGlobalConfigSnapshot: configdomain.EmptyPartialConfig(),
 			BeforeLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			BeforeStashSize:            0,
 			DryRun:                     true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
@@ -218,6 +220,7 @@ func TestLoadSave(t *testing.T) {
     "SyncPerennialStrategy": null,
     "SyncUpstream": null
   },
+  "AfterStashSize": 1,
   "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": []
@@ -264,6 +267,7 @@ func TestLoadSave(t *testing.T) {
     "SyncPerennialStrategy": null,
     "SyncUpstream": null
   },
+  "BeforeStashSize": 0,
   "Command": "command",
   "DryRun": true,
   "FinalUndoProgram": [],

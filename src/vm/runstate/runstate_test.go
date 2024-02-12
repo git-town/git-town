@@ -62,9 +62,11 @@ func TestRunState(t *testing.T) {
 			},
 			AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
 			AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
+			AfterStashSize:             1,
 			BeforeBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
 			BeforeGlobalConfigSnapshot: configdomain.EmptyPartialConfig(),
 			BeforeLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
+			BeforeStashSize:            0,
 			UndoablePerennialCommits:   []gitdomain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
@@ -142,6 +144,7 @@ func TestRunState(t *testing.T) {
     "SyncPerennialStrategy": null,
     "SyncUpstream": null
   },
+  "AfterStashSize": 1,
   "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": []
@@ -188,6 +191,7 @@ func TestRunState(t *testing.T) {
     "SyncPerennialStrategy": null,
     "SyncUpstream": null
   },
+  "BeforeStashSize": 0,
   "Command": "sync",
   "DryRun": true,
   "FinalUndoProgram": [],
