@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -36,18 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:                    "command",
-			IsUndo:                     true,
-			AbortProgram:               program.Program{},
-			AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-			AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-			AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-			AfterStashSize:             1,
-			BeforeBranchesSnapshot:     gitdomain.EmptyBranchesSnapshot(),
-			BeforeGlobalConfigSnapshot: configdomain.EmptyPartialConfig(),
-			BeforeLocalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-			BeforeStashSize:            0,
-			DryRun:                     true,
+			Command:                "command",
+			IsUndo:                 true,
+			AbortProgram:           program.Program{},
+			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+			AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
+			AfterStashSize:         1,
+			BeforeBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+			BeforeStashSize:        0,
+			DryRun:                 true,
 			RunProgram: program.Program{
 				&opcode.AbortMerge{},
 				&opcode.AbortRebase{},
@@ -178,94 +176,18 @@ func TestLoadSave(t *testing.T) {
     "Active": "",
     "Branches": []
   },
-  "AfterGlobalConfigSnapshot": {
-    "Aliases": {},
-    "GitHubToken": null,
-    "GitLabToken": null,
-    "GitUserEmail": null,
-    "GitUserName": null,
-    "GiteaToken": null,
-    "HostingOriginHostname": null,
-    "HostingPlatform": null,
-    "Lineage": null,
-    "MainBranch": null,
-    "Offline": null,
-    "PerennialBranches": null,
-    "PushHook": null,
-    "PushNewBranches": null,
-    "ShipDeleteTrackingBranch": null,
-    "SyncBeforeShip": null,
-    "SyncFeatureStrategy": null,
-    "SyncPerennialStrategy": null,
-    "SyncUpstream": null
-  },
-  "AfterLocalConfigSnapshot": {
-    "Aliases": {},
-    "GitHubToken": null,
-    "GitLabToken": null,
-    "GitUserEmail": null,
-    "GitUserName": null,
-    "GiteaToken": null,
-    "HostingOriginHostname": null,
-    "HostingPlatform": null,
-    "Lineage": null,
-    "MainBranch": null,
-    "Offline": null,
-    "PerennialBranches": null,
-    "PushHook": null,
-    "PushNewBranches": null,
-    "ShipDeleteTrackingBranch": null,
-    "SyncBeforeShip": null,
-    "SyncFeatureStrategy": null,
-    "SyncPerennialStrategy": null,
-    "SyncUpstream": null
+  "AfterConfigSnapshot": {
+    "Global": {},
+    "Local": {}
   },
   "AfterStashSize": 1,
   "BeforeBranchesSnapshot": {
     "Active": "",
     "Branches": []
   },
-  "BeforeGlobalConfigSnapshot": {
-    "Aliases": {},
-    "GitHubToken": null,
-    "GitLabToken": null,
-    "GitUserEmail": null,
-    "GitUserName": null,
-    "GiteaToken": null,
-    "HostingOriginHostname": null,
-    "HostingPlatform": null,
-    "Lineage": null,
-    "MainBranch": null,
-    "Offline": null,
-    "PerennialBranches": null,
-    "PushHook": null,
-    "PushNewBranches": null,
-    "ShipDeleteTrackingBranch": null,
-    "SyncBeforeShip": null,
-    "SyncFeatureStrategy": null,
-    "SyncPerennialStrategy": null,
-    "SyncUpstream": null
-  },
-  "BeforeLocalConfigSnapshot": {
-    "Aliases": {},
-    "GitHubToken": null,
-    "GitLabToken": null,
-    "GitUserEmail": null,
-    "GitUserName": null,
-    "GiteaToken": null,
-    "HostingOriginHostname": null,
-    "HostingPlatform": null,
-    "Lineage": null,
-    "MainBranch": null,
-    "Offline": null,
-    "PerennialBranches": null,
-    "PushHook": null,
-    "PushNewBranches": null,
-    "ShipDeleteTrackingBranch": null,
-    "SyncBeforeShip": null,
-    "SyncFeatureStrategy": null,
-    "SyncPerennialStrategy": null,
-    "SyncUpstream": null
+  "BeforeConfigSnapshot": {
+    "Global": {},
+    "Local": {}
   },
   "BeforeStashSize": 0,
   "Command": "command",

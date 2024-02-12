@@ -15,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/sync"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -69,17 +70,15 @@ func executePropose(dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
-		AfterGlobalConfigSnapshot:  configdomain.EmptyPartialConfig(),
-		AfterLocalConfigSnapshot:   configdomain.EmptyPartialConfig(),
-		AfterStashSize:             0,
-		BeforeBranchesSnapshot:     initialBranchesSnapshot,
-		BeforeGlobalConfigSnapshot: repo.Runner.GlobalGitConfig,
-		BeforeLocalConfigSnapshot:  repo.Runner.LocalGitConfig,
-		BeforeStashSize:            initialStashSize,
-		Command:                    "propose",
-		DryRun:                     dryRun,
-		RunProgram:                 proposeProgram(config),
+		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    repo.ConfigSnapshot,
+		AfterStashSize:         0,
+		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		BeforeStashSize:        initialStashSize,
+		Command:                "propose",
+		DryRun:                 dryRun,
+		RunProgram:             proposeProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              config.FullConfig,
