@@ -157,9 +157,9 @@ func (self *RunState) HasUndoProgram() bool {
 	return !self.UndoProgram.IsEmpty()
 }
 
-// IsUnfinished returns whether or not the run state is unfinished.
-func (self *RunState) IsUnfinished() bool {
-	return self.UnfinishedDetails != nil
+// IsFinished returns whether or not the run state is unfinished.
+func (self *RunState) IsFinished() bool {
+	return self.UnfinishedDetails == nil
 }
 
 // MarkAsFinished updates the run state to be marked as finished.

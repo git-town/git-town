@@ -23,7 +23,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	if runState == nil || !runState.IsUnfinished() {
+	if runState == nil || runState.IsFinished() {
 		return false, nil
 	}
 	response, aborted, err := dialog.AskHowToHandleUnfinishedRunState(
