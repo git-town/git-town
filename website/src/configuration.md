@@ -9,4 +9,4 @@ git town config setup
 ```
 
 More information about the configuration file including how to create one
-manually are [here](configuration-file.md).
+manually is [here](configuration-file.md).
