@@ -43,7 +43,7 @@ type ExecuteArgs struct {
 	*configdomain.FullConfig
 	Connector               hostingdomain.Connector
 	DialogTestInputs        *components.TestInputs
-	InitialBranchesSnapshot gitdomain.BranchesStatus
+	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSnapshot    gitdomain.StashSize
 	RootDir                 gitdomain.RepoRootDir
