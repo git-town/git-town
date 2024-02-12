@@ -17,8 +17,10 @@ import (
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
+	"github.com/git-town/git-town/v12/src/undo/undostash"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -66,6 +68,8 @@ func executeUndo(verbose bool) error {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 
+	undoProgram := program.Program{}
+
 	// undo branch changes
 	branchSpans := undobranches.NewBranchSpans(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
@@ -75,6 +79,19 @@ func executeUndo(verbose bool) error {
 		InitialBranch:            runState.BeforeBranchesSnapshot.Active,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	})
+	undoProgram.AddProgram(branchUndoProgram)
+
+	// UNDO CONFIG CHANGES
+	configSpans := undoconfig.NewConfigDiffs(runState.BeforeConfigSnapshot, runState.AfterConfigSnapshot)
+	configUndoProgram := configSpans.UndoProgram()
+	undoProgram.AddProgram(configUndoProgram)
+
+	// UNDO STASH CHANGES
+	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, runState.AfterStashSize)
+	undoStashProgram := stashDiff.Program()
+	undoProgram.AddProgram(undoStashProgram)
+
+	// execute the undo program
 	for _, opcode := range branchUndoProgram {
 		err := opcode.Run(shared.RunArgs{
 			Connector:                       nil,
@@ -89,12 +106,6 @@ func executeUndo(verbose bool) error {
 			fmt.Println("ERROR: " + err.Error())
 		}
 	}
-
-	// UNDO CONFIG CHANGES
-	globalConfigSpans := undoconfig.NewConfigDiffs(runState.BeforeGlobalConfigSnapshot, runState.EmptyRunState().AfterGlobalConfigSnapshot)
-
-	// undoConfigChanges(runState.BeforeGlobalConfigSnapshot, runState.AfterGlobalConfigSnapshot, repo.Runner)
-	// undoStashChanges(runState.BeforeStashSize, runState.AfterStashSize, repo.Runner)
 
 	// OLD CODE
 	undoRunState, err := determineUndoRunState(config, repo)
