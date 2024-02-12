@@ -84,9 +84,9 @@ test: fix docs unit cuke  # runs all the tests
 
 test-go: tools/rta@${RTA_VERSION}  # smoke tests while working on the Go code
 	@make --no-print-directory build &
-	@make --no-print-directory golangci-lint &
+	@make --no-print-directory unit &
 	@make --no-print-directory deadcode &
-	@make --no-print-directory unit
+	@make --no-print-directory golangci-lint
 
 todo:  # displays all TODO items
 	git grep --line-number TODO ':!vendor'
