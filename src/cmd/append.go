@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
@@ -62,7 +63,9 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
+		BeforeConfigSnapshot:   config,
 		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+		AfterConfigSnapshot:    gitconfig.SingleSnapshot{},
 		Command:                "append",
 		DryRun:                 dryRun,
 		RunProgram:             appendProgram(config),

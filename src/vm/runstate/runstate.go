@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
@@ -18,7 +19,9 @@ import (
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
 	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
+	AfterConfigSnapshot      gitconfig.SingleSnapshot
 	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
+	BeforeConfigSnapshot     gitconfig.SingleSnapshot
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
@@ -62,7 +65,9 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
 		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
+		AfterConfigSnapshot:    self.AfterConfigSnapshot,
 		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
+		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
 		Command:                self.Command,
 		DryRun:                 self.DryRun,
 		IsUndo:                 true,
@@ -75,7 +80,9 @@ func (self *RunState) CreateAbortRunState() RunState {
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
 		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
+		AfterConfigSnapshot:    self.AfterConfigSnapshot,
 		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
+		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
 		Command:                self.Command,
 		DryRun:                 self.DryRun,
 		RunProgram:             self.AbortProgram,
@@ -108,7 +115,9 @@ func (self *RunState) CreateSkipRunState() RunState {
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
 		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
+		AfterConfigSnapshot:      self.AfterConfigSnapshot,
 		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
+		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
 		IsUndo:                   true,
