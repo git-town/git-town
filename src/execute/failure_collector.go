@@ -18,7 +18,7 @@ type FailureCollector struct {
 	Err error `exhaustruct:"optional"`
 }
 
-func (self *FailureCollector) BranchesSyncStatus(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
+func (self *FailureCollector) BranchInfos(value gitdomain.BranchInfos, err error) gitdomain.BranchInfos {
 	self.Check(err)
 	return value
 }

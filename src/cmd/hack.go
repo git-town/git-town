@@ -103,7 +103,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSnapshot, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
-	branchesToSync := fc.BranchesSyncStatus(branchesSnapshot.Branches.Select(branchNamesToSync))
+	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
 	return &appendConfig{
 		FullConfig:                &repo.Runner.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
