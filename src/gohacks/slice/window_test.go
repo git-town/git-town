@@ -18,6 +18,10 @@ func TestWindow(t *testing.T) {
 	})
 	t.Run("one element", func(t *testing.T) {
 		t.Parallel()
+		elements := []int{1}
+		have := slice.Window(elements, 0, 4)
+		want := []int{1}
+		must.Eq(t, want, have)
 	})
 	t.Run("fewer elements than window size", func(t *testing.T) {
 		t.Parallel()
