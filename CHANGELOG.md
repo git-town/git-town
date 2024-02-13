@@ -4,7 +4,7 @@
 
 #### Bug Fixes
 
-- removes a crash when using self-hosted platform instances ([#3114](https://github.com/git-town/git-town/pull/3114))
+- removes crashes when using a self-hosted platform instance ([#3114](https://github.com/git-town/git-town/pull/3114))
 - improve the CLI output when using a hosting connector ([#3115](https://github.com/git-town/git-town/pull/3115))
 
 ## 12.0.0 (2023-02-05)
