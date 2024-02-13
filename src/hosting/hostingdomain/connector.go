@@ -15,7 +15,7 @@ type Connector interface {
 
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
-	SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error)
+	SquashMergeProposal(number int, message string) error
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
