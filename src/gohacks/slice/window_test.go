@@ -35,11 +35,11 @@ func TestWindow(t *testing.T) {
 		// fewer elements than window size, cursor at second element
 		{ElementCount: 20, CursorPos: 1, WindowSize: 9}: {StartRow: 0, EndRow: 9, CursorRow: 1},
 		// fewer elements than window size, cursor at middle element
-		{ElementCount: 20, CursorPos: 10, WindowSize: 9}: {StartRow: 6, EndRow: 15, CursorRow: 3},
+		{ElementCount: 20, CursorPos: 10, WindowSize: 9}: {StartRow: 6, EndRow: 15, CursorRow: 10},
 		// fewer elements than window size, cursor at second to last element
-		{ElementCount: 20, CursorPos: 18, WindowSize: 9}: {StartRow: 10, EndRow: 19, CursorRow: 5},
+		{ElementCount: 20, CursorPos: 18, WindowSize: 9}: {StartRow: 11, EndRow: 20, CursorRow: 18},
 		// fewer elements than window size, cursor at last element
-		{ElementCount: 20, CursorPos: 19, WindowSize: 9}: {StartRow: 10, EndRow: 19, CursorRow: 6},
+		{ElementCount: 20, CursorPos: 19, WindowSize: 9}: {StartRow: 11, EndRow: 20, CursorRow: 19},
 	}
 	for give, want := range tests {
 		have := slice.Window(give)
