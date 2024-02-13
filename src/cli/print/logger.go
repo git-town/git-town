@@ -21,5 +21,5 @@ func (l Logger) Start(template string, data ...interface{}) {
 
 func (l Logger) Success() {
 	boldGreen := termenv.String().Bold().Foreground(termenv.ANSIGreen)
-	fmt.Println(boldGreen.Styled("ok\n"))
+	fmt.Println(boldGreen.Styled("ok"))
 }
