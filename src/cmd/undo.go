@@ -81,12 +81,12 @@ func executeUndo(verbose bool) error {
 	})
 	undoProgram.AddProgram(branchUndoProgram)
 
-	// UNDO CONFIG CHANGES
+	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(runState.BeforeConfigSnapshot, runState.AfterConfigSnapshot)
 	configUndoProgram := configSpans.UndoProgram()
 	undoProgram.AddProgram(configUndoProgram)
 
-	// UNDO STASH CHANGES
+	// undo stash changes
 	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, initialStashSize)
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
