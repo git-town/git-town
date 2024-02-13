@@ -15,8 +15,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/git-town/git-town/v12/src/cmd.version={{.Env.VERSION}} -X
-        github.com/git-town/git-town/v12/src/cmd.buildDate={{.Env.TODAY}}
+      - -s -w
     goarch:
       - amd64
       - arm64
