@@ -14,12 +14,13 @@ import (
 
 func enterParentCmd() *cobra.Command {
 	return &cobra.Command{
-		Use: "parent",
+		Use:  "parent",
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var amount uint64 = 10
-			if len(args) > 1 {
+			if len(args) > 0 {
 				var err error
-				amount, err = strconv.ParseUint(args[1], 10, 64)
+				amount, err = strconv.ParseUint(args[0], 10, 64)
 				if err != nil {
 					panic(err)
 				}
