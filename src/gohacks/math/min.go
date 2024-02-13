@@ -1,9 +1,7 @@
 package math
 
-import "golang.org/x/exp/constraints"
-
 // Generic min function that should be in the Go standard library.
-func Min[T constraints.Ordered](element1, element2 T) T {
+func Min(element1, element2 int) int {
 	if element1 < element2 {
 		return element1
 	}
