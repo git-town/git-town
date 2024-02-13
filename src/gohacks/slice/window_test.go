@@ -29,6 +29,7 @@ func TestWindow(t *testing.T) {
 		must.Eq(t, []int{1}, have)
 		must.EqOp(t, 0, cursorRow)
 	})
+
 	t.Run("fewer elements than window size", func(t *testing.T) {
 		t.Parallel()
 		elements := []int{1, 2, 3, 4}
@@ -50,7 +51,7 @@ func TestWindow(t *testing.T) {
 				Size:     6,
 			})
 			must.Eq(t, elements, have)
-			must.EqOp(t, 0, cursorRow)
+			must.EqOp(t, 1, cursorRow)
 		})
 		t.Run("cursor at third element", func(t *testing.T) {
 			t.Parallel()
