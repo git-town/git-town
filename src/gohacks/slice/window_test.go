@@ -9,152 +9,40 @@ import (
 
 func TestWindow(t *testing.T) {
 	t.Parallel()
-	t.Run("no elements", func(t *testing.T) {
-		t.Parallel()
-		have, cursorRow := slice.Window(slice.WindowArgs[int]{
-			Elements: []int{},
-			Cursor:   0,
-			Size:     5,
-		})
-		must.Eq(t, []int{}, have)
-		must.EqOp(t, 0, cursorRow)
-	})
-	t.Run("one element", func(t *testing.T) {
-		t.Parallel()
-		have, cursorRow := slice.Window(slice.WindowArgs[int]{
-			Elements: []int{1},
-			Cursor:   0,
-			Size:     5,
-		})
-		must.Eq(t, []int{1}, have)
-		must.EqOp(t, 0, cursorRow)
-	})
+	tests := map[slice.WindowArgs]slice.WindowResult{
+		// no elements
+		{ElementCount: 0, CursorPos: 0, WindowSize: 5}: {StartRow: 0, EndRow: 0, CursorRow: 0},
+		// one element
+		{ElementCount: 1, CursorPos: 0, WindowSize: 5}: {StartRow: 0, EndRow: 1, CursorRow: 0},
 
-	t.Run("fewer elements than window size", func(t *testing.T) {
-		t.Parallel()
-		t.Run("cursor at first element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4},
-				Cursor:   0,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4}, have)
-			must.EqOp(t, 0, cursorRow)
-		})
-		t.Run("cursor at second element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4},
-				Cursor:   1,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4}, have)
-			must.EqOp(t, 1, cursorRow)
-		})
-		t.Run("cursor at third element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4},
-				Cursor:   2,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4}, have)
-			must.EqOp(t, 2, cursorRow)
-		})
-		t.Run("cursor at middle element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5},
-				Cursor:   2,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 2, cursorRow)
-		})
-		t.Run("cursor at second to last element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5},
-				Cursor:   3,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 3, cursorRow)
-		})
-		t.Run("cursor at last element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5},
-				Cursor:   4,
-				Size:     7,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 4, cursorRow)
-		})
-	})
-	t.Run("more elements than window size", func(t *testing.T) {
-		t.Parallel()
-		t.Run("cursor at first element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   0,
-				Size:     5,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 0, cursorRow)
-		})
-		t.Run("cursor at second element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   1,
-				Size:     5,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 1, cursorRow)
-		})
-		t.Run("cursor at third element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   2,
-				Size:     5,
-			})
-			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
-			must.EqOp(t, 2, cursorRow)
-		})
-		t.Run("cursor at middle element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   3,
-				Size:     5,
-			})
-			must.Eq(t, []int{2, 3, 4, 5, 6}, have)
-			must.EqOp(t, 3, cursorRow)
-		})
-		t.Run("cursor at second to last element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   5,
-				Size:     5,
-			})
-			must.Eq(t, []int{3, 4, 5, 6, 7}, have)
-			must.EqOp(t, 5, cursorRow)
-		})
-		t.Run("cursor at last element", func(t *testing.T) {
-			t.Parallel()
-			have, cursorRow := slice.Window(slice.WindowArgs[int]{
-				Elements: []int{1, 2, 3, 4, 5, 6, 7},
-				Cursor:   6,
-				Size:     5,
-			})
-			must.Eq(t, []int{3, 4, 5, 6, 7}, have)
-			must.EqOp(t, 6, cursorRow)
-		})
-	})
+		// FEWER ELEMENTS THAN WINDOW SIZE
 
+		// cursor at first element
+		{ElementCount: 7, CursorPos: 0, WindowSize: 9}: {StartRow: 0, EndRow: 7, CursorRow: 0},
+		// fewer elements than window size, cursor at second element
+		{ElementCount: 7, CursorPos: 1, WindowSize: 9}: {StartRow: 0, EndRow: 7, CursorRow: 1},
+		// fewer elements than window size, cursor at middle element
+		{ElementCount: 7, CursorPos: 3, WindowSize: 9}: {StartRow: 0, EndRow: 7, CursorRow: 3},
+		// fewer elements than window size, cursor at second to last element
+		{ElementCount: 7, CursorPos: 5, WindowSize: 9}: {StartRow: 0, EndRow: 7, CursorRow: 5},
+		// fewer elements than window size, cursor at last element
+		{ElementCount: 7, CursorPos: 6, WindowSize: 9}: {StartRow: 0, EndRow: 7, CursorRow: 6},
+
+		// MORE ELEMENTS THAN WINDOW SIZE
+
+		// cursor at first element
+		{ElementCount: 20, CursorPos: 0, WindowSize: 9}: {StartRow: 0, EndRow: 9, CursorRow: 0},
+		// fewer elements than window size, cursor at second element
+		{ElementCount: 20, CursorPos: 1, WindowSize: 9}: {StartRow: 0, EndRow: 9, CursorRow: 1},
+		// fewer elements than window size, cursor at middle element
+		{ElementCount: 20, CursorPos: 10, WindowSize: 9}: {StartRow: 6, EndRow: 15, CursorRow: 3},
+		// fewer elements than window size, cursor at second to last element
+		{ElementCount: 20, CursorPos: 18, WindowSize: 9}: {StartRow: 10, EndRow: 19, CursorRow: 5},
+		// fewer elements than window size, cursor at last element
+		{ElementCount: 20, CursorPos: 19, WindowSize: 9}: {StartRow: 10, EndRow: 19, CursorRow: 6},
+	}
+	for give, want := range tests {
+		have := slice.Window(give)
+		must.EqOp(t, want, have)
+	}
 }

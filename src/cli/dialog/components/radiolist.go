@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
 )
 
 // RadioList lets the user select a new main branch for this repo.
@@ -67,9 +68,15 @@ func (self radioListModel[S]) View() string {
 	s.WriteString(self.Colors.Title.Styled(self.title))
 	s.WriteRune('\n')
 	s.WriteString(self.help)
-	for i, branch := range self.Entries {
+	window := slice.Window(slice.WindowArgs{
+		ElementCount: len(self.Entries),
+		CursorPos:    self.Cursor,
+		WindowSize:   9,
+	})
+	for i := window.StartRow; i <= window.EndRow; i++ {
+		branch := self.Entries[i]
 		s.WriteString(self.EntryNumberStr(i))
-		if i == self.Cursor {
+		if i == window.CursorRow {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		} else {
 			s.WriteString("  " + branch.String())

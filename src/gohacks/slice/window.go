@@ -2,21 +2,21 @@ package slice
 
 import "github.com/git-town/git-town/v12/src/gohacks/math"
 
-// Window provides size elements surrounding the given cursor.
-func Window[T any](args WindowArgs[T]) (window []T, cursorRow int) {
-	if len(args.Elements) == 0 {
-		return args.Elements, 0
+// Window tells you which of the given elements to display given where the cursor is.
+func Window(args WindowArgs) WindowResult {
+	if args.ElementCount == 0 {
+		return WindowResult{0, 0, 0}
 	}
-	length := math.Min(args.Size, len(args.Elements))
-	start := args.Cursor - (args.Size / 2)
+	length := math.Min(args.WindowSize, args.ElementCount)
+	start := args.CursorPos - (args.WindowSize / 2)
 	var end int
 loop:
 	for {
 		end = start + length
 		startsBeforeZero := start < 0
 		startsAtZero := start == 0
-		endsAtEnd := end == len(args.Elements)
-		endsAfterEnd := end > len(args.Elements)
+		endsAtEnd := end == args.ElementCount
+		endsAfterEnd := end > args.ElementCount
 		switch {
 		case startsBeforeZero && endsAfterEnd:
 			start += 1
@@ -34,11 +34,21 @@ loop:
 			break loop
 		}
 	}
-	return args.Elements[start:end], args.Cursor
+	return WindowResult{
+		StartRow:  start,
+		EndRow:    end,
+		CursorRow: args.CursorPos,
+	}
 }
 
-type WindowArgs[T any] struct {
-	Elements []T
-	Cursor   int
-	Size     int
+type WindowArgs struct {
+	ElementCount int
+	CursorPos    int
+	WindowSize   int
+}
+
+type WindowResult struct {
+	StartRow  int
+	EndRow    int
+	CursorRow int
 }
