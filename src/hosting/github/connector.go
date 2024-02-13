@@ -74,7 +74,7 @@ func (self *Connector) SquashMergeProposal(number int, message string) (err erro
 		CommitTitle: commitMessageParts.Title,
 	})
 	self.log.Success()
-	return nil
+	return err
 }
 
 func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
