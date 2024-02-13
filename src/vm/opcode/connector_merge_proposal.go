@@ -68,7 +68,7 @@ func (self *ConnectorMergeProposal) Run(args shared.RunArgs) error {
 		}
 		self.enteredEmptyCommitMessage = false
 	}
-	_, self.mergeError = args.Connector.SquashMergeProposal(self.ProposalNumber, commitMessage)
+	self.mergeError = args.Connector.SquashMergeProposal(self.ProposalNumber, commitMessage)
 	return self.mergeError
 }
 

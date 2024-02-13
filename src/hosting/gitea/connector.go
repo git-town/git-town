@@ -63,24 +63,21 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
+func (self *Connector) SquashMergeProposal(number int, message string) error {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
+		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	commitMessageParts := commitmessage.Split(message)
-	_, _, err = self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
+	_, _, err := self.client.MergePullRequest(self.Organization, self.Repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitMessageParts.Title,
 		Message: commitMessageParts.Body,
 	})
 	if err != nil {
-		return gitdomain.EmptySHA(), err
+		return err
 	}
-	pullRequest, _, err := self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
-	if err != nil {
-		return gitdomain.EmptySHA(), err
-	}
-	return gitdomain.NewSHA(*pullRequest.MergedCommitID), nil
+	_, _, err = self.client.GetPullRequest(self.Organization, self.Repository, int64(number))
+	return err
 }
 
 func (self *Connector) UpdateProposalTarget(_ int, _ gitdomain.LocalBranchName) error {

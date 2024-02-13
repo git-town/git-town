@@ -42,13 +42,13 @@ func (self *Connector) FindProposal(branch, target gitdomain.LocalBranchName) (*
 	return &proposal, nil
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
+func (self *Connector) SquashMergeProposal(number int, message string) error {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
+		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
-	result, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+	_, _, err := self.client.MergeRequests.AcceptMergeRequest(self.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.Ptr(message),
 		Squash:              gitlab.Ptr(true),
 		// the branch will be deleted by Git Town
@@ -56,10 +56,10 @@ func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA
 	})
 	if err != nil {
 		self.log.Failed(err)
-		return gitdomain.EmptySHA(), err
+		return err
 	}
 	self.log.Success()
-	return gitdomain.NewSHA(result.SHA), nil
+	return nil
 }
 
 func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
