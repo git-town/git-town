@@ -16,10 +16,10 @@ func (l Logger) Failed(failure error) {
 
 func (l Logger) Start(template string, data ...interface{}) {
 	fmt.Println()
-	fmt.Println(Bold.Styled(fmt.Sprintf(template, data...)))
+	fmt.Print(Bold.Styled(fmt.Sprintf(template, data...)))
 }
 
 func (l Logger) Success() {
 	boldGreen := termenv.String().Bold().Foreground(termenv.ANSIGreen)
-	fmt.Println(boldGreen.Styled("ok\n"))
+	fmt.Println(boldGreen.Styled("ok"))
 }
