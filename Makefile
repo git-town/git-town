@@ -6,7 +6,7 @@ RELEASE_VERSION := "12.0.1"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	@go install
+	@go install -ldflags="-s -w"
 
 clear:  # clears the build and lint caches
 	tools/rta golangci-lint cache clean
