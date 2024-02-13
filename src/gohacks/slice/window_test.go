@@ -77,14 +77,21 @@ func TestWindow(t *testing.T) {
 			t.Parallel()
 			have, cursorRow := slice.Window(slice.WindowArgs[int]{
 				Elements: elements,
+				Cursor:   5,
+				Size:     7,
+			})
+			must.Eq(t, elements, have)
+			must.EqOp(t, 5, cursorRow)
+		})
+		t.Run("cursor at last element", func(t *testing.T) {
+			t.Parallel()
+			have, cursorRow := slice.Window(slice.WindowArgs[int]{
+				Elements: elements,
 				Cursor:   6,
 				Size:     7,
 			})
 			must.Eq(t, elements, have)
 			must.EqOp(t, 6, cursorRow)
-		})
-		t.Run("cursor at last element", func(t *testing.T) {
-			t.Parallel()
 		})
 	})
 	t.Run("more elements than window size", func(t *testing.T) {
