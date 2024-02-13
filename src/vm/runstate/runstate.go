@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -71,7 +72,10 @@ func (self *RunState) CreateSkipRunState() RunState {
 		RunProgram:             self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
-	// by copying the respective undo-opcodes into the runprogram
+	branchSpan := undobranches.BranchSpan{
+		Before: gitdomain.BranchInfo{},
+		After:  gitdomain.BranchInfo{},
+	}
 	for _, opcode := range self.UndoProgram {
 		if shared.IsCheckoutOpcode(opcode) {
 			break
