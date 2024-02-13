@@ -34,6 +34,9 @@ func TestWindow(t *testing.T) {
 		})
 		t.Run("cursor at second element", func(t *testing.T) {
 			t.Parallel()
+			have, cursorRow := slice.Window(elements, 0, 6)
+			must.Eq(t, elements, have)
+			must.EqOp(t, 0, cursorRow)
 		})
 		t.Run("cursor at third element", func(t *testing.T) {
 			t.Parallel()
