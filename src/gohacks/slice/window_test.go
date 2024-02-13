@@ -98,6 +98,13 @@ func TestWindow(t *testing.T) {
 		t.Parallel()
 		t.Run("cursor at first element", func(t *testing.T) {
 			t.Parallel()
+			have, cursorRow := slice.Window(slice.WindowArgs[int]{
+				Elements: []int{1, 2, 3, 4, 5, 6, 7},
+				Cursor:   0,
+				Size:     5,
+			})
+			must.Eq(t, []int{1, 2, 3, 4, 5}, have)
+			must.EqOp(t, 0, cursorRow)
 		})
 		t.Run("cursor at second element", func(t *testing.T) {
 			t.Parallel()
