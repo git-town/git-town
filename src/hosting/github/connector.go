@@ -63,23 +63,18 @@ func (self *Connector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", self.HostnameWithStandardPort(), self.Organization, self.Repository)
 }
 
-func (self *Connector) SquashMergeProposal(number int, message string) (mergeSHA gitdomain.SHA, err error) {
+func (self *Connector) SquashMergeProposal(number int, message string) (err error) {
 	if number <= 0 {
-		return gitdomain.EmptySHA(), errors.New(messages.ProposalNoNumberGiven)
+		return errors.New(messages.ProposalNoNumberGiven)
 	}
 	self.log.Start(messages.HostingGithubMergingViaAPI, number)
 	commitMessageParts := commitmessage.Split(message)
-	result, _, err := self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
+	_, _, err = self.client.PullRequests.Merge(context.Background(), self.Organization, self.Repository, number, commitMessageParts.Body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: commitMessageParts.Title,
 	})
-	sha := gitdomain.NewSHA(result.GetSHA())
-	if err != nil {
-		self.log.Failed(err)
-		return sha, err
-	}
 	self.log.Success()
-	return sha, nil
+	return nil
 }
 
 func (self *Connector) UpdateProposalTarget(number int, target gitdomain.LocalBranchName) error {
