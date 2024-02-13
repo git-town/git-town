@@ -1,7 +1,6 @@
 package runstate
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -27,9 +26,7 @@ type RunState struct {
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
-	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
@@ -57,26 +54,6 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 		}
 	}
 	return nil
-}
-
-// CreateAbortRunState returns a new runstate
-// to be run to aborting and undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateAbortRunState() RunState {
-	abortProgram := self.AbortProgram
-	abortProgram.AddProgram(self.UndoProgram)
-	return RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		AfterStashSize:         self.AfterStashSize,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		BeforeStashSize:        self.BeforeStashSize,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		IsUndo:                 true,
-		RunProgram:             abortProgram,
-	}
 }
 
 // CreateSkipRunState returns a new Runstate
@@ -115,38 +92,12 @@ func (self *RunState) CreateSkipRunState() RunState {
 	return result
 }
 
-// CreateUndoRunState returns a new runstate
-// to be run when undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateUndoRunState() RunState {
-	result := RunState{
-		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:      self.AfterConfigSnapshot,
-		AfterStashSize:           self.AfterStashSize,
-		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
-		BeforeStashSize:          self.BeforeStashSize,
-		Command:                  self.Command,
-		DryRun:                   self.DryRun,
-		IsUndo:                   true,
-		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []gitdomain.SHA{},
-	}
-	result.RunProgram.Add(&opcode.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
-	result.RunProgram.RemoveDuplicateCheckout()
-	return result
-}
-
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
 
 func (self *RunState) HasRunProgram() bool {
 	return !self.RunProgram.IsEmpty()
-}
-
-func (self *RunState) HasUndoProgram() bool {
-	return !self.UndoProgram.IsEmpty()
 }
 
 // IsFinished returns whether or not the run state is unfinished.
@@ -196,14 +147,8 @@ func (self *RunState) String() string {
 	result.WriteString("RunState:\n")
 	result.WriteString("  Command: ")
 	result.WriteString(self.Command)
-	result.WriteString("\n  IsUndo: ")
-	result.WriteString(strconv.FormatBool(self.IsUndo))
-	result.WriteString("\n  AbortProgram: ")
-	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
-	result.WriteString("  UndoProgram: ")
-	result.WriteString(self.UndoProgram.StringIndented("    "))
 	if self.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")
 		result.WriteString(self.UnfinishedDetails.String())

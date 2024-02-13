@@ -37,7 +37,6 @@ func TestLoadSave(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
 			Command:                "command",
-			IsUndo:                 true,
 			AbortProgram:           program.Program{},
 			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
 			AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
@@ -160,7 +159,6 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
-			UndoProgram: program.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
@@ -193,7 +191,6 @@ func TestLoadSave(t *testing.T) {
   "Command": "command",
   "DryRun": true,
   "FinalUndoProgram": [],
-  "IsUndo": true,
   "RunProgram": [
     {
       "data": {},
@@ -449,7 +446,6 @@ func TestLoadSave(t *testing.T) {
       "type": "UpdateProposalTarget"
     }
   ],
-  "UndoProgram": [],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": {
     "CanSkip": true,

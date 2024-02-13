@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
@@ -19,19 +18,6 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.AfterBranchesSnapshot = afterBranchesSnapshot
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
-		DryRun:                   args.RunState.DryRun,
-		Run:                      args.Run,
-		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:    args.InitialConfigSnapshot,
-		InitialStashSize:         args.InitialStashSize,
-		NoPushHook:               args.NoPushHook(),
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	if err != nil {
-		return err
-	}
-	args.RunState.UndoProgram.AddProgram(undoProgram)
 	if failedOpcode.ShouldAutomaticallyUndoOnError() {
 		return autoUndo(failedOpcode, runErr, args)
 	}
@@ -57,9 +43,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	print.Footer(args.Verbose, args.Run.CommandsCounter.Count(), args.Run.FinalMessages.Result())
 	message := runErr.Error()
-	if !args.RunState.IsUndo {
-		message += messages.UndoContinueGuidance
-	}
+	message += messages.UndoContinueGuidance
 	if args.RunState.UnfinishedDetails.CanSkip {
 		message += messages.ContinueSkipGuidance
 	}

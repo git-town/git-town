@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -18,9 +17,7 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/undo/undostash"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
 	"github.com/git-town/git-town/v12/src/vm/program"
-	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -91,6 +88,8 @@ func executeUndo(verbose bool) error {
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
 
+	undoProgram.AddProgram(runState.FinalUndoProgram)
+
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   runState.DryRun,
 		RunInGitRoot:             true,
@@ -113,6 +112,13 @@ func executeUndo(verbose bool) error {
 			fmt.Println("ERROR: " + err.Error())
 		}
 	}
+
+	err = statefile.Delete(repo.RootDir)
+	if err != nil {
+		return fmt.Errorf(messages.RunstateDeleteProblem, err)
+	}
+	print.Footer(verbose, repo.Runner.CommandsCounter.Count(), repo.Runner.FinalMessages.Result())
+
 	return nil
 }
 
@@ -163,41 +169,4 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
 	}, initialStashSize, repo.Runner.Lineage, nil
-}
-
-func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
-	runState, err := statefile.Load(repo.RootDir)
-	if err != nil {
-		return runstate.EmptyRunState(), fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	if runState == nil {
-		return runstate.EmptyRunState(), errors.New(messages.UndoNothingToDo)
-	}
-	var undoRunState runstate.RunState
-	if runState.IsFinished() {
-		undoRunState = runState.CreateUndoRunState()
-	} else {
-		undoRunState = runState.CreateAbortRunState()
-	}
-	if !undoRunState.DryRun {
-		cmdhelpers.Wrap(&undoRunState.RunProgram, cmdhelpers.WrapOptions{
-			DryRun:                   undoRunState.DryRun,
-			RunInGitRoot:             true,
-			StashOpenChanges:         config.hasOpenChanges,
-			PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
-		})
-		// If the command to undo failed and was continued,
-		// there might be opcodes in the undo stack that became obsolete
-		// when the command was continued.
-		// Example: the command stashed away uncommitted changes,
-		// failed, and remembered in the undo list to pop the stack.
-		// When continuing, it finishes and pops the stack as part of the continue list.
-		// When we run undo now, it still wants to pop the stack even though that was already done.
-		// This seems to apply only to popping the stack and switching back to the initial branch.
-		// Hence we consolidate these opcode types here.
-		undoRunState.RunProgram = undoRunState.RunProgram.
-			MoveToEnd(&opcode.RestoreOpenChanges{}).
-			RemoveAllButLast("*opcode.CheckoutIfExists")
-	}
-	return undoRunState, err
 }
