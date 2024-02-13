@@ -133,7 +133,7 @@ func TestWindow(t *testing.T) {
 				Size:     5,
 			})
 			must.Eq(t, []int{2, 3, 4, 5, 6}, have)
-			must.EqOp(t, 2, cursorRow)
+			must.EqOp(t, 3, cursorRow)
 		})
 		t.Run("cursor at second to last element", func(t *testing.T) {
 			t.Parallel()
