@@ -11,15 +11,21 @@ func TestWindow(t *testing.T) {
 	t.Parallel()
 	t.Run("no elements", func(t *testing.T) {
 		t.Parallel()
-		elements := []int{}
-		have, cursorRow := slice.Window(elements, 0, 4)
+		have, cursorRow := slice.Window(slice.WindowArgs[int]{
+			Elements: []int{},
+			Cursor:   0,
+			Size:     4,
+		})
 		must.Eq(t, []int{}, have)
 		must.EqOp(t, 0, cursorRow)
 	})
 	t.Run("one element", func(t *testing.T) {
 		t.Parallel()
-		elements := []int{1}
-		have, cursorRow := slice.Window(elements, 0, 4)
+		have, cursorRow := slice.Window(slice.WindowArgs[int]{
+			Elements: []int{1},
+			Cursor:   0,
+			Size:     4,
+		})
 		must.Eq(t, []int{1}, have)
 		must.EqOp(t, 0, cursorRow)
 	})
@@ -28,13 +34,21 @@ func TestWindow(t *testing.T) {
 		elements := []int{1, 2, 3, 4}
 		t.Run("cursor at first element", func(t *testing.T) {
 			t.Parallel()
-			have, cursorRow := slice.Window(elements, 0, 6)
+			have, cursorRow := slice.Window(slice.WindowArgs[int]{
+				Elements: elements,
+				Cursor:   0,
+				Size:     6,
+			})
 			must.Eq(t, elements, have)
 			must.EqOp(t, 0, cursorRow)
 		})
 		t.Run("cursor at second element", func(t *testing.T) {
 			t.Parallel()
-			have, cursorRow := slice.Window(elements, 0, 6)
+			have, cursorRow := slice.Window(slice.WindowArgs[int]{
+				Elements: elements,
+				Cursor:   1,
+				Size:     6,
+			})
 			must.Eq(t, elements, have)
 			must.EqOp(t, 0, cursorRow)
 		})

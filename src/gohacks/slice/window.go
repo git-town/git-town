@@ -1,6 +1,12 @@
 package slice
 
 // Window provides size elements surrounding the given cursor.
-func Window[S ~[]C, C comparable](elements S, cursor int, size int) (window S, cursorRow int) {
-	return elements, 0
+func Window[T any](args WindowArgs[T]) (window []T, cursorRow int) {
+	return args.Elements, 0
+}
+
+type WindowArgs[T any] struct {
+	Elements []T
+	Cursor   int
+	Size     int
 }
