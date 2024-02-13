@@ -1,11 +1,20 @@
 package slice_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/shoenig/test/must"
+)
 
 func TestWindow(t *testing.T) {
 	t.Parallel()
 	t.Run("no elements", func(t *testing.T) {
 		t.Parallel()
+		elements := []int{}
+		have := slice.Window(elements, 0, 4)
+		want := []int{}
+		must.Eq(t, want, have)
 	})
 	t.Run("one element", func(t *testing.T) {
 		t.Parallel()
