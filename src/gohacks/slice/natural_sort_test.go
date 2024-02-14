@@ -12,7 +12,7 @@ func TestNaturalSort(t *testing.T) {
 	tests := map[*[]stringer]*[]stringer{
 		newStringers():                    newStringers(),                    // empty
 		newStringers("a"):                 newStringers("a"),                 // single element
-		newStringers("a20", "a100", "a3"): newStringers("a3", "a20", "a100"), // multiple elements
+		newStringers("a100", "a20", "a3"): newStringers("a3", "a20", "a100"), // multiple elements
 		newStringers("a10b", "a10a"):      newStringers("a10a", "a10b"),      // multiple elements
 	}
 	for give, want := range tests {
