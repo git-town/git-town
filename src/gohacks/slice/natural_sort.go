@@ -11,33 +11,7 @@ import (
 func NaturalSort[T fmt.Stringer](elements []T) []T {
 	stringers := newStringers(elements)
 	sort.Sort(stringers)
-	result := make([]T, len(stringers))
-	for s, stringer := range stringers {
-		result[s] = stringer.(T) //nolint:forcetypeassert  // we are sure this is T here because stringers consists of T
-	}
-	return result
-}
-
-type stringers []fmt.Stringer
-
-func newStringers[T fmt.Stringer](elements []T) stringers {
-	stringers := make(stringers, len(elements))
-	for e, element := range elements {
-		stringers[e] = element
-	}
-	return stringers
-}
-
-func (self stringers) Len() int {
-	return len(self)
-}
-
-func (self stringers) Less(a, b int) bool {
-	return naturalLess(self[a].String(), self[b].String())
-}
-
-func (self stringers) Swap(a, b int) {
-	self[a], self[b] = self[b], self[a]
+	return stringers.unwrap()
 }
 
 func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
@@ -79,4 +53,34 @@ func naturalLess(text1, text2 string) bool {
 	}
 	// the strings are equal up to the end of one of them
 	return len(text1) < len(text2)
+}
+
+type stringers[T fmt.Stringer] []fmt.Stringer
+
+func newStringers[T fmt.Stringer](elements []T) stringers[T] {
+	stringers := make(stringers[T], len(elements))
+	for e, element := range elements {
+		stringers[e] = element
+	}
+	return stringers
+}
+
+func (self stringers[T]) Len() int {
+	return len(self)
+}
+
+func (self stringers[T]) Less(a, b int) bool {
+	return naturalLess(self[a].String(), self[b].String())
+}
+
+func (self stringers[T]) Swap(a, b int) {
+	self[a], self[b] = self[b], self[a]
+}
+
+func (self stringers[T]) unwrap() []T {
+	result := make([]T, len(self))
+	for s, stringer := range self {
+		result[s] = stringer.(T) //nolint:forcetypeassert  // we are sure this is T here because stringers consists of T
+	}
+	return result
 }
