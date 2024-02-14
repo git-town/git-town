@@ -24,9 +24,7 @@ func naturalLess(text1, text2 string) bool {
 		if part1 != part2 {
 			if part1.isNumber() && part2.isNumber() {
 				// compare numbers by their numeric value
-				int1, _ := strconv.Atoi(string(part1))
-				int2, _ := strconv.Atoi(string(part2))
-				return int1 < int2
+				return part1.asNumber() < part2.asNumber()
 			}
 			// compare non-numbers lexicographically
 			return part1 < part2
@@ -64,6 +62,11 @@ type part string
 
 func (part part) isNumber() bool {
 	return unicode.IsDigit(rune(part[0]))
+}
+
+func (part part) asNumber() int {
+	result, _ := strconv.Atoi(string(part))
+	return result
 }
 
 func newCursor(text string) cursor {
