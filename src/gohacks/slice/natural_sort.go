@@ -54,12 +54,12 @@ func (c cutter) hasMoreParts() bool {
 
 // provides the next part of the content that this cutter disects
 func (c *cutter) nextPart() part {
-	var endIndex int
+	endIndex := c.index
 	if unicode.IsDigit(rune(c.content[c.index])) {
-		for endIndex = c.index; endIndex < len(c.content) && unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		for ; endIndex < len(c.content) && unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	} else {
-		for endIndex = c.index; endIndex < len(c.content) && !unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		for ; endIndex < len(c.content) && !unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	}
 	result := part(c.content[c.index:endIndex])
