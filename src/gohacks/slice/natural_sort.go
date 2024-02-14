@@ -81,7 +81,7 @@ func (part part) toNumber() int {
 	return result
 }
 
-// wraps the given []fmt.Stringer with methods that allow sorting it using the stdlib
+// wraps the given []fmt.Stringer with the sort.Interface methods so that we can sort it using the stdlib
 type sortable[T fmt.Stringer] []T
 
 func newSortable[T fmt.Stringer](elements []T) sortable[T] {
