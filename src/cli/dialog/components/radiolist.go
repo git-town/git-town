@@ -79,7 +79,7 @@ func (self radioListModel[S]) View() string {
 	for i := window.StartRow; i < window.EndRow; i++ {
 		branch := self.Entries[i]
 		s.WriteString(self.EntryNumberStr(i))
-		if i == window.CursorRow {
+		if i == self.Cursor {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
 		} else {
 			s.WriteString("  " + branch.String())

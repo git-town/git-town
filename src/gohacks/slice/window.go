@@ -4,7 +4,7 @@ package slice
 // with the given number of elements around the given cursor position.
 func Window(args WindowArgs) WindowResult {
 	if args.ElementCount == 0 {
-		return WindowResult{0, 0, 0}
+		return WindowResult{0, 0}
 	}
 	length := args.WindowSize
 	start := args.CursorPos - (args.WindowSize / 2)
@@ -34,9 +34,8 @@ loop:
 		}
 	}
 	return WindowResult{
-		CursorRow: args.CursorPos,
-		EndRow:    end,
-		StartRow:  start,
+		EndRow:   end,
+		StartRow: start,
 	}
 }
 
@@ -47,7 +46,6 @@ type WindowArgs struct {
 }
 
 type WindowResult struct {
-	CursorRow int
-	EndRow    int
-	StartRow  int
+	EndRow   int
+	StartRow int
 }
