@@ -89,6 +89,16 @@ func (self SwitchModel) View() string {
 	s.WriteString(self.Colors.Help.Styled("/"))
 	s.WriteString(self.Colors.HelpKey.Styled("j"))
 	s.WriteString(self.Colors.Help.Styled(" down   "))
+	// left
+	s.WriteString(self.Colors.HelpKey.Styled("←"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("u"))
+	s.WriteString(self.Colors.Help.Styled(" 10 up   "))
+	// right
+	s.WriteString(self.Colors.HelpKey.Styled("→"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("d"))
+	s.WriteString(self.Colors.Help.Styled(" 10 down   "))
 	// accept
 	s.WriteString(self.Colors.HelpKey.Styled("enter"))
 	s.WriteString(self.Colors.Help.Styled("/"))
