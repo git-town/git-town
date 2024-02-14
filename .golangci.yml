@@ -77,6 +77,9 @@ issues:
     - text: receiver name should be a reflection of its identity
       linters:
         - revive
+    - text: increment-decrement
+      linters:
+        - revive
     - text: is missing field undeclaredOpcodeMethods
       linters:
         - exhaustruct
