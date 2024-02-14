@@ -124,7 +124,6 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = components.StatusDone
 		self.ToggleCurrentEntry()
 		return self, nil
 	}
@@ -173,6 +172,16 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.Help.Styled("/"))
 	s.WriteString(self.Colors.HelpKey.Styled("j"))
 	s.WriteString(self.Colors.Help.Styled(" down   "))
+	// left
+	s.WriteString(self.Colors.HelpKey.Styled("←"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("u"))
+	s.WriteString(self.Colors.Help.Styled(" 10 up   "))
+	// right
+	s.WriteString(self.Colors.HelpKey.Styled("→"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("d"))
+	s.WriteString(self.Colors.Help.Styled(" 10 down   "))
 	// toggle
 	s.WriteString(self.Colors.HelpKey.Styled("space"))
 	s.WriteString(self.Colors.Help.Styled("/"))
