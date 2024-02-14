@@ -8,10 +8,10 @@ import (
 )
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
-func NaturalSort[T fmt.Stringer](elements []T) []T {
-	sortableElements := newSortable(elements)
-	sort.Sort(sortableElements)
-	return sortableElements
+func NaturalSort[T fmt.Stringer](list []T) []T {
+	sortableList := newSortable(list)
+	sort.Sort(sortableList)
+	return sortableList
 }
 
 func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
