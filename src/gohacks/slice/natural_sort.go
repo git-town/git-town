@@ -9,9 +9,9 @@ import (
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
-	stringers := newSortable(elements)
-	sort.Sort(stringers)
-	return stringers
+	sortableElements := newSortable(elements)
+	sort.Sort(sortableElements)
+	return sortableElements
 }
 
 func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
@@ -61,9 +61,7 @@ type sortable[T fmt.Stringer] []T
 
 func newSortable[T fmt.Stringer](elements []T) sortable[T] {
 	sortables := make(sortable[T], len(elements))
-	for e, element := range elements {
-		sortables[e] = element
-	}
+	copy(sortables, elements)
 	return sortables
 }
 
