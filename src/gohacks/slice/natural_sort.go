@@ -14,30 +14,13 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 	return sortableList
 }
 
-type part string
-
-func extractPart(text string, startIndex int) (result part, endIndex int) {
-	if unicode.IsDigit(rune(text[startIndex])) {
-		for endIndex = startIndex; endIndex < len(text) && unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
-		}
-	} else {
-		for endIndex = startIndex; endIndex < len(text) && !unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
-		}
-	}
-	return part(text[startIndex:endIndex]), endIndex
-}
-
-func (part part) isNumber() bool {
-	return unicode.IsDigit(rune(part[0]))
-}
-
 // indicates whether text1 < text2 according to natural sort order
 func naturalLess(text1, text2 string) bool {
-	index1, index2 := 0, 0
-	for index1 < len(text1) && index2 < len(text2) {
-		var part1, part2 part
-		part1, index1 = extractPart(text1, index1)
-		part2, index2 = extractPart(text2, index2)
+	cursor1 := newCursor(text1)
+	cursor2 := newCursor(text2)
+	for cursor1.hasMore() && cursor2.hasMore() {
+		part1 := cursor1.nextPart()
+		part2 := cursor2.nextPart()
 		if part1 != part2 {
 			if part1.isNumber() && part2.isNumber() {
 				// compare numbers by their numeric value
@@ -51,6 +34,43 @@ func naturalLess(text1, text2 string) bool {
 	}
 	// the strings are equal up to the end of one of them
 	return len(text1) < len(text2)
+}
+
+type cursor struct {
+	index int
+	text  string
+}
+
+func (cursor cursor) hasMore() bool {
+	return cursor.index < len(cursor.text)
+}
+
+func (cursor *cursor) nextPart() part {
+	var endIndex int
+	if unicode.IsDigit(rune(cursor.text[cursor.index])) {
+		for endIndex = cursor.index; endIndex < len(cursor.text) && unicode.IsDigit(rune(cursor.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		}
+	} else {
+		for endIndex = cursor.index; endIndex < len(cursor.text) && !unicode.IsDigit(rune(cursor.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		}
+	}
+	result := part(cursor.text[cursor.index:endIndex])
+	cursor.index = endIndex
+	return result
+}
+
+// a part of a search string, represents either a multi-digit number or a text block
+type part string
+
+func (part part) isNumber() bool {
+	return unicode.IsDigit(rune(part[0]))
+}
+
+func newCursor(text string) cursor {
+	return cursor{
+		index: 0,
+		text:  text,
+	}
 }
 
 // wraps the given []fmt.Stringer with methods that allow sorting it using the stdlib
