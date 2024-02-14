@@ -24,7 +24,7 @@ func naturalLess(text1, text2 string) bool {
 		if part1 != part2 {
 			if part1.isNumber() && part2.isNumber() {
 				// compare numbers by their numeric value
-				return part1.asNumber() < part2.asNumber()
+				return part1.toNumber() < part2.toNumber()
 			}
 			// compare non-numbers lexicographically
 			return part1 < part2
@@ -32,6 +32,13 @@ func naturalLess(text1, text2 string) bool {
 	}
 	// the strings are equal up to the end of one of them
 	return len(text1) < len(text2)
+}
+
+func newCursor(text string) cursor {
+	return cursor{
+		index: 0,
+		text:  text,
+	}
 }
 
 type cursor struct {
@@ -64,16 +71,9 @@ func (part part) isNumber() bool {
 	return unicode.IsDigit(rune(part[0]))
 }
 
-func (part part) asNumber() int {
+func (part part) toNumber() int {
 	result, _ := strconv.Atoi(string(part))
 	return result
-}
-
-func newCursor(text string) cursor {
-	return cursor{
-		index: 0,
-		text:  text,
-	}
 }
 
 // wraps the given []fmt.Stringer with methods that allow sorting it using the stdlib
