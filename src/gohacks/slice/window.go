@@ -1,13 +1,11 @@
 package slice
 
-import "github.com/git-town/git-town/v12/src/gohacks/math"
-
 // Window tells you which of the given elements to display given where the cursor is.
 func Window(args WindowArgs) WindowResult {
 	if args.ElementCount == 0 {
 		return WindowResult{0, 0, 0}
 	}
-	length := math.Min(args.WindowSize, args.ElementCount)
+	length := args.WindowSize
 	start := args.CursorPos - (args.WindowSize / 2)
 	var end int
 loop:
@@ -35,20 +33,20 @@ loop:
 		}
 	}
 	return WindowResult{
-		StartRow:  start,
-		EndRow:    end,
 		CursorRow: args.CursorPos,
+		EndRow:    end,
+		StartRow:  start,
 	}
 }
 
 type WindowArgs struct {
-	ElementCount int
 	CursorPos    int
+	ElementCount int
 	WindowSize   int
 }
 
 type WindowResult struct {
-	StartRow  int
-	EndRow    int
 	CursorRow int
+	EndRow    int
+	StartRow  int
 }
