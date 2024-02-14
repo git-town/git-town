@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-func NatSort[T fmt.Stringer](elements []T) []T {
+func NaturalSort[T fmt.Stringer](elements []T) []T {
 	stringers := make(Stringers, len(elements))
 	for e, element := range elements {
 		stringers[e] = element

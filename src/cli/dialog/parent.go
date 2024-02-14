@@ -43,7 +43,7 @@ type ParentArgs struct {
 
 func ParentEntries(args ParentArgs) gitdomain.LocalBranchNames {
 	parentCandidateBranches := args.LocalBranches.Remove(args.Branch).Remove(args.Lineage.Children(args.Branch)...)
-	parentCandidateBranches = slice.NatSort(parentCandidateBranches)
+	parentCandidateBranches = slice.NaturalSort(parentCandidateBranches)
 	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch)
 	return append(gitdomain.LocalBranchNames{PerennialBranchOption}, parentCandidates...)
 }

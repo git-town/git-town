@@ -18,7 +18,7 @@ func TestSortStringers(t *testing.T) {
 		newStringers("b20", "b1", "a2"): newStringers("a2", "b1", "b20"),
 	}
 	for give, want := range tests {
-		have := slice.NatSort(*give)
+		have := slice.NaturalSort(*give)
 		must.Eq(t, want, &have)
 	}
 }
