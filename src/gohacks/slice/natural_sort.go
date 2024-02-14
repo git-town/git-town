@@ -52,7 +52,7 @@ func (c cutter) hasMoreParts() bool {
 	return c.index < len(c.content)
 }
 
-// provides the next part of the content that this cutter cuts up
+// provides the next part of the content that this cutter disects
 func (c *cutter) nextPart() part {
 	var endIndex int
 	if unicode.IsDigit(rune(c.content[c.index])) {
