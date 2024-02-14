@@ -9,9 +9,9 @@ import (
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
-	stringers := newStringers(elements)
+	stringers := newSortable(elements)
 	sort.Sort(stringers)
-	return stringers.unwrap()
+	return stringers
 }
 
 func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
@@ -56,32 +56,25 @@ func naturalLess(text1, text2 string) bool {
 	return len(text1) < len(text2)
 }
 
-type stringers[T fmt.Stringer] []fmt.Stringer
+// wraps the given type T with methods that allow sorting it using stdlib mechanisms
+type sortable[T fmt.Stringer] []T
 
-func newStringers[T fmt.Stringer](elements []T) stringers[T] {
-	stringers := make(stringers[T], len(elements))
+func newSortable[T fmt.Stringer](elements []T) sortable[T] {
+	sortables := make(sortable[T], len(elements))
 	for e, element := range elements {
-		stringers[e] = element
+		sortables[e] = element
 	}
-	return stringers
+	return sortables
 }
 
-func (self stringers[T]) Len() int {
+func (self sortable[T]) Len() int {
 	return len(self)
 }
 
-func (self stringers[T]) Less(a, b int) bool {
+func (self sortable[T]) Less(a, b int) bool {
 	return naturalLess(self[a].String(), self[b].String())
 }
 
-func (self stringers[T]) Swap(a, b int) {
+func (self sortable[T]) Swap(a, b int) {
 	self[a], self[b] = self[b], self[a]
-}
-
-func (self stringers[T]) unwrap() []T {
-	result := make([]T, len(self))
-	for s, stringer := range self {
-		result[s] = stringer.(T) //nolint:forcetypeassert  // we are sure this is T here because stringers consists of T
-	}
-	return result
 }
