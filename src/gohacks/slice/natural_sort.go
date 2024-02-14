@@ -52,18 +52,19 @@ func (c cutter) hasMoreParts() bool {
 	return c.index < len(c.content)
 }
 
+func (c cutter) isDigitAt(index int) bool {
+	return unicode.IsDigit(rune(c.content[index]))
+}
+
 // provides the next part of the content that this cutter disects
 func (c *cutter) nextPart() part {
-	endIndex := c.index
-	if unicode.IsDigit(rune(c.content[c.index])) {
-		for ; endIndex < len(c.content) && unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
-		}
-	} else {
-		for ; endIndex < len(c.content) && !unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
-		}
+	index := c.index
+	lookingForDigits := c.isDigitAt(index)
+	for index < len(c.content) && unicode.IsDigit(rune(c.content[index])) == lookingForDigits {
+		index++
 	}
-	result := part(c.content[c.index:endIndex])
-	c.index = endIndex
+	result := part(c.content[c.index:index])
+	c.index = index
 	return result
 }
 
