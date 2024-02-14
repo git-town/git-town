@@ -14,23 +14,15 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 	return sortableList
 }
 
-func extractText(text string, startIndex int) (nonNumber string, endIndex int) {
-	for endIndex = startIndex; endIndex < len(text) && !unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
-	}
-	return text[startIndex:endIndex], endIndex
-}
-
-func extractNumber(text string, startIndex int) (number string, endIndex int) {
-	for endIndex = startIndex; endIndex < len(text) && unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
-	}
-	return text[startIndex:endIndex], endIndex
-}
-
 func extractPart(text string, startIndex int) (part string, endIndex int) {
 	if unicode.IsDigit(rune(text[startIndex])) {
-		return extractNumber(text, startIndex)
+		for endIndex = startIndex; endIndex < len(text) && unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		}
+	} else {
+		for endIndex = startIndex; endIndex < len(text) && !unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		}
 	}
-	return extractText(text, startIndex)
+	return text[startIndex:endIndex], endIndex
 }
 
 func partIsNumber(part string) bool {
