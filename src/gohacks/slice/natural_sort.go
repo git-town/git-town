@@ -14,7 +14,7 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 	return sortableList
 }
 
-func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
+func extractText(text string, index int) (nonNumber string, nextIndex int) {
 	for nextIndex = index; nextIndex < len(text) && !unicode.IsDigit(rune(text[nextIndex])); nextIndex++ { //revive:disable-line:empty-block
 	}
 	return text[index:nextIndex], nextIndex
@@ -34,12 +34,12 @@ func naturalLess(text1, text2 string) bool {
 		if unicode.IsDigit(rune(text1[index1])) {
 			part1, index1 = extractNumber(text1, index1)
 		} else {
-			part1, index1 = extractNonNumber(text1, index1)
+			part1, index1 = extractText(text1, index1)
 		}
 		if unicode.IsDigit(rune(text2[index2])) {
 			part2, index2 = extractNumber(text2, index2)
 		} else {
-			part2, index2 = extractNonNumber(text2, index2)
+			part2, index2 = extractText(text2, index2)
 		}
 		if part1 != part2 {
 			if unicode.IsDigit(rune(part1[0])) && unicode.IsDigit(rune(part2[0])) {
