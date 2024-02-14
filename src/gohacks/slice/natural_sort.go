@@ -9,7 +9,7 @@ import (
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
-	stringers := make(stringers, len(elements))
+	stringers := newStringers(elements)
 	for e, element := range elements {
 		stringers[e] = element
 	}
@@ -22,6 +22,14 @@ func NaturalSort[T fmt.Stringer](elements []T) []T {
 }
 
 type stringers []fmt.Stringer
+
+func newStringers[T fmt.Stringer](elements []T) stringers {
+	stringers := make(stringers, len(elements))
+	for e, element := range elements {
+		stringers[e] = element
+	}
+	return stringers
+}
 
 func (self stringers) Len() int {
 	return len(self)
