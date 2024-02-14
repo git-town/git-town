@@ -21,12 +21,21 @@ func (s StringerSlice) Swap(a, b int) {
 	s[a], s[b] = s[b], s[a]
 }
 
-func NatSort[T fmt.Stringer](elements []T) {
-	s := StringerSlice{}
+func NatSort[T fmt.Stringer](elements []T) []T {
+	stringerSlice := make(StringerSlice, len(elements))
+	for e, element := range elements {
+		stringerSlice[e] = element
+	}
+	SortStringers(stringerSlice)
+	result := make([]T, len(stringerSlice))
+	for s, stringer := range stringerSlice {
+		result[s] = stringer.(T)
+	}
+	return result
 }
 
-func SortStringers(s StringerSlice) {
-	sort.Sort(s)
+func SortStringers(stringerSlice StringerSlice) {
+	sort.Sort(stringerSlice)
 }
 
 func naturalLess(a, b string) bool {
@@ -58,14 +67,14 @@ func naturalLess(a, b string) bool {
 	return len(a) < len(b)
 }
 
-func extractNumber(s string, i int) (number string, next int) {
-	for next = i; next < len(s) && unicode.IsDigit(rune(s[next])); next++ {
+func extractNumber(stringerSlice string, i int) (number string, next int) {
+	for next = i; next < len(stringerSlice) && unicode.IsDigit(rune(stringerSlice[next])); next++ {
 	}
-	return s[i:next], next
+	return stringerSlice[i:next], next
 }
 
-func extractNonNumber(s string, i int) (nonNumber string, next int) {
-	for next = i; next < len(s) && !unicode.IsDigit(rune(s[next])); next++ {
+func extractNonNumber(stringerSlice string, i int) (nonNumber string, next int) {
+	for next = i; next < len(stringerSlice) && !unicode.IsDigit(rune(stringerSlice[next])); next++ {
 	}
-	return s[i:next], next
+	return stringerSlice[i:next], next
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/shoenig/test/must"
 )
 
 type stringer struct {
@@ -14,37 +15,25 @@ func (s stringer) String() string {
 	return s.s
 }
 
-func TestSortStringers(t *testing.T) {
-	tests := []struct {
-		name     string
-		input    slice.StringerSlice
-		expected slice.StringerSlice
-	}{
-		{
-			name:     "empty slice",
-			input:    slice.StringerSlice{},
-			expected: slice.StringerSlice{},
-		},
-		{
-			name:     "single element",
-			input:    slice.StringerSlice{stringer{"a"}},
-			expected: slice.StringerSlice{stringer{"a"}},
-		},
-		{
-			name:     "multiple elements",
-			input:    slice.StringerSlice{stringer{"b10"}, stringer{"b2"}, stringer{"a1"}},
-			expected: slice.StringerSlice{stringer{"a1"}, stringer{"b2"}, stringer{"b10"}},
-		},
+func newStringers(names ...string) *[]stringer {
+	result := make([]stringer, len(names))
+	for n, name := range names {
+		result[n] = stringer{name}
 	}
+	return &result
+}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			slice.SortStringers(test.input)
-			for i, v := range test.input {
-				if v.String() != test.expected[i].String() {
-					t.Errorf("Expected %v, but got %v", test.expected, test.input)
-				}
-			}
-		})
+func TestSortStringers(t *testing.T) {
+	tests := map[*[]stringer]*[]stringer{
+		// empty
+		newStringers(): newStringers(),
+		// single element
+		newStringers("a"): newStringers("a"),
+		// multiple elements
+		newStringers("b10", "b2", "a1"): newStringers("a1", "b2", "b10"),
+	}
+	for give, want := range tests {
+		have := slice.NatSort(*give)
+		must.Eq(t, want, &have)
 	}
 }
