@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"golang.org/x/exp/maps"
 )
 
@@ -60,7 +61,13 @@ func (self SwitchModel) View() string {
 		return ""
 	}
 	s := strings.Builder{}
-	for i, branch := range self.Entries {
+	window := slice.Window(slice.WindowArgs{
+		ElementCount: len(self.Entries),
+		CursorPos:    self.Cursor,
+		WindowSize:   components.WindowSize,
+	})
+	for i := window.StartRow; i < window.EndRow; i++ {
+		branch := self.Entries[i]
 		switch {
 		case i == self.Cursor:
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
