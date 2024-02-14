@@ -5,7 +5,11 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
 )
+
+// how many elements to display in the dialog
+const windowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
 func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
@@ -67,7 +71,13 @@ func (self radioListModel[S]) View() string {
 	s.WriteString(self.Colors.Title.Styled(self.title))
 	s.WriteRune('\n')
 	s.WriteString(self.help)
-	for i, branch := range self.Entries {
+	window := slice.Window(slice.WindowArgs{
+		ElementCount: len(self.Entries),
+		CursorPos:    self.Cursor,
+		WindowSize:   windowSize,
+	})
+	for i := window.StartRow; i < window.EndRow; i++ {
+		branch := self.Entries[i]
 		s.WriteString(self.EntryNumberStr(i))
 		if i == self.Cursor {
 			s.WriteString(self.Colors.Selection.Styled("> " + branch.String()))
