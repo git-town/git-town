@@ -10,10 +10,10 @@ import (
 func TestNaturalSort(t *testing.T) {
 	t.Parallel()
 	tests := map[*[]stringer]*[]stringer{
-		newStringers():                    newStringers(),                    // empty
-		newStringers("a"):                 newStringers("a"),                 // single element
-		newStringers("a100", "a20", "a3"): newStringers("a3", "a20", "a100"), // ordering by numeric value
-		newStringers("a10b10", "a10b2"):   newStringers("a10b2", "a10b10"),   // multiple parts of numbers and characters
+		newStringers():                       newStringers(),                       // empty
+		newStringers("a"):                    newStringers("a"),                    // single element
+		newStringers("a100a", "a20b", "a3c"): newStringers("a3c", "a20b", "a100a"), // ordering by numeric value
+		newStringers("a10b10", "a10b2"):      newStringers("a10b2", "a10b10"),      // multiple parts of numbers and characters
 	}
 	for give, want := range tests {
 		have := slice.NaturalSort(*give)
