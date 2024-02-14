@@ -7,6 +7,7 @@ import (
 	"unicode"
 )
 
+// sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
 	stringers := make(Stringers, len(elements))
 	for e, element := range elements {
