@@ -26,6 +26,7 @@ func extractNumber(text string, index int) (number string, nextIndex int) {
 	return text[index:nextIndex], nextIndex
 }
 
+// indicates whether text1 < text2 according to natural sort order
 func naturalLess(text1, text2 string) bool {
 	index1, index2 := 0, 0
 	for index1 < len(text1) && index2 < len(text2) {
