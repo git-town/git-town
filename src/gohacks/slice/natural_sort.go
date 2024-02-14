@@ -9,7 +9,7 @@ import (
 
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
-	stringers := make(Stringers, len(elements))
+	stringers := make(stringers, len(elements))
 	for e, element := range elements {
 		stringers[e] = element
 	}
@@ -21,17 +21,17 @@ func NaturalSort[T fmt.Stringer](elements []T) []T {
 	return result
 }
 
-type Stringers []fmt.Stringer
+type stringers []fmt.Stringer
 
-func (self Stringers) Len() int {
+func (self stringers) Len() int {
 	return len(self)
 }
 
-func (self Stringers) Less(a, b int) bool {
+func (self stringers) Less(a, b int) bool {
 	return naturalLess(self[a].String(), self[b].String())
 }
 
-func (self Stringers) Swap(a, b int) {
+func (self stringers) Swap(a, b int) {
 	self[a], self[b] = self[b], self[a]
 }
 
