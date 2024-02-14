@@ -16,11 +16,11 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 
 // indicates whether text1 < text2 according to natural sort order
 func naturalLess(text1, text2 string) bool {
-	cursor1 := newCutter(text1)
-	cursor2 := newCutter(text2)
-	for cursor1.hasMore() && cursor2.hasMore() {
-		part1 := cursor1.nextPart()
-		part2 := cursor2.nextPart()
+	cutter1 := newCutter(text1)
+	cutter2 := newCutter(text2)
+	for cutter1.hasMore() && cutter2.hasMore() {
+		part1 := cutter1.nextPart()
+		part2 := cutter2.nextPart()
 		if part1 != part2 {
 			if part1.isNumber() && part2.isNumber() {
 				// compare numbers by their numeric value
