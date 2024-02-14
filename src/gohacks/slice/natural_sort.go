@@ -65,7 +65,7 @@ func (c *cutter) nextPart() part {
 	return result
 }
 
-// a part cut from given text, either a multi-digit number or a block of non-numbers
+// a part cut from text, either a multi-digit number or a block of non-numbers
 type part string
 
 func (part part) isNumber() bool {
