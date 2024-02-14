@@ -124,7 +124,6 @@ func (self PerennialBranchesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //
 		return self, tea.Quit
 	}
 	if keyMsg.String() == "o" {
-		self.Status = components.StatusDone
 		self.ToggleCurrentEntry()
 		return self, nil
 	}
@@ -140,7 +139,13 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
 	s.WriteRune('\n')
 	s.WriteString(PerennialBranchesHelp)
-	for i, branch := range self.Entries {
+	window := slice.Window(slice.WindowArgs{
+		ElementCount: len(self.Entries),
+		CursorPos:    self.Cursor,
+		WindowSize:   components.WindowSize,
+	})
+	for i := window.StartRow; i < window.EndRow; i++ {
+		branch := self.Entries[i]
 		selected := self.Cursor == i
 		checked := self.IsRowChecked(i)
 		s.WriteString(self.EntryNumberStr(i))
@@ -167,6 +172,16 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.Help.Styled("/"))
 	s.WriteString(self.Colors.HelpKey.Styled("j"))
 	s.WriteString(self.Colors.Help.Styled(" down   "))
+	// left
+	s.WriteString(self.Colors.HelpKey.Styled("←"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("u"))
+	s.WriteString(self.Colors.Help.Styled(" 10 up   "))
+	// right
+	s.WriteString(self.Colors.HelpKey.Styled("→"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("d"))
+	s.WriteString(self.Colors.Help.Styled(" 10 down   "))
 	// toggle
 	s.WriteString(self.Colors.HelpKey.Styled("space"))
 	s.WriteString(self.Colors.Help.Styled("/"))
