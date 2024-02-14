@@ -16,8 +16,8 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 
 // indicates whether text1 < text2 according to natural sort order
 func naturalLess(text1, text2 string) bool {
-	cursor1 := newCursor(text1)
-	cursor2 := newCursor(text2)
+	cursor1 := newCutter(text1)
+	cursor2 := newCutter(text2)
 	for cursor1.hasMore() && cursor2.hasMore() {
 		part1 := cursor1.nextPart()
 		part2 := cursor2.nextPart()
@@ -34,33 +34,34 @@ func naturalLess(text1, text2 string) bool {
 	return len(text1) < len(text2)
 }
 
-func newCursor(text string) cursor {
-	return cursor{
+// cuts given text into parts of numbers and non-numbers
+type cutter struct {
+	index int
+	text  string
+}
+
+func newCutter(text string) cutter {
+	return cutter{
 		index: 0,
 		text:  text,
 	}
 }
 
-type cursor struct {
-	index int
-	text  string
+func (c cutter) hasMore() bool {
+	return c.index < len(c.text)
 }
 
-func (cursor cursor) hasMore() bool {
-	return cursor.index < len(cursor.text)
-}
-
-func (cursor *cursor) nextPart() part {
+func (c *cutter) nextPart() part {
 	var endIndex int
-	if unicode.IsDigit(rune(cursor.text[cursor.index])) {
-		for endIndex = cursor.index; endIndex < len(cursor.text) && unicode.IsDigit(rune(cursor.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+	if unicode.IsDigit(rune(c.text[c.index])) {
+		for endIndex = c.index; endIndex < len(c.text) && unicode.IsDigit(rune(c.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	} else {
-		for endIndex = cursor.index; endIndex < len(cursor.text) && !unicode.IsDigit(rune(cursor.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		for endIndex = c.index; endIndex < len(c.text) && !unicode.IsDigit(rune(c.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	}
-	result := part(cursor.text[cursor.index:endIndex])
-	cursor.index = endIndex
+	result := part(c.text[c.index:endIndex])
+	c.index = endIndex
 	return result
 }
 
