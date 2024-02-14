@@ -47,10 +47,12 @@ func newCutter(text string) cutter {
 	}
 }
 
+// indicates whether this cutter can yield more parts
 func (c cutter) hasMore() bool {
 	return c.index < len(c.text)
 }
 
+// provides the next part of this cutters text
 func (c *cutter) nextPart() part {
 	var endIndex int
 	if unicode.IsDigit(rune(c.text[c.index])) {
