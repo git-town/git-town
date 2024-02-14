@@ -83,10 +83,10 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		if number < len(self.Entries) {
 			self.Cursor = number
 		}
-	case "k", "A", "Z":
+	case "k":
 		self.moveCursorUp()
 		return true, nil
-	case "j", "B":
+	case "j":
 		self.moveCursorDown()
 		return true, nil
 	case "u":
