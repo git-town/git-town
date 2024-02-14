@@ -7,6 +7,22 @@ import (
 	"github.com/shoenig/test/must"
 )
 
+func TestSortStringers(t *testing.T) {
+	t.Parallel()
+	tests := map[*[]stringer]*[]stringer{
+		// empty
+		newStringers(): newStringers(),
+		// single element
+		newStringers("a"): newStringers("a"),
+		// multiple elements
+		newStringers("b20", "b1", "a2"): newStringers("a2", "b1", "b20"),
+	}
+	for give, want := range tests {
+		have := slice.NatSort(*give)
+		must.Eq(t, want, &have)
+	}
+}
+
 type stringer struct {
 	s string
 }
@@ -21,19 +37,4 @@ func newStringers(names ...string) *[]stringer {
 		result[n] = stringer{name}
 	}
 	return &result
-}
-
-func TestSortStringers(t *testing.T) {
-	tests := map[*[]stringer]*[]stringer{
-		// empty
-		newStringers(): newStringers(),
-		// single element
-		newStringers("a"): newStringers("a"),
-		// multiple elements
-		newStringers("b20", "b1", "a2"): newStringers("a2", "b1", "b20"),
-	}
-	for give, want := range tests {
-		have := slice.NatSort(*give)
-		must.Eq(t, want, &have)
-	}
 }

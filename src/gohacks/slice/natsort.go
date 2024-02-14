@@ -8,14 +8,14 @@ import (
 )
 
 func NatSort[T fmt.Stringer](elements []T) []T {
-	stringerSlice := make(Stringers, len(elements))
+	stringers := make(Stringers, len(elements))
 	for e, element := range elements {
-		stringerSlice[e] = element
+		stringers[e] = element
 	}
-	sort.Sort(stringerSlice)
-	result := make([]T, len(stringerSlice))
-	for s, stringer := range stringerSlice {
-		result[s] = stringer.(T)
+	sort.Sort(stringers)
+	result := make([]T, len(stringers))
+	for s, stringer := range stringers {
+		result[s] = stringer.(T) //nolint:forcetypeassert  // we are sure this is T here because stringers consists of T
 	}
 	return result
 }
@@ -32,6 +32,18 @@ func (self Stringers) Less(a, b int) bool {
 
 func (self Stringers) Swap(a, b int) {
 	self[a], self[b] = self[b], self[a]
+}
+
+func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
+	for nextIndex = index; nextIndex < len(text) && !unicode.IsDigit(rune(text[nextIndex])); nextIndex++ { //revive:disable-line:empty-block
+	}
+	return text[index:nextIndex], nextIndex
+}
+
+func extractNumber(text string, index int) (number string, nextIndex int) {
+	for nextIndex = index; nextIndex < len(text) && unicode.IsDigit(rune(text[nextIndex])); nextIndex++ { //revive:disable-line:empty-block
+	}
+	return text[index:nextIndex], nextIndex
 }
 
 func naturalLess(text1, text2 string) bool {
@@ -61,16 +73,4 @@ func naturalLess(text1, text2 string) bool {
 	}
 	// the strings are equal up to the end of one of them
 	return len(text1) < len(text2)
-}
-
-func extractNumber(text string, index int) (number string, nextIndex int) {
-	for nextIndex = index; nextIndex < len(text) && unicode.IsDigit(rune(text[nextIndex])); nextIndex++ {
-	}
-	return text[index:nextIndex], nextIndex
-}
-
-func extractNonNumber(text string, index int) (nonNumber string, nextIndex int) {
-	for nextIndex = index; nextIndex < len(text) && !unicode.IsDigit(rune(text[nextIndex])); nextIndex++ {
-	}
-	return text[index:nextIndex], nextIndex
 }
