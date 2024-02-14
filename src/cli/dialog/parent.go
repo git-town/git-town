@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"github.com/git-town/git-town/v12/src/gohacks/stringers"
 )
 
@@ -42,7 +43,7 @@ type ParentArgs struct {
 
 func ParentEntries(args ParentArgs) gitdomain.LocalBranchNames {
 	parentCandidateBranches := args.LocalBranches.Remove(args.Branch).Remove(args.Lineage.Children(args.Branch)...)
-	parentCandidateBranches.Sort()
+	parentCandidateBranches = slice.NaturalSort(parentCandidateBranches)
 	parentCandidates := parentCandidateBranches.Hoist(args.MainBranch)
 	return append(gitdomain.LocalBranchNames{PerennialBranchOption}, parentCandidates...)
 }
