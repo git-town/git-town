@@ -14,16 +14,12 @@ import (
 
 func enterParentCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:  "parent",
-		Args: cobra.MaximumNArgs(1),
+		Use:  "parent <number of branches>",
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var amount uint64 = 10
-			if len(args) > 0 {
-				var err error
-				amount, err = strconv.ParseUint(args[0], 10, 64)
-				if err != nil {
-					panic(err)
-				}
+			amount, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
 			}
 			localBranches := gitdomain.LocalBranchNames{}
 			for i := 0; i < int(amount); i++ {
@@ -32,7 +28,7 @@ func enterParentCmd() *cobra.Command {
 			main := gitdomain.NewLocalBranchName("main")
 			lineage := configdomain.Lineage{}
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.Parent(dialog.ParentArgs{
+			_, _, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          gitdomain.NewLocalBranchName("branch-2"),
 				DialogTestInput: dialogTestInputs.Next(),
 				LocalBranches:   localBranches,
