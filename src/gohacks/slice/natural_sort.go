@@ -77,12 +77,12 @@ func (c *cutter) nextPart() part {
 // a multi-rune part cut from text, either all numbers or all non-numbers
 type part string
 
-// indicates whether this part is a block of numbers
+// indicates whether this part contains a number
 func (part part) isNumber() bool {
 	return unicode.IsDigit(rune(part[0]))
 }
 
-// assuming this block contains of numbers, provides their numeric value
+// assuming this block contains numbers, provides the resulting numeric value
 func (part part) toNumber() int {
 	result, _ := strconv.Atoi(string(part))
 	return result
