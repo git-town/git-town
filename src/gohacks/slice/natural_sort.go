@@ -14,16 +14,16 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 	return sortableList
 }
 
-func extractText(text string, index int) (nonNumber string, nextIndex int) {
-	for nextIndex = index; nextIndex < len(text) && !unicode.IsDigit(rune(text[nextIndex])); nextIndex++ { //revive:disable-line:empty-block
+func extractText(text string, startIndex int) (nonNumber string, endIndex int) {
+	for endIndex = startIndex; endIndex < len(text) && !unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 	}
-	return text[index:nextIndex], nextIndex
+	return text[startIndex:endIndex], endIndex
 }
 
-func extractNumber(text string, index int) (number string, nextIndex int) {
-	for nextIndex = index; nextIndex < len(text) && unicode.IsDigit(rune(text[nextIndex])); nextIndex++ { //revive:disable-line:empty-block
+func extractNumber(text string, startIndex int) (number string, endIndex int) {
+	for endIndex = startIndex; endIndex < len(text) && unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 	}
-	return text[index:nextIndex], nextIndex
+	return text[startIndex:endIndex], endIndex
 }
 
 // indicates whether text1 < text2 according to natural sort order
