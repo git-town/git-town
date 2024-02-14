@@ -59,7 +59,7 @@ func naturalLess(text1, text2 string) bool {
 	return len(text1) < len(text2)
 }
 
-// wraps the given []T with methods that allow sorting it using the stdlib
+// wraps the given []fmt.Stringer with methods that allow sorting it using the stdlib
 type sortable[T fmt.Stringer] []T
 
 func newSortable[T fmt.Stringer](elements []T) sortable[T] {
