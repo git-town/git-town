@@ -140,7 +140,13 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteString(self.Colors.Title.Styled(perennialBranchesTitle))
 	s.WriteRune('\n')
 	s.WriteString(PerennialBranchesHelp)
-	for i, branch := range self.Entries {
+	window := slice.Window(slice.WindowArgs{
+		ElementCount: len(self.Entries),
+		CursorPos:    self.Cursor,
+		WindowSize:   components.WindowSize,
+	})
+	for i := window.StartRow; i < window.EndRow; i++ {
+		branch := self.Entries[i]
 		selected := self.Cursor == i
 		checked := self.IsRowChecked(i)
 		s.WriteString(self.EntryNumberStr(i))
