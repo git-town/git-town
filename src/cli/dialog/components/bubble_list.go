@@ -63,8 +63,10 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 		self.moveCursorDown()
 		return true, nil
 	case tea.KeyLeft:
-		for i := 0; i <
-		self.moveCursorUp()
+		self.movePageUp()
+		return true, nil
+	case tea.KeyRight:
+		self.movePageDown()
 		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
 		self.Status = StatusAborted
@@ -111,5 +113,19 @@ func (self *BubbleList[S]) moveCursorUp() {
 		self.Cursor--
 	} else {
 		self.Cursor = len(self.Entries) - 1
+	}
+}
+
+func (self *BubbleList[S]) movePageDown() {
+	self.Cursor += windowSize
+	if self.Cursor >= len(self.Entries) {
+		self.Cursor = len(self.Entries)
+	}
+}
+
+func (self *BubbleList[S]) movePageUp() {
+	self.Cursor -= windowSize
+	if self.Cursor < 0 {
+		self.Cursor = 0
 	}
 }
