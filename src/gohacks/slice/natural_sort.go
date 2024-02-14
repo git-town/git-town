@@ -18,7 +18,7 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 func naturalLess(text1, text2 string) bool {
 	cutter1 := newCutter(text1)
 	cutter2 := newCutter(text2)
-	for cutter1.hasMore() && cutter2.hasMore() {
+	for cutter1.hasMoreParts() && cutter2.hasMoreParts() {
 		part1 := cutter1.nextPart()
 		part2 := cutter2.nextPart()
 		if part1 != part2 {
@@ -34,35 +34,35 @@ func naturalLess(text1, text2 string) bool {
 	return len(text1) < len(text2)
 }
 
-// cuts given text into parts of numbers and non-numbers
+// cuts given text into parts of consecutive numbers and non-numbers
 type cutter struct {
-	index int
-	text  string
+	content string // the content to cut into parts
+	index   int    // where we are in the content right now
 }
 
-func newCutter(text string) cutter {
+func newCutter(content string) cutter {
 	return cutter{
-		index: 0,
-		text:  text,
+		content: content,
+		index:   0,
 	}
 }
 
 // indicates whether this cutter can yield more parts
-func (c cutter) hasMore() bool {
-	return c.index < len(c.text)
+func (c cutter) hasMoreParts() bool {
+	return c.index < len(c.content)
 }
 
 // provides the next part of this cutters text
 func (c *cutter) nextPart() part {
 	var endIndex int
-	if unicode.IsDigit(rune(c.text[c.index])) {
-		for endIndex = c.index; endIndex < len(c.text) && unicode.IsDigit(rune(c.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+	if unicode.IsDigit(rune(c.content[c.index])) {
+		for endIndex = c.index; endIndex < len(c.content) && unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	} else {
-		for endIndex = c.index; endIndex < len(c.text) && !unicode.IsDigit(rune(c.text[endIndex])); endIndex++ { //revive:disable-line:empty-block
+		for endIndex = c.index; endIndex < len(c.content) && !unicode.IsDigit(rune(c.content[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	}
-	result := part(c.text[c.index:endIndex])
+	result := part(c.content[c.index:endIndex])
 	c.index = endIndex
 	return result
 }
