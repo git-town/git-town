@@ -30,7 +30,7 @@ func TestSortStringers(t *testing.T) {
 		// single element
 		newStringers("a"): newStringers("a"),
 		// multiple elements
-		newStringers("b10", "b2", "a1"): newStringers("a1", "b2", "b10"),
+		newStringers("b20", "b1", "a2"): newStringers("a2", "b1", "b20"),
 	}
 	for give, want := range tests {
 		have := slice.NatSort(*give)
