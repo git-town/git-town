@@ -7,15 +7,12 @@ import (
 	"github.com/shoenig/test/must"
 )
 
-func TestSortStringers(t *testing.T) {
+func TestNaturalSort(t *testing.T) {
 	t.Parallel()
 	tests := map[*[]stringer]*[]stringer{
-		// empty
-		newStringers(): newStringers(),
-		// single element
-		newStringers("a"): newStringers("a"),
-		// multiple elements
-		newStringers("b20", "b1", "a2"): newStringers("a2", "b1", "b20"),
+		newStringers():                    newStringers(),                    // empty
+		newStringers("a"):                 newStringers("a"),                 // single element
+		newStringers("a20", "a100", "a3"): newStringers("a3", "a20", "a100"), // multiple elements
 	}
 	for give, want := range tests {
 		have := slice.NaturalSort(*give)
