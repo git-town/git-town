@@ -97,6 +97,16 @@ func (self radioListModel[S]) View() string {
 	s.WriteString(self.Colors.Help.Styled("/"))
 	s.WriteString(self.Colors.HelpKey.Styled("j"))
 	s.WriteString(self.Colors.Help.Styled(" down   "))
+	// left
+	s.WriteString(self.Colors.HelpKey.Styled("←"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("u"))
+	s.WriteString(self.Colors.Help.Styled(" page up   "))
+	// right
+	s.WriteString(self.Colors.HelpKey.Styled("→"))
+	s.WriteString(self.Colors.Help.Styled("/"))
+	s.WriteString(self.Colors.HelpKey.Styled("d"))
+	s.WriteString(self.Colors.Help.Styled(" page down   "))
 	// numbers
 	s.WriteString(self.Colors.HelpKey.Styled("0"))
 	s.WriteString(self.Colors.Help.Styled("-"))
