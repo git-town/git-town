@@ -60,9 +60,9 @@ func naturalLess(text1, text2 string) bool {
 type sortable[T fmt.Stringer] []T
 
 func newSortable[T fmt.Stringer](elements []T) sortable[T] {
-	sortables := make(sortable[T], len(elements))
-	copy(sortables, elements)
-	return sortables
+	sortable := make(sortable[T], len(elements))
+	copy(sortable, elements)
+	return sortable
 }
 
 func (self sortable[T]) Len() int {
