@@ -1,7 +1,9 @@
 package debug
 
 import (
+	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/git-town/git-town/v12/src/cli/dialog"
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
@@ -11,23 +13,21 @@ import (
 
 func enterPerennialBranchesCmd() *cobra.Command {
 	return &cobra.Command{
-		Use: "perennial-branches",
+		Use:  "perennial-branches <number of branches>",
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			branch1 := gitdomain.NewLocalBranchName("branch-1")
-			branch2 := gitdomain.NewLocalBranchName("branch-2")
-			branch3 := gitdomain.NewLocalBranchName("branch-3")
-			branch4 := gitdomain.NewLocalBranchName("branch-4")
-			branch5 := gitdomain.NewLocalBranchName("branch-5")
-			branch6 := gitdomain.NewLocalBranchName("branch-6")
-			branch7 := gitdomain.NewLocalBranchName("branch-7")
-			branch8 := gitdomain.NewLocalBranchName("branch-8")
-			branch9 := gitdomain.NewLocalBranchName("branch-9")
-			branchA := gitdomain.NewLocalBranchName("branch-A")
-			localBranches := gitdomain.LocalBranchNames{branch1, branch2, branch3, branch4, branch5, branch6, branch7, branch8, branch9, branchA}
-			existingPerennialBranches := gitdomain.LocalBranchNames{branch1, branch4}
+			amount, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+			localBranches := gitdomain.LocalBranchNames{}
+			for i := 0; i < int(amount); i++ {
+				localBranches = append(localBranches, gitdomain.NewLocalBranchName(fmt.Sprintf("branch-%d", i)))
+			}
+			existingPerennialBranches := gitdomain.NewLocalBranchNames("branch-2", "branch-4")
 			main := gitdomain.NewLocalBranchName("main")
 			dialogTestInputs := components.LoadTestInputs(os.Environ())
-			_, _, err := dialog.PerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
+			_, _, err = dialog.PerennialBranches(localBranches, existingPerennialBranches, main, dialogTestInputs.Next())
 			return err
 		},
 	}
