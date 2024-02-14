@@ -33,6 +33,10 @@ func extractPart(text string, startIndex int) (part string, endIndex int) {
 	return extractText(text, startIndex)
 }
 
+func partIsNumber(part string) bool {
+	return unicode.IsDigit(rune(part[0]))
+}
+
 // indicates whether text1 < text2 according to natural sort order
 func naturalLess(text1, text2 string) bool {
 	index1, index2 := 0, 0
@@ -41,7 +45,7 @@ func naturalLess(text1, text2 string) bool {
 		part1, index1 = extractPart(text1, index1)
 		part2, index2 = extractPart(text2, index2)
 		if part1 != part2 {
-			if unicode.IsDigit(rune(part1[0])) && unicode.IsDigit(rune(part2[0])) {
+			if partIsNumber(part1) && partIsNumber(part2) {
 				// compare numbers by their numeric value
 				int1, _ := strconv.Atoi(part1)
 				int2, _ := strconv.Atoi(part2)
