@@ -1,5 +1,11 @@
 # Git Town Changelog
 
+## 12.0.2 (2023-02-14)
+
+#### Bug Fixes
+
+- All dialogs that show local branches now paginate ([#3119](https://github.com/git-town/git-town/issues/3119)).
+
 ## 12.0.1 (2023-02-12)
 
 #### Bug Fixes
