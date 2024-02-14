@@ -14,7 +14,9 @@ func NaturalSort[T fmt.Stringer](list []T) []T {
 	return sortableList
 }
 
-func extractPart(text string, startIndex int) (part string, endIndex int) {
+type part string
+
+func extractPart(text string, startIndex int) (result part, endIndex int) {
 	if unicode.IsDigit(rune(text[startIndex])) {
 		for endIndex = startIndex; endIndex < len(text) && unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
@@ -22,10 +24,10 @@ func extractPart(text string, startIndex int) (part string, endIndex int) {
 		for endIndex = startIndex; endIndex < len(text) && !unicode.IsDigit(rune(text[endIndex])); endIndex++ { //revive:disable-line:empty-block
 		}
 	}
-	return text[startIndex:endIndex], endIndex
+	return part(text[startIndex:endIndex]), endIndex
 }
 
-func partIsNumber(part string) bool {
+func (part part) isNumber() bool {
 	return unicode.IsDigit(rune(part[0]))
 }
 
@@ -33,14 +35,14 @@ func partIsNumber(part string) bool {
 func naturalLess(text1, text2 string) bool {
 	index1, index2 := 0, 0
 	for index1 < len(text1) && index2 < len(text2) {
-		var part1, part2 string
+		var part1, part2 part
 		part1, index1 = extractPart(text1, index1)
 		part2, index2 = extractPart(text2, index2)
 		if part1 != part2 {
-			if partIsNumber(part1) && partIsNumber(part2) {
+			if part1.isNumber() && part2.isNumber() {
 				// compare numbers by their numeric value
-				int1, _ := strconv.Atoi(part1)
-				int2, _ := strconv.Atoi(part2)
+				int1, _ := strconv.Atoi(string(part1))
+				int2, _ := strconv.Atoi(string(part2))
 				return int1 < int2
 			}
 			// compare non-numbers lexicographically
