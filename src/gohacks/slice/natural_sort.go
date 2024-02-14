@@ -10,9 +10,6 @@ import (
 // sorts the given elements in natural sort order (https://en.wikipedia.org/wiki/Natural_sort_order)
 func NaturalSort[T fmt.Stringer](elements []T) []T {
 	stringers := newStringers(elements)
-	for e, element := range elements {
-		stringers[e] = element
-	}
 	sort.Sort(stringers)
 	result := make([]T, len(stringers))
 	for s, stringer := range stringers {
