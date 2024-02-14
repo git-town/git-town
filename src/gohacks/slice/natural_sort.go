@@ -56,11 +56,15 @@ func (c cutter) isDigitAt(index int) bool {
 	return unicode.IsDigit(rune(c.content[index]))
 }
 
+func (c cutter) hasContentAt(index int) bool {
+	return index < len(c.content)
+}
+
 // provides the next part of the content that this cutter disects
 func (c *cutter) nextPart() part {
 	index := c.index
 	lookingForDigit := c.isDigitAt(index)
-	for index < len(c.content) && c.isDigitAt(index) == lookingForDigit {
+	for c.hasContentAt(index) && c.isDigitAt(index) == lookingForDigit {
 		index++
 	}
 	result := part(c.content[c.index:index])
