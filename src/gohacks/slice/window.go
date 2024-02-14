@@ -1,6 +1,7 @@
 package slice
 
-// Window tells you which of the given elements to display given where the cursor is.
+// Window provides the largest window in a collection
+// with the given number of elements around the given cursor position.
 func Window(args WindowArgs) WindowResult {
 	if args.ElementCount == 0 {
 		return WindowResult{0, 0, 0}
