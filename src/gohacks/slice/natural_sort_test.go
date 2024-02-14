@@ -23,14 +23,6 @@ func TestNaturalSort(t *testing.T) {
 
 type stringer string
 
-func (s stringer) String() string {
-	return string(s)
-}
-
-func newStringers(names ...string) *[]stringer {
-	result := make([]stringer, len(names))
-	for n, name := range names {
-		result[n] = stringer(name)
-	}
-	return &result
+func (self stringer) String() string {
+	return string(self)
 }

@@ -47,6 +47,11 @@ func newCutter(content string) cutter {
 	}
 }
 
+// indicates whether the given index is inside the content this cutter disects
+func (c cutter) hasContentAt(index int) bool {
+	return index < len(c.content)
+}
+
 // indicates whether this cutter can yield more parts
 func (c cutter) hasMoreParts() bool {
 	return c.index < len(c.content)
@@ -55,11 +60,6 @@ func (c cutter) hasMoreParts() bool {
 // indicates whether the rune at the given index is a number
 func (c cutter) isDigitAt(index int) bool {
 	return unicode.IsDigit(rune(c.content[index]))
-}
-
-// indicates whether the given index is inside the content this cutter disects
-func (c cutter) hasContentAt(index int) bool {
-	return index < len(c.content)
 }
 
 // provides the next part of the content that this cutter disects
