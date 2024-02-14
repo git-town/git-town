@@ -62,6 +62,10 @@ func (self *BubbleList[S]) HandleKey(key tea.KeyMsg) (bool, tea.Cmd) {
 	case tea.KeyDown, tea.KeyTab:
 		self.moveCursorDown()
 		return true, nil
+	case tea.KeyLeft:
+		for i := 0; i <
+		self.moveCursorUp()
+		return true, nil
 	case tea.KeyCtrlC, tea.KeyEsc:
 		self.Status = StatusAborted
 		return true, tea.Quit
