@@ -103,7 +103,7 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 }
 
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	skip.Execute(skip.ExecuteArgs{
+	return false, skip.Execute(skip.ExecuteArgs{
 		InitialStashSize: 0,
 		RootDir:          args.RootDir,
 		Runner:           args.Run,
@@ -111,7 +111,6 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 		TestInputs:       []components.TestInput{},
 		Verbose:          args.Verbose,
 	})
-	return false, nil
 }
 
 func undoRunstate(args undo.ExecuteArgs) (bool, error) {

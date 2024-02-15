@@ -69,6 +69,5 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	skip.Execute(skip.ExecuteArgs{})
-	return nil
+	return skip.Execute(skip.ExecuteArgs{})
 }

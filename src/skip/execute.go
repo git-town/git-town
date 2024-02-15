@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
-func Execute(args ExecuteArgs) {
+func Execute(args ExecuteArgs) error {
 	// abort the current op
 	for _, opcode := range args.RunState.AbortProgram {
 		err := opcode.Run(shared.RunArgs{
@@ -54,7 +54,7 @@ func Execute(args ExecuteArgs) {
 	args.RunState.RunProgram = newProgram
 
 	// continue executing the program
-	interpreter.Execute(interpreter.ExecuteArgs{
+	return interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Runner.FullConfig,
 		RunState:                args.RunState,
 		Run:                     args.Runner,
