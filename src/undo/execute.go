@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/undo/undostash"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -47,6 +48,8 @@ func Execute(args ExecuteArgs) error {
 	undoProgram.AddProgram(undoStashProgram)
 
 	undoProgram.AddProgram(runState.FinalUndoProgram)
+	undoProgram.Add(&opcodes.Checkout{Branch: args.BeforeBranchesSnapshot.Active})
+	undoProgram.RemoveDuplicateCheckout()
 
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   runState.DryRun,
@@ -74,11 +77,12 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	FullConfig       *configdomain.FullConfig
-	HasOpenChanges   bool
-	InitialStashSize gitdomain.StashSize
-	Lineage          configdomain.Lineage
-	PreviousBranch   gitdomain.LocalBranchName
-	RootDir          gitdomain.RepoRootDir
-	Runner           *git.ProdRunner
+	BeforeBranchesSnapshot gitdomain.BranchesSnapshot
+	FullConfig             *configdomain.FullConfig
+	HasOpenChanges         bool
+	InitialStashSize       gitdomain.StashSize
+	Lineage                configdomain.Lineage
+	PreviousBranch         gitdomain.LocalBranchName
+	RootDir                gitdomain.RepoRootDir
+	Runner                 *git.ProdRunner
 }

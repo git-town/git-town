@@ -113,7 +113,6 @@ func (self *RunState) CreateUndoRunState() RunState {
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
 	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
-	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 
