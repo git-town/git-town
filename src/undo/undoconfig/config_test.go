@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/undo/undodomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/shoenig/test/must"
 )
@@ -43,7 +43,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.RemoveGlobalConfig{
+			&opcodes.RemoveGlobalConfig{
 				Key: gitconfig.KeySyncPerennialStrategy,
 			},
 		}
@@ -83,7 +83,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.SetGlobalConfig{
+			&opcodes.SetGlobalConfig{
 				Key:   gitconfig.KeySyncPerennialStrategy,
 				Value: "1",
 			},
@@ -126,7 +126,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.SetGlobalConfig{
+			&opcodes.SetGlobalConfig{
 				Key:   gitconfig.KeyOffline,
 				Value: "0",
 			},
@@ -163,7 +163,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.RemoveLocalConfig{
+			&opcodes.RemoveLocalConfig{
 				Key: gitconfig.KeySyncPerennialStrategy,
 			},
 		}
@@ -203,7 +203,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.SetLocalConfig{
+			&opcodes.SetLocalConfig{
 				Key:   gitconfig.KeySyncPerennialStrategy,
 				Value: "1",
 			},
@@ -246,7 +246,7 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.SetLocalConfig{
+			&opcodes.SetLocalConfig{
 				Key:   gitconfig.KeyOffline,
 				Value: "0",
 			},
@@ -310,25 +310,25 @@ func TestConfigUndo(t *testing.T) {
 		must.Eq(t, wantDiff, haveDiff)
 		haveProgram := haveDiff.UndoProgram()
 		wantProgram := program.Program{
-			&opcode.RemoveGlobalConfig{
+			&opcodes.RemoveGlobalConfig{
 				Key: gitconfig.KeySyncPerennialStrategy,
 			},
-			&opcode.SetGlobalConfig{
+			&opcodes.SetGlobalConfig{
 				Key:   gitconfig.KeyPushHook,
 				Value: "0",
 			},
-			&opcode.SetGlobalConfig{
+			&opcodes.SetGlobalConfig{
 				Key:   gitconfig.KeyOffline,
 				Value: "0",
 			},
-			&opcode.RemoveLocalConfig{
+			&opcodes.RemoveLocalConfig{
 				Key: gitconfig.KeyPushHook,
 			},
-			&opcode.SetLocalConfig{
+			&opcodes.SetLocalConfig{
 				Key:   gitconfig.KeyGithubToken,
 				Value: "token",
 			},
-			&opcode.SetLocalConfig{
+			&opcodes.SetLocalConfig{
 				Key:   gitconfig.KeyPerennialBranches,
 				Value: "prod",
 			},

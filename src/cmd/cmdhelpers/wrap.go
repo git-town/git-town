@@ -2,7 +2,7 @@ package cmdhelpers
 
 import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
@@ -12,13 +12,13 @@ func Wrap(program *program.Program, options WrapOptions) {
 		return
 	}
 	if !options.DryRun {
-		program.Add(&opcode.PreserveCheckoutHistory{
+		program.Add(&opcodes.PreserveCheckoutHistory{
 			PreviousBranchCandidates: options.PreviousBranchCandidates,
 		})
 	}
 	if options.StashOpenChanges {
-		program.Prepend(&opcode.StashOpenChanges{})
-		program.Add(&opcode.RestoreOpenChanges{})
+		program.Prepend(&opcodes.StashOpenChanges{})
+		program.Add(&opcodes.RestoreOpenChanges{})
 	}
 }
 

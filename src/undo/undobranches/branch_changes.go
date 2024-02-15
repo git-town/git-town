@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
 	"github.com/git-town/git-town/v12/src/undo/undodomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
@@ -78,25 +78,25 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, branch := range omniChangedPerennials.BranchNames() {
 		change := omniChangedPerennials[branch]
 		if slice.Contains(args.UndoablePerennialCommits, change.After) {
-			result.Add(&opcode.Checkout{Branch: branch})
-			result.Add(&opcode.RevertCommit{SHA: change.After})
-			result.Add(&opcode.PushCurrentBranch{CurrentBranch: branch})
+			result.Add(&opcodes.Checkout{Branch: branch})
+			result.Add(&opcodes.RevertCommit{SHA: change.After})
+			result.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch})
 		}
 	}
 
 	// reset omni-changed feature branches
 	for _, branch := range omniChangedFeatures.BranchNames() {
 		change := omniChangedFeatures[branch]
-		result.Add(&opcode.Checkout{Branch: branch})
-		result.Add(&opcode.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
-		result.Add(&opcode.ForcePushCurrentBranch{})
+		result.Add(&opcodes.Checkout{Branch: branch})
+		result.Add(&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&opcodes.ForcePushCurrentBranch{})
 	}
 
 	// re-create removed omni-branches
 	for _, branch := range self.OmniRemoved.BranchNames() {
 		sha := self.OmniRemoved[branch]
-		result.Add(&opcode.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
-		result.Add(&opcode.CreateTrackingBranch{Branch: branch})
+		result.Add(&opcodes.CreateBranch{Branch: branch, StartingPoint: sha.Location()})
+		result.Add(&opcodes.CreateTrackingBranch{Branch: branch})
 	}
 
 	inconsistentlyChangedPerennials, inconsistentChangedFeatures := CategorizeInconsistentChanges(self.InconsistentlyChanged, args.Config)
@@ -105,22 +105,22 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	for _, inconsistentlyChangedPerennial := range inconsistentlyChangedPerennials {
 		if inconsistentlyChangedPerennial.After.LocalSHA == inconsistentlyChangedPerennial.After.RemoteSHA {
 			if slice.Contains(args.UndoablePerennialCommits, inconsistentlyChangedPerennial.After.LocalSHA) {
-				result.Add(&opcode.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
-				result.Add(&opcode.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
-				result.Add(&opcode.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName})
+				result.Add(&opcodes.Checkout{Branch: inconsistentlyChangedPerennial.Before.LocalName})
+				result.Add(&opcodes.RevertCommit{SHA: inconsistentlyChangedPerennial.After.LocalSHA})
+				result.Add(&opcodes.PushCurrentBranch{CurrentBranch: inconsistentlyChangedPerennial.After.LocalName})
 			}
 		}
 	}
 
 	// reset inconsintently changed feature branches
 	for _, inconsistentChange := range inconsistentChangedFeatures {
-		result.Add(&opcode.Checkout{Branch: inconsistentChange.Before.LocalName})
-		result.Add(&opcode.ResetCurrentBranchToSHA{
+		result.Add(&opcodes.Checkout{Branch: inconsistentChange.Before.LocalName})
+		result.Add(&opcodes.ResetCurrentBranchToSHA{
 			MustHaveSHA: inconsistentChange.After.LocalSHA,
 			SetToSHA:    inconsistentChange.Before.LocalSHA,
 			Hard:        true,
 		})
-		result.Add(&opcode.ResetRemoteBranchToSHA{
+		result.Add(&opcodes.ResetRemoteBranchToSHA{
 			Branch:      inconsistentChange.Before.RemoteName,
 			MustHaveSHA: inconsistentChange.After.RemoteSHA,
 			SetToSHA:    inconsistentChange.Before.RemoteSHA,
@@ -130,7 +130,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// remove remotely added branches
 	for _, addedRemoteBranch := range self.RemoteAdded {
 		if addedRemoteBranch.Remote() != gitdomain.UpstreamRemote {
-			result.Add(&opcode.DeleteTrackingBranch{
+			result.Add(&opcodes.DeleteTrackingBranch{
 				Branch: addedRemoteBranch,
 			})
 		}
@@ -140,7 +140,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, removedFeatureTrackingBranches := CategorizeRemoteBranchesSHAs(self.RemoteRemoved, args.Config)
 	for _, branch := range removedFeatureTrackingBranches.BranchNames() {
 		sha := removedFeatureTrackingBranches[branch]
-		result.Add(&opcode.CreateRemoteBranch{
+		result.Add(&opcodes.CreateRemoteBranch{
 			Branch: branch.LocalBranchName(),
 			SHA:    sha,
 		})
@@ -149,14 +149,14 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// reset locally changed branches
 	for _, localBranch := range self.LocalChanged.BranchNames() {
 		change := self.LocalChanged[localBranch]
-		result.Add(&opcode.Checkout{Branch: localBranch})
-		result.Add(&opcode.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
+		result.Add(&opcodes.Checkout{Branch: localBranch})
+		result.Add(&opcodes.ResetCurrentBranchToSHA{MustHaveSHA: change.After, SetToSHA: change.Before, Hard: true})
 	}
 
 	// re-create locally removed branches
 	for _, removedLocalBranch := range self.LocalRemoved.BranchNames() {
 		startingPoint := self.LocalRemoved[removedLocalBranch]
-		result.Add(&opcode.CreateBranch{
+		result.Add(&opcodes.CreateBranch{
 			Branch:        removedLocalBranch,
 			StartingPoint: startingPoint.Location(),
 		})
@@ -165,9 +165,9 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	// remove locally added branches
 	for _, addedLocalBranch := range self.LocalAdded {
 		if args.FinalBranch == addedLocalBranch {
-			result.Add(&opcode.Checkout{Branch: args.InitialBranch})
+			result.Add(&opcodes.Checkout{Branch: args.InitialBranch})
 		}
-		result.Add(&opcode.DeleteLocalBranch{
+		result.Add(&opcodes.DeleteLocalBranch{
 			Branch: addedLocalBranch,
 			Force:  true,
 		})
@@ -180,7 +180,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 	_, remoteFeatureChanges := CategorizeRemoteBranchChange(self.RemoteChanged, args.Config)
 	for _, remoteChangedFeatureBranch := range remoteFeatureChanges.BranchNames() {
 		change := remoteFeatureChanges[remoteChangedFeatureBranch]
-		result.Add(&opcode.ResetRemoteBranchToSHA{
+		result.Add(&opcodes.ResetRemoteBranchToSHA{
 			Branch:      remoteChangedFeatureBranch,
 			MustHaveSHA: change.After,
 			SetToSHA:    change.Before,
@@ -189,7 +189,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// This must be a CheckoutIfExists opcode because this branch might not exist
 	// when a Git Town command fails, stores this undo opcode, then gets continued and deletes this branch.
-	result.Add(&opcode.CheckoutIfExists{Branch: args.InitialBranch})
+	result.Add(&opcodes.CheckoutIfExists{Branch: args.InitialBranch})
 	return result
 }
 

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/shoenig/test/must"
@@ -20,21 +20,21 @@ func TestRunState(t *testing.T) {
 			Command: "sync",
 			DryRun:  true,
 			AbortProgram: program.Program{
-				&opcode.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHA{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
 			RunProgram: program.Program{
-				&opcode.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHA{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,
 				},
 			},
 			UndoProgram: program.Program{
-				&opcode.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHA{
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 					Hard:        false,

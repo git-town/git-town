@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/sync"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -175,20 +175,20 @@ func killProgram(config *killConfig) (runProgram, finalUndoProgram program.Progr
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program, config killConfig) {
 	if config.branchToKill.HasTrackingBranch() && config.IsOnline() {
-		prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
+		prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchToKill.RemoteName})
 	}
 	if config.initialBranch == config.branchToKill.LocalName {
 		if config.hasOpenChanges {
-			prog.Add(&opcode.CommitOpenChanges{})
+			prog.Add(&opcodes.CommitOpenChanges{})
 			// update the registered initial SHA for this branch so that undo restores the just committed changes
-			prog.Add(&opcode.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
+			prog.Add(&opcodes.UpdateInitialBranchLocalSHA{Branch: config.initialBranch})
 			// when undoing, manually undo the just committed changes so that they are uncommitted again
-			finalUndoProgram.Add(&opcode.Checkout{Branch: config.branchToKill.LocalName})
-			finalUndoProgram.Add(&opcode.UndoLastCommit{})
+			finalUndoProgram.Add(&opcodes.Checkout{Branch: config.branchToKill.LocalName})
+			finalUndoProgram.Add(&opcodes.UndoLastCommit{})
 		}
-		prog.Add(&opcode.Checkout{Branch: config.branchWhenDone})
+		prog.Add(&opcodes.Checkout{Branch: config.branchWhenDone})
 	}
-	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
+	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
 	if !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchToKill.LocalName,

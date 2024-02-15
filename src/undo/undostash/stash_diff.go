@@ -2,7 +2,7 @@ package undostash
 
 import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
@@ -21,7 +21,7 @@ func NewStashDiff(before, after gitdomain.StashSize) StashDiff {
 func (self StashDiff) Program() program.Program {
 	result := program.Program{}
 	for ; self.EntriesAdded > 0; self.EntriesAdded-- {
-		result.Add(&opcode.RestoreOpenChanges{})
+		result.Add(&opcodes.RestoreOpenChanges{})
 	}
 	return result
 }

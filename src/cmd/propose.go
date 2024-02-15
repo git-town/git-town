@@ -16,7 +16,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/sync"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -181,6 +181,6 @@ func proposeProgram(config *proposeConfig) program.Program {
 		StashOpenChanges:         config.hasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
 	})
-	prog.Add(&opcode.CreateProposal{Branch: config.initialBranch})
+	prog.Add(&opcodes.CreateProposal{Branch: config.initialBranch})
 	return prog
 }
