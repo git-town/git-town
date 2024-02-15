@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/muesli/termenv"
 )
 
@@ -46,7 +47,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 	if selectionText == "" {
 		selectionText = "(none)"
 	}
-	fmt.Printf("Perennial branches: %s\n", components.FormattedSelection(selectionText, result.Aborted()))
+	fmt.Printf(messages.PerennialBranches, components.FormattedSelection(selectionText, result.Aborted()))
 	return selectedBranches, result.Aborted(), nil
 }
 

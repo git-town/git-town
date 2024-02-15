@@ -2,6 +2,7 @@ package messages
 
 const (
 	UndoContinueGuidance               = "\n\nTo continue after having resolved conflicts, run \"git-town continue\".\nTo go back to where you started, run \"git-town undo\".\n"
+	AliasedCommands                    = "Aliased commands: %s\n"
 	ArgumentUnknown                    = "unknown argument: %q"
 	BranchAlreadyExistsLocally         = "there is already a branch %q"
 	BranchAlreadyExistsRemotely        = "there is already a branch %q at the \"origin\" remote"
@@ -19,6 +20,7 @@ const (
 	BranchParentChanged                = "branch %q is now a child of %q"
 	BrowserOpen                        = "Please open in a browser: %s\n"
 	CacheUnitialized                   = "using a cached value before initialization"
+	CodeHosting                        = "Code hosting: %s\n"
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CompletionTypeUnknown              = "unknown completion type: %q"
@@ -27,6 +29,7 @@ const (
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"
 	ConfigNeeded                       = "Git Town needs to be configured\n\n"
+	ConfigStorage                      = "Config storage: %s\n"
 	ConfigSyncFeatureStrategyUnknown   = "unknown sync-feature strategy: %q"
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
@@ -49,6 +52,9 @@ const (
 	FileReadProblem                    = "cannot read file %q: %w"
 	FileStatProblem                    = "cannot check file %q: %w"
 	FileWriteProblem                   = "cannot write file %q: %w"
+	GiteaToken                         = "Gitea token: %s\n"
+	GitHubToken                        = "GitHub token: %s\n"
+	GitLabToken                        = "GitLab token: %s\n"
 	GitOutputIrregular                 = `
 ERROR: Encountered irregular Git output
 
@@ -79,9 +85,13 @@ END OUTPUT FROM 'git branch -vva'
 	InputYesOrNo                      = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	KillBranchOtherWorktree           = `branch %q is active in another worktree`
 	KillOnlyFeatureBranches           = "you can only kill feature branches"
+	MainBranch                        = "Main branch: %s\n"
 	OfflineNotAllowed                 = "this command requires an active internet connection"
 	OpcodeUnknown                     = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                = "cannot determine open changes: %w"
+	OriginHostname                    = "Origin hostname: %s\n"
+	ParentDialogSelected              = "Selected parent branch for %q: %s\n"
+	PerennialBranches                 = "Perennial branches: %s\n"
 	PreviousCommandFinished           = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem            = "The last Git Town command (%s) hit a problem %v ago.\n"
 	ProposalMultipleFound             = "found %d proposals from branch %q to branch %q"
@@ -93,6 +103,8 @@ END OUTPUT FROM 'git branch -vva'
 
 This command has been renamed to "git town propose"
 nd will be removed in future versions of Git Town.`
+	PushHook                     = "Push hook: %s\n"
+	PushNewBranches              = "Push new branches: %s\n"
 	RebaseProblem                = "cannot determine rebase in progress: %w"
 	RemoteExistsProblem          = "cannot determine if remote %q exists: %w"
 	RemotesProblem               = "cannot determine remotes: %w"
@@ -115,6 +127,7 @@ nd will be removed in future versions of Git Town.`
 	ShipBranchOtherWorktree      = "branch %q is active in another worktree"
 	ShipBranchNothingToDo        = "the branch %q has no shippable changes"
 	ShipChildBranch              = "shipping this branch would ship %s as well,\nplease ship %q first"
+	ShipDeletesTrackingBranches  = "Ship deletes tracking branches: %s\n"
 	ShipNoFeatureBranch          = "the branch %q is not a feature branch. Only feature branches can be shipped"
 	ShipOpenChanges              = "you have uncommitted changes. Did you mean to commit them before shipping?"
 	ShippableChangesProblem      = "cannot determine whether branch %q has shippable changes: %w"
@@ -124,12 +137,18 @@ nd will be removed in future versions of Git Town.`
 	SquashCannotReadFile         = "cannot read squash message file %q: %w"
 	SquashCommitAuthorQuery      = "Please choose an author for the squash commit:"
 	SquashCommitAuthorProblem    = "error getting squash commit author: %w"
+	SquashCommitAuthorSelection  = "Selected squash commit author: %s\n"
 	SquashMessageProblem         = "cannot comment out the squash commit message: %w"
 	StatusFileNotFound           = "No status file found for this repository."
+	SyncBeforeShip               = "Sync before ship: %s\n"
+	SyncFeatureBranches          = "Sync feature branches: %s\n"
+	SyncPerennialBranches        = "Sync perennial branches: %s\n"
 	SyncStatusNotRecognized      = "cannot determine the sync status for Git remote %q and branch name %q"
+	SyncWithUpstream             = "Sync with upstream: %s\n"
 	UndoCreateOpcodeProblem      = "cannot create undo operations for %q: %w"
 	UndoMessage                  = `You can run "git town undo" to go back to where you started.`
 	UndoNothingToDo              = "nothing to undo"
+	UnfinishedCommandHandle      = "Handle unfinished command: %s\n"
 	UnfinishedRunStateContinue   = "Continue the \"%s\" command after having resolved conflicts"
 	UnfinishedRunStateDiscard    = "Discard the unfinished state and run the new command"
 	UnfinishedRunStateQuit       = "Quit without running anything"

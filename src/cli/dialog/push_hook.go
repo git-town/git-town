@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -41,7 +42,7 @@ func PushHook(existing configdomain.PushHook, inputs components.TestInput) (conf
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Push hook: %s\n", components.FormattedSelection(selection.String(), aborted))
+	fmt.Printf(messages.PushHook, components.FormattedSelection(selection.String(), aborted))
 	return selection.PushHook(), aborted, err
 }
 
