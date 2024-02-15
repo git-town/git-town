@@ -7,7 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
@@ -45,7 +45,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 			if err != nil {
 				return err
 			}
-			self.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch})
+			self.RunProgram.Prepend(&opcodes.PushCurrentBranch{CurrentBranch: currentBranch})
 			self.RunProgram.PrependProgram(popped)
 			break
 		}
@@ -102,7 +102,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(opcode)
 		}
 	}
-	result.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{})
+	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
 	return result
 }
 
@@ -118,7 +118,7 @@ func (self *RunState) CreateUndoRunState() RunState {
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
-	result.RunProgram.Add(&opcode.Checkout{Branch: self.InitialActiveBranch})
+	result.RunProgram.Add(&opcodes.Checkout{Branch: self.InitialActiveBranch})
 	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }

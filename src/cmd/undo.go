@@ -16,7 +16,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -156,8 +156,8 @@ func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (ru
 		// This seems to apply only to popping the stack and switching back to the initial branch.
 		// Hence we consolidate these opcode types here.
 		undoRunState.RunProgram = undoRunState.RunProgram.
-			MoveToEnd(&opcode.RestoreOpenChanges{}).
-			RemoveAllButLast("*opcode.CheckoutIfExists")
+			MoveToEnd(&opcodes.RestoreOpenChanges{}).
+			RemoveAllButLast("*opcodes.CheckoutIfExists")
 	}
 	return undoRunState, err
 }
