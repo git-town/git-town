@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -55,45 +54,6 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 		}
 	}
 	return nil
-}
-
-// CreateSkipRunState returns a new Runstate
-// that skips operations for the current branch.
-func (self *RunState) CreateSkipRunState() RunState {
-	result := RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		AfterStashSize:         self.AfterStashSize,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		BeforeStashSize:        self.BeforeStashSize,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		RunProgram:             self.AbortProgram,
-	}
-	// undo the operations done on the current branch so far
-	branchSpan := undobranches.BranchSpan{
-		Before: gitdomain.BranchInfo{},
-		After:  gitdomain.BranchInfo{},
-	}
-	for _, opcode := range self.UndoProgram {
-		if shared.IsCheckoutOpcode(opcode) {
-			break
-		}
-		result.RunProgram.Add(opcode)
-	}
-	// skip the remaining run-opcodes for this branch
-	skipping := true
-	for _, opcode := range self.RunProgram {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			result.RunProgram.Add(opcode)
-		}
-	}
-	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	return result
 }
 
 func (self *RunState) HasAbortProgram() bool {
