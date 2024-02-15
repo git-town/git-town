@@ -20,14 +20,7 @@ func TextField(args TextFieldArgs) (string, bool, error) {
 		title:     args.Title,
 	}
 	program := tea.NewProgram(model)
-	// TODO: extract into helper function.
-	if len(args.TestInput) > 0 {
-		go func() {
-			for _, input := range args.TestInput {
-				program.Send(input)
-			}
-		}()
-	}
+	SendInputs(args.TestInput, program)
 	dialogResult, err := program.Run()
 	if err != nil {
 		return args.ExistingValue, false, err
