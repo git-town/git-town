@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -76,7 +77,7 @@ func loadDisplayStatusConfig(rootDir gitdomain.RepoRootDir) (*displayStatusConfi
 
 func displayStatus(config displayStatusConfig) {
 	if config.state == nil {
-		fmt.Println("No status file found for this repository.")
+		fmt.Println(messages.StatusFileNotFound)
 		return
 	}
 	if config.state.IsFinished() {
@@ -88,21 +89,21 @@ func displayStatus(config displayStatusConfig) {
 
 func displayUnfinishedStatus(config displayStatusConfig) {
 	timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
-	fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
+	fmt.Printf(messages.PreviousCommandProblem, config.state.Command, timeDiff)
 	if config.state.HasAbortProgram() {
-		fmt.Println("You can run \"git town undo\" to go back to where you started.")
+		fmt.Println(messages.UndoMessage)
 	}
 	if config.state.HasRunProgram() {
-		fmt.Println("You can run \"git town continue\" to finish it.")
+		fmt.Println(messages.ContinueMessage)
 	}
 	if config.state.UnfinishedDetails.CanSkip {
-		fmt.Println("You can run \"git town skip\" to skip the currently failing operation.")
+		fmt.Println(messages.SkipMessage)
 	}
 }
 
 func displayFinishedStatus(config displayStatusConfig) {
-	fmt.Printf("The previous Git Town command (%s) finished successfully.\n", config.state.Command)
+	fmt.Printf(messages.PreviousCommandFinished, config.state.Command)
 	if config.state.HasUndoProgram() {
-		fmt.Println("You can run \"git town undo\" to undo it.")
+		fmt.Println(messages.UndoMessage)
 	}
 }
