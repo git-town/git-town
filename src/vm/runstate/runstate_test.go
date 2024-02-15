@@ -109,7 +109,7 @@ func TestRunState(t *testing.T) {
   "BeforeStashSize": 0,
   "Command": "sync",
   "DryRun": true,
-  "IsUndo": false,
+  "FinalUndoProgram": [],
   "RunProgram": [
     {
       "data": {
