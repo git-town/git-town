@@ -126,3 +126,8 @@ issues:
       text: Potential hardcoded credentials
       linters:
         - gosec
+
+    - path: src/messages/en.go
+      text: Potential hardcoded credentials
+      linters:
+        - gosec
