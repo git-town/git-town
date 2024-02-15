@@ -24,13 +24,13 @@ func Execute(args ExecuteArgs) {
 	// undo branch changes
 	branchSpans := undobranches.NewBranchSpans(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
-	branchUndoProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   args.FullConfig,
 		FinalBranch:              args.RunState.AfterBranchesSnapshot.Active,
 		InitialBranch:            args.RunState.BeforeBranchesSnapshot.Active,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	})
-	undoProgram.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot))
+	undoProgram.AddProgram(undoBranchesProgram)
 
 	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeforeConfigSnapshot, args.RunState.AfterConfigSnapshot)
@@ -54,7 +54,7 @@ func Execute(args ExecuteArgs) {
 	})
 
 	// execute the undo program
-	for _, opcode := range branchUndoProgram {
+	for _, opcode := range undoBranchesProgram {
 		err := opcode.Run(shared.RunArgs{
 			Connector:                       nil,
 			DialogTestInputs:                nil,
