@@ -164,28 +164,26 @@ func (self *Access) SetLocalConfigValue(key Key, value string) error {
 }
 
 func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value string) {
-	fmt.Printf("I found the deprecated global setting %q.\n", oldKey)
-	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	fmt.Printf(messages.SettingDeprecatedGlobalMessage, oldKey, newKey)
 	err := self.RemoveGlobalConfigValue(oldKey)
 	if err != nil {
-		fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
+		fmt.Printf(messages.SettingGlobalCannotRemove, oldKey, err)
 	}
 	err = self.SetGlobalConfigValue(newKey, value)
 	if err != nil {
-		fmt.Printf("ERROR: cannot write global Git setting %q: %v", newKey, err)
+		fmt.Printf(messages.SettingGlobalCannotWrite, newKey, err)
 	}
 }
 
 func (self *Access) UpdateDeprecatedLocalSetting(oldKey, newKey Key, value string) {
-	fmt.Printf("I found the deprecated local setting %q.\n", oldKey)
-	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	fmt.Printf(messages.SettingLocalDeprecatedMessage, oldKey, newKey)
 	err := self.RemoveLocalConfigValue(oldKey)
 	if err != nil {
-		fmt.Printf("ERROR: cannot remove local Git setting %q: %v", oldKey, err)
+		fmt.Printf(messages.SettingLocalCannotRemove, oldKey, err)
 	}
 	err = self.SetLocalConfigValue(newKey, value)
 	if err != nil {
-		fmt.Printf("ERROR: cannot write local Git setting %q: %v", newKey, err)
+		fmt.Printf(messages.SettingLocalCannotWrite, newKey, err)
 	}
 }
 
