@@ -64,16 +64,17 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Connector               hostingdomain.Connector
-	DialogTestInputs        components.TestInputs
-	InitialBranchesSnapshot gitdomain.BranchesSnapshot
-	InitialConfigSnapshot   undoconfig.ConfigSnapshot
-	InitialStashSize        gitdomain.StashSize
-	Lineage                 configdomain.Lineage
-	PushHook                configdomain.PushHook
-	RootDir                 gitdomain.RepoRootDir
-	Run                     *git.ProdRunner
-	Verbose                 bool
+	Connector             hostingdomain.Connector
+	DialogTestInputs      components.TestInputs
+	HasOpenChanges        bool
+	anchesSnapshot        gitdomain.BranchesSnapshot
+	InitialConfigSnapshot undoconfig.ConfigSnapshot
+	InitialStashSize      gitdomain.StashSize
+	Lineage               configdomain.Lineage
+	PushHook              configdomain.PushHook
+	RootDir               gitdomain.RepoRootDir
+	Run                   *git.ProdRunner
+	Verbose               bool
 }
 
 func undoRunstate(args undo.ExecuteArgs) (bool, error) {
@@ -90,16 +91,13 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                runState,
-		Verbose:                 args.Verbose,
+		FullConfig:       &args.Run.FullConfig,
+		Connector:        args.Connector,
+		DialogTestInputs: &args.DialogTestInputs,
+		RootDir:          args.RootDir,
+		Run:              args.Run,
+		RunState:         runState,
+		Verbose:          args.Verbose,
 	})
 }
 
@@ -111,15 +109,12 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		Verbose:                 args.Verbose,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &skipRunState,
+		FullConfig:       &args.Run.FullConfig,
+		Connector:        args.Connector,
+		DialogTestInputs: &args.DialogTestInputs,
+		Verbose:          args.Verbose,
+		RootDir:          args.RootDir,
+		Run:              args.Run,
+		RunState:         &skipRunState,
 	})
 }
