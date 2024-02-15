@@ -49,11 +49,19 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, initialStashSize, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
+	config, initialStashSize, lineage, err := determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
-	err = undo.Execute(repo.RootDir)
+	err = undo.Execute(undo.ExecuteArgs{
+		FullConfig:       config.FullConfig,
+		HasOpenChanges:   config.hasOpenChanges,
+		InitialStashSize: initialStashSize,
+		Lineage:          lineage,
+		PreviousBranch:   config.previousBranch,
+		RootDir:          repo.RootDir,
+		Runner:           repo.Runner,
+	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)
 	}

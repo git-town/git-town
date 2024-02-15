@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -68,6 +69,7 @@ type UnfinishedStateArgs struct {
 }
 
 func undoRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+	return true, undo.Execute()
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,

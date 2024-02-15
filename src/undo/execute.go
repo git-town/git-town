@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
@@ -14,8 +16,9 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
-func Execute(rootDir gitdomain.RepoRootDir) error {
-	runState, err := statefile.Load(rootDir)
+// runs the undo commands to undo the given snapshots
+func Execute(args ExecuteArgs) error {
+	runState, err := statefile.Load(args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -26,7 +29,7 @@ func Execute(rootDir gitdomain.RepoRootDir) error {
 	branchSpans := undobranches.NewBranchSpans(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	branchUndoProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		Config:                   config.FullConfig,
+		Config:                   args.FullConfig,
 		FinalBranch:              runState.AfterBranchesSnapshot.Active,
 		InitialBranch:            runState.BeforeBranchesSnapshot.Active,
 		UndoablePerennialCommits: []gitdomain.SHA{},
@@ -39,7 +42,7 @@ func Execute(rootDir gitdomain.RepoRootDir) error {
 	undoProgram.AddProgram(configUndoProgram)
 
 	// undo stash changes
-	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, initialStashSize)
+	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, args.InitialStashSize)
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
 
@@ -48,8 +51,8 @@ func Execute(rootDir gitdomain.RepoRootDir) error {
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   runState.DryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         config.hasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
+		StashOpenChanges:         args.HasOpenChanges,
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
 	})
 
 	// execute the undo program
@@ -57,10 +60,10 @@ func Execute(rootDir gitdomain.RepoRootDir) error {
 		err := opcode.Run(shared.RunArgs{
 			Connector:                       nil,
 			DialogTestInputs:                nil,
-			Lineage:                         config.Lineage,
+			Lineage:                         args.Lineage,
 			PrependOpcodes:                  nil,
 			RegisterUndoablePerennialCommit: nil,
-			Runner:                          repo.Runner,
+			Runner:                          args.Runner,
 			UpdateInitialBranchLocalSHA:     nil,
 		})
 		if err != nil {
@@ -68,4 +71,14 @@ func Execute(rootDir gitdomain.RepoRootDir) error {
 		}
 	}
 	return nil
+}
+
+type ExecuteArgs struct {
+	FullConfig       *configdomain.FullConfig
+	HasOpenChanges   bool
+	InitialStashSize gitdomain.StashSize
+	Lineage          configdomain.Lineage
+	PreviousBranch   gitdomain.LocalBranchName
+	RootDir          gitdomain.RepoRootDir
+	Runner           *git.ProdRunner
 }

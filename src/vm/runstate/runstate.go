@@ -109,7 +109,6 @@ func (self *RunState) CreateUndoRunState() RunState {
 		BeforeStashSize:          self.BeforeStashSize,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
-		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
