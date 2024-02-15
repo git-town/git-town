@@ -7,7 +7,7 @@ Feature: describe the status of the current/last Git Town command
     Then it prints:
       """
       The previous Git Town command (sync) finished successfully.
-      You can run "git town undo" to undo it.
+      You can run "git town undo" to go back to where you started.
       """
 
   Scenario: Git Town command in progress

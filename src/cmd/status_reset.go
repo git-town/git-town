@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/execute"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -43,6 +44,6 @@ func executeStatusReset(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Runstate file deleted.")
+	fmt.Println(messages.RunstateDeleted)
 	return nil
 }

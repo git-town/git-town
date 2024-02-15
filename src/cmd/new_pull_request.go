@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -33,9 +34,6 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func printDeprecationNotice() {
-	fmt.Println("DEPRECATION NOTICE")
-	fmt.Println("")
-	fmt.Println("This command has been renamed to \"git town propose\"")
-	fmt.Println("and will be removed in future versions of Git Town.")
+	fmt.Println(messages.PullRequestDeprecation)
 	time.Sleep(2000 * time.Millisecond)
 }

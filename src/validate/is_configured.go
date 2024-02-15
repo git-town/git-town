@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
@@ -17,10 +18,9 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 	mainBranch := config.MainBranch
 	if mainBranch.IsEmpty() {
 		if backend.ConfigFile != nil {
-			return errors.New("please configure the main branch in the config file")
+			return errors.New(messages.ConfigMainbranchInConfigFile)
 		}
-		// TODO: extract text
-		fmt.Print("Git Town needs to be configured\n\n")
+		fmt.Print(messages.ConfigNeeded)
 		var err error
 		newMainBranch, aborted, err := dialog.MainBranch(localBranches, backend.DefaultBranch(), dialogInputs.Next())
 		if err != nil || aborted {
