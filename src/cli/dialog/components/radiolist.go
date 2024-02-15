@@ -12,19 +12,13 @@ import (
 const WindowSize = 9
 
 // RadioList lets the user select a new main branch for this repo.
-func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, testInput TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
+func RadioList[S fmt.Stringer](entries []S, cursor int, title, help string, inputs TestInput) (selected S, aborted bool, err error) { //nolint:ireturn
 	program := tea.NewProgram(radioListModel[S]{
 		BubbleList: NewBubbleList(entries, cursor),
 		help:       help,
 		title:      title,
 	})
-	if len(testInput) > 0 {
-		go func() {
-			for _, input := range testInput {
-				program.Send(input)
-			}
-		}()
-	}
+	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
 		return entries[0], false, err

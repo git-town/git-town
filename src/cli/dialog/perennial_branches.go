@@ -25,7 +25,7 @@ Typically, perennial branches have names like
 
 // PerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, dialogTestInput components.TestInput) (gitdomain.LocalBranchNames, bool, error) {
+func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBranches gitdomain.LocalBranchNames, mainBranch gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchNames, bool, error) {
 	perennialCandidates := localBranches.Remove(mainBranch).AppendAllMissing(oldPerennialBranches...)
 	if len(perennialCandidates) == 0 {
 		return gitdomain.LocalBranchNames{}, false, nil
@@ -35,13 +35,7 @@ func PerennialBranches(localBranches gitdomain.LocalBranchNames, oldPerennialBra
 		Selections:    slice.FindMany(perennialCandidates, oldPerennialBranches),
 		selectedColor: termenv.String().Foreground(termenv.ANSIGreen),
 	})
-	if len(dialogTestInput) > 0 {
-		go func() {
-			for _, input := range dialogTestInput {
-				program.Send(input)
-			}
-		}()
-	}
+	components.SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
 		return gitdomain.LocalBranchNames{}, false, err
