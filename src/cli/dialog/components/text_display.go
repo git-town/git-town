@@ -14,14 +14,7 @@ func TextDisplay(title, text string, inputs TestInput) (bool, error) {
 		title:  title,
 	}
 	program := tea.NewProgram(model)
-	// TODO: extract into helper function.
-	if len(inputs) > 0 {
-		go func() {
-			for _, input := range inputs {
-				program.Send(input)
-			}
-		}()
-	}
+	SendInputs(inputs, program)
 	dialogResult, err := program.Run()
 	if err != nil {
 		return false, err
