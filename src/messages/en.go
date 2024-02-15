@@ -127,7 +127,15 @@ nd will be removed in future versions of Git Town.`
 I found the deprecated global setting %q.
 I am upgrading this setting to the new format %q.
 `
-	SettingIgnoreInvalid        = "Notice: ignoring invalid dialog input setting %q\n"
+	SettingGlobalCannotRemove     = "ERROR: cannot remove global Git setting %q: %v"
+	SettingGlobalCannotWrite      = "ERROR: cannot write global Git setting %q: %v"
+	SettingIgnoreInvalid          = "Notice: ignoring invalid dialog input setting %q\n"
+	SettingLocalDeprecatedMessage = `
+I found the deprecated local setting %q.
+I am upgrading this setting to the new format %q.
+`
+	SettingLocalCannotRemove    = "ERROR: cannot remove local Git setting %q: %v"
+	SettingLocalCannotWrite     = "ERROR: cannot write local Git setting %q: %v"
 	ShipAbortedMergeError       = "aborted because commit exited with error"
 	ShipBranchOtherWorktree     = "branch %q is active in another worktree"
 	ShipBranchNothingToDo       = "the branch %q has no shippable changes"
