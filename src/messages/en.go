@@ -123,7 +123,7 @@ nd will be removed in future versions of Git Town.`
 	RunstatePathProblem            = "cannot determine the runstate file path: %w"
 	RunstateSaveProblem            = "cannot save run state: %w"
 	SetParentNoFeatureBranch       = "the branch %q is not a feature branch. Only feature branches can have parent branches"
-	SettingDeprecatedUpdateMessage = `
+	SettingDeprecatedGlobalMessage = `
 I found the deprecated global setting %q.
 I am upgrading this setting to the new format %q.
 `
