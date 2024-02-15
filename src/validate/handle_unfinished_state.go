@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/skip"
 	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
@@ -107,14 +108,13 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 }
 
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	skipRunState := runState.CreateSkipRunState()
-	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:       &args.Run.FullConfig,
-		Connector:        args.Connector,
-		DialogTestInputs: &args.DialogTestInputs,
-		Verbose:          args.Verbose,
+	skip.Execute(skip.ExecuteArgs{
+		InitialStashSize: 0,
 		RootDir:          args.RootDir,
-		Run:              args.Run,
-		RunState:         &skipRunState,
+		Runner:           args.Run,
+		RunState:         runState,
+		TestInputs:       []components.TestInput{},
+		Verbose:          args.Verbose,
 	})
+	return false, nil
 }
