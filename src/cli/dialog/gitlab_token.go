@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -28,6 +29,6 @@ func GitLabToken(oldValue configdomain.GitLabToken, inputs components.TestInput)
 		TestInput:     inputs,
 		Title:         gitLabTokenTitle,
 	})
-	fmt.Printf("GitLab token: %s\n", components.FormattedSecret(token, aborted))
+	fmt.Printf(messages.GitLabToken, components.FormattedSecret(token, aborted))
 	return configdomain.GitLabToken(token), aborted, err
 }
