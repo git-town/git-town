@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/gohacks/stringers"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -29,7 +30,7 @@ func HostingPlatform(existingValue configdomain.HostingPlatform, inputs componen
 	}
 	cursor := indexOfHostingPlatform(existingValue, entries)
 	newValue, aborted, err := components.RadioList(entries, cursor, hostingPlatformTitle, HostingPlatformHelp, inputs)
-	fmt.Printf("Code hosting: %s\n", components.FormattedSelection(newValue.String(), aborted))
+	fmt.Printf(messages.CodeHosting, components.FormattedSelection(newValue.String(), aborted))
 	return newValue.HostingPlatform(), aborted, err
 }
 

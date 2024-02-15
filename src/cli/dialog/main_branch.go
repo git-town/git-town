@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/gohacks/stringers"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -22,6 +23,6 @@ This branch is often called "main", "master", or "development".
 func MainBranch(localBranches gitdomain.LocalBranchNames, defaultEntry gitdomain.LocalBranchName, inputs components.TestInput) (gitdomain.LocalBranchName, bool, error) {
 	cursor := stringers.IndexOrStart(localBranches, defaultEntry)
 	selection, aborted, err := components.RadioList(localBranches, cursor, mainBranchTitle, MainBranchHelp, inputs)
-	fmt.Printf("Main branch: %s\n", components.FormattedSelection(selection.String(), aborted))
+	fmt.Printf(messages.MainBranch, components.FormattedSelection(selection.String(), aborted))
 	return selection, aborted, err
 }

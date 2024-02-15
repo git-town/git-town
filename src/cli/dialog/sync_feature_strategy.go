@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -44,7 +45,7 @@ func SyncFeatureStrategy(existing configdomain.SyncFeatureStrategy, inputs compo
 		return configdomain.SyncFeatureStrategyMerge, aborted, err
 	}
 	cutSelection, _, _ := strings.Cut(selection.String(), " ")
-	fmt.Printf("Sync feature branches: %s\n", components.FormattedSelection(cutSelection, aborted))
+	fmt.Printf(messages.SyncFeatureBranches, components.FormattedSelection(cutSelection, aborted))
 	return selection.SyncFeatureStrategy(), aborted, err
 }
 

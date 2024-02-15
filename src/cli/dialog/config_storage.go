@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -38,7 +39,7 @@ func ConfigStorage(hasConfigFile bool, inputs components.TestInput) (ConfigStora
 		ConfigStorageOptionGit,
 	}
 	selection, aborted, err := components.RadioList(entries, 0, configStorageTitle, configStorageHelp, inputs)
-	fmt.Printf("Config storage: %s\n", components.FormattedSelection(selection.Short(), aborted))
+	fmt.Printf(messages.ConfigStorage, components.FormattedSelection(selection.Short(), aborted))
 	return selection, aborted, err
 }
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 const (
@@ -39,7 +40,7 @@ func ShipDeleteTrackingBranch(existing configdomain.ShipDeleteTrackingBranch, in
 	if err != nil || aborted {
 		return true, aborted, err
 	}
-	fmt.Printf("Ship deletes tracking branches: %s\n", components.FormattedSelection(selection.Short(), aborted))
+	fmt.Printf(messages.ShipDeletesTrackingBranches, components.FormattedSelection(selection.Short(), aborted))
 	return selection.ShipDeleteTrackingBranch(), aborted, err
 }
 
