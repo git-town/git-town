@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -165,27 +165,27 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 
 func renameBranchProgram(config *renameBranchConfig) program.Program {
 	result := program.Program{}
-	result.Add(&opcode.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
+	result.Add(&opcodes.CreateBranch{Branch: config.newBranch, StartingPoint: config.oldBranch.LocalName.Location()})
 	if config.initialBranch == config.oldBranch.LocalName {
-		result.Add(&opcode.Checkout{Branch: config.newBranch})
+		result.Add(&opcodes.Checkout{Branch: config.newBranch})
 	}
 	if !config.dryRun {
 		if config.IsPerennialBranch(config.initialBranch) {
-			result.Add(&opcode.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
-			result.Add(&opcode.AddToPerennialBranches{Branch: config.newBranch})
+			result.Add(&opcodes.RemoveFromPerennialBranches{Branch: config.oldBranch.LocalName})
+			result.Add(&opcodes.AddToPerennialBranches{Branch: config.newBranch})
 		} else {
-			result.Add(&opcode.DeleteParentBranch{Branch: config.oldBranch.LocalName})
-			result.Add(&opcode.SetParent{Branch: config.newBranch, Parent: config.Lineage.Parent(config.oldBranch.LocalName)})
+			result.Add(&opcodes.DeleteParentBranch{Branch: config.oldBranch.LocalName})
+			result.Add(&opcodes.SetParent{Branch: config.newBranch, Parent: config.Lineage.Parent(config.oldBranch.LocalName)})
 		}
 	}
 	for _, child := range config.Lineage.Children(config.oldBranch.LocalName) {
-		result.Add(&opcode.SetParent{Branch: child, Parent: config.newBranch})
+		result.Add(&opcodes.SetParent{Branch: child, Parent: config.newBranch})
 	}
 	if config.oldBranch.HasTrackingBranch() && config.IsOnline() {
-		result.Add(&opcode.CreateTrackingBranch{Branch: config.newBranch})
-		result.Add(&opcode.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
+		result.Add(&opcodes.CreateTrackingBranch{Branch: config.newBranch})
+		result.Add(&opcodes.DeleteTrackingBranch{Branch: config.oldBranch.RemoteName})
 	}
-	result.Add(&opcode.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
+	result.Add(&opcodes.DeleteLocalBranch{Branch: config.oldBranch.LocalName, Force: false})
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,
 		RunInGitRoot:             false,

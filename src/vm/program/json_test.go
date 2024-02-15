@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/shoenig/test/must"
 )
@@ -16,7 +16,7 @@ func TestJSON(t *testing.T) {
 	t.Run("MarshalJSON", func(t *testing.T) {
 		t.Parallel()
 		jsonstep := program.JSON{
-			Opcode: &opcode.Checkout{
+			Opcode: &opcodes.Checkout{
 				Branch: gitdomain.NewLocalBranchName("branch-1"),
 			},
 		}
@@ -43,14 +43,14 @@ func TestJSON(t *testing.T) {
 	"type": "Checkout"
 }`[1:]
 		have := program.JSON{
-			Opcode: &opcode.Checkout{
+			Opcode: &opcodes.Checkout{
 				Branch: gitdomain.EmptyLocalBranchName(),
 			},
 		}
 		err := json.Unmarshal([]byte(give), &have)
 		must.NoError(t, err)
 		want := program.JSON{
-			Opcode: &opcode.Checkout{
+			Opcode: &opcodes.Checkout{
 				Branch: gitdomain.NewLocalBranchName("branch-1"),
 			},
 		}
