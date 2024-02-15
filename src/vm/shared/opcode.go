@@ -16,7 +16,7 @@ type Opcode interface {
 	// cause the command to automatically undo.
 	CreateAutomaticUndoError() error
 
-	// Run executes this opcode.
+	// Run executes this opcodes.
 	Run(args RunArgs) error
 
 	// ShouldAutomaticallyUndoOnError indicates whether this opcode should

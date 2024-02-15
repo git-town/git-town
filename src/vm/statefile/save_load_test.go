@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -47,115 +47,115 @@ func TestLoadSave(t *testing.T) {
 			BeforeStashSize:        0,
 			DryRun:                 true,
 			RunProgram: program.Program{
-				&opcode.AbortMerge{},
-				&opcode.AbortRebase{},
-				&opcode.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcode.ChangeParent{
+				&opcodes.AbortMerge{},
+				&opcodes.AbortRebase{},
+				&opcodes.AddToPerennialBranches{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.ChangeParent{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcode.CommitOpenChanges{},
-				&opcode.ConnectorMergeProposal{
+				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CommitOpenChanges{},
+				&opcodes.ConnectorMergeProposal{
 					Branch:          gitdomain.NewLocalBranchName("branch"),
 					CommitMessage:   "commit message",
 					ProposalMessage: "proposal message",
 					ProposalNumber:  123,
 				},
-				&opcode.ContinueMerge{},
-				&opcode.ContinueRebase{},
-				&opcode.CreateBranch{
+				&opcodes.ContinueMerge{},
+				&opcodes.ContinueRebase{},
+				&opcodes.CreateBranch{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					StartingPoint: gitdomain.NewSHA("123456").Location(),
 				},
-				&opcode.CreateProposal{Branch: gitdomain.NewLocalBranchName("branch")},
-				&opcode.CreateRemoteBranch{
+				&opcodes.CreateProposal{Branch: gitdomain.NewLocalBranchName("branch")},
+				&opcodes.CreateRemoteBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					SHA:    gitdomain.NewSHA("123456"),
 				},
-				&opcode.CreateTrackingBranch{
+				&opcodes.CreateTrackingBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.DeleteLocalBranch{
+				&opcodes.DeleteLocalBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Force:  false,
 				},
-				&opcode.DeleteParentBranch{
+				&opcodes.DeleteParentBranch{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.DeleteTrackingBranch{
+				&opcodes.DeleteTrackingBranch{
 					Branch: gitdomain.NewRemoteBranchName("origin/branch"),
 				},
-				&opcode.DiscardOpenChanges{},
-				&opcode.EndOfBranchProgram{},
-				&opcode.EnsureHasShippableChanges{
+				&opcodes.DiscardOpenChanges{},
+				&opcodes.EndOfBranchProgram{},
+				&opcodes.EnsureHasShippableChanges{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.FetchUpstream{
+				&opcodes.FetchUpstream{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.ForcePushCurrentBranch{},
-				&opcode.Merge{Branch: gitdomain.NewBranchName("branch")},
-				&opcode.MergeParent{
+				&opcodes.ForcePushCurrentBranch{},
+				&opcodes.Merge{Branch: gitdomain.NewBranchName("branch")},
+				&opcodes.MergeParent{
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
 					ParentActiveInOtherWorktree: true,
 				},
-				&opcode.PreserveCheckoutHistory{
+				&opcodes.PreserveCheckoutHistory{
 					PreviousBranchCandidates: gitdomain.NewLocalBranchNames("previous"),
 				},
-				&opcode.PullCurrentBranch{},
-				&opcode.PushCurrentBranch{
+				&opcodes.PullCurrentBranch{},
+				&opcodes.PushCurrentBranch{
 					CurrentBranch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.PushTags{},
-				&opcode.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
-				&opcode.RebaseParent{
+				&opcodes.PushTags{},
+				&opcodes.RebaseBranch{Branch: gitdomain.NewBranchName("branch")},
+				&opcodes.RebaseParent{
 					CurrentBranch:               gitdomain.NewLocalBranchName("branch"),
 					ParentActiveInOtherWorktree: true,
 				},
-				&opcode.RemoveFromPerennialBranches{
+				&opcodes.RemoveFromPerennialBranches{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 				},
-				&opcode.RemoveGlobalConfig{
+				&opcodes.RemoveGlobalConfig{
 					Key: gitconfig.KeyOffline,
 				},
-				&opcode.RemoveLocalConfig{
+				&opcodes.RemoveLocalConfig{
 					Key: gitconfig.KeyOffline,
 				},
-				&opcode.ResetCurrentBranchToSHA{
+				&opcodes.ResetCurrentBranchToSHA{
 					Hard:        true,
 					MustHaveSHA: gitdomain.NewSHA("222222"),
 					SetToSHA:    gitdomain.NewSHA("111111"),
 				},
-				&opcode.RestoreOpenChanges{},
-				&opcode.RevertCommit{
+				&opcodes.RestoreOpenChanges{},
+				&opcodes.RevertCommit{
 					SHA: gitdomain.NewSHA("123456"),
 				},
-				&opcode.SetGlobalConfig{
+				&opcodes.SetGlobalConfig{
 					Key:   gitconfig.KeyOffline,
 					Value: "1",
 				},
-				&opcode.SetLocalConfig{
+				&opcodes.SetLocalConfig{
 					Key:   gitconfig.KeyOffline,
 					Value: "1",
 				},
-				&opcode.SetParent{
+				&opcodes.SetParent{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.SetParentIfBranchExists{
+				&opcodes.SetParentIfBranchExists{
 					Branch: gitdomain.NewLocalBranchName("branch"),
 					Parent: gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.SkipCurrentBranch{},
-				&opcode.SquashMerge{
+				&opcodes.SkipCurrentBranch{},
+				&opcodes.SquashMerge{
 					Branch:        gitdomain.NewLocalBranchName("branch"),
 					CommitMessage: "commit message",
 					Parent:        gitdomain.NewLocalBranchName("parent"),
 				},
-				&opcode.StashOpenChanges{},
-				&opcode.UpdateProposalTarget{
+				&opcodes.StashOpenChanges{},
+				&opcodes.UpdateProposalTarget{
 					ProposalNumber: 123,
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
