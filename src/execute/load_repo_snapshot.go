@@ -15,31 +15,33 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
 	}
+	repoStatus, err := args.Repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return branchesSnapshot, stashSize, false, err
+	}
 	if args.HandleUnfinishedState {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
-			Connector:             nil,
-			DialogTestInputs:      args.DialogTestInputs,
-			Verbose:               args.Verbose,
-			InitialConfigSnapshot: args.Repo.ConfigSnapshot,
-			InitialStashSize:      stashSize,
-			Lineage:               args.Lineage,
-			PushHook:              args.PushHook,
-			RootDir:               args.Repo.RootDir,
-			Run:                   args.Repo.Runner,
+			Connector:               nil,
+			DialogTestInputs:        args.DialogTestInputs,
+			HasOpenChanges:          repoStatus.OpenChanges,
+			InitialBranchesSnapshot: branchesSnapshot,
+			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
+			InitialStashSize:        stashSize,
+			Lineage:                 args.Lineage,
+			PushHook:                args.PushHook,
+			RootDir:                 args.Repo.RootDir,
+			Run:                     args.Repo.Runner,
+			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
 			return branchesSnapshot, stashSize, exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		repoStatus, err := args.Repo.Runner.Backend.RepoStatus()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
 		err = validate.NoOpenChanges(repoStatus.OpenChanges)
 		if err != nil {
 			return branchesSnapshot, stashSize, false, err

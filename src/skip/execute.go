@@ -55,20 +55,22 @@ func Execute(args ExecuteArgs) error {
 
 	// continue executing the program
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Runner.FullConfig,
-		RunState:                args.RunState,
-		Run:                     args.Runner,
 		Connector:               nil,
 		DialogTestInputs:        &args.TestInputs,
-		Verbose:                 args.Verbose,
-		RootDir:                 args.RootDir,
+		FullConfig:              &args.Runner.FullConfig,
+		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
+		RootDir:                 args.RootDir,
+		Run:                     args.Runner,
+		RunState:                args.RunState,
+		Verbose:                 args.Verbose,
 	})
 }
 
 type ExecuteArgs struct {
+	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
 	RunState         *runstate.RunState

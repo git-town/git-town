@@ -87,13 +87,17 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:       &args.Run.FullConfig,
-		Connector:        args.Connector,
-		DialogTestInputs: &args.DialogTestInputs,
-		RootDir:          args.RootDir,
-		Run:              args.Run,
-		RunState:         runState,
-		Verbose:          args.Verbose,
+		Connector:               args.Connector,
+		DialogTestInputs:        &args.DialogTestInputs,
+		FullConfig:              &args.Run.FullConfig,
+		HasOpenChanges:          args.HasOpenChanges,
+		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
+		InitialConfigSnapshot:   args.InitialConfigSnapshot,
+		InitialStashSize:        args.InitialStashSize,
+		RootDir:                 args.RootDir,
+		Run:                     args.Run,
+		RunState:                runState,
+		Verbose:                 args.Verbose,
 	})
 }
 
@@ -104,6 +108,7 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	return false, skip.Execute(skip.ExecuteArgs{
+		HasOpenChanges:   args.HasOpenChanges,
 		InitialStashSize: 0,
 		RootDir:          args.RootDir,
 		Runner:           args.Run,
