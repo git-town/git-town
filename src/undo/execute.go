@@ -7,52 +7,47 @@ import (
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/undo/undostash"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
+	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/shared"
-	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
-// runs the undo commands to undo the given snapshots
-func Execute(args ExecuteArgs) error {
-	runState, err := statefile.Load(args.RootDir)
-	if err != nil {
-		return fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
+// undoes the persisted runstate
+func Execute(args ExecuteArgs) {
 	undoProgram := program.Program{}
-	undoProgram.AddProgram(runState.AbortProgram)
+	undoProgram.AddProgram(args.RunState.AbortProgram)
 
 	// undo branch changes
-	branchSpans := undobranches.NewBranchSpans(runState.BeforeBranchesSnapshot, runState.AfterBranchesSnapshot)
+	branchSpans := undobranches.NewBranchSpans(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	branchUndoProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   args.FullConfig,
-		FinalBranch:              runState.AfterBranchesSnapshot.Active,
-		InitialBranch:            runState.BeforeBranchesSnapshot.Active,
+		FinalBranch:              args.RunState.AfterBranchesSnapshot.Active,
+		InitialBranch:            args.RunState.BeforeBranchesSnapshot.Active,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	})
 	undoProgram.AddProgram(branchUndoProgram)
 
 	// undo config changes
-	configSpans := undoconfig.NewConfigDiffs(runState.BeforeConfigSnapshot, runState.AfterConfigSnapshot)
+	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeforeConfigSnapshot, args.RunState.AfterConfigSnapshot)
 	configUndoProgram := configSpans.UndoProgram()
 	undoProgram.AddProgram(configUndoProgram)
 
 	// undo stash changes
-	stashDiff := undostash.NewStashDiff(runState.BeforeStashSize, args.InitialStashSize)
+	stashDiff := undostash.NewStashDiff(args.RunState.BeforeStashSize, args.InitialStashSize)
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
 
-	undoProgram.AddProgram(runState.FinalUndoProgram)
-	undoProgram.Add(&opcodes.Checkout{Branch: args.BeforeBranchesSnapshot.Active})
+	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
+	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeforeBranchesSnapshot.Active})
 	undoProgram.RemoveDuplicateCheckout()
 
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
-		DryRun:                   runState.DryRun,
+		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.HasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
@@ -73,16 +68,15 @@ func Execute(args ExecuteArgs) error {
 			fmt.Println("ERROR: " + err.Error())
 		}
 	}
-	return nil
 }
 
 type ExecuteArgs struct {
-	BeforeBranchesSnapshot gitdomain.BranchesSnapshot
-	FullConfig             *configdomain.FullConfig
-	HasOpenChanges         bool
-	InitialStashSize       gitdomain.StashSize
-	Lineage                configdomain.Lineage
-	PreviousBranch         gitdomain.LocalBranchName
-	RootDir                gitdomain.RepoRootDir
-	Runner                 *git.ProdRunner
+	FullConfig       *configdomain.FullConfig
+	HasOpenChanges   bool
+	InitialStashSize gitdomain.StashSize
+	Lineage          configdomain.Lineage
+	PreviousBranch   gitdomain.LocalBranchName
+	RootDir          gitdomain.RepoRootDir
+	Runner           *git.ProdRunner
+	RunState         runstate.RunState
 }

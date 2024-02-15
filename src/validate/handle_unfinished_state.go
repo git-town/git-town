@@ -69,8 +69,15 @@ type UnfinishedStateArgs struct {
 }
 
 func undoRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	return true, undo.Execute()
-	abortRunState := runState.CreateAbortRunState()
+	return true, undo.Execute(undo.ExecuteArgs{
+		FullConfig:       &configdomain.FullConfig{},
+		HasOpenChanges:   ,
+		InitialStashSize: 0,
+		Lineage:          map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},
+		PreviousBranch:   "",
+		RootDir:          "",
+		Runner:           &git.ProdRunner{},
+	})
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,

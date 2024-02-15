@@ -53,18 +53,19 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = undo.Execute(undo.ExecuteArgs{
+	runState, err := statefile.Load(repo.RootDir)
+	if err != nil {
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
+	}
+	undo.Execute(undo.ExecuteArgs{
 		FullConfig:       config.FullConfig,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          lineage,
 		PreviousBranch:   config.previousBranch,
-		RootDir:          repo.RootDir,
 		Runner:           repo.Runner,
+		RunState:         *runState,
 	})
-	if err != nil {
-		return fmt.Errorf(messages.RunstateDeleteProblem, err)
-	}
 	err = statefile.Delete(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)

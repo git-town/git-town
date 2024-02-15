@@ -96,26 +96,6 @@ func (self *RunState) CreateSkipRunState() RunState {
 	return result
 }
 
-// CreateUndoRunState returns a new runstate
-// to be run when undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateUndoRunState() RunState {
-	result := RunState{
-		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:      self.AfterConfigSnapshot,
-		AfterStashSize:           self.AfterStashSize,
-		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
-		BeforeStashSize:          self.BeforeStashSize,
-		Command:                  self.Command,
-		DryRun:                   self.DryRun,
-		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []gitdomain.SHA{},
-	}
-	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
-	return result
-}
-
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
