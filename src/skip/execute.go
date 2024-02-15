@@ -71,8 +71,8 @@ func Execute(args ExecuteArgs) {
 type ExecuteArgs struct {
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
-	Runner           *git.ProdRunner
 	RunState         *runstate.RunState
+	Runner           *git.ProdRunner
 	TestInputs       components.TestInputs
 	Verbose          bool
 }

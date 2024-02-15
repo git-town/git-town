@@ -65,22 +65,17 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 }
 
 type UnfinishedStateArgs struct {
-	Connector             hostingdomain.Connector
-	DialogTestInputs      components.TestInputs
-	HasOpenChanges        bool
-	anchesSnapshot        gitdomain.BranchesSnapshot
-	InitialConfigSnapshot undoconfig.ConfigSnapshot
-	InitialStashSize      gitdomain.StashSize
-	Lineage               configdomain.Lineage
-	PushHook              configdomain.PushHook
-	RootDir               gitdomain.RepoRootDir
-	Run                   *git.ProdRunner
-	Verbose               bool
-}
-
-func undoRunstate(args undo.ExecuteArgs) (bool, error) {
-	undo.Execute(args)
-	return true, nil
+	Connector               hostingdomain.Connector
+	DialogTestInputs        components.TestInputs
+	HasOpenChanges          bool
+	InitialBranchesSnapshot gitdomain.BranchesSnapshot
+	InitialConfigSnapshot   undoconfig.ConfigSnapshot
+	InitialStashSize        gitdomain.StashSize
+	Lineage                 configdomain.Lineage
+	PushHook                configdomain.PushHook
+	RootDir                 gitdomain.RepoRootDir
+	Run                     *git.ProdRunner
+	Verbose                 bool
 }
 
 func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
@@ -117,4 +112,9 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 		Verbose:          args.Verbose,
 	})
 	return false, nil
+}
+
+func undoRunstate(args undo.ExecuteArgs) (bool, error) {
+	undo.Execute(args)
+	return true, nil
 }

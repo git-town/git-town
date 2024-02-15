@@ -30,7 +30,7 @@ func Execute(args ExecuteArgs) {
 		InitialBranch:            args.RunState.BeforeBranchesSnapshot.Active,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	})
-	undoProgram.AddProgram(branchUndoProgram)
+	undoProgram.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot))
 
 	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeforeConfigSnapshot, args.RunState.AfterConfigSnapshot)
@@ -76,6 +76,6 @@ type ExecuteArgs struct {
 	InitialStashSize gitdomain.StashSize
 	Lineage          configdomain.Lineage
 	RootDir          gitdomain.RepoRootDir
-	Runner           *git.ProdRunner
 	RunState         runstate.RunState
+	Runner           *git.ProdRunner
 }
