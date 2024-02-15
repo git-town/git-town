@@ -50,7 +50,7 @@ func Execute(args ExecuteArgs) {
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.PreviousBranch},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeforeBranchesSnapshot.Active},
 	})
 
 	// execute the undo program
@@ -75,7 +75,6 @@ type ExecuteArgs struct {
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	Lineage          configdomain.Lineage
-	PreviousBranch   gitdomain.LocalBranchName
 	RootDir          gitdomain.RepoRootDir
 	Runner           *git.ProdRunner
 	RunState         runstate.RunState

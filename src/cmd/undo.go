@@ -62,7 +62,6 @@ func executeUndo(verbose bool) error {
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
 		Lineage:          lineage,
-		PreviousBranch:   config.previousBranch,
 		Runner:           repo.Runner,
 		RunState:         *runState,
 	})

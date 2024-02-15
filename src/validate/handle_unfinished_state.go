@@ -46,7 +46,15 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		return undoRunstate(runState, args)
+		return undoRunstate(undo.ExecuteArgs{
+			FullConfig:       &args.Run.FullConfig,
+			HasOpenChanges:   args.HasOpenChanges,
+			InitialStashSize: args.InitialStashSize,
+			Lineage:          args.Lineage,
+			RootDir:          args.RootDir,
+			Runner:           args.Run,
+			RunState:         *runState,
+		})
 	case dialog.ResponseSkip:
 		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
@@ -68,28 +76,9 @@ type UnfinishedStateArgs struct {
 	Verbose                 bool
 }
 
-func undoRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	return true, undo.Execute(undo.ExecuteArgs{
-		FullConfig:       &configdomain.FullConfig{},
-		HasOpenChanges:   ,
-		InitialStashSize: 0,
-		Lineage:          map[gitdomain.LocalBranchName]gitdomain.LocalBranchName{},
-		PreviousBranch:   "",
-		RootDir:          "",
-		Runner:           &git.ProdRunner{},
-	})
-	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &abortRunState,
-		Verbose:                 args.Verbose,
-	})
+func undoRunstate(args undo.ExecuteArgs) (bool, error) {
+	undo.Execute(args)
+	return true, nil
 }
 
 func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
