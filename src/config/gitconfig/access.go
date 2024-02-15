@@ -164,8 +164,7 @@ func (self *Access) SetLocalConfigValue(key Key, value string) error {
 }
 
 func (self *Access) UpdateDeprecatedGlobalSetting(oldKey, newKey Key, value string) {
-	fmt.Printf("I found the deprecated global setting %q.\n", oldKey)
-	fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+	fmt.Printf(messages.SettingDeprecatedUpdateMessage, oldKey, newKey)
 	err := self.RemoveGlobalConfigValue(oldKey)
 	if err != nil {
 		fmt.Printf("ERROR: cannot remove global Git setting %q: %v", oldKey, err)
