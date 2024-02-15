@@ -21,7 +21,7 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/validate"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -287,29 +287,29 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			PushBranch:  false,
 		})
 	}
-	prog.Add(&opcode.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})
-	prog.Add(&opcode.Checkout{Branch: config.targetBranch.LocalName})
+	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})
+	prog.Add(&opcodes.Checkout{Branch: config.targetBranch.LocalName})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
-			prog.Add(&opcode.UpdateProposalTarget{
+			prog.Add(&opcodes.UpdateProposalTarget{
 				ProposalNumber: childProposal.Number,
 				NewTarget:      config.targetBranch.LocalName,
 			})
 		}
-		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName})
-		prog.Add(&opcode.ConnectorMergeProposal{
+		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: config.branchToShip.LocalName})
+		prog.Add(&opcodes.ConnectorMergeProposal{
 			Branch:          config.branchToShip.LocalName,
 			ProposalNumber:  config.proposal.Number,
 			CommitMessage:   commitMessage,
 			ProposalMessage: config.proposalMessage,
 		})
-		prog.Add(&opcode.PullCurrentBranch{})
+		prog.Add(&opcodes.PullCurrentBranch{})
 	} else {
-		prog.Add(&opcode.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
+		prog.Add(&opcodes.SquashMerge{Branch: config.branchToShip.LocalName, CommitMessage: commitMessage, Parent: config.targetBranch.LocalName})
 	}
 	if config.remotes.HasOrigin() && config.IsOnline() {
-		prog.Add(&opcode.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
+		prog.Add(&opcodes.PushCurrentBranch{CurrentBranch: config.targetBranch.LocalName})
 	}
 	// NOTE: when shipping via API, we can always delete the tracking branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -317,18 +317,18 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && config.IsOnline()) {
 		if config.ShipDeleteTrackingBranch {
-			prog.Add(&opcode.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
+			prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
-	prog.Add(&opcode.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
+	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
 	if !config.dryRun {
-		prog.Add(&opcode.DeleteParentBranch{Branch: config.branchToShip.LocalName})
+		prog.Add(&opcodes.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	}
 	for _, child := range config.childBranches {
-		prog.Add(&opcode.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
+		prog.Add(&opcodes.ChangeParent{Branch: child, Parent: config.targetBranch.LocalName})
 	}
 	if !config.isShippingInitialBranch {
-		prog.Add(&opcode.Checkout{Branch: config.initialBranch})
+		prog.Add(&opcodes.Checkout{Branch: config.initialBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,

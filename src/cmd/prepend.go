@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v12/src/sync"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -173,23 +173,23 @@ func prependProgram(config *prependConfig) program.Program {
 			Remotes:     config.remotes,
 		})
 	}
-	prog.Add(&opcode.CreateBranchExistingParent{
+	prog.Add(&opcodes.CreateBranchExistingParent{
 		Ancestors: config.newBranchParentCandidates,
 		Branch:    config.targetBranch,
 	})
 	// set the parent of the newly created branch
-	prog.Add(&opcode.SetExistingParent{
+	prog.Add(&opcodes.SetExistingParent{
 		Branch:    config.targetBranch,
 		Ancestors: config.newBranchParentCandidates,
 	})
 	// set the parent of the branch prepended to
-	prog.Add(&opcode.SetParentIfBranchExists{
+	prog.Add(&opcodes.SetParentIfBranchExists{
 		Branch: config.initialBranch,
 		Parent: config.targetBranch,
 	})
-	prog.Add(&opcode.Checkout{Branch: config.targetBranch})
+	prog.Add(&opcodes.Checkout{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.ShouldPushNewBranches() && config.IsOnline() {
-		prog.Add(&opcode.CreateTrackingBranch{Branch: config.targetBranch})
+		prog.Add(&opcodes.CreateTrackingBranch{Branch: config.targetBranch})
 	}
 	cmdhelpers.Wrap(&prog, cmdhelpers.WrapOptions{
 		DryRun:                   config.dryRun,

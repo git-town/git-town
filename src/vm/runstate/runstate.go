@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
@@ -49,7 +49,7 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 			if err != nil {
 				return err
 			}
-			self.RunProgram.Prepend(&opcode.PushCurrentBranch{CurrentBranch: currentBranch})
+			self.RunProgram.Prepend(&opcodes.PushCurrentBranch{CurrentBranch: currentBranch})
 			self.RunProgram.PrependProgram(popped)
 			break
 		}
@@ -92,7 +92,29 @@ func (self *RunState) CreateSkipRunState() RunState {
 			result.RunProgram.Add(opcode)
 		}
 	}
-	result.RunProgram.MoveToEnd(&opcode.RestoreOpenChanges{})
+	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
+	return result
+}
+
+// CreateUndoRunState returns a new runstate
+// to be run when undoing the Git Town command
+// represented by this runstate.
+func (self *RunState) CreateUndoRunState() RunState {
+	result := RunState{
+		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
+		AfterConfigSnapshot:      self.AfterConfigSnapshot,
+		AfterStashSize:           self.AfterStashSize,
+		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
+		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
+		BeforeStashSize:          self.BeforeStashSize,
+		Command:                  self.Command,
+		DryRun:                   self.DryRun,
+		IsUndo:                   true,
+		RunProgram:               self.UndoProgram,
+		UndoablePerennialCommits: []gitdomain.SHA{},
+	}
+	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
+	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 

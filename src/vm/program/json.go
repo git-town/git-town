@@ -6,7 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/gohacks"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/opcode"
+	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
@@ -35,7 +35,7 @@ func (self *JSON) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	self.Opcode = opcode.Lookup(opcodeType)
+	self.Opcode = opcodes.Lookup(opcodeType)
 	if self.Opcode == nil {
 		return fmt.Errorf(messages.OpcodeUnknown, opcodeType)
 	}
