@@ -17,7 +17,7 @@ func SelectSquashCommitAuthor(branch gitdomain.LocalBranchName, authors []string
 	}
 	authorsList := squashCommitAuthorList(authors)
 	selection, aborted, err := components.RadioList(authorsList, 0, squashCommitAuthorTitle, fmt.Sprintf(messages.BranchAuthorMultiple, branch), dialogTestInputs)
-	fmt.Printf("Selected squash commit author: %s\n", components.FormattedSelection(selection.String(), aborted))
+	fmt.Printf(messages.SquashCommitAuthorSelection, components.FormattedSelection(selection.String(), aborted))
 	return selection.String(), aborted, err
 }
 

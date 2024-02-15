@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/git-town/git-town/v12/src/messages"
 )
 
 // TestInputKey specifies the name of environment variables containing input for dialogs in end-to-end tests.
@@ -38,7 +39,7 @@ func LoadTestInputs(environmenttVariables []string) TestInputs {
 		}
 		_, value, match := strings.Cut(environmentVariable, "=")
 		if !match {
-			fmt.Printf("Notice: ignoring invalid dialog input setting %q\n", environmentVariable)
+			fmt.Printf(messages.SettingIgnoreInvalid, environmentVariable)
 			continue
 		}
 		inputs := ParseTestInput(value)
