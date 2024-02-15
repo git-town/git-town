@@ -45,7 +45,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		return abortRunstate(runState, args)
+		return undoRunstate(runState, args)
 	case dialog.ResponseSkip:
 		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
@@ -67,7 +67,7 @@ type UnfinishedStateArgs struct {
 	Verbose                 bool
 }
 
-func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
+func undoRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
 		FullConfig:              &args.Run.FullConfig,
