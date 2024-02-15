@@ -25,6 +25,8 @@ const (
 	CompletionTypeUnknown              = "unknown completion type: %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
+	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"
+	ConfigNeeded                       = "Git Town needs to be configured\n\n"
 	ConfigSyncFeatureStrategyUnknown   = "unknown sync-feature strategy: %q"
 	ConfigSyncPerennialStrategyUnknown = "unknown sync-perennial strategy: %q"
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
