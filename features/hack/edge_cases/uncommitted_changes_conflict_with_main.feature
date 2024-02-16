@@ -50,7 +50,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist
-    And file "conflicting_file" now has content "resolved content"
+    And file "conflicting_file" still has content "conflicting content"
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

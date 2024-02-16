@@ -24,7 +24,7 @@ Feature: rename the current branch to a branch that is active in another worktre
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
-    And it prints the error:
+    And it prints:
       """
       nothing to undo
       """
