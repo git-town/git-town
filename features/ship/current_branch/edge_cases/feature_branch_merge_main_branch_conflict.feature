@@ -29,7 +29,7 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to undo
       """

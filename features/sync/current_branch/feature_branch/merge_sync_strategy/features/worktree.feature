@@ -39,7 +39,7 @@ Feature: sync a branch whose parent is active in another worktree
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to undo
       """
