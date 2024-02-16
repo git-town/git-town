@@ -25,6 +25,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And file "conflicting_file" still contains unresolved conflicts
 
+  @this
   Scenario: undo with unresolved conflict fails due to unresolved merge conflicts
     When I run "git-town undo"
     Then it runs the commands
