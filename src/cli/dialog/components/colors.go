@@ -41,6 +41,10 @@ func FormattedToken(token string, aborted bool) string {
 	return green().Styled(token)
 }
 
+func Red() termenv.Style {
+	return termenv.String().Foreground(termenv.ANSIRed)
+}
+
 func createColors() dialogColors {
 	return dialogColors{
 		Help:      termenv.String().Faint(),
@@ -53,8 +57,4 @@ func createColors() dialogColors {
 
 func green() termenv.Style {
 	return termenv.String().Foreground(termenv.ANSIGreen)
-}
-
-func Red() termenv.Style {
-	return termenv.String().Foreground(termenv.ANSIRed)
 }
