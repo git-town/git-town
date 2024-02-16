@@ -6,7 +6,6 @@ Feature: display all executed Git commands
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
 
-  @debug @this
   Scenario: result
     When I run "git-town append new --verbose"
     Then it runs the commands
@@ -38,11 +37,10 @@ Feature: display all executed Git commands
       |          | backend  | git branch -vva                                      |
       |          | backend  | git config -lz --global                              |
       |          | backend  | git config -lz --local                               |
-      |          | backend  | git branch -vva                                      |
       |          | backend  | git stash list                                       |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "new"
 
