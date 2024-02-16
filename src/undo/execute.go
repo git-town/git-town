@@ -26,6 +26,11 @@ func Execute(args ExecuteArgs) error {
 		return nil
 	}
 	undoProgram.AddProgram(args.RunState.AbortProgram)
+	if !args.RunState.IsFinished() && args.HasOpenChanges {
+		// Open changes in the middle of an unfinished command will be undone as well.
+		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
+		undoProgram.Add(&opcodes.CommitOpenChanges{})
+	}
 
 	// undo branch changes
 	branchSpans := undobranches.NewBranchSpans(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot)
@@ -57,7 +62,7 @@ func Execute(args ExecuteArgs) error {
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
-		StashOpenChanges:         args.HasOpenChanges,
+		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeforeBranchesSnapshot.Active},
 	})
 
