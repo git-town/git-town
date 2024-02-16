@@ -99,10 +99,10 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	}
 	runState := runstate.RunState{
 		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		AfterConfigSnapshot:    repo.ConfigSnapshot,
+		AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
 		AfterStashSize:         0,
 		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		BeforeConfigSnapshot:   repo.ConfigSnapshot,
 		BeforeStashSize:        initialStashSize,
 		Command:                "ship",
 		DryRun:                 dryRun,
