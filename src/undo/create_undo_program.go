@@ -15,7 +15,7 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.InitialBranchesSnapshot, args.FinalBranchesSnapshot, args.UndoablePerennialCommits, args.Run)
+	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.InitialBranchesSnapshot, args.FinalBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig)
 	if err != nil {
 		return program.Program{}, err
 	}
