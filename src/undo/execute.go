@@ -36,6 +36,8 @@ func Execute(args ExecuteArgs) error {
 	undoProgram.AddProgram(undoBranchesProgram)
 
 	// undo config changes
+	fmt.Println("111111111", args.RunState.BeforeConfigSnapshot)
+	fmt.Println("222222222", args.RunState.AfterConfigSnapshot)
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeforeConfigSnapshot, args.RunState.AfterConfigSnapshot)
 	configUndoProgram := configSpans.UndoProgram()
 	undoProgram.AddProgram(configUndoProgram)
