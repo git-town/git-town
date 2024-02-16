@@ -77,6 +77,7 @@ Feature: conflicts between uncommitted changes and the main branch
       | new    | local         | conflicting commit | conflicting_file | main content |
     And file "conflicting_file" still has content "resolved content"
 
+  @this
   Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
