@@ -64,10 +64,10 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
       |        | backend  | git status --long --ignore-submodules      |
       |        | backend  | git remote get-url origin                  |
-      |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'initial commit' }}  |
-      |        | frontend | git checkout old                           |
-      |        | backend  | git show-ref --verify --quiet refs/heads/  |
+      |        | backend  | git show-ref --quiet refs/heads/old        |
+      | main   | frontend | git checkout old                           |
+      |        | backend  | git config git-town-branch.old.parent main |
     And it prints:
       """
       Ran 13 shell commands.
