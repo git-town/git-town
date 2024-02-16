@@ -88,13 +88,13 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 false,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil {
 		return nil, initialStashSize, repo.Runner.Lineage, err

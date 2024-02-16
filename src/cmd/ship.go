@@ -110,6 +110,7 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               config.connector,
+		FullConfig:              config.FullConfig,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
 		HasOpenChanges:          config.hasOpenChanges,
