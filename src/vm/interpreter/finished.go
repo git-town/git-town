@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
@@ -17,6 +19,19 @@ func finished(args ExecuteArgs) error {
 	}
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
+	}
+	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
+	globalSnapshot, _, err := configGitAccess.LoadGlobal()
+	if err != nil {
+		return err
+	}
+	localSnapshot, _, err := configGitAccess.LoadLocal()
+	if err != nil {
+		return err
+	}
+	args.RunState.AfterConfigSnapshot = undoconfig.ConfigSnapshot{
+		Global: globalSnapshot,
+		Local:  localSnapshot,
 	}
 	args.RunState.MarkAsFinished()
 	err = statefile.Save(args.RunState, args.RootDir)
