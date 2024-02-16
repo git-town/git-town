@@ -14,7 +14,7 @@ type dialogColors struct {
 // FormattedToken provides the given API token in a printable format.
 func FormattedSecret(secret string, aborted bool) string {
 	if aborted {
-		return red().Styled("(aborted)")
+		return Red().Styled("(aborted)")
 	}
 	if secret == "" {
 		return green().Styled("(not provided)")
@@ -25,7 +25,7 @@ func FormattedSecret(secret string, aborted bool) string {
 // FormattedSelection provides the given dialog choice in a printable format.
 func FormattedSelection(selection string, aborted bool) string {
 	if aborted {
-		return red().Styled("(aborted)")
+		return Red().Styled("(aborted)")
 	}
 	return green().Styled(selection)
 }
@@ -33,7 +33,7 @@ func FormattedSelection(selection string, aborted bool) string {
 // FormattedToken provides the given API token in a printable format.
 func FormattedToken(token string, aborted bool) string {
 	if aborted {
-		return red().Styled("(aborted)")
+		return Red().Styled("(aborted)")
 	}
 	if token == "" {
 		return green().Styled("(not provided)")
@@ -55,6 +55,6 @@ func green() termenv.Style {
 	return termenv.String().Foreground(termenv.ANSIGreen)
 }
 
-func red() termenv.Style {
+func Red() termenv.Style {
 	return termenv.String().Foreground(termenv.ANSIRed)
 }
