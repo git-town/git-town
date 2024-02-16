@@ -50,7 +50,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist
-    And file "conflicting_file" still has content "resolved content"
+    And file "conflicting_file" now has content "resolved content"
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -68,7 +68,7 @@ Feature: conflicts between uncommitted changes and the main branch
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
       | new    | local         | conflicting commit | conflicting_file | main content |
-    And file "conflicting_file" still has content "resolved content"
+    And file "conflicting_file" now has content "resolved content"
 
   Scenario: resolve, continue, and undo undoes the hack but cannot get back to the original branch due to merge conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -85,4 +85,4 @@ Feature: conflicts between uncommitted changes and the main branch
     And the current branch is now "existing"
     And the initial commits exist
     And the initial branches and lineage exist
-    And file "conflicting_file" still has content "resolved content"
+    And file "conflicting_file" now has content "resolved content"
