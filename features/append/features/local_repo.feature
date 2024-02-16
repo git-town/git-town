@@ -27,7 +27,7 @@ Feature: in a local repo
       | existing | main   |
       | new      | main   |
 
-  @debug @this
+  @this
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
