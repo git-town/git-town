@@ -86,16 +86,17 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunProgram:             renameBranchProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
@@ -103,6 +104,7 @@ type renameBranchConfig struct {
 	*configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
+	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	newBranch        gitdomain.LocalBranchName
 	oldBranch        gitdomain.BranchInfo
@@ -158,10 +160,15 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(newBranchName) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, branchesSnapshot, stashSize, false, err
+	}
 	return &renameBranchConfig{
 		FullConfig:       &repo.Runner.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
 		newBranch:        newBranchName,
 		oldBranch:        *oldBranch,
