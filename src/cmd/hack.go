@@ -63,16 +63,16 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
@@ -81,13 +81,13 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 true,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

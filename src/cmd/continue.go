@@ -60,16 +60,16 @@ func executeContinue(verbose bool) error {
 		return err
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
@@ -77,13 +77,13 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 false,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
@@ -102,8 +102,8 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
 		HostingPlatform: repo.Runner.HostingPlatform,
-		OriginURL:       originURL,
 		Log:             print.Logger{},
+		OriginURL:       originURL,
 	})
 	return &continueConfig{
 		FullConfig:       &repo.Runner.FullConfig,
