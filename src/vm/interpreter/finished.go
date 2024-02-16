@@ -40,6 +40,8 @@ func finished(args ExecuteArgs) error {
 	args.RunState.MarkAsFinished()
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   args.RunState.DryRun,
+		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
+		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSize:         args.InitialStashSize,

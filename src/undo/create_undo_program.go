@@ -11,11 +11,11 @@ import (
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
-	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.InitialConfigSnapshot, &args.Run.Config.GitConfig)
+	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.InitialConfigSnapshot, args.FinalConfigSnapshot)
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.InitialBranchesSnapshot, args.UndoablePerennialCommits, args.Run)
+	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.InitialBranchesSnapshot, args.FinalBranchesSnapshot, args.UndoablePerennialCommits, args.Run)
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -30,6 +30,8 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 
 type CreateUndoProgramArgs struct {
 	DryRun                   bool
+	FinalBranchesSnapshot    gitdomain.BranchesSnapshot
+	FinalConfigSnapshot      undoconfig.ConfigSnapshot
 	InitialBranchesSnapshot  gitdomain.BranchesSnapshot
 	InitialConfigSnapshot    undoconfig.ConfigSnapshot
 	InitialStashSize         gitdomain.StashSize
