@@ -109,16 +109,17 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 		RunProgram:             shipProgram(config, message),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
