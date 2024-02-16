@@ -68,15 +68,15 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git remote get-url origin                      |
-      |        | backend  | git config git-town-branch.feature.parent main |
       |        | backend  | git log --pretty=format:%h -10                 |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
-      |        | frontend | git checkout feature                           |
-      |        | backend  | git show-ref --verify --quiet refs/heads/      |
+      |        | backend  | git show-ref --quiet refs/heads/feature        |
+      | main   | frontend | git checkout feature                           |
+      |        | backend  | git config git-town-branch.feature.parent main |
     And it prints:
       """
       Ran 18 shell commands.
