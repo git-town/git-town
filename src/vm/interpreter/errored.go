@@ -5,8 +5,10 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
@@ -17,6 +19,19 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	args.RunState.AfterBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
+	}
+	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
+	globalSnapshot, _, err := configGitAccess.LoadGlobal()
+	if err != nil {
+		return err
+	}
+	localSnapshot, _, err := configGitAccess.LoadLocal()
+	if err != nil {
+		return err
+	}
+	args.RunState.AfterConfigSnapshot = undoconfig.ConfigSnapshot{
+		Global: globalSnapshot,
+		Local:  localSnapshot,
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{

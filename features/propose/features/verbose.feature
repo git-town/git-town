@@ -32,9 +32,9 @@ Feature: display all executed Git commands
       |         | backend  | which xdg-open                                                     |
       |         | backend  | which open                                                         |
       | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+      |         | backend  | git branch -vva                                                    |
       |         | backend  | git config -lz --global                                            |
       |         | backend  | git config -lz --local                                             |
-      |         | backend  | git branch -vva                                                    |
       |         | backend  | git stash list                                                     |
     And it prints:
       """
