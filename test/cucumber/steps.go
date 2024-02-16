@@ -217,7 +217,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
+	suite.Step(`^file "([^"]*)" (?:now|still) has content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent := state.fixture.DevRepo.FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
