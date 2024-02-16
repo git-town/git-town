@@ -57,7 +57,7 @@ func Execute(args ExecuteArgs) error {
 	})
 
 	// execute the undo program
-	for _, opcode := range undoBranchesProgram {
+	for _, opcode := range undoProgram {
 		err := opcode.Run(shared.RunArgs{
 			Connector:                       nil,
 			DialogTestInputs:                nil,
