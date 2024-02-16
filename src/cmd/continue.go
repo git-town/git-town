@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -127,5 +128,6 @@ func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState,
 		fmt.Println(messages.ContinueNothingToDo)
 		return runstate.EmptyRunState(), true, nil
 	}
+	runState.AbortProgram = program.Program{}
 	return *runState, false, nil
 }
