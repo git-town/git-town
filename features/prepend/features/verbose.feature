@@ -60,10 +60,10 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}        |
       |        | backend  | git status --long --ignore-submodules            |
       |        | backend  | git remote get-url origin                        |
-      |        | backend  | git config --unset git-town-branch.parent.parent |
-      |        | backend  | git config git-town-branch.old.parent main       |
       | parent | frontend | git checkout old                                 |
       | old    | frontend | git branch -D parent                             |
+      |        | backend  | git config --unset git-town-branch.parent.parent |
+      |        | backend  | git config git-town-branch.old.parent main       |
     And it prints:
       """
       Ran 13 shell commands.
