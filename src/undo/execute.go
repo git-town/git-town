@@ -40,7 +40,7 @@ func Execute(args ExecuteArgs) error {
 		Config:                   args.FullConfig,
 		FinalBranch:              args.RunState.AfterBranchesSnapshot.Active,
 		InitialBranch:            args.RunState.BeforeBranchesSnapshot.Active,
-		UndoablePerennialCommits: []gitdomain.SHA{},
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	undoProgram.AddProgram(undoBranchesProgram)
 
