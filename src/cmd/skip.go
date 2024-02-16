@@ -59,6 +59,10 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return err
+	}
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -69,5 +73,13 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	return skip.Execute(skip.ExecuteArgs{})
+	return skip.Execute(skip.ExecuteArgs{
+		HasOpenChanges:   repoStatus.OpenChanges,
+		InitialStashSize: runState.BeforeStashSize,
+		RootDir:          repo.RootDir,
+		RunState:         runState,
+		Runner:           repo.Runner,
+		TestInputs:       dialogTestInputs,
+		Verbose:          verbose,
+	})
 }
