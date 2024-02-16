@@ -1,8 +1,6 @@
 package cmdhelpers
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -10,7 +8,6 @@ import (
 
 // Wrap makes the given program perform housekeeping before and after it executes.
 func Wrap(program *program.Program, options WrapOptions) {
-	fmt.Println("11111111111111", program)
 	if program.IsEmpty() {
 		return
 	}
