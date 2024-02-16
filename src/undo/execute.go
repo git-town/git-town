@@ -22,6 +22,9 @@ import (
 // undoes the persisted runstate
 func Execute(args ExecuteArgs) error {
 	undoProgram := program.Program{}
+	if args.RunState.DryRun {
+		return nil
+	}
 	undoProgram.AddProgram(args.RunState.AbortProgram)
 
 	// undo branch changes

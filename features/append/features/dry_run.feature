@@ -27,7 +27,6 @@ Feature: dry run appending a new feature branch to an existing feature branch
     And the initial commits exist
     And the initial branches and lineage exist
 
-  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
