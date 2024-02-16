@@ -67,16 +67,16 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		RunProgram:          appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		RootDir:                 repo.RootDir,
+		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
