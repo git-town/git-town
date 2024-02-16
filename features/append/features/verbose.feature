@@ -6,6 +6,7 @@ Feature: display all executed Git commands
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
 
+  @this
   Scenario: result
     When I run "git-town append new --verbose"
     Then it runs the commands
@@ -34,6 +35,7 @@ Feature: display all executed Git commands
       |          | backend  | git config git-town-branch.new.parent existing       |
       | existing | frontend | git checkout new                                     |
       |          | backend  | git show-ref --verify --quiet refs/heads/existing    |
+      |          | backend  | git branch -vva                                      |
       |          | backend  | git config -lz --global                              |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git branch -vva                                      |
