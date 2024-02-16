@@ -70,9 +70,9 @@ type UnfinishedStateArgs struct {
 func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	abortRunState := runState.CreateAbortRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
+		FullConfig:              &args.Run.FullConfig,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
@@ -92,9 +92,9 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
+		FullConfig:              &args.Run.FullConfig,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
@@ -113,15 +113,15 @@ func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
 	skipRunState := runState.CreateSkipRunState()
 	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              &args.Run.FullConfig,
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
-		Verbose:                 args.Verbose,
+		FullConfig:              &args.Run.FullConfig,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Run,
 		RunState:                &skipRunState,
+		Verbose:                 args.Verbose,
 	})
 }

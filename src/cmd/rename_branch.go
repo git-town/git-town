@@ -80,16 +80,16 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		RunProgram:          renameBranchProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		FullConfig:              config.FullConfig,
-		RunState:                &runState,
-		Run:                     repo.Runner,
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
-		Verbose:                 verbose,
-		RootDir:                 repo.RootDir,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
+		Verbose:                 verbose,
+		RootDir:                 repo.RootDir,
+		RunState:                &runState,
+		Run:                     repo.Runner,
 	})
 }
 
