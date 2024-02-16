@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/undo"
+	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -29,15 +29,33 @@ func Execute(args ExecuteArgs) error {
 		}
 	}
 	// undo the changes to the current branch
-	undo.Execute(undo.ExecuteArgs{
-		FullConfig:       &args.Runner.FullConfig,
-		HasOpenChanges:   false,
-		InitialStashSize: args.InitialStashSize,
-		Lineage:          args.Runner.Lineage,
-		RootDir:          args.RootDir,
-		Runner:           args.Runner,
-		RunState:         *args.RunState,
+	spans := undobranches.BranchSpans{
+		undobranches.BranchSpan{
+			Before: *args.RunState.BeforeBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			After:  *args.RunState.AfterBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+		},
+	}
+	changes := spans.Changes()
+	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		Config:                   &args.Runner.FullConfig,
+		FinalBranch:              args.CurrentBranch,
+		InitialBranch:            args.CurrentBranch,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
+	for _, opcode := range undoCurrentBranchProgram {
+		err := opcode.Run(shared.RunArgs{
+			Connector:                       nil,
+			DialogTestInputs:                nil,
+			Lineage:                         args.Runner.Lineage,
+			PrependOpcodes:                  nil,
+			RegisterUndoablePerennialCommit: nil,
+			Runner:                          args.Runner,
+			UpdateInitialBranchLocalSHA:     nil,
+		})
+		if err != nil {
+			panic(err.Error())
+		}
+	}
 
 	// remove the remaining opcodes for the current branch from the program
 	newProgram := program.Program{}
@@ -69,6 +87,7 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
+	CurrentBranch    gitdomain.LocalBranchName
 	HasOpenChanges   bool
 	InitialStashSize gitdomain.StashSize
 	RootDir          gitdomain.RepoRootDir
