@@ -58,12 +58,13 @@ Feature: display all executed Git commands
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git remote get-url origin                     |
-      |          | backend  | git config --unset git-town-branch.new.parent |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
+      |          | backend  | git show-ref --quiet refs/heads/existing      |
+      |          | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
-      Ran 12 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is still "existing"
     And the initial commits exist
