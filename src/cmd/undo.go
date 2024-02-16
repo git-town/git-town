@@ -59,6 +59,10 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
+	if runState == nil {
+		fmt.Println(messages.UndoNothingToDo)
+		return nil
+	}
 	return undo.Execute(undo.ExecuteArgs{
 		FullConfig:       config.FullConfig,
 		HasOpenChanges:   config.hasOpenChanges,
