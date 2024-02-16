@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	"github.com/git-town/git-town/v12/src/skip"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -34,7 +34,6 @@ func skipCmd() *cobra.Command {
 }
 
 func executeSkip(verbose bool) error {
-	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		Verbose:          verbose,
 		DryRun:           false,
@@ -46,7 +45,8 @@ func executeSkip(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	_, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
@@ -59,6 +59,10 @@ func executeSkip(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return err
+	}
 	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -69,17 +73,13 @@ func executeSkip(verbose bool) error {
 	if !runState.UnfinishedDetails.CanSkip {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
-	skipRunState := runState.CreateSkipRunState()
-	return interpreter.Execute(interpreter.ExecuteArgs{
-		Connector:               nil,
-		DialogTestInputs:        &dialogTestInputs,
-		FullConfig:              &repo.Runner.FullConfig,
-		InitialBranchesSnapshot: initialBranchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
-		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
-		RunState:                &skipRunState,
-		Verbose:                 verbose,
+	return skip.Execute(skip.ExecuteArgs{
+		HasOpenChanges:   repoStatus.OpenChanges,
+		InitialStashSize: runState.BeforeStashSize,
+		RootDir:          repo.RootDir,
+		RunState:         runState,
+		Runner:           repo.Runner,
+		TestInputs:       dialogTestInputs,
+		Verbose:          verbose,
 	})
 }
