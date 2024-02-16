@@ -17,9 +17,6 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.RunState.DryRun {
-		return finishedDryRunCommand(args)
-	}
 	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal()
 	if err != nil {
