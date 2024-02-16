@@ -13,15 +13,12 @@ import (
 
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
-	afterBranchesSnapshot, err := args.Run.Backend.BranchesSnapshot()
-	if err != nil {
-		return err
-	}
 	args.RunState.AfterBranchesSnapshot = afterBranchesSnapshot
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   args.RunState.DryRun,
-		FinalBranchesSnapshot:    afterBranchesSnapshot,
+		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
+		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSize:         args.InitialStashSize,
