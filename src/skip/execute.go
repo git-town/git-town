@@ -58,7 +58,6 @@ func Execute(args ExecuteArgs) error {
 		Connector:               nil,
 		DialogTestInputs:        &args.TestInputs,
 		FullConfig:              &args.Runner.FullConfig,
-		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
