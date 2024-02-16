@@ -39,6 +39,7 @@ Feature: display all executed Git commands
       """
     And the current branch is now "new"
 
+  @this
   Scenario: undo
     Given I ran "git-town hack new"
     When I run "git town undo --verbose"
@@ -53,11 +54,11 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git remote get-url origin                     |
-      |        | backend  | git config --unset git-town-branch.new.parent |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
       | main   | frontend | git reset --hard {{ sha 'initial commit' }}   |
       |        | frontend | git branch -D new                             |
+      |        | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
       Ran 14 shell commands.
