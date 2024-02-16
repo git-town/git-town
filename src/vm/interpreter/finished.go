@@ -21,9 +21,6 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.RunState.DryRun {
-		return finishedDryRunCommand(args)
-	}
 	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal()
 	if err != nil {
@@ -38,6 +35,9 @@ func finished(args ExecuteArgs) error {
 		Local:  localSnapshot,
 	}
 	args.RunState.MarkAsFinished()
+	if args.RunState.DryRun {
+		return finishedDryRunCommand(args)
+	}
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   args.RunState.DryRun,
 		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
