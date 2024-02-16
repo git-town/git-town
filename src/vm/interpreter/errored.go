@@ -21,6 +21,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   args.RunState.DryRun,
+		FinalBranchesSnapshot:    afterBranchesSnapshot,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSize:         args.InitialStashSize,

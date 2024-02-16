@@ -6,7 +6,7 @@ Feature: display all executed Git commands
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
 
-  @this
+  @debug @this
   Scenario: result
     When I run "git-town append new --verbose"
     Then it runs the commands
