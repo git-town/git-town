@@ -39,7 +39,6 @@ Feature: display all executed Git commands
       """
     And the current branch is now "new"
 
-  @this
   Scenario: undo
     Given I ran "git-town hack new"
     When I run "git town undo --verbose"
