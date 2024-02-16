@@ -13,6 +13,13 @@ type CheckoutIfExists struct {
 }
 
 func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
+	existingBranch, err := args.Runner.Backend.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	if existingBranch == self.Branch {
+		return nil
+	}
 	if !args.Runner.Backend.HasLocalBranch(self.Branch) {
 		return nil
 	}
