@@ -29,7 +29,6 @@ type RunState struct {
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
-	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
