@@ -42,12 +42,12 @@ func continueCmd() *cobra.Command {
 
 func executeContinue(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err

@@ -78,10 +78,10 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BinDir:     binDir,
 	}
 	config, err := config.NewConfig(config.NewConfigArgs{
-		GlobalConfig: configdomain.EmptyPartialConfig(),
-		LocalConfig:  configdomain.EmptyPartialConfig(),
 		ConfigFile:   nil,
 		DryRun:       false,
+		GlobalConfig: configdomain.EmptyPartialConfig(),
+		LocalConfig:  configdomain.EmptyPartialConfig(),
 		Runner:       &runner,
 	})
 	if err != nil {

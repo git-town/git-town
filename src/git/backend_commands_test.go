@@ -24,14 +24,14 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch(branch, initial)
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch,
-			FileName:    "file1",
 			FileContent: "file1",
+			FileName:    "file1",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(testgit.Commit{
 			Branch:      branch,
-			FileName:    "file2",
 			FileContent: "file2",
+			FileName:    "file2",
 			Message:     "second commit",
 		})
 		authors, err := runtime.Backend.BranchAuthors(branch, initial)
@@ -55,26 +55,26 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      initial,
-				Message:     "commit 1",
-				FileName:    "file1",
 				FileContent: "original content",
+				FileName:    "file1",
+				Message:     "commit 1",
 			})
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 2",
-				FileName:    "file1",
 				FileContent: "modified content",
+				FileName:    "file1",
+				Message:     "commit 2",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 3",
-				FileName:    "file1",
 				FileContent: "original content",
+				FileName:    "file1",
+				Message:     "commit 3",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
@@ -98,26 +98,26 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      initial,
-				Message:     "commit 1",
-				FileName:    "file1",
 				FileContent: "original content",
+				FileName:    "file1",
+				Message:     "commit 1",
 			})
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 2",
-				FileName:    "file1",
 				FileContent: "modified content",
+				FileName:    "file1",
+				Message:     "commit 2",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 3",
-				FileName:    "file1",
 				FileContent: "original content",
+				FileName:    "file1",
+				Message:     "commit 3",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
@@ -147,13 +147,13 @@ func TestBackendCommands(t *testing.T) {
 			runtime.CreateBranch(gitdomain.NewLocalBranchName("branch1"), initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   gitdomain.NewLocalBranchName("branch1"),
-				Message:  "commit 1",
 				FileName: "file1",
+				Message:  "commit 1",
 			})
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   gitdomain.NewLocalBranchName("branch1"),
-				Message:  "commit 2",
 				FileName: "file2",
+				Message:  "commit 2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
@@ -172,13 +172,13 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   initial,
-				Message:  "commit 1",
 				FileName: "file1",
+				Message:  "commit 1",
 			})
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   initial,
-				Message:  "commit 2",
 				FileName: "file2",
+				Message:  "commit 2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), gitdomain.EmptyLocalBranchName())
 			must.NoError(t, err)
@@ -293,15 +293,15 @@ func TestBackendCommands(t *testing.T) {
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      branch1,
-					FileName:    "file",
 					FileContent: "content on branch1",
+					FileName:    "file",
 					Message:     "Create file",
 				})
 				runtime.CheckoutBranch(initial)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      initial,
-					FileName:    "file",
 					FileContent: "content on initial",
+					FileName:    "file",
 					Message:     "Create file1",
 				})
 				_ = runtime.RebaseAgainstBranch(branch1) // this is expected to fail
@@ -317,15 +317,15 @@ func TestBackendCommands(t *testing.T) {
 				runtime.CheckoutBranch(branch1)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      branch1,
-					FileName:    "file",
 					FileContent: "content on branch1",
+					FileName:    "file",
 					Message:     "Create file",
 				})
 				runtime.CheckoutBranch(initial)
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      initial,
-					FileName:    "file",
 					FileContent: "content on initial",
+					FileName:    "file",
 					Message:     "Create file1",
 				})
 				_ = runtime.MergeBranch(branch1) // this is expected to fail
@@ -340,8 +340,8 @@ func TestBackendCommands(t *testing.T) {
 				runtime.StashOpenFiles()
 				runtime.CreateCommit(testgit.Commit{
 					Branch:      initial,
-					FileName:    "file",
 					FileContent: "committed content",
+					FileName:    "file",
 					Message:     "Create file",
 				})
 				_ = runtime.UnstashOpenFiles() // this is expected to fail
