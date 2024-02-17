@@ -107,13 +107,13 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	fc := execute.FailureCollector{}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 true,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err
