@@ -58,12 +58,12 @@ func syncCmd() *cobra.Command {
 
 func executeSync(all, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -102,10 +102,10 @@ func executeSync(all, dryRun, verbose bool) error {
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
-		FullConfig:              config.FullConfig,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
 		RunState:                &runState,
@@ -156,8 +156,8 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		localBranches := branchesSnapshot.Branches.LocalBranches()
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
 			Config:           &repo.Runner.FullConfig,
-			LocalBranches:    localBranches,
 			DialogTestInputs: &dialogTestInputs,
+			LocalBranches:    localBranches,
 			Runner:           repo.Runner,
 		})
 		if err != nil {

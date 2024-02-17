@@ -16,30 +16,30 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 	switch Detect(args.OriginURL, args.HostingPlatform) {
 	case configdomain.HostingPlatformBitbucket:
 		return bitbucket.NewConnector(bitbucket.NewConnectorArgs{
-			OriginURL:       args.OriginURL,
 			HostingPlatform: args.HostingPlatform,
+			OriginURL:       args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitea:
 		return gitea.NewConnector(gitea.NewConnectorArgs{
-			OriginURL:       args.OriginURL,
-			HostingPlatform: args.HostingPlatform,
 			APIToken:        args.GiteaToken,
+			HostingPlatform: args.HostingPlatform,
 			Log:             args.Log,
+			OriginURL:       args.OriginURL,
 		})
 	case configdomain.HostingPlatformGitHub:
 		return github.NewConnector(github.NewConnectorArgs{
-			HostingPlatform: args.HostingPlatform,
 			APIToken:        github.GetAPIToken(args.GitHubToken),
+			HostingPlatform: args.HostingPlatform,
+			Log:             args.Log,
 			MainBranch:      args.MainBranch,
 			OriginURL:       args.OriginURL,
-			Log:             args.Log,
 		})
 	case configdomain.HostingPlatformGitLab:
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingPlatform: args.HostingPlatform,
-			OriginURL:       args.OriginURL,
 			APIToken:        args.GitLabToken,
+			HostingPlatform: args.HostingPlatform,
 			Log:             args.Log,
+			OriginURL:       args.OriginURL,
 		})
 	case configdomain.HostingPlatformNone:
 		return nil, nil

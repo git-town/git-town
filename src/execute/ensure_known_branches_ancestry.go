@@ -16,10 +16,10 @@ import (
 // It ensures that all information derived from lineage gets updated when the lineage is updated.
 func EnsureKnownBranchesAncestry(args EnsureKnownBranchesAncestryArgs) error {
 	updated, err := validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
-		LocalBranches:    args.LocalBranches,
 		Backend:          &args.Runner.Backend,
 		Config:           args.Config,
 		DialogTestInputs: args.DialogTestInputs,
+		LocalBranches:    args.LocalBranches,
 	})
 	if err != nil {
 		return err

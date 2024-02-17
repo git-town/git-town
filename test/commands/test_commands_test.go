@@ -37,14 +37,14 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileName:    "file1",
 			FileContent: "hello",
+			FileName:    "file1",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileName:    "file2",
 			FileContent: "hello again",
+			FileName:    "file2",
 			Message:     "second commit",
 		})
 		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
@@ -120,8 +120,8 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileName:    "hello.txt",
 				FileContent: "hello world",
+				FileName:    "hello.txt",
 				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
@@ -136,11 +136,11 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
-				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileName:    "hello.txt",
-				FileContent: "hello world",
-				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
+				Branch:      gitdomain.NewLocalBranchName("initial"),
+				FileContent: "hello world",
+				FileName:    "hello.txt",
+				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
 			must.Len(t, 1, commits)
@@ -210,8 +210,8 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileName:    "hello.txt",
 			FileContent: "hello world",
+			FileName:    "hello.txt",
 			Message:     "commit",
 		})
 		commits := runtime.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), []string{})
@@ -381,7 +381,12 @@ func TestTestCommands(t *testing.T) {
 	t.Run("SHAForCommit", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
-		repo.CreateCommit(git.Commit{Branch: gitdomain.NewLocalBranchName("initial"), FileName: "foo", FileContent: "bar", Message: "commit"})
+		repo.CreateCommit(git.Commit{
+			Branch:      gitdomain.NewLocalBranchName("initial"),
+			FileContent: "bar",
+			FileName:    "foo",
+			Message:     "commit",
+		})
 		sha := repo.SHAForCommit("commit")
 		must.EqOp(t, 7, len(sha))
 	})
