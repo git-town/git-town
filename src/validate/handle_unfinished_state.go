@@ -49,6 +49,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
 		return true, skip.Execute(skip.ExecuteArgs{
+			Connector:      args.Connector,
 			CurrentBranch:  args.CurrentBranch,
 			HasOpenChanges: args.HasOpenChanges,
 			RootDir:        args.RootDir,

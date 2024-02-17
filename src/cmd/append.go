@@ -103,9 +103,14 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
+	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
+	if fc.Err != nil {
+		return nil, gitdomain.BranchesSnapshot{}, 0, false, fc.Err
+	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,
@@ -119,10 +124,6 @@ func determineAppendConfig(targetBranch gitdomain.LocalBranchName, repo *execute
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
-	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
-	if fc.Err != nil {
-		return nil, branchesSnapshot, stashSize, false, fc.Err
-	}
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
