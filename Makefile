@@ -68,7 +68,7 @@ lint: tools/rta@${RTA_VERSION}  # runs the linters concurrently
 	@make --no-print-directory golangci-lint
 
 lint-structs-sorted:
-	@(cd tools/structs_sorted && go build && ./structs_sorted
+	@(cd tools/structs_sorted && go build && ./structs_sorted)
 
 smoke: build  # run the smoke tests
 	@env $(GO_BUILD_ARGS) smoke=1 go test . -v -count=1
