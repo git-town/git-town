@@ -28,9 +28,8 @@ func lintStructDefinition(typeSpec *ast.TypeSpec, fileSet *token.FileSet) Issues
 	}
 	return Issues{
 		issue{
-			expected:   sortedFields,
-			position:   fileSet.Position(typeSpec.Pos()),
-			structName: structName,
+			expected: sortedFields,
+			position: fileSet.Position(typeSpec.Pos()),
 		},
 	}
 }

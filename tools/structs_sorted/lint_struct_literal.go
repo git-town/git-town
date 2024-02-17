@@ -28,9 +28,8 @@ func lintStructLiteralVariable(compositeLit *ast.CompositeLit, fileSet *token.Fi
 	}
 	return Issues{
 		issue{
-			expected:   sortedFields,
-			position:   fileSet.Position(compositeLit.Pos()),
-			structName: structName,
+			expected: sortedFields,
+			position: fileSet.Position(compositeLit.Pos()),
 		},
 	}
 }
