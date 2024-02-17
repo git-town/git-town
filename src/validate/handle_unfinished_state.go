@@ -50,7 +50,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseSkip:
 		err = skip.Execute(skip.ExecuteArgs{
 			CurrentBranch:    args.InitialBranchesSnapshot.Active,
-			HasOpenChanges:   args.Has,
+			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: 0,
 			RootDir:          "",
 			RunState:         runState,
