@@ -41,12 +41,12 @@ func repoCommand() *cobra.Command {
 
 func executeRepo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: true,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: true,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -73,8 +73,8 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
 		HostingPlatform: repo.Runner.HostingPlatform,
-		OriginURL:       repo.Runner.OriginURL(),
 		Log:             print.Logger{},
+		OriginURL:       repo.Runner.OriginURL(),
 	})
 	if err != nil {
 		return nil, err

@@ -90,22 +90,22 @@ func TestFixture(t *testing.T) {
 		cloned.CreateCommits([]git.Commit{
 			{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "local-file",
 				FileContent: "lc",
+				FileName:    "local-file",
 				Locations:   []string{"local"},
 				Message:     "local commit",
 			},
 			{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "origin-file",
 				FileContent: "rc",
+				FileName:    "origin-file",
 				Locations:   []string{"origin"},
 				Message:     "origin commit",
 			},
 			{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "loc-rem-file",
 				FileContent: "lrc",
+				FileName:    "loc-rem-file",
 				Locations:   []string{"local", "origin"},
 				Message:     "local and origin commit",
 			},
@@ -162,15 +162,15 @@ func TestFixture(t *testing.T) {
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "local-origin.md",
 				FileContent: "one",
+				FileName:    "local-origin.md",
 				Message:     "local-origin",
 			})
 			cloned.DevRepo.PushBranchToRemote(gitdomain.NewLocalBranchName("main"), gitdomain.OriginRemote)
 			cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "origin.md",
 				FileContent: "two",
+				FileName:    "origin.md",
 				Message:     "2",
 			})
 			// get the CommitTable
@@ -194,14 +194,14 @@ func TestFixture(t *testing.T) {
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "local.md",
 				FileContent: "one",
+				FileName:    "local.md",
 				Message:     "local",
 			})
 			cloned.UpstreamRepo.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("main"),
-				FileName:    "upstream.md",
 				FileContent: "two",
+				FileName:    "upstream.md",
 				Message:     "2",
 			})
 			// get the CommitTable

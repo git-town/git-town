@@ -89,11 +89,11 @@ func TestNewConnector(t *testing.T) {
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformNone,
-			OriginURL:       giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:        "apiToken",
-			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
+			HostingPlatform: configdomain.HostingPlatformNone,
 			Log:             print.Logger{},
+			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
+			OriginURL:       giturl.Parse("git@github.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{
@@ -107,11 +107,11 @@ func TestNewConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := github.NewConnector(github.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformGitHub,
-			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:        "apiToken",
-			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
+			HostingPlatform: configdomain.HostingPlatformGitHub,
 			Log:             print.Logger{},
+			MainBranch:      gitdomain.NewLocalBranchName("mainBranch"),
+			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := hostingdomain.Config{

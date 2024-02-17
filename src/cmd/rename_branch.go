@@ -59,12 +59,12 @@ func renameBranchCommand() *cobra.Command {
 
 func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -86,10 +86,10 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
-		Verbose:                 verbose,
 		RootDir:                 repo.RootDir,
-		RunState:                &runState,
 		Run:                     repo.Runner,
+		RunState:                &runState,
+		Verbose:                 verbose,
 	})
 }
 
