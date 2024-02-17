@@ -25,7 +25,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			CurrentBranch:           branchesSnapshot.Active,
 			DialogTestInputs:        args.DialogTestInputs,
 			HasOpenChanges:          args.HasOpenChanges,
-			Verbose:                 args.Verbose,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
 			InitialStashSize:        stashSize,
@@ -33,6 +32,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			PushHook:                args.PushHook,
 			RootDir:                 args.Repo.RootDir,
 			Run:                     args.Repo.Runner,
+			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
 			return branchesSnapshot, stashSize, exit, err

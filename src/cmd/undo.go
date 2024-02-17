@@ -39,12 +39,12 @@ func undoCmd() *cobra.Command {
 
 func executeUndo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -109,8 +109,8 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
 		HostingPlatform: repo.Runner.Config.HostingPlatform,
-		OriginURL:       originURL,
 		Log:             print.Logger{},
+		OriginURL:       originURL,
 	})
 	if err != nil {
 		return nil, initialStashSize, repo.Runner.Lineage, err

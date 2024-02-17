@@ -73,12 +73,12 @@ func shipCmd() *cobra.Command {
 
 func executeShip(args []string, message string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -110,8 +110,8 @@ func executeShip(args []string, message string, dryRun, verbose bool) error {
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               config.connector,
-		FullConfig:              config.FullConfig,
 		DialogTestInputs:        &config.dialogTestInputs,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -207,8 +207,8 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
 		HostingPlatform: repo.Runner.HostingPlatform,
-		OriginURL:       originURL,
 		Log:             print.Logger{},
+		OriginURL:       originURL,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err

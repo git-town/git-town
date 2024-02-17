@@ -52,12 +52,12 @@ func proposeCommand() *cobra.Command {
 
 func executePropose(dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: true,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: true,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -146,8 +146,8 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
 		HostingPlatform: repo.Runner.HostingPlatform,
-		OriginURL:       originURL,
 		Log:             print.Logger{},
+		OriginURL:       originURL,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err

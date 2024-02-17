@@ -59,10 +59,10 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		return nil, err
 	}
 	config, err := config.NewConfig(config.NewConfigArgs{
-		GlobalConfig: globalConfig,
-		LocalConfig:  localConfig,
 		ConfigFile:   configFile,
 		DryRun:       args.DryRun,
+		GlobalConfig: globalConfig,
+		LocalConfig:  localConfig,
 		Runner:       backendRunner,
 	})
 	if err != nil {
