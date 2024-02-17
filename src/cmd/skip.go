@@ -74,13 +74,12 @@ func executeSkip(verbose bool) error {
 		return errors.New(messages.SkipBranchHasConflicts)
 	}
 	return skip.Execute(skip.ExecuteArgs{
-		CurrentBranch:    currentSnapshot.Active,
-		HasOpenChanges:   repoStatus.OpenChanges,
-		InitialStashSize: runState.BeforeStashSize,
-		RootDir:          repo.RootDir,
-		RunState:         runState,
-		Runner:           repo.Runner,
-		TestInputs:       dialogTestInputs,
-		Verbose:          verbose,
+		CurrentBranch:  currentSnapshot.Active,
+		HasOpenChanges: repoStatus.OpenChanges,
+		RootDir:        repo.RootDir,
+		RunState:       runState,
+		Runner:         repo.Runner,
+		TestInputs:     dialogTestInputs,
+		Verbose:        verbose,
 	})
 }
