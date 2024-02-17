@@ -137,8 +137,8 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileName:    "hello.txt",
 				FileContent: "hello world",
+				FileName:    "hello.txt",
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
