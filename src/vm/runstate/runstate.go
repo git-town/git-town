@@ -201,8 +201,6 @@ func (self *RunState) String() string {
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
-	result.WriteString("  UndoProgram: ")
-	result.WriteString(self.UndoProgram.StringIndented("    "))
 	if self.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")
 		result.WriteString(self.UnfinishedDetails.String())
