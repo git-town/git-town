@@ -66,8 +66,8 @@ func (self radioListModel[S]) View() string {
 	s.WriteRune('\n')
 	s.WriteString(self.help)
 	window := slice.Window(slice.WindowArgs{
-		ElementCount: len(self.Entries),
 		CursorPos:    self.Cursor,
+		ElementCount: len(self.Entries),
 		WindowSize:   WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
