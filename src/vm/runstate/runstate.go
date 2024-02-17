@@ -7,7 +7,6 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
-	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -79,48 +78,25 @@ func (self *RunState) CreateAbortRunState() RunState {
 	}
 }
 
-// CreateSkipRunState returns a new Runstate
-// that skips operations for the current branch.
-func (self *RunState) CreateSkipRunState() RunState {
+// CreateUndoRunState returns a new runstate
+// to be run when undoing the Git Town command
+// represented by this runstate.
+func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		AfterStashSize:         self.AfterStashSize,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		BeforeStashSize:        self.BeforeStashSize,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		RunProgram:             self.AbortProgram,
-	}
-	// undo the operations done on the current branch so far
-	// by copying the respective undo-opcodes into the runprogram
-	// TODO: generate the undo program using the new undo package.
-	spans := undobranches.BranchSpans{
-		undobranches.BranchSpan{
-			Before: *self.BeforeBranchesSnapshot.Branches.FindByLocalName(currentBranch),
-			After:  *self.AfterBranchesSnapshot.Branches.FindByLocalName(currentBranch),
-		},
-	}
-	changes := spans.Changes()
-	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		Config:                   //TODO,
-		FinalBranch:              //self,
-		InitialBranch:            "",
+		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
+		AfterConfigSnapshot:      self.AfterConfigSnapshot,
+		AfterStashSize:           self.AfterStashSize,
+		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
+		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
+		BeforeStashSize:          self.BeforeStashSize,
+		Command:                  self.Command,
+		DryRun:                   self.DryRun,
+		IsUndo:                   true,
+		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
-	})
-	result.RunProgram = undoCurrentBranchProgram
-	// skip the remaining run-opcodes for this branch
-	skipping := true
-	for _, opcode := range self.RunProgram {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			result.RunProgram.Add(opcode)
-		}
 	}
-	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
+	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
+	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }
 

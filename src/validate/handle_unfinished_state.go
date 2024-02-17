@@ -48,17 +48,15 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseUndo:
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
-		err = skip.Execute(skip.ExecuteArgs{
-			CurrentBranch:    args.InitialBranchesSnapshot.Active,
-			HasOpenChanges:   args.HasOpenChanges,
-			InitialStashSize: 0,
-			RootDir:          "",
-			RunState:         runState,
-			Runner:           &git.ProdRunner{},
-			TestInputs:       []components.TestInput{},
-			Verbose:          false,
+		return true, skip.Execute(skip.ExecuteArgs{
+			CurrentBranch:  args.CurrentBranch,
+			HasOpenChanges: args.HasOpenChanges,
+			RootDir:        args.RootDir,
+			RunState:       runState,
+			Runner:         args.Run,
+			TestInputs:     args.DialogTestInputs,
+			Verbose:        args.Verbose,
 		})
-		return false, err
 	case dialog.ResponseQuit:
 		return true, nil
 	}
