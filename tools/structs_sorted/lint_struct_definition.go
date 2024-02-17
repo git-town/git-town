@@ -7,31 +7,29 @@ import (
 	"slices"
 )
 
-func lintStructDefinition(typeSpec *ast.TypeSpec, fileSet *token.FileSet) Issues {
+func lintStructDefinition(typeSpec *ast.TypeSpec, fileSet *token.FileSet, issues *Issues) {
 	structName := typeSpec.Name.Name
 	if slices.Contains(ignoreTypes, structName) {
-		return Issues{}
+		return
 	}
 	structType, ok := typeSpec.Type.(*ast.StructType)
 	if !ok {
-		return Issues{}
+		return
 	}
 	fields := structDefFieldNames(structType)
 	if len(fields) == 0 {
-		return Issues{}
+		return
 	}
 	sortedFields := make([]string, len(fields))
 	copy(sortedFields, fields)
 	slices.Sort(sortedFields)
 	if reflect.DeepEqual(fields, sortedFields) {
-		return Issues{}
+		return
 	}
-	return Issues{
-		issue{
-			expected: sortedFields,
-			position: fileSet.Position(typeSpec.Pos()),
-		},
-	}
+	*issues = append(*issues, issue{
+		expected: sortedFields,
+		position: fileSet.Position(typeSpec.Pos()),
+	})
 }
 
 func structDefFieldNames(structType *ast.StructType) []string {

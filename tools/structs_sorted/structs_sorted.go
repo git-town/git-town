@@ -56,11 +56,11 @@ func LintFile(path string) Issues {
 	ast.Inspect(file, func(node ast.Node) bool {
 		switch typedNode := node.(type) {
 		case *ast.CallExpr:
-			result = append(result, lintStructLiteralCallArg(typedNode, fileSet)...)
+			lintStructLiteralCallArg(typedNode, fileSet, &result)
 		case *ast.CompositeLit:
-			result = append(result, lintStructLiteralVariable(typedNode, fileSet)...)
+			lintStructLiteralVariable(typedNode, fileSet, &result)
 		case *ast.TypeSpec:
-			result = append(result, lintStructDefinition(typedNode, fileSet)...)
+			lintStructDefinition(typedNode, fileSet, &result)
 		}
 		return true
 	})

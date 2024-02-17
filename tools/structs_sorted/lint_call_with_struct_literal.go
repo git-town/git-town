@@ -7,27 +7,25 @@ import (
 	"slices"
 )
 
-func lintStructLiteralCallArg(callExpr *ast.CallExpr, fileSet *token.FileSet) Issues {
-	result := Issues{}
+func lintStructLiteralCallArg(callExpr *ast.CallExpr, fileSet *token.FileSet, issues *Issues) {
 	for _, arg := range callExpr.Args {
 		compositeLit, ok := arg.(*ast.CompositeLit)
 		if !ok {
-			return Issues{}
+			return
 		}
 		fieldNames := structInstantiationFieldNames(compositeLit)
 		if len(fieldNames) == 0 {
-			return Issues{}
+			return
 		}
 		sortedFields := make([]string, len(fieldNames))
 		copy(sortedFields, fieldNames)
 		slices.Sort(sortedFields)
 		if reflect.DeepEqual(fieldNames, sortedFields) {
-			return Issues{}
+			return
 		}
-		result = append(result, issue{
+		*issues = append(*issues, issue{
 			expected: sortedFields,
 			position: fileSet.Position(compositeLit.Pos()),
 		})
 	}
-	return result
 }
