@@ -7,7 +7,7 @@ import (
 	"slices"
 )
 
-func lintStructLiteral(compositeLit *ast.CompositeLit, fileSet *token.FileSet) Issues {
+func lintStructLiteralVariable(compositeLit *ast.CompositeLit, fileSet *token.FileSet) Issues {
 	structType, ok := compositeLit.Type.(*ast.Ident)
 	if !ok {
 		return Issues{}
