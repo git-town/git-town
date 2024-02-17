@@ -39,7 +39,7 @@ fix: tools/rta@${RTA_VERSION} tools/node_modules  # runs all linters and auto-fi
 	git diff --check
 	go run tools/format_unittests/format_unittests.go
 	go run tools/format_self/format_self.go
-	go run tools/structs_sorted/structs_sorted.go
+	make --no-print-directory lint-structs-sorted
 	tools/rta gofumpt -l -w .
 	tools/rta dprint fmt
 	tools/rta dprint fmt --config dprint-changelog.json
