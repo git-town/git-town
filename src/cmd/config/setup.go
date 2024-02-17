@@ -172,13 +172,13 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 false,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
+		Repo:                  repo,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	return setupConfig{
 		dialogInputs:  dialogTestInputs,
