@@ -22,7 +22,9 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Connector:               nil,
+			CurrentBranch:           branchesSnapshot.Active,
 			DialogTestInputs:        args.DialogTestInputs,
+			HasOpenChanges:          args.HasOpenChanges,
 			Verbose:                 args.Verbose,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
@@ -80,6 +82,7 @@ type LoadRepoSnapshotArgs struct {
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	HandleUnfinishedState bool
+	HasOpenChanges        bool
 	Repo                  *OpenRepoResult
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool

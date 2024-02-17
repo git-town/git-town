@@ -170,9 +170,14 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 
 func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return setupConfig{}, false, err
+	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 false,
