@@ -135,8 +135,8 @@ func (self PerennialBranchesModel) View() string {
 	s.WriteRune('\n')
 	s.WriteString(PerennialBranchesHelp)
 	window := slice.Window(slice.WindowArgs{
-		ElementCount: len(self.Entries),
 		CursorPos:    self.Cursor,
+		ElementCount: len(self.Entries),
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
