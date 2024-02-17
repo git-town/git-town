@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/token"
 	"reflect"
@@ -13,8 +12,6 @@ func lintStructLiteral(compositeLit *ast.CompositeLit, fileSet *token.FileSet) I
 	if !ok {
 		return Issues{}
 	}
-	pos := fileSet.Position(compositeLit.Pos())
-	fmt.Printf("%s:%d  %s\n", pos.Filename, pos.Line, structType.Name)
 	structName := structType.Name
 	if slices.Contains(ignoreTypes, structName) {
 		return Issues{}
