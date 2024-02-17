@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/skip"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -47,7 +48,16 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseUndo:
 		return abortRunstate(runState, args)
 	case dialog.ResponseSkip:
-		return skipRunstate(runState, args)
+		return skip.Execute(skip.ExecuteArgs{
+			CurrentBranch:    args.InitialBranchesSnapshot.Active,
+			HasOpenChanges:   args.Has,
+			InitialStashSize: 0,
+			RootDir:          "",
+			RunState:         runState,
+			Runner:           &git.ProdRunner{},
+			TestInputs:       []components.TestInput{},
+			Verbose:          false,
+		})
 	case dialog.ResponseQuit:
 		return true, nil
 	}
@@ -108,20 +118,4 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 func discardRunstate(rootDir gitdomain.RepoRootDir) (bool, error) {
 	err := statefile.Delete(rootDir)
 	return false, err
-}
-
-func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	skipRunState := runState.CreateSkipRunState()
-	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		FullConfig:              &args.Run.FullConfig,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &skipRunState,
-		Verbose:                 args.Verbose,
-	})
 }
