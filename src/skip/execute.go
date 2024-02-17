@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
@@ -73,12 +74,12 @@ func Execute(args ExecuteArgs) error {
 
 	// continue executing the program
 	return interpreter.Execute(interpreter.ExecuteArgs{
-		Connector:               nil,
+		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		FullConfig:              &args.Runner.FullConfig,
 		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
+		InitialStashSize:        args.RunState.BeforeStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Runner,
 		RunState:                args.RunState,
@@ -87,12 +88,12 @@ func Execute(args ExecuteArgs) error {
 }
 
 type ExecuteArgs struct {
-	CurrentBranch    gitdomain.LocalBranchName
-	HasOpenChanges   bool
-	InitialStashSize gitdomain.StashSize
-	RootDir          gitdomain.RepoRootDir
-	RunState         *runstate.RunState
-	Runner           *git.ProdRunner
-	TestInputs       components.TestInputs
-	Verbose          bool
+	Connector      hostingdomain.Connector
+	CurrentBranch  gitdomain.LocalBranchName
+	HasOpenChanges bool
+	RootDir        gitdomain.RepoRootDir
+	RunState       *runstate.RunState
+	Runner         *git.ProdRunner
+	TestInputs     components.TestInputs
+	Verbose        bool
 }
