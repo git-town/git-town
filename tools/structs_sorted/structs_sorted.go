@@ -56,18 +56,18 @@ func LintFile(path string) Issues {
 		return result
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
-		result = append(result, lintStructDefinition(node, fileSet)...)
+		switch n := node.(type) {
+		case *ast.TypeSpec:
+			result = append(result, lintStructDefinition(n, fileSet)...)
+		case *ast.CompositeLit:
+		}
 		result = append(result, lintStructLiteral(node, fileSet)...)
 		return true
 	})
 	return result
 }
 
-func lintStructDefinition(node ast.Node, fileSet *token.FileSet) Issues {
-	typeSpec, ok := node.(*ast.TypeSpec)
-	if !ok {
-		return Issues{}
-	}
+func lintStructDefinition(typeSpec *ast.TypeSpec, fileSet *token.FileSet) Issues {
 	structName := typeSpec.Name.Name
 	if slices.Contains(ignoreTypes, structName) {
 		return Issues{}
@@ -89,22 +89,18 @@ func lintStructDefinition(node ast.Node, fileSet *token.FileSet) Issues {
 	return Issues{
 		issue{
 			expected:   sortedFields,
-			position:   fileSet.Position(node.Pos()),
+			position:   fileSet.Position(typeSpec.Pos()),
 			structName: structName,
 		},
 	}
 }
 
-func lintStructLiteral(node ast.Node, fileSet *token.FileSet) Issues {
-	compositeLit, ok := node.(*ast.CompositeLit)
-	if !ok {
-		return Issues{}
-	}
+func lintStructLiteral(compositeLit *ast.CompositeLit, fileSet *token.FileSet) Issues {
 	structType, ok := compositeLit.Type.(*ast.Ident)
 	if !ok {
 		return Issues{}
 	}
-	pos := fileSet.Position(node.Pos())
+	pos := fileSet.Position(compositeLit.Pos())
 	fmt.Printf("%s:%d  %s\n", pos.Filename, pos.Line, structType.Name)
 	structName := structType.Name
 	if slices.Contains(ignoreTypes, structName) {
@@ -123,7 +119,7 @@ func lintStructLiteral(node ast.Node, fileSet *token.FileSet) Issues {
 	return Issues{
 		issue{
 			expected:   sortedFields,
-			position:   fileSet.Position(node.Pos()),
+			position:   fileSet.Position(compositeLit.Pos()),
 			structName: structName,
 		},
 	}
