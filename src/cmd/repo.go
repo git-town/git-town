@@ -41,12 +41,12 @@ func repoCommand() *cobra.Command {
 
 func executeRepo(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: true,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: true,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
