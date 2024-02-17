@@ -96,10 +96,10 @@ func executeSync(all, dryRun, verbose bool) error {
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
+		FullConfig:              config.FullConfig,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
-		FullConfig:              config.FullConfig,
 		RootDir:                 repo.RootDir,
 		Run:                     repo.Runner,
 		RunState:                &runState,
