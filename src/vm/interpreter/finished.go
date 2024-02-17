@@ -52,8 +52,8 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.UndoProgram.AddProgram(undoProgram)
-	args.RunState.UndoProgram.AddProgram(args.RunState.FinalUndoProgram)
+	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
+	args.RunState.UndoProgram = undoProgram
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)
