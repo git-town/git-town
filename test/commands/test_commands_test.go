@@ -136,11 +136,11 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
+				Author:      "developer <developer@example.com>",
 				Branch:      gitdomain.NewLocalBranchName("initial"),
 				FileContent: "hello world",
 				FileName:    "hello.txt",
 				Message:     "test commit",
-				Author:      "developer <developer@example.com>",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
 			must.Len(t, 1, commits)
