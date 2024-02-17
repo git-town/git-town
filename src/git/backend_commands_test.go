@@ -55,26 +55,26 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      initial,
-				Message:     "commit 1",
 				FileContent: "original content",
 				FileName:    "file1",
+				Message:     "commit 1",
 			})
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 2",
 				FileContent: "modified content",
 				FileName:    "file1",
+				Message:     "commit 2",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 3",
 				FileContent: "original content",
 				FileName:    "file1",
+				Message:     "commit 3",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedChanges(branch, initial)
 			must.NoError(t, err)
@@ -98,26 +98,26 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      initial,
-				Message:     "commit 1",
 				FileContent: "original content",
 				FileName:    "file1",
+				Message:     "commit 1",
 			})
 			branch := gitdomain.NewLocalBranchName("branch")
 			runtime.CreateBranch(branch, initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 2",
 				FileContent: "modified content",
 				FileName:    "file1",
+				Message:     "commit 2",
 			})
 			have, err := runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
 			must.True(t, have, must.Sprint("branch with commits that make changes"))
 			runtime.CreateCommit(testgit.Commit{
 				Branch:      branch,
-				Message:     "commit 3",
 				FileContent: "original content",
 				FileName:    "file1",
+				Message:     "commit 3",
 			})
 			have, err = runtime.Backend.BranchHasUnmergedCommits(branch, initial.Location())
 			must.NoError(t, err)
