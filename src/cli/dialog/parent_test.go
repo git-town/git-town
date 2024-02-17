@@ -30,8 +30,8 @@ func TestParent(t *testing.T) {
 			have := dialog.ParentEntries(dialog.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
-				LocalBranches:   localBranches,
 				Lineage:         lineage,
+				LocalBranches:   localBranches,
 				MainBranch:      main,
 			})
 			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch3}
@@ -56,8 +56,8 @@ func TestParent(t *testing.T) {
 			have := dialog.ParentEntries(dialog.ParentArgs{
 				Branch:          branch2,
 				DialogTestInput: components.TestInput{},
-				LocalBranches:   localBranches,
 				Lineage:         lineage,
+				LocalBranches:   localBranches,
 				MainBranch:      main,
 			})
 			want := gitdomain.LocalBranchNames{dialog.PerennialBranchOption, main, branch1, branch1a, branch3}

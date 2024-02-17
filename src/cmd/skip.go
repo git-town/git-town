@@ -36,12 +36,12 @@ func skipCmd() *cobra.Command {
 func executeSkip(verbose bool) error {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err

@@ -27,9 +27,9 @@ func TestGitlabConnector(t *testing.T) {
 		}
 		give := hostingdomain.Proposal{
 			Number:       1,
-			Title:        "my title",
 			MergeWithAPI: true,
 			Target:       gitdomain.EmptyLocalBranchName(),
+			Title:        "my title",
 		}
 		have := config.DefaultProposalMessage(give)
 		want := "my title (!1)"
@@ -63,12 +63,12 @@ func TestGitlabConnector(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				connector := gitlab.Connector{
 					Config: gitlab.Config{
+						APIToken: "apiToken",
 						Config: hostingdomain.Config{
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
 						},
-						APIToken: "apiToken",
 					},
 				}
 				have, err := connector.NewProposalURL(tt.branch, tt.parent)
@@ -85,10 +85,10 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformNone,
-			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
 			APIToken:        "apiToken",
+			HostingPlatform: configdomain.HostingPlatformNone,
 			Log:             print.Logger{},
+			OriginURL:       giturl.Parse("git@gitlab.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{
@@ -105,10 +105,10 @@ func TestNewGitlabConnector(t *testing.T) {
 	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
 		have, err := gitlab.NewConnector(gitlab.NewConnectorArgs{
-			HostingPlatform: configdomain.HostingPlatformGitLab,
-			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:        "apiToken",
+			HostingPlatform: configdomain.HostingPlatformGitLab,
 			Log:             print.Logger{},
+			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
 		})
 		must.NoError(t, err)
 		wantConfig := gitlab.Config{

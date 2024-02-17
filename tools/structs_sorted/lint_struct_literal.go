@@ -7,32 +7,29 @@ import (
 	"slices"
 )
 
-func lintStructLiteral(compositeLit *ast.CompositeLit, fileSet *token.FileSet) Issues {
+func lintStructLiteralVariable(compositeLit *ast.CompositeLit, fileSet *token.FileSet, issues *Issues) {
 	structType, ok := compositeLit.Type.(*ast.Ident)
 	if !ok {
-		return Issues{}
+		return
 	}
 	structName := structType.Name
 	if slices.Contains(ignoreTypes, structName) {
-		return Issues{}
+		return
 	}
 	fieldNames := structInstantiationFieldNames(compositeLit)
 	if len(fieldNames) == 0 {
-		return Issues{}
+		return
 	}
 	sortedFields := make([]string, len(fieldNames))
 	copy(sortedFields, fieldNames)
 	slices.Sort(sortedFields)
 	if reflect.DeepEqual(fieldNames, sortedFields) {
-		return Issues{}
+		return
 	}
-	return Issues{
-		issue{
-			expected:   sortedFields,
-			position:   fileSet.Position(compositeLit.Pos()),
-			structName: structName,
-		},
-	}
+	*issues = append(*issues, issue{
+		expected: sortedFields,
+		position: fileSet.Position(compositeLit.Pos()),
+	})
 }
 
 func structInstantiationFieldNames(compositeLit *ast.CompositeLit) []string {
