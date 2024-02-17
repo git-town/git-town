@@ -439,8 +439,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
 		state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName(branch),
-			FileName:    "new_file",
 			FileContent: "new content",
+			FileName:    "new_file",
 			Message:     message,
 		})
 		return nil
