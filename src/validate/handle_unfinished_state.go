@@ -65,7 +65,9 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
+	CurrentBranch           gitdomain.LocalBranchName
 	DialogTestInputs        components.TestInputs
+	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
