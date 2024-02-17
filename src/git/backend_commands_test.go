@@ -147,13 +147,13 @@ func TestBackendCommands(t *testing.T) {
 			runtime.CreateBranch(gitdomain.NewLocalBranchName("branch1"), initial)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   gitdomain.NewLocalBranchName("branch1"),
-				Message:  "commit 1",
 				FileName: "file1",
+				Message:  "commit 1",
 			})
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   gitdomain.NewLocalBranchName("branch1"),
-				Message:  "commit 2",
 				FileName: "file2",
+				Message:  "commit 2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("branch1"), gitdomain.NewLocalBranchName("initial"))
 			must.NoError(t, err)
@@ -172,13 +172,13 @@ func TestBackendCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   initial,
-				Message:  "commit 1",
 				FileName: "file1",
+				Message:  "commit 1",
 			})
 			runtime.CreateCommit(testgit.Commit{
 				Branch:   initial,
-				Message:  "commit 2",
 				FileName: "file2",
+				Message:  "commit 2",
 			})
 			commits, err := runtime.BackendCommands.CommitsInBranch(gitdomain.NewLocalBranchName("initial"), gitdomain.EmptyLocalBranchName())
 			must.NoError(t, err)
