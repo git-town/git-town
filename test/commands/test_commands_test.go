@@ -37,14 +37,14 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileName:    "file1",
 			FileContent: "hello",
+			FileName:    "file1",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(git.Commit{
 			Branch:      gitdomain.NewLocalBranchName("initial"),
-			FileName:    "file2",
 			FileContent: "hello again",
+			FileName:    "file2",
 			Message:     "second commit",
 		})
 		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
@@ -120,8 +120,8 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileContent: "hello world",
 				FileName:    "hello.txt",
+				FileContent: "hello world",
 				Message:     "test commit",
 			})
 			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, gitdomain.NewLocalBranchName("initial"))
@@ -137,8 +137,8 @@ func TestTestCommands(t *testing.T) {
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
 				Branch:      gitdomain.NewLocalBranchName("initial"),
-				FileContent: "hello world",
 				FileName:    "hello.txt",
+				FileContent: "hello world",
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
