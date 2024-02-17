@@ -38,8 +38,8 @@ func NewConnector(args NewConnectorArgs) (hostingdomain.Connector, error) {
 		return gitlab.NewConnector(gitlab.NewConnectorArgs{
 			APIToken:        args.GitLabToken,
 			HostingPlatform: args.HostingPlatform,
-			OriginURL:       args.OriginURL,
 			Log:             args.Log,
+			OriginURL:       args.OriginURL,
 		})
 	case configdomain.HostingPlatformNone:
 		return nil, nil
