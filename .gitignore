@@ -9,6 +9,7 @@ tools/depth*
 tools/gofumpt*
 tools/golangci_lint*
 tools/stats_release/stats_release
+tools/structs_sorted/structs_sorted
 tools/rta*
 tools/scc*
 tools/shellcheck*
