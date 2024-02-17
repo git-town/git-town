@@ -103,9 +103,14 @@ type killConfig struct {
 
 func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*killConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.BranchesSnapshot{}, 0, true, err
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
@@ -140,10 +145,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	var branchWhenDone gitdomain.LocalBranchName
 	if branchNameToKill == branchesSnapshot.Active {
 		branchWhenDone = previousBranch

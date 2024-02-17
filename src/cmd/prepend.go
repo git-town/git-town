@@ -105,9 +105,14 @@ type prependConfig struct {
 func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*prependConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
 	fc := execute.FailureCollector{}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.BranchesSnapshot{}, 0, true, err
+	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		FullConfig:            &repo.Runner.FullConfig,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		Verbose:               verbose,
 		Fetch:                 true,
@@ -119,7 +124,6 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {

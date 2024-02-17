@@ -44,8 +44,13 @@ func executeSetParent(verbose bool) error {
 	if err != nil {
 		return err
 	}
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return err
+	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		FullConfig:            &repo.Runner.FullConfig,
 		Repo:                  repo,
 		Verbose:               verbose,

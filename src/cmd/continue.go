@@ -76,11 +76,16 @@ func executeContinue(verbose bool) error {
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
+	repoStatus, err := repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return nil, gitdomain.BranchesSnapshot{}, 0, false, err
+	}
 	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
+		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
@@ -88,10 +93,6 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
-	}
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
-	if err != nil {
-		return nil, initialBranchesSnapshot, initialStashSize, false, err
 	}
 	if repoStatus.Conflicts {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
