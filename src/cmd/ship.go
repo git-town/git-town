@@ -150,14 +150,14 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
+		HandleUnfinishedState: true,
 		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: len(args) == 0,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

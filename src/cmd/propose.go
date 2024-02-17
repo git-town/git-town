@@ -115,14 +115,14 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
+		HandleUnfinishedState: true,
 		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 true,
-		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

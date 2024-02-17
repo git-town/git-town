@@ -109,14 +109,14 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
+		HandleUnfinishedState: false,
 		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 true,
-		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

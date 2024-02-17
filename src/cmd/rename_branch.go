@@ -117,14 +117,14 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	}
 	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		HasOpenChanges:        repoStatus.OpenChanges,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 true,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
+		HasOpenChanges:        repoStatus.OpenChanges,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, branchesSnapshot, stashSize, exit, err

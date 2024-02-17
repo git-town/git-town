@@ -50,14 +50,14 @@ func executeSetParent(verbose bool) error {
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
-		HasOpenChanges:        repoStatus.OpenChanges,
-		FullConfig:            &repo.Runner.FullConfig,
-		Repo:                  repo,
-		Verbose:               verbose,
 		Fetch:                 false,
+		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
+		HasOpenChanges:        repoStatus.OpenChanges,
+		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return err

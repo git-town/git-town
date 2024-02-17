@@ -176,14 +176,14 @@ func loadSetupConfig(repo *execute.OpenRepoResult, verbose bool) (setupConfig, b
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
+		HandleUnfinishedState: false,
 		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 false,
-		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	return setupConfig{
 		dialogInputs:  dialogTestInputs,

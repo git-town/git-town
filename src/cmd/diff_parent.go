@@ -77,14 +77,14 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	}
 	branchesSnapshot, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
+		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
+		HandleUnfinishedState: true,
 		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
-		Verbose:               verbose,
-		Fetch:                 false,
-		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
 	})
 	if err != nil || exit {
 		return nil, exit, err
