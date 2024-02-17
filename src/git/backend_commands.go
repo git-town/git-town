@@ -360,7 +360,7 @@ func (self *BackendCommands) RemoveOutdatedConfiguration(localBranches gitdomain
 	return nil
 }
 
-// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
+// RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
 func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 	output, err := self.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
