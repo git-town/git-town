@@ -44,12 +44,12 @@ func defaultUserInput() userInput {
 
 func executeConfigSetup(verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err

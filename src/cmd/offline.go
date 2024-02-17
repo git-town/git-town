@@ -38,12 +38,12 @@ func offlineCmd() *cobra.Command {
 
 func executeOffline(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           false,
 		OmitBranchNames:  true,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  false,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err

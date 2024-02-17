@@ -43,12 +43,12 @@ func hackCmd() *cobra.Command {
 
 func executeHack(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err

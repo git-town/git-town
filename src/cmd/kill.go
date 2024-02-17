@@ -46,12 +46,12 @@ func killCommand() *cobra.Command {
 
 func executeKill(args []string, dryRun, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
-		Verbose:          verbose,
 		DryRun:           dryRun,
 		OmitBranchNames:  false,
 		PrintCommands:    true,
-		ValidateIsOnline: false,
 		ValidateGitRepo:  true,
+		ValidateIsOnline: false,
+		Verbose:          verbose,
 	})
 	if err != nil {
 		return err
@@ -199,8 +199,8 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchToKill.LocalName,
 			Lineage: config.Lineage,
-			Program: prog,
 			Parent:  config.branchToKillParent(),
+			Program: prog,
 		})
 	}
 }

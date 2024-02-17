@@ -23,7 +23,6 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Connector:               nil,
 			DialogTestInputs:        args.DialogTestInputs,
-			Verbose:                 args.Verbose,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
 			InitialStashSize:        stashSize,
@@ -31,6 +30,7 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			PushHook:                args.PushHook,
 			RootDir:                 args.Repo.RootDir,
 			Run:                     args.Repo.Runner,
+			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
 			return branchesSnapshot, stashSize, exit, err

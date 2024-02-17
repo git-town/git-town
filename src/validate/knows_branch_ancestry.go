@@ -26,8 +26,8 @@ func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAnce
 			parent, aborted, err = dialog.Parent(dialog.ParentArgs{
 				Branch:          currentBranch,
 				DialogTestInput: args.DialogTestInputs.Next(),
-				LocalBranches:   args.LocalBranches,
 				Lineage:         args.Config.Lineage,
+				LocalBranches:   args.LocalBranches,
 				MainBranch:      args.MainBranch,
 			})
 			if err != nil {

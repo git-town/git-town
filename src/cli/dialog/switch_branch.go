@@ -62,8 +62,8 @@ func (self SwitchModel) View() string {
 	}
 	s := strings.Builder{}
 	window := slice.Window(slice.WindowArgs{
-		ElementCount: len(self.Entries),
 		CursorPos:    self.Cursor,
+		ElementCount: len(self.Entries),
 		WindowSize:   components.WindowSize,
 	})
 	for i := window.StartRow; i < window.EndRow; i++ {
