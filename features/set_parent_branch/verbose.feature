@@ -24,7 +24,7 @@ Feature: display all executed Git commands
       |        | backend | git config -lz --local                          |
     And it prints:
       """
-      Ran 12 shell commands.
+      Ran 13 shell commands.
       """
     And this branch lineage exists now
       | BRANCH | PARENT |
