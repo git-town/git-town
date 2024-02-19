@@ -38,7 +38,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                                     |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 28 shell commands.
       """
     And "open" launches a new proposal with this url in my browser:
       """
