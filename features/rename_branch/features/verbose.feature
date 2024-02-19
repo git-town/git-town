@@ -66,6 +66,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main    |
     And it prints:
       """
-      Ran 15 shell commands.
+      Ran 16 shell commands.
       """
     And the current branch is now "old"
