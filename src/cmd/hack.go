@@ -85,7 +85,7 @@ func executeHack(args []string, dryRun, verbose bool) error {
 func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, verbose bool) (*appendConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	fc := execute.FailureCollector{}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
@@ -99,7 +99,6 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	repoStatus := fc.RepoStatus(repo.Runner.Backend.RepoStatus())
 	targetBranch := gitdomain.NewLocalBranchName(args[0])
 	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	if branchesSnapshot.Branches.HasLocalBranch(targetBranch) {
