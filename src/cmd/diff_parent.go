@@ -76,7 +76,6 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

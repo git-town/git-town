@@ -116,7 +116,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

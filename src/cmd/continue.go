@@ -81,7 +81,6 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

@@ -108,7 +108,6 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

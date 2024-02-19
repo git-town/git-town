@@ -49,7 +49,6 @@ func executeSetParent(verbose bool) error {
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

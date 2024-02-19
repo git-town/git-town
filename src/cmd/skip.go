@@ -50,7 +50,6 @@ func executeSkip(verbose bool) error {
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: false,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

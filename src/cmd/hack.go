@@ -90,7 +90,6 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

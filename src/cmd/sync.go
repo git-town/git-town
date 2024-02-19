@@ -132,7 +132,6 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
 		HandleUnfinishedState: true,
-		HasOpenChanges:        repoStatus.OpenChanges,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
