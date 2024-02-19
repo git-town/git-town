@@ -14,13 +14,13 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva                               |
       |        | backend  | git remote                                    |
       | main   | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --long --ignore-submodules         |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
@@ -48,10 +48,10 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git remote get-url origin                     |
       | new    | frontend | git checkout main                             |
       |        | backend  | git rev-parse --short HEAD                    |
