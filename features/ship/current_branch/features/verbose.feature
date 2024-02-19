@@ -17,8 +17,8 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git stash list                                    |
-      |         | backend  | git branch -vva                                   |
       |         | backend  | git status --long --ignore-submodules             |
+      |         | backend  | git branch -vva                                   |
       |         | backend  | git remote                                        |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
@@ -50,7 +50,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 37 shell commands.
+      Ran 36 shell commands.
       """
     And the current branch is now "main"
 
@@ -65,6 +65,7 @@ Feature: display all executed Git commands
       |        | backend  | git rev-parse --show-toplevel                  |
       |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git stash list                                 |
+      |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git branch -vva                                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
       |        | backend  | git remote get-url origin                      |

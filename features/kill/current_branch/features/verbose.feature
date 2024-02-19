@@ -19,6 +19,7 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git stash list                                    |
+      |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git remote                                        |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
