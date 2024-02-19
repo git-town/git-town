@@ -35,7 +35,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "new"
 
@@ -60,6 +60,6 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
-      Ran 14 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is now "main"

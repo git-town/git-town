@@ -42,7 +42,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 30 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "parent"
 
@@ -66,6 +66,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main       |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is now "old"

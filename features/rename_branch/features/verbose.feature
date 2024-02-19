@@ -15,7 +15,6 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
-      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git branch -vva                               |
@@ -40,7 +39,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "new"
 
@@ -53,7 +52,6 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
-      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git stash list                                |
       |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git branch -vva                               |
@@ -68,6 +66,6 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent main    |
     And it prints:
       """
-      Ran 16 shell commands.
+      Ran 15 shell commands.
       """
     And the current branch is now "old"
