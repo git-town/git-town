@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
@@ -14,18 +15,15 @@ import (
 // should they fail.
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
-	abortRunState := args.RunState.CreateAbortRunState()
-	err := Execute(ExecuteArgs{
-		Connector:               args.Connector,
-		DialogTestInputs:        args.DialogTestInputs,
-		FullConfig:              args.FullConfig,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &abortRunState,
-		Verbose:                 args.Verbose,
+	err := undo.Execute(undo.ExecuteArgs{
+		FullConfig:       args.FullConfig,
+		HasOpenChanges:   args.HasOpenChanges,
+		InitialStashSize: args.InitialStashSize,
+		Lineage:          args.Lineage,
+		RootDir:          args.RootDir,
+		RunState:         *args.RunState,
+		Runner:           args.Run,
+		Verbose:          args.Verbose,
 	})
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)
