@@ -60,6 +60,6 @@ Feature: display all executed Git commands
       |        | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
-      Ran 13 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "main"
