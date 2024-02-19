@@ -69,8 +69,8 @@ func executeUndo(verbose bool) error {
 		InitialStashSize: initialStashSize,
 		Lineage:          repo.Runner.Lineage,
 		RootDir:          repo.RootDir,
-		Runner:           repo.Runner,
 		RunState:         *runState,
+		Runner:           repo.Runner,
 		Verbose:          verbose,
 	})
 }
