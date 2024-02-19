@@ -34,13 +34,6 @@ func TestRunState(t *testing.T) {
 					Hard:        false,
 				},
 			},
-			UndoProgram: program.Program{
-				&opcodes.ResetCurrentBranchToSHA{
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
-					Hard:        false,
-				},
-			},
 			AfterBranchesSnapshot: gitdomain.BranchesSnapshot{
 				Active: "branch-1",
 				Branches: gitdomain.BranchInfos{

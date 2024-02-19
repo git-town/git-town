@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
@@ -38,22 +37,6 @@ func finished(args ExecuteArgs) error {
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
 	}
-	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
-		DryRun:                   args.RunState.DryRun,
-		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
-		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
-		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:    args.InitialConfigSnapshot,
-		InitialStashSize:         args.InitialStashSize,
-		NoPushHook:               args.NoPushHook(),
-		Run:                      args.Run,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	if err != nil {
-		return err
-	}
-	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	args.RunState.UndoProgram = undoProgram
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)

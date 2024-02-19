@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -34,21 +33,6 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Local:  localSnapshot,
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
-		DryRun:                   args.RunState.DryRun,
-		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
-		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
-		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:    args.InitialConfigSnapshot,
-		InitialStashSize:         args.InitialStashSize,
-		NoPushHook:               args.NoPushHook(),
-		Run:                      args.Run,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	if err != nil {
-		return err
-	}
-	args.RunState.UndoProgram.AddProgram(undoProgram)
 	if failedOpcode.ShouldAutomaticallyUndoOnError() {
 		return autoUndo(failedOpcode, runErr, args)
 	}
