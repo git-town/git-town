@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/skip"
+	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/interpreter"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -46,7 +47,16 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		return abortRunstate(runState, args)
+		return true, undo.Execute(undo.ExecuteArgs{
+			FullConfig:       &args.Run.FullConfig,
+			HasOpenChanges:   args.HasOpenChanges,
+			InitialStashSize: args.InitialStashSize,
+			Lineage:          args.Lineage,
+			RootDir:          args.RootDir,
+			RunState:         *runState,
+			Runner:           args.Run,
+			Verbose:          args.Verbose,
+		})
 	case dialog.ResponseSkip:
 		return true, skip.Execute(skip.ExecuteArgs{
 			Connector:      args.Connector,
@@ -77,22 +87,6 @@ type UnfinishedStateArgs struct {
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
 	Verbose                 bool
-}
-
-func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	abortRunState := runState.CreateAbortRunState()
-	return true, interpreter.Execute(interpreter.ExecuteArgs{
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		FullConfig:              &args.Run.FullConfig,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &abortRunState,
-		Verbose:                 args.Verbose,
-	})
 }
 
 func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {

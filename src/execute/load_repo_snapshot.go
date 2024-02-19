@@ -8,23 +8,27 @@ import (
 )
 
 // LoadRepoSnapshot loads the initial snapshot of the Git repo.
-func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
+func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gitdomain.StashSize, gitdomain.RepoStatus, bool, error) {
 	var branchesSnapshot gitdomain.BranchesSnapshot
 	var err error
 	stashSize, err := args.Repo.Runner.Backend.StashSize()
 	if err != nil {
-		return gitdomain.EmptyBranchesSnapshot(), stashSize, false, err
+		return gitdomain.EmptyBranchesSnapshot(), stashSize, gitdomain.RepoStatus{}, false, err
+	}
+	repoStatus, err := args.Repo.Runner.Backend.RepoStatus()
+	if err != nil {
+		return branchesSnapshot, stashSize, repoStatus, false, err
 	}
 	if args.HandleUnfinishedState {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return branchesSnapshot, stashSize, repoStatus, false, err
 		}
 		exit, err := validate.HandleUnfinishedState(validate.UnfinishedStateArgs{
 			Connector:               nil,
 			CurrentBranch:           branchesSnapshot.Active,
 			DialogTestInputs:        args.DialogTestInputs,
-			HasOpenChanges:          args.HasOpenChanges,
+			HasOpenChanges:          repoStatus.OpenChanges,
 			InitialBranchesSnapshot: branchesSnapshot,
 			InitialConfigSnapshot:   args.Repo.ConfigSnapshot,
 			InitialStashSize:        stashSize,
@@ -35,46 +39,42 @@ func LoadRepoSnapshot(args LoadRepoSnapshotArgs) (gitdomain.BranchesSnapshot, gi
 			Verbose:                 args.Verbose,
 		})
 		if err != nil || exit {
-			return branchesSnapshot, stashSize, exit, err
+			return branchesSnapshot, stashSize, repoStatus, exit, err
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		repoStatus, err := args.Repo.Runner.Backend.RepoStatus()
-		if err != nil {
-			return branchesSnapshot, stashSize, false, err
-		}
 		err = validate.NoOpenChanges(repoStatus.OpenChanges)
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return branchesSnapshot, stashSize, repoStatus, false, err
 		}
 	}
 	if args.Fetch {
 		var remotes gitdomain.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return branchesSnapshot, stashSize, repoStatus, false, err
 		}
 		if remotes.HasOrigin() && !args.Repo.IsOffline.Bool() {
 			err = args.Repo.Runner.Frontend.Fetch()
 			if err != nil {
-				return branchesSnapshot, stashSize, false, err
+				return branchesSnapshot, stashSize, repoStatus, false, err
 			}
 		}
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return branchesSnapshot, stashSize, repoStatus, false, err
 		}
 	}
 	if branchesSnapshot.IsEmpty() {
 		branchesSnapshot, err = args.Repo.Runner.Backend.BranchesSnapshot()
 		if err != nil {
-			return branchesSnapshot, stashSize, false, err
+			return branchesSnapshot, stashSize, repoStatus, false, err
 		}
 	}
 	if args.ValidateIsConfigured {
 		err = validate.IsConfigured(&args.Repo.Runner.Backend, args.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &args.DialogTestInputs)
 	}
-	return branchesSnapshot, stashSize, false, err
+	return branchesSnapshot, stashSize, repoStatus, false, err
 }
 
 type LoadRepoSnapshotArgs struct {
@@ -82,7 +82,6 @@ type LoadRepoSnapshotArgs struct {
 	DialogTestInputs      components.TestInputs
 	Fetch                 bool
 	HandleUnfinishedState bool
-	HasOpenChanges        bool
 	Repo                  *OpenRepoResult
 	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
