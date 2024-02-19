@@ -43,8 +43,3 @@ func (self *FailureCollector) Remotes(value gitdomain.Remotes, err error) gitdom
 	self.Check(err)
 	return value
 }
-
-func (self *FailureCollector) RepoStatus(value gitdomain.RepoStatus, err error) gitdomain.RepoStatus {
-	self.Check(err)
-	return value
-}
