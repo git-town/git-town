@@ -54,9 +54,9 @@ Feature: display all executed Git commands
       |          | backend  | git config -lz --local                        |
       |          | backend  | git rev-parse --show-toplevel                 |
       |          | backend  | git stash list                                |
+      |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git branch -vva                               |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git remote get-url origin                     |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |

@@ -15,5 +15,5 @@ Feature: display all executed Git commands
       | feature | frontend | git diff main..feature                |
     And it prints:
       """
-      Ran 7 shell commands.
+      Ran 8 shell commands.
       """
