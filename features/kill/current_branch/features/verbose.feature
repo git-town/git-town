@@ -18,13 +18,13 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git stash list                                    |
+      |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git remote                                        |
       |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git status --long --ignore-submodules             |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout other                                |
       |         | backend  | git log main..current                             |
