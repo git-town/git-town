@@ -17,7 +17,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	err := undo.Execute(undo.ExecuteArgs{
 		FullConfig:       args.FullConfig,
-		HasOpenChanges:   args.HasOpenChanges,
+		HasOpenChanges:   false,
 		InitialStashSize: args.InitialStashSize,
 		Lineage:          args.Lineage,
 		RootDir:          args.RootDir,
