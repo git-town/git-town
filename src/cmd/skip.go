@@ -48,7 +48,7 @@ func executeSkip(verbose bool) error {
 		return err
 	}
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, _, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
@@ -83,7 +83,7 @@ func executeSkip(verbose bool) error {
 	}
 	return skip.Execute(skip.ExecuteArgs{
 		Connector:      connector,
-		CurrentBranch:  currentSnapshot.Active,
+		CurrentBranch:  initialBranchesSnapshot.Active,
 		HasOpenChanges: repoStatus.OpenChanges,
 		RootDir:        repo.RootDir,
 		RunState:       runState,
