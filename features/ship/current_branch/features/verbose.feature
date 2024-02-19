@@ -49,7 +49,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 37 shell commands.
+      Ran 36 shell commands.
       """
     And the current branch is now "main"
 
