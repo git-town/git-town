@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/shared"
@@ -17,11 +18,16 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
+	BeginBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeginConfigSnapshot      undoconfig.ConfigSnapshot
+	BeginStashSize           gitdomain.StashSize
 	Command                  string
 	DryRun                   bool
+	EndBranchesSnapshot      gitdomain.BranchesSnapshot
+	EndConfigSnapshot        undoconfig.ConfigSnapshot
+	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	InitialActiveBranch      gitdomain.LocalBranchName
-	IsUndo                   bool `exhaustruct:"optional"`
+	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
 	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
@@ -60,11 +66,16 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		IsUndo:              true,
-		RunProgram:          abortProgram,
+		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
+		BeginConfigSnapshot:   self.BeginConfigSnapshot,
+		BeginStashSize:        self.BeginStashSize,
+		Command:               self.Command,
+		DryRun:                self.DryRun,
+		EndBranchesSnapshot:   self.EndBranchesSnapshot,
+		EndConfigSnapshot:     self.EndConfigSnapshot,
+		EndStashSize:          self.EndStashSize,
+		IsUndo:                true,
+		RunProgram:            abortProgram,
 	}
 }
 
@@ -72,10 +83,15 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		RunProgram:          self.AbortProgram,
+		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
+		BeginConfigSnapshot:   self.BeginConfigSnapshot,
+		BeginStashSize:        self.BeginStashSize,
+		Command:               self.Command,
+		DryRun:                self.DryRun,
+		EndBranchesSnapshot:   self.EndBranchesSnapshot,
+		EndConfigSnapshot:     self.EndConfigSnapshot,
+		EndStashSize:          self.EndStashSize,
+		RunProgram:            self.AbortProgram,
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
@@ -104,14 +120,19 @@ func (self *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
+		BeginBranchesSnapshot:    self.BeginBranchesSnapshot,
+		BeginConfigSnapshot:      self.BeginConfigSnapshot,
+		BeginStashSize:           self.BeginStashSize,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
-		InitialActiveBranch:      self.InitialActiveBranch,
+		EndBranchesSnapshot:      self.EndBranchesSnapshot,
+		EndConfigSnapshot:        self.EndConfigSnapshot,
+		EndStashSize:             self.EndStashSize,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
-	result.RunProgram.Add(&opcodes.Checkout{Branch: self.InitialActiveBranch})
+	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeginBranchesSnapshot.Active})
 	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }

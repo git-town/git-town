@@ -34,9 +34,9 @@ Feature: display all executed Git commands
       |         | backend  | git rev-list --left-right feature...origin/feature |
       | feature | frontend | git push                                           |
       |         | backend  | git show-ref --verify --quiet refs/heads/main      |
+      |         | backend  | git branch -vva                                    |
       |         | backend  | git config -lz --global                            |
       |         | backend  | git config -lz --local                             |
-      |         | backend  | git branch -vva                                    |
       |         | backend  | git stash list                                     |
     And it prints:
       """

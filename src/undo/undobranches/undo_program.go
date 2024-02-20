@@ -1,22 +1,18 @@
 package undobranches
 
 import (
-	"github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
-func DetermineUndoBranchesProgram(initialBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, runner *git.ProdRunner) (program.Program, error) {
-	finalBranchesSnapshot, err := runner.Backend.BranchesSnapshot()
-	if err != nil {
-		return program.Program{}, err
-	}
-	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
+func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig *configdomain.FullConfig) program.Program {
+	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
-		Config:                   &runner.FullConfig,
-		FinalBranch:              finalBranchesSnapshot.Active,
-		InitialBranch:            initialBranchesSnapshot.Active,
+		Config:                   fullConfig,
+		FinalBranch:              endBranchesSnapshot.Active,
+		InitialBranch:            beginBranchesSnapshot.Active,
 		UndoablePerennialCommits: undoablePerennialCommits,
-	}), nil
+	})
 }

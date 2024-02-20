@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -35,10 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:      "command",
-			IsUndo:       true,
-			AbortProgram: program.Program{},
-			DryRun:       true,
+			AbortProgram:          program.Program{},
+			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+			BeginStashSize:        0,
+			Command:               "command",
+			DryRun:                true,
+			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+			EndStashSize:          1,
+			IsUndo:                true,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
@@ -159,17 +166,33 @@ func TestLoadSave(t *testing.T) {
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
-			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 
 		wantJSON := `
 {
   "AbortProgram": [],
+  "BeginBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "BeginConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "BeginStashSize": 0,
   "Command": "command",
   "DryRun": true,
+  "EndBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "EndConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "EndStashSize": 1,
   "FinalUndoProgram": [],
-  "InitialActiveBranch": "initial",
   "IsUndo": true,
   "RunProgram": [
     {

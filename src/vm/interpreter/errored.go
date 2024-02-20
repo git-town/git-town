@@ -5,20 +5,42 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/print"
+	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
+	var err error
+	args.RunState.EndBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	if err != nil {
+		return err
+	}
+	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
+	globalSnapshot, _, err := configGitAccess.LoadGlobal()
+	if err != nil {
+		return err
+	}
+	localSnapshot, _, err := configGitAccess.LoadLocal()
+	if err != nil {
+		return err
+	}
+	args.RunState.EndConfigSnapshot = undoconfig.ConfigSnapshot{
+		Global: globalSnapshot,
+		Local:  localSnapshot,
+	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
+		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
+		BeginConfigSnapshot:      args.InitialConfigSnapshot,
+		BeginStashSize:           args.InitialStashSize,
 		DryRun:                   args.RunState.DryRun,
-		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:    args.InitialConfigSnapshot,
-		InitialStashSize:         args.InitialStashSize,
+		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
 		NoPushHook:               args.NoPushHook(),
 		Run:                      args.Run,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,

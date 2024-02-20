@@ -36,9 +36,9 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
       |        | backend  | git show-ref --verify --quiet refs/heads/old  |
+      |        | backend  | git branch -vva                               |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
-      |        | backend  | git branch -vva                               |
       |        | backend  | git stash list                                |
     And it prints:
       """
