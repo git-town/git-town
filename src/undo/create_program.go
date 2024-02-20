@@ -37,8 +37,7 @@ func createProgram(args ExecuteArgs) program.Program {
 
 	// undo stash changes
 	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.InitialStashSize)
-	undoStashProgram := stashDiff.Program()
-	undoProgram.AddProgram(undoStashProgram)
+	undoProgram.AddProgram(stashDiff.Program())
 
 	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
 	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
