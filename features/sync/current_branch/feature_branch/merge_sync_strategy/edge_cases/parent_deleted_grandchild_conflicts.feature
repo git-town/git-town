@@ -44,16 +44,12 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       | BRANCH     | COMMAND           |
       | grandchild | git merge --abort |
       # |            | git reset {{ sha 'conflicting grandchild commit' }} |
-      |            | git checkout main |
-      | main       | git push --tags   |
-    And the current branch is now "main"
-    When I run "git checkout grandchild"
-    And I run "git-town kill"
+      |            | git push --tags   |
+    And the current branch is now "grandchild"
+    When I run "git-town kill"
     Then it runs the commands
-      | BRANCH     | COMMAND                  |
-      | grandchild | git fetch --prune --tags |
-      |            | git branch -d child      |
-    And it prints:
-      """
-      xxx
-      """
+      | BRANCH     | COMMAND                     |
+      | grandchild | git fetch --prune --tags    |
+      |            | git push origin :grandchild |
+      |            | git checkout main           |
+      | main       | git branch -D grandchild    |
