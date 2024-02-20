@@ -13,7 +13,6 @@ import (
 // creates the program for undoing a program that finished
 func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result := program.Program{}
-	// if there is a pending operation --> abort it
 	result.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
 		// Open changes in the middle of an unfinished command will be undone as well.
