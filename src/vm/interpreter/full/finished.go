@@ -33,6 +33,10 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
+	args.RunState.AfterStashSize, err = args.Run.Backend.StashSize()
+	if err != nil {
+		return err
+	}
 	args.RunState.MarkAsFinished()
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
