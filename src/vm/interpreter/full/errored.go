@@ -43,6 +43,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		InitialStashSize:         args.InitialStashSize,
 		NoPushHook:               args.NoPushHook(),
 		Run:                      args.Run,
+		RunState:                 *args.RunState,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	if err != nil {
