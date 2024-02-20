@@ -77,6 +77,7 @@ func Execute(args ExecuteArgs) error {
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		FullConfig:              &args.Runner.FullConfig,
+		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
 		InitialStashSize:        args.RunState.BeforeStashSize,
