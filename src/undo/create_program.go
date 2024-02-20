@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
-// provides the program to undo the given runstate
+// creates the program for undoing a program that finished
 func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result := program.Program{}
 	// if there is a pending operation --> abort it

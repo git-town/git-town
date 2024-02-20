@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 )
 
+// create the program to undo a currently running Git Town command
 func CreateUndoErroredProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
