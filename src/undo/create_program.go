@@ -25,8 +25,8 @@ func createProgram(args ExecuteArgs) program.Program {
 	branchChanges := branchSpans.Changes()
 	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   args.FullConfig,
-		FinalBranch:              args.RunState.EndBranchesSnapshot.Active,
-		InitialBranch:            args.RunState.BeginBranchesSnapshot.Active,
+		EndBranch:                args.RunState.EndBranchesSnapshot.Active,
+		BeginBranch:              args.RunState.BeginBranchesSnapshot.Active,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	undoProgram.AddProgram(undoBranchesProgram)
