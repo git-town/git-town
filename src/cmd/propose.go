@@ -70,15 +70,15 @@ func executePropose(dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
-		AfterStashSize:         0,
-		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		BeforeConfigSnapshot:   repo.ConfigSnapshot,
-		BeforeStashSize:        initialStashSize,
-		Command:                "propose",
-		DryRun:                 dryRun,
-		RunProgram:             proposeProgram(config),
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
+		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        initialStashSize,
+		Command:               "propose",
+		DryRun:                dryRun,
+		RunProgram:            proposeProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               config.connector,

@@ -58,15 +58,15 @@ func executeHack(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
-		AfterStashSize:         0,
-		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		BeforeConfigSnapshot:   repo.ConfigSnapshot,
-		BeforeStashSize:        initialStashSize,
-		Command:                "hack",
-		DryRun:                 dryRun,
-		RunProgram:             appendProgram(config),
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
+		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        initialStashSize,
+		Command:               "hack",
+		DryRun:                dryRun,
+		RunProgram:            appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               nil,

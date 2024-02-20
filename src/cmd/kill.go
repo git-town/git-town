@@ -65,16 +65,16 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-		AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
-		AfterStashSize:         0,
-		BeforeBranchesSnapshot: initialBranchesSnapshot,
-		BeforeConfigSnapshot:   repo.ConfigSnapshot,
-		BeforeStashSize:        initialStashSize,
-		Command:                "kill",
-		DryRun:                 dryRun,
-		RunProgram:             steps,
-		FinalUndoProgram:       finalUndoProgram,
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
+		BeginBranchesSnapshot: initialBranchesSnapshot,
+		BeginConfigSnapshot:   repo.ConfigSnapshot,
+		BeginStashSize:        initialStashSize,
+		Command:               "kill",
+		DryRun:                dryRun,
+		RunProgram:            steps,
+		FinalUndoProgram:      finalUndoProgram,
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
 		Connector:               nil,
