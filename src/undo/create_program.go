@@ -11,45 +11,40 @@ import (
 )
 
 // provides the program to undo the given runstate
-func createProgram(args ExecuteArgs) program.Program {
-	undoProgram := program.Program{}
-	undoProgram.AddProgram(args.RunState.AbortProgram)
+func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
+	result := program.Program{}
+	// if there is a pending operation --> abort it
+	result.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
 		// Open changes in the middle of an unfinished command will be undone as well.
 		// To achieve this, we commit them here so that they are gone when the branch is reset to the original SHA.
-		undoProgram.Add(&opcodes.CommitOpenChanges{})
+		result.Add(&opcodes.CommitOpenChanges{})
 	}
-
 	// undo branch changes
 	branchSpans := undobranches.NewBranchSpans(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.RunState.BeginBranchesSnapshot.Active,
-		Config:                   args.FullConfig,
+		Config:                   &args.Run.FullConfig,
 		EndBranch:                args.RunState.EndBranchesSnapshot.Active,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	undoProgram.AddProgram(undoBranchesProgram)
-
+	result.AddProgram(undoBranchesProgram)
 	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
-	configUndoProgram := configSpans.UndoProgram()
-	undoProgram.AddProgram(configUndoProgram)
-
+	result.AddProgram(configSpans.UndoProgram())
 	// undo stash changes
-	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.InitialStashSize)
-	undoStashProgram := stashDiff.Program()
-	undoProgram.AddProgram(undoStashProgram)
-
-	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
-	undoProgram.RemoveDuplicateCheckout()
-
-	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
+	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.RunState.EndStashSize)
+	result.AddProgram(stashDiff.Program())
+	// wrap up
+	result.AddProgram(args.RunState.FinalUndoProgram)
+	result.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
+	result.RemoveDuplicateCheckout()
+	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
 		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeginBranchesSnapshot.Active},
 	})
-	return undoProgram
+	return result
 }
