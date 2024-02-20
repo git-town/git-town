@@ -11,7 +11,7 @@ import (
 )
 
 // provides the program to undo the given runstate
-func CreateProgram(args ExecuteArgs) program.Program {
+func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result := program.Program{}
 	// if there is a pending operation --> abort it
 	result.AddProgram(args.RunState.AbortProgram)
@@ -25,7 +25,7 @@ func CreateProgram(args ExecuteArgs) program.Program {
 	branchChanges := branchSpans.Changes()
 	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.RunState.BeginBranchesSnapshot.Active,
-		Config:                   args.FullConfig,
+		Config:                   &args.Run.FullConfig,
 		EndBranch:                args.RunState.EndBranchesSnapshot.Active,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
@@ -34,7 +34,7 @@ func CreateProgram(args ExecuteArgs) program.Program {
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
 	result.AddProgram(configSpans.UndoProgram())
 	// undo stash changes
-	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.InitialStashSize)
+	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.RunState.EndStashSize)
 	result.AddProgram(stashDiff.Program())
 	// wrap up
 	result.AddProgram(args.RunState.FinalUndoProgram)

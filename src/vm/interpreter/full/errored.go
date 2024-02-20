@@ -33,14 +33,19 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
+	args.RunState.EndStashSize, err = args.Run.Backend.StashSize()
+	if err != nil {
+		return err
+	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateProgram2(undo.CreateUndoProgramArgs{
+	undoProgram, err := undo.CreateUndoErroredProgram(undo.CreateUndoProgramArgs{
 		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
 		BeginConfigSnapshot:      args.InitialConfigSnapshot,
 		BeginStashSize:           args.InitialStashSize,
 		DryRun:                   args.RunState.DryRun,
 		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
 		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
+		HasOpenChanges:           false,
 		NoPushHook:               args.NoPushHook(),
 		Run:                      args.Run,
 		RunState:                 *args.RunState,
