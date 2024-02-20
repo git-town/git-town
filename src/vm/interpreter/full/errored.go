@@ -16,7 +16,7 @@ import (
 // errored is called when the given opcode has resulted in the given error.
 func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	var err error
-	args.RunState.AfterBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	args.RunState.EndBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
@@ -29,15 +29,15 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.AfterConfigSnapshot = undoconfig.ConfigSnapshot{
+	args.RunState.EndConfigSnapshot = undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   args.RunState.DryRun,
-		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
-		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
+		FinalBranchesSnapshot:    args.RunState.EndBranchesSnapshot,
+		FinalConfigSnapshot:      args.RunState.EndConfigSnapshot,
 		InitialBranchesSnapshot:  args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:    args.InitialConfigSnapshot,
 		InitialStashSize:         args.InitialStashSize,
