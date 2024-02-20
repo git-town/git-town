@@ -27,7 +27,7 @@ type MyStruct struct {
 			defer os.Remove(testPath)
 			have := structsSorted.LintFile(testPath).String()
 			want := `
-test.go:3:6 unsorted fields in MyStruct. Expected order:
+test.go:3:6 unsorted fields, expected order:
 
 field1
 field2
@@ -81,7 +81,7 @@ func main() {
 			defer os.Remove(testPath)
 			have := structsSorted.LintFile(testPath).String()
 			want := `
-test.go:8:9 unsorted fields in MyStruct. Expected order:
+test.go:8:9 unsorted fields, expected order:
 
 field1
 field2
