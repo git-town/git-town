@@ -18,11 +18,11 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
 		DryRun:                   false,
-		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
-		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
-		InitialBranchesSnapshot:  args.RunState.BeforeBranchesSnapshot,
-		InitialConfigSnapshot:    args.RunState.BeforeConfigSnapshot,
-		InitialStashSize:         args.RunState.BeforeStashSize,
+		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
+		BeginBranchesSnapshot:    args.RunState.EndBranchesSnapshot,
+		BeginConfigSnapshot:      args.RunState.BeginConfigSnapshot,
+		BeginStashSize:           args.RunState.BeginStashSize,
 		NoPushHook:               args.FullConfig.NoPushHook(),
 		Run:                      args.Run,
 		RunState:                 *args.RunState,
