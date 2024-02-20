@@ -23,8 +23,7 @@ func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	// undo branch changes
 	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig))
 	// undo config changes
-	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
-	result.AddProgram(configSpans.UndoProgram())
+	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot))
 	// undo stash changes
 	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.RunState.EndStashSize)
 	result.AddProgram(stashDiff.Program())
