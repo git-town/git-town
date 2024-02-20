@@ -121,16 +121,6 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
-  "UndoProgram": [
-    {
-      "data": {
-        "Hard": false,
-        "MustHaveSHA": "222222",
-        "SetToSHA": "111111"
-      },
-      "type": "ResetCurrentBranchToSHA"
-    }
-  ],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": null
 }`[1:]

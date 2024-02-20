@@ -103,7 +103,5 @@ func displayUnfinishedStatus(config displayStatusConfig) {
 
 func displayFinishedStatus(config displayStatusConfig) {
 	fmt.Printf(messages.PreviousCommandFinished, config.state.Command)
-	if config.state.HasUndoProgram() {
-		fmt.Println(messages.UndoMessage)
-	}
+	fmt.Println(messages.UndoMessage)
 }
