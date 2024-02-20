@@ -58,58 +58,12 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 	return nil
 }
 
-// CreateAbortRunState returns a new runstate
-// to be run to aborting and undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateAbortRunState() RunState {
-	abortProgram := self.AbortProgram
-	abortProgram.AddProgram(self.UndoProgram)
-	return RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		AfterStashSize:         self.AfterStashSize,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		BeforeStashSize:        self.BeforeStashSize,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		IsUndo:                 true,
-		RunProgram:             abortProgram,
-	}
-}
-
-// CreateUndoRunState returns a new runstate
-// to be run when undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateUndoRunState() RunState {
-	result := RunState{
-		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:      self.AfterConfigSnapshot,
-		AfterStashSize:           self.AfterStashSize,
-		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
-		BeforeStashSize:          self.BeforeStashSize,
-		Command:                  self.Command,
-		DryRun:                   self.DryRun,
-		IsUndo:                   true,
-		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []gitdomain.SHA{},
-	}
-	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
-	result.RunProgram.RemoveDuplicateCheckout()
-	return result
-}
-
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
 
 func (self *RunState) HasRunProgram() bool {
 	return !self.RunProgram.IsEmpty()
-}
-
-func (self *RunState) HasUndoProgram() bool {
-	return !self.UndoProgram.IsEmpty()
 }
 
 // IsFinished returns whether or not the run state is unfinished.
