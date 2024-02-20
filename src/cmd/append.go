@@ -65,11 +65,11 @@ func executeAppend(arg string, dryRun, verbose bool) error {
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
+		Command:               "append",
+		DryRun:                dryRun,
 		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
 		EndStashSize:          0,
-		Command:               "append",
-		DryRun:                dryRun,
 		RunProgram:            appendProgram(config),
 	}
 	return interpreter.Execute(interpreter.ExecuteArgs{
