@@ -11,8 +11,9 @@ import (
 )
 
 // provides the program to undo the given runstate
-func createProgram(args ExecuteArgs) program.Program {
+func CreateProgram(args ExecuteArgs) program.Program {
 	result := program.Program{}
+	// if there is a pending operation --> abort it
 	result.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {
 		// Open changes in the middle of an unfinished command will be undone as well.

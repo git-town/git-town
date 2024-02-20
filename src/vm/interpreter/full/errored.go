@@ -34,7 +34,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		Local:  localSnapshot,
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateProgram(undo.CreateUndoProgramArgs{
+	undoProgram, err := undo.CreateProgram2(undo.CreateUndoProgramArgs{
 		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
 		BeginConfigSnapshot:      args.InitialConfigSnapshot,
 		BeginStashSize:           args.InitialStashSize,

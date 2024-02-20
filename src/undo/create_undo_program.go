@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 )
 
-func CreateProgram(args CreateUndoProgramArgs) (program.Program, error) {
+func CreateProgram2(args CreateUndoProgramArgs) (program.Program, error) {
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot))

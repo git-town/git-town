@@ -18,7 +18,7 @@ func Execute(args ExecuteArgs) error {
 	if args.RunState.DryRun {
 		return nil
 	}
-	program := createProgram(args)
+	program := CreateProgram(args)
 	lightInterpreter.Execute(program, args.Runner, args.Lineage)
 	err := statefile.Delete(args.RootDir)
 	if err != nil {
