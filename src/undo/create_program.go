@@ -21,35 +21,35 @@ func createProgram(args ExecuteArgs) program.Program {
 	}
 
 	// undo branch changes
-	branchSpans := undobranches.NewBranchSpans(args.RunState.BeforeBranchesSnapshot, args.RunState.AfterBranchesSnapshot)
+	branchSpans := undobranches.NewBranchSpans(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   args.FullConfig,
-		FinalBranch:              args.RunState.AfterBranchesSnapshot.Active,
-		InitialBranch:            args.RunState.BeforeBranchesSnapshot.Active,
+		FinalBranch:              args.RunState.EndBranchesSnapshot.Active,
+		InitialBranch:            args.RunState.BeginBranchesSnapshot.Active,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	undoProgram.AddProgram(undoBranchesProgram)
 
 	// undo config changes
-	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeforeConfigSnapshot, args.RunState.AfterConfigSnapshot)
+	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
 	configUndoProgram := configSpans.UndoProgram()
 	undoProgram.AddProgram(configUndoProgram)
 
 	// undo stash changes
-	stashDiff := undostash.NewStashDiff(args.RunState.BeforeStashSize, args.InitialStashSize)
+	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.InitialStashSize)
 	undoStashProgram := stashDiff.Program()
 	undoProgram.AddProgram(undoStashProgram)
 
 	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeforeBranchesSnapshot.Active})
+	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
 	undoProgram.RemoveDuplicateCheckout()
 
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeforeBranchesSnapshot.Active},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeginBranchesSnapshot.Active},
 	})
 	return undoProgram
 }
