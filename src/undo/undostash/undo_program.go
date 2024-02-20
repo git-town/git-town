@@ -6,6 +6,5 @@ import (
 )
 
 func DetermineUndoStashProgram(beginStashSize, endStashSize gitdomain.StashSize) program.Program {
-	stashDiff := NewStashDiff(beginStashSize, endStashSize)
-	return stashDiff.Program()
+	return NewStashDiff(beginStashSize, endStashSize).Program()
 }
