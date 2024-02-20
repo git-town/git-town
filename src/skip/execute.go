@@ -32,8 +32,8 @@ func Execute(args ExecuteArgs) error {
 	// undo the changes to the current branch
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
-			Before: *args.RunState.BeforeBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-			After:  *args.RunState.AfterBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
 		},
 	}
 	changes := spans.Changes()
@@ -78,9 +78,9 @@ func Execute(args ExecuteArgs) error {
 		DialogTestInputs:        &args.TestInputs,
 		FullConfig:              &args.Runner.FullConfig,
 		HasOpenChanges:          args.HasOpenChanges,
-		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
-		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
-		InitialStashSize:        args.RunState.BeforeStashSize,
+		InitialBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
+		InitialConfigSnapshot:   args.RunState.BeginConfigSnapshot,
+		InitialStashSize:        args.RunState.BeginStashSize,
 		RootDir:                 args.RootDir,
 		Run:                     args.Runner,
 		RunState:                args.RunState,
