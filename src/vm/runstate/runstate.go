@@ -91,7 +91,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 		BeforeStashSize:        self.BeforeStashSize,
 		Command:                self.Command,
 		DryRun:                 self.DryRun,
-		RunProgram:             self.AbortProgram,
+		RunProgram:             program.Program{},
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram
