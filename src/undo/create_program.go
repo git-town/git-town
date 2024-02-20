@@ -33,8 +33,7 @@ func createProgram(args ExecuteArgs) program.Program {
 
 	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
-	configUndoProgram := configSpans.UndoProgram()
-	undoProgram.AddProgram(configUndoProgram)
+	undoProgram.AddProgram(configSpans.UndoProgram())
 
 	// undo stash changes
 	stashDiff := undostash.NewStashDiff(args.RunState.BeginStashSize, args.InitialStashSize)
