@@ -3,14 +3,13 @@ package undo
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
+	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
-	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
 
@@ -22,20 +21,7 @@ func Execute(args ExecuteArgs) error {
 	program := createProgram(args)
 
 	// execute the undo program
-	for _, opcode := range program {
-		err := opcode.Run(shared.RunArgs{
-			Connector:                       nil,
-			DialogTestInputs:                nil,
-			Lineage:                         args.Lineage,
-			PrependOpcodes:                  nil,
-			RegisterUndoablePerennialCommit: nil,
-			Runner:                          args.Runner,
-			UpdateInitialBranchLocalSHA:     nil,
-		})
-		if err != nil {
-			fmt.Println(components.Red().Styled("NOTICE: " + err.Error()))
-		}
-	}
+	lightInterpreter.Execute(program, args.Runner, args.Lineage)
 
 	err := statefile.Delete(args.RootDir)
 	if err != nil {
