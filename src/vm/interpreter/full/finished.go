@@ -16,7 +16,7 @@ func finished(args ExecuteArgs) error {
 		return finishedUndoCommand(args)
 	}
 	var err error
-	args.RunState.AfterBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
+	args.RunState.EndBranchesSnapshot, err = args.Run.Backend.BranchesSnapshot()
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func finished(args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	args.RunState.AfterConfigSnapshot = undoconfig.ConfigSnapshot{
+	args.RunState.EndConfigSnapshot = undoconfig.ConfigSnapshot{
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
