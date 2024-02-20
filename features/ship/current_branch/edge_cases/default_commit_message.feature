@@ -7,7 +7,6 @@ Feature: must provide a commit message
       | feature | local    | feature commit |
     When I run "git-town ship" and close the editor
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |
