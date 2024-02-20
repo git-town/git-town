@@ -11,8 +11,9 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 )
 
-func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
+func CreateUndoErroredProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	result := program.Program{}
+	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot))
 	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.BeginBranchesSnapshot, args.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig))
 	finalStashSize, err := args.Run.Backend.StashSize()
@@ -30,6 +31,7 @@ type CreateUndoProgramArgs struct {
 	DryRun                   bool
 	EndBranchesSnapshot      gitdomain.BranchesSnapshot
 	EndConfigSnapshot        undoconfig.ConfigSnapshot
+	HasOpenChanges           bool
 	NoPushHook               configdomain.NoPushHook
 	Run                      *git.ProdRunner
 	RunState                 runstate.RunState
