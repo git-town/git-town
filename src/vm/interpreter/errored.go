@@ -35,12 +35,12 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
-		DryRun:                   args.RunState.DryRun,
-		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
-		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
 		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
 		BeginConfigSnapshot:      args.InitialConfigSnapshot,
 		BeginStashSize:           args.InitialStashSize,
+		DryRun:                   args.RunState.DryRun,
+		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
 		NoPushHook:               args.NoPushHook(),
 		Run:                      args.Run,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
