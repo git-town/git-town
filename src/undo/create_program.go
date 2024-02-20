@@ -21,12 +21,12 @@ func createProgram(args ExecuteArgs) program.Program {
 	}
 
 	// undo branch changes
-	branchSpans := undobranches.NewBranchSpans(args.RunState.EndBranchesSnapshot, args.RunState.EndBranchesSnapshot)
+	branchSpans := undobranches.NewBranchSpans(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   args.FullConfig,
 		FinalBranch:              args.RunState.EndBranchesSnapshot.Active,
-		InitialBranch:            args.RunState.EndBranchesSnapshot.Active,
+		InitialBranch:            args.RunState.BeginBranchesSnapshot.Active,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	undoProgram.AddProgram(undoBranchesProgram)
@@ -42,14 +42,14 @@ func createProgram(args ExecuteArgs) program.Program {
 	undoProgram.AddProgram(undoStashProgram)
 
 	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.EndBranchesSnapshot.Active})
+	undoProgram.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
 	undoProgram.RemoveDuplicateCheckout()
 
 	cmdhelpers.Wrap(&undoProgram, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
 		StashOpenChanges:         args.RunState.IsFinished() && args.HasOpenChanges,
-		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.EndBranchesSnapshot.Active},
+		PreviousBranchCandidates: gitdomain.LocalBranchNames{args.RunState.BeginBranchesSnapshot.Active},
 	})
 	return undoProgram
 }

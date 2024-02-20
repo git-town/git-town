@@ -20,7 +20,7 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		DryRun:                   false,
 		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
 		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
-		BeginBranchesSnapshot:    args.RunState.EndBranchesSnapshot,
+		BeginBranchesSnapshot:    args.RunState.BeginBranchesSnapshot,
 		BeginConfigSnapshot:      args.RunState.BeginConfigSnapshot,
 		BeginStashSize:           args.RunState.BeginStashSize,
 		NoPushHook:               args.FullConfig.NoPushHook(),
