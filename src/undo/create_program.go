@@ -21,15 +21,7 @@ func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
 		result.Add(&opcodes.CommitOpenChanges{})
 	}
 	// undo branch changes
-	branchSpans := undobranches.NewBranchSpans(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot)
-	branchChanges := branchSpans.Changes()
-	undoBranchesProgram := branchChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		BeginBranch:              args.RunState.BeginBranchesSnapshot.Active,
-		Config:                   &args.Run.FullConfig,
-		EndBranch:                args.RunState.EndBranchesSnapshot.Active,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	result.AddProgram(undoBranchesProgram)
+	result.AddProgram(undobranches.DetermineUndoBranchesProgram(args.RunState.BeginBranchesSnapshot, args.RunState.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig))
 	// undo config changes
 	configSpans := undoconfig.NewConfigDiffs(args.RunState.BeginConfigSnapshot, args.RunState.EndConfigSnapshot)
 	result.AddProgram(configSpans.UndoProgram())
