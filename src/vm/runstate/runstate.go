@@ -66,14 +66,14 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		EndBranchesSnapshot:   self.EndBranchesSnapshot,
-		EndConfigSnapshot:     self.EndConfigSnapshot,
-		EndStashSize:          self.EndStashSize,
 		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
 		BeginConfigSnapshot:   self.BeginConfigSnapshot,
 		BeginStashSize:        self.BeginStashSize,
 		Command:               self.Command,
 		DryRun:                self.DryRun,
+		EndBranchesSnapshot:   self.EndBranchesSnapshot,
+		EndConfigSnapshot:     self.EndConfigSnapshot,
+		EndStashSize:          self.EndStashSize,
 		IsUndo:                true,
 		RunProgram:            abortProgram,
 	}
@@ -83,14 +83,14 @@ func (self *RunState) CreateAbortRunState() RunState {
 // that skips operations for the current branch.
 func (self *RunState) CreateSkipRunState() RunState {
 	result := RunState{
-		EndBranchesSnapshot:   self.EndBranchesSnapshot,
-		EndConfigSnapshot:     self.EndConfigSnapshot,
-		EndStashSize:          self.EndStashSize,
 		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
 		BeginConfigSnapshot:   self.BeginConfigSnapshot,
 		BeginStashSize:        self.BeginStashSize,
 		Command:               self.Command,
 		DryRun:                self.DryRun,
+		EndBranchesSnapshot:   self.EndBranchesSnapshot,
+		EndConfigSnapshot:     self.EndConfigSnapshot,
+		EndStashSize:          self.EndStashSize,
 		RunProgram:            program.Program{},
 	}
 	// undo the operations done on the current branch so far
@@ -120,14 +120,14 @@ func (self *RunState) CreateSkipRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		EndBranchesSnapshot:      self.EndBranchesSnapshot,
-		EndConfigSnapshot:        self.EndConfigSnapshot,
-		EndStashSize:             self.EndStashSize,
 		BeginBranchesSnapshot:    self.BeginBranchesSnapshot,
 		BeginConfigSnapshot:      self.BeginConfigSnapshot,
 		BeginStashSize:           self.BeginStashSize,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
+		EndBranchesSnapshot:      self.EndBranchesSnapshot,
+		EndConfigSnapshot:        self.EndConfigSnapshot,
+		EndStashSize:             self.EndStashSize,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
