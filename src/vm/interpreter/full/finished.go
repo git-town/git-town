@@ -39,12 +39,12 @@ func finished(args ExecuteArgs) error {
 		return finishedDryRunCommand(args)
 	}
 	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
-		DryRun:                   args.RunState.DryRun,
-		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
-		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
 		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
 		BeginConfigSnapshot:      args.InitialConfigSnapshot,
 		BeginStashSize:           args.InitialStashSize,
+		DryRun:                   args.RunState.DryRun,
+		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
 		NoPushHook:               args.NoPushHook(),
 		Run:                      args.Run,
 		RunState:                 *args.RunState,

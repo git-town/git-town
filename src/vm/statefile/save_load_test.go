@@ -36,16 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:               "command",
-			IsUndo:                true,
 			AbortProgram:          program.Program{},
-			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
-			EndStashSize:          1,
 			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
 			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 			BeginStashSize:        0,
+			Command:               "command",
 			DryRun:                true,
+			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+			EndStashSize:          1,
+			IsUndo:                true,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
