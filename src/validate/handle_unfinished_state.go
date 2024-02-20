@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/v12/src/skip"
 	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
@@ -97,10 +97,11 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	if repoStatus.Conflicts {
 		return false, errors.New(messages.ContinueUnresolvedConflicts)
 	}
-	return true, interpreter.Execute(interpreter.ExecuteArgs{
+	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
 		FullConfig:              &args.Run.FullConfig,
+		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,

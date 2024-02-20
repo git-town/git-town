@@ -15,7 +15,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -60,10 +60,11 @@ func executeContinue(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	return interpreter.Execute(interpreter.ExecuteArgs{
+	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -106,6 +107,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		FullConfig:       &repo.Runner.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
+		hasOpenChanges:   repoStatus.OpenChanges,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
@@ -113,6 +115,7 @@ type continueConfig struct {
 	connector hostingdomain.Connector
 	*configdomain.FullConfig
 	dialogTestInputs components.TestInputs
+	hasOpenChanges   bool
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
