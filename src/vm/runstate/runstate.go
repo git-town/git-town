@@ -18,14 +18,14 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
-	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
-	AfterConfigSnapshot      undoconfig.ConfigSnapshot
-	AfterStashSize           gitdomain.StashSize
-	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
-	BeforeConfigSnapshot     undoconfig.ConfigSnapshot
-	BeforeStashSize          gitdomain.StashSize
+	BeginBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeginConfigSnapshot      undoconfig.ConfigSnapshot
+	BeginStashSize           gitdomain.StashSize
 	Command                  string
 	DryRun                   bool
+	EndBranchesSnapshot      gitdomain.BranchesSnapshot
+	EndConfigSnapshot        undoconfig.ConfigSnapshot
+	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program

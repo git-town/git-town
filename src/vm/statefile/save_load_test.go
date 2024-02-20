@@ -36,16 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:                "command",
-			IsUndo:                 true,
-			AbortProgram:           program.Program{},
-			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
-			AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
-			AfterStashSize:         1,
-			BeforeBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
-			BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
-			BeforeStashSize:        0,
-			DryRun:                 true,
+			Command:               "command",
+			IsUndo:                true,
+			AbortProgram:          program.Program{},
+			EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+			EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+			EndStashSize:          1,
+			BeginBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			BeginConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+			BeginStashSize:        0,
+			DryRun:                true,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
@@ -171,26 +171,26 @@ func TestLoadSave(t *testing.T) {
 		wantJSON := `
 {
   "AbortProgram": [],
-  "AfterBranchesSnapshot": {
+  "BeginBranchesSnapshot": {
     "Active": "",
     "Branches": []
   },
-  "AfterConfigSnapshot": {
+  "BeginConfigSnapshot": {
     "Global": {},
     "Local": {}
   },
-  "AfterStashSize": 1,
-  "BeforeBranchesSnapshot": {
-    "Active": "",
-    "Branches": []
-  },
-  "BeforeConfigSnapshot": {
-    "Global": {},
-    "Local": {}
-  },
-  "BeforeStashSize": 0,
+  "BeginStashSize": 0,
   "Command": "command",
   "DryRun": true,
+  "EndBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "EndConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "EndStashSize": 1,
   "FinalUndoProgram": [],
   "IsUndo": true,
   "RunProgram": [
