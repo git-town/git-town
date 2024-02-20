@@ -18,14 +18,14 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
-	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
-	AfterConfigSnapshot      undoconfig.ConfigSnapshot
-	AfterStashSize           gitdomain.StashSize
-	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
-	BeforeConfigSnapshot     undoconfig.ConfigSnapshot
-	BeforeStashSize          gitdomain.StashSize
+	BeginBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeginConfigSnapshot      undoconfig.ConfigSnapshot
+	BeginStashSize           gitdomain.StashSize
 	Command                  string
 	DryRun                   bool
+	EndBranchesSnapshot      gitdomain.BranchesSnapshot
+	EndConfigSnapshot        undoconfig.ConfigSnapshot
+	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
 	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
@@ -66,16 +66,16 @@ func (self *RunState) CreateAbortRunState() RunState {
 	abortProgram := self.AbortProgram
 	abortProgram.AddProgram(self.UndoProgram)
 	return RunState{
-		AfterBranchesSnapshot:  self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:    self.AfterConfigSnapshot,
-		AfterStashSize:         self.AfterStashSize,
-		BeforeBranchesSnapshot: self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:   self.BeforeConfigSnapshot,
-		BeforeStashSize:        self.BeforeStashSize,
-		Command:                self.Command,
-		DryRun:                 self.DryRun,
-		IsUndo:                 true,
-		RunProgram:             abortProgram,
+		EndBranchesSnapshot:   self.EndBranchesSnapshot,
+		EndConfigSnapshot:     self.EndConfigSnapshot,
+		EndStashSize:          self.EndStashSize,
+		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
+		BeginConfigSnapshot:   self.BeginConfigSnapshot,
+		BeginStashSize:        self.BeginStashSize,
+		Command:               self.Command,
+		DryRun:                self.DryRun,
+		IsUndo:                true,
+		RunProgram:            abortProgram,
 	}
 }
 
@@ -84,19 +84,19 @@ func (self *RunState) CreateAbortRunState() RunState {
 // represented by this runstate.
 func (self *RunState) CreateUndoRunState() RunState {
 	result := RunState{
-		AfterBranchesSnapshot:    self.AfterBranchesSnapshot,
-		AfterConfigSnapshot:      self.AfterConfigSnapshot,
-		AfterStashSize:           self.AfterStashSize,
-		BeforeBranchesSnapshot:   self.BeforeBranchesSnapshot,
-		BeforeConfigSnapshot:     self.BeforeConfigSnapshot,
-		BeforeStashSize:          self.BeforeStashSize,
+		EndBranchesSnapshot:      self.EndBranchesSnapshot,
+		EndConfigSnapshot:        self.EndConfigSnapshot,
+		EndStashSize:             self.EndStashSize,
+		BeginBranchesSnapshot:    self.BeginBranchesSnapshot,
+		BeginConfigSnapshot:      self.BeginConfigSnapshot,
+		BeginStashSize:           self.BeginStashSize,
 		Command:                  self.Command,
 		DryRun:                   self.DryRun,
 		IsUndo:                   true,
 		RunProgram:               self.UndoProgram,
 		UndoablePerennialCommits: []gitdomain.SHA{},
 	}
-	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeforeBranchesSnapshot.Active})
+	result.RunProgram.Add(&opcodes.Checkout{Branch: self.BeginBranchesSnapshot.Active})
 	result.RunProgram.RemoveDuplicateCheckout()
 	return result
 }

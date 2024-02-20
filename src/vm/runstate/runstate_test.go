@@ -41,7 +41,7 @@ func TestRunState(t *testing.T) {
 					Hard:        false,
 				},
 			},
-			AfterBranchesSnapshot: gitdomain.BranchesSnapshot{
+			EndBranchesSnapshot: gitdomain.BranchesSnapshot{
 				Active: "branch-1",
 				Branches: gitdomain.BranchInfos{
 					gitdomain.BranchInfo{
@@ -60,11 +60,11 @@ func TestRunState(t *testing.T) {
 					},
 				},
 			},
-			AfterConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
-			AfterStashSize:           1,
-			BeforeBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-			BeforeConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
-			BeforeStashSize:          0,
+			EndConfigSnapshot:        undoconfig.EmptyConfigSnapshot(),
+			EndStashSize:             1,
+			BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
+			BeginConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
+			BeginStashSize:           0,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
@@ -81,7 +81,18 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
-  "AfterBranchesSnapshot": {
+  "BeginBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "BeginConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "BeginStashSize": 0,
+  "Command": "sync",
+  "DryRun": true,
+  "EndBranchesSnapshot": {
     "Active": "branch-1",
     "Branches": [
       {
@@ -100,22 +111,11 @@ func TestRunState(t *testing.T) {
       }
     ]
   },
-  "AfterConfigSnapshot": {
+  "EndConfigSnapshot": {
     "Global": {},
     "Local": {}
   },
-  "AfterStashSize": 1,
-  "BeforeBranchesSnapshot": {
-    "Active": "",
-    "Branches": []
-  },
-  "BeforeConfigSnapshot": {
-    "Global": {},
-    "Local": {}
-  },
-  "BeforeStashSize": 0,
-  "Command": "sync",
-  "DryRun": true,
+  "EndStashSize": 1,
   "FinalUndoProgram": [],
   "IsUndo": false,
   "RunProgram": [
