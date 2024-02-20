@@ -11,15 +11,15 @@ import (
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
-	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.InitialConfigSnapshot, args.FinalConfigSnapshot)
+	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot)
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.InitialBranchesSnapshot, args.FinalBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig)
+	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.BeginBranchesSnapshot, args.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig)
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.InitialStashSize, &args.Run.Backend)
+	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.BeginStashSize, &args.Run.Backend)
 	if err != nil {
 		return program.Program{}, err
 	}
@@ -29,12 +29,12 @@ func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
 }
 
 type CreateUndoProgramArgs struct {
+	BeginBranchesSnapshot    gitdomain.BranchesSnapshot
+	BeginConfigSnapshot      undoconfig.ConfigSnapshot
+	BeginStashSize           gitdomain.StashSize
 	DryRun                   bool
-	FinalBranchesSnapshot    gitdomain.BranchesSnapshot
-	FinalConfigSnapshot      undoconfig.ConfigSnapshot
-	InitialBranchesSnapshot  gitdomain.BranchesSnapshot
-	InitialConfigSnapshot    undoconfig.ConfigSnapshot
-	InitialStashSize         gitdomain.StashSize
+	EndBranchesSnapshot      gitdomain.BranchesSnapshot
+	EndConfigSnapshot        undoconfig.ConfigSnapshot
 	NoPushHook               configdomain.NoPushHook
 	Run                      *git.ProdRunner
 	UndoablePerennialCommits []gitdomain.SHA

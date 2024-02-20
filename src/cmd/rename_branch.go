@@ -75,14 +75,14 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
-		EndStashSize:          0,
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
 		Command:               "rename-branch",
 		DryRun:                dryRun,
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
 		RunProgram:            renameBranchProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

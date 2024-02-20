@@ -63,14 +63,14 @@ func executePrepend(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	runState := runstate.RunState{
-		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
-		EndStashSize:          0,
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        initialStashSize,
 		Command:               "prepend",
 		DryRun:                dryRun,
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
 		RunProgram:            prependProgram(config),
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{

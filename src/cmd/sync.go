@@ -89,14 +89,14 @@ func executeSync(all, dryRun, verbose bool) error {
 		ShouldPushTags: config.shouldPushTags,
 	})
 	runState := runstate.RunState{
-		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
-		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
-		EndStashSize:          0,
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
 		BeginStashSize:        0,
 		Command:               "sync",
 		DryRun:                dryRun,
+		EndBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+		EndConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+		EndStashSize:          0,
 		RunProgram:            runProgram,
 	}
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
