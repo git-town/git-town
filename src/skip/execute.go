@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -73,10 +73,11 @@ func Execute(args ExecuteArgs) error {
 	args.RunState.RunProgram = newProgram
 
 	// continue executing the program
-	return interpreter.Execute(interpreter.ExecuteArgs{
+	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
 		FullConfig:              &args.Runner.FullConfig,
+		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.RunState.BeforeBranchesSnapshot,
 		InitialConfigSnapshot:   args.RunState.BeforeConfigSnapshot,
 		InitialStashSize:        args.RunState.BeforeStashSize,
