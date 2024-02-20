@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/sync"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/spf13/cobra"
@@ -99,7 +99,7 @@ func executeSync(all, dryRun, verbose bool) error {
 		DryRun:                 dryRun,
 		RunProgram:             runProgram,
 	}
-	return interpreter.Execute(interpreter.ExecuteArgs{
+	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
