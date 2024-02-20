@@ -39,8 +39,8 @@ func Execute(args ExecuteArgs) error {
 	changes := spans.Changes()
 	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		Config:                   &args.Runner.FullConfig,
-		FinalBranch:              args.CurrentBranch,
-		InitialBranch:            args.CurrentBranch,
+		EndBranch:                args.CurrentBranch,
+		BeginBranch:              args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	for _, opcode := range undoCurrentBranchProgram {
