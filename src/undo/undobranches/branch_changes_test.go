@@ -76,9 +76,9 @@ func TestChanges(t *testing.T) {
 			PerennialBranches: gitdomain.NewLocalBranchNames(),
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -133,9 +133,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -222,9 +222,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -312,9 +312,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -396,9 +396,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -470,9 +470,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -569,9 +569,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          true,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -665,9 +665,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          true,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -774,9 +774,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch: before.Active,
 			Config:      &config,
 			EndBranch:   after.Active,
-			BeginBranch: before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -874,9 +874,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch: before.Active,
 			Config:      &config,
 			EndBranch:   after.Active,
-			BeginBranch: before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{
 				gitdomain.NewSHA("444444"),
 			},
@@ -992,9 +992,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1088,9 +1088,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1184,9 +1184,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1268,9 +1268,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1354,9 +1354,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
@@ -1435,9 +1435,9 @@ func TestChanges(t *testing.T) {
 			PushHook:          false,
 		}
 		haveProgram := haveChanges.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+			BeginBranch:              before.Active,
 			Config:                   &config,
 			EndBranch:                after.Active,
-			BeginBranch:              before.Active,
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		})
 		wantProgram := program.Program{
