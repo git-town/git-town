@@ -19,10 +19,7 @@ func Execute(args ExecuteArgs) error {
 		return nil
 	}
 	program := createProgram(args)
-
-	// execute the undo program
 	lightInterpreter.Execute(program, args.Runner, args.Lineage)
-
 	err := statefile.Delete(args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateDeleteProblem, err)

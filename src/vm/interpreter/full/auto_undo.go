@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo"
+	"github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
@@ -15,16 +16,18 @@ import (
 // should they fail.
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
-	err := undo.Execute(undo.ExecuteArgs{
-		FullConfig:       args.FullConfig,
-		HasOpenChanges:   false,
-		InitialStashSize: args.InitialStashSize,
-		Lineage:          args.Lineage,
-		RootDir:          args.RootDir,
-		RunState:         *args.RunState,
-		Runner:           args.Run,
-		Verbose:          args.Verbose,
+	undoProgram, err := undo.CreateUndoProgram(undo.CreateUndoProgramArgs{
+		DryRun:                   false,
+		FinalBranchesSnapshot:    args.RunState.AfterBranchesSnapshot,
+		FinalConfigSnapshot:      args.RunState.AfterConfigSnapshot,
+		InitialBranchesSnapshot:  args.RunState.BeforeBranchesSnapshot,
+		InitialConfigSnapshot:    args.RunState.BeforeConfigSnapshot,
+		InitialStashSize:         args.RunState.BeforeStashSize,
+		NoPushHook:               args.FullConfig.NoPushHook(),
+		Run:                      args.Run,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
+	light.Execute(undoProgram, args.Run, args.Lineage)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)
 	}
