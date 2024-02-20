@@ -6,13 +6,13 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
-func DetermineUndoBranchesProgram(initialBranchesSnapshot, finalBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig *configdomain.FullConfig) (program.Program, error) {
-	branchSpans := NewBranchSpans(initialBranchesSnapshot, finalBranchesSnapshot)
+func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot gitdomain.BranchesSnapshot, undoablePerennialCommits []gitdomain.SHA, fullConfig *configdomain.FullConfig) (program.Program, error) {
+	branchSpans := NewBranchSpans(beginBranchesSnapshot, endBranchesSnapshot)
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		Config:                   fullConfig,
-		FinalBranch:              finalBranchesSnapshot.Active,
-		InitialBranch:            initialBranchesSnapshot.Active,
+		FinalBranch:              endBranchesSnapshot.Active,
+		InitialBranch:            beginBranchesSnapshot.Active,
 		UndoablePerennialCommits: undoablePerennialCommits,
 	}), nil
 }
