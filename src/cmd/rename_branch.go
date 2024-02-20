@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
-	"github.com/git-town/git-town/v12/src/vm/interpreter"
+	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -85,10 +85,11 @@ func executeRenameBranch(args []string, dryRun, force, verbose bool) error {
 		DryRun:                 dryRun,
 		RunProgram:             renameBranchProgram(config),
 	}
-	return interpreter.Execute(interpreter.ExecuteArgs{
+	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               nil,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -103,6 +104,7 @@ type renameBranchConfig struct {
 	*configdomain.FullConfig
 	dialogTestInputs components.TestInputs
 	dryRun           bool
+	hasOpenChanges   bool
 	initialBranch    gitdomain.LocalBranchName
 	newBranch        gitdomain.LocalBranchName
 	oldBranch        gitdomain.BranchInfo
@@ -111,7 +113,7 @@ type renameBranchConfig struct {
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.OpenRepoResult, dryRun, verbose bool) (*renameBranchConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	branchesSnapshot, stashSize, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
 		FullConfig:            &repo.Runner.FullConfig,
@@ -162,6 +164,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		FullConfig:       &repo.Runner.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
+		hasOpenChanges:   repoStatus.OpenChanges,
 		initialBranch:    branchesSnapshot.Active,
 		newBranch:        newBranchName,
 		oldBranch:        *oldBranch,
