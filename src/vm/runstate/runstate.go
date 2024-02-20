@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/shared"
@@ -17,13 +18,17 @@ import (
 // and how to undo what has been done so far.
 type RunState struct {
 	AbortProgram             program.Program `exhaustruct:"optional"`
+	AfterBranchesSnapshot    gitdomain.BranchesSnapshot
+	AfterConfigSnapshot      undoconfig.ConfigSnapshot
+	AfterStashSize           gitdomain.StashSize
+	BeforeBranchesSnapshot   gitdomain.BranchesSnapshot
+	BeforeConfigSnapshot     undoconfig.ConfigSnapshot
+	BeforeStashSize          gitdomain.StashSize
 	Command                  string
 	DryRun                   bool
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	InitialActiveBranch      gitdomain.LocalBranchName
-	IsUndo                   bool `exhaustruct:"optional"`
+	IsUndo                   bool            `exhaustruct:"optional"`
 	RunProgram               program.Program
-	UndoProgram              program.Program            `exhaustruct:"optional"`
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
@@ -53,86 +58,12 @@ func (self *RunState) AddPushBranchAfterCurrentBranchProgram(backend *git.Backen
 	return nil
 }
 
-// CreateAbortRunState returns a new runstate
-// to be run to aborting and undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateAbortRunState() RunState {
-	abortProgram := self.AbortProgram
-	abortProgram.AddProgram(self.UndoProgram)
-	return RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		IsUndo:              true,
-		RunProgram:          abortProgram,
-	}
-}
-
-// CreateSkipRunState returns a new Runstate
-// that skips operations for the current branch.
-func (self *RunState) CreateSkipRunState() RunState {
-	result := RunState{
-		Command:             self.Command,
-		DryRun:              self.DryRun,
-		InitialActiveBranch: self.InitialActiveBranch,
-		RunProgram:          self.AbortProgram,
-	}
-	// first undo the changes made to the current branch
-	// TODO: instead of using the undo opcodes here, reset the branch to the SHA from the snapshot
-	result.RunProgram.Add(&opcode.ResetCurrentBranchToSHA{
-		Hard:        true,
-		MustHaveSHA: "",
-		SetToSHA:    self,
-	})
-	for _, opcode := range self.UndoProgram {
-		if shared.IsCheckoutOpcode(opcode) {
-			break
-		}
-		result.RunProgram.Add(opcode)
-	}
-	// skip all remaining opcodes for the current branch (to skip),
-	// then copy the opcode for the remaining branches into the result
-	skipping := true
-	for _, opcode := range self.RunProgram {
-		// TODO: don't look for the checkout opcode here, look for the "end of the current branch" opcode
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			result.RunProgram.Add(opcode)
-		}
-	}
-	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	return result
-}
-
-// CreateUndoRunState returns a new runstate
-// to be run when undoing the Git Town command
-// represented by this runstate.
-func (self *RunState) CreateUndoRunState() RunState {
-	result := RunState{
-		Command:                  self.Command,
-		DryRun:                   self.DryRun,
-		InitialActiveBranch:      self.InitialActiveBranch,
-		IsUndo:                   true,
-		RunProgram:               self.UndoProgram,
-		UndoablePerennialCommits: []gitdomain.SHA{},
-	}
-	result.RunProgram.Add(&opcodes.Checkout{Branch: self.InitialActiveBranch})
-	result.RunProgram.RemoveDuplicateCheckout()
-	return result
-}
-
 func (self *RunState) HasAbortProgram() bool {
 	return !self.AbortProgram.IsEmpty()
 }
 
 func (self *RunState) HasRunProgram() bool {
 	return !self.RunProgram.IsEmpty()
-}
-
-func (self *RunState) HasUndoProgram() bool {
-	return !self.UndoProgram.IsEmpty()
 }
 
 // IsFinished returns whether or not the run state is unfinished.
@@ -188,8 +119,6 @@ func (self *RunState) String() string {
 	result.WriteString(self.AbortProgram.StringIndented("    "))
 	result.WriteString("  RunProgram: ")
 	result.WriteString(self.RunProgram.StringIndented("    "))
-	result.WriteString("  UndoProgram: ")
-	result.WriteString(self.UndoProgram.StringIndented("    "))
 	if self.UnfinishedDetails != nil {
 		result.WriteString("  UnfineshedDetails: ")
 		result.WriteString(self.UnfinishedDetails.String())

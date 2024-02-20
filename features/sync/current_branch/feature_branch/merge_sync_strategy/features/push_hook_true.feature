@@ -37,7 +37,7 @@ Feature: push-hook setting set to "true"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to undo
       """

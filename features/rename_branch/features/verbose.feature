@@ -16,6 +16,7 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git stash list                                |
+      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git branch -vva                               |
       |        | backend  | git remote                                    |
       | old    | frontend | git fetch --prune --tags                      |
@@ -32,13 +33,13 @@ Feature: display all executed Git commands
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout new                              |
+      |        | backend  | git branch -vva                               |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
-      |        | backend  | git branch -vva                               |
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "new"
 
@@ -52,22 +53,19 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git stash list                                |
+      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git remote get-url origin                     |
-      |        | backend  | git config --unset git-town-branch.new.parent |
-      |        | backend  | git config git-town-branch.old.parent main    |
       | new    | frontend | git branch old {{ sha 'old commit' }}         |
       |        | frontend | git push -u origin old                        |
       |        | frontend | git push origin :new                          |
       |        | frontend | git checkout old                              |
       | old    | frontend | git branch -D new                             |
-      |        | backend  | git show-ref --verify --quiet refs/heads/main |
-      |        | backend  | git checkout main                             |
-      |        | backend  | git checkout old                              |
+      |        | backend  | git config --unset git-town-branch.new.parent |
+      |        | backend  | git config git-town-branch.old.parent main    |
     And it prints:
       """
-      Ran 19 shell commands.
+      Ran 16 shell commands.
       """
     And the current branch is now "old"

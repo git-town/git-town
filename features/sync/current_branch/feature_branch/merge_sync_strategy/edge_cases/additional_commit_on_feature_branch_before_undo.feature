@@ -14,11 +14,11 @@ Feature: undo offline sync after additional commits to the feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       cannot reset branch "feature"
       """
-    And it prints the error:
+    And it prints:
       """
       because it received additional commits in the meantime
       """

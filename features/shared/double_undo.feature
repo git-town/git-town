@@ -5,7 +5,7 @@ Feature: no double undo
     And I run "git-town kill"
     And I run "git-town undo"
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to undo
       """

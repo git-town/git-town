@@ -595,7 +595,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput)
 		}
 		if state.runExitCode == 0 {
-			return fmt.Errorf("expected exit code %d", state.runExitCode)
+			return fmt.Errorf("unexpected exit code %d", state.runExitCode)
 		}
 		return nil
 	})

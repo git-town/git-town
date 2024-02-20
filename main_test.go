@@ -36,11 +36,12 @@ func TestGodog(t *testing.T) {
 		tags = "@this"
 	}
 	status := godog.RunWithOptions("godog", FeatureContext, godog.Options{
-		Format:      "progress",
-		Concurrency: runtime.NumCPU() * concurrency,
-		Strict:      true,
-		Paths:       []string{"features/"},
-		Tags:        tags,
+		Format:        "progress",
+		Concurrency:   runtime.NumCPU() * concurrency,
+		StopOnFailure: true,
+		Strict:        true,
+		Paths:         []string{"features/"},
+		Tags:          tags,
 	})
 	if status > 0 {
 		t.FailNow()

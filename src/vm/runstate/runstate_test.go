@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -33,15 +34,31 @@ func TestRunState(t *testing.T) {
 					Hard:        false,
 				},
 			},
-			UndoProgram: program.Program{
-				&opcodes.ResetCurrentBranchToSHA{
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
-					Hard:        false,
+			AfterBranchesSnapshot: gitdomain.BranchesSnapshot{
+				Active: "branch-1",
+				Branches: gitdomain.BranchInfos{
+					gitdomain.BranchInfo{
+						LocalName:  "branch-1",
+						LocalSHA:   "111111",
+						RemoteName: "origin/branch-1",
+						RemoteSHA:  "222222",
+						SyncStatus: gitdomain.SyncStatusNotInSync,
+					},
+					gitdomain.BranchInfo{
+						LocalName:  "branch-2",
+						LocalSHA:   "333333",
+						RemoteName: gitdomain.EmptyRemoteBranchName(),
+						RemoteSHA:  gitdomain.EmptySHA(),
+						SyncStatus: gitdomain.SyncStatusLocalOnly,
+					},
 				},
 			},
+			AfterConfigSnapshot:      undoconfig.EmptyConfigSnapshot(),
+			AfterStashSize:           1,
+			BeforeBranchesSnapshot:   gitdomain.EmptyBranchesSnapshot(),
+			BeforeConfigSnapshot:     undoconfig.EmptyConfigSnapshot(),
+			BeforeStashSize:          0,
 			UndoablePerennialCommits: []gitdomain.SHA{},
-			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 		}
 		encoded, err := json.MarshalIndent(runState, "", "  ")
 		must.NoError(t, err)
@@ -57,22 +74,44 @@ func TestRunState(t *testing.T) {
       "type": "ResetCurrentBranchToSHA"
     }
   ],
+  "AfterBranchesSnapshot": {
+    "Active": "branch-1",
+    "Branches": [
+      {
+        "LocalName": "branch-1",
+        "LocalSHA": "111111",
+        "RemoteName": "origin/branch-1",
+        "RemoteSHA": "222222",
+        "SyncStatus": "not in sync"
+      },
+      {
+        "LocalName": "branch-2",
+        "LocalSHA": "333333",
+        "RemoteName": "",
+        "RemoteSHA": "",
+        "SyncStatus": "local only"
+      }
+    ]
+  },
+  "AfterConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "AfterStashSize": 1,
+  "BeforeBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "BeforeConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "BeforeStashSize": 0,
   "Command": "sync",
   "DryRun": true,
   "FinalUndoProgram": [],
-  "InitialActiveBranch": "initial",
   "IsUndo": false,
   "RunProgram": [
-    {
-      "data": {
-        "Hard": false,
-        "MustHaveSHA": "222222",
-        "SetToSHA": "111111"
-      },
-      "type": "ResetCurrentBranchToSHA"
-    }
-  ],
-  "UndoProgram": [
     {
       "data": {
         "Hard": false,

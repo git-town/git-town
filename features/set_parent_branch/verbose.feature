@@ -14,6 +14,7 @@ Feature: display all executed Git commands
       |        | backend | git config -lz --local                          |
       |        | backend | git rev-parse --show-toplevel                   |
       |        | backend | git stash list                                  |
+      |        | backend | git status --long --ignore-submodules           |
       |        | backend | git branch -vva                                 |
       |        | backend | git config --unset git-town-branch.child.parent |
       |        | backend | git config -lz --global                         |
@@ -23,7 +24,7 @@ Feature: display all executed Git commands
       |        | backend | git config -lz --local                          |
     And it prints:
       """
-      Ran 12 shell commands.
+      Ran 13 shell commands.
       """
     And this branch lineage exists now
       | BRANCH | PARENT |

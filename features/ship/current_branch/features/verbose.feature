@@ -16,13 +16,12 @@ Feature: display all executed Git commands
       |         | backend  | git config -lz --local                            |
       |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git stash list                                    |
-      |         | backend  | git branch -vva                                   |
       |         | backend  | git status --long --ignore-submodules             |
+      |         | backend  | git branch -vva                                   |
       |         | backend  | git remote                                        |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
-      |         | backend  | git status --long --ignore-submodules             |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git status --long --ignore-submodules             |
       | feature | frontend | git checkout main                                 |
@@ -44,13 +43,13 @@ Feature: display all executed Git commands
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
+      |         | backend  | git branch -vva                                   |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git config -lz --local                            |
-      |         | backend  | git branch -vva                                   |
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 37 shell commands.
+      Ran 36 shell commands.
       """
     And the current branch is now "main"
 
@@ -64,19 +63,19 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                         |
       |        | backend  | git rev-parse --show-toplevel                  |
       |        | backend  | git stash list                                 |
+      |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git branch -vva                                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}      |
-      |        | backend  | git status --long --ignore-submodules          |
       |        | backend  | git remote get-url origin                      |
-      |        | backend  | git config git-town-branch.feature.parent main |
       |        | backend  | git log --pretty=format:%h -10                 |
       | main   | frontend | git revert {{ sha 'done' }}                    |
       |        | backend  | git rev-list --left-right main...origin/main   |
       | main   | frontend | git push                                       |
       |        | frontend | git branch feature {{ sha 'feature commit' }}  |
       |        | frontend | git push -u origin feature                     |
-      |        | frontend | git checkout feature                           |
-      |        | backend  | git show-ref --verify --quiet refs/heads/      |
+      |        | backend  | git show-ref --quiet refs/heads/feature        |
+      | main   | frontend | git checkout feature                           |
+      |        | backend  | git config git-town-branch.feature.parent main |
     And it prints:
       """
       Ran 18 shell commands.

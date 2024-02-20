@@ -19,7 +19,7 @@ Feature: does not ship a non-existing branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs no commands
-    And it prints the error:
+    And it prints:
       """
       nothing to undo
       """

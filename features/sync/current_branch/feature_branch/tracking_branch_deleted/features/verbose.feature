@@ -17,12 +17,12 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                        |
       |        | backend  | git rev-parse --show-toplevel                 |
       |        | backend  | git stash list                                |
+      |        | backend  | git status --long --ignore-submodules         |
       |        | backend  | git branch -vva                               |
       |        | backend  | git remote                                    |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |        | backend  | git status --long --ignore-submodules         |
       | old    | frontend | git checkout main                             |
       | main   | frontend | git rebase origin/main                        |
       |        | backend  | git rev-list --left-right main...origin/main  |
@@ -34,9 +34,9 @@ Feature: display all executed Git commands
       | main   | frontend | git branch -d old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
       |        | backend  | git show-ref --quiet refs/heads/old           |
+      |        | backend  | git branch -vva                               |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git config -lz --local                        |
-      |        | backend  | git branch -vva                               |
       |        | backend  | git stash list                                |
     And it prints:
       """
@@ -60,14 +60,14 @@ Feature: display all executed Git commands
       |        | backend  | git config -lz --local                     |
       |        | backend  | git rev-parse --show-toplevel              |
       |        | backend  | git stash list                             |
+      |        | backend  | git status --long --ignore-submodules      |
       |        | backend  | git branch -vva                            |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}  |
-      |        | backend  | git status --long --ignore-submodules      |
       |        | backend  | git remote get-url origin                  |
-      |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git branch old {{ sha 'initial commit' }}  |
-      |        | frontend | git checkout old                           |
-      |        | backend  | git show-ref --verify --quiet refs/heads/  |
+      |        | backend  | git show-ref --quiet refs/heads/old        |
+      | main   | frontend | git checkout old                           |
+      |        | backend  | git config git-town-branch.old.parent main |
     And it prints:
       """
       Ran 13 shell commands.

@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -35,10 +36,16 @@ func TestLoadSave(t *testing.T) {
 	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
 		runState := runstate.RunState{
-			Command:      "command",
-			IsUndo:       true,
-			AbortProgram: program.Program{},
-			DryRun:       true,
+			Command:                "command",
+			IsUndo:                 true,
+			AbortProgram:           program.Program{},
+			AfterBranchesSnapshot:  gitdomain.EmptyBranchesSnapshot(),
+			AfterConfigSnapshot:    undoconfig.EmptyConfigSnapshot(),
+			AfterStashSize:         1,
+			BeforeBranchesSnapshot: gitdomain.EmptyBranchesSnapshot(),
+			BeforeConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+			BeforeStashSize:        0,
+			DryRun:                 true,
 			RunProgram: program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.AbortRebase{},
@@ -153,23 +160,38 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
-			UndoProgram: program.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
 				EndTime:   time.Time{},
 			},
-			InitialActiveBranch:      gitdomain.NewLocalBranchName("initial"),
 			UndoablePerennialCommits: []gitdomain.SHA{},
 		}
 
 		wantJSON := `
 {
   "AbortProgram": [],
+  "AfterBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "AfterConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "AfterStashSize": 1,
+  "BeforeBranchesSnapshot": {
+    "Active": "",
+    "Branches": []
+  },
+  "BeforeConfigSnapshot": {
+    "Global": {},
+    "Local": {}
+  },
+  "BeforeStashSize": 0,
   "Command": "command",
   "DryRun": true,
   "FinalUndoProgram": [],
-  "InitialActiveBranch": "initial",
   "IsUndo": true,
   "RunProgram": [
     {
@@ -426,7 +448,6 @@ func TestLoadSave(t *testing.T) {
       "type": "UpdateProposalTarget"
     }
   ],
-  "UndoProgram": [],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": {
     "CanSkip": true,
