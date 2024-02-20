@@ -11,8 +11,8 @@ func DetermineUndoBranchesProgram(beginBranchesSnapshot, endBranchesSnapshot git
 	branchChanges := branchSpans.Changes()
 	return branchChanges.UndoProgram(BranchChangesUndoProgramArgs{
 		Config:                   fullConfig,
-		FinalBranch:              endBranchesSnapshot.Active,
-		InitialBranch:            beginBranchesSnapshot.Active,
+		EndBranch:                endBranchesSnapshot.Active,
+		BeginBranch:              beginBranchesSnapshot.Active,
 		UndoablePerennialCommits: undoablePerennialCommits,
 	})
 }
