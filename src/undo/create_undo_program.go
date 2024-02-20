@@ -11,21 +11,15 @@ import (
 )
 
 func CreateUndoProgram(args CreateUndoProgramArgs) (program.Program, error) {
-	undoConfigProgram, err := undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot)
+	undoProgram := program.Program{}
+	undoProgram.AddProgram(undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot))
+	undoProgram.AddProgram(undobranches.DetermineUndoBranchesProgram(args.BeginBranchesSnapshot, args.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig))
+	finalStashSize, err := args.Run.Backend.StashSize()
 	if err != nil {
 		return program.Program{}, err
 	}
-	undoBranchesProgram, err := undobranches.DetermineUndoBranchesProgram(args.BeginBranchesSnapshot, args.EndBranchesSnapshot, args.UndoablePerennialCommits, &args.Run.FullConfig)
-	if err != nil {
-		return program.Program{}, err
-	}
-	undoStashProgram, err := undostash.DetermineUndoStashProgram(args.BeginStashSize, &args.Run.Backend)
-	if err != nil {
-		return program.Program{}, err
-	}
-	undoConfigProgram.AddProgram(undoBranchesProgram)
-	undoConfigProgram.AddProgram(undoStashProgram)
-	return undoConfigProgram, nil
+	undoProgram.AddProgram(undostash.DetermineUndoStashProgram(args.BeginStashSize, finalStashSize))
+	return undoProgram, nil
 }
 
 type CreateUndoProgramArgs struct {
