@@ -45,6 +45,22 @@ type ExecuteArgs struct {
 	Verbose        bool
 }
 
+// removes the remaining opcodes for the current branch from the given program
+func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
+	newProgram := program.Program{}
+	skipping := true
+	for _, opcode := range prog {
+		if shared.IsEndOfBranchProgramOpcode(opcode) {
+			skipping = false
+		}
+		if !skipping {
+			newProgram.Add(opcode)
+		}
+	}
+	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
+	return newProgram
+}
+
 func revertChangesToCurrentBranch(args ExecuteArgs) {
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
@@ -60,20 +76,4 @@ func revertChangesToCurrentBranch(args ExecuteArgs) {
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
 	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
-}
-
-// removes the remaining opcodes for the current branch from the given program
-func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
-	newProgram := program.Program{}
-	skipping := true
-	for _, opcode := range prog {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			newProgram.Add(opcode)
-		}
-	}
-	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	return newProgram
 }
