@@ -8,6 +8,7 @@ Feature: don't ask for perennial branches if no branches that could be perennial
       | aliases                     | enter      |                                             |
       | main development branch     | down enter |                                             |
       | perennial branches          |            | no input here since the dialog doesn't show |
+      | perennial regex             | enter      |                                             |
       | hosting platform            | enter      |                                             |
       | origin hostname             | enter      |                                             |
       | sync-feature-strategy       | enter      |                                             |
