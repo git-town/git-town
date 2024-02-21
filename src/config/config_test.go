@@ -19,8 +19,8 @@ func TestGitTown(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature1"))
 		repo.CreateFeatureBranch(gitdomain.NewLocalBranchName("feature2"))
-		repo.Reload()
-		have := repo.Lineage
+		repo.Config.Reload()
+		have := repo.Config.Lineage
 		want := configdomain.Lineage{
 			gitdomain.NewLocalBranchName("feature1"): gitdomain.NewLocalBranchName("main"),
 			gitdomain.NewLocalBranchName("feature2"): gitdomain.NewLocalBranchName("main"),
@@ -42,7 +42,7 @@ func TestGitTown(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
-			have := repo.OriginURL()
+			have := repo.Config.OriginURL()
 			must.EqOp(t, want, *have)
 		}
 	})
@@ -54,24 +54,24 @@ func TestGitTown(t *testing.T) {
 			repo := testruntime.CreateGitTown(t)
 			branch := gitdomain.NewLocalBranchName("branch-1")
 			repo.CreateFeatureBranch(branch)
-			repo.Reload()
+			repo.Config.Reload()
 			want := configdomain.Lineage{
 				branch: gitdomain.NewLocalBranchName("main"),
 			}
-			must.Eq(t, want, repo.Lineage)
+			must.Eq(t, want, repo.Config.Lineage)
 		})
 	})
 
 	t.Run("SetOffline", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		err := repo.SetOffline(true)
+		err := repo.Config.SetOffline(true)
 		must.NoError(t, err)
-		offline := repo.Offline
+		offline := repo.Config.Offline
 		must.True(t, offline.Bool())
-		err = repo.SetOffline(false)
+		err = repo.Config.SetOffline(false)
 		must.NoError(t, err)
-		offline = repo.Offline
+		offline = repo.Config.Offline
 		must.False(t, offline.Bool())
 	})
 }
