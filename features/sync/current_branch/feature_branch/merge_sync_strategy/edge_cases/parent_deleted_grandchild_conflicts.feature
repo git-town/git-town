@@ -20,7 +20,7 @@ Feature: a grandchild branch has conflicts while its parent was deleted remotely
       |            | git checkout child                    |
       | child      | git merge --no-edit main              |
       |            | git checkout main                     |
-      | main       | git branch -d child                   |
+      | main       | git branch -D child                   |
       |            | git checkout grandchild               |
       | grandchild | git merge --no-edit origin/grandchild |
       |            | git merge --no-edit main              |

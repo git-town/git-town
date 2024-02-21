@@ -23,7 +23,7 @@ Feature: sync a branch whose tracking branch was shipped
       |           | git checkout feature-1   |
       | feature-1 | git merge --no-edit main |
       |           | git checkout main        |
-      | main      | git branch -d feature-1  |
+      | main      | git branch -D feature-1  |
       |           | git stash pop            |
     And it prints:
       """

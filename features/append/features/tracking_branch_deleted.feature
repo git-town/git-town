@@ -21,7 +21,7 @@ Feature: append a branch to a branch whose tracking branch was deleted
       |         | git checkout shipped     |
       | shipped | git merge --no-edit main |
       |         | git checkout main        |
-      | main    | git branch -d shipped    |
+      | main    | git branch -D shipped    |
       |         | git branch new main      |
       |         | git checkout new         |
       | new     | git stash pop            |

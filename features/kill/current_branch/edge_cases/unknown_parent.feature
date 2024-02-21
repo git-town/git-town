@@ -9,5 +9,5 @@ Feature: ask for missing parent branch information
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
       |         | git checkout main        |
-      | main    | git branch -d feature    |
+      | main    | git branch -D feature    |
     And no lineage exists now

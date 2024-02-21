@@ -42,7 +42,7 @@ Feature: shipped changes conflict with multiple existing feature branches
       |        | git checkout beta                |
       | beta   | git merge --no-edit main         |
       |        | git checkout main                |
-      | main   | git branch -d beta               |
+      | main   | git branch -D beta               |
       |        | git checkout gamma               |
       | gamma  | git merge --no-edit origin/gamma |
       |        | git merge --no-edit main         |

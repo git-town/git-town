@@ -30,8 +30,7 @@ Feature: display all executed Git commands
       | old    | frontend | git merge --no-edit main                      |
       |        | backend  | git diff main..old                            |
       | old    | frontend | git checkout main                             |
-      |        | backend  | git log main..old                             |
-      | main   | frontend | git branch -d old                             |
+      | main   | frontend | git branch -D old                             |
       |        | backend  | git config --unset git-town-branch.old.parent |
       |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git branch -vva                               |
@@ -40,7 +39,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
