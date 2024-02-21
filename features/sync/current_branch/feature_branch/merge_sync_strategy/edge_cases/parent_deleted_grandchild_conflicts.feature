@@ -1,4 +1,3 @@
-@this
 Feature: a grandchild branch has conflicts while its parent was deleted remotely
 
   Background:
