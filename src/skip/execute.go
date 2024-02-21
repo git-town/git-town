@@ -34,18 +34,7 @@ func Execute(args ExecuteArgs) error {
 	})
 	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
 	// remove the remaining opcodes for the current branch from the program
-	newProgram := program.Program{}
-	skipping := true
-	for _, opcode := range args.RunState.RunProgram {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			newProgram.Add(opcode)
-		}
-	}
-	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	args.RunState.RunProgram = newProgram
+	args.RunState.RunProgram = removeOpcodesForBranch(args.RunState.RunProgram)
 	// continue executing the program
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
@@ -71,4 +60,20 @@ type ExecuteArgs struct {
 	Runner         *git.ProdRunner
 	TestInputs     components.TestInputs
 	Verbose        bool
+}
+
+// removes the remaining opcodes for the current branch from the given program
+func removeOpcodesForBranch(prog program.Program) program.Program {
+	newProgram := program.Program{}
+	skipping := true
+	for _, opcode := range prog {
+		if shared.IsEndOfBranchProgramOpcode(opcode) {
+			skipping = false
+		}
+		if !skipping {
+			newProgram.Add(opcode)
+		}
+	}
+	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
+	return newProgram
 }
