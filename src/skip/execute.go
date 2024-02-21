@@ -32,21 +32,7 @@ func Execute(args ExecuteArgs) error {
 		EndBranch:                args.CurrentBranch,
 		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
 	})
-	for _, opcode := range undoCurrentBranchProgram {
-		err := opcode.Run(shared.RunArgs{
-			Connector:                       nil,
-			DialogTestInputs:                nil,
-			Lineage:                         args.Runner.Lineage,
-			PrependOpcodes:                  nil,
-			RegisterUndoablePerennialCommit: nil,
-			Runner:                          args.Runner,
-			UpdateInitialBranchLocalSHA:     nil,
-		})
-		if err != nil {
-			panic(err.Error())
-		}
-	}
-
+	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
 	// remove the remaining opcodes for the current branch from the program
 	newProgram := program.Program{}
 	skipping := true
@@ -60,7 +46,6 @@ func Execute(args ExecuteArgs) error {
 	}
 	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
 	args.RunState.RunProgram = newProgram
-
 	// continue executing the program
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
