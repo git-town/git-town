@@ -37,23 +37,6 @@ func (self Program) MarshalJSON() ([]byte, error) {
 	return json.Marshal(jsonOpcodes)
 }
 
-// MoveToEnd provides a program with all occurrences of the given opcode moved to the end.
-func (self Program) MoveToEnd(op shared.Opcode) Program {
-	result := make(Program, 0, len(self))
-	hasOp := false
-	for _, element := range self {
-		if reflect.DeepEqual(element, op) {
-			hasOp = true
-		} else {
-			result = append(result, element)
-		}
-	}
-	if hasOp {
-		result = append(result, op)
-	}
-	return result
-}
-
 // OpcodeTypes provides the names of the types of the opcodes in this program.
 func (self Program) OpcodeTypes() []string {
 	result := make([]string, len(self))
