@@ -276,7 +276,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return errors.New("key not found")
 		}
 		aliasableCommand := gitconfig.AliasableCommandForKey(*key)
-		command, has := state.fixture.DevRepo.Config.Aliases[*aliasableCommand]
+		command, has := state.fixture.DevRepo.Config.FullConfig.Aliases[*aliasableCommand]
 		if !has {
 			return nil
 		}
@@ -926,8 +926,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no lineage exists now$`, func() error {
-		if state.fixture.DevRepo.Config.ContainsLineage() {
-			lineage := state.fixture.DevRepo.Config.Lineage
+		if state.fixture.DevRepo.Config.FullConfig.ContainsLineage() {
+			lineage := state.fixture.DevRepo.Config.FullConfig.Lineage
 			return fmt.Errorf("unexpected Git Town lineage information: %+v", lineage)
 		}
 		return nil
@@ -965,7 +965,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		isOffline := state.fixture.DevRepo.Config.Offline
+		isOffline := state.fixture.DevRepo.Config.FullConfig.Offline
 		if isOffline {
 			return errors.New("expected to not be offline but am")
 		}
@@ -1255,7 +1255,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is (?:now|still) "([^"]+)"$`, func(want string) error {
-		have := state.fixture.DevRepo.Config.MainBranch
+		have := state.fixture.DevRepo.Config.FullConfig.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
 		}

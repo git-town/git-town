@@ -53,7 +53,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Run.Config.IsMainBranch(currentBranch)) {
+	if args.RunState.Command == "sync" && !(repoStatus.RebaseInProgress && args.Run.Config.FullConfig.IsMainBranch(currentBranch)) {
 		args.RunState.UnfinishedDetails.CanSkip = true
 	}
 	err = statefile.Save(args.RunState, args.RootDir)

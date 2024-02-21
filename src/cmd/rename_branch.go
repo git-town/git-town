@@ -136,11 +136,11 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
-	if repo.Runner.Config.IsMainBranch(oldBranchName) {
+	if repo.Runner.Config.FullConfig.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if repo.Runner.Config.IsPerennialBranch(oldBranchName) {
+		if repo.Runner.Config.FullConfig.IsPerennialBranch(oldBranchName) {
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}

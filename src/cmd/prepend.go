@@ -128,23 +128,23 @@ func determinePrependConfig(args []string, repo *execute.OpenRepoResult, dryRun,
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	if !repo.Runner.Config.IsFeatureBranch(branchesSnapshot.Active) {
+	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchesSnapshot.Active) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.SetParentNoFeatureBranch, branchesSnapshot.Active)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.Config.MainBranch,
+		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	branchNamesToSync := repo.Runner.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
-	parent := repo.Runner.Config.Lineage.Parent(branchesSnapshot.Active)
-	parentAndAncestors := repo.Runner.Config.Lineage.BranchAndAncestors(parent)
+	parent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
+	parentAndAncestors := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(parent)
 	slices.Reverse(parentAndAncestors)
 	return &prependConfig{
 		FullConfig:                &repo.Runner.Config.FullConfig,

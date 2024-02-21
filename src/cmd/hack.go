@@ -108,7 +108,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
 	return &appendConfig{
 		FullConfig:                &repo.Runner.Config.FullConfig,
@@ -118,8 +118,8 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.MainBranch},
-		parentBranch:              repo.Runner.Config.MainBranch,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.FullConfig.MainBranch},
+		parentBranch:              repo.Runner.Config.FullConfig.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,

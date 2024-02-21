@@ -278,7 +278,7 @@ func (self *TestCommands) HasFile(name, content string) string {
 func (self *TestCommands) LineageTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	self.Config.Reload()
-	lineage := self.Config.Lineage
+	lineage := self.Config.FullConfig.Lineage
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName.String(), lineage[branchName].String())
@@ -441,7 +441,7 @@ func (self *TestCommands) VerifyNoGitTownConfiguration() error {
 		return fmt.Errorf("unexpected Git Town configuration:\n%s", output)
 	}
 	self.Config.Reload()
-	for aliasName, aliasValue := range self.Config.Aliases {
+	for aliasName, aliasValue := range self.Config.FullConfig.Aliases {
 		if strings.HasPrefix(aliasValue, "town ") {
 			return fmt.Errorf("unexpected Git Town alias %q with value %q", aliasName, aliasValue)
 		}

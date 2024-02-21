@@ -57,16 +57,16 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if !repo.Runner.Config.IsFeatureBranch(branchesSnapshot.Active) {
+	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchesSnapshot.Active) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := repo.Runner.Config.Lineage.Parent(branchesSnapshot.Active)
+	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
 		repo.Runner.Config.Reload()
 	} else {
-		existingParent = repo.Runner.Config.MainBranch
+		existingParent = repo.Runner.Config.FullConfig.MainBranch
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
