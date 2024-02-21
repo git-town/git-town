@@ -3,6 +3,7 @@ Feature: migrate existing configuration in Git metadata to a config file
   Background:
     Given a perennial branch "qa"
     And the main branch is "main"
+    And local Git Town setting "perennial-regex" is "release-.*"
     And local Git Town setting "push-new-branches" is "false"
     And local Git Town setting "push-hook" is "true"
     And local Git Town setting "sync-before-ship" is "false"
@@ -16,6 +17,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       | add all aliases                           | enter |
       | accept the already configured main branch | enter |
       | perennial branches                        | enter |
+      | perennial regex                           | enter |
       | hosting service                           | enter |
       | origin hostname                           | enter |
       | sync-feature-strategy                     | enter |
@@ -36,6 +38,7 @@ Feature: migrate existing configuration in Git metadata to a config file
     And local Git Town setting "sync-feature-strategy" now doesn't exist
     And local Git Town setting "sync-perennial-strategy" now doesn't exist
     And local Git Town setting "sync-upstream" now doesn't exist
+    And local Git Town setting "perennial-regex" now doesn't exist
     And local Git Town setting "push-new-branches" now doesn't exist
     And local Git Town setting "push-hook" now doesn't exist
     And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
@@ -111,13 +114,13 @@ Feature: migrate existing configuration in Git metadata to a config file
       #
       # If you have many perennial branches, you can also
       # enter a regular expression for them on the next screen.
-      perennials = []
+      perennials = ["qa"]
 
       # Please enter a regular expression that matches
       # additional perennial branches.
       #
       # If you are not sure, leave this empty.
-      perennial-regex = ""
+      perennial-regex = "release-.*"
 
       [hosting]
 

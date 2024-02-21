@@ -157,6 +157,14 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
+// SetPushHookLocally updates the locally configured push-hook strategy.
+func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
+	self.LocalGitConfig.PerennialRegex = &value
+	self.FullConfig.PerennialRegex = value
+	self.LocalGitConfig.PerennialRegex = &value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
+}
+
 // SetPushHook updates the configured push-hook strategy.
 func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 	self.GlobalGitConfig.PushHook = &value

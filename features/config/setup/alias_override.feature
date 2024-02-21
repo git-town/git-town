@@ -8,6 +8,7 @@ Feature: override an existing Git alias
       | aliases                     | o enter |
       | main development branch     | enter   |
       | perennial branches          | enter   |
+      | perennial regex             | enter   |
       | hosting platform            | enter   |
       | origin hostname             | enter   |
       | sync-feature-strategy       | enter   |

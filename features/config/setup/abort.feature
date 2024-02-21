@@ -9,7 +9,7 @@ Feature: aborting the setup assistant
       | aliases                 | enter |
       | main development branch | enter |
       | perennial branches      | enter |
-      | hosting platform        | esc   |
+      | perennial regex         | esc   |
 
   Scenario: result
     Then it runs no commands

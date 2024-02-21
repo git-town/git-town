@@ -8,6 +8,7 @@ Feature: enter the GitHub API token
       | aliases                       | enter             |                                             |
       | main development branch       | enter             |                                             |
       | perennial branches            |                   | no input here since the dialog doesn't show |
+      | perennial regex               | enter             |                                             |
       | hosting platform: auto-detect | enter             |                                             |
       | github token                  | 1 2 3 4 5 6 enter |                                             |
       | origin hostname               | enter             |                                             |
@@ -32,6 +33,7 @@ Feature: enter the GitHub API token
       | aliases                     | enter                |                                             |
       | main development branch     | enter                |                                             |
       | perennial branches          |                      | no input here since the dialog doesn't show |
+      | perennial regex             | enter                |                                             |
       | hosting platform            | down down down enter |                                             |
       | github token                | 1 2 3 4 5 6 enter    |                                             |
       | origin hostname             | enter                |                                             |
