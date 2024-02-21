@@ -51,7 +51,7 @@ func executeSkip(verbose bool) error {
 	initialBranchesSnapshot, _, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -73,8 +73,8 @@ func executeSkip(verbose bool) error {
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
-		HostingPlatform: repo.Runner.HostingPlatform,
+		FullConfig:      &repo.Runner.Config.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})

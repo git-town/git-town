@@ -19,6 +19,6 @@ func (self *CreateBranchExistingParent) CreateContinueProgram() []shared.Opcode 
 }
 
 func (self *CreateBranchExistingParent) Run(args shared.RunArgs) error {
-	nearestAncestor := args.Runner.Backend.FirstExistingBranch(self.Ancestors, args.Runner.MainBranch)
+	nearestAncestor := args.Runner.Backend.FirstExistingBranch(self.Ancestors, args.Runner.Config.MainBranch)
 	return args.Runner.Frontend.CreateBranch(self.Branch, nearestAncestor.Location())
 }

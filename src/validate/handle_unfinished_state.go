@@ -48,7 +48,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
 		return true, undo.Execute(undo.ExecuteArgs{
-			FullConfig:       &args.Run.FullConfig,
+			FullConfig:       &args.Run.Config.FullConfig,
 			HasOpenChanges:   args.HasOpenChanges,
 			InitialStashSize: args.InitialStashSize,
 			Lineage:          args.Lineage,
@@ -100,7 +100,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
-		FullConfig:              &args.Run.FullConfig,
+		FullConfig:              &args.Run.Config.FullConfig,
 		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,

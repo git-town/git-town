@@ -131,7 +131,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -151,7 +151,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 	if allFlag {
 		localBranches := branchesSnapshot.Branches.LocalBranches()
 		err = execute.EnsureKnownBranchesAncestry(execute.EnsureKnownBranchesAncestryArgs{
-			Config:           &repo.Runner.FullConfig,
+			Config:           &repo.Runner.Config.FullConfig,
 			DialogTestInputs: &dialogTestInputs,
 			LocalBranches:    localBranches,
 			Runner:           repo.Runner,
@@ -163,9 +163,9 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		shouldPushTags = true
 	} else {
 		err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-			Config:           &repo.Runner.FullConfig,
+			Config:           &repo.Runner.Config.FullConfig,
 			AllBranches:      branchesSnapshot.Branches,
-			DefaultBranch:    repo.Runner.MainBranch,
+			DefaultBranch:    repo.Runner.Config.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			Runner:           repo.Runner,
 		})
@@ -173,12 +173,12 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = !repo.Runner.IsFeatureBranch(branchesSnapshot.Active)
+		shouldPushTags = !repo.Runner.Config.IsFeatureBranch(branchesSnapshot.Active)
 	}
-	allBranchNamesToSync := repo.Runner.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := repo.Runner.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)
 	return &syncConfig{
-		FullConfig:       &repo.Runner.FullConfig,
+		FullConfig:       &repo.Runner.Config.FullConfig,
 		allBranches:      branchesSnapshot.Branches,
 		branchesToSync:   branchesToSync,
 		dialogTestInputs: dialogTestInputs,

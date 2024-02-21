@@ -66,15 +66,15 @@ func determineRepoConfig(repo *execute.OpenRepoResult) (*repoConfig, error) {
 		return nil, err
 	}
 	dialogInputs := components.LoadTestInputs(os.Environ())
-	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
+	err = validate.IsConfigured(&repo.Runner.Backend, &repo.Runner.Config.FullConfig, branchesSnapshot.Branches.LocalBranches().Names(), &dialogInputs)
 	if err != nil {
 		return nil, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
-		HostingPlatform: repo.Runner.HostingPlatform,
+		FullConfig:      &repo.Runner.Config.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
 		Log:             print.Logger{},
-		OriginURL:       repo.Runner.OriginURL(),
+		OriginURL:       repo.Runner.Config.OriginURL(),
 	})
 	if err != nil {
 		return nil, err

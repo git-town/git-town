@@ -25,5 +25,5 @@ func (self *PushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Runner.Frontend.PushCurrentBranch(args.Runner.NoPushHook())
+	return args.Runner.Frontend.PushCurrentBranch(args.Runner.Config.NoPushHook())
 }

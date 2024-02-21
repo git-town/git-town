@@ -47,7 +47,7 @@ func executeSetParent(verbose bool) error {
 	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -57,10 +57,10 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if !repo.Runner.IsFeatureBranch(branchesSnapshot.Active) {
+	if !repo.Runner.Config.IsFeatureBranch(branchesSnapshot.Active) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := repo.Runner.Lineage.Parent(branchesSnapshot.Active)
+	existingParent := repo.Runner.Config.Lineage.Parent(branchesSnapshot.Active)
 	if !existingParent.IsEmpty() {
 		// TODO: delete the old parent only when the user has entered a new parent
 		repo.Runner.Config.RemoveParent(branchesSnapshot.Active)
@@ -69,7 +69,7 @@ func executeSetParent(verbose bool) error {
 		existingParent = repo.Runner.Config.MainBranch
 	}
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
-		Config:           &repo.Runner.FullConfig,
+		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
 		DefaultBranch:    existingParent,
 		DialogTestInputs: &dialogTestInputs,

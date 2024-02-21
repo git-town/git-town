@@ -116,7 +116,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -136,11 +136,11 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		oldBranchName = gitdomain.NewLocalBranchName(args[0])
 		newBranchName = gitdomain.NewLocalBranchName(args[1])
 	}
-	if repo.Runner.IsMainBranch(oldBranchName) {
+	if repo.Runner.Config.IsMainBranch(oldBranchName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if repo.Runner.IsPerennialBranch(oldBranchName) {
+		if repo.Runner.Config.IsPerennialBranch(oldBranchName) {
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -161,7 +161,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Op
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	return &renameBranchConfig{
-		FullConfig:       &repo.Runner.FullConfig,
+		FullConfig:       &repo.Runner.Config.FullConfig,
 		dialogTestInputs: dialogTestInputs,
 		dryRun:           dryRun,
 		hasOpenChanges:   repoStatus.OpenChanges,

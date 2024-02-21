@@ -74,7 +74,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -90,13 +90,13 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	if !repo.Runner.IsFeatureBranch(branch) {
+	if !repo.Runner.Config.IsFeatureBranch(branch) {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{
-		Config:           &repo.Runner.FullConfig,
+		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.MainBranch,
+		DefaultBranch:    repo.Runner.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
@@ -105,6 +105,6 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: repo.Runner.Lineage.Parent(branch),
+		parentBranch: repo.Runner.Config.Lineage.Parent(branch),
 	}, false, nil
 }
