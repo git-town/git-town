@@ -17,7 +17,7 @@ import (
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Lineage)
-	undoChangesToCurrentBranch(args)
+	revertChangesToCurrentBranch(args)
 	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
@@ -45,7 +45,7 @@ type ExecuteArgs struct {
 	Verbose        bool
 }
 
-func undoChangesToCurrentBranch(args ExecuteArgs) {
+func revertChangesToCurrentBranch(args ExecuteArgs) {
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
 			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
