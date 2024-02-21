@@ -88,7 +88,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		panic(err)
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner:      &runner,
+		Runner:             &runner,
 		DryRun:             false,
 		Config:             config,
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},

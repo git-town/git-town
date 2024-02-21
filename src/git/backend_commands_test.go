@@ -770,7 +770,7 @@ func TestBackendCommands(t *testing.T) {
 				CommandsCounter: &gohacks.Counter{},
 			}
 			cmds := git.BackendCommands{
-				BackendRunner:      runner,
+				Runner:             runner,
 				DryRun:             false,
 				Config:             nil,
 				CurrentBranchCache: &cache.LocalBranchWithPrevious{},

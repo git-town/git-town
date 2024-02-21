@@ -106,7 +106,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		runtime.CreateChildFeatureBranch(gitdomain.NewLocalBranchName("f1a"), gitdomain.NewLocalBranchName("f1"))
-		output, err := runtime.BackendRunner.QueryTrim("git-town", "config")
+		output, err := runtime.Runner.QueryTrim("git-town", "config")
 		must.NoError(t, err)
 		output = stripansi.Strip(output)
 		if !strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a") {

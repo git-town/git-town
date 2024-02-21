@@ -27,7 +27,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Verbose:         args.Verbose,
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner:      backendRunner,
+		Runner:             backendRunner,
 		DryRun:             args.DryRun,
 		Config:             nil, // initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.LocalBranchWithPrevious{},
