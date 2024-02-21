@@ -24,7 +24,6 @@ func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result.AddProgram(undostash.DetermineUndoStashProgram(args.RunState.BeginStashSize, args.RunState.EndStashSize))
 	result.AddProgram(args.RunState.FinalUndoProgram)
 	result.Add(&opcodes.Checkout{Branch: args.RunState.BeginBranchesSnapshot.Active})
-	result.RemoveDuplicateCheckout()
 	cmdhelpers.Wrap(&result, cmdhelpers.WrapOptions{
 		DryRun:                   args.RunState.DryRun,
 		RunInGitRoot:             true,
