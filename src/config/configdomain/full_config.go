@@ -102,6 +102,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
+	if other.PerennialRegex != nil {
+		self.PerennialRegex = *other.PerennialRegex
+	}
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook
 	}
@@ -149,6 +152,7 @@ func DefaultConfig() FullConfig {
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
+		PerennialRegex:           "",
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,

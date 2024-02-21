@@ -86,6 +86,10 @@ func (self *Config) RemovePerennialBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
 
+func (self *Config) RemovePerennialRegex() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialRegex)
+}
+
 func (self *Config) RemovePushHook() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
 }

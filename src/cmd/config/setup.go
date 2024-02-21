@@ -394,6 +394,7 @@ func saveToFile(userInput userInput, runner *git.ProdRunner) error {
 	}
 	runner.Config.RemoveMainBranch()
 	runner.Config.RemovePerennialBranches()
+	runner.Config.RemovePerennialRegex()
 	runner.Config.RemovePushNewBranches()
 	runner.Config.RemovePushHook()
 	runner.Config.RemoveSyncBeforeShip()

@@ -23,3 +23,8 @@ func (self PerennialRegex) MatchBranch(branch gitdomain.LocalBranchName) bool {
 	}
 	return re.MatchString(branch.String())
 }
+
+func NewPerennialRegexRef(value string) *PerennialRegex {
+	result := PerennialRegex(value)
+	return &result
+}

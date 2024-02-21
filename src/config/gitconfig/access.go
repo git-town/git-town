@@ -85,6 +85,8 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 		config.Offline, err = configdomain.NewOfflineRef(value, KeyOffline.String())
 	case KeyPerennialBranches:
 		config.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
+	case KeyPerennialRegex:
+		config.PerennialRegex = configdomain.NewPerennialRegexRef(value)
 	case KeyPushHook:
 		config.PushHook, err = configdomain.NewPushHookRef(value, KeyPushHook.String())
 	case KeyPushNewBranches:
