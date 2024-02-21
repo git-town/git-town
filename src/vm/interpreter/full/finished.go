@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 )
@@ -34,22 +33,14 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
+	args.RunState.EndStashSize, err = args.Run.Backend.StashSize()
+	if err != nil {
+		return err
+	}
 	args.RunState.MarkAsFinished()
 	if args.RunState.DryRun {
 		return finishedDryRunCommand(args)
 	}
-	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
-		DryRun:         args.RunState.DryRun,
-		HasOpenChanges: args.HasOpenChanges,
-		NoPushHook:     args.NoPushHook(),
-		Run:            args.Run,
-		RunState:       *args.RunState,
-	})
-	if err != nil {
-		return err
-	}
-	undoProgram.AddProgram(args.RunState.FinalUndoProgram)
-	args.RunState.UndoProgram = undoProgram
 	err = statefile.Save(args.RunState, args.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSaveProblem, err)

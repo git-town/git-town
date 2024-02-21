@@ -160,7 +160,6 @@ func TestLoadSave(t *testing.T) {
 					NewTarget:      gitdomain.NewLocalBranchName("new-target"),
 				},
 			},
-			UndoProgram: program.Program{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
 				CanSkip:   true,
 				EndBranch: gitdomain.NewLocalBranchName("end-branch"),
@@ -449,7 +448,6 @@ func TestLoadSave(t *testing.T) {
       "type": "UpdateProposalTarget"
     }
   ],
-  "UndoProgram": [],
   "UndoablePerennialCommits": [],
   "UnfinishedDetails": {
     "CanSkip": true,

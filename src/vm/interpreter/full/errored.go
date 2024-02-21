@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
 	"github.com/git-town/git-town/v12/src/messages"
-	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
@@ -38,17 +37,6 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
-		DryRun:         args.RunState.DryRun,
-		HasOpenChanges: false,
-		NoPushHook:     args.NoPushHook(),
-		Run:            args.Run,
-		RunState:       *args.RunState,
-	})
-	if err != nil {
-		return err
-	}
-	args.RunState.UndoProgram.AddProgram(undoProgram)
 	if failedOpcode.ShouldAutomaticallyUndoOnError() {
 		return autoUndo(failedOpcode, runErr, args)
 	}

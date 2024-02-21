@@ -34,13 +34,6 @@ func TestRunState(t *testing.T) {
 					Hard:        false,
 				},
 			},
-			UndoProgram: program.Program{
-				&opcodes.ResetCurrentBranchToSHA{
-					MustHaveSHA: gitdomain.NewSHA("222222"),
-					SetToSHA:    gitdomain.NewSHA("111111"),
-					Hard:        false,
-				},
-			},
 			EndBranchesSnapshot: gitdomain.BranchesSnapshot{
 				Active: "branch-1",
 				Branches: gitdomain.BranchInfos{
@@ -119,16 +112,6 @@ func TestRunState(t *testing.T) {
   "FinalUndoProgram": [],
   "IsUndo": false,
   "RunProgram": [
-    {
-      "data": {
-        "Hard": false,
-        "MustHaveSHA": "222222",
-        "SetToSHA": "111111"
-      },
-      "type": "ResetCurrentBranchToSHA"
-    }
-  ],
-  "UndoProgram": [
     {
       "data": {
         "Hard": false,
