@@ -38,7 +38,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 		return err
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
-	undoProgram, err := undo.CreateUndoErroredProgram(undo.CreateUndoProgramArgs{
+	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
 		BeginConfigSnapshot:      args.InitialConfigSnapshot,
 		BeginStashSize:           args.InitialStashSize,

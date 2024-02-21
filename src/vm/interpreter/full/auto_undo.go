@@ -16,7 +16,7 @@ import (
 // should they fail.
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
-	undoProgram, err := undo.CreateUndoErroredProgram(undo.CreateUndoProgramArgs{
+	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
 		BeginBranchesSnapshot:    args.RunState.BeginBranchesSnapshot,
 		BeginConfigSnapshot:      args.RunState.BeginConfigSnapshot,
 		BeginStashSize:           args.RunState.BeginStashSize,

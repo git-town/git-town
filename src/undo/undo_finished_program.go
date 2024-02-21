@@ -11,7 +11,7 @@ import (
 )
 
 // creates the program for undoing a program that finished
-func CreateUndoFinishedProgram(args CreateUndoProgramArgs) program.Program {
+func CreateUndoForFinishedProgram(args CreateUndoProgramArgs) program.Program {
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
 	if !args.RunState.IsFinished() && args.HasOpenChanges {

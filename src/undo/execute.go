@@ -18,7 +18,7 @@ func Execute(args ExecuteArgs) error {
 	if args.RunState.DryRun {
 		return nil
 	}
-	program := CreateUndoFinishedProgram(CreateUndoProgramArgs{
+	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
 		BeginBranchesSnapshot:    args.RunState.BeginBranchesSnapshot,
 		BeginConfigSnapshot:      args.RunState.BeginConfigSnapshot,
 		BeginStashSize:           args.RunState.BeginStashSize,

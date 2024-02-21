@@ -12,7 +12,7 @@ import (
 )
 
 // create the program to undo a currently running Git Town command
-func CreateUndoErroredProgram(args CreateUndoProgramArgs) (program.Program, error) {
+func CreateUndoForRunningProgram(args CreateUndoProgramArgs) (program.Program, error) {
 	result := program.Program{}
 	result.AddProgram(args.RunState.AbortProgram)
 	result.AddProgram(undoconfig.DetermineUndoConfigProgram(args.BeginConfigSnapshot, args.EndConfigSnapshot))
