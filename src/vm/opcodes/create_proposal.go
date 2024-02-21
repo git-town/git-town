@@ -24,6 +24,6 @@ func (self *CreateProposal) Run(args shared.RunArgs) error {
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, args.Runner.Frontend.FrontendRunner, args.Runner.Backend.Runner)
+	browser.Open(prURL, args.Runner.Frontend.Runner, args.Runner.Backend.Runner)
 	return nil
 }

@@ -73,7 +73,7 @@ func OpenRepo(args OpenRepoArgs) (*OpenRepoResult, error) {
 		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner: newFrontendRunner(newFrontendRunnerArgs{
+			Runner: newFrontendRunner(newFrontendRunnerArgs{
 				counter:          &commandsCounter,
 				dryRun:           args.DryRun,
 				getCurrentBranch: backendCommands.CurrentBranch,
