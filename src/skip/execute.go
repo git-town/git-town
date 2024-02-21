@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
+	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -16,20 +17,7 @@ import (
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	// abort the current op
-	for _, opcode := range args.RunState.AbortProgram {
-		err := opcode.Run(shared.RunArgs{
-			Connector:                       nil,
-			DialogTestInputs:                nil,
-			Lineage:                         args.Runner.Lineage,
-			PrependOpcodes:                  nil,
-			RegisterUndoablePerennialCommit: nil,
-			Runner:                          args.Runner,
-			UpdateInitialBranchLocalSHA:     nil,
-		})
-		if err != nil {
-			panic(err.Error())
-		}
-	}
+	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Lineage)
 	// undo the changes to the current branch
 	spans := undobranches.BranchSpans{
 		undobranches.BranchSpan{
