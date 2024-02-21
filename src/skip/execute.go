@@ -13,6 +13,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
+// executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
 	// abort the current op
 	for _, opcode := range args.RunState.AbortProgram {
