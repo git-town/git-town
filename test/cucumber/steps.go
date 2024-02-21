@@ -202,7 +202,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^display "([^"]+)"$`, func(command string) error {
 		parts := strings.Split(command, " ")
-		output, err := state.fixture.DevRepo.BackendRunner.Query(parts[0], parts[1:]...)
+		output, err := state.fixture.DevRepo.Runner.Query(parts[0], parts[1:]...)
 		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " START XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 		fmt.Println(output)
 		fmt.Println("XXXXXXXXXXXXXXXXX " + strings.ToUpper(command) + " END XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")

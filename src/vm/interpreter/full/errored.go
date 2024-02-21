@@ -19,7 +19,7 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	configGitAccess := gitconfig.Access{Runner: args.Run.Backend}
+	configGitAccess := gitconfig.Access{Runner: args.Run.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal()
 	if err != nil {
 		return err

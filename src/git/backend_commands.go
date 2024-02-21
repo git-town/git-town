@@ -27,11 +27,11 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	BackendRunner                                     // executes shell commands in the directory of the Git repo
 	Config             *config.Config                 // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
+	Runner             BackendRunner  // executes shell commands in the directory of the Git repo
 }
 
 // Author provides the locally Git configured user.
@@ -50,7 +50,7 @@ func (self *BackendCommands) Author() (string, error) {
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
 func (self *BackendCommands) BranchAuthors(branch, parent gitdomain.LocalBranchName) ([]string, error) {
-	output, err := self.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
+	output, err := self.Runner.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
 		return []string{}, err
 	}
@@ -64,14 +64,14 @@ func (self *BackendCommands) BranchAuthors(branch, parent gitdomain.LocalBranchN
 }
 
 func (self *BackendCommands) BranchExists(branch gitdomain.LocalBranchName) bool {
-	err := self.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
+	err := self.Runner.Run("git", "show-ref", "--verify", "--quiet", "refs/heads/"+branch.String())
 	return err == nil
 }
 
 // BranchHasUnmergedChanges indicates whether the branch with the given name
 // contains changes that were not merged into the main branch.
 func (self *BackendCommands) BranchHasUnmergedChanges(branch, parent gitdomain.LocalBranchName) (bool, error) {
-	out, err := self.QueryTrim("git", "diff", parent.String()+".."+branch.String())
+	out, err := self.Runner.QueryTrim("git", "diff", parent.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
@@ -81,7 +81,7 @@ func (self *BackendCommands) BranchHasUnmergedChanges(branch, parent gitdomain.L
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBranchName, parent gitdomain.Location) (bool, error) {
-	out, err := self.QueryTrim("git", "log", parent.String()+".."+branch.String())
+	out, err := self.Runner.QueryTrim("git", "log", parent.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
@@ -90,7 +90,7 @@ func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBran
 
 // BranchesSnapshot provides detailed information about the sync status of all branches.
 func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
-	output, err := self.Query("git", "branch", "-vva")
+	output, err := self.Runner.Query("git", "branch", "-vva")
 	if err != nil {
 		return gitdomain.EmptyBranchesSnapshot(), err
 	}
@@ -173,7 +173,7 @@ func IsRemoteGone(branchName, remoteText string) (bool, gitdomain.RemoteBranchNa
 
 // CheckoutBranch checks out the Git branch with the given name.
 func (self *BackendCommands) CheckoutBranchUncached(name gitdomain.LocalBranchName) error {
-	err := self.Run("git", "checkout", name.String())
+	err := self.Runner.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
@@ -204,7 +204,7 @@ func (self *BackendCommands) CommitsInBranch(branch, parent gitdomain.LocalBranc
 }
 
 func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.LocalBranchName) (gitdomain.SHAs, error) {
-	output, err := self.QueryTrim("git", "cherry", parent.String(), branch.String())
+	output, err := self.Runner.QueryTrim("git", "cherry", parent.String(), branch.String())
 	if err != nil {
 		return gitdomain.SHAs{}, err
 	}
@@ -219,7 +219,7 @@ func (self *BackendCommands) CommitsInFeatureBranch(branch, parent gitdomain.Loc
 }
 
 func (self *BackendCommands) CommitsInPerennialBranch() (gitdomain.SHAs, error) {
-	output, err := self.QueryTrim("git", "log", "--pretty=format:%h", "-10")
+	output, err := self.Runner.QueryTrim("git", "log", "--pretty=format:%h", "-10")
 	if err != nil {
 		return gitdomain.SHAs{}, err
 	}
@@ -256,7 +256,7 @@ func (self *BackendCommands) CurrentBranchUncached() (gitdomain.LocalBranchName,
 		}
 		return currentBranch, nil
 	}
-	output, err := self.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := self.Runner.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName(), fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
@@ -269,7 +269,7 @@ func (self *BackendCommands) CurrentSHA() (gitdomain.SHA, error) {
 }
 
 func (self *BackendCommands) DefaultBranch() gitdomain.LocalBranchName {
-	name, _ := self.QueryTrim("git", "config", "--get", "init.defaultbranch")
+	name, _ := self.Runner.QueryTrim("git", "config", "--get", "init.defaultbranch")
 	return gitdomain.LocalBranchName(name)
 }
 
@@ -284,19 +284,19 @@ func (self *BackendCommands) FirstExistingBranch(branches gitdomain.LocalBranchN
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (self *BackendCommands) HasLocalBranch(name gitdomain.LocalBranchName) bool {
-	return self.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
+	return self.Runner.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (self *BackendCommands) HasMergeInProgress() bool {
-	err := self.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+	err := self.Runner.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (self *BackendCommands) HasShippableChanges(branch, mainBranch gitdomain.LocalBranchName) (bool, error) {
-	out, err := self.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
+	out, err := self.Runner.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
@@ -305,7 +305,7 @@ func (self *BackendCommands) HasShippableChanges(branch, mainBranch gitdomain.Lo
 
 // LastCommitMessage provides the commit message for the last commit.
 func (self *BackendCommands) LastCommitMessage() (string, error) {
-	out, err := self.QueryTrim("git", "log", "-1", "--format=%B")
+	out, err := self.Runner.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
@@ -314,7 +314,7 @@ func (self *BackendCommands) LastCommitMessage() (string, error) {
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (self *BackendCommands) PreviouslyCheckedOutBranch() gitdomain.LocalBranchName {
-	output, err := self.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	output, err := self.Runner.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return gitdomain.EmptyLocalBranchName()
 	}
@@ -338,7 +338,7 @@ func (self *BackendCommands) Remotes() (gitdomain.Remotes, error) {
 
 // Remotes provides the names of all Git remotes in this repository.
 func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
-	out, err := self.QueryTrim("git", "remote")
+	out, err := self.Runner.QueryTrim("git", "remote")
 	if err != nil {
 		return gitdomain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
 	}
@@ -362,7 +362,7 @@ func (self *BackendCommands) RemoveOutdatedConfiguration(localBranches gitdomain
 
 // RepoStatus provides a summary of the state the current workspace is in right now: rebasing, has conflicts, has open changes, etc.
 func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
-	output, err := self.QueryTrim("git", "status", "--long", "--ignore-submodules")
+	output, err := self.Runner.QueryTrim("git", "status", "--long", "--ignore-submodules")
 	if err != nil {
 		return gitdomain.RepoStatus{}, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
@@ -381,7 +381,7 @@ func (self *BackendCommands) RepoStatus() (gitdomain.RepoStatus, error) {
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
-	output, err := self.QueryTrim("git", "rev-parse", "--show-toplevel")
+	output, err := self.Runner.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return gitdomain.EmptyRepoRootDir()
 	}
@@ -390,7 +390,7 @@ func (self *BackendCommands) RootDirectory() gitdomain.RepoRootDir {
 
 // SHAForBranch provides the SHA for the local branch with the given name.
 func (self *BackendCommands) SHAForBranch(name gitdomain.BranchName) (gitdomain.SHA, error) {
-	output, err := self.QueryTrim("git", "rev-parse", "--short", name.String())
+	output, err := self.Runner.QueryTrim("git", "rev-parse", "--short", name.String())
 	if err != nil {
 		return gitdomain.EmptySHA(), fmt.Errorf(messages.BranchLocalSHAProblem, name, err)
 	}
@@ -400,7 +400,7 @@ func (self *BackendCommands) SHAForBranch(name gitdomain.BranchName) (gitdomain.
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (self *BackendCommands) ShouldPushBranch(branch gitdomain.LocalBranchName, trackingBranch gitdomain.RemoteBranchName) (bool, error) {
-	out, err := self.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
+	out, err := self.Runner.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
@@ -409,14 +409,14 @@ func (self *BackendCommands) ShouldPushBranch(branch gitdomain.LocalBranchName, 
 
 // StashSize provides the number of stashes in this repository.
 func (self *BackendCommands) StashSize() (gitdomain.StashSize, error) {
-	output, err := self.QueryTrim("git", "stash", "list")
+	output, err := self.Runner.QueryTrim("git", "stash", "list")
 	return gitdomain.StashSize(len(stringslice.Lines(output))), err
 }
 
 // Version indicates whether the needed Git version is installed.
 func (self *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
-	output, err := self.QueryTrim("git", "version")
+	output, err := self.Runner.QueryTrim("git", "version")
 	if err != nil {
 		return 0, 0, fmt.Errorf(messages.GitVersionProblem, err)
 	}
