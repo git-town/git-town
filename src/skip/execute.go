@@ -67,8 +67,7 @@ func revertChangesToCurrentBranch(args ExecuteArgs) {
 			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
 		},
 	}
-	changes := spans.Changes()
-	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
 		BeginBranch:              args.CurrentBranch,
 		Config:                   &args.Runner.FullConfig,
 		EndBranch:                args.CurrentBranch,
