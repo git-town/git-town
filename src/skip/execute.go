@@ -47,18 +47,19 @@ type ExecuteArgs struct {
 
 // removes the remaining opcodes for the current branch from the given program
 func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
-	newProgram := program.Program{}
+	result := program.Program{}
 	skipping := true
 	for _, opcode := range prog {
 		if shared.IsEndOfBranchProgramOpcode(opcode) {
 			skipping = false
+			continue
 		}
 		if !skipping {
-			newProgram.Add(opcode)
+			result.Add(opcode)
 		}
 	}
-	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	return newProgram
+	result.MoveToEnd(&opcodes.RestoreOpenChanges{})
+	return result
 }
 
 func revertChangesToCurrentBranch(args ExecuteArgs) {
