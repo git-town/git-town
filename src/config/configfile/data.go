@@ -15,7 +15,7 @@ type Data struct {
 type Branches struct {
 	Main           *string  `toml:"main"`
 	Perennials     []string `toml:"perennials"`
-	PerennialRegex *string
+	PerennialRegex *string  `toml:"perennial-regex"`
 }
 
 func (self Branches) IsEmpty() bool {

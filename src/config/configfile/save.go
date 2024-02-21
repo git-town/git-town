@@ -38,7 +38,7 @@ func RenderTOML(config *configdomain.FullConfig) string {
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.MainBranchHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("main = %q\n\n", config.MainBranch))
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialBranchesHelp)) + "\n")
-	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)))
+	result.WriteString(fmt.Sprintf("perennials = %s\n", RenderPerennialBranches(config.PerennialBranches)) + "\n")
 	result.WriteString(TOMLComment(strings.TrimSpace(dialog.PerennialRegexHelp)) + "\n")
 	result.WriteString(fmt.Sprintf("perennial-regex = %q\n", config.PerennialRegex))
 	result.WriteString("\n[hosting]\n\n")
