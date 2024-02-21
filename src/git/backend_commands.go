@@ -27,8 +27,8 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "verbose" option is set.
 type BackendCommands struct {
-	*config.Config                                    // the known state of the Git repository
 	BackendRunner                                     // executes shell commands in the directory of the Git repo
+	Config             *config.Config                 // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranchWithPrevious // caches the currently checked out Git branch
 	DryRun             bool
 	RemotesCache       *cache.Remotes // caches Git remotes
@@ -36,11 +36,11 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (self *BackendCommands) Author() (string, error) {
-	email := self.GitUserEmail
+	email := self.Config.GitUserEmail
 	if email == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}
-	name := self.GitUserName
+	name := self.Config.GitUserName
 	if name == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}

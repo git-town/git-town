@@ -17,7 +17,7 @@ import (
 func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig, localBranches gitdomain.LocalBranchNames, dialogInputs *components.TestInputs) error {
 	mainBranch := config.MainBranch
 	if mainBranch.IsEmpty() {
-		if backend.ConfigFile != nil {
+		if backend.Config.ConfigFile != nil {
 			return errors.New(messages.ConfigMainbranchInConfigFile)
 		}
 		fmt.Print(messages.ConfigNeeded)
@@ -27,7 +27,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			return err
 		}
 		if newMainBranch != config.MainBranch {
-			err := backend.SetMainBranch(newMainBranch)
+			err := backend.Config.SetMainBranch(newMainBranch)
 			if err != nil {
 				return err
 			}
@@ -38,7 +38,7 @@ func IsConfigured(backend *git.BackendCommands, config *configdomain.FullConfig,
 			return err
 		}
 		if slices.Compare(newPerennialBranches, config.PerennialBranches) != 0 {
-			err := backend.SetPerennialBranches(newPerennialBranches)
+			err := backend.Config.SetPerennialBranches(newPerennialBranches)
 			if err != nil {
 				return err
 			}

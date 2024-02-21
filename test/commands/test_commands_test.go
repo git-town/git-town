@@ -192,9 +192,9 @@ func TestTestCommands(t *testing.T) {
 		must.NoError(t, err)
 		want := gitdomain.NewLocalBranchNames("main", "initial", "p1", "p2")
 		must.Eq(t, want, branches)
-		runtime.Reload()
-		must.True(t, runtime.IsPerennialBranch(gitdomain.NewLocalBranchName("p1")))
-		must.True(t, runtime.IsPerennialBranch(gitdomain.NewLocalBranchName("p2")))
+		runtime.Config.Reload()
+		must.True(t, runtime.Config.IsPerennialBranch(gitdomain.NewLocalBranchName("p1")))
+		must.True(t, runtime.Config.IsPerennialBranch(gitdomain.NewLocalBranchName("p2")))
 	})
 
 	t.Run("Fetch", func(t *testing.T) {
