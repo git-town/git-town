@@ -7,72 +7,17 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
+	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
+// executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	// abort the current op
-	for _, opcode := range args.RunState.AbortProgram {
-		err := opcode.Run(shared.RunArgs{
-			Connector:                       nil,
-			DialogTestInputs:                nil,
-			Lineage:                         args.Runner.Lineage,
-			PrependOpcodes:                  nil,
-			RegisterUndoablePerennialCommit: nil,
-			Runner:                          args.Runner,
-			UpdateInitialBranchLocalSHA:     nil,
-		})
-		if err != nil {
-			panic(err.Error())
-		}
-	}
-	// undo the changes to the current branch
-	spans := undobranches.BranchSpans{
-		undobranches.BranchSpan{
-			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-		},
-	}
-	changes := spans.Changes()
-	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		Config:                   &args.Runner.FullConfig,
-		EndBranch:                args.CurrentBranch,
-		BeginBranch:              args.CurrentBranch,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	for _, opcode := range undoCurrentBranchProgram {
-		err := opcode.Run(shared.RunArgs{
-			Connector:                       nil,
-			DialogTestInputs:                nil,
-			Lineage:                         args.Runner.Lineage,
-			PrependOpcodes:                  nil,
-			RegisterUndoablePerennialCommit: nil,
-			Runner:                          args.Runner,
-			UpdateInitialBranchLocalSHA:     nil,
-		})
-		if err != nil {
-			panic(err.Error())
-		}
-	}
-
-	// remove the remaining opcodes for the current branch from the program
-	newProgram := program.Program{}
-	skipping := true
-	for _, opcode := range args.RunState.RunProgram {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			newProgram.Add(opcode)
-		}
-	}
-	newProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	args.RunState.RunProgram = newProgram
-
-	// continue executing the program
+	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Lineage)
+	revertChangesToCurrentBranch(args)
+	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
@@ -97,4 +42,36 @@ type ExecuteArgs struct {
 	Runner         *git.ProdRunner
 	TestInputs     components.TestInputs
 	Verbose        bool
+}
+
+// removes the remaining opcodes for the current branch from the given program
+func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
+	result := make(program.Program, 0, len(prog)-1)
+	skipping := true
+	for _, opcode := range prog {
+		if shared.IsEndOfBranchProgramOpcode(opcode) {
+			skipping = false
+			continue
+		}
+		if !skipping {
+			result.Add(opcode)
+		}
+	}
+	return result
+}
+
+func revertChangesToCurrentBranch(args ExecuteArgs) {
+	spans := undobranches.BranchSpans{
+		undobranches.BranchSpan{
+			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+		},
+	}
+	undoCurrentBranchProgram := spans.Changes().UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		BeginBranch:              args.CurrentBranch,
+		Config:                   &args.Runner.FullConfig,
+		EndBranch:                args.CurrentBranch,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
+	})
+	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
 }
