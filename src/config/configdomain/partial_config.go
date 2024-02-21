@@ -18,6 +18,7 @@ type PartialConfig struct {
 	MainBranch               *gitdomain.LocalBranchName
 	Offline                  *Offline
 	PerennialBranches        *gitdomain.LocalBranchNames
+	PerennialRegex           *string
 	PushHook                 *PushHook
 	PushNewBranches          *PushNewBranches
 	ShipDeleteTrackingBranch *ShipDeleteTrackingBranch

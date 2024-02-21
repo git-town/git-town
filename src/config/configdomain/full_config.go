@@ -1,10 +1,6 @@
 package configdomain
 
 import (
-	"fmt"
-	"regexp"
-
-	"github.com/git-town/git-town/v12/src/cli/dialog/components"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/gohacks/slice"
 )
@@ -23,7 +19,7 @@ type FullConfig struct {
 	MainBranch               gitdomain.LocalBranchName
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
-	PerennialRegex           string
+	PerennialRegex           PerennialRegex
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -56,15 +52,7 @@ func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
-	if self.PerennialRegex == "" {
-		return false
-	}
-	re, err := regexp.Compile(self.PerennialRegex)
-	if err != nil {
-		fmt.Println(components.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self.PerennialRegex, err.Error())))
-		return false
-	}
-	return re.MatchString(branch.String())
+	return self.PerennialRegex.MatchBranch(branch)
 }
 
 func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
