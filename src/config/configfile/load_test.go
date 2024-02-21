@@ -81,8 +81,9 @@ main = "main"
 			main := "main"
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:       &main,
-					Perennials: nil,
+					Main:           &main,
+					Perennials:     nil,
+					PerennialRegex: nil,
 				},
 				Hosting:                  nil,
 				SyncStrategy:             nil,
