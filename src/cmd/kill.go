@@ -191,7 +191,7 @@ func killFeatureBranch(prog *program.Program, finalUndoProgram *program.Program,
 		}
 		prog.Add(&opcodes.Checkout{Branch: config.branchWhenDone})
 	}
-	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToKill.LocalName, Force: false})
+	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToKill.LocalName})
 	if !config.dryRun {
 		sync.RemoveBranchFromLineage(sync.RemoveBranchFromLineageArgs{
 			Branch:  config.branchToKill.LocalName,

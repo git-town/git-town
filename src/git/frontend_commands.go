@@ -114,11 +114,8 @@ func (self *FrontendCommands) DeleteLastCommit() error {
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, force bool) error {
-	args := []string{"branch", "-d", name.String()}
-	if force {
-		args[1] = "-D"
-	}
+func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName) error {
+	args := []string{"branch", "-D", name.String()}
 	return self.Runner.Run("git", args...)
 }
 

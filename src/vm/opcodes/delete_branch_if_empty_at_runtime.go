@@ -27,10 +27,7 @@ func (self *DeleteBranchIfEmptyAtRuntime) Run(args shared.RunArgs) error {
 	} else {
 		args.PrependOpcodes(
 			&CheckoutParent{CurrentBranch: self.Branch},
-			&DeleteLocalBranch{
-				Branch: self.Branch,
-				Force:  false,
-			},
+			&DeleteLocalBranch{Branch: self.Branch},
 			&RemoveBranchFromLineage{
 				Branch: self.Branch,
 			},
