@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undobranches"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
 	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/shared"
@@ -58,7 +57,6 @@ func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
 			result.Add(opcode)
 		}
 	}
-	result.MoveToEnd(&opcodes.RestoreOpenChanges{})
 	return result
 }
 
