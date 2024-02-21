@@ -10,12 +10,14 @@ import (
 
 func TestPerennialRegex(t *testing.T) {
 	t.Parallel()
+
 	t.Run("empty regex matches nothing", func(t *testing.T) {
 		t.Parallel()
 		perennialRegex := configdomain.PerennialRegex("")
 		must.False(t, perennialRegex.MatchBranch(""))
 		must.False(t, perennialRegex.MatchBranch("foo"))
 	})
+
 	t.Run("only characters, no wildcards matches all branch names that contain that phrase", func(t *testing.T) {
 		t.Parallel()
 		perennialRegex := configdomain.PerennialRegex("release")
@@ -31,6 +33,7 @@ func TestPerennialRegex(t *testing.T) {
 			must.Eq(t, want, have)
 		}
 	})
+
 	t.Run("with wildcards", func(t *testing.T) {
 		t.Parallel()
 		perennialRegex := configdomain.PerennialRegex("release-.*")
