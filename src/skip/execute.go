@@ -16,26 +16,9 @@ import (
 
 // executes the "skip" command at the given runstate
 func Execute(args ExecuteArgs) error {
-	// abort the current op
 	lightInterpreter.Execute(args.RunState.AbortProgram, args.Runner, args.Runner.Lineage)
-	// undo the changes to the current branch
-	spans := undobranches.BranchSpans{
-		undobranches.BranchSpan{
-			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
-		},
-	}
-	changes := spans.Changes()
-	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
-		BeginBranch:              args.CurrentBranch,
-		Config:                   &args.Runner.FullConfig,
-		EndBranch:                args.CurrentBranch,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
-	})
-	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
-	// remove the remaining opcodes for the current branch from the program
-	args.RunState.RunProgram = removeOpcodesForBranch(args.RunState.RunProgram)
-	// continue executing the program
+	undoChangesToCurrentBranch(args)
+	args.RunState.RunProgram = removeOpcodesForCurrentBranch(args.RunState.RunProgram)
 	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.TestInputs,
@@ -62,8 +45,25 @@ type ExecuteArgs struct {
 	Verbose        bool
 }
 
+func undoChangesToCurrentBranch(args ExecuteArgs) {
+	spans := undobranches.BranchSpans{
+		undobranches.BranchSpan{
+			Before: *args.RunState.BeginBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+			After:  *args.RunState.EndBranchesSnapshot.Branches.FindByLocalName(args.CurrentBranch),
+		},
+	}
+	changes := spans.Changes()
+	undoCurrentBranchProgram := changes.UndoProgram(undobranches.BranchChangesUndoProgramArgs{
+		BeginBranch:              args.CurrentBranch,
+		Config:                   &args.Runner.FullConfig,
+		EndBranch:                args.CurrentBranch,
+		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
+	})
+	lightInterpreter.Execute(undoCurrentBranchProgram, args.Runner, args.Runner.Lineage)
+}
+
 // removes the remaining opcodes for the current branch from the given program
-func removeOpcodesForBranch(prog program.Program) program.Program {
+func removeOpcodesForCurrentBranch(prog program.Program) program.Program {
 	newProgram := program.Program{}
 	skipping := true
 	for _, opcode := range prog {
