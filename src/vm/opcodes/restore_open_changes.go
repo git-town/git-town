@@ -13,14 +13,11 @@ type RestoreOpenChanges struct {
 }
 
 func (self *RestoreOpenChanges) Run(args shared.RunArgs) error {
-	if args.Runner.DryRun {
-		return args.Runner.Frontend.PopStash()
-	}
 	stashSize, err := args.Runner.Backend.StashSize()
 	if err != nil {
 		return err
 	}
-	if stashSize == 0 {
+	if stashSize == 0 && !args.Runner.DryRun {
 		return nil
 	}
 	err = args.Runner.Frontend.PopStash()
