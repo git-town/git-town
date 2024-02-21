@@ -21,5 +21,5 @@ func (self *ForcePushCurrentBranch) Run(args shared.RunArgs) error {
 	if !shouldPush {
 		return nil
 	}
-	return args.Runner.Frontend.ForcePushBranch(args.Runner.NoPushHook())
+	return args.Runner.Frontend.ForcePushBranch(args.Runner.Config.NoPushHook())
 }

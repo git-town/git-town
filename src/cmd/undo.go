@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	}
 	var config *undoConfig
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Lineage, err = determineUndoConfig(repo, verbose)
+	config, initialStashSize, repo.Runner.Config.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func executeUndo(verbose bool) error {
 		FullConfig:       config.FullConfig,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          repo.Runner.Lineage,
+		Lineage:          repo.Runner.Config.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         *runState,
 		Runner:           repo.Runner,
@@ -89,7 +89,7 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 	initialBranchesSnapshot, initialStashSize, repoStatus, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -97,25 +97,25 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		Verbose:               verbose,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Lineage, err
+		return nil, initialStashSize, repo.Runner.Config.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
+		FullConfig:      &repo.Runner.Config.FullConfig,
 		HostingPlatform: repo.Runner.Config.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Lineage, err
+		return nil, initialStashSize, repo.Runner.Config.Lineage, err
 	}
 	return &undoConfig{
-		FullConfig:              &repo.Runner.FullConfig,
+		FullConfig:              &repo.Runner.Config.FullConfig,
 		connector:               connector,
 		dialogTestInputs:        dialogTestInputs,
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, repo.Runner.Lineage, nil
+	}, initialStashSize, repo.Runner.Config.Lineage, nil
 }

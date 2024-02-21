@@ -89,7 +89,7 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -108,18 +108,18 @@ func determineHackConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(targetBranch) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.MainBranch}
+	branchNamesToSync := gitdomain.LocalBranchNames{repo.Runner.Config.MainBranch}
 	branchesToSync := fc.BranchInfos(branchesSnapshot.Branches.Select(branchNamesToSync))
 	return &appendConfig{
-		FullConfig:                &repo.Runner.FullConfig,
+		FullConfig:                &repo.Runner.Config.FullConfig,
 		allBranches:               branchesSnapshot.Branches,
 		branchesToSync:            branchesToSync,
 		dialogTestInputs:          dialogTestInputs,
 		dryRun:                    dryRun,
 		hasOpenChanges:            repoStatus.OpenChanges,
 		initialBranch:             branchesSnapshot.Active,
-		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.MainBranch},
-		parentBranch:              repo.Runner.MainBranch,
+		newBranchParentCandidates: gitdomain.LocalBranchNames{repo.Runner.Config.MainBranch},
+		parentBranch:              repo.Runner.Config.MainBranch,
 		previousBranch:            previousBranch,
 		remotes:                   remotes,
 		targetBranch:              targetBranch,

@@ -44,7 +44,7 @@ func executeConfig(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	printConfig(&repo.Runner.FullConfig)
+	printConfig(&repo.Runner.Config.FullConfig)
 	return nil
 }
 

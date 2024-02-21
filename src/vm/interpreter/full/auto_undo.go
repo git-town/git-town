@@ -17,7 +17,7 @@ import (
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
-		DryRun:         args.Run.DryRun,
+		DryRun:         args.Run.Config.DryRun,
 		HasOpenChanges: false,
 		NoPushHook:     args.FullConfig.NoPushHook(),
 		Run:            args.Run,

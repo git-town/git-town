@@ -148,7 +148,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: true,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -174,35 +174,35 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !repo.Runner.IsFeatureBranch(branchNameToShip) {
+	if !repo.Runner.Config.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
-		Config:           &repo.Runner.FullConfig,
+		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.MainBranch,
+		DefaultBranch:    repo.Runner.Config.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.FullConfig, repo.Runner.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.Config.FullConfig, repo.Runner.Config.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName := repo.Runner.Lineage.Parent(branchNameToShip)
+	targetBranchName := repo.Runner.Config.Lineage.Parent(branchNameToShip)
 	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	var proposal *hostingdomain.Proposal
-	childBranches := repo.Runner.Lineage.Children(branchNameToShip)
+	childBranches := repo.Runner.Config.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
-		HostingPlatform: repo.Runner.HostingPlatform,
+		FullConfig:      &repo.Runner.Config.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})
@@ -233,7 +233,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		}
 	}
 	return &shipConfig{
-		FullConfig:               &repo.Runner.FullConfig,
+		FullConfig:               &repo.Runner.Config.FullConfig,
 		allBranches:              branchesSnapshot.Branches,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,

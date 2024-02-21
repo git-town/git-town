@@ -107,7 +107,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	branchesSnapshot, stashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 true,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -127,9 +127,9 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 	}
 	if branchToKill.IsLocal() {
 		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
-			Config:           &repo.Runner.FullConfig,
+			Config:           &repo.Runner.Config.FullConfig,
 			AllBranches:      branchesSnapshot.Branches,
-			DefaultBranch:    repo.Runner.MainBranch,
+			DefaultBranch:    repo.Runner.Config.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			Runner:           repo.Runner,
 		})
@@ -137,7 +137,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 	}
-	if !repo.Runner.IsFeatureBranch(branchToKill.LocalName) {
+	if !repo.Runner.Config.IsFeatureBranch(branchToKill.LocalName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
@@ -148,7 +148,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		branchWhenDone = branchesSnapshot.Active
 	}
 	return &killConfig{
-		FullConfig:       &repo.Runner.FullConfig,
+		FullConfig:       &repo.Runner.Config.FullConfig,
 		branchToKill:     *branchToKill,
 		branchWhenDone:   branchWhenDone,
 		dialogTestInputs: dialogTestInputs,

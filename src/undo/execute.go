@@ -19,7 +19,7 @@ func Execute(args ExecuteArgs) error {
 		return nil
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
-		DryRun:         args.Runner.DryRun,
+		DryRun:         args.Runner.Config.DryRun,
 		HasOpenChanges: args.HasOpenChanges,
 		NoPushHook:     args.FullConfig.NoPushHook(),
 		Run:            args.Runner,

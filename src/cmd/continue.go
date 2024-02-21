@@ -80,7 +80,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	initialBranchesSnapshot, initialStashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
-		FullConfig:            &repo.Runner.FullConfig,
+		FullConfig:            &repo.Runner.Config.FullConfig,
 		HandleUnfinishedState: false,
 		Repo:                  repo,
 		ValidateIsConfigured:  true,
@@ -98,13 +98,13 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
-		FullConfig:      &repo.Runner.FullConfig,
-		HostingPlatform: repo.Runner.HostingPlatform,
+		FullConfig:      &repo.Runner.Config.FullConfig,
+		HostingPlatform: repo.Runner.Config.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})
 	return &continueConfig{
-		FullConfig:       &repo.Runner.FullConfig,
+		FullConfig:       &repo.Runner.Config.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
 		hasOpenChanges:   repoStatus.OpenChanges,
