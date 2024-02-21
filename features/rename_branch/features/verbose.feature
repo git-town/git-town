@@ -28,8 +28,7 @@ Feature: display all executed Git commands
       |        | backend  | git config git-town-branch.new.parent main    |
       | new    | frontend | git push -u origin new                        |
       |        | frontend | git push origin :old                          |
-      |        | backend  | git log main..old                             |
-      | new    | frontend | git branch -D old                             |
+      |        | frontend | git branch -D old                             |
       |        | backend  | git show-ref --verify --quiet refs/heads/main |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout new                              |
@@ -39,7 +38,7 @@ Feature: display all executed Git commands
       |        | backend  | git stash list                                |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "new"
 

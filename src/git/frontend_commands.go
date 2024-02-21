@@ -114,12 +114,8 @@ func (self *FrontendCommands) DeleteLastCommit() error {
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName, force bool) error {
-	args := []string{"branch", "-d", name.String()}
-	if force {
-		args[1] = "-D"
-	}
-	return self.Runner.Run("git", args...)
+func (self *FrontendCommands) DeleteLocalBranch(name gitdomain.LocalBranchName) error {
+	return self.Runner.Run("git", "branch", "-D", name.String())
 }
 
 // DeleteOriginHostname removes the origin hostname override

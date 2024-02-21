@@ -35,9 +35,6 @@ func syncDeletedPerennialBranchProgram(list *program.Program, branch gitdomain.B
 	})
 	list.Add(&opcodes.RemoveFromPerennialBranches{Branch: branch.LocalName})
 	list.Add(&opcodes.Checkout{Branch: args.Config.MainBranch})
-	list.Add(&opcodes.DeleteLocalBranch{
-		Branch: branch.LocalName,
-		Force:  false,
-	})
+	list.Add(&opcodes.DeleteLocalBranch{Branch: branch.LocalName})
 	list.Add(&opcodes.QueueMessage{Message: fmt.Sprintf(messages.BranchDeleted, branch.LocalName)})
 }

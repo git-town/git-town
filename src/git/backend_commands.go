@@ -78,16 +78,6 @@ func (self *BackendCommands) BranchHasUnmergedChanges(branch, parent gitdomain.L
 	return out != "", nil
 }
 
-// BranchHasUnmergedCommits indicates whether the branch with the given name
-// contains commits that are not merged into the main branch.
-func (self *BackendCommands) BranchHasUnmergedCommits(branch gitdomain.LocalBranchName, parent gitdomain.Location) (bool, error) {
-	out, err := self.Runner.QueryTrim("git", "log", parent.String()+".."+branch.String())
-	if err != nil {
-		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
-	}
-	return out != "", nil
-}
-
 // BranchesSnapshot provides detailed information about the sync status of all branches.
 func (self *BackendCommands) BranchesSnapshot() (gitdomain.BranchesSnapshot, error) { //nolint:nonamedreturns
 	output, err := self.Runner.Query("git", "branch", "-vva")

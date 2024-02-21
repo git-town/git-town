@@ -14,7 +14,7 @@ Feature: sync perennial branch that was deleted at the remote
       | BRANCH    | COMMAND                  |
       | feature-1 | git fetch --prune --tags |
       |           | git checkout main        |
-      | main      | git branch -d feature-1  |
+      | main      | git branch -D feature-1  |
       |           | git push --tags          |
     And it prints:
       """

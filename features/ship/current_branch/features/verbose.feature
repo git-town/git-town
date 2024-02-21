@@ -39,8 +39,7 @@ Feature: display all executed Git commands
       |         | backend  | git rev-list --left-right main...origin/main      |
       | main    | frontend | git push                                          |
       |         | frontend | git push origin :feature                          |
-      |         | backend  | git log main..feature                             |
-      | main    | frontend | git branch -D feature                             |
+      |         | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/feature  |
       |         | backend  | git branch -vva                                   |
@@ -49,7 +48,7 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 36 shell commands.
+      Ran 35 shell commands.
       """
     And the current branch is now "main"
 

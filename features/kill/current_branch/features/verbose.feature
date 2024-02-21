@@ -27,7 +27,6 @@ Feature: display all executed Git commands
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout other                                |
-      |         | backend  | git log main..current                             |
       | other   | frontend | git branch -D current                             |
       |         | backend  | git config --unset git-town-branch.current.parent |
       |         | backend  | git show-ref --verify --quiet refs/heads/current  |
@@ -37,6 +36,6 @@ Feature: display all executed Git commands
       |         | backend  | git stash list                                    |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "other"

@@ -27,7 +27,7 @@ Feature: rename a perennial branch
       |            | git checkout new            |
       | new        | git push -u origin new      |
       |            | git push origin :production |
-      |            | git branch -d production    |
+      |            | git branch -D production    |
     And the current branch is now "new"
     And the perennial branches are now "new"
     And these commits exist now

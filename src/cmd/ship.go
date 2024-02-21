@@ -317,7 +317,7 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 			prog.Add(&opcodes.DeleteTrackingBranch{Branch: config.branchToShip.RemoteName})
 		}
 	}
-	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToShip.LocalName, Force: false})
+	prog.Add(&opcodes.DeleteLocalBranch{Branch: config.branchToShip.LocalName})
 	if !config.dryRun {
 		prog.Add(&opcodes.DeleteParentBranch{Branch: config.branchToShip.LocalName})
 	}

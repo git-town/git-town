@@ -72,8 +72,7 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("old", "frontend", "git merge --no-edit main")
 		table.AddRow("", "backend", "git diff main..old")
 		table.AddRow("old", "frontend", "git checkout main")
-		table.AddRow("", "backend", "git log main..old")
-		table.AddRow("main", "frontend", "git branch -d old")
+		table.AddRow("main", "frontend", "git branch -D old")
 		table.AddRow("", "backend", "git config git-town.perennial-branches")
 		table.AddRow("", "backend", "git show-ref --quiet refs/heads/main")
 		table.AddRow("", "backend", "git show-ref --quiet refs/heads/old")
@@ -101,8 +100,7 @@ func TestDataTable(t *testing.T) {
 | old    | frontend | git merge --no-edit main                  |
 |        | backend  | git diff main..old                        |
 | old    | frontend | git checkout main                         |
-|        | backend  | git log main..old                         |
-| main   | frontend | git branch -d old                         |
+| main   | frontend | git branch -D old                         |
 |        | backend  | git config git-town.perennial-branches    |
 |        | backend  | git show-ref --quiet refs/heads/main      |
 |        | backend  | git show-ref --quiet refs/heads/old       |

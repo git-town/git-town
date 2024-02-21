@@ -24,7 +24,7 @@ Feature: prepend a branch to a branch that was shipped at the remote
       |        | git checkout child                |
       | child  | git merge --no-edit parent        |
       |        | git checkout parent               |
-      | parent | git branch -d child               |
+      | parent | git branch -D child               |
       |        | git branch new parent             |
       |        | git checkout new                  |
     And it prints:

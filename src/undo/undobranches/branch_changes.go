@@ -167,10 +167,7 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 		if args.EndBranch == addedLocalBranch {
 			result.Add(&opcodes.Checkout{Branch: args.BeginBranch})
 		}
-		result.Add(&opcodes.DeleteLocalBranch{
-			Branch: addedLocalBranch,
-			Force:  true,
-		})
+		result.Add(&opcodes.DeleteLocalBranch{Branch: addedLocalBranch})
 	}
 
 	// Ignore remotely changed perennial branches because we can't force-push to them
