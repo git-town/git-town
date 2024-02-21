@@ -25,39 +25,32 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And file "conflicting_file" still contains unresolved conflicts
 
-  Scenario: undo with unresolved conflict fails due to unresolved merge conflicts
+  Scenario: undo with unresolved merge conflict
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash pop         |
-    And it prints the error:
-      """
-      conflicts between your uncommmitted changes and the main branch
-      """
+      | BRANCH   | COMMAND                    |
+      | new      | git add -A                 |
+      |          | git commit -m "WIP on new" |
+      |          | git checkout existing      |
+      | existing | git branch -D new          |
+      |          | git stash pop              |
     And the current branch is now "existing"
+    And file "conflicting_file" still has content "conflicting content"
 
   Scenario: resolve and undo
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND               |
-      | new      | git add -A            |
-      |          | git stash             |
-      |          | git checkout existing |
-      | existing | git branch -D new     |
-      |          | git stash pop         |
-    And it prints the error:
-      """
-      conflicts between your uncommmitted changes and the main branch
-      """
+      | BRANCH   | COMMAND                    |
+      | new      | git add -A                 |
+      |          | git commit -m "WIP on new" |
+      |          | git checkout existing      |
+      | existing | git branch -D new          |
+      |          | git stash pop              |
     And it does not print "to go back to where you started, run \"git-town undo\""
     And the current branch is now "existing"
     And the initial commits exist
-    And file "conflicting_file" now has content "resolved content"
+    And file "conflicting_file" still has content "conflicting content"
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -88,10 +81,7 @@ Feature: conflicts between uncommitted changes and the main branch
       |          | git checkout existing |
       | existing | git branch -D new     |
       |          | git stash pop         |
-    And it prints the error:
-      """
-      conflicts between your uncommmitted changes and the main branch
-      """
+      |          | git stash pop         |
     And the current branch is now "existing"
     And the initial commits exist
     And the initial branches and lineage exist

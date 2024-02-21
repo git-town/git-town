@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -15,9 +14,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
-	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
-	"github.com/git-town/git-town/v12/src/vm/opcodes"
-	"github.com/git-town/git-town/v12/src/vm/runstate"
+	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
 )
@@ -58,21 +55,23 @@ func executeUndo(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	undoRunState, err := determineUndoRunState(config, repo)
+	runState, err := statefile.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	return fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Connector:               config.connector,
-		DialogTestInputs:        &config.dialogTestInputs,
-		FullConfig:              config.FullConfig,
-		InitialBranchesSnapshot: config.initialBranchesSnapshot,
-		InitialConfigSnapshot:   repo.ConfigSnapshot,
-		InitialStashSize:        initialStashSize,
-		RootDir:                 repo.RootDir,
-		Run:                     repo.Runner,
-		RunState:                &undoRunState,
-		Verbose:                 verbose,
+	if runState == nil {
+		fmt.Println(messages.UndoNothingToDo)
+		return nil
+	}
+	return undo.Execute(undo.ExecuteArgs{
+		FullConfig:       config.FullConfig,
+		HasOpenChanges:   config.hasOpenChanges,
+		InitialStashSize: initialStashSize,
+		Lineage:          repo.Runner.Lineage,
+		RootDir:          repo.RootDir,
+		RunState:         *runState,
+		Runner:           repo.Runner,
+		Verbose:          verbose,
 	})
 }
 
@@ -87,7 +86,7 @@ type undoConfig struct {
 
 func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfig, gitdomain.StashSize, configdomain.Lineage, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSize, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, repoStatus, _, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
@@ -101,10 +100,6 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		return nil, initialStashSize, repo.Runner.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
-	if err != nil {
-		return nil, initialStashSize, repo.Runner.Lineage, err
-	}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.FullConfig,
@@ -123,41 +118,4 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
 	}, initialStashSize, repo.Runner.Lineage, nil
-}
-
-func determineUndoRunState(config *undoConfig, repo *execute.OpenRepoResult) (runstate.RunState, error) {
-	runState, err := statefile.Load(repo.RootDir)
-	if err != nil {
-		return runstate.EmptyRunState(), fmt.Errorf(messages.RunstateLoadProblem, err)
-	}
-	if runState == nil {
-		return runstate.EmptyRunState(), errors.New(messages.UndoNothingToDo)
-	}
-	var undoRunState runstate.RunState
-	if runState.IsFinished() {
-		undoRunState = runState.CreateUndoRunState()
-	} else {
-		undoRunState = runState.CreateAbortRunState()
-	}
-	if !undoRunState.DryRun {
-		cmdhelpers.Wrap(&undoRunState.RunProgram, cmdhelpers.WrapOptions{
-			DryRun:                   undoRunState.DryRun,
-			RunInGitRoot:             true,
-			StashOpenChanges:         config.hasOpenChanges,
-			PreviousBranchCandidates: gitdomain.LocalBranchNames{config.previousBranch},
-		})
-		// If the command to undo failed and was continued,
-		// there might be opcodes in the undo stack that became obsolete
-		// when the command was continued.
-		// Example: the command stashed away uncommitted changes,
-		// failed, and remembered in the undo list to pop the stack.
-		// When continuing, it finishes and pops the stack as part of the continue list.
-		// When we run undo now, it still wants to pop the stack even though that was already done.
-		// This seems to apply only to popping the stack and switching back to the initial branch.
-		// Hence we consolidate these opcode types here.
-		undoRunState.RunProgram = undoRunState.RunProgram.
-			MoveToEnd(&opcodes.RestoreOpenChanges{}).
-			RemoveAllButLast("*opcodes.CheckoutIfExists")
-	}
-	return undoRunState, err
 }

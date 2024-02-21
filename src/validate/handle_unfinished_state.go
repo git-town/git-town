@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
@@ -45,7 +46,16 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 	case dialog.ResponseContinue:
 		return continueRunstate(runState, args)
 	case dialog.ResponseUndo:
-		return abortRunstate(runState, args)
+		return true, undo.Execute(undo.ExecuteArgs{
+			FullConfig:       &args.Run.FullConfig,
+			HasOpenChanges:   args.HasOpenChanges,
+			InitialStashSize: args.InitialStashSize,
+			Lineage:          args.Lineage,
+			RootDir:          args.RootDir,
+			RunState:         *runState,
+			Runner:           args.Run,
+			Verbose:          args.Verbose,
+		})
 	case dialog.ResponseSkip:
 		return skipRunstate(runState, args)
 	case dialog.ResponseQuit:
@@ -57,6 +67,7 @@ func HandleUnfinishedState(args UnfinishedStateArgs) (quit bool, err error) {
 type UnfinishedStateArgs struct {
 	Connector               hostingdomain.Connector
 	DialogTestInputs        components.TestInputs
+	HasOpenChanges          bool
 	InitialBranchesSnapshot gitdomain.BranchesSnapshot
 	InitialConfigSnapshot   undoconfig.ConfigSnapshot
 	InitialStashSize        gitdomain.StashSize
@@ -65,22 +76,6 @@ type UnfinishedStateArgs struct {
 	RootDir                 gitdomain.RepoRootDir
 	Run                     *git.ProdRunner
 	Verbose                 bool
-}
-
-func abortRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
-	abortRunState := runState.CreateAbortRunState()
-	return true, fullInterpreter.Execute(fullInterpreter.ExecuteArgs{
-		Connector:               args.Connector,
-		DialogTestInputs:        &args.DialogTestInputs,
-		FullConfig:              &args.Run.FullConfig,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &abortRunState,
-		Verbose:                 args.Verbose,
-	})
 }
 
 func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, error) {
@@ -95,6 +90,7 @@ func continueRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bo
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
 		FullConfig:              &args.Run.FullConfig,
+		HasOpenChanges:          repoStatus.OpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,
@@ -116,6 +112,7 @@ func skipRunstate(runState *runstate.RunState, args UnfinishedStateArgs) (bool, 
 		Connector:               args.Connector,
 		DialogTestInputs:        &args.DialogTestInputs,
 		FullConfig:              &args.Run.FullConfig,
+		HasOpenChanges:          args.HasOpenChanges,
 		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
 		InitialConfigSnapshot:   args.InitialConfigSnapshot,
 		InitialStashSize:        args.InitialStashSize,

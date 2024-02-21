@@ -27,7 +27,7 @@ Feature: abort the ship by empty commit message
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints the error:
+    Then it prints:
       """
       nothing to undo
       """

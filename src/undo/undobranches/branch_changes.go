@@ -164,8 +164,8 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// remove locally added branches
 	for _, addedLocalBranch := range self.LocalAdded {
-		if args.FinalBranch == addedLocalBranch {
-			result.Add(&opcodes.Checkout{Branch: args.InitialBranch})
+		if args.EndBranch == addedLocalBranch {
+			result.Add(&opcodes.Checkout{Branch: args.BeginBranch})
 		}
 		result.Add(&opcodes.DeleteLocalBranch{
 			Branch: addedLocalBranch,
@@ -189,13 +189,13 @@ func (self BranchChanges) UndoProgram(args BranchChangesUndoProgramArgs) program
 
 	// This must be a CheckoutIfExists opcode because this branch might not exist
 	// when a Git Town command fails, stores this undo opcode, then gets continued and deletes this branch.
-	result.Add(&opcodes.CheckoutIfExists{Branch: args.InitialBranch})
+	result.Add(&opcodes.CheckoutIfExists{Branch: args.BeginBranch})
 	return result
 }
 
 type BranchChangesUndoProgramArgs struct {
+	BeginBranch              gitdomain.LocalBranchName
 	Config                   *configdomain.FullConfig
-	FinalBranch              gitdomain.LocalBranchName
-	InitialBranch            gitdomain.LocalBranchName
+	EndBranch                gitdomain.LocalBranchName
 	UndoablePerennialCommits []gitdomain.SHA
 }

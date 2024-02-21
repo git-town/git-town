@@ -5,6 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo"
+	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
@@ -14,21 +16,16 @@ import (
 // should they fail.
 func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	print.Error(fmt.Errorf(messages.RunAutoUndo, runErr.Error()))
-	abortRunState := args.RunState.CreateAbortRunState()
-	err := Execute(ExecuteArgs{
-		Connector:               args.Connector,
-		DialogTestInputs:        args.DialogTestInputs,
-		FullConfig:              args.FullConfig,
-		InitialBranchesSnapshot: args.InitialBranchesSnapshot,
-		InitialConfigSnapshot:   args.InitialConfigSnapshot,
-		InitialStashSize:        args.InitialStashSize,
-		RootDir:                 args.RootDir,
-		Run:                     args.Run,
-		RunState:                &abortRunState,
-		Verbose:                 args.Verbose,
+	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
+		DryRun:         args.Run.DryRun,
+		HasOpenChanges: false,
+		NoPushHook:     args.FullConfig.NoPushHook(),
+		Run:            args.Run,
+		RunState:       *args.RunState,
 	})
 	if err != nil {
-		return fmt.Errorf(messages.RunstateAbortOpcodeProblem, err)
+		return err
 	}
+	lightInterpreter.Execute(undoProgram, args.Run, args.Lineage)
 	return opcode.CreateAutomaticUndoError()
 }

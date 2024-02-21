@@ -115,7 +115,6 @@ nd will be removed in future versions of Git Town.`
 	RepoOutside                    = "this is not a Git repository"
 	RunAutoUndo                    = "%s\nAuto-undo... "
 	RunCommandProblem              = "error running command %q: %w"
-	RunstateAbortOpcodeProblem     = "cannot run the abort opcode: %w"
 	RunstateDeleted                = "Runstate file deleted."
 	RunstateDeleteProblem          = "cannot delete previous run state: %w"
 	RunstateLoadProblem            = "cannot load previous run state: %w"

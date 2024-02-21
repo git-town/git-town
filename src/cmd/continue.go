@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
+	"github.com/git-town/git-town/v12/src/vm/program"
 	"github.com/git-town/git-town/v12/src/vm/runstate"
 	"github.com/git-town/git-town/v12/src/vm/statefile"
 	"github.com/spf13/cobra"
@@ -63,6 +64,7 @@ func executeContinue(verbose bool) error {
 		Connector:               config.connector,
 		DialogTestInputs:        &config.dialogTestInputs,
 		FullConfig:              config.FullConfig,
+		HasOpenChanges:          config.hasOpenChanges,
 		InitialBranchesSnapshot: initialBranchesSnapshot,
 		InitialConfigSnapshot:   repo.ConfigSnapshot,
 		InitialStashSize:        initialStashSize,
@@ -75,7 +77,7 @@ func executeContinue(verbose bool) error {
 
 func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*continueConfig, gitdomain.BranchesSnapshot, gitdomain.StashSize, bool, error) {
 	dialogTestInputs := components.LoadTestInputs(os.Environ())
-	initialBranchesSnapshot, initialStashSize, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+	initialBranchesSnapshot, initialStashSize, repoStatus, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
 		DialogTestInputs:      dialogTestInputs,
 		Fetch:                 false,
 		FullConfig:            &repo.Runner.FullConfig,
@@ -87,10 +89,6 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 	})
 	if err != nil || exit {
 		return nil, initialBranchesSnapshot, initialStashSize, exit, err
-	}
-	repoStatus, err := repo.Runner.Backend.RepoStatus()
-	if err != nil {
-		return nil, initialBranchesSnapshot, initialStashSize, false, err
 	}
 	if repoStatus.Conflicts {
 		return nil, initialBranchesSnapshot, initialStashSize, false, errors.New(messages.ContinueUnresolvedConflicts)
@@ -109,6 +107,7 @@ func determineContinueConfig(repo *execute.OpenRepoResult, verbose bool) (*conti
 		FullConfig:       &repo.Runner.FullConfig,
 		connector:        connector,
 		dialogTestInputs: dialogTestInputs,
+		hasOpenChanges:   repoStatus.OpenChanges,
 	}, initialBranchesSnapshot, initialStashSize, false, err
 }
 
@@ -116,6 +115,7 @@ type continueConfig struct {
 	connector hostingdomain.Connector
 	*configdomain.FullConfig
 	dialogTestInputs components.TestInputs
+	hasOpenChanges   bool
 }
 
 func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState, bool, error) {
@@ -127,5 +127,6 @@ func determineContinueRunstate(repo *execute.OpenRepoResult) (runstate.RunState,
 		fmt.Println(messages.ContinueNothingToDo)
 		return runstate.EmptyRunState(), true, nil
 	}
+	runState.AbortProgram = program.Program{}
 	return *runState, false, nil
 }

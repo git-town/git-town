@@ -91,7 +91,7 @@ func (self *RunState) CreateSkipRunState() RunState {
 		EndBranchesSnapshot:   self.EndBranchesSnapshot,
 		EndConfigSnapshot:     self.EndConfigSnapshot,
 		EndStashSize:          self.EndStashSize,
-		RunProgram:            self.AbortProgram,
+		RunProgram:            program.Program{},
 	}
 	// undo the operations done on the current branch so far
 	// by copying the respective undo-opcodes into the runprogram

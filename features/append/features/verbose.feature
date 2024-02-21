@@ -15,12 +15,12 @@ Feature: display all executed Git commands
       |          | backend  | git config -lz --local                               |
       |          | backend  | git rev-parse --show-toplevel                        |
       |          | backend  | git stash list                                       |
+      |          | backend  | git status --long --ignore-submodules                |
       |          | backend  | git branch -vva                                      |
       |          | backend  | git remote                                           |
       | existing | frontend | git fetch --prune --tags                             |
       |          | backend  | git branch -vva                                      |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
-      |          | backend  | git status --long --ignore-submodules                |
       | existing | frontend | git checkout main                                    |
       | main     | frontend | git rebase origin/main                               |
       |          | backend  | git rev-list --left-right main...origin/main         |
@@ -54,13 +54,13 @@ Feature: display all executed Git commands
       |          | backend  | git config -lz --local                        |
       |          | backend  | git rev-parse --show-toplevel                 |
       |          | backend  | git stash list                                |
+      |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git branch -vva                               |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
-      |          | backend  | git status --long --ignore-submodules         |
       |          | backend  | git remote get-url origin                     |
-      |          | backend  | git config --unset git-town-branch.new.parent |
       | new      | frontend | git checkout existing                         |
       | existing | frontend | git branch -D new                             |
+      |          | backend  | git config --unset git-town-branch.new.parent |
     And it prints:
       """
       Ran 12 shell commands.
