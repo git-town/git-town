@@ -56,7 +56,7 @@ func executeOffline(args []string, verbose bool) error {
 }
 
 func displayOfflineStatus(run *git.ProdRunner) {
-	fmt.Println(format.Bool(run.Config.Offline.Bool()))
+	fmt.Println(format.Bool(run.Config.FullConfig.Offline.Bool()))
 }
 
 func setOfflineStatus(text string, run *git.ProdRunner) error {

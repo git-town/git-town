@@ -48,7 +48,7 @@ func executeSwitch(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.Lineage)
+	branchToCheckout, abort, err := dialog.SwitchBranch(config.branchNames, config.initialBranch, repo.Runner.Config.FullConfig.Lineage)
 	if err != nil || abort {
 		return err
 	}

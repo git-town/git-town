@@ -51,7 +51,7 @@ func executeUndo(verbose bool) error {
 	}
 	var config *undoConfig
 	var initialStashSize gitdomain.StashSize
-	config, initialStashSize, repo.Runner.Config.Lineage, err = determineUndoConfig(repo, verbose)
+	config, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err = determineUndoConfig(repo, verbose)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func executeUndo(verbose bool) error {
 		FullConfig:       config.FullConfig,
 		HasOpenChanges:   config.hasOpenChanges,
 		InitialStashSize: initialStashSize,
-		Lineage:          repo.Runner.Config.Lineage,
+		Lineage:          repo.Runner.Config.FullConfig.Lineage,
 		RootDir:          repo.RootDir,
 		RunState:         *runState,
 		Runner:           repo.Runner,
@@ -97,18 +97,18 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		Verbose:               verbose,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.Lineage, err
+		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.HostingPlatform,
+		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})
 	if err != nil {
-		return nil, initialStashSize, repo.Runner.Config.Lineage, err
+		return nil, initialStashSize, repo.Runner.Config.FullConfig.Lineage, err
 	}
 	return &undoConfig{
 		FullConfig:              &repo.Runner.Config.FullConfig,
@@ -117,5 +117,5 @@ func determineUndoConfig(repo *execute.OpenRepoResult, verbose bool) (*undoConfi
 		hasOpenChanges:          repoStatus.OpenChanges,
 		initialBranchesSnapshot: initialBranchesSnapshot,
 		previousBranch:          previousBranch,
-	}, initialStashSize, repo.Runner.Config.Lineage, nil
+	}, initialStashSize, repo.Runner.Config.FullConfig.Lineage, nil
 }

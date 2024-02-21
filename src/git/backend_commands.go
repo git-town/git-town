@@ -36,11 +36,11 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (self *BackendCommands) Author() (string, error) {
-	email := self.Config.GitUserEmail
+	email := self.Config.FullConfig.GitUserEmail
 	if email == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}
-	name := self.Config.GitUserName
+	name := self.Config.FullConfig.GitUserName
 	if name == "" {
 		return "", errors.New(messages.GitUserEmailMissing)
 	}
@@ -350,7 +350,7 @@ func (self *BackendCommands) RemotesUncached() (gitdomain.Remotes, error) {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (self *BackendCommands) RemoveOutdatedConfiguration(localBranches gitdomain.LocalBranchNames) error {
-	for child, parent := range self.Config.Lineage {
+	for child, parent := range self.Config.FullConfig.Lineage {
 		hasChildBranch := localBranches.Contains(child)
 		hasParentBranch := localBranches.Contains(parent)
 		if !hasChildBranch || !hasParentBranch {

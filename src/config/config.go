@@ -18,19 +18,19 @@ import (
 // Config provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type Config struct {
-	configdomain.FullConfig                             // the merged configuration data
-	ConfigFile              *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
-	DryRun                  bool
-	GitConfig               gitconfig.Access           // access to the Git configuration settings
-	GlobalGitConfig         configdomain.PartialConfig // content of the global Git configuration
-	LocalGitConfig          configdomain.PartialConfig // content of the local Git configuration
-	originURLCache          configdomain.OriginURLCache
+	ConfigFile      *configdomain.PartialConfig // content of git-town.toml, nil = no config file exists
+	DryRun          bool
+	FullConfig      configdomain.FullConfig    // the merged configuration data
+	GitConfig       gitconfig.Access           // access to the Git configuration settings
+	GlobalGitConfig configdomain.PartialConfig // content of the global Git configuration
+	LocalGitConfig  configdomain.PartialConfig // content of the local Git configuration
+	originURLCache  configdomain.OriginURLCache
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
-	return self.SetPerennialBranches(append(self.PerennialBranches, branches...))
+	return self.SetPerennialBranches(append(self.FullConfig.PerennialBranches, branches...))
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -41,7 +41,7 @@ func (self *Config) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	return confighelpers.DetermineOriginURL(text, self.HostingOriginHostname, self.originURLCache)
+	return confighelpers.DetermineOriginURL(text, self.FullConfig.HostingOriginHostname, self.originURLCache)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
@@ -142,7 +142,7 @@ func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) er
 	if self.DryRun {
 		return nil
 	}
-	self.Lineage[branch] = parentBranch
+	self.FullConfig.Lineage[branch] = parentBranch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
 }
 
@@ -156,7 +156,7 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 // SetPushHook updates the configured push-hook strategy.
 func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 	self.GlobalGitConfig.PushHook = &value
-	self.PushHook = value
+	self.FullConfig.PushHook = value
 	return self.GitConfig.SetGlobalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(value.Bool()))
 }
 

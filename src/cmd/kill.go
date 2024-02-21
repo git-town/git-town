@@ -129,7 +129,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 		err = execute.EnsureKnownBranchAncestry(branchToKill.LocalName, execute.EnsureKnownBranchAncestryArgs{
 			Config:           &repo.Runner.Config.FullConfig,
 			AllBranches:      branchesSnapshot.Branches,
-			DefaultBranch:    repo.Runner.Config.MainBranch,
+			DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			Runner:           repo.Runner,
 		})
@@ -137,7 +137,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 	}
-	if !repo.Runner.Config.IsFeatureBranch(branchToKill.LocalName) {
+	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchToKill.LocalName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()

@@ -165,7 +165,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 		err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 			Config:           &repo.Runner.Config.FullConfig,
 			AllBranches:      branchesSnapshot.Branches,
-			DefaultBranch:    repo.Runner.Config.MainBranch,
+			DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 			DialogTestInputs: &dialogTestInputs,
 			Runner:           repo.Runner,
 		})
@@ -173,9 +173,9 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = !repo.Runner.Config.IsFeatureBranch(branchesSnapshot.Active)
+		shouldPushTags = !repo.Runner.Config.FullConfig.IsFeatureBranch(branchesSnapshot.Active)
 	}
-	allBranchNamesToSync := repo.Runner.Config.Lineage.BranchesAndAncestors(branchNamesToSync)
+	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)
 	return &syncConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,

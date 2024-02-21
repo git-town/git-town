@@ -174,35 +174,35 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !repo.Runner.Config.IsFeatureBranch(branchNameToShip) {
+	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.Config.MainBranch,
+		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.Config.FullConfig, repo.Runner.Config.Lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &repo.Runner.Config.FullConfig, repo.Runner.Config.FullConfig.Lineage)
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err
 	}
-	targetBranchName := repo.Runner.Config.Lineage.Parent(branchNameToShip)
+	targetBranchName := repo.Runner.Config.FullConfig.Lineage.Parent(branchNameToShip)
 	targetBranch := branchesSnapshot.Branches.FindByLocalName(targetBranchName)
 	if targetBranch == nil {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	var proposal *hostingdomain.Proposal
-	childBranches := repo.Runner.Config.Lineage.Children(branchNameToShip)
+	childBranches := repo.Runner.Config.FullConfig.Lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hostingdomain.Proposal{}
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.HostingPlatform,
+		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})

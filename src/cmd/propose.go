@@ -131,7 +131,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	err = execute.EnsureKnownBranchAncestry(branchesSnapshot.Active, execute.EnsureKnownBranchAncestryArgs{
 		Config:           &repo.Runner.Config.FullConfig,
 		AllBranches:      branchesSnapshot.Branches,
-		DefaultBranch:    repo.Runner.Config.MainBranch,
+		DefaultBranch:    repo.Runner.Config.FullConfig.MainBranch,
 		DialogTestInputs: &dialogTestInputs,
 		Runner:           repo.Runner,
 	})
@@ -141,7 +141,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	originURL := repo.Runner.Config.OriginURL()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		FullConfig:      &repo.Runner.Config.FullConfig,
-		HostingPlatform: repo.Runner.Config.HostingPlatform,
+		HostingPlatform: repo.Runner.Config.FullConfig.HostingPlatform,
 		Log:             print.Logger{},
 		OriginURL:       originURL,
 	})
@@ -151,7 +151,7 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 	if connector == nil {
 		return nil, branchesSnapshot, stashSize, false, hostingdomain.UnsupportedServiceError()
 	}
-	branchNamesToSync := repo.Runner.Config.Lineage.BranchAndAncestors(branchesSnapshot.Active)
+	branchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchAndAncestors(branchesSnapshot.Active)
 	branchesToSync, err := branchesSnapshot.Branches.Select(branchNamesToSync)
 	return &proposeConfig{
 		FullConfig:       &repo.Runner.Config.FullConfig,
