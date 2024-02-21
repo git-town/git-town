@@ -108,7 +108,16 @@ Feature: migrate existing configuration in Git metadata to a config file
       # They are never shipped and have no ancestors.
       # Typically, perennial branches have names like
       # "development", "staging", "qa", "production", etc.
-      perennials = ["qa"]
+      #
+      # If you have many perennial branches, you can also
+      # enter a regular expression for them on the next screen.
+      perennials = []
+
+      # Please enter a regular expression that matches
+      # additional perennial branches.
+      #
+      # If you are not sure, leave this empty.
+      perennial-regex = ""
 
       [hosting]
 

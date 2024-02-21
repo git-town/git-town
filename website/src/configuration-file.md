@@ -17,6 +17,7 @@ sync-upstream = true
 [branches]
 main = ""             # must be set by the user
 perennials = []
+perennial-regex = ""
 
 [hosting]
 platform = ""         # auto-detect

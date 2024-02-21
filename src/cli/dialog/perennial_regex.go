@@ -10,7 +10,7 @@ import (
 
 const (
 	perennialRegexTitle = `Regular expression for perennial branches`
-	perennialRegexHelp  = `
+	PerennialRegexHelp  = `
 Please enter a regular expression that matches
 additional perennial branches.
 
@@ -23,7 +23,7 @@ If you are not sure, leave this empty.
 func PerennialRegex(oldValue configdomain.PerennialRegex, inputs components.TestInput) (configdomain.PerennialRegex, bool, error) {
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
-		Help:          perennialRegexHelp,
+		Help:          PerennialRegexHelp,
 		Prompt:        "Perennial Regex: ",
 		TestInput:     inputs,
 		Title:         perennialRegexTitle,

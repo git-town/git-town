@@ -29,7 +29,7 @@ git config [--global] git-town.perennial-branches "branch other-branch"
 The optional `--global` flag applies this setting to all Git repositories on
 your local machine. When not present, the setting applies to the current repo.
 
-## bulk-definitions for perennial branches
+## bulk-define perennial branches
 
 If you have many perennial branches that follow the same naming schema, like
 `release-v4.0-rev.1`, `release-v4.0-rev.2`, etc, you can define a

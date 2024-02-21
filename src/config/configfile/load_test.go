@@ -23,7 +23,8 @@ sync-upstream = true
 
 [branches]
 main = "main"
-perennials = [ "public", "release" ]
+perennials = [ "public", "staging" ]
+perennial-regex = "release-.*"
 
 [hosting]
 platform = "github"
@@ -42,13 +43,15 @@ perennial-branches = "rebase"
 			pushNewBranches := true
 			pushHook := true
 			rebase := "rebase"
+			releaseRegex := "release-.*"
 			shipDeleteTrackingBranch := false
 			syncBeforeShip := false
 			syncUpstream := true
 			want := configfile.Data{
 				Branches: &configfile.Branches{
-					Main:       &main,
-					Perennials: []string{"public", "release"},
+					Main:           &main,
+					Perennials:     []string{"public", "staging"},
+					PerennialRegex: &releaseRegex,
 				},
 				Hosting: &configfile.Hosting{
 					Platform:       &github,
