@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo"
-	"github.com/git-town/git-town/v12/src/vm/interpreter/light"
+	lightInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/light"
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
@@ -26,6 +26,6 @@ func autoUndo(opcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	light.Execute(undoProgram, args.Run, args.Lineage)
+	lightInterpreter.Execute(undoProgram, args.Run, args.Lineage)
 	return opcode.CreateAutomaticUndoError()
 }
