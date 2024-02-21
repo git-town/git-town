@@ -19,17 +19,16 @@ func Execute(args ExecuteArgs) error {
 		return nil
 	}
 	program := CreateUndoForFinishedProgram(CreateUndoProgramArgs{
-		BeginBranchesSnapshot:    args.RunState.BeginBranchesSnapshot,
-		BeginConfigSnapshot:      args.RunState.BeginConfigSnapshot,
-		BeginStashSize:           args.RunState.BeginStashSize,
-		DryRun:                   args.Runner.DryRun,
-		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
-		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
-		HasOpenChanges:           args.HasOpenChanges,
-		NoPushHook:               args.FullConfig.NoPushHook(),
-		Run:                      args.Runner,
-		RunState:                 args.RunState,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits, // TODO: remove this and use the field in RunState?
+		BeginBranchesSnapshot: args.RunState.BeginBranchesSnapshot,
+		BeginConfigSnapshot:   args.RunState.BeginConfigSnapshot,
+		BeginStashSize:        args.RunState.BeginStashSize,
+		DryRun:                args.Runner.DryRun,
+		EndBranchesSnapshot:   args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:     args.RunState.EndConfigSnapshot,
+		HasOpenChanges:        args.HasOpenChanges,
+		NoPushHook:            args.FullConfig.NoPushHook(),
+		Run:                   args.Runner,
+		RunState:              args.RunState,
 	})
 	lightInterpreter.Execute(program, args.Runner, args.Lineage)
 	err := statefile.Delete(args.RootDir)

@@ -39,17 +39,16 @@ func errored(failedOpcode shared.Opcode, runErr error, args ExecuteArgs) error {
 	}
 	args.RunState.AbortProgram.Add(failedOpcode.CreateAbortProgram()...)
 	undoProgram, err := undo.CreateUndoForRunningProgram(undo.CreateUndoProgramArgs{
-		BeginBranchesSnapshot:    args.InitialBranchesSnapshot,
-		BeginConfigSnapshot:      args.InitialConfigSnapshot,
-		BeginStashSize:           args.InitialStashSize,
-		DryRun:                   args.RunState.DryRun,
-		EndBranchesSnapshot:      args.RunState.EndBranchesSnapshot,
-		EndConfigSnapshot:        args.RunState.EndConfigSnapshot,
-		HasOpenChanges:           false,
-		NoPushHook:               args.NoPushHook(),
-		Run:                      args.Run,
-		RunState:                 *args.RunState,
-		UndoablePerennialCommits: args.RunState.UndoablePerennialCommits,
+		BeginBranchesSnapshot: args.InitialBranchesSnapshot,
+		BeginConfigSnapshot:   args.InitialConfigSnapshot,
+		BeginStashSize:        args.InitialStashSize,
+		DryRun:                args.RunState.DryRun,
+		EndBranchesSnapshot:   args.RunState.EndBranchesSnapshot,
+		EndConfigSnapshot:     args.RunState.EndConfigSnapshot,
+		HasOpenChanges:        false,
+		NoPushHook:            args.NoPushHook(),
+		Run:                   args.Run,
+		RunState:              *args.RunState,
 	})
 	if err != nil {
 		return err
