@@ -56,9 +56,12 @@ func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
+	if self.PerennialRegex == "" {
+		return false
+	}
 	re, err := regexp.Compile(self.PerennialRegex)
 	if err != nil {
-		fmt.Println(components.Red().Styled(fmt.Sprintf("Error: Cannot compile perennial regex %q: %s", self.PerennialRegex, err.Error())))
+		fmt.Println(components.Red().Styled(fmt.Sprintf("Error in perennial regex %q: %s", self.PerennialRegex, err.Error())))
 		return false
 	}
 	return re.MatchString(branch.String())
