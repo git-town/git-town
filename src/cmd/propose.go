@@ -124,9 +124,6 @@ func determineProposeConfig(repo *execute.OpenRepoResult, dryRun, verbose bool) 
 		return nil, branchesSnapshot, stashSize, exit, err
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
-	if err != nil {
-		return nil, branchesSnapshot, stashSize, false, err
-	}
 	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
 		return nil, branchesSnapshot, stashSize, false, err

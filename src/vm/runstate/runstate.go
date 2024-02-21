@@ -79,42 +79,6 @@ func (self *RunState) CreateAbortRunState() RunState {
 	}
 }
 
-// CreateSkipRunState returns a new Runstate
-// that skips operations for the current branch.
-func (self *RunState) CreateSkipRunState() RunState {
-	result := RunState{
-		BeginBranchesSnapshot: self.BeginBranchesSnapshot,
-		BeginConfigSnapshot:   self.BeginConfigSnapshot,
-		BeginStashSize:        self.BeginStashSize,
-		Command:               self.Command,
-		DryRun:                self.DryRun,
-		EndBranchesSnapshot:   self.EndBranchesSnapshot,
-		EndConfigSnapshot:     self.EndConfigSnapshot,
-		EndStashSize:          self.EndStashSize,
-		RunProgram:            program.Program{},
-	}
-	// undo the operations done on the current branch so far
-	// by copying the respective undo-opcodes into the runprogram
-	for _, opcode := range self.UndoProgram {
-		if shared.IsCheckoutOpcode(opcode) {
-			break
-		}
-		result.RunProgram.Add(opcode)
-	}
-	// skip the remaining run-opcodes for this branch
-	skipping := true
-	for _, opcode := range self.RunProgram {
-		if shared.IsEndOfBranchProgramOpcode(opcode) {
-			skipping = false
-		}
-		if !skipping {
-			result.RunProgram.Add(opcode)
-		}
-	}
-	result.RunProgram.MoveToEnd(&opcodes.RestoreOpenChanges{})
-	return result
-}
-
 // CreateUndoRunState returns a new runstate
 // to be run when undoing the Git Town command
 // represented by this runstate.
