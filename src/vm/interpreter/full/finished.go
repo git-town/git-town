@@ -33,7 +33,7 @@ func finished(args ExecuteArgs) error {
 		Global: globalSnapshot,
 		Local:  localSnapshot,
 	}
-	args.RunState.AfterStashSize, err = args.Run.Backend.StashSize()
+	args.RunState.EndStashSize, err = args.Run.Backend.StashSize()
 	if err != nil {
 		return err
 	}
