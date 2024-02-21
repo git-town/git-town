@@ -105,6 +105,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
+	config.userInput.PerennialRegex, aborted, err = dialog.PerennialRegex(runner.Config.FullConfig.PerennialRegex, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	config.userInput.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.Config.FullConfig.HostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err

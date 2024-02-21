@@ -92,6 +92,7 @@ END OUTPUT FROM 'git branch -vva'
 	OriginHostname                    = "Origin hostname: %s\n"
 	ParentDialogSelected              = "Selected parent branch for %q: %s\n"
 	PerennialBranches                 = "Perennial branches: %s\n"
+	PerennialRegex                    = "Perennial branches regex: %s\n"
 	PreviousCommandFinished           = "The previous Git Town command (%s) finished successfully.\n"
 	PreviousCommandProblem            = "The last Git Town command (%s) hit a problem %v ago.\n"
 	ProposalMultipleFound             = "found %d proposals from branch %q to branch %q"

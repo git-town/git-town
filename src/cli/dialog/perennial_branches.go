@@ -21,6 +21,9 @@ They are never shipped and have no ancestors.
 Typically, perennial branches have names like
 "development", "staging", "qa", "production", etc.
 
+If you have many perennial branches, you can also
+enter a regular expression for them on the next screen.
+
 `
 )
 
