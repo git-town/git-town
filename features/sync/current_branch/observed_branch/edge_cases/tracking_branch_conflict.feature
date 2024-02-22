@@ -39,6 +39,7 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And the uncommitted file still exists
     And no rebase is in progress
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
