@@ -41,7 +41,12 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	branchType := args.Config.BranchType(branch.LocalName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
-		FeatureBranchProgram(list, branch, parentOtherWorktree, args.Config.SyncFeatureStrategy)
+		FeatureBranchProgram(SyncFeatureBranchArgs{
+			branch:              branch,
+			list:                list,
+			parentOtherWorktree: parentOtherWorktree,
+			syncFeatureStrategy: args.Config.SyncFeatureStrategy,
+		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeObservedBranch:

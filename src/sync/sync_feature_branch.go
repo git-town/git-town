@@ -7,9 +7,16 @@ import (
 )
 
 // FeatureBranchProgram adds the opcodes to sync the feature branch with the given name.
-func FeatureBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, syncFeatureStrategy configdomain.SyncFeatureStrategy) {
-	if branch.HasTrackingBranch() {
-		pullTrackingBranchOfCurrentFeatureBranchOpcode(list, branch.RemoteName, syncFeatureStrategy)
+func FeatureBranchProgram(args SyncFeatureBranchArgs) {
+	if args.branch.HasTrackingBranch() {
+		pullTrackingBranchOfCurrentFeatureBranchOpcode(args.list, args.branch.RemoteName, args.syncFeatureStrategy)
 	}
-	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, syncFeatureStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(args.list, args.branch.LocalName, args.parentOtherWorktree, args.syncFeatureStrategy)
+}
+
+type SyncFeatureBranchArgs struct {
+	list                *program.Program
+	branch              gitdomain.BranchInfo
+	parentOtherWorktree bool
+	syncFeatureStrategy configdomain.SyncFeatureStrategy
 }
