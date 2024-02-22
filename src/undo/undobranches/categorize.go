@@ -7,9 +7,10 @@ import (
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		if config.IsMainOrPerennialBranch(change.Before.LocalName) {
+		switch config.BranchType(change.Before.LocalName) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennials = append(perennials, change)
-		} else {
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch:
 			features = append(features, change)
 		}
 	}
@@ -20,9 +21,10 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
-		if config.IsMainOrPerennialBranch(branch) {
+		switch config.BranchType(branch) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			changedPerennials[branch] = change
-		} else {
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch:
 			changedFeatures[branch] = change
 		}
 	}
@@ -33,9 +35,10 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomai
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
-		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
+		switch config.BranchType(branch.LocalBranchName()) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennialChanges[branch] = change
-		} else {
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch:
 			featureChanges[branch] = change
 		}
 	}
@@ -46,9 +49,10 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
-		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
+		switch config.BranchType(branch.LocalBranchName()) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennials[branch] = sha
-		} else {
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch:
 			features[branch] = sha
 		}
 	}
