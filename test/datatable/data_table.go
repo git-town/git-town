@@ -48,7 +48,10 @@ func (self *DataTable) EqualDataTable(other DataTable) (diff string, errorCount 
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}
-	return dmp.DiffPrettyText(diffs), len(diffs)
+	result := dmp.DiffPrettyText(diffs)
+	result += "\n\nReceived this table:\n\n"
+	result += self.String()
+	return result, len(diffs)
 }
 
 // EqualGherkin compares this DataTable instance to the given Gherkin self.
