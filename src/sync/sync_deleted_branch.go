@@ -26,7 +26,12 @@ func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo
 // The parent branch must have been fully synced before calling this function.
 func syncDeletedFeatureBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
 	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
-	pullParentBranchOfCurrentFeatureBranchOpcode(list, branch.LocalName, parentOtherWorktree, args.Config.SyncFeatureStrategy)
+	pullParentBranchOfCurrentFeatureBranchOpcode(featureBranchArgs{
+		branch:              branch,
+		parentOtherWorktree: parentOtherWorktree,
+		program:             list,
+		syncStrategy:        args.Config.SyncFeatureStrategy,
+	})
 	list.Add(&opcodes.DeleteBranchIfEmptyAtRuntime{Branch: branch.LocalName})
 }
 
