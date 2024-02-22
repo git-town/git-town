@@ -86,6 +86,10 @@ func (self *Config) RemovePerennialBranches() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialBranches)
 }
 
+func (self *Config) RemovePerennialRegex() {
+	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPerennialRegex)
+}
+
 func (self *Config) RemovePushHook() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeyPushHook)
 }
@@ -153,6 +157,13 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialBranches, branches.Join(" "))
 }
 
+// SetPushHookLocally updates the locally configured push-hook strategy.
+func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
+	self.LocalGitConfig.PerennialRegex = &value
+	self.FullConfig.PerennialRegex = value
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
+}
+
 // SetPushHook updates the configured push-hook strategy.
 func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 	self.GlobalGitConfig.PushHook = &value
@@ -164,7 +175,6 @@ func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	self.LocalGitConfig.PushHook = &value
 	self.FullConfig.PushHook = value
-	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 

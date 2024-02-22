@@ -105,6 +105,10 @@ func enterData(runner *git.ProdRunner, config *setupConfig) (aborted bool, err e
 	if err != nil || aborted {
 		return aborted, err
 	}
+	config.userInput.PerennialRegex, aborted, err = dialog.PerennialRegex(runner.Config.FullConfig.PerennialRegex, config.dialogInputs.Next())
+	if err != nil || aborted {
+		return aborted, err
+	}
 	config.userInput.HostingPlatform, aborted, err = dialog.HostingPlatform(runner.Config.FullConfig.HostingPlatform, config.dialogInputs.Next())
 	if err != nil || aborted {
 		return aborted, err
@@ -231,6 +235,10 @@ func saveToGit(runner *git.ProdRunner, userInput userInput) error {
 	if err != nil {
 		return err
 	}
+	err = savePerennialRegex(runner, userInput.PerennialRegex)
+	if err != nil {
+		return err
+	}
 	err = savePushHook(runner, userInput.PushHook)
 	if err != nil {
 		return err
@@ -338,6 +346,13 @@ func savePerennialBranches(runner *git.ProdRunner, newValue gitdomain.LocalBranc
 	return nil
 }
 
+func savePerennialRegex(runner *git.ProdRunner, newValue configdomain.PerennialRegex) error {
+	if newValue == runner.Config.FullConfig.PerennialRegex {
+		return nil
+	}
+	return runner.Config.SetPerennialRegexLocally(newValue)
+}
+
 func savePushHook(runner *git.ProdRunner, newValue configdomain.PushHook) error {
 	if newValue == runner.Config.FullConfig.PushHook {
 		return nil
@@ -394,6 +409,7 @@ func saveToFile(userInput userInput, runner *git.ProdRunner) error {
 	}
 	runner.Config.RemoveMainBranch()
 	runner.Config.RemovePerennialBranches()
+	runner.Config.RemovePerennialRegex()
 	runner.Config.RemovePushNewBranches()
 	runner.Config.RemovePushHook()
 	runner.Config.RemoveSyncBeforeShip()

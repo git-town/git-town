@@ -13,8 +13,9 @@ import (
 var (
 	// file paths to ignore
 	ignorePaths = []string{ //nolint:gochecknoglobals
-		"vendor/",
+		"src/config/configfile/data.go",
 		"tools/structs_sorted/test.go",
+		"vendor/",
 	}
 
 	// struct types to ignore

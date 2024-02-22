@@ -19,6 +19,7 @@ type FullConfig struct {
 	MainBranch               gitdomain.LocalBranchName
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
+	PerennialRegex           PerennialRegex
 	PushHook                 PushHook
 	PushNewBranches          PushNewBranches
 	ShipDeleteTrackingBranch ShipDeleteTrackingBranch
@@ -48,7 +49,10 @@ func (self *FullConfig) IsOnline() bool {
 }
 
 func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
-	return slice.Contains(self.PerennialBranches, branch)
+	if slice.Contains(self.PerennialBranches, branch) {
+		return true
+	}
+	return self.PerennialRegex.MatchesBranch(branch)
 }
 
 func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {
@@ -98,6 +102,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
+	if other.PerennialRegex != nil {
+		self.PerennialRegex = *other.PerennialRegex
+	}
 	if other.PushHook != nil {
 		self.PushHook = *other.PushHook
 	}
@@ -145,6 +152,7 @@ func DefaultConfig() FullConfig {
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
+		PerennialRegex:           "",
 		PushHook:                 true,
 		PushNewBranches:          false,
 		ShipDeleteTrackingBranch: true,

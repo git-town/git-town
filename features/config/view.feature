@@ -4,12 +4,14 @@ Feature: show the configuration
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
+    And local Git Town setting "perennial-regex" is "release-.*"
     When I run "git-town config"
     Then it prints:
       """
       Branches:
         main branch: main
         perennial branches: qa, staging
+        perennial regex: release-.*
 
       Configuration:
         offline: no
@@ -37,7 +39,8 @@ Feature: show the configuration
 
       [branches]
       main = "main"
-      perennials = [ "public", "release" ]
+      perennials = [ "public", "staging" ]
+      perennial-regex = "release-.*"
 
       [hosting]
       platform = "github"
@@ -52,7 +55,8 @@ Feature: show the configuration
       """
       Branches:
         main branch: main
-        perennial branches: public, release
+        perennial branches: public, staging
+        perennial regex: release-.*
 
       Configuration:
         offline: no
@@ -74,6 +78,7 @@ Feature: show the configuration
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
     And the perennial branches are "git-perennial-1" and "git-perennial-2"
+    And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-delete-tracking-branch" is "false"
     And Git Town setting "sync-upstream" is "false"
@@ -88,6 +93,7 @@ Feature: show the configuration
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
+      perennial-regex = "config-perennial-.*"
 
       [hosting]
       platform = "github"
@@ -103,6 +109,7 @@ Feature: show the configuration
       Branches:
         main branch: git-main
         perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
+        perennial regex: git-perennial-.*
 
       Configuration:
         offline: no
@@ -132,6 +139,7 @@ Feature: show the configuration
       Branches:
         main branch: main
         perennial branches: qa, staging
+        perennial regex: (not set)
 
       Configuration:
         offline: no
@@ -167,6 +175,7 @@ Feature: show the configuration
       Branches:
         main branch: (not set)
         perennial branches: (not set)
+        perennial regex: (not set)
 
       Configuration:
         offline: no

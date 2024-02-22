@@ -111,7 +111,15 @@ main = "main"
 # They are never shipped and have no ancestors.
 # Typically, perennial branches have names like
 # "development", "staging", "qa", "production", etc.
+#
+# See also the "perennial-regex" setting.
 perennials = ["one", "two"]
+
+# All branches whose names match this regular expression
+# are also considered perennial branches.
+#
+# If you are not sure, leave this empty.
+perennial-regex = ""
 
 [hosting]
 
@@ -221,7 +229,15 @@ main = "main"
 # They are never shipped and have no ancestors.
 # Typically, perennial branches have names like
 # "development", "staging", "qa", "production", etc.
+#
+# See also the "perennial-regex" setting.
 perennials = []
+
+# All branches whose names match this regular expression
+# are also considered perennial branches.
+#
+# If you are not sure, leave this empty.
+perennial-regex = ""
 
 [hosting]
 

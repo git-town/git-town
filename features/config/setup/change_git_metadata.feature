@@ -12,6 +12,7 @@ Feature: change existing information in Git metadata
       | add all aliases                           | a enter                |
       | accept the already configured main branch | enter                  |
       | change the perennial branches             | space down space enter |
+      | enter a perennial regex                   | 3 3 6 6 enter          |
       | set github as hosting service             | up up enter            |
       | github token                              | 1 2 3 4 5 6 enter      |
       | origin hostname                           | c o d e enter          |
@@ -60,6 +61,7 @@ Feature: change existing information in Git metadata
     And local Git Town setting "sync-feature-strategy" is now "rebase"
     And local Git Town setting "sync-perennial-strategy" is now "merge"
     And local Git Town setting "sync-upstream" is now "false"
+    And local Git Town setting "perennial-regex" is now "3366"
     And local Git Town setting "push-new-branches" is now "true"
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"

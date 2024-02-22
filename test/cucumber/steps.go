@@ -766,6 +766,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf(`expected local setting "main-branch" to be %v, but was %v`, want, have)
 	})
 
+	suite.Step(`^local Git Town setting "perennial-regex" is now "([^"]*)"$`, func(wantStr string) error {
+		have := state.fixture.DevRepo.Config.LocalGitConfig.PerennialRegex
+		want := configdomain.PerennialRegex(wantStr)
+		if *have != want {
+			return fmt.Errorf(`expected local setting "perennial-regex" to be %q, but was %q`, want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^local Git Town setting "push-hook" is (:?now|still) not set$`, func() error {
 		have := state.fixture.DevRepo.Config.LocalGitConfig.PushHook
 		if have == nil {

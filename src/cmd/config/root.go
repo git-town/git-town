@@ -53,6 +53,7 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Header("Branches")
 	print.Entry("main branch", format.StringSetting(config.MainBranch.String()))
 	print.Entry("perennial branches", format.StringSetting((config.PerennialBranches.Join(", "))))
+	print.Entry("perennial regex", format.StringSetting(config.PerennialRegex.String()))
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.Offline.Bool()))

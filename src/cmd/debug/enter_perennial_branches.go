@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func enterPerennialBranchesCmd() *cobra.Command {
+func enterPerennialBranches() *cobra.Command {
 	return &cobra.Command{
 		Use:  "perennial-branches <number of branches>",
 		Args: cobra.ExactArgs(1),

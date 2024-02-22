@@ -40,11 +40,22 @@ func TestFullConfig(t *testing.T) {
 		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
+			PerennialRegex:    "release-.*",
 		}
-		must.False(t, config.IsPerennialBranch(gitdomain.NewLocalBranchName("feature")))
-		must.False(t, config.IsPerennialBranch(gitdomain.NewLocalBranchName("main")))
-		must.True(t, config.IsPerennialBranch(gitdomain.NewLocalBranchName("peren1")))
-		must.True(t, config.IsPerennialBranch(gitdomain.NewLocalBranchName("peren2")))
+		tests := map[string]bool{
+			"main":      false,
+			"peren1":    true,
+			"peren2":    true,
+			"peren3":    false,
+			"feature":   false,
+			"release-1": true,
+			"release-2": true,
+			"other":     false,
+		}
+		for give, want := range tests {
+			have := config.IsPerennialBranch(gitdomain.NewLocalBranchName(give))
+			must.Eq(t, want, have)
+		}
 	})
 
 	t.Run("MainAndPerennials", func(t *testing.T) {
