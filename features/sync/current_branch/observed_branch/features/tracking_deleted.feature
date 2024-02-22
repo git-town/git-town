@@ -1,4 +1,4 @@
-Feature: remove the observed branch even if it has unpushed commits as soon as the tracking branch is gone
+Feature: remove the observed branch as soon as the tracking branch is gone, even if it has unpushed commits
 
   Background:
     Given the current branch is an observed branch "other"
