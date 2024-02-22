@@ -167,7 +167,6 @@ Feature: show the configuration
           hotfix
       """
 
-  @this
   Scenario: no configuration data
     Given Git Town is not configured
     When I run "git-town config"
@@ -176,7 +175,7 @@ Feature: show the configuration
       Branches:
         main branch: (not set)
         perennial branches: (not set)
-        perennial-regex: (not set)
+        perennial regex: (not set)
 
       Configuration:
         offline: no
