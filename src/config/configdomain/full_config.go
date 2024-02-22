@@ -45,6 +45,10 @@ func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
+func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.ObservedBranches, branch)
+}
+
 func (self *FullConfig) IsOnline() bool {
 	return self.Online().Bool()
 }
@@ -96,6 +100,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 	if other.PushNewBranches != nil {
 		self.PushNewBranches = *other.PushNewBranches
+	}
+	if other.ObservedBranches != nil {
+		self.ObservedBranches = append(self.ObservedBranches, *other.ObservedBranches...)
 	}
 	if other.Offline != nil {
 		self.Offline = *other.Offline
@@ -151,6 +158,7 @@ func DefaultConfig() FullConfig {
 		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
+		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           "",

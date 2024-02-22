@@ -27,6 +27,12 @@ type Config struct {
 	originURLCache  configdomain.OriginURLCache
 }
 
+// AddToObservedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *Config) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetObservedBranches(append(self.FullConfig.ObservedBranches, branches...))
+}
+
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
@@ -64,6 +70,12 @@ func (self *Config) Reload() {
 	}
 	self.FullConfig.Merge(self.GlobalGitConfig)
 	self.FullConfig.Merge(self.LocalGitConfig)
+}
+
+// RemoveFromObservedBranches removes the given branch as a perennial branch.
+func (self *Config) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ObservedBranches = slice.Remove(self.FullConfig.ObservedBranches, branch)
+	return self.SetObservedBranches(self.FullConfig.ObservedBranches)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
