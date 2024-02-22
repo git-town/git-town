@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v12/src/vm/shared"
 )
 
-// RemoveFromObservedBranches removes the branch with the given name as a perennial branch.
+// RemoveFromObservedBranches removes the branch with the given name as an observed branch.
 type RemoveFromObservedBranches struct {
 	Branch gitdomain.LocalBranchName
 	undeclaredOpcodeMethods
