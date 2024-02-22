@@ -19,6 +19,7 @@ type FullConfig struct {
 	MainBranch               gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
+	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           PerennialRegex
 	PushHook                 PushHook
@@ -48,7 +49,7 @@ func (self *FullConfig) ContainsLineage() bool {
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
-	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsObservedBranch(branch)
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsObservedBranch(branch) && !self.IsParkedBranch(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -63,6 +64,10 @@ func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool 
 
 func (self *FullConfig) IsOnline() bool {
 	return self.Online().Bool()
+}
+
+func (self *FullConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.ParkedBranches, branch)
 }
 
 func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -119,6 +124,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.Offline != nil {
 		self.Offline = *other.Offline
 	}
+	if other.ParkedBranches != nil {
+		self.ParkedBranches = append(self.ParkedBranches, *other.ParkedBranches...)
+	}
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
@@ -172,6 +180,7 @@ func DefaultConfig() FullConfig {
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
+		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           "",
 		PushHook:                 true,

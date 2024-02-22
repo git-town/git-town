@@ -1302,6 +1302,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the parked branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		return state.fixture.DevRepo.Config.SetParkedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
+	})
+
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
 		return state.fixture.DevRepo.Config.SetPerennialBranches(gitdomain.NewLocalBranchNames(name))
 	})

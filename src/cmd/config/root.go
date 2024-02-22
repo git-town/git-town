@@ -55,6 +55,7 @@ func printConfig(config *configdomain.FullConfig) {
 	print.Entry("perennial branches", format.StringsSetting((config.PerennialBranches.Join(", "))))
 	print.Entry("perennial regex", format.StringSetting(config.PerennialRegex.String()))
 	print.Entry("observed branches", format.StringsSetting((config.ObservedBranches.Join(", "))))
+	print.Entry("parked branches", format.StringsSetting((config.ParkedBranches.Join(", "))))
 	fmt.Println()
 	print.Header("Configuration")
 	print.Entry("offline", format.Bool(config.Offline.Bool()))

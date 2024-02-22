@@ -1,11 +1,13 @@
 @smoke
 Feature: show the configuration
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
     And local Git Town setting "perennial-regex" is "release-.*"
     And the observed branches "other-1" and "other-2"
+    And the parked branches "parked-1" and "parked-2"
     When I run "git-town config"
     Then it prints:
       """
@@ -14,6 +16,7 @@ Feature: show the configuration
         perennial branches: qa, staging
         perennial regex: release-.*
         observed branches: other-1, other-2
+        parked branches: parked-1, parked-2
 
       Configuration:
         offline: no
