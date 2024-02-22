@@ -157,7 +157,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		runtime.CreateFeatureBranch(gitdomain.NewLocalBranchName("f1"))
 		runtime.Config.Reload()
-		must.True(t, runtime.Config.FullConfig.IsFeatureBranch(gitdomain.NewLocalBranchName("f1")))
+		must.False(t, runtime.Config.FullConfig.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.FullConfig.Lineage
 		lineageWant := configdomain.Lineage{}
 		lineageWant[gitdomain.NewLocalBranchName("f1")] = gitdomain.NewLocalBranchName("main")
