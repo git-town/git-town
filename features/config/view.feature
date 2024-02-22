@@ -128,7 +128,6 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  @this
   Scenario: all configured, with stacked changes
     Given the perennial branches "qa" and "staging"
     And the feature branches "alpha" and "beta"
@@ -140,6 +139,7 @@ Feature: show the configuration
       Branches:
         main branch: main
         perennial branches: qa, staging
+        perennial regex: (not set)
 
       Configuration:
         offline: no
@@ -167,6 +167,7 @@ Feature: show the configuration
           hotfix
       """
 
+  @this
   Scenario: no configuration data
     Given Git Town is not configured
     When I run "git-town config"
