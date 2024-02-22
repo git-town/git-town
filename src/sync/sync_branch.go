@@ -33,8 +33,8 @@ type BranchProgramArgs struct {
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
 func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, parentOtherWorktree bool, args BranchProgramArgs) {
-	isFeatureBranch := args.Config.IsFeatureBranch(branch.LocalName)
-	if !isFeatureBranch && !args.Remotes.HasOrigin() {
+	isMainOrPerennialBranch := args.Config.IsMainOrPerennialBranch(branch.LocalName)
+	if isMainOrPerennialBranch && !args.Remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
@@ -64,7 +64,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcodes.CreateTrackingBranch{Branch: branch.LocalName})
-		case !isFeatureBranch:
+		case isMainOrPerennialBranch:
 			list.Add(&opcodes.PushCurrentBranch{CurrentBranch: branch.LocalName})
 		default:
 			pushFeatureBranchProgram(list, branch.LocalName, args.Config.SyncFeatureStrategy)

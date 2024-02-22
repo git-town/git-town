@@ -137,7 +137,7 @@ func determineKillConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 	}
-	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchToKill.LocalName) {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchToKill.LocalName) {
 		return nil, branchesSnapshot, stashSize, false, errors.New(messages.KillOnlyFeatureBranches)
 	}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()

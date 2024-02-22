@@ -90,7 +90,7 @@ func determineDiffParentConfig(args []string, repo *execute.OpenRepoResult, verb
 			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branch) {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branch) {
 		return nil, false, errors.New(messages.DiffParentNoFeatureBranch)
 	}
 	err = execute.EnsureKnownBranchAncestry(branch, execute.EnsureKnownBranchAncestryArgs{

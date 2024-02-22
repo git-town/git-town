@@ -175,7 +175,7 @@ func determineSyncConfig(allFlag bool, repo *execute.OpenRepoResult, verbose boo
 			return nil, branchesSnapshot, stashSize, false, err
 		}
 		branchNamesToSync = gitdomain.LocalBranchNames{branchesSnapshot.Active}
-		shouldPushTags = !repo.Runner.Config.FullConfig.IsFeatureBranch(branchesSnapshot.Active)
+		shouldPushTags = repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active)
 	}
 	allBranchNamesToSync := repo.Runner.Config.FullConfig.Lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := branchesSnapshot.Branches.Select(allBranchNamesToSync)

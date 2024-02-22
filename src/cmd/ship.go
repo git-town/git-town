@@ -174,7 +174,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 			return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchNameToShip) {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchNameToShip) {
 		return nil, branchesSnapshot, stashSize, false, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = execute.EnsureKnownBranchAncestry(branchNameToShip, execute.EnsureKnownBranchAncestryArgs{
@@ -255,7 +255,7 @@ func determineShipConfig(args []string, repo *execute.OpenRepoResult, dryRun, ve
 
 func ensureParentBranchIsMainOrPerennialBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig, lineage configdomain.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if config.IsFeatureBranch(parentBranch) {
+	if !config.IsMainOrPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]

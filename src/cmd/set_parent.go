@@ -57,7 +57,7 @@ func executeSetParent(verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if !repo.Runner.Config.FullConfig.IsFeatureBranch(branchesSnapshot.Active) {
+	if repo.Runner.Config.FullConfig.IsMainOrPerennialBranch(branchesSnapshot.Active) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	existingParent := repo.Runner.Config.FullConfig.Lineage.Parent(branchesSnapshot.Active)
