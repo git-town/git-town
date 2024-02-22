@@ -1,7 +1,6 @@
 @smoke
 Feature: show the configuration
 
-  @this
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
@@ -115,7 +114,7 @@ Feature: show the configuration
         main branch: git-main
         perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
         perennial regex: git-perennial-.*
-        observed branches: other-1, other-2
+        observed branches: observed-1, observed-2
 
       Configuration:
         offline: no
