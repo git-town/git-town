@@ -75,11 +75,12 @@ func executeSync(all, dryRun, verbose bool) error {
 	runProgram := program.Program{}
 	sync.BranchesProgram(sync.BranchesProgramArgs{
 		BranchProgramArgs: sync.BranchProgramArgs{
-			Config:      config.FullConfig,
-			BranchInfos: config.allBranches,
-			Remotes:     config.remotes,
-			Program:     &runProgram,
-			PushBranch:  true,
+			Config:        config.FullConfig,
+			BranchInfos:   config.allBranches,
+			InitialBranch: config.initialBranch,
+			Remotes:       config.remotes,
+			Program:       &runProgram,
+			PushBranch:    true,
 		},
 		BranchesToSync: config.branchesToSync,
 		DryRun:         dryRun,
