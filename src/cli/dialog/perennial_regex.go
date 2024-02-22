@@ -24,7 +24,7 @@ func PerennialRegex(oldValue configdomain.PerennialRegex, inputs components.Test
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
 		Help:          PerennialRegexHelp,
-		Prompt:        "Perennial Regex: ",
+		Prompt:        "Perennial regex: ",
 		TestInput:     inputs,
 		Title:         perennialRegexTitle,
 	})
