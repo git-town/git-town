@@ -7,12 +7,13 @@ const (
 	BranchTypePerennialBranch
 	BranchTypeFeatureBranch
 	BranchTypeObservedBranch
+	BranchTypeParkedBranch
 )
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush() bool {
 	switch self {
-	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch:
+	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeParkedBranch:
 		return true
 	case BranchTypeObservedBranch:
 		return false

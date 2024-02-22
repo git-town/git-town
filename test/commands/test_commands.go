@@ -161,6 +161,15 @@ func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchN
 	asserts.NoError(self.Config.AddToObservedBranches(names...))
 }
 
+// CreateParkedBranches creates perennial branches with the given names in this repository.
+func (self *TestCommands) CreateParkedBranches(names ...gitdomain.LocalBranchName) {
+	main := gitdomain.NewLocalBranchName("main")
+	for _, name := range names {
+		self.CreateBranch(name, main)
+	}
+	asserts.NoError(self.Config.AddToParkedBranches(names...))
+}
+
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranchName) {
 	main := gitdomain.NewLocalBranchName("main")
