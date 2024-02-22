@@ -21,6 +21,7 @@ Feature: sync the current observed branch in a local repo
     And the current branch is still "other"
     And the uncommitted file still exists
     And the initial commits exist
+    And the initial branches and lineage exist
 
   Scenario: undo
     When I run "git-town undo"
