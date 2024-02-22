@@ -17,21 +17,17 @@ func TestFullConfig(t *testing.T) {
 		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
 			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-			ObservedBranches:  gitdomain.NewLocalBranchNames("observed-1", "observed-2"),
-			ParkedBranches:    gitdomain.NewLocalBranchNames("parked-1", "parked-2"),
+			ObservedBranches:  gitdomain.NewLocalBranchNames("observed-1"),
+			ParkedBranches:    gitdomain.NewLocalBranchNames("parked-1"),
 		}
 		tests := map[string]bool{
-			"feature":     true,
-			"main":        false,
-			"perennial-1": false,
-			"perennial-2": false,
-			"perennial-3": true,
+			"feature":     false,
+			"main":        true,
+			"perennial-1": true,
+			"perennial-2": true,
+			"perennial-3": false,
 			"observed-1":  false,
-			"observed-2":  false,
-			"observed-3":  true,
 			"parked-1":    false,
-			"parked-2":    false,
-			"parked-3":    true,
 		}
 		for give, want := range tests {
 			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))

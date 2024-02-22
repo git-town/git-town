@@ -7,10 +7,9 @@ import (
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		switch config.BranchType(change.Before.LocalName) {
-		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		if config.IsMainOrPerennialBranch(change.Before.LocalName) {
 			perennials = append(perennials, change)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		} else {
 			features = append(features, change)
 		}
 	}
@@ -21,10 +20,9 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
-		switch config.BranchType(branch) {
-		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		if config.IsMainOrPerennialBranch(branch) {
 			changedPerennials[branch] = change
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		} else {
 			changedFeatures[branch] = change
 		}
 	}
@@ -35,10 +33,9 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomai
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
-		switch config.BranchType(branch.LocalBranchName()) {
-		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennialChanges[branch] = change
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		} else {
 			featureChanges[branch] = change
 		}
 	}
@@ -49,10 +46,9 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
-		switch config.BranchType(branch.LocalBranchName()) {
-		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennials[branch] = sha
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+		} else {
 			features[branch] = sha
 		}
 	}
