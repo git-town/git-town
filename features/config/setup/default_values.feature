@@ -107,8 +107,8 @@ Feature: Accepting all default values leads to a working setup
       # enter a regular expression for them on the next screen.
       perennials = []
 
-      # Please enter a regular expression that matches
-      # additional perennial branches.
+      # All branches whose names match this regular expression
+      # are also considered perennial branches.
       #
       # If you are not sure, leave this empty.
       perennial-regex = ""

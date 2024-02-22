@@ -11,8 +11,8 @@ import (
 const (
 	perennialRegexTitle = `Regular expression for perennial branches`
 	PerennialRegexHelp  = `
-Please enter a regular expression that matches
-additional perennial branches.
+All branches whose names match this regular expression
+are also considered perennial branches.
 
 If you are not sure, leave this empty.
 

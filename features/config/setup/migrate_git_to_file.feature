@@ -116,8 +116,8 @@ Feature: migrate existing configuration in Git metadata to a config file
       # enter a regular expression for them on the next screen.
       perennials = ["qa"]
 
-      # Please enter a regular expression that matches
-      # additional perennial branches.
+      # All branches whose names match this regular expression
+      # are also considered perennial branches.
       #
       # If you are not sure, leave this empty.
       perennial-regex = "release-.*"
