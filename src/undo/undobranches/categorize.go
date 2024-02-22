@@ -18,6 +18,8 @@ func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, confi
 }
 
 func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.FullConfig) (changedPerennials, changedFeatures LocalBranchChange) {
+	changedPerennials = LocalBranchChange{}
+	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
 		switch config.BranchType(branch) {
 		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
