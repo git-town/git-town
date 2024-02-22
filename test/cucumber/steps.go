@@ -1300,8 +1300,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("unexpected main branch setting %q", have)
 	})
 
-	suite.Step(`^the observed branch "([^"]+)"$`, func(branch1 string) error {
-		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1))
+	suite.Step(`^an observed branch "([^"]+)"$`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		state.fixture.DevRepo.CreateBranch(branch, "main")
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(name))
 	})
 
 	suite.Step(`^the observed branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
