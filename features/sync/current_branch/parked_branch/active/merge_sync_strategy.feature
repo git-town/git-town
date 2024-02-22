@@ -10,7 +10,6 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
       |        | origin   | origin parked commit |
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                           |
@@ -22,6 +21,7 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
       | parked | git merge --no-edit origin/parked |
       |        | git merge --no-edit main          |
       |        | git push                          |
+      |        | git push --tags                   |
     And all branches are now synchronized
     And the current branch is still "parked"
     And these commits exist now
@@ -35,6 +35,7 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parked                          |
 
+  @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

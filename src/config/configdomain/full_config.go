@@ -39,6 +39,8 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 		return BranchTypePerennialBranch
 	case self.IsObservedBranch(branch):
 		return BranchTypeObservedBranch
+	case self.IsParkedBranch(branch):
+		return BranchTypeParkedBranch
 	}
 	return BranchTypeFeatureBranch
 }

@@ -20,3 +20,19 @@ func (self BranchType) ShouldPush() bool {
 	}
 	panic("unhandled branch type")
 }
+
+func (self BranchType) String() string {
+	switch self {
+	case BranchTypeMainBranch:
+		return "main branch"
+	case BranchTypePerennialBranch:
+		return "perennial branch"
+	case BranchTypeFeatureBranch:
+		return "feature branch"
+	case BranchTypeObservedBranch:
+		return "observed branch"
+	case BranchTypeParkedBranch:
+		return "parked branch"
+	}
+	panic("unhandled branch type")
+}

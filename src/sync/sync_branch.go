@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
@@ -40,6 +42,7 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	}
 	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
 	branchType := args.Config.BranchType(branch.LocalName)
+	fmt.Println("222222222222222", branch.LocalName, branchType.String())
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(featureBranchArgs{
