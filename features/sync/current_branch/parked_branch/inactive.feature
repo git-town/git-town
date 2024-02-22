@@ -1,4 +1,4 @@
-Feature: inactive parked branch branches don't get synced
+Feature: inactive parked branches don't get synced
 
   Background:
     Given a parked branch "parked"
