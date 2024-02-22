@@ -12,25 +12,23 @@ import (
 func TestFullConfig(t *testing.T) {
 	t.Parallel()
 
-	t.Run("IsFeatureBranch", func(t *testing.T) {
+	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.FullConfig{ //nolint:exhaustruct
 			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("peren1", "peren2"),
-			ObservedBranches:  gitdomain.NewLocalBranchNames("observed1", "observed2"),
+			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			ObservedBranches:  gitdomain.NewLocalBranchNames("observed"),
 		}
 		tests := map[string]bool{
-			"feature":   true,
-			"main":      false,
-			"peren1":    false,
-			"peren2":    false,
-			"peren3":    true,
-			"observed1": false,
-			"observed2": false,
-			"observed3": true,
+			"feature":     false,
+			"main":        true,
+			"perennial-1": true,
+			"perennial-2": true,
+			"perennial-3": false,
+			"observed":    false,
 		}
 		for give, want := range tests {
-			have := config.IsFeatureBranch(gitdomain.NewLocalBranchName(give))
+			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
 			fmt.Println(give)
 			must.Eq(t, want, have)
 		}

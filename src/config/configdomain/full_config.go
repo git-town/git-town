@@ -47,14 +47,16 @@ func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
-func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
-	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsObservedBranch(branch)
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
+}
+
+// IsMainOrPerennialBranch indicates whether the branch with the given name
+// is the main branch of the repository.
+func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
+	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
 func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
