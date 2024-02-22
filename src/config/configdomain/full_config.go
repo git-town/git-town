@@ -30,13 +30,25 @@ type FullConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
+func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+	switch {
+	case self.IsMainBranch(branch):
+		return BranchTypeMainBranch
+	case self.IsPerennialBranch(branch):
+		return BranchTypePerennialBranch
+	case self.IsObservedBranch(branch):
+		return BranchTypeObservedBranch
+	}
+	return BranchTypeFeatureBranch
+}
+
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
-	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch)
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsObservedBranch(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name

@@ -1,6 +1,7 @@
 package configdomain_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/git-town/git-town/v12/src/config/configdomain"
@@ -30,6 +31,7 @@ func TestFullConfig(t *testing.T) {
 		}
 		for give, want := range tests {
 			have := config.IsFeatureBranch(gitdomain.NewLocalBranchName(give))
+			fmt.Println(give)
 			must.Eq(t, want, have)
 		}
 	})
