@@ -27,6 +27,12 @@ type Config struct {
 	originURLCache  configdomain.OriginURLCache
 }
 
+// AddToObservedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *Config) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetObservedBranches(append(self.FullConfig.ObservedBranches, branches...))
+}
+
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
@@ -66,6 +72,12 @@ func (self *Config) Reload() {
 	self.FullConfig.Merge(self.LocalGitConfig)
 }
 
+// RemoveFromObservedBranches removes the given branch as a perennial branch.
+func (self *Config) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ObservedBranches = slice.Remove(self.FullConfig.ObservedBranches, branch)
+	return self.SetObservedBranches(self.FullConfig.ObservedBranches)
+}
+
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (self *Config) RemoveFromPerennialBranches(branch gitdomain.LocalBranchName) error {
 	self.FullConfig.PerennialBranches = slice.Remove(self.FullConfig.PerennialBranches, branch)
@@ -78,7 +90,9 @@ func (self *Config) RemoveMainBranch() {
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *Config) RemoveParent(branch gitdomain.LocalBranchName) {
-	self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	if self.LocalGitConfig.Lineage != nil {
+		self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	}
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
 }
 
@@ -124,6 +138,13 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	self.FullConfig.MainBranch = branch
 	self.LocalGitConfig.MainBranch = &branch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
+}
+
+// SetObservedBranches marks the given branches as perennial branches.
+func (self *Config) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ObservedBranches = branches
+	self.LocalGitConfig.ObservedBranches = &branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
 }
 
 // SetOffline updates whether Git Town is in offline mode.
