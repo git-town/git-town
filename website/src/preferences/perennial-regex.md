@@ -1,7 +1,7 @@
 # pererennial-regex
 
-If you have many [perennial branches](perennial-branches.md) with comparable
-names, you can define them via a regular expression.
+All branches matching this regular expression are considered
+[perennial branches](perennial-branches.md).
 
 ## configure in config file
 
@@ -18,7 +18,7 @@ perennial-regex = "release-*"
 You can configure the perennial branches manually by running:
 
 ```bash
-git config [--global] git-town.perennial-branches "branch other-branch"
+git config [--global] git-town.perennial-regex 'release-.*'
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
