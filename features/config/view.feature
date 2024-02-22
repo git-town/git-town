@@ -1,6 +1,7 @@
 @smoke
 Feature: show the configuration
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"

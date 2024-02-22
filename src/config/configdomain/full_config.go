@@ -17,6 +17,7 @@ type FullConfig struct {
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
+	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           PerennialRegex

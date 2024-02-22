@@ -1279,6 +1279,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("unexpected main branch setting %q", have)
 	})
 
+	suite.Step(`^the observed branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
+	})
+
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
 		state.fixture.DevRepo.SetTestOrigin(origin)
 		return nil

@@ -126,6 +126,13 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
+// SetObservedBranches marks the given branches as perennial branches.
+func (self *Config) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ObservedBranches = branches
+	self.LocalGitConfig.ObservedBranches = &branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyObservedBranches, branches.Join(" "))
+}
+
 // SetOffline updates whether Git Town is in offline mode.
 func (self *Config) SetOffline(value configdomain.Offline) error {
 	self.FullConfig.Offline = value
