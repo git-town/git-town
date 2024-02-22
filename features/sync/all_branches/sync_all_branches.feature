@@ -20,7 +20,6 @@ Feature: sync all feature branches
       |            | origin        | qa origin commit         |
     And the current branch is "alpha"
 
-  @this
   Scenario: with "merge" sync-feature strategy
     When I run "git-town sync --all"
     Then it runs the commands
