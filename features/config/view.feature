@@ -30,7 +30,6 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
-  @this
   Scenario: all configured in config file
     Given the configuration file:
       """
@@ -79,7 +78,7 @@ Feature: show the configuration
   Scenario: configured in both Git and config file
     Given the main branch is "git-main"
     And the perennial branches are "git-perennial-1" and "git-perennial-2"
-    And the perennial regex is "git-perennial-.*"
+    And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-delete-tracking-branch" is "false"
     And Git Town setting "sync-upstream" is "false"
@@ -94,7 +93,7 @@ Feature: show the configuration
       [branches]
       main = "config-main"
       perennials = [ "config-perennial-1", "config-perennial-2" ]
-      perennial-regex = "git-perennial-.*"
+      perennial-regex = "config-perennial-.*"
 
       [hosting]
       platform = "github"
@@ -110,6 +109,7 @@ Feature: show the configuration
       Branches:
         main branch: git-main
         perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
+        perennial regex: git-perennial-.*
 
       Configuration:
         offline: no
@@ -128,6 +128,7 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  @this
   Scenario: all configured, with stacked changes
     Given the perennial branches "qa" and "staging"
     And the feature branches "alpha" and "beta"
