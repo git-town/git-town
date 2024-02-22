@@ -1,21 +1,21 @@
 Feature: handle conflicts between the current observed branch and its tracking branch
 
   Background:
-    Given the current branch is an observed branch "other"
+    Given the current branch is an observed branch "observed"
     And the commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | other  | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | origin   | conflicting origin commit | conflicting_file | origin content |
+      | BRANCH   | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | observed | local    | conflicting local commit  | conflicting_file | local content  |
+      |          | origin   | conflicting origin commit | conflicting_file | origin content |
     And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | other  | git fetch --prune --tags |
-      |        | git add -A               |
-      |        | git stash                |
-      |        | git rebase origin/other  |
+      | BRANCH   | COMMAND                    |
+      | observed | git fetch --prune --tags   |
+      |          | git add -A                 |
+      |          | git stash                  |
+      |          | git rebase origin/observed |
     And it prints the error:
       """
       CONFLICT (add/add): Merge conflict in conflicting_file
@@ -32,10 +32,10 @@ Feature: handle conflicts between the current observed branch and its tracking b
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND            |
-      | other  | git rebase --abort |
-      |        | git stash pop      |
-    And the current branch is still "other"
+      | BRANCH   | COMMAND            |
+      | observed | git rebase --abort |
+      |          | git stash pop      |
+    And the current branch is still "observed"
     And the uncommitted file still exists
     And no rebase is in progress
     And the initial commits exist
@@ -54,36 +54,36 @@ Feature: handle conflicts between the current observed branch and its tracking b
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH | COMMAND               |
-      | other  | git rebase --continue |
-      |        | git push --tags       |
-      |        | git stash pop         |
+      | BRANCH   | COMMAND               |
+      | observed | git rebase --continue |
+      |          | git push --tags       |
+      |          | git stash pop         |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                   |
-      | other  | local, origin | conflicting origin commit |
-      |        | local         | conflicting local commit  |
-    And the current branch is still "other"
+      | BRANCH   | LOCATION      | MESSAGE                   |
+      | observed | local, origin | conflicting origin commit |
+      |          | local         | conflicting local commit  |
+    And the current branch is still "observed"
     And no rebase is in progress
     And the uncommitted file still exists
     And these committed files exist now
-      | BRANCH | NAME             | CONTENT          |
-      | other  | conflicting_file | resolved content |
+      | BRANCH   | NAME             | CONTENT          |
+      | observed | conflicting_file | resolved content |
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH | COMMAND         |
-      | other  | git push --tags |
-      |        | git stash pop   |
+      | BRANCH   | COMMAND         |
+      | observed | git push --tags |
+      |          | git stash pop   |
     And these commits exist now
-      | BRANCH | LOCATION      | MESSAGE                   |
-      | other  | local, origin | conflicting origin commit |
-      |        | local         | conflicting local commit  |
-    And the current branch is still "other"
+      | BRANCH   | LOCATION      | MESSAGE                   |
+      | observed | local, origin | conflicting origin commit |
+      |          | local         | conflicting local commit  |
+    And the current branch is still "observed"
     And no rebase is in progress
     And the uncommitted file still exists
     And these committed files exist now
-      | BRANCH | NAME             | CONTENT          |
-      | other  | conflicting_file | resolved content |
+      | BRANCH   | NAME             | CONTENT          |
+      | observed | conflicting_file | resolved content |
