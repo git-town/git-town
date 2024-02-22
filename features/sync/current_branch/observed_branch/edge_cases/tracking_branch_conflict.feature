@@ -1,4 +1,3 @@
-@this
 Feature: handle conflicts between the current observed branch and its tracking branch
 
   Background:

@@ -90,7 +90,9 @@ func (self *Config) RemoveMainBranch() {
 
 // RemoveParent removes the parent branch entry for the given branch from the Git configuration.
 func (self *Config) RemoveParent(branch gitdomain.LocalBranchName) {
-	self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	if self.LocalGitConfig.Lineage != nil {
+		self.LocalGitConfig.Lineage.RemoveBranch(branch)
+	}
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.NewParentKey(branch))
 }
 

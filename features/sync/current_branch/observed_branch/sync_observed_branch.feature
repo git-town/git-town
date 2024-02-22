@@ -7,7 +7,6 @@ Feature: sync the current observed branch
       | main   | local, origin | main commit   | main_file   |
       | other  | local         | local commit  | local_file  |
       |        | origin        | origin commit | origin_file |
-    And the current branch is "other"
     When I run "git-town sync"
 
   Scenario: result
