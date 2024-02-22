@@ -131,6 +131,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreateParkedBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		state.initialLineage.AddRow(branchText, "main")
 		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
 		return nil
 	})
@@ -1115,19 +1116,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		switch branchType {
 		case "feature":
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
+			state.initialLineage.AddRow(branchName, "main")
 		case "perennial":
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 		case "observed":
 			state.fixture.DevRepo.CreateObservedBranches(branch)
 		case "parked":
 			state.fixture.DevRepo.CreateParkedBranches(branch)
+			state.initialLineage.AddRow(branchName, "main")
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		if branchType == "feature" {
-			state.initialLineage.AddRow(branchName, "main")
-		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)

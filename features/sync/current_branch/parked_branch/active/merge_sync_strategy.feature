@@ -48,7 +48,4 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
       |        |               | local main commit    |
       | parked | local         | local parked commit  |
       |        | origin        | origin parked commit |
-    And the initial branches exist
-    And this branch lineage exists now
-      | BRANCH | PARENT |
-      | parked | main   |
+    And the initial branches and lineage exist

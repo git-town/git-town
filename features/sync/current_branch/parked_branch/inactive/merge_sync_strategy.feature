@@ -1,4 +1,4 @@
-Feature: sync the current parked branch with a tracking branch using the "merge" sync-feature strategy
+Feature: inactive parked branch branches don't get synced
 
   Background:
     Given a parked branch "parked"
@@ -11,7 +11,6 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
     And the current branch is "main"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -29,11 +28,8 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | BRANCH | COMMAND                                                                    |
-      | parked | git reset --hard {{ sha 'local parked commit' }}                           |
-      |        | git push --force-with-lease origin {{ sha 'origin parked commit' }}:parked |
-    And the current branch is still "parked"
+    Then it runs no commands
+    And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | origin main commit   |
