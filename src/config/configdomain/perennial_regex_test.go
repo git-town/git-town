@@ -14,8 +14,8 @@ func TestPerennialRegex(t *testing.T) {
 	t.Run("empty regex matches nothing", func(t *testing.T) {
 		t.Parallel()
 		perennialRegex := configdomain.PerennialRegex("")
-		must.False(t, perennialRegex.MatchBranch(""))
-		must.False(t, perennialRegex.MatchBranch("foo"))
+		must.False(t, perennialRegex.MatchesBranch(""))
+		must.False(t, perennialRegex.MatchesBranch("foo"))
 	})
 
 	t.Run("only characters, no wildcards matches all branch names that contain that phrase", func(t *testing.T) {
@@ -29,7 +29,7 @@ func TestPerennialRegex(t *testing.T) {
 			"main":            false,
 		}
 		for give, want := range tests {
-			have := perennialRegex.MatchBranch(gitdomain.LocalBranchName(give))
+			have := perennialRegex.MatchesBranch(gitdomain.LocalBranchName(give))
 			must.Eq(t, want, have)
 		}
 	})
@@ -47,7 +47,7 @@ func TestPerennialRegex(t *testing.T) {
 			"main":            false,
 		}
 		for give, want := range tests {
-			have := perennialRegex.MatchBranch(gitdomain.LocalBranchName(give))
+			have := perennialRegex.MatchesBranch(gitdomain.LocalBranchName(give))
 			must.Eq(t, want, have)
 		}
 	})

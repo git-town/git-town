@@ -52,7 +52,7 @@ func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
-	return self.PerennialRegex.MatchBranch(branch)
+	return self.PerennialRegex.MatchesBranch(branch)
 }
 
 func (self *FullConfig) MainAndPerennials() gitdomain.LocalBranchNames {

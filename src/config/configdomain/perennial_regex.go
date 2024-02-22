@@ -11,8 +11,8 @@ import (
 // PerennialRegex contains the "branches.perennial-regex" setting.
 type PerennialRegex string
 
-// MatchBranch indicates whether the given branch matches this PerennialRegex.
-func (self PerennialRegex) MatchBranch(branch gitdomain.LocalBranchName) bool {
+// MatchesBranch indicates whether the given branch matches this PerennialRegex.
+func (self PerennialRegex) MatchesBranch(branch gitdomain.LocalBranchName) bool {
 	if self == "" {
 		return false
 	}
