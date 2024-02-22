@@ -35,10 +35,11 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomai
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
-		if config.IsFeatureBranch(branch.LocalBranchName()) {
-			featureChanges[branch] = change
-		} else {
+		switch config.BranchType(branch.LocalBranchName()) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennialChanges[branch] = change
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+			featureChanges[branch] = change
 		}
 	}
 	return
@@ -48,10 +49,11 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
-		if config.IsFeatureBranch(branch.LocalBranchName()) {
-			features[branch] = sha
-		} else {
+		switch config.BranchType(branch.LocalBranchName()) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennials[branch] = sha
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+			features[branch] = sha
 		}
 	}
 	return
