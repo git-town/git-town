@@ -11,12 +11,14 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
     And the current branch is "main"
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git rebase origin/main   |
       |        | git push                 |
+      |        | git push --tags          |
     And the current branch is still "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE              |

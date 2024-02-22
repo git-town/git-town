@@ -126,6 +126,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a parked branch "([^"]+)"$`, func(branchText string) error {
+		branch := gitdomain.NewLocalBranchName(branchText)
+		state.fixture.DevRepo.CreateParkedBranches(branch)
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		state.fixture.DevRepo.PushBranchToRemote(branch, gitdomain.OriginRemote)
+		return nil
+	})
+
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branchText string) error {
 		branch := gitdomain.NewLocalBranchName(branchText)
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
