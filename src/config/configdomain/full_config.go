@@ -60,6 +60,12 @@ func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
+// IsMainOrPerennialBranch indicates whether the branch with the given name
+// is the main branch or a perennial branch of the repository.
+func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
+	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
+}
+
 func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ObservedBranches, branch)
 }
