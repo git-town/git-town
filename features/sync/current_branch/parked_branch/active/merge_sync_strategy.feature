@@ -35,7 +35,7 @@ Feature: sync the current parked branch with a tracking branch using the "merge"
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parked                          |
 
-  @this
+  @debug @this
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
