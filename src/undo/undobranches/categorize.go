@@ -7,10 +7,10 @@ import (
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		if config.IsFeatureBranch(change.Before.LocalName) {
-			features = append(features, change)
-		} else {
+		if config.IsMainOrPerennialBranch(change.Before.LocalName) {
 			perennials = append(perennials, change)
+		} else {
+			features = append(features, change)
 		}
 	}
 	return
@@ -20,10 +20,10 @@ func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.
 	changedPerennials = LocalBranchChange{}
 	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
-		if config.IsFeatureBranch(branch) {
-			changedFeatures[branch] = change
-		} else {
+		if config.IsMainOrPerennialBranch(branch) {
 			changedPerennials[branch] = change
+		} else {
+			changedFeatures[branch] = change
 		}
 	}
 	return
@@ -33,10 +33,10 @@ func CategorizeRemoteBranchChange(change RemoteBranchChange, config *configdomai
 	perennialChanges = RemoteBranchChange{}
 	featureChanges = RemoteBranchChange{}
 	for branch, change := range change {
-		if config.IsFeatureBranch(branch.LocalBranchName()) {
-			featureChanges[branch] = change
-		} else {
+		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennialChanges[branch] = change
+		} else {
+			featureChanges[branch] = change
 		}
 	}
 	return
@@ -46,10 +46,10 @@ func CategorizeRemoteBranchesSHAs(shas RemoteBranchesSHAs, config *configdomain.
 	perennials = RemoteBranchesSHAs{}
 	features = RemoteBranchesSHAs{}
 	for branch, sha := range shas {
-		if config.IsFeatureBranch(branch.LocalBranchName()) {
-			features[branch] = sha
-		} else {
+		if config.IsMainOrPerennialBranch(branch.LocalBranchName()) {
 			perennials[branch] = sha
+		} else {
+			features[branch] = sha
 		}
 	}
 	return
