@@ -97,6 +97,7 @@ func (self *Program) RemoveDuplicateCheckout() {
 			continue
 		}
 		if shared.IsEndOfBranchProgramOpcode(opcode) {
+			result = append(result, opcode)
 			continue
 		}
 		if lastOpcode != nil {

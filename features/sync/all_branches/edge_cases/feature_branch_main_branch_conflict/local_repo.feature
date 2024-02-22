@@ -50,7 +50,6 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And the initial commits exist
     And no merge is in progress
 
-  @debug @this
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands

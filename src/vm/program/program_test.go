@@ -285,6 +285,7 @@ func TestProgram(t *testing.T) {
 			give.RemoveDuplicateCheckout()
 			want := program.Program{
 				&opcodes.AbortMerge{},
+				&opcodes.EndOfBranchProgram{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-2")},
 				&opcodes.AbortRebase{},
 			}
