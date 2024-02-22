@@ -86,6 +86,7 @@ func AddKeyToPartialConfig(key Key, value string, config *configdomain.PartialCo
 	case KeyPerennialBranches:
 		config.PerennialBranches = gitdomain.ParseLocalBranchNamesRef(value)
 	case KeyPerennialRegex:
+		fmt.Println("3333333333333")
 		config.PerennialRegex = configdomain.NewPerennialRegexRef(value)
 	case KeyPushHook:
 		config.PushHook, err = configdomain.NewPushHookRef(value, KeyPushHook.String())

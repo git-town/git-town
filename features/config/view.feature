@@ -4,14 +4,14 @@ Feature: show the configuration
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
-    And the perennial regex is "release-.*"
+    And local Git Town setting "perennial-regex" is "release-.*"
     When I run "git-town config"
     Then it prints:
       """
       Branches:
         main branch: main
         perennial branches: qa, staging
-        perennial-regex: release-.*
+        perennial regex: release-.*
 
       Configuration:
         offline: no
@@ -30,6 +30,7 @@ Feature: show the configuration
         Gitea token: (not set)
       """
 
+  @this
   Scenario: all configured in config file
     Given the configuration file:
       """
@@ -55,8 +56,8 @@ Feature: show the configuration
       """
       Branches:
         main branch: main
-        perennial branches: public, release
-        perennial-regex: release-.*
+        perennial branches: public, staging
+        perennial regex: release-.*
 
       Configuration:
         offline: no
