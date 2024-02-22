@@ -24,7 +24,6 @@ const (
 	CommandsRun                        = "Ran %d shell commands."
 	CommitMessageProblem               = "cannot determine last commit message: %w"
 	CompletionTypeUnknown              = "unknown completion type: %q"
-	ConfigurationEmptyEntryDeleted     = "\nNOTICE: cleaned up empty configuration entry %q"
 	ConfigFileCannotRead               = "cannot read the configuration file %q: %w"
 	ConfigFileInvalidData              = "the configuration file %q does not contain TOML-formatted content: %w"
 	ConfigMainbranchInConfigFile       = "please configure the main branch in the config file"

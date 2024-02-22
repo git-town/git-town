@@ -230,7 +230,6 @@ func (self *Access) load(global bool) (SingleSnapshot, configdomain.PartialConfi
 		}
 		if key != KeyPerennialBranches.String() && value == "" {
 			_ = self.RemoveLocalConfigValue(*configKey)
-			fmt.Printf(messages.ConfigurationEmptyEntryDeleted, key)
 			continue
 		}
 		snapshot[*configKey] = value
