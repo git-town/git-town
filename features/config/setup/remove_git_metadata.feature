@@ -1,4 +1,3 @@
-# this test produces console output
 Feature: remove existing configuration in Git metadata
 
   Background:
