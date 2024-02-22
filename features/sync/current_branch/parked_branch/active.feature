@@ -1,4 +1,4 @@
-Feature: sync the current parked branch with a tracking branch using the "merge" sync-feature strategy
+Feature: active parked branches get synced like normal feature branches
 
   Background:
     Given the current branch is a parked branch "parked"
