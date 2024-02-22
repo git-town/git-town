@@ -41,7 +41,12 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	branchType := args.Config.BranchType(branch.LocalName)
 	switch branchType {
 	case configdomain.BranchTypeFeatureBranch:
-		FeatureBranchProgram(list, branch, parentOtherWorktree, args.Config.SyncFeatureStrategy)
+		FeatureBranchProgram(featureBranchArgs{
+			branch:              branch,
+			parentOtherWorktree: parentOtherWorktree,
+			program:             list,
+			syncStrategy:        args.Config.SyncFeatureStrategy,
+		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeObservedBranch:
@@ -60,12 +65,12 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 }
 
 // pullParentBranchOfCurrentFeatureBranchOpcode adds the opcode to pull updates from the parent branch of the current feature branch into the current feature branch.
-func pullParentBranchOfCurrentFeatureBranchOpcode(list *program.Program, currentBranch gitdomain.LocalBranchName, parentOtherWorktree bool, strategy configdomain.SyncFeatureStrategy) {
-	switch strategy {
+func pullParentBranchOfCurrentFeatureBranchOpcode(args featureBranchArgs) {
+	switch args.syncStrategy {
 	case configdomain.SyncFeatureStrategyMerge:
-		list.Add(&opcodes.MergeParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
+		args.program.Add(&opcodes.MergeParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	case configdomain.SyncFeatureStrategyRebase:
-		list.Add(&opcodes.RebaseParent{CurrentBranch: currentBranch, ParentActiveInOtherWorktree: parentOtherWorktree})
+		args.program.Add(&opcodes.RebaseParent{CurrentBranch: args.branch.LocalName, ParentActiveInOtherWorktree: args.parentOtherWorktree})
 	}
 }
 
