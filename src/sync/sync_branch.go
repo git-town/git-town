@@ -53,7 +53,12 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	case configdomain.BranchTypeObservedBranch:
 		ObservedBranchProgram(branch, args.Program)
 	case configdomain.BranchTypeParkedBranch:
-		ParkedBranchProgram(list, branch, args.InitialBranch, parentOtherWorktree, args.Config.SyncFeatureStrategy)
+		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
+			branch:              branch,
+			parentOtherWorktree: parentOtherWorktree,
+			program:             list,
+			syncStrategy:        args.Config.SyncFeatureStrategy,
+		})
 	}
 	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush() {
 		switch {
