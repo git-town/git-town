@@ -152,6 +152,15 @@ func (self *TestCommands) CreateFile(name, content string) {
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0o700))
 }
 
+// CreateObservedBranches creates perennial branches with the given names in this repository.
+func (self *TestCommands) CreateObservedBranches(names ...gitdomain.LocalBranchName) {
+	main := gitdomain.NewLocalBranchName("main")
+	for _, name := range names {
+		self.CreateBranch(name, main)
+	}
+	asserts.NoError(self.Config.AddToObservedBranches(names...))
+}
+
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (self *TestCommands) CreatePerennialBranches(names ...gitdomain.LocalBranchName) {
 	main := gitdomain.NewLocalBranchName("main")
@@ -255,9 +264,9 @@ func (self *TestCommands) GlobalGitConfig(name gitconfig.Key) *string {
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
-func (self *TestCommands) HasBranchesOutOfSync() bool {
+func (self *TestCommands) HasBranchesOutOfSync() (bool, string) {
 	output := self.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
-	return strings.Contains(output, "[")
+	return strings.Contains(output, "["), output
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.

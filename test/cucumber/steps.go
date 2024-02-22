@@ -158,8 +158,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
-		if state.fixture.DevRepo.HasBranchesOutOfSync() {
-			return errors.New("expected no branches out of sync")
+		branchesOutOfSync, output := state.fixture.DevRepo.HasBranchesOutOfSync()
+		if branchesOutOfSync {
+			return errors.New("unexpected out of sync:\n" + output)
 		}
 		return nil
 	})
@@ -1099,7 +1100,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
+	suite.Step(`^the current branch is an? (local )?(feature|perennial|observed) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
 		switch branchType {
@@ -1107,6 +1108,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
+		case "observed":
+			state.fixture.DevRepo.CreateObservedBranches(branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -1231,6 +1234,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the local observed branch "([^"]+)"$`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		state.fixture.DevRepo.CreateObservedBranches(branch)
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		return nil
+	})
+
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1Text, branch2Text string) error {
 		branch1 := gitdomain.NewLocalBranchName(branch1Text)
 		branch2 := gitdomain.NewLocalBranchName(branch2Text)
@@ -1277,6 +1287,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return nil
 		}
 		return fmt.Errorf("unexpected main branch setting %q", have)
+	})
+
+	suite.Step(`^the observed branch "([^"]+)"$`, func(branch1 string) error {
+		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1))
+	})
+
+	suite.Step(`^the observed branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		return state.fixture.DevRepo.Config.SetObservedBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
 	})
 
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {

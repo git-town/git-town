@@ -17,6 +17,7 @@ type FullConfig struct {
 	HostingPlatform          HostingPlatform
 	Lineage                  Lineage
 	MainBranch               gitdomain.LocalBranchName
+	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           PerennialRegex
@@ -29,19 +30,35 @@ type FullConfig struct {
 	SyncUpstream             SyncUpstream
 }
 
+func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType {
+	switch {
+	case self.IsMainBranch(branch):
+		return BranchTypeMainBranch
+	case self.IsPerennialBranch(branch):
+		return BranchTypePerennialBranch
+	case self.IsObservedBranch(branch):
+		return BranchTypeObservedBranch
+	}
+	return BranchTypeFeatureBranch
+}
+
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
 func (self *FullConfig) IsFeatureBranch(branch gitdomain.LocalBranchName) bool {
-	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch)
+	return !self.IsMainBranch(branch) && !self.IsPerennialBranch(branch) && !self.IsObservedBranch(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
+}
+
+func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.ObservedBranches, branch)
 }
 
 func (self *FullConfig) IsOnline() bool {
@@ -95,6 +112,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	}
 	if other.PushNewBranches != nil {
 		self.PushNewBranches = *other.PushNewBranches
+	}
+	if other.ObservedBranches != nil {
+		self.ObservedBranches = append(self.ObservedBranches, *other.ObservedBranches...)
 	}
 	if other.Offline != nil {
 		self.Offline = *other.Offline
@@ -150,6 +170,7 @@ func DefaultConfig() FullConfig {
 		HostingPlatform:          HostingPlatformNone,
 		Lineage:                  Lineage{},
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
+		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           "",
