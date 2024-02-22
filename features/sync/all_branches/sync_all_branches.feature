@@ -81,6 +81,8 @@ Feature: sync all feature branches
       | beta       | git rebase origin/beta       |
       |            | git rebase main              |
       |            | git push --force-with-lease  |
+      |            | git checkout observed        |
+      | observed   | git rebase origin/observed   |
       |            | git checkout production      |
       | production | git rebase origin/production |
       |            | git push                     |
@@ -90,4 +92,18 @@ Feature: sync all feature branches
       |            | git checkout alpha           |
       | alpha      | git push --tags              |
     And the current branch is still "alpha"
-    And all branches are now synchronized
+    And these commits exist now
+      | BRANCH     | LOCATION      | MESSAGE                  |
+      | main       | local, origin | main commit              |
+      | alpha      | local, origin | main commit              |
+      |            |               | alpha commit             |
+      | beta       | local, origin | main commit              |
+      |            |               | beta commit              |
+      | observed   | local, origin | origin observed commit   |
+      |            | local         | local observed commit    |
+      | parked     | local         | local parked commit      |
+      |            | origin        | origin parked commit     |
+      | production | local, origin | origin production commit |
+      |            |               | local production commit  |
+      | qa         | local, origin | qa origin commit         |
+      |            |               | qa local commit          |
