@@ -244,7 +244,7 @@ func TestTestCommands(t *testing.T) {
 			runner.StageFiles("file1")
 			runner.CommitStagedChanges("stuff")
 			runner.PushBranchToRemote(gitdomain.NewLocalBranchName("branch1"), gitdomain.OriginRemote)
-			have := runner.HasBranchesOutOfSync()
+			have, _ := runner.HasBranchesOutOfSync()
 			must.False(t, have)
 		})
 
@@ -256,7 +256,7 @@ func TestTestCommands(t *testing.T) {
 			env.DevRepo.CreateFile("file1", "content")
 			env.DevRepo.StageFiles("file1")
 			env.DevRepo.CommitStagedChanges("stuff")
-			have := env.DevRepo.HasBranchesOutOfSync()
+			have, _ := env.DevRepo.HasBranchesOutOfSync()
 			must.True(t, have)
 		})
 
@@ -271,7 +271,7 @@ func TestTestCommands(t *testing.T) {
 			env.OriginRepo.CommitStagedChanges("stuff")
 			env.OriginRepo.CheckoutBranch(gitdomain.NewLocalBranchName("initial"))
 			env.DevRepo.Fetch()
-			have := env.DevRepo.HasBranchesOutOfSync()
+			have, _ := env.DevRepo.HasBranchesOutOfSync()
 			must.True(t, have)
 		})
 	})
