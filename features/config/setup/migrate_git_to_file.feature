@@ -112,8 +112,7 @@ Feature: migrate existing configuration in Git metadata to a config file
       # Typically, perennial branches have names like
       # "development", "staging", "qa", "production", etc.
       #
-      # If you have many perennial branches, you can also
-      # enter a regular expression for them on the next screen.
+      # See also the "perennial-regex" setting.
       perennials = ["qa"]
 
       # All branches whose names match this regular expression

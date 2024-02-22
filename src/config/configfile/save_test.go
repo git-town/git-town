@@ -112,8 +112,7 @@ main = "main"
 # Typically, perennial branches have names like
 # "development", "staging", "qa", "production", etc.
 #
-# If you have many perennial branches, you can also
-# enter a regular expression for them on the next screen.
+# See also the "perennial-regex" setting.
 perennials = ["one", "two"]
 
 # All branches whose names match this regular expression
@@ -231,8 +230,7 @@ main = "main"
 # Typically, perennial branches have names like
 # "development", "staging", "qa", "production", etc.
 #
-# If you have many perennial branches, you can also
-# enter a regular expression for them on the next screen.
+# See also the "perennial-regex" setting.
 perennials = []
 
 # All branches whose names match this regular expression
