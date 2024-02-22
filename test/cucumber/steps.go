@@ -1234,6 +1234,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the local observed branch "([^"]+)"$`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		state.fixture.DevRepo.CreateObservedBranches(branch)
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		return nil
+	})
+
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1Text, branch2Text string) error {
 		branch1 := gitdomain.NewLocalBranchName(branch1Text)
 		branch2 := gitdomain.NewLocalBranchName(branch2Text)
