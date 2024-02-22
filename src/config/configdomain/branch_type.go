@@ -9,6 +9,7 @@ const (
 	BranchTypeObservedBranch
 )
 
+// ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush() bool {
 	switch self {
 	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch:
