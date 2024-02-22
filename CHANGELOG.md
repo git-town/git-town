@@ -13,6 +13,10 @@ Git Town 12.1 implements community feedback and makes Git Town's undo engine sim
 - [git town skip](https://www.git-town.com/commands/skip) now works correctly in all known situations ([#2978](https://github.com/git-town/git-town/issues/2978)).
 - Git Town now deletes branches reliably in more edge cases ([#3097](https://github.com/git-town/git-town/issues/3097)).
 
+#### Statistics
+
+Heartfelt thanks to @kevgo, @ruudk, and @tranhl for contributing feedback, ideas, and solutions to 38 shipped PRs and 7 resolved issues.
+
 ## 12.0.2 (2024-02-14)
 
 #### Bug Fixes
