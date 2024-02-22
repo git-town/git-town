@@ -19,7 +19,7 @@ If you are not sure, leave this empty.
 `
 )
 
-// GitHubToken lets the user enter the GitHub API token.
+// PerennialRegex lets the user enter the GitHub API token.
 func PerennialRegex(oldValue configdomain.PerennialRegex, inputs components.TestInput) (configdomain.PerennialRegex, bool, error) {
 	value, aborted, err := components.TextField(components.TextFieldArgs{
 		ExistingValue: oldValue.String(),
