@@ -20,5 +20,3 @@ type featureBranchArgs struct {
 	program             *program.Program                 // the program to update
 	syncStrategy        configdomain.SyncFeatureStrategy // the sync-feature-strategy
 }
-
-type SyncFeatureBranchArgs struct{}
