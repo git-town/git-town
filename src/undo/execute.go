@@ -15,6 +15,7 @@ import (
 
 // undoes the persisted runstate
 func Execute(args ExecuteArgs) error {
+	fmt.Println("111111111111111111", args.RunState)
 	if args.RunState.DryRun {
 		return nil
 	}
@@ -25,6 +26,7 @@ func Execute(args ExecuteArgs) error {
 		Run:            args.Runner,
 		RunState:       args.RunState,
 	})
+	fmt.Println("22222222222222222222", program)
 	lightInterpreter.Execute(program, args.Runner, args.Lineage)
 	err := statefile.Delete(args.RootDir)
 	if err != nil {

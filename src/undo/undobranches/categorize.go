@@ -7,23 +7,23 @@ import (
 
 func CategorizeInconsistentChanges(changes undodomain.InconsistentChanges, config *configdomain.FullConfig) (perennials, features undodomain.InconsistentChanges) {
 	for _, change := range changes {
-		if config.IsFeatureBranch(change.Before.LocalName) {
-			features = append(features, change)
-		} else {
+		switch config.BranchType(change.Before.LocalName) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			perennials = append(perennials, change)
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+			features = append(features, change)
 		}
 	}
 	return
 }
 
 func CategorizeLocalBranchChange(change LocalBranchChange, config *configdomain.FullConfig) (changedPerennials, changedFeatures LocalBranchChange) {
-	changedPerennials = LocalBranchChange{}
-	changedFeatures = LocalBranchChange{}
 	for branch, change := range change {
-		if config.IsFeatureBranch(branch) {
-			changedFeatures[branch] = change
-		} else {
+		switch config.BranchType(branch) {
+		case configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 			changedPerennials[branch] = change
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
+			changedFeatures[branch] = change
 		}
 	}
 	return
