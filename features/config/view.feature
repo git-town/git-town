@@ -174,7 +174,7 @@ Feature: show the configuration
       """
       Branches:
         main branch: (not set)
-        perennial branches: (not set)
+        perennial branches: (none)
         perennial regex: (not set)
 
       Configuration:
