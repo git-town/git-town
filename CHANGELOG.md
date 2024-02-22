@@ -6,16 +6,16 @@ Git Town 12.1 implements community feedback and makes Git Town's undo engine sim
 
 #### New Features
 
-- All branches matching the regular expression in the new configuration setting `branches.perennial-regex` are now also considered perennial, in addition to the ones already listed in `branches.perennials` ([#2659](https://github.com/git-town/git-town/issues/2659)). This helps with situations where you have a lot of perennial branches with similar sounding names like `release-1`, `release-2`, etc.
+- All branches matching the regular expression in the new configuration setting [branches.perennial-regex](https://www.git-town.com/preferences/perennial-regex) are now also considered perennial, in addition to the ones already listed in `branches.perennials`. This makes it easier to deal with situations where you have many perennial branches with similar sounding names like `release-1`, `release-2`, etc ([#2659](https://github.com/git-town/git-town/issues/2659)).
 
 #### Bug Fixes
 
-- [git town skip](https://www.git-town.com/commands/skip) now works correctly in all known situations ([#2978](https://github.com/git-town/git-town/issues/2978)).
-- Git Town now deletes branches reliably in more edge cases ([#3097](https://github.com/git-town/git-town/issues/3097)).
+- [git town skip](https://www.git-town.com/commands/skip) now works correctly even in complex situations ([#2978](https://github.com/git-town/git-town/issues/2978)).
+- Git Town now deletes branches more reliably ([#3097](https://github.com/git-town/git-town/issues/3097)).
 
 #### Statistics
 
-Heartfelt thanks to @kevgo, @ruudk, and @tranhl for contributing feedback, ideas, and solutions to 38 shipped PRs and 7 resolved issues.
+Many thanks to @kevgo, @ruudk, and @tranhl for contributing feedback, ideas, and solutions to 38 shipped PRs and 7 resolved issues!
 
 ## 12.0.2 (2024-02-14)
 
