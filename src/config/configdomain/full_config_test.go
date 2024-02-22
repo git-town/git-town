@@ -43,11 +43,11 @@ func TestFullConfig(t *testing.T) {
 			PerennialRegex:    "release-.*",
 		}
 		tests := map[string]bool{
-			"feature":   false,
 			"main":      false,
 			"peren1":    true,
 			"peren2":    true,
 			"peren3":    false,
+			"feature":   false,
 			"release-1": true,
 			"release-2": true,
 			"other":     false,
