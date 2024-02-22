@@ -20,12 +20,12 @@ func TestFullConfig(t *testing.T) {
 			ObservedBranches:  gitdomain.NewLocalBranchNames("observed"),
 		}
 		tests := map[string]bool{
-			"feature":   false,
-			"main":      true,
-			"peren1":    true,
-			"peren2":    true,
-			"peren3":    false,
-			"observed1": false,
+			"feature":  false,
+			"main":     true,
+			"peren1":   true,
+			"peren2":   true,
+			"peren3":   false,
+			"observed": false,
 		}
 		for give, want := range tests {
 			have := config.IsMainOrPerennialBranch(gitdomain.NewLocalBranchName(give))
