@@ -38,12 +38,16 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 		return
 	}
 	list.Add(&opcodes.Checkout{Branch: branch.LocalName})
-	if isFeatureBranch {
+	branchType := args.Config.BranchType(branch.LocalName)
+	switch branchType {
+	case configdomain.BranchTypeFeatureBranch:
 		FeatureBranchProgram(list, branch, parentOtherWorktree, args.Config.SyncFeatureStrategy)
-	} else {
+	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
+	case configdomain.BranchTypeObservedBranch:
+		ObservedBranchProgram(branch, args)
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush() {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcodes.CreateTrackingBranch{Branch: branch.LocalName})
