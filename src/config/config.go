@@ -161,7 +161,6 @@ func (self *Config) SetPerennialBranches(branches gitdomain.LocalBranchNames) er
 func (self *Config) SetPerennialRegexLocally(value configdomain.PerennialRegex) error {
 	self.LocalGitConfig.PerennialRegex = &value
 	self.FullConfig.PerennialRegex = value
-	self.LocalGitConfig.PerennialRegex = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPerennialRegex, value.String())
 }
 
@@ -176,7 +175,6 @@ func (self *Config) SetPushHookGlobally(value configdomain.PushHook) error {
 func (self *Config) SetPushHookLocally(value configdomain.PushHook) error {
 	self.LocalGitConfig.PushHook = &value
 	self.FullConfig.PushHook = value
-	self.LocalGitConfig.PushHook = &value
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyPushHook, strconv.FormatBool(bool(value)))
 }
 
