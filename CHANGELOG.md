@@ -1,19 +1,32 @@
 # Git Town Changelog
 
-## 12.0.2 (2023-02-14)
+## 12.1.0 (2024-02-22)
+
+Git Town 12.1 implements community feedback and makes Git Town's undo engine simpler, more robust, and more reliable.
+
+#### New Features
+
+- All branches matching the regular expression in the new configuration setting `branches.perennial-regex` are now also considered perennial, in addition to the ones already listed in `branches.perennials` ([#2659](https://github.com/git-town/git-town/issues/2659)). This helps with situations where you have a lot of perennial branches with similar sounding names like `release-1`, `release-2`, etc.
+
+#### Bug Fixes
+
+- [git town skip](https://www.git-town.com/commands/skip) now works correctly in all known situations ([#2978](https://github.com/git-town/git-town/issues/2978)).
+- Git Town now deletes branches reliably in more edge cases ([#3097](https://github.com/git-town/git-town/issues/3097)).
+
+## 12.0.2 (2024-02-14)
 
 #### Bug Fixes
 
 - All dialogs that show local branches now paginate ([#3119](https://github.com/git-town/git-town/issues/3119)).
 
-## 12.0.1 (2023-02-12)
+## 12.0.1 (2024-02-12)
 
 #### Bug Fixes
 
 - removes crashes when using a self-hosted platform instance ([#3114](https://github.com/git-town/git-town/pull/3114))
 - improve the CLI output when using a hosting connector ([#3115](https://github.com/git-town/git-town/pull/3115))
 
-## 12.0.0 (2023-02-05)
+## 12.0.0 (2024-02-05)
 
 Git Town 12 continues the effort to make the Git Town user experience more consistent and intuitive by modernizing Git Town's configuration system.
 
