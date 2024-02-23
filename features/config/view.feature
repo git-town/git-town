@@ -7,7 +7,7 @@ Feature: show the configuration
     And the perennial branches are "qa" and "staging"
     And local Git Town setting "perennial-regex" is "release-.*"
     And the observed branches "observed-1" and "observed-2"
-    And the contributor branches "contributor-1" and "contributor-2"
+    And the contribution branches "contributor-1" and "contributor-2"
     And the parked branches "parked-1" and "parked-2"
     When I run "git-town config"
     Then it prints:

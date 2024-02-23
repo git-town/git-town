@@ -1070,6 +1070,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the contribution branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		return state.fixture.DevRepo.Config.SetContributionBranches(gitdomain.NewLocalBranchNames(branch1, branch2))
+	})
+
 	suite.Step(`^the coworker fetches updates$`, func() error {
 		state.fixture.CoworkerRepo.Fetch()
 		return nil
