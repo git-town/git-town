@@ -160,11 +160,12 @@ func appendProgram(config *appendConfig) program.Program {
 	prog := program.Program{}
 	for _, branch := range config.branchesToSync {
 		sync.BranchProgram(branch, sync.BranchProgramArgs{
-			Config:      config.FullConfig,
-			BranchInfos: config.allBranches,
-			Program:     &prog,
-			Remotes:     config.remotes,
-			PushBranch:  true,
+			Config:        config.FullConfig,
+			BranchInfos:   config.allBranches,
+			InitialBranch: config.initialBranch,
+			Program:       &prog,
+			Remotes:       config.remotes,
+			PushBranch:    true,
 		})
 	}
 	prog.Add(&opcodes.CreateBranchExistingParent{

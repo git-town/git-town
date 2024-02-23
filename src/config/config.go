@@ -33,6 +33,12 @@ func (self *Config) AddToObservedBranches(branches ...gitdomain.LocalBranchName)
 	return self.SetObservedBranches(append(self.FullConfig.ObservedBranches, branches...))
 }
 
+// AddToParkedBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *Config) AddToParkedBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetParkedBranches(append(self.FullConfig.ParkedBranches, branches...))
+}
+
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *Config) AddToPerennialBranches(branches ...gitdomain.LocalBranchName) error {
@@ -76,6 +82,12 @@ func (self *Config) Reload() {
 func (self *Config) RemoveFromObservedBranches(branch gitdomain.LocalBranchName) error {
 	self.FullConfig.ObservedBranches = slice.Remove(self.FullConfig.ObservedBranches, branch)
 	return self.SetObservedBranches(self.FullConfig.ObservedBranches)
+}
+
+// RemoveFromParkedBranches removes the given branch as a perennial branch.
+func (self *Config) RemoveFromParkedBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ParkedBranches = slice.Remove(self.FullConfig.ParkedBranches, branch)
+	return self.SetParkedBranches(self.FullConfig.ParkedBranches)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -169,6 +181,13 @@ func (self *Config) SetParent(branch, parentBranch gitdomain.LocalBranchName) er
 	}
 	self.FullConfig.Lineage[branch] = parentBranch
 	return self.GitConfig.SetLocalConfigValue(gitconfig.NewParentKey(branch), parentBranch.String())
+}
+
+// SetObservedBranches marks the given branches as perennial branches.
+func (self *Config) SetParkedBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ParkedBranches = branches
+	self.LocalGitConfig.ParkedBranches = &branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyParkedBranches, branches.Join(" "))
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.

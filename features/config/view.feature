@@ -5,8 +5,13 @@ Feature: show the configuration
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
     And local Git Town setting "perennial-regex" is "release-.*"
+    <<<<<<< HEAD
     And the observed branches "observed-1" and "observed-2"
     And the contributor branches "contributor-1" and "contributor-2"
+    =======
+    And the observed branches "other-1" and "other-2"
+    And the parked branches "parked-1" and "parked-2"
+    >>>>>>> main
     When I run "git-town config"
     Then it prints:
       """
@@ -16,6 +21,7 @@ Feature: show the configuration
         perennial regex: release-.*
         observed branches: observed-1, observed-2
         contributor branches: contributor-1, contributor-2
+        parked branches: parked-1, parked-2
 
       Configuration:
         offline: no
@@ -63,6 +69,7 @@ Feature: show the configuration
         perennial regex: release-.*
         observed branches: (none)
         contributor branches: (none)
+        parked branches: (none)
 
       Configuration:
         offline: no
@@ -86,6 +93,7 @@ Feature: show the configuration
     And the perennial branches are "git-perennial-1" and "git-perennial-2"
     And the observed branches "observed-1" and "observed-2"
     And the contributor branches "contributor-1" and "contributor-2"
+    And the parked branches "parked-1" and "parked-2"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
     And Git Town setting "ship-delete-tracking-branch" is "false"
@@ -120,6 +128,7 @@ Feature: show the configuration
         perennial regex: git-perennial-.*
         observed branches: observed-1, observed-2
         contributor branches: contributor-1, contributor-2
+        parked branches: parked-1, parked-2
 
       Configuration:
         offline: no
@@ -152,6 +161,7 @@ Feature: show the configuration
         perennial regex: (not set)
         observed branches: (none)
         contributor branches: (none)
+        parked branches: (none)
 
       Configuration:
         offline: no
@@ -190,6 +200,7 @@ Feature: show the configuration
         perennial regex: (not set)
         observed branches: (none)
         contributor branches: (none)
+        parked branches: (none)
 
       Configuration:
         offline: no

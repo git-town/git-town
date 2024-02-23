@@ -166,11 +166,12 @@ func prependProgram(config *prependConfig) program.Program {
 	prog := program.Program{}
 	for _, branchToSync := range config.branchesToSync {
 		sync.BranchProgram(branchToSync, sync.BranchProgramArgs{
-			Config:      config.FullConfig,
-			BranchInfos: config.allBranches,
-			Program:     &prog,
-			PushBranch:  true,
-			Remotes:     config.remotes,
+			Config:        config.FullConfig,
+			BranchInfos:   config.allBranches,
+			InitialBranch: config.initialBranch,
+			Program:       &prog,
+			PushBranch:    true,
+			Remotes:       config.remotes,
 		})
 	}
 	prog.Add(&opcodes.CreateBranchExistingParent{

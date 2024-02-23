@@ -23,11 +23,12 @@ func BranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
 }
 
 type BranchProgramArgs struct {
-	BranchInfos gitdomain.BranchInfos
-	Config      *configdomain.FullConfig
-	Program     *program.Program
-	PushBranch  bool
-	Remotes     gitdomain.Remotes
+	BranchInfos   gitdomain.BranchInfos
+	Config        *configdomain.FullConfig
+	InitialBranch gitdomain.LocalBranchName
+	Program       *program.Program
+	PushBranch    bool
+	Remotes       gitdomain.Remotes
 }
 
 // ExistingBranchProgram provides the opcode to sync a particular branch.
@@ -50,9 +51,16 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
 	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branch, args)
+		ObservedBranchProgram(branch, args.Program)
+	case configdomain.BranchTypeParkedBranch:
+		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
+			branch:              branch,
+			parentOtherWorktree: parentOtherWorktree,
+			program:             list,
+			syncStrategy:        args.Config.SyncFeatureStrategy,
+		})
 	}
-	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush() {
+	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(branch.LocalName, args.InitialBranch) {
 		switch {
 		case !branch.HasTrackingBranch():
 			list.Add(&opcodes.CreateTrackingBranch{Branch: branch.LocalName})
