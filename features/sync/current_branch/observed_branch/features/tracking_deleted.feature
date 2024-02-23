@@ -15,7 +15,6 @@ Feature: remove the observed branch as soon as the tracking branch is gone, even
       | other  | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git branch -D other      |
-      |        | git push --tags          |
     And the current branch is now "main"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |

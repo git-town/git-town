@@ -14,7 +14,6 @@ Feature: sync the current observed branch
       | BRANCH | COMMAND                  |
       | other  | git fetch --prune --tags |
       |        | git rebase origin/other  |
-      |        | git push --tags          |
     And the current branch is still "other"
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE       |

@@ -57,6 +57,7 @@ const (
 	KeyMainBranch                          = Key("git-town.main-branch")
 	KeyObservedBranches                    = Key("git-town.observed-branches")
 	KeyOffline                             = Key("git-town.offline")
+	KeyParkedBranches                      = Key("git-town.parked-branches")
 	KeyPerennialBranches                   = Key("git-town.perennial-branches")
 	KeyPerennialRegex                      = Key("git-town.perennial-regex")
 	KeyPushHook                            = Key("git-town.push-hook")
@@ -92,6 +93,7 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyMainBranch,
 	KeyObservedBranches,
 	KeyOffline,
+	KeyParkedBranches,
 	KeyPerennialBranches,
 	KeyPerennialRegex,
 	KeyPushHook,
