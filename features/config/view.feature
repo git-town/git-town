@@ -1,6 +1,7 @@
 @smoke
 Feature: show the configuration
 
+  @this
   Scenario: all configured in Git, no stacked changes
     Given the main branch is "main"
     And the perennial branches are "qa" and "staging"
@@ -15,9 +16,9 @@ Feature: show the configuration
         main branch: main
         perennial branches: qa, staging
         perennial regex: release-.*
-        observed branches: observed-1, observed-2
-        contributor branches: contributor-1, contributor-2
         parked branches: parked-1, parked-2
+        contribution branches: contributor-1, contributor-2
+        observed branches: observed-1, observed-2
 
       Configuration:
         offline: no
