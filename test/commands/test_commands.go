@@ -132,6 +132,15 @@ func (self *TestCommands) CreateCommit(commit git.Commit) {
 	self.MustRun("git", commands...)
 }
 
+// CreateObservedBranches creates perennial branches with the given names in this repository.
+func (self *TestCommands) CreateContributionBranches(names ...gitdomain.LocalBranchName) {
+	main := gitdomain.NewLocalBranchName("main")
+	for _, name := range names {
+		self.CreateBranch(name, main)
+	}
+	asserts.NoError(self.Config.AddToContributionBranches(names...))
+}
+
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (self *TestCommands) CreateFeatureBranch(name gitdomain.LocalBranchName) {
 	err := self.RunMany([][]string{

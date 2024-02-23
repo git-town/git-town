@@ -17,7 +17,7 @@ func syncDeletedBranchProgram(list *program.Program, branch gitdomain.BranchInfo
 		syncDeletedFeatureBranchProgram(list, branch, parentOtherWorktree, args)
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		syncDeletedPerennialBranchProgram(list, branch, args)
-	case configdomain.BranchTypeObservedBranch:
+	case configdomain.BranchTypeObservedBranch, configdomain.BranchTypeContributionBranch:
 		syncDeletedObservedBranchProgram(list, branch, args)
 	}
 }

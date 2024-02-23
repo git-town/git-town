@@ -8,6 +8,7 @@ import (
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
 	Aliases                  Aliases
+	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              GitHubToken
 	GitLabToken              GitLabToken
 	GitUserEmail             string
@@ -37,6 +38,8 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 		return BranchTypeMainBranch
 	case self.IsPerennialBranch(branch):
 		return BranchTypePerennialBranch
+	case self.IsContributionBranch(branch):
+		return BranchTypeContributionBranch
 	case self.IsObservedBranch(branch):
 		return BranchTypeObservedBranch
 	case self.IsParkedBranch(branch):
@@ -48,6 +51,10 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 // ContainsLineage indicates whether this configuration contains any lineage entries.
 func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
+}
+
+func (self *FullConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.ContributionBranches, branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -94,6 +101,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 		for child, parent := range *other.Lineage {
 			self.Lineage[child] = parent
 		}
+	}
+	if other.ContributionBranches != nil {
+		self.ContributionBranches = append(self.ContributionBranches, *other.ContributionBranches...)
 	}
 	if other.HostingOriginHostname != nil {
 		self.HostingOriginHostname = *other.HostingOriginHostname
@@ -173,6 +183,7 @@ func (self *FullConfig) ShouldPushNewBranches() bool {
 func DefaultConfig() FullConfig {
 	return FullConfig{
 		Aliases:                  Aliases{},
+		ContributionBranches:     gitdomain.NewLocalBranchNames(),
 		GitHubToken:              "",
 		GitLabToken:              "",
 		GitUserEmail:             "",

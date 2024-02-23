@@ -50,8 +50,6 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 		})
 	case configdomain.BranchTypePerennialBranch, configdomain.BranchTypeMainBranch:
 		PerennialBranchProgram(branch, args)
-	case configdomain.BranchTypeObservedBranch:
-		ObservedBranchProgram(branch, args.Program)
 	case configdomain.BranchTypeParkedBranch:
 		ParkedBranchProgram(args.InitialBranch, featureBranchArgs{
 			branch:              branch,
@@ -59,6 +57,10 @@ func ExistingBranchProgram(list *program.Program, branch gitdomain.BranchInfo, p
 			program:             list,
 			syncStrategy:        args.Config.SyncFeatureStrategy,
 		})
+	case configdomain.BranchTypeContributionBranch:
+		ContributionBranchProgram(args.Program, branch)
+	case configdomain.BranchTypeObservedBranch:
+		ObservedBranchProgram(branch, args.Program)
 	}
 	if args.PushBranch && args.Remotes.HasOrigin() && args.Config.IsOnline() && branchType.ShouldPush(branch.LocalName, args.InitialBranch) {
 		switch {

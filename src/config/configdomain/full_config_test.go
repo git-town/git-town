@@ -15,10 +15,11 @@ func TestFullConfig(t *testing.T) {
 	t.Run("IsMainOrPerennialBranch", func(t *testing.T) {
 		t.Parallel()
 		config := configdomain.FullConfig{ //nolint:exhaustruct
-			MainBranch:        gitdomain.NewLocalBranchName("main"),
-			PerennialBranches: gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
-			ObservedBranches:  gitdomain.NewLocalBranchNames("observed"),
-			ParkedBranches:    gitdomain.NewLocalBranchNames("parked"),
+			ContributionBranches: gitdomain.NewLocalBranchNames("contribution"),
+			MainBranch:           gitdomain.NewLocalBranchName("main"),
+			PerennialBranches:    gitdomain.NewLocalBranchNames("perennial-1", "perennial-2"),
+			ObservedBranches:     gitdomain.NewLocalBranchNames("observed"),
+			ParkedBranches:       gitdomain.NewLocalBranchNames("parked"),
 		}
 		tests := map[string]bool{
 			"feature":     false,
