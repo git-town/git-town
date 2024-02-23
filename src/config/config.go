@@ -27,6 +27,12 @@ type Config struct {
 	originURLCache  configdomain.OriginURLCache
 }
 
+// AddToContributionBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (self *Config) AddToContributionBranches(branches ...gitdomain.LocalBranchName) error {
+	return self.SetContributionBranches(append(self.FullConfig.ContributionBranches, branches...))
+}
+
 // AddToObservedBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (self *Config) AddToObservedBranches(branches ...gitdomain.LocalBranchName) error {
@@ -76,6 +82,12 @@ func (self *Config) Reload() {
 	}
 	self.FullConfig.Merge(self.GlobalGitConfig)
 	self.FullConfig.Merge(self.LocalGitConfig)
+}
+
+// RemoveFromContributionBranches removes the given branch as a perennial branch.
+func (self *Config) RemoveFromContributionBranches(branch gitdomain.LocalBranchName) error {
+	self.FullConfig.ContributionBranches = slice.Remove(self.FullConfig.ContributionBranches, branch)
+	return self.SetContributionBranches(self.FullConfig.ContributionBranches)
 }
 
 // RemoveFromObservedBranches removes the given branch as a perennial branch.
@@ -144,6 +156,13 @@ func (self *Config) RemoveSyncUpstream() {
 	_ = self.GitConfig.RemoveLocalConfigValue(gitconfig.KeySyncUpstream)
 }
 
+// SetObservedBranches marks the given branches as observed branches.
+func (self *Config) SetContributionBranches(branches gitdomain.LocalBranchNames) error {
+	self.FullConfig.ContributionBranches = branches
+	self.LocalGitConfig.ContributionBranches = &branches
+	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyContributionBranches, branches.Join(" "))
+}
+
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
@@ -152,7 +171,7 @@ func (self *Config) SetMainBranch(branch gitdomain.LocalBranchName) error {
 	return self.GitConfig.SetLocalConfigValue(gitconfig.KeyMainBranch, branch.String())
 }
 
-// SetObservedBranches marks the given branches as perennial branches.
+// SetContributionBranches marks the given branches as contribution branches.
 func (self *Config) SetObservedBranches(branches gitdomain.LocalBranchNames) error {
 	self.FullConfig.ObservedBranches = branches
 	self.LocalGitConfig.ObservedBranches = &branches

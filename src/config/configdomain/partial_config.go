@@ -7,6 +7,7 @@ import (
 // PartialConfig contains configuration data as it is stored in the local or global Git configuration.
 type PartialConfig struct {
 	Aliases                  Aliases
+	ContributionBranches     *gitdomain.LocalBranchNames
 	GitHubToken              *GitHubToken
 	GitLabToken              *GitLabToken
 	GitUserEmail             *string

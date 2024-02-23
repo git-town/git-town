@@ -8,14 +8,15 @@ const (
 	BranchTypeMainBranch BranchType = iota
 	BranchTypePerennialBranch
 	BranchTypeFeatureBranch
-	BranchTypeObservedBranch
 	BranchTypeParkedBranch
+	BranchTypeContributionBranch
+	BranchTypeObservedBranch
 )
 
 // ShouldPush indicates whether a branch with this type should push its local commit to origin.
 func (self BranchType) ShouldPush(currentBranch, initialBranch gitdomain.LocalBranchName) bool {
 	switch self {
-	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch:
+	case BranchTypeMainBranch, BranchTypeFeatureBranch, BranchTypePerennialBranch, BranchTypeContributionBranch:
 		return true
 	case BranchTypeObservedBranch:
 		return false
@@ -33,10 +34,12 @@ func (self BranchType) String() string {
 		return "perennial branch"
 	case BranchTypeFeatureBranch:
 		return "feature branch"
-	case BranchTypeObservedBranch:
-		return "observed branch"
 	case BranchTypeParkedBranch:
 		return "parked branch"
+	case BranchTypeContributionBranch:
+		return "contribution branch"
+	case BranchTypeObservedBranch:
+		return "observed branch"
 	}
 	panic("unhandled branch type")
 }
