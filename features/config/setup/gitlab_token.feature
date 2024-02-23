@@ -51,3 +51,8 @@ Feature: enter the GitLab API token
       | git config git-town.hosting-platform gitlab |
     And local Git Town setting "hosting-platform" is now "gitlab"
     And local Git Town setting "gitlab-token" is now "123456"
+
+  Scenario: undo
+    When I run "git-town undo"
+    And local Git Town setting "hosting-platform" now doesn't exist
+    And local Git Town setting "gitlab-token" now doesn't exist
