@@ -48,15 +48,18 @@ func executeOffline(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if len(args) > 0 {
+	switch len(args) {
+	case 0:
+		return displayOfflineStatus(repo.Runner)
+	case 1:
 		return setOfflineStatus(args[0], repo.Runner)
 	}
-	displayOfflineStatus(repo.Runner)
 	return nil
 }
 
-func displayOfflineStatus(run *git.ProdRunner) {
+func displayOfflineStatus(run *git.ProdRunner) error {
 	fmt.Println(format.Bool(run.Config.FullConfig.Offline.Bool()))
+	return nil
 }
 
 func setOfflineStatus(text string, run *git.ProdRunner) error {
