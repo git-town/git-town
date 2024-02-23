@@ -9,6 +9,6 @@ Feature: undo changing offline mode
   Scenario: undo disabling offline mode
     Given global Git Town setting "offline" is "true"
     And I run "git-town offline off"
-    Then global Git Town setting "offline" is now "false"
+    And global Git Town setting "offline" is now "false"
     When I run "git-town undo"
     Then global Git Town setting "offline" is now "true"
