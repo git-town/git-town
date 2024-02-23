@@ -16,13 +16,12 @@ Feature: sync the current contribution branch
       | contribution | git fetch --prune --tags       |
       |              | git rebase origin/contribution |
       |              | git push                       |
-      |              | git push --tags                |
     And the current branch is still "contribution"
     And these commits exist now
       | BRANCH       | LOCATION      | MESSAGE       |
       | main         | local, origin | main commit   |
       | contribution | local, origin | origin commit |
-      |              | local, origin | local commit  |
+      |              |               | local commit  |
 
   Scenario: undo
     When I run "git-town undo"

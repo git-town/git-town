@@ -38,6 +38,8 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 		return BranchTypeMainBranch
 	case self.IsPerennialBranch(branch):
 		return BranchTypePerennialBranch
+	case self.IsContributionBranch(branch):
+		return BranchTypeContributionBranch
 	case self.IsObservedBranch(branch):
 		return BranchTypeObservedBranch
 	case self.IsParkedBranch(branch):
