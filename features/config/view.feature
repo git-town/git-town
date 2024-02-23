@@ -1,4 +1,3 @@
-@this
 @smoke
 Feature: show the configuration
 
@@ -7,7 +6,7 @@ Feature: show the configuration
     And the perennial branches are "qa" and "staging"
     And local Git Town setting "perennial-regex" is "release-.*"
     And the observed branches "observed-1" and "observed-2"
-    And the contribution branches "contributor-1" and "contributor-2"
+    And the contribution branches "contribution-1" and "contribution-2"
     And the parked branches "parked-1" and "parked-2"
     When I run "git-town config"
     Then it prints:
@@ -17,7 +16,7 @@ Feature: show the configuration
         perennial branches: qa, staging
         perennial regex: release-.*
         parked branches: parked-1, parked-2
-        contribution branches: contributor-1, contributor-2
+        contribution branches: contribution-1, contribution-2
         observed branches: observed-1, observed-2
 
       Configuration:
@@ -89,7 +88,7 @@ Feature: show the configuration
     Given the main branch is "git-main"
     And the perennial branches are "git-perennial-1" and "git-perennial-2"
     And the observed branches "observed-1" and "observed-2"
-    And the contribution branches "contributor-1" and "contributor-2"
+    And the contribution branches "contribution-1" and "contribution-2"
     And the parked branches "parked-1" and "parked-2"
     And Git Town setting "perennial-regex" is "git-perennial-.*"
     And Git Town setting "push-new-branches" is "false"
@@ -124,7 +123,7 @@ Feature: show the configuration
         perennial branches: config-perennial-1, config-perennial-2, git-perennial-1, git-perennial-2
         perennial regex: git-perennial-.*
         parked branches: parked-1, parked-2
-        contribution branches: contributor-1, contributor-2
+        contribution branches: contribution-1, contribution-2
         observed branches: observed-1, observed-2
 
       Configuration:
