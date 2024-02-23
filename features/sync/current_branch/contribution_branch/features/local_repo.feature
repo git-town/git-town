@@ -11,7 +11,6 @@ Feature: sync the current contribution branch in a local repo
     And an uncommitted file
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND       |
