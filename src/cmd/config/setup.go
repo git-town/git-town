@@ -75,7 +75,6 @@ func executeConfigSetup(verbose bool) error {
 		RootDir:             repo.RootDir,
 		Runner:              repo.Runner.Backend.Runner,
 	})
-
 }
 
 type setupConfig struct {
