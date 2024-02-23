@@ -31,7 +31,7 @@
   - [Configuration commands](configuration-commands.md)
     - [display](commands/config.md)
     - [setup](commands/config-setup.md)
-    - [offline](commands/config-offline.md)
+    - [offline](commands/offline.md)
 - [Preferences](preferences.md)
   - [configuration file](configuration-file.md)
   - [hosting-platform](preferences/hosting-platform.md)

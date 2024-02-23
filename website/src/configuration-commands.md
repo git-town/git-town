@@ -14,8 +14,7 @@ to run Git configuration commands manually:
   configuration
 - [git town config setup](commands/config-setup.md) - setup assistant for all
   config settings
-- [git town config offline](commands/config-offline.md) - enable/disable offline
-  mode
+- [git town offline](commands/offline.md) - enable/disable offline mode
 - git town config sync-perennial-strategy - display or set the strategy to
   update perennial branches
 - git town config sync-feature-strategy - display or set the strategy to sync
