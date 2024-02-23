@@ -143,27 +143,27 @@ Feature: Accepting all default values leads to a working setup
 
   Scenario: undo
     When I run "git-town undo"
-    Then global Git setting "alias.append" now doesn't exist
-    And global Git setting "alias.diff-parent" now doesn't exist
-    And global Git setting "alias.hack" now doesn't exist
-    And global Git setting "alias.kill" now doesn't exist
-    And global Git setting "alias.prepend" now doesn't exist
-    And global Git setting "alias.propose" now doesn't exist
-    And global Git setting "alias.rename-branch" now doesn't exist
-    And global Git setting "alias.repo" now doesn't exist
-    And global Git setting "alias.set-parent" now doesn't exist
-    And global Git setting "alias.ship" now doesn't exist
-    And global Git setting "alias.sync" now doesn't exist
-    And the main branch is now ""
-    And there are now no perennial branches
-    And local Git Town setting "hosting-platform" now doesn't exist
-    And local Git Town setting "github-token" now doesn't exist
-    And local Git Town setting "hosting-origin-hostname" now doesn't exist
-    And local Git Town setting "sync-feature-strategy" now doesn't exist
-    And local Git Town setting "sync-perennial-strategy" now doesn't exist
-    And local Git Town setting "sync-upstream" now doesn't exist
-    And local Git Town setting "perennial-regex" now doesn't exist
-    And local Git Town setting "push-new-branches" now doesn't exist
-    And local Git Town setting "push-hook" now doesn't exist
-    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
-    And local Git Town setting "sync-before-ship" now doesn't exist
+    Then global Git setting "alias.append" still doesn't exist
+    And global Git setting "alias.diff-parent" still doesn't exist
+    And global Git setting "alias.hack" still doesn't exist
+    And global Git setting "alias.kill" still doesn't exist
+    And global Git setting "alias.prepend" still doesn't exist
+    And global Git setting "alias.propose" still doesn't exist
+    And global Git setting "alias.rename-branch" still doesn't exist
+    And global Git setting "alias.repo" still doesn't exist
+    And global Git setting "alias.set-parent" still doesn't exist
+    And global Git setting "alias.ship" still doesn't exist
+    And global Git setting "alias.sync" still doesn't exist
+    And the main branch is still ""
+    And there are still no perennial branches
+    And local Git Town setting "hosting-platform" still doesn't exist
+    And local Git Town setting "github-token" still doesn't exist
+    And local Git Town setting "hosting-origin-hostname" still doesn't exist
+    And local Git Town setting "sync-feature-strategy" still doesn't exist
+    And local Git Town setting "sync-perennial-strategy" still doesn't exist
+    And local Git Town setting "sync-upstream" still doesn't exist
+    And local Git Town setting "perennial-regex" still doesn't exist
+    And local Git Town setting "push-new-branches" still doesn't exist
+    And local Git Town setting "push-hook" still doesn't exist
+    And local Git Town setting "ship-delete-tracking-branch" still doesn't exist
+    And local Git Town setting "sync-before-ship" still doesn't exist
