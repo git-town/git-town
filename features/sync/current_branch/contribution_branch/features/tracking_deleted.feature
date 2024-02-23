@@ -9,7 +9,6 @@ Feature: remove the contribution branch as soon as the tracking branch is gone, 
     And origin deletes the "contribution" branch
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                    |
