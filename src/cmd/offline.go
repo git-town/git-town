@@ -12,6 +12,8 @@ import (
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/gohacks"
 	"github.com/git-town/git-town/v12/src/messages"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
+	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
 
@@ -50,11 +52,20 @@ func executeOffline(args []string, verbose bool) error {
 	}
 	switch len(args) {
 	case 0:
-		return displayOfflineStatus(repo.Runner)
+		err = displayOfflineStatus(repo.Runner)
 	case 1:
-		return setOfflineStatus(args[0], repo.Runner)
+		err = setOfflineStatus(args[0], repo.Runner)
 	}
-	return nil
+	if err != nil {
+		return err
+	}
+	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		BeginConfigSnapshot: repo.ConfigSnapshot,
+		Command:             "offline",
+		EndConfigSnapshot:   undoconfig.ConfigSnapshot{},
+		RootDir:             repo.RootDir,
+		Runner:              repo.Runner.Backend.Runner,
+	})
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {

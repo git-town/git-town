@@ -27,7 +27,7 @@ type RunState struct {
 	EndConfigSnapshot        undoconfig.ConfigSnapshot
 	EndStashSize             gitdomain.StashSize
 	FinalUndoProgram         program.Program `exhaustruct:"optional"`
-	IsUndo                   bool            `exhaustruct:"optional"`
+	IsUndo                   bool            `exhaustruct:"optional"` // TODO: remove?
 	RunProgram               program.Program
 	UndoablePerennialCommits []gitdomain.SHA            `exhaustruct:"optional"`
 	UnfinishedDetails        *UnfinishedRunStateDetails `exhaustruct:"optional"`
