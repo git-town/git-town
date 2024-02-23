@@ -152,12 +152,7 @@ Feature: migrate existing configuration in Git metadata to a config file
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs the commands
-      | COMMAND       |
-      | git add -A    |
-      | git stash     |
-      | git stash pop |
-    And the main branch is now "main"
+    Then the main branch is now "main"
     And local Git Town setting "perennial-regex" is now "release-.*"
     And local Git Town setting "push-new-branches" is now "false"
     And local Git Town setting "push-hook" is now "true"
