@@ -57,7 +57,6 @@ Feature: handle conflicts between the current observed branch and its tracking b
     Then it runs the commands
       | BRANCH   | COMMAND               |
       | observed | git rebase --continue |
-      |          | git push --tags       |
       |          | git stash pop         |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
@@ -75,9 +74,8 @@ Feature: handle conflicts between the current observed branch and its tracking b
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH   | COMMAND         |
-      | observed | git push --tags |
-      |          | git stash pop   |
+      | BRANCH   | COMMAND       |
+      | observed | git stash pop |
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE                   |
       | observed | local, origin | conflicting origin commit |

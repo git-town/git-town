@@ -3,11 +3,12 @@ package sync
 import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/vm/opcodes"
+	"github.com/git-town/git-town/v12/src/vm/program"
 )
 
 // PerennialBranchProgram adds the opcodes to sync the observed branch with the given name.
-func ObservedBranchProgram(branch gitdomain.BranchInfo, args BranchProgramArgs) {
+func ObservedBranchProgram(branch gitdomain.BranchInfo, prog *program.Program) {
 	if branch.HasTrackingBranch() {
-		args.Program.Add(&opcodes.RebaseBranch{Branch: branch.RemoteName.BranchName()})
+		prog.Add(&opcodes.RebaseBranch{Branch: branch.RemoteName.BranchName()})
 	}
 }

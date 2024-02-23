@@ -269,19 +269,21 @@ func shipProgram(config *shipConfig, commitMessage string) program.Program {
 	if config.SyncBeforeShip {
 		// sync the parent branch
 		sync.BranchProgram(config.targetBranch, sync.BranchProgramArgs{
-			Config:      config.FullConfig,
-			BranchInfos: config.allBranches,
-			Remotes:     config.remotes,
-			Program:     &prog,
-			PushBranch:  true,
+			Config:        config.FullConfig,
+			BranchInfos:   config.allBranches,
+			InitialBranch: config.initialBranch,
+			Remotes:       config.remotes,
+			Program:       &prog,
+			PushBranch:    true,
 		})
 		// sync the branch to ship (local sync only)
 		sync.BranchProgram(config.branchToShip, sync.BranchProgramArgs{
-			Config:      config.FullConfig,
-			BranchInfos: config.allBranches,
-			Remotes:     config.remotes,
-			Program:     &prog,
-			PushBranch:  false,
+			Config:        config.FullConfig,
+			BranchInfos:   config.allBranches,
+			InitialBranch: config.initialBranch,
+			Remotes:       config.remotes,
+			Program:       &prog,
+			PushBranch:    false,
 		})
 	}
 	prog.Add(&opcodes.EnsureHasShippableChanges{Branch: config.branchToShip.LocalName, Parent: config.MainBranch})

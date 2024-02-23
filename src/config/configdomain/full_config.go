@@ -19,6 +19,7 @@ type FullConfig struct {
 	MainBranch               gitdomain.LocalBranchName
 	ObservedBranches         gitdomain.LocalBranchNames
 	Offline                  Offline
+	ParkedBranches           gitdomain.LocalBranchNames
 	PerennialBranches        gitdomain.LocalBranchNames
 	PerennialRegex           PerennialRegex
 	PushHook                 PushHook
@@ -38,6 +39,8 @@ func (self *FullConfig) BranchType(branch gitdomain.LocalBranchName) BranchType 
 		return BranchTypePerennialBranch
 	case self.IsObservedBranch(branch):
 		return BranchTypeObservedBranch
+	case self.IsParkedBranch(branch):
+		return BranchTypeParkedBranch
 	}
 	return BranchTypeFeatureBranch
 }
@@ -54,7 +57,7 @@ func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
-// is the main branch of the repository.
+// is the main branch or a perennial branch of the repository.
 func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
@@ -65,6 +68,10 @@ func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool 
 
 func (self *FullConfig) IsOnline() bool {
 	return self.Online().Bool()
+}
+
+func (self *FullConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
+	return slice.Contains(self.ParkedBranches, branch)
 }
 
 func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
@@ -121,6 +128,9 @@ func (self *FullConfig) Merge(other PartialConfig) {
 	if other.Offline != nil {
 		self.Offline = *other.Offline
 	}
+	if other.ParkedBranches != nil {
+		self.ParkedBranches = append(self.ParkedBranches, *other.ParkedBranches...)
+	}
 	if other.PerennialBranches != nil {
 		self.PerennialBranches = append(self.PerennialBranches, *other.PerennialBranches...)
 	}
@@ -174,6 +184,7 @@ func DefaultConfig() FullConfig {
 		MainBranch:               gitdomain.EmptyLocalBranchName(),
 		ObservedBranches:         gitdomain.NewLocalBranchNames(),
 		Offline:                  false,
+		ParkedBranches:           gitdomain.NewLocalBranchNames(),
 		PerennialBranches:        gitdomain.NewLocalBranchNames(),
 		PerennialRegex:           "",
 		PushHook:                 true,
