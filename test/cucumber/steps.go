@@ -1290,7 +1290,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(name))
 	})
 
-	suite.Step(`^the main branch is (?:now|still) "([^"]+)"$`, func(want string) error {
+	suite.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.FullConfig.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)
