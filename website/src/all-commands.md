@@ -66,5 +66,5 @@ _Commands that help adapt Git Town's behavior to your preferences._
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town config setup](commands/config-offline.md) - setup assistant
-- [git town offline](commands/config-offline.md) - enable/disable offline mode
+- [git town config setup](commands/config-setup.md) - setup assistant
+- [git town offline](commands/offline.md) - enable/disable offline mode
