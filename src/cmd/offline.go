@@ -52,25 +52,24 @@ func executeOffline(args []string, verbose bool) error {
 	}
 	switch len(args) {
 	case 0:
-		err = displayOfflineStatus(repo.Runner)
+		displayOfflineStatus(repo.Runner)
 	case 1:
 		err = setOfflineStatus(args[0], repo.Runner)
-	}
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "offline",
-		EndConfigSnapshot:   undoconfig.ConfigSnapshot{},
+		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
 		Runner:              repo.Runner.Backend.Runner,
 	})
 }
 
-func displayOfflineStatus(run *git.ProdRunner) error {
+func displayOfflineStatus(run *git.ProdRunner) {
 	fmt.Println(format.Bool(run.Config.FullConfig.Offline.Bool()))
-	return nil
 }
 
 func setOfflineStatus(text string, run *git.ProdRunner) error {

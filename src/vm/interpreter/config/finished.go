@@ -28,12 +28,12 @@ func Finished(args FinishedArgs) error {
 	}
 	runState := runstate.RunState{
 		AbortProgram:             program.Program{},
-		BeginBranchesSnapshot:    gitdomain.BranchesSnapshot{},
+		BeginBranchesSnapshot:    gitdomain.EmptyBranchesSnapshot(),
 		BeginConfigSnapshot:      args.BeginConfigSnapshot,
 		BeginStashSize:           0,
 		Command:                  args.Command,
 		DryRun:                   false,
-		EndBranchesSnapshot:      gitdomain.BranchesSnapshot{},
+		EndBranchesSnapshot:      gitdomain.EmptyBranchesSnapshot(),
 		EndConfigSnapshot:        configSnapshot,
 		EndStashSize:             0,
 		FinalUndoProgram:         program.Program{},
