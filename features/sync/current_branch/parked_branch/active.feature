@@ -21,7 +21,6 @@ Feature: active parked branches get synced like normal feature branches
       | parked | git merge --no-edit origin/parked |
       |        | git merge --no-edit main          |
       |        | git push                          |
-      |        | git push --tags                   |
     And all branches are now synchronized
     And the current branch is still "parked"
     And these commits exist now
