@@ -14,7 +14,7 @@ import (
 var PerennialBranchOption = gitdomain.LocalBranchName("<none> (perennial branch)") //nolint:gochecknoglobals
 
 const (
-	parentBranchTitleTemplate = `Parent Branch for %s`
+	parentBranchTitleTemplate = `Parent branch for %s`
 	parentBranchHelpTemplate  = `
 Please select the parent of branch %q or enter its number.
 Most of the time this is the main development branch (%v).

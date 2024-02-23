@@ -9,6 +9,7 @@ Feature: sync the current contribution branch
       |              | origin        | origin commit | origin_file |
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                        |

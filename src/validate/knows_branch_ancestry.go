@@ -13,7 +13,7 @@ import (
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestors(branch gitdomain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	currentBranch := branch
-	if args.Config.IsMainOrPerennialBranch(branch) || args.Config.IsObservedBranch(branch) {
+	if args.Config.IsMainOrPerennialBranch(branch) || args.Config.IsObservedBranch(branch) || args.Config.IsContributionBranch(branch) {
 		return false, nil
 	}
 	updated := false

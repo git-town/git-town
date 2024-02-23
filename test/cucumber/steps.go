@@ -1114,7 +1114,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the current branch is an? (local )?(feature|perennial|observed|parked) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
+	suite.Step(`^the current branch is an? (local )?(feature|perennial|parked|contribution|observed) branch "([^"]*)"$`, func(localStr, branchType, branchName string) error {
 		branch := gitdomain.NewLocalBranchName(branchName)
 		isLocal := localStr != ""
 		switch branchType {
@@ -1123,11 +1123,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLineage.AddRow(branchName, "main")
 		case "perennial":
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
-		case "observed":
-			state.fixture.DevRepo.CreateObservedBranches(branch)
 		case "parked":
 			state.fixture.DevRepo.CreateParkedBranches(branch)
 			state.initialLineage.AddRow(branchName, "main")
+		case "contribution":
+			state.fixture.DevRepo.CreateContributionBranches(branch)
+		case "observed":
+			state.fixture.DevRepo.CreateObservedBranches(branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
