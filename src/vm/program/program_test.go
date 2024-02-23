@@ -280,13 +280,16 @@ func TestProgram(t *testing.T) {
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-1")},
 				&opcodes.EndOfBranchProgram{},
 				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-2")},
+				&opcodes.EndOfBranchProgram{},
+				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 				&opcodes.AbortRebase{},
 			}
 			give.RemoveDuplicateCheckout()
 			want := program.Program{
 				&opcodes.AbortMerge{},
 				&opcodes.EndOfBranchProgram{},
-				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-2")},
+				&opcodes.EndOfBranchProgram{},
+				&opcodes.Checkout{Branch: gitdomain.NewLocalBranchName("branch-3")},
 				&opcodes.AbortRebase{},
 			}
 			must.Eq(t, want, give)
