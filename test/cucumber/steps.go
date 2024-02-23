@@ -281,7 +281,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.SetGitAlias(*aliasableCommand, value)
 	})
 
-	suite.Step(`^global Git setting "alias\.(.*?)" now doesn't exist$`, func(name string) error {
+	suite.Step(`^global Git setting "alias\.(.*?)" (?:now|still) doesn't exist$`, func(name string) error {
 		key := gitconfig.ParseKey("alias." + name)
 		if key == nil {
 			return errors.New("key not found")
@@ -318,7 +318,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.GitConfig.SetGlobalConfigValue(*configKey, value)
 	})
 
-	suite.Step(`^global Git Town setting "([^"]*)" now doesn't exist$`, func(name string) error {
+	suite.Step(`^global Git Town setting "([^"]*)" (?:now|still) doesn't exist$`, func(name string) error {
 		configKey := gitconfig.ParseKey("git-town." + name)
 		newValue := state.fixture.DevRepo.TestCommands.GlobalGitConfig(*configKey)
 		if newValue != nil {
@@ -1290,7 +1290,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetMainBranch(gitdomain.NewLocalBranchName(name))
 	})
 
-	suite.Step(`^the main branch is (?:now|still) "([^"]+)"$`, func(want string) error {
+	suite.Step(`^the main branch is (?:now|still) "([^"]*)"$`, func(want string) error {
 		have := state.fixture.DevRepo.Config.FullConfig.MainBranch
 		if have.String() != want {
 			return fmt.Errorf("expected %q, got %q", want, have)

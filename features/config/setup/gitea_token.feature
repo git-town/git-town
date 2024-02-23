@@ -51,3 +51,8 @@ Feature: enter the Gitea API token
       | git config git-town.hosting-platform gitea |
     And local Git Town setting "hosting-platform" is now "gitea"
     And local Git Town setting "gitea-token" is now "123456"
+
+  Scenario: undo
+    When I run "git-town undo"
+    And local Git Town setting "hosting-platform" now doesn't exist
+    And local Git Town setting "gitea-token" now doesn't exist
