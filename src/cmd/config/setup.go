@@ -14,6 +14,8 @@ import (
 	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting"
+	"github.com/git-town/git-town/v12/src/undo/undoconfig"
+	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
 
@@ -62,7 +64,18 @@ func executeConfigSetup(verbose bool) error {
 	if err != nil || aborted {
 		return err
 	}
-	return saveAll(repo.Runner, config.userInput)
+	err = saveAll(repo.Runner, config.userInput)
+	if err != nil {
+		return err
+	}
+	return configInterpreter.Finished(configInterpreter.FinishedArgs{
+		BeginConfigSnapshot: repo.ConfigSnapshot,
+		Command:             "setup",
+		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
+		RootDir:             repo.RootDir,
+		Runner:              repo.Runner.Backend.Runner,
+	})
+
 }
 
 type setupConfig struct {

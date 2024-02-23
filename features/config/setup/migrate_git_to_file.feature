@@ -150,7 +150,6 @@ Feature: migrate existing configuration in Git metadata to a config file
       perennial-branches = "rebase"
       """
 
-  @this
   Scenario: undo
     When I run "git-town undo"
     Then the main branch is now "main"
