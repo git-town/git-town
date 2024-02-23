@@ -9,7 +9,6 @@ Feature: sync the current contribution branch
       |              | origin        | origin commit | origin_file |
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                        |
@@ -26,8 +25,9 @@ Feature: sync the current contribution branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH       | COMMAND                                              |
-      | contribution | git reset --hard {{ sha-before-run 'local commit' }} |
+      | BRANCH       | COMMAND                                                                   |
+      | contribution | git reset --hard {{ sha-before-run 'local commit' }}                      |
+      |              | git push --force-with-lease origin {{ sha 'origin commit' }}:contribution |
     And the current branch is still "contribution"
     And the initial commits exist
     And the initial branches and lineage exist
