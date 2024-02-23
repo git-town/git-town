@@ -14,7 +14,6 @@ Feature: sync the current observed branch
       | BRANCH   | COMMAND                    |
       | observed | git fetch --prune --tags   |
       |          | git rebase origin/observed |
-      |          | git push --tags            |
     And the current branch is still "observed"
     And these commits exist now
       | BRANCH   | LOCATION      | MESSAGE       |
