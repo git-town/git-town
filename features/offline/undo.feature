@@ -1,4 +1,3 @@
-@this
 Feature: undo changing offline mode
 
   Scenario: undo enabling offline mode
