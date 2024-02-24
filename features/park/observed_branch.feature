@@ -8,7 +8,7 @@ Feature: parking an observed branch
   Scenario: result
     Then it runs no commands
     And the current branch is still "observed"
-    And branch "observed" is still observed
+    And branch "observed" is still an observed branch
     And the uncommitted file still exists
     And it prints the error:
       """
@@ -20,4 +20,4 @@ Feature: parking an observed branch
     Then it runs no commands
     And the current branch is still "observed"
     And the uncommitted file still exists
-    And branch "observed" is still observed
+    And branch "observed" is still an observed branch
