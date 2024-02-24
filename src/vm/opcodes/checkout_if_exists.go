@@ -13,6 +13,9 @@ type CheckoutIfExists struct {
 }
 
 func (self *CheckoutIfExists) Run(args shared.RunArgs) error {
+	if self.Branch.IsEmpty() {
+		return nil
+	}
 	existingBranch, err := args.Runner.Backend.CurrentBranch()
 	if err != nil {
 		return err
