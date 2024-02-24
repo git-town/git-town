@@ -49,6 +49,9 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
+	if repo.Runner.Config.FullConfig.IsMainBranch(currentBranch) {
+		return errors.New(messages.MainBranchCannotPark)
+	}
 	if repo.Runner.Config.FullConfig.IsObservedBranch(currentBranch) {
 		return errors.New(messages.ObservedBranchCannotPark)
 	}

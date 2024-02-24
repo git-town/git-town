@@ -9,6 +9,7 @@ Feature: parking a perennial branch
     Then it runs no commands
     And the current branch is still "perennial"
     And the perennial branches are still "perennial"
+    And the uncommitted file still exists
     And it prints the error:
       """
       Cannot park perennial branches
@@ -18,4 +19,5 @@ Feature: parking a perennial branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "perennial"
+    And the uncommitted file still exists
     And the perennial branches are still "perennial"

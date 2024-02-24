@@ -85,6 +85,7 @@ END OUTPUT FROM 'git branch -vva'
 	KillBranchOtherWorktree           = `branch %q is active in another worktree`
 	KillOnlyFeatureBranches           = "you can only kill feature branches"
 	MainBranch                        = "Main branch: %s\n"
+	MainBranchCannotPark              = "Cannot park the main branch"
 	ObservedBranchCannotPark          = "Cannot park observed branches"
 	OfflineNotAllowed                 = "this command requires an active internet connection"
 	OpcodeUnknown                     = "unknown opcode: %q, run \"git town status reset\" to reset it"

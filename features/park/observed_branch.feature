@@ -9,6 +9,7 @@ Feature: parking an observed branch
     Then it runs no commands
     And the current branch is still "observed"
     And branch "observed" is still observed
+    And the uncommitted file still exists
     And it prints the error:
       """
       Cannot park observed branches
@@ -18,4 +19,5 @@ Feature: parking an observed branch
     When I run "git-town undo"
     Then it runs no commands
     And the current branch is still "observed"
+    And the uncommitted file still exists
     And branch "observed" is still observed

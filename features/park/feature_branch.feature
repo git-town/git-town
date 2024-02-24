@@ -8,6 +8,7 @@ Feature: parking a feature branch
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
+    And the uncommitted file still exists
     And branch "branch" is now parked
 
   Scenario: undo
@@ -18,4 +19,5 @@ Feature: parking a feature branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
+    And the uncommitted file still exists
     And branch "branch" is now a feature branch
