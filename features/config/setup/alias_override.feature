@@ -25,3 +25,7 @@ Feature: override an existing Git alias
       | COMMAND                                        |
       | git config --global alias.append "town append" |
     And global Git setting "alias.append" is now "town append"
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then global Git setting "alias.append" is now "checkout"

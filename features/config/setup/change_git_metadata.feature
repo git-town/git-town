@@ -66,3 +66,30 @@ Feature: change existing information in Git metadata
     And local Git Town setting "push-hook" is now "true"
     And local Git Town setting "ship-delete-tracking-branch" is now "false"
     And local Git Town setting "sync-before-ship" is now "true"
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then global Git setting "alias.append" now doesn't exist
+    And global Git setting "alias.diff-parent" now doesn't exist
+    And global Git setting "alias.hack" now doesn't exist
+    And global Git setting "alias.kill" now doesn't exist
+    And global Git setting "alias.prepend" now doesn't exist
+    And global Git setting "alias.propose" now doesn't exist
+    And global Git setting "alias.rename-branch" now doesn't exist
+    And global Git setting "alias.repo" now doesn't exist
+    And global Git setting "alias.set-parent" now doesn't exist
+    And global Git setting "alias.ship" now doesn't exist
+    And global Git setting "alias.sync" now doesn't exist
+    And the main branch is now "main"
+    And the perennial branches are now "qa"
+    And local Git Town setting "hosting-platform" now doesn't exist
+    And local Git Town setting "github-token" now doesn't exist
+    And local Git Town setting "hosting-origin-hostname" now doesn't exist
+    And local Git Town setting "sync-feature-strategy" now doesn't exist
+    And local Git Town setting "sync-perennial-strategy" now doesn't exist
+    And local Git Town setting "sync-upstream" now doesn't exist
+    And local Git Town setting "perennial-regex" now doesn't exist
+    And local Git Town setting "push-new-branches" is now "false"
+    And local Git Town setting "push-hook" is now "false"
+    And local Git Town setting "ship-delete-tracking-branch" now doesn't exist
+    And local Git Town setting "sync-before-ship" now doesn't exist
