@@ -46,6 +46,7 @@
   - [pererennial-branches](preferences/perennial-branches.md)
   - [pererennial-regex](preferences/perennial-regex.md)
   - [ship-delete-tracking-branch](preferences/ship-delete-tracking-branch.md)
+  - [sync-before-ship](preferences/sync-before-ship.md)
   - [sync-feature-strategy](preferences/sync-feature-strategy.md)
   - [sync-perennial-strategy](preferences/sync-perennial-strategy.md)
   - [sync-upstream](preferences/sync-upstream.md)
