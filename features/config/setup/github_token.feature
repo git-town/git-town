@@ -51,3 +51,8 @@ Feature: enter the GitHub API token
       | git config git-town.hosting-platform github |
     And local Git Town setting "hosting-platform" is now "github"
     And local Git Town setting "github-token" is now "123456"
+
+  Scenario: undo
+    When I run "git-town undo"
+    And local Git Town setting "hosting-platform" now doesn't exist
+    And local Git Town setting "github-token" now doesn't exist
