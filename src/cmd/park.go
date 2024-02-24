@@ -15,7 +15,7 @@ import (
 const parkDesc = "Parks the current branch"
 
 const parkHelp = `
-Git Town does not sync parked branches until they are currently checked out.`
+Git Town does not sync a parked branch unless it is checked when the sync starts.`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
