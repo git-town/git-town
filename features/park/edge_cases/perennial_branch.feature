@@ -12,7 +12,7 @@ Feature: parking a perennial branch
     And the uncommitted file still exists
     And it prints the error:
       """
-      Cannot park perennial branches
+      cannot park perennial branches
       """
 
   Scenario: undo

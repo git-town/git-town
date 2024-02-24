@@ -11,7 +11,7 @@ Feature: parking the main branch
     And the uncommitted file still exists
     And it prints the error:
       """
-      Cannot park the main branch
+      cannot park the main branch
       """
 
   Scenario: undo

@@ -12,7 +12,7 @@ Feature: parking an observed branch
     And the uncommitted file still exists
     And it prints the error:
       """
-      Cannot park observed branches
+      cannot park observed branches
       """
 
   Scenario: undo

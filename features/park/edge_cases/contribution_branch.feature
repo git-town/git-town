@@ -12,7 +12,7 @@ Feature: parking a contribution branch
     And the uncommitted file still exists
     And it prints the error:
       """
-      Cannot park contribution branches
+      cannot park contribution branches
       """
 
   Scenario: undo
