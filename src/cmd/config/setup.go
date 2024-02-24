@@ -73,7 +73,8 @@ func executeConfigSetup(verbose bool) error {
 		Command:             "setup",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner.Backend.Runner,
+		Runner:              repo.Runner,
+		Verbose:             verbose,
 	})
 }
 

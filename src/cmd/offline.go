@@ -64,7 +64,8 @@ func executeOffline(args []string, verbose bool) error {
 		Command:             "offline",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner.Backend.Runner,
+		Runner:              repo.Runner,
+		Verbose:             verbose,
 	})
 }
 

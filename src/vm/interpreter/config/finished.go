@@ -1,7 +1,9 @@
 package config
 
 import (
+	"github.com/git-town/git-town/v12/src/cli/print"
 	"github.com/git-town/git-town/v12/src/config/gitconfig"
+	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	"github.com/git-town/git-town/v12/src/vm/program"
@@ -13,7 +15,7 @@ import (
 func Finished(args FinishedArgs) error {
 	// TODO: extract the code to load a config snapshot into a reusable function
 	//       since it exists in multiple places
-	configGitAccess := gitconfig.Access{Runner: args.Runner}
+	configGitAccess := gitconfig.Access{Runner: args.Runner.Backend.Runner}
 	globalSnapshot, _, err := configGitAccess.LoadGlobal()
 	if err != nil {
 		return err
@@ -42,6 +44,7 @@ func Finished(args FinishedArgs) error {
 		UndoablePerennialCommits: gitdomain.SHAs{},
 		UnfinishedDetails:        nil,
 	}
+	print.Footer(args.Verbose, args.Runner.CommandsCounter.Count(), args.Runner.FinalMessages.Result())
 	return statefile.Save(&runState, args.RootDir)
 }
 
@@ -50,5 +53,6 @@ type FinishedArgs struct {
 	Command             string
 	EndConfigSnapshot   undoconfig.ConfigSnapshot
 	RootDir             gitdomain.RepoRootDir
-	Runner              gitconfig.Runner
+	Runner              *git.ProdRunner
+	Verbose             bool
 }

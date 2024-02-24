@@ -33,7 +33,7 @@ func parkCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePark(args []string, verbose bool) error {
+func executePark(_ []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -70,6 +70,7 @@ func executePark(args []string, verbose bool) error {
 		Command:             "park",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
-		Runner:              repo.Runner.Backend.Runner,
+		Runner:              repo.Runner,
+		Verbose:             verbose,
 	})
 }
