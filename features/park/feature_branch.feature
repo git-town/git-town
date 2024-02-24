@@ -5,7 +5,6 @@ Feature: parking a feature branch
     And an uncommitted file
     When I run "git-town park"
 
-  @this
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
@@ -13,6 +12,10 @@ Feature: parking a feature branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND       |
+      | branch | git add -A    |
+      |        | git stash     |
+      |        | git stash pop |
     And the current branch is still "branch"
     And branch "branch" is now a feature branch

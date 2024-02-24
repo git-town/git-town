@@ -85,11 +85,13 @@ END OUTPUT FROM 'git branch -vva'
 	KillBranchOtherWorktree           = `branch %q is active in another worktree`
 	KillOnlyFeatureBranches           = "you can only kill feature branches"
 	MainBranch                        = "Main branch: %s\n"
+	ObservedBranchCannotPark          = "Cannot park observed branches"
 	OfflineNotAllowed                 = "this command requires an active internet connection"
 	OpcodeUnknown                     = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                = "cannot determine open changes: %w"
 	OriginHostname                    = "Origin hostname: %s\n"
 	ParentDialogSelected              = "Selected parent branch for %q: %s\n"
+	PerennialBranchCannotPark         = "Cannot park perennial branches"
 	PerennialBranches                 = "Perennial branches: %s\n"
 	PerennialRegex                    = "Perennial regex: %s\n"
 	PreviousCommandFinished           = "The previous Git Town command (%s) finished successfully.\n"

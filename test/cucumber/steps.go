@@ -211,6 +211,46 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't observed as expected.\nObserved branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ObservedBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+	suite.Step(`^branch "([^"]+)" is now parked`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't parked as expected.\nParked branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ParkedBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
+	suite.Step(`^branch "([^"]+)" is now a feature branch`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {
+			return fmt.Errorf("branch %q is parked", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
+			return fmt.Errorf("branch %q is observed", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+			return fmt.Errorf("branch %q is contribution", branch)
+		}
+		if state.fixture.DevRepo.Config.FullConfig.IsPerennialBranch(branch) {
+			return fmt.Errorf("branch %q is perennial", branch)
+		}
+		return nil
+	})
+
 	suite.Step(`^display "([^"]+)"$`, func(command string) error {
 		parts := strings.Split(command, " ")
 		output, err := state.fixture.DevRepo.Runner.Query(parts[0], parts[1:]...)
