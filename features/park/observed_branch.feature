@@ -1,7 +1,7 @@
 Feature: parking an observed branch
 
   Background:
-    Given the current branch is a observed branch "observed"
+    Given the current branch is an observed branch "observed"
     And an uncommitted file
     When I run "git-town park"
 

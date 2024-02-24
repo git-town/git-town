@@ -211,6 +211,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^branch "([^"]+)" is (?:now|still) contribution`, func(name string) error {
+		branch := gitdomain.NewLocalBranchName(name)
+		if !state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
+			return fmt.Errorf(
+				"branch %q isn't contribution as expected.\nObserved branches: %s",
+				branch,
+				strings.Join(state.fixture.DevRepo.Config.FullConfig.ContributionBranches.Strings(), ", "),
+			)
+		}
+		return nil
+	})
+
 	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
@@ -222,6 +234,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		return nil
 	})
+
 	suite.Step(`^branch "([^"]+)" is now parked`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		if !state.fixture.DevRepo.Config.FullConfig.IsParkedBranch(branch) {

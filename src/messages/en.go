@@ -34,6 +34,7 @@ const (
 	ConfigRemoveError                  = "unexpected error while removing the 'git-town' section from the Git configuration: %w"
 	ContinueMessage                    = `You can run "git town continue" to finish it.`
 	ContinueSkipGuidance               = "To continue by skipping the current branch, run \"git-town skip\"."
+	ContributionBranchCannotPark       = "Cannot park contribution branches"
 	DiffConflictWithMain               = "conflicts between your uncommmitted changes and the main branch"
 	DryRun                             = "In dry run mode. No commands will be run. When run in normal mode, the command output will appear beneath the command. Some commands will only be run if necessary. For example: 'git push' will run if and only if there are local commits not on origin."
 	ValueInvalid                       = "invalid value for %s: %q. Please provide either \"yes\" or \"no\""
