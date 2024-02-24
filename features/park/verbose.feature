@@ -19,7 +19,7 @@ Feature: park a branch verbosely
       |        | git config -lz --local                     |
     And it prints:
       """
-      Ran 9 shell commands2
+      Ran 9 shell commands
       """
     And the current branch is still "branch"
     And the uncommitted file still exists
