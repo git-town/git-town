@@ -35,6 +35,9 @@ func rootCmd() cobra.Command {
 		ID:    "lineage",
 		Title: "Commands for stacked changes:",
 	}, &cobra.Group{
+		ID:    "types",
+		Title: "Commands to change branch types:",
+	}, &cobra.Group{
 		ID:    "setup",
 		Title: "Commands to set up Git Town on your computer:",
 	})
