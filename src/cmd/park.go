@@ -53,13 +53,13 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineParkConfig(args, repo, verbose)
+	config, err := determineParkConfig(args, repo)
 	if err != nil {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
 		if !config.branches.HasLocalBranch(branchToPark) {
-			return fmt.Errorf(messages.BranchDoesntExist, &branchToPark)
+			return fmt.Errorf(messages.BranchDoesntExist, branchToPark)
 		}
 		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
 			return err
@@ -83,7 +83,7 @@ type parkConfig struct {
 	branchesToPark gitdomain.LocalBranchNames
 }
 
-func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (parkConfig, error) {
+func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfig, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
 		return parkConfig{}, err
