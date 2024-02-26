@@ -67,7 +67,7 @@ func executePark(args []string, verbose bool) error {
 		}
 	}
 	for _, branchToPark := range config.branchesToPark {
-		if err = repo.Runner.Config.AddToParkedBranches(branchToPark); err != nil {
+		if err = repo.Runner.Config.AddToParkedBranches(branchToPark.LocalName()); err != nil {
 			return err
 		}
 	}
@@ -107,16 +107,16 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 }
 
 func validateIsParkableBranch(branch gitdomain.BranchName, config *configdomain.FullConfig) error {
-	if config.IsContributionBranch(branch) {
+	if config.IsContributionBranch(branch.LocalName()) {
 		return errors.New(messages.ContributionBranchCannotPark)
 	}
-	if config.IsMainBranch(branch) {
+	if config.IsMainBranch(branch.LocalName()) {
 		return errors.New(messages.MainBranchCannotPark)
 	}
-	if config.IsObservedBranch(branch) {
+	if config.IsObservedBranch(branch.LocalName()) {
 		return errors.New(messages.ObservedBranchCannotPark)
 	}
-	if config.IsPerennialBranch(branch) {
+	if config.IsPerennialBranch(branch.LocalName()) {
 		return errors.New(messages.PerennialBranchCannotPark)
 	}
 	return nil

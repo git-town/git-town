@@ -8,7 +8,7 @@ import (
 // FullConfig is the merged configuration to be used by Git Town commands.
 type FullConfig struct {
 	Aliases                  Aliases
-	ContributionBranches     []gitdomain.BranchName
+	ContributionBranches     gitdomain.LocalBranchNames
 	GitHubToken              GitHubToken
 	GitLabToken              GitLabToken
 	GitUserEmail             string
@@ -53,23 +53,23 @@ func (self *FullConfig) ContainsLineage() bool {
 	return len(self.Lineage) > 0
 }
 
-func (self *FullConfig) IsContributionBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsContributionBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ContributionBranches, branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (self *FullConfig) IsMainBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsMainBranch(branch gitdomain.LocalBranchName) bool {
 	return branch == self.MainBranch
 }
 
 // IsMainOrPerennialBranch indicates whether the branch with the given name
 // is the main branch or a perennial branch of the repository.
-func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsMainOrPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	return self.IsMainBranch(branch) || self.IsPerennialBranch(branch)
 }
 
-func (self *FullConfig) IsObservedBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsObservedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ObservedBranches, branch)
 }
 
@@ -77,11 +77,11 @@ func (self *FullConfig) IsOnline() bool {
 	return self.Online().Bool()
 }
 
-func (self *FullConfig) IsParkedBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsParkedBranch(branch gitdomain.LocalBranchName) bool {
 	return slice.Contains(self.ParkedBranches, branch)
 }
 
-func (self *FullConfig) IsPerennialBranch(branch gitdomain.BranchName) bool {
+func (self *FullConfig) IsPerennialBranch(branch gitdomain.LocalBranchName) bool {
 	if slice.Contains(self.PerennialBranches, branch) {
 		return true
 	}
