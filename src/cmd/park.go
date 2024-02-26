@@ -49,6 +49,9 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	config, err := determineParkConfig(args, repo.Runner)
+	if err != nil {
+		return err
+	}
 	for _, branchToPark := range config.branchesToPark {
 		err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig)
 		if err != nil {
