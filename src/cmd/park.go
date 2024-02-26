@@ -53,14 +53,12 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
-		err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig)
-		if err != nil {
+		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
 			return err
 		}
 	}
 	for _, branchToPark := range config.branchesToPark {
-		err = repo.Runner.Config.AddToParkedBranches(branchToPark)
-		if err != nil {
+		if err = repo.Runner.Config.AddToParkedBranches(branchToPark); err != nil {
 			return err
 		}
 	}
@@ -84,9 +82,14 @@ func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, err
 	if err != nil {
 		return parkConfig{}, err
 	}
-	branchesToPark := make(gitdomain.LocalBranchNames, len(args))
-	for b, branchName := range args {
-		branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
+	var branchesToPark gitdomain.LocalBranchNames
+	if len(args) == 0 {
+		branchesToPark = gitdomain.LocalBranchNames{currentBranch}
+	} else {
+		branchesToPark = make(gitdomain.LocalBranchNames, len(args))
+		for b, branchName := range args {
+			branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
+		}
 	}
 	return parkConfig{
 		branchesToPark: branchesToPark,
