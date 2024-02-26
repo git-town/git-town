@@ -105,6 +105,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^a known remote feature branch "([^"]*)"$`, func(branchText string) error {
+		branch := gitdomain.NewLocalBranchName(branchText)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		// we are creating a remote branch in the remote repo --> it is a local branch there
+		state.fixture.OriginRepo.CreateBranch(branch, gitdomain.NewLocalBranchName("main"))
+		state.fixture.DevRepo.TestCommands.Fetch()
+		return nil
+	})
+
 	suite.Step(`^a merge is now in progress$`, func() error {
 		if !state.fixture.DevRepo.HasMergeInProgress() {
 			return errors.New("expected merge in progress")
@@ -1427,6 +1436,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branches := state.fixture.DevRepo.Config.LocalGitConfig.ObservedBranches
 		if branches != nil && len(*branches) > 0 {
 			return fmt.Errorf("expected no observed branches, got %q", branches)
+		}
+		return nil
+	})
+
+	suite.Step(`^there are (?:now|still) no parked branches$`, func() error {
+		branches := state.fixture.DevRepo.Config.LocalGitConfig.ParkedBranches
+		if branches != nil && len(*branches) > 0 {
+			return fmt.Errorf("expected no parked branches, got %q", branches)
 		}
 		return nil
 	})

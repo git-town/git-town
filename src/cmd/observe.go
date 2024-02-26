@@ -14,7 +14,7 @@ import (
 
 const observeDesc = "Stops your contributions to a specific feature branches"
 
-const parkHelp = `
+const observeHelp = `
 Observed branches are useful when you assist other developers
 and make local changes to try out ideas,
 but want the other developers to implement and commit all the work.
@@ -31,8 +31,8 @@ func observeCmd() *cobra.Command {
 		Use:     "observe",
 		Args:    cobra.NoArgs,
 		GroupID: "types",
-		Short:   parkDesc,
-		Long:    cmdhelpers.Long(parkDesc, parkHelp),
+		Short:   observeDesc,
+		Long:    cmdhelpers.Long(observeDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return executePark(args, readVerboseFlag(cmd))
 		},
