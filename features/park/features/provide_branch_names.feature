@@ -22,6 +22,4 @@ Feature: parking multiple feature branches all at once
       |        | git stash pop |
     And the current branch is still "main"
     And the uncommitted file still exists
-    And branch "feature-1" is now a feature branch
-    And branch "feature-2" is now a feature branch
-    And branch "feature-3" is now a feature branch
+    And there are now no parked branches

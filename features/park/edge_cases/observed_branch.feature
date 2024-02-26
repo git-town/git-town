@@ -14,6 +14,7 @@ Feature: parking an observed branch
       """
       cannot park observed branches
       """
+    And there are still no parked branches
 
   Scenario: undo
     When I run "git-town undo"
@@ -21,3 +22,4 @@ Feature: parking an observed branch
     And the current branch is still "observed"
     And the uncommitted file still exists
     And branch "observed" is still an observed branch
+    And there are still no parked branches

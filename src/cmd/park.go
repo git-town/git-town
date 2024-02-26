@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
-	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
@@ -53,11 +53,14 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineParkConfig(args, repo.Runner)
-	if err != nil {
+	config, exit, err := determineParkConfig(args, repo, verbose)
+	if err != nil && exit {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
+		if !config.branches.HasLocalBranch(branchToPark) {
+			return fmt.Errorf(messages.BranchDoesntExist, &branchToPark)
+		}
 		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
 			return err
 		}
@@ -79,14 +82,28 @@ func executePark(args []string, verbose bool) error {
 
 type parkConfig struct {
 	branchesToPark gitdomain.LocalBranchNames
+	branches       gitdomain.BranchInfos
 }
 
-func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, error) {
+func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (parkConfig, bool, error) {
+	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
+		DialogTestInputs:      nil,
+		Fetch:                 false,
+		FullConfig:            &repo.Runner.Config.FullConfig,
+		HandleUnfinishedState: false,
+		Repo:                  repo,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+		Verbose:               verbose,
+	})
+	if err != nil || exit {
+		return parkConfig{}, exit, err
+	}
 	var branchesToPark gitdomain.LocalBranchNames
 	if len(args) == 0 {
-		currentBranch, err := runner.Backend.CurrentBranch()
+		currentBranch, err := repo.Runner.Backend.CurrentBranch()
 		if err != nil {
-			return parkConfig{}, err
+			return parkConfig{}, false, err
 		}
 		branchesToPark = gitdomain.LocalBranchNames{currentBranch}
 	} else {
@@ -97,7 +114,8 @@ func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, err
 	}
 	return parkConfig{
 		branchesToPark: branchesToPark,
-	}, nil
+		branches:       branchesSnapshot.Branches,
+	}, false, nil
 }
 
 func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
