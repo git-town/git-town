@@ -15,15 +15,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Parks the current branch"
+const parkDesc = "Parks feature branches"
 
 const parkHelp = `
-Git Town does not sync a parked branch unless it is checked when the sync starts.`
+Git Town does not sync parked branches unless they are currently checked out.
+
+If no branch is given, parks the current branch.
+If branches are given, parks the given branches.
+`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "park",
+		Use:     "park [branch names]",
 		Args:    cobra.ArbitraryArgs,
 		GroupID: "types",
 		Short:   parkDesc,
