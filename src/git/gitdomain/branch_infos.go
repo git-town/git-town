@@ -44,23 +44,6 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	return EmptyBranchInfo()
 }
 
-// HasBranch indicates whether the given branch is already known to this BranchInfos instance.
-func (self BranchInfos) HasBranch(branch BranchName) bool {
-	branchName := branch.String()
-	for _, bi := range self {
-		if bi.LocalName.String() == branchName {
-			return true
-		}
-		if bi.RemoteName.String() == branchName {
-			return true
-		}
-		if bi.RemoteName.LocalBranchName().String() == branchName {
-			return true
-		}
-	}
-	return false
-}
-
 // HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
 func (self BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, bi := range self {
