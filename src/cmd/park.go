@@ -59,7 +59,7 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
-		if !config.branches.HasLocalBranch(branchToPark) {
+		if !config.branches.HasBranch(branchToPark) {
 			return fmt.Errorf(messages.BranchDoesntExist, &branchToPark)
 		}
 		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
@@ -82,7 +82,7 @@ func executePark(args []string, verbose bool) error {
 }
 
 type parkConfig struct {
-	branchesToPark gitdomain.LocalBranchNames
+	branchesToPark []gitdomain.BranchName
 	branches       gitdomain.BranchInfos
 }
 
@@ -91,13 +91,13 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return parkConfig{}, err
 	}
-	var branchesToPark gitdomain.LocalBranchNames
+	var branchesToPark []gitdomain.BranchName
 	if len(args) == 0 {
-		branchesToPark = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+		branchesToPark = []gitdomain.BranchName{branchesSnapshot.Active.BranchName()}
 	} else {
-		branchesToPark = make(gitdomain.LocalBranchNames, len(args))
+		branchesToPark = make([]gitdomain.BranchName, len(args))
 		for b, branchName := range args {
-			branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
+			branchesToPark[b] = gitdomain.BranchName(branchName)
 		}
 	}
 	return parkConfig{
@@ -106,7 +106,7 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, nil
 }
 
-func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
+func validateIsParkableBranch(branch gitdomain.BranchName, config *configdomain.FullConfig) error {
 	if config.IsContributionBranch(branch) {
 		return errors.New(messages.ContributionBranchCannotPark)
 	}
