@@ -12,19 +12,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const observeDesc = "Stops your collaboration on specific feature branches"
+const observeDesc = "Stops your contributions to a specific feature branches"
 
 const parkHelp = `
-Your local copy of an observed feature branch only reflects the
-and doesn't pull in updates from the parent.
+When you observe a branch, "git sync"
+- pulls down updates from the tracking branch (always via rebase)
+- does not push your local commits to the tracking branch
+- does not pull updates from the parent branch
 
-
+Observed branches are useful when you assist other developers
+and perform local changes to try out something,
+but want the other developers implement and commit all the work.
 `
 
-func parkCmd() *cobra.Command {
+func observeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "park",
+		Use:     "observe",
 		Args:    cobra.NoArgs,
 		GroupID: "types",
 		Short:   parkDesc,
@@ -37,7 +41,7 @@ func parkCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePark(_ []string, verbose bool) error {
+func executeObserve(_ []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
