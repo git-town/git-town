@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Suspends syncing some feature branches"
+const parkDesc = "Suspends syncing of selected feature branches"
 
 const parkHelp = `
 Git Town does not sync a parked branch
