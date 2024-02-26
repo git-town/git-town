@@ -18,7 +18,7 @@ import (
 const parkDesc = "Suspends syncing of selected feature branches"
 
 const parkHelp = `
-Parks the given branches.
+Parks the given local branches.
 If no branch is provided, parks the current branch.
 
 Git Town does not sync a parked branch
