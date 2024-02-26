@@ -18,12 +18,11 @@ import (
 const parkDesc = "Suspends syncing of selected feature branches"
 
 const parkHelp = `
-Git Town does not sync a parked branch
-unless it is currently checked out.
+Parks the given branches.
+If no branch is provided, parks the current branch.
 
-If branches are given, parks the given branches.
-If no branch is given, parks the current branch.
-`
+Git Town does not sync a parked branch
+unless it is currently checked out.`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
