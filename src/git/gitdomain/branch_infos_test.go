@@ -71,9 +71,9 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			must.True(t, bs.HasLocalBranch(gitdomain.NewLocalBranchName("one")))
+			must.True(t, bs.HasBranch(gitdomain.NewBranchName("one")))
 		})
-		t.Run("has a remote branch with that name", func(t *testing.T) {
+		t.Run("has a remote branch with the given local name", func(t *testing.T) {
 			t.Parallel()
 			bs := gitdomain.BranchInfos{
 				gitdomain.BranchInfo{
@@ -84,7 +84,20 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			must.True(t, bs.HasLocalBranch(gitdomain.NewLocalBranchName("one")))
+			must.True(t, bs.HasBranch(gitdomain.NewBranchName("one")))
+		})
+		t.Run("has a remote branch with the given remote name", func(t *testing.T) {
+			t.Parallel()
+			bs := gitdomain.BranchInfos{
+				gitdomain.BranchInfo{
+					LocalName:  gitdomain.EmptyLocalBranchName(),
+					LocalSHA:   gitdomain.EmptySHA(),
+					SyncStatus: gitdomain.SyncStatusRemoteOnly,
+					RemoteName: gitdomain.NewRemoteBranchName("origin/one"),
+					RemoteSHA:  gitdomain.EmptySHA(),
+				},
+			}
+			must.True(t, bs.HasBranch(gitdomain.NewBranchName("origin/one")))
 		})
 		t.Run("has no branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -97,7 +110,7 @@ func TestBranchInfos(t *testing.T) {
 					RemoteSHA:  gitdomain.EmptySHA(),
 				},
 			}
-			must.True(t, bs.HasLocalBranch(gitdomain.NewLocalBranchName("other")))
+			must.False(t, bs.HasLocalBranch(gitdomain.NewLocalBranchName("other")))
 		})
 	})
 

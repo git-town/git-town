@@ -39,7 +39,7 @@ func (self LocalBranchName) AtRemote(remote Remote) RemoteBranchName {
 
 // BranchName widens the type of this LocalBranchName to a more generic BranchName.
 func (self LocalBranchName) BranchName() BranchName {
-	return NewBranchName(string(self))
+	return BranchName(string(self))
 }
 
 // IsEmpty indicates whether this branch name is not set.
