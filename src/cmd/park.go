@@ -59,17 +59,15 @@ func executePark(args []string, verbose bool) error {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
-		if !config.branches.HasBranch(branchToPark) {
+		if !config.branches.HasLocalBranch(branchToPark) {
 			return fmt.Errorf(messages.BranchDoesntExist, &branchToPark)
 		}
 		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
 			return err
 		}
 	}
-	for _, branchToPark := range config.branchesToPark {
-		if err = repo.Runner.Config.AddToParkedBranches(branchToPark.LocalName()); err != nil {
-			return err
-		}
+	if err = repo.Runner.Config.AddToParkedBranches(config.branchesToPark...); err != nil {
+		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
@@ -82,7 +80,7 @@ func executePark(args []string, verbose bool) error {
 }
 
 type parkConfig struct {
-	branchesToPark []gitdomain.BranchName
+	branchesToPark gitdomain.LocalBranchNames
 	branches       gitdomain.BranchInfos
 }
 
@@ -91,13 +89,13 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if err != nil {
 		return parkConfig{}, err
 	}
-	var branchesToPark []gitdomain.BranchName
+	var branchesToPark gitdomain.LocalBranchNames
 	if len(args) == 0 {
-		branchesToPark = []gitdomain.BranchName{branchesSnapshot.Active.BranchName()}
+		branchesToPark = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	} else {
-		branchesToPark = make([]gitdomain.BranchName, len(args))
+		branchesToPark = make([]gitdomain.LocalBranchName, len(args))
 		for b, branchName := range args {
-			branchesToPark[b] = gitdomain.BranchName(branchName)
+			branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
 		}
 	}
 	return parkConfig{
@@ -106,17 +104,17 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	}, nil
 }
 
-func validateIsParkableBranch(branch gitdomain.BranchName, config *configdomain.FullConfig) error {
-	if config.IsContributionBranch(branch.LocalName()) {
+func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
+	if config.IsContributionBranch(branch) {
 		return errors.New(messages.ContributionBranchCannotPark)
 	}
-	if config.IsMainBranch(branch.LocalName()) {
+	if config.IsMainBranch(branch) {
 		return errors.New(messages.MainBranchCannotPark)
 	}
-	if config.IsObservedBranch(branch.LocalName()) {
+	if config.IsObservedBranch(branch) {
 		return errors.New(messages.ObservedBranchCannotPark)
 	}
-	if config.IsPerennialBranch(branch.LocalName()) {
+	if config.IsPerennialBranch(branch) {
 		return errors.New(messages.PerennialBranchCannotPark)
 	}
 	return nil
