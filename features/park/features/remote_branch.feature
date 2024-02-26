@@ -1,4 +1,4 @@
-Feature: park a remote branch
+Feature: park a remote branch by local name
 
   Background:
     Given a known remote feature branch "feature"
