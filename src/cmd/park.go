@@ -18,8 +18,8 @@ import (
 const parkDesc = "Suspends syncing some feature branches"
 
 const parkHelp = `
-Git Town does not sync parked branches.
-The only exception is the currently checked out branch.
+Git Town does not sync a parked branch
+unless it is currently checked out.
 
 If branches are given, parks the given branches.
 If no branch is given, parks the current branch.
