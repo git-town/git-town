@@ -79,8 +79,8 @@ func executePark(args []string, verbose bool) error {
 }
 
 type parkConfig struct {
-	branchesToPark gitdomain.LocalBranchNames
 	branches       gitdomain.BranchInfos
+	branchesToPark gitdomain.LocalBranchNames
 }
 
 func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (parkConfig, error) {
@@ -95,8 +95,8 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 		branchesToPark = gitdomain.NewLocalBranchNames(args...)
 	}
 	return parkConfig{
-		branchesToPark: branchesToPark,
 		branches:       branchesSnapshot.Branches,
+		branchesToPark: branchesToPark,
 	}, nil
 }
 
