@@ -7,11 +7,11 @@ Feature: parking multiple branches all at once
 
   Scenario: result
     Then it runs no commands
-    And the current branch is still "main"
-    And the uncommitted file still exists
     And branch "feature-1" is now parked
     And branch "feature-2" is now parked
     And branch "feature-3" is now parked
+    And the current branch is still "main"
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -20,6 +20,6 @@ Feature: parking multiple branches all at once
       | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
+    And there are now no parked branches
     And the current branch is still "main"
     And the uncommitted file still exists
-    And there are now no parked branches
