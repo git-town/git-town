@@ -22,7 +22,9 @@ Parks the given branches.
 If no branch is provided, parks the current branch.
 
 Git Town does not sync a parked branch
-unless it is currently checked out.`
+unless it is currently checked out.
+Only feature branches can be parked.
+`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
