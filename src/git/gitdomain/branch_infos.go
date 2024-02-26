@@ -44,7 +44,7 @@ func (self BranchInfos) FindMatchingRecord(other BranchInfo) BranchInfo {
 	return EmptyBranchInfo()
 }
 
-// IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
+// HasLocalBranch indicates whether the given local branch is already known to this BranchInfos instance.
 func (self BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 	for _, bi := range self {
 		if bi.LocalName == localBranch {

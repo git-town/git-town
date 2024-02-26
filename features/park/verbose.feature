@@ -12,14 +12,13 @@ Feature: park a branch verbosely
       |        | git config -lz --global                    |
       |        | git config -lz --local                     |
       |        | git rev-parse --show-toplevel              |
-      |        | git status --long --ignore-submodules      |
-      |        | git rev-parse --abbrev-ref HEAD            |
+      |        | git branch -vva                            |
       |        | git config git-town.parked-branches branch |
       |        | git config -lz --global                    |
       |        | git config -lz --local                     |
     And it prints:
       """
-      Ran 9 shell commands
+      Ran 8 shell commands
       """
     And the current branch is still "branch"
     And the uncommitted file still exists

@@ -19,3 +19,4 @@ Feature: parking the main branch
     Then it runs no commands
     And the current branch is still "main"
     And the main branch is still "main"
+    And there are now no parked branches

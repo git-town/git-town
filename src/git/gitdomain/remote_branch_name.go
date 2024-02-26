@@ -31,7 +31,7 @@ func isValidRemoteBranchName(value string) bool {
 
 // BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (self RemoteBranchName) BranchName() BranchName {
-	return NewBranchName(string(self))
+	return BranchName(string(self))
 }
 
 func (self RemoteBranchName) IsEmpty() bool {

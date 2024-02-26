@@ -2,26 +2,34 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
 )
 
-const parkDesc = "Parks the current branch"
+const parkDesc = "Suspends syncing of selected feature branches"
 
 const parkHelp = `
-Git Town does not sync a parked branch unless it is checked when the sync starts.`
+Parks the given local feature branches.
+If no branch is provided, parks the current branch.
+
+Git Town does not sync parked branches.
+The currently checked out branch gets synced even if parked.
+`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "park",
-		Args:    cobra.NoArgs,
+		Use:     "park [branches]",
+		Args:    cobra.ArbitraryArgs,
 		GroupID: "types",
 		Short:   parkDesc,
 		Long:    cmdhelpers.Long(parkDesc, parkHelp),
@@ -33,7 +41,7 @@ func parkCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePark(_ []string, verbose bool) error {
+func executePark(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -45,24 +53,19 @@ func executePark(_ []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	currentBranch, err := repo.Runner.Backend.CurrentBranch()
+	config, err := determineParkConfig(args, repo)
 	if err != nil {
 		return err
 	}
-	if repo.Runner.Config.FullConfig.IsContributionBranch(currentBranch) {
-		return errors.New(messages.ContributionBranchCannotPark)
+	for _, branchToPark := range config.branchesToPark {
+		if !config.branches.HasLocalBranch(branchToPark) {
+			return fmt.Errorf(messages.BranchDoesntExist, branchToPark)
+		}
+		if err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig); err != nil {
+			return err
+		}
 	}
-	if repo.Runner.Config.FullConfig.IsMainBranch(currentBranch) {
-		return errors.New(messages.MainBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsObservedBranch(currentBranch) {
-		return errors.New(messages.ObservedBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsPerennialBranch(currentBranch) {
-		return errors.New(messages.PerennialBranchCannotPark)
-	}
-	err = repo.Runner.Config.AddToParkedBranches(currentBranch)
-	if err != nil {
+	if err = repo.Runner.Config.AddToParkedBranches(config.branchesToPark...); err != nil {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
@@ -73,4 +76,42 @@ func executePark(_ []string, verbose bool) error {
 		Runner:              repo.Runner,
 		Verbose:             verbose,
 	})
+}
+
+type parkConfig struct {
+	branches       gitdomain.BranchInfos
+	branchesToPark gitdomain.LocalBranchNames
+}
+
+func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return parkConfig{}, err
+	}
+	var branchesToPark gitdomain.LocalBranchNames
+	if len(args) == 0 {
+		branchesToPark = gitdomain.LocalBranchNames{branchesSnapshot.Active}
+	} else {
+		branchesToPark = gitdomain.NewLocalBranchNames(args...)
+	}
+	return parkConfig{
+		branches:       branchesSnapshot.Branches,
+		branchesToPark: branchesToPark,
+	}, nil
+}
+
+func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
+	if config.IsContributionBranch(branch) {
+		return errors.New(messages.ContributionBranchCannotPark)
+	}
+	if config.IsMainBranch(branch) {
+		return errors.New(messages.MainBranchCannotPark)
+	}
+	if config.IsObservedBranch(branch) {
+		return errors.New(messages.ObservedBranchCannotPark)
+	}
+	if config.IsPerennialBranch(branch) {
+		return errors.New(messages.PerennialBranchCannotPark)
+	}
+	return nil
 }

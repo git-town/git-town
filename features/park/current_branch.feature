@@ -20,4 +20,4 @@ Feature: parking a feature branch
       |        | git stash pop |
     And the current branch is still "branch"
     And the uncommitted file still exists
-    And branch "branch" is now a feature branch
+    And there are now no parked branches

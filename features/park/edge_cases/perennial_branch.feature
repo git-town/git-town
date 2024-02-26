@@ -14,6 +14,7 @@ Feature: parking a perennial branch
       """
       cannot park perennial branches
       """
+    And there are still no parked branches
 
   Scenario: undo
     When I run "git-town undo"
@@ -21,3 +22,4 @@ Feature: parking a perennial branch
     And the current branch is still "perennial"
     And the uncommitted file still exists
     And the perennial branches are still "perennial"
+    And there are still no parked branches
