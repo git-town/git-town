@@ -1,4 +1,4 @@
-Feature: parking multiple branches all at once
+Feature: parking multiple branches
 
   Background:
     Given the feature branches "feature-1", "feature-2", and "feature-3"
