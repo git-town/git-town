@@ -101,14 +101,8 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 }
 
 func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
-	if config.IsContributionBranch(branch) {
-		return errors.New(messages.ContributionBranchCannotPark)
-	}
 	if config.IsMainBranch(branch) {
 		return errors.New(messages.MainBranchCannotPark)
-	}
-	if config.IsObservedBranch(branch) {
-		return errors.New(messages.ObservedBranchCannotPark)
 	}
 	if config.IsPerennialBranch(branch) {
 		return errors.New(messages.PerennialBranchCannotPark)
