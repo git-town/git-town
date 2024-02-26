@@ -92,10 +92,7 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	if len(args) == 0 {
 		branchesToPark = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	} else {
-		branchesToPark = make([]gitdomain.LocalBranchName, len(args))
-		for b, branchName := range args {
-			branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
-		}
+		branchesToPark = gitdomain.NewLocalBranchNames(args...)
 	}
 	return parkConfig{
 		branchesToPark: branchesToPark,
