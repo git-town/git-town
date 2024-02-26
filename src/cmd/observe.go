@@ -15,14 +15,14 @@ import (
 const observeDesc = "Stops your contributions to a specific feature branches"
 
 const parkHelp = `
+Observed branches are useful when you assist other developers
+and make local changes to try out ideas,
+but want the other developers to implement and commit all the work.
+
 When you observe a branch, "git sync"
 - pulls down updates from the tracking branch (always via rebase)
 - does not push your local commits to the tracking branch
 - does not pull updates from the parent branch
-
-Observed branches are useful when you assist other developers
-and perform local changes to try out something,
-but want the other developers implement and commit all the work.
 `
 
 func observeCmd() *cobra.Command {
