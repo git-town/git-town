@@ -79,16 +79,15 @@ func executePark(args []string, verbose bool) error {
 
 type parkConfig struct {
 	branchesToPark gitdomain.LocalBranchNames
-	currentBranch  gitdomain.LocalBranchName
 }
 
 func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, error) {
-	currentBranch, err := runner.Backend.CurrentBranch()
-	if err != nil {
-		return parkConfig{}, err
-	}
 	var branchesToPark gitdomain.LocalBranchNames
 	if len(args) == 0 {
+		currentBranch, err := runner.Backend.CurrentBranch()
+		if err != nil {
+			return parkConfig{}, err
+		}
 		branchesToPark = gitdomain.LocalBranchNames{currentBranch}
 	} else {
 		branchesToPark = make(gitdomain.LocalBranchNames, len(args))
@@ -98,7 +97,6 @@ func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, err
 	}
 	return parkConfig{
 		branchesToPark: branchesToPark,
-		currentBranch:  currentBranch,
 	}, nil
 }
 
