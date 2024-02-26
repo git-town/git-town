@@ -1,0 +1,26 @@
+Feature: parking multiple feature branches all at once
+
+  Background:
+    Given the feature branches "feature-1", "feature-2", and "feature-3"
+    And an uncommitted file
+    When I run "git-town park feature-1 feature-2 feature-3"
+
+  @this
+  Scenario: result
+    Then it runs no commands
+    And the current branch is still "main"
+    And the uncommitted file still exists
+    And branch "feature-1" is now parked
+    And branch "feature-2" is now parked
+    And branch "feature-3" is now parked
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH | COMMAND       |
+      | branch | git add -A    |
+      |        | git stash     |
+      |        | git stash pop |
+    And the current branch is still "branch"
+    And the uncommitted file still exists
+    And branch "branch" is now a feature branch

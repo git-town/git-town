@@ -5,7 +5,10 @@ import (
 
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
+	"github.com/git-town/git-town/v12/src/git"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
@@ -21,7 +24,7 @@ func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "park",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ArbitraryArgs,
 		GroupID: "types",
 		Short:   parkDesc,
 		Long:    cmdhelpers.Long(parkDesc, parkHelp),
@@ -33,7 +36,7 @@ func parkCmd() *cobra.Command {
 	return &cmd
 }
 
-func executePark(_ []string, verbose bool) error {
+func executePark(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -45,25 +48,18 @@ func executePark(_ []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	currentBranch, err := repo.Runner.Backend.CurrentBranch()
-	if err != nil {
-		return err
+	config, err := determineParkConfig(args, repo.Runner)
+	for _, branchToPark := range config.branchesToPark {
+		err = validateIsParkableBranch(branchToPark, &repo.Runner.Config.FullConfig)
+		if err != nil {
+			return err
+		}
 	}
-	if repo.Runner.Config.FullConfig.IsContributionBranch(currentBranch) {
-		return errors.New(messages.ContributionBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsMainBranch(currentBranch) {
-		return errors.New(messages.MainBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsObservedBranch(currentBranch) {
-		return errors.New(messages.ObservedBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsPerennialBranch(currentBranch) {
-		return errors.New(messages.PerennialBranchCannotPark)
-	}
-	err = repo.Runner.Config.AddToParkedBranches(currentBranch)
-	if err != nil {
-		return err
+	for _, branchToPark := range config.branchesToPark {
+		err = repo.Runner.Config.AddToParkedBranches(branchToPark)
+		if err != nil {
+			return err
+		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
@@ -73,4 +69,40 @@ func executePark(_ []string, verbose bool) error {
 		Runner:              repo.Runner,
 		Verbose:             verbose,
 	})
+}
+
+type parkConfig struct {
+	branchesToPark gitdomain.LocalBranchNames
+	currentBranch  gitdomain.LocalBranchName
+}
+
+func determineParkConfig(args []string, runner *git.ProdRunner) (parkConfig, error) {
+	currentBranch, err := runner.Backend.CurrentBranch()
+	if err != nil {
+		return parkConfig{}, err
+	}
+	branchesToPark := make(gitdomain.LocalBranchNames, len(args))
+	for b, branchName := range args {
+		branchesToPark[b] = gitdomain.NewLocalBranchName(branchName)
+	}
+	return parkConfig{
+		branchesToPark: branchesToPark,
+		currentBranch:  currentBranch,
+	}, nil
+}
+
+func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
+	if config.IsContributionBranch(branch) {
+		return errors.New(messages.ContributionBranchCannotPark)
+	}
+	if config.IsMainBranch(branch) {
+		return errors.New(messages.MainBranchCannotPark)
+	}
+	if config.IsObservedBranch(branch) {
+		return errors.New(messages.ObservedBranchCannotPark)
+	}
+	if config.IsPerennialBranch(branch) {
+		return errors.New(messages.PerennialBranchCannotPark)
+	}
+	return nil
 }
