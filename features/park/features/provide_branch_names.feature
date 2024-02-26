@@ -5,7 +5,6 @@ Feature: parking multiple feature branches all at once
     And an uncommitted file
     When I run "git-town park feature-1 feature-2 feature-3"
 
-  @this
   Scenario: result
     Then it runs no commands
     And the current branch is still "main"
@@ -18,9 +17,11 @@ Feature: parking multiple feature branches all at once
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | branch | git add -A    |
+      | main   | git add -A    |
       |        | git stash     |
       |        | git stash pop |
-    And the current branch is still "branch"
+    And the current branch is still "main"
     And the uncommitted file still exists
-    And branch "branch" is now a feature branch
+    And branch "feature-1" is now a feature branch
+    And branch "feature-2" is now a feature branch
+    And branch "feature-3" is now a feature branch
