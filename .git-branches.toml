@@ -6,7 +6,7 @@ sync-upstream = true
 
 [branches]
 main = "main"
-perennials = ["public", "foobar"]
+perennials = ["public"]
 
 [sync-strategy]
 feature-branches = "merge"
