@@ -53,8 +53,8 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, exit, err := determineParkConfig(args, repo, verbose)
-	if err != nil && exit {
+	config, err := determineParkConfig(args, repo, verbose)
+	if err != nil {
 		return err
 	}
 	for _, branchToPark := range config.branchesToPark {
@@ -85,27 +85,14 @@ type parkConfig struct {
 	branches       gitdomain.BranchInfos
 }
 
-func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (parkConfig, bool, error) {
-	branchesSnapshot, _, _, exit, err := execute.LoadRepoSnapshot(execute.LoadRepoSnapshotArgs{
-		DialogTestInputs:      nil,
-		Fetch:                 false,
-		FullConfig:            &repo.Runner.Config.FullConfig,
-		HandleUnfinishedState: false,
-		Repo:                  repo,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-		Verbose:               verbose,
-	})
-	if err != nil || exit {
-		return parkConfig{}, exit, err
+func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bool) (parkConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return parkConfig{}, err
 	}
 	var branchesToPark gitdomain.LocalBranchNames
 	if len(args) == 0 {
-		currentBranch, err := repo.Runner.Backend.CurrentBranch()
-		if err != nil {
-			return parkConfig{}, false, err
-		}
-		branchesToPark = gitdomain.LocalBranchNames{currentBranch}
+		branchesToPark = gitdomain.LocalBranchNames{branchesSnapshot.Active}
 	} else {
 		branchesToPark = make(gitdomain.LocalBranchNames, len(args))
 		for b, branchName := range args {
@@ -115,7 +102,7 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult, verbose bo
 	return parkConfig{
 		branchesToPark: branchesToPark,
 		branches:       branchesSnapshot.Branches,
-	}, false, nil
+	}, nil
 }
 
 func validateIsParkableBranch(branch gitdomain.LocalBranchName, config *configdomain.FullConfig) error {
