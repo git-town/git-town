@@ -12,10 +12,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const observeDesc = "Observes the current branch"
+const observeDesc = "Stops your collaboration on specific feature branches"
 
 const parkHelp = `
-Git Town does not sync a parked branch unless it is checked when the sync starts.`
+Your local copy of an observed feature branch only reflects the
+and doesn't pull in updates from the parent.
+
+
+`
 
 func parkCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
