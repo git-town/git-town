@@ -17,7 +17,7 @@ const observeDesc = "Stops your contributions to a specific feature branches"
 const observeHelp = `
 Observed branches are useful when you assist other developers
 and make local changes to try out ideas,
-but want the other developers to implement and commit all the work.
+but want the other developers to implement and commit all official changes.
 
 When you observe a branch, "git sync"
 - pulls down updates from the tracking branch (always via rebase)
@@ -28,13 +28,13 @@ When you observe a branch, "git sync"
 func observeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "observe",
+		Use:     "observe [branches]",
 		Args:    cobra.NoArgs,
 		GroupID: "types",
 		Short:   observeDesc,
 		Long:    cmdhelpers.Long(observeDesc, observeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executePark(args, readVerboseFlag(cmd))
+			return executeObserve(args, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
@@ -57,14 +57,8 @@ func executeObserve(_ []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if repo.Runner.Config.FullConfig.IsContributionBranch(currentBranch) {
-		return errors.New(messages.ContributionBranchCannotPark)
-	}
 	if repo.Runner.Config.FullConfig.IsMainBranch(currentBranch) {
 		return errors.New(messages.MainBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsObservedBranch(currentBranch) {
-		return errors.New(messages.ObservedBranchCannotPark)
 	}
 	if repo.Runner.Config.FullConfig.IsPerennialBranch(currentBranch) {
 		return errors.New(messages.PerennialBranchCannotPark)
