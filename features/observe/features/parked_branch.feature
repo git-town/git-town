@@ -1,14 +1,15 @@
-Feature: parking the current branch
+Feature: observing a parked branch
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given the current branch is a parked branch "branch"
     And an uncommitted file
-    When I run "git-town park"
+    When I run "git-town observe"
 
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
-    And branch "branch" is now parked
+    And branch "branch" is now observed
+    And there are now no parked branches
     And the uncommitted file still exists
 
   Scenario: undo
@@ -19,5 +20,6 @@ Feature: parking the current branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And there are now no parked branches
+    And branch "branch" is now parked
+    And there are now no observed branches
     And the uncommitted file still exists

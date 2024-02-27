@@ -232,7 +232,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^branch "([^"]+)" is (?:now|still) an observed branch`, func(name string) error {
+	suite.Step(`^branch "([^"]+)" is (?:now|still) observed`, func(name string) error {
 		branch := gitdomain.NewLocalBranchName(name)
 		if !state.fixture.DevRepo.Config.FullConfig.IsObservedBranch(branch) {
 			return fmt.Errorf(

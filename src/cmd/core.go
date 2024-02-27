@@ -18,6 +18,7 @@ func Execute() error {
 	rootCmd.AddCommand(hackCmd())
 	rootCmd.AddCommand(killCommand())
 	rootCmd.AddCommand(newPullRequestCommand())
+	rootCmd.AddCommand(observeCmd())
 	rootCmd.AddCommand(offlineCmd())
 	rootCmd.AddCommand(parkCmd())
 	rootCmd.AddCommand(proposeCommand())

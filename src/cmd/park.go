@@ -17,7 +17,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-const parkDesc = "Suspends syncing of selected feature branches"
+const parkDesc = "Suspends syncing of some feature branches"
 
 const parkHelp = `
 Parks the given local feature branches.
