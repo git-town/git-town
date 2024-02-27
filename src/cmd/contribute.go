@@ -28,29 +28,29 @@ and make commits to their branch,
 but want the other developers to handle the branch
 including syncing it with its parent and shipping it.
 
-On an observed branch, "git sync"
+On a contribution branch, "git sync"
 - pulls down updates from the tracking branch (always via rebase)
-- does not push your local commits to the tracking branch
+- pushes your local commits to the tracking branch
 - does not pull updates from the parent branch
 `
 
-func observeCmd() *cobra.Command {
+func contributeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
-		Use:     "observe [branches]",
+		Use:     "contribute [branches]",
 		Args:    cobra.ArbitraryArgs,
 		GroupID: "types",
-		Short:   observeDesc,
-		Long:    cmdhelpers.Long(observeDesc, observeHelp),
+		Short:   contributeDesc,
+		Long:    cmdhelpers.Long(contributeDesc, contributeHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return executeObserve(args, readVerboseFlag(cmd))
+			return executeContribute(args, readVerboseFlag(cmd))
 		},
 	}
 	addVerboseFlag(&cmd)
 	return &cmd
 }
 
-func executeObserve(args []string, verbose bool) error {
+func executeContribute(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -62,18 +62,18 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineObserveConfig(args, repo)
+	config, err := determineContributeConfig(args, repo)
 	if err != nil {
 		return err
 	}
-	err = validateObserveConfig(config)
+	err = validateContributeConfig(config)
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToObservedBranches(maps.Keys(config.branchesToObserve)...); err != nil {
+	if err = repo.Runner.Config.AddToContributionBranches(maps.Keys(config.branchesToMark)...); err != nil {
 		return err
 	}
-	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
+	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
 		return err
 	}
 	if !config.checkout.IsEmpty() {
@@ -83,7 +83,7 @@ func executeObserve(args []string, verbose bool) error {
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "observe",
+		Command:             "contribute",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
 		Runner:              repo.Runner,
@@ -91,16 +91,16 @@ func executeObserve(args []string, verbose bool) error {
 	})
 }
 
-type observeConfig struct {
-	allBranches       gitdomain.BranchInfos
-	branchesToObserve map[gitdomain.LocalBranchName]configdomain.BranchType
-	checkout          gitdomain.LocalBranchName
+type contributeConfig struct {
+	allBranches    gitdomain.BranchInfos
+	branchesToMark map[gitdomain.LocalBranchName]configdomain.BranchType
+	checkout       gitdomain.LocalBranchName
 }
 
-func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
+func removeNonContributionBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
 	for branchName, branchType := range branches {
 		switch branchType {
-		case configdomain.BranchTypeContributionBranch:
+		case configdomain.BranchTypeObservedBranch:
 			if err := config.RemoveFromContributionBranches(branchName); err != nil {
 				return err
 			}
@@ -108,25 +108,25 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 			if err := config.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 	}
 	return nil
 }
 
-func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observeConfig, error) {
+func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (contributeConfig, error) {
 	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
 	if err != nil {
-		return observeConfig{}, err
+		return contributeConfig{}, err
 	}
-	branchesToObserve := map[gitdomain.LocalBranchName]configdomain.BranchType{}
+	branchesToMark := map[gitdomain.LocalBranchName]configdomain.BranchType{}
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToObserve[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
+		branchesToMark[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
+		branchesToMark[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
@@ -134,29 +134,29 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	default:
 		for _, branch := range args {
 			branchName := gitdomain.NewLocalBranchName(branch)
-			branchesToObserve[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
+			branchesToMark[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
 		}
 	}
-	return observeConfig{
-		allBranches:       branchesSnapshot.Branches,
-		branchesToObserve: branchesToObserve,
-		checkout:          checkout,
+	return contributeConfig{
+		allBranches:    branchesSnapshot.Branches,
+		branchesToMark: branchesToMark,
+		checkout:       checkout,
 	}, nil
 }
 
-func validateObserveConfig(config observeConfig) error {
-	for branchName, branchType := range config.branchesToObserve {
+func validateContributeConfig(config contributeConfig) error {
+	for branchName, branchType := range config.branchesToMark {
 		if !config.allBranches.HasLocalBranch(branchName) && !config.allBranches.HasMatchingTrackingBranchFor(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
-			return errors.New(messages.MainBranchCannotObserve)
+			return errors.New(messages.MainBranchCannotMakeContribution)
 		case configdomain.BranchTypePerennialBranch:
-			return errors.New(messages.PerennialBranchCannotObserve)
-		case configdomain.BranchTypeObservedBranch:
-			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
+			return errors.New(messages.PerennialBranchCannotMakeContribution)
+		case configdomain.BranchTypeContributionBranch:
+			return fmt.Errorf(messages.BranchIsAlreadyContribution, branchName)
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeParkedBranch:
 		}
 	}
 	return nil
