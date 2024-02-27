@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/config/commandconfig"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
@@ -118,22 +119,21 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	if err != nil {
 		return observeConfig{}, err
 	}
-	branchesToObserve := map[gitdomain.LocalBranchName]configdomain.BranchType{}
+	branchesToObserve := commandconfig.BranchesToMark{}
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToObserve[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
+		branchesToObserve.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToObserve[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
+		branchesToObserve.Add(branch, &repo.Runner.Config.FullConfig)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
 		for _, branch := range args {
-			branchName := gitdomain.NewLocalBranchName(branch)
-			branchesToObserve[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
+			branchesToObserve.Add(gitdomain.NewLocalBranchName(branch), &repo.Runner.Config.FullConfig)
 		}
 	}
 	return observeConfig{

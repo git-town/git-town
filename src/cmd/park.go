@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/config/commandconfig"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
@@ -14,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
 )
 
 const parkDesc = "Suspends syncing of some feature branches"
@@ -63,7 +63,7 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToParkedBranches(maps.Keys(config.branchesToPark)...); err != nil {
+	if err = repo.Runner.Config.AddToParkedBranches(config.branchesToPark.Keys()...); err != nil {
 		return err
 	}
 	if err = removeNonParkBranchTypes(config.branchesToPark, repo.Runner.Config); err != nil {
@@ -81,7 +81,7 @@ func executePark(args []string, verbose bool) error {
 
 type parkConfig struct {
 	allBranches    gitdomain.BranchInfos
-	branchesToPark map[gitdomain.LocalBranchName]configdomain.BranchType
+	branchesToPark commandconfig.BranchesToMark
 }
 
 func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
@@ -106,13 +106,12 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	if err != nil {
 		return parkConfig{}, err
 	}
-	branchesToPark := map[gitdomain.LocalBranchName]configdomain.BranchType{}
+	branchesToPark := commandconfig.BranchesToMark{}
 	if len(args) == 0 {
-		branchesToPark[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
+		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
 	} else {
 		for _, branch := range args {
-			branchName := gitdomain.NewLocalBranchName(branch)
-			branchesToPark[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
+			branchesToPark.Add(gitdomain.NewLocalBranchName(branch), &repo.Runner.Config.FullConfig)
 		}
 	}
 	return parkConfig{
