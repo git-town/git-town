@@ -68,8 +68,7 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = validateProposeConfig(config)
-	if err != nil {
+	if err = validateProposeConfig(config); err != nil {
 		return err
 	}
 	runState := runstate.RunState{
