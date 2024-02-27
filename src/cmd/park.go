@@ -81,7 +81,7 @@ func executePark(args []string, verbose bool) error {
 
 type parkConfig struct {
 	allBranches    gitdomain.BranchInfos
-	branchesToPark commandconfig.BranchesToMark
+	branchesToPark commandconfig.BranchesAndTypes
 }
 
 func removeNonParkBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
@@ -106,7 +106,7 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	if err != nil {
 		return parkConfig{}, err
 	}
-	branchesToPark := commandconfig.BranchesToMark{}
+	branchesToPark := commandconfig.BranchesAndTypes{}
 	if len(args) == 0 {
 		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
 	} else {

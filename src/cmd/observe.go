@@ -92,7 +92,7 @@ func executeObserve(args []string, verbose bool) error {
 
 type observeConfig struct {
 	allBranches       gitdomain.BranchInfos
-	branchesToObserve commandconfig.BranchesToMark
+	branchesToObserve commandconfig.BranchesAndTypes
 	checkout          gitdomain.LocalBranchName
 }
 
@@ -118,7 +118,7 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	if err != nil {
 		return observeConfig{}, err
 	}
-	branchesToObserve := commandconfig.BranchesToMark{}
+	branchesToObserve := commandconfig.BranchesAndTypes{}
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:

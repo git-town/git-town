@@ -17,11 +17,11 @@ func (self mockFullConfig) BranchType(branch gitdomain.LocalBranchName) configdo
 	return self.branchTypes[branch]
 }
 
-func TestBranchesToMark(t *testing.T) {
+func TestBranchesAndTypes(t *testing.T) {
 	t.Parallel()
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
-		have := commandconfig.BranchesToMark{}
+		have := commandconfig.BranchesAndTypes{}
 		fullConfig := mockFullConfig{
 			branchTypes: map[gitdomain.LocalBranchName]configdomain.BranchType{
 				"main": configdomain.BranchTypeMainBranch,
@@ -36,7 +36,7 @@ func TestBranchesToMark(t *testing.T) {
 
 	t.Run("Keys", func(t *testing.T) {
 		t.Parallel()
-		give := commandconfig.BranchesToMark{
+		give := commandconfig.BranchesAndTypes{
 			"main":      configdomain.BranchTypeMainBranch,
 			"perennial": configdomain.BranchTypePerennialBranch,
 		}

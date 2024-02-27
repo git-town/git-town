@@ -10,12 +10,12 @@ type FullConfig interface {
 	BranchType(branch gitdomain.LocalBranchName) configdomain.BranchType
 }
 
-type BranchesToMark map[gitdomain.LocalBranchName]configdomain.BranchType
+type BranchesAndTypes map[gitdomain.LocalBranchName]configdomain.BranchType
 
-func (self *BranchesToMark) Add(branch gitdomain.LocalBranchName, fullConfig FullConfig) {
+func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig FullConfig) {
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
-func (self BranchesToMark) Keys() gitdomain.LocalBranchNames {
+func (self BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
 	return maps.Keys(self)
 }
