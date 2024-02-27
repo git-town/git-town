@@ -20,7 +20,7 @@ import (
 const observeDesc = "Stops your contributions to some feature branches"
 
 const observeHelp = `
-Markes the given local branches as observed.
+Marks the given local branches as observed.
 If no branch is provided, observes the current branch.
 
 Observed branches are useful when you assist other developers
