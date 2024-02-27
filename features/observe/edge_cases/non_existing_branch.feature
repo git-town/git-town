@@ -1,4 +1,4 @@
-Feature: cannot park non-existing branches
+Feature: cannot observe non-existing branches
 
   Background:
     Given the current branch is a feature branch "feature"
