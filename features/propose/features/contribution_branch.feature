@@ -1,4 +1,4 @@
-Feature: Cannot create proposals for perennial branches
+Feature: Cannot create proposals for contribution branches
 
   Background:
     Given the current branch is a contribution branch "contribution"
