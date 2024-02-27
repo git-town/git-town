@@ -124,7 +124,8 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
 		branchesToObserve[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
-		if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branch) {
+		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
+		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
