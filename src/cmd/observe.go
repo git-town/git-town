@@ -131,9 +131,7 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 			checkout = branch
 		}
 	default:
-		for _, branch := range args {
-			branchesToObserve.Add(gitdomain.NewLocalBranchName(branch), &repo.Runner.Config.FullConfig)
-		}
+		branchesToObserve.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
 	return observeConfig{
 		allBranches:       branchesSnapshot.Branches,
