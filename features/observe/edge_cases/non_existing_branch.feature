@@ -11,7 +11,7 @@ Feature: cannot observe non-existing branches
     And the uncommitted file still exists
     And it prints the error:
       """
-      there is no branch "non-existing"
+      there is no branch "feature"
       """
     And there are still no observed branches
 

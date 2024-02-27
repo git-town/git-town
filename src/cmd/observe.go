@@ -143,6 +143,9 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 
 func validateObserveConfig(config observeConfig) error {
 	for branchName, branchType := range config.branchesToObserve {
+		if !config.allBranches.HasLocalBranch(branchName) || config.allBranches.HasMatchingTrackingBranchFor(branchName) {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
