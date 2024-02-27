@@ -15,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
 )
 
 const observeDesc = "Stops your contributions to some feature branches"
@@ -70,7 +69,7 @@ func executeObserve(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToObservedBranches(maps.Keys(config.branchesToObserve)...); err != nil {
+	if err = repo.Runner.Config.AddToObservedBranches(config.branchesToObserve.Keys()...); err != nil {
 		return err
 	}
 	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
@@ -93,7 +92,7 @@ func executeObserve(args []string, verbose bool) error {
 
 type observeConfig struct {
 	allBranches       gitdomain.BranchInfos
-	branchesToObserve map[gitdomain.LocalBranchName]configdomain.BranchType
+	branchesToObserve commandconfig.BranchesToMark
 	checkout          gitdomain.LocalBranchName
 }
 
