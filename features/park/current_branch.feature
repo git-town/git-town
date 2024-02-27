@@ -8,8 +8,8 @@ Feature: parking a feature branch
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And branch "branch" is now parked
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -19,5 +19,5 @@ Feature: parking a feature branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And there are now no parked branches
+    And the uncommitted file still exists

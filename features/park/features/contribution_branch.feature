@@ -9,8 +9,8 @@ Feature: parking a contribution branch
     Then it runs no commands
     And the current branch is still "branch"
     And branch "branch" is now parked
-    And the uncommitted file still exists
     And there are now no contribution branches
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -20,6 +20,6 @@ Feature: parking a contribution branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And branch "branch" is now a contribution branch
     And there are now no parked branches
+    And the uncommitted file still exists

@@ -9,8 +9,8 @@ Feature: parking an observed branch
     Then it runs no commands
     And the current branch is still "observed"
     And branch "observed" is now parked
-    And the uncommitted file still exists
     And there are now no observed branches
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -20,6 +20,6 @@ Feature: parking an observed branch
       |          | git stash     |
       |          | git stash pop |
     And the current branch is still "observed"
-    And the uncommitted file still exists
     And branch "observed" is now an observed branch
     And there are now no parked branches
+    And the uncommitted file still exists
