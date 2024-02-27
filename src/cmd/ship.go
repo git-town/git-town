@@ -352,5 +352,5 @@ func validateShippableBranchType(branchType configdomain.BranchType) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotShip)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %rv", branchType))
+	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
 }
