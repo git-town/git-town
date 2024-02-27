@@ -123,18 +123,17 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
-		branchesToMark[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
+		branchesToMark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
 	case 1:
 		branch := gitdomain.NewLocalBranchName(args[0])
-		branchesToMark[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
+		branchesToMark.Add(branch, &repo.Runner.Config.FullConfig)
 		branchInfo := branchesSnapshot.Branches.FindByRemoteName(branch.TrackingBranch())
 		if branchInfo.SyncStatus == gitdomain.SyncStatusRemoteOnly {
 			checkout = branch
 		}
 	default:
 		for _, branch := range args {
-			branchName := gitdomain.NewLocalBranchName(branch)
-			branchesToMark[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
+			branchesToMark.Add(gitdomain.NewLocalBranchName(branch), &repo.Runner.Config.FullConfig)
 		}
 	}
 	return contributeConfig{
