@@ -19,6 +19,7 @@ func (self mockFullConfig) BranchType(branch gitdomain.LocalBranchName) configdo
 
 func TestBranchesAndTypes(t *testing.T) {
 	t.Parallel()
+
 	t.Run("Add", func(t *testing.T) {
 		t.Parallel()
 		have := commandconfig.BranchesAndTypes{}
