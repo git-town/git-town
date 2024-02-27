@@ -35,6 +35,23 @@ func TestBranchesAndTypes(t *testing.T) {
 		must.Eq(t, want, have)
 	})
 
+	t.Run("AddMany", func(t *testing.T) {
+		t.Parallel()
+		have := commandconfig.BranchesAndTypes{}
+		fullConfig := mockFullConfig{
+			branchTypes: map[gitdomain.LocalBranchName]configdomain.BranchType{
+				"main":      configdomain.BranchTypeMainBranch,
+				"perennial": configdomain.BranchTypePerennialBranch,
+			},
+		}
+		have.AddMany(gitdomain.NewLocalBranchNames("main", "perennial"), fullConfig)
+		want := map[gitdomain.LocalBranchName]configdomain.BranchType{
+			"main":      configdomain.BranchTypeMainBranch,
+			"perennial": configdomain.BranchTypePerennialBranch,
+		}
+		must.Eq(t, want, have)
+	})
+
 	t.Run("Keys", func(t *testing.T) {
 		t.Parallel()
 		give := commandconfig.BranchesAndTypes{

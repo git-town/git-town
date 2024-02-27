@@ -16,6 +16,12 @@ func (self *BranchesAndTypes) Add(branch gitdomain.LocalBranchName, fullConfig F
 	(*self)[branch] = fullConfig.BranchType(branch)
 }
 
+func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullConfig FullConfig) {
+	for _, branch := range branches {
+		self.Add(branch, fullConfig)
+	}
+}
+
 func (self BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
 	return maps.Keys(self)
 }

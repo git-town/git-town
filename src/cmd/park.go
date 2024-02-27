@@ -110,9 +110,7 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	if len(args) == 0 {
 		branchesToPark.Add(branchesSnapshot.Active, &repo.Runner.Config.FullConfig)
 	} else {
-		for _, branch := range args {
-			branchesToPark.Add(gitdomain.NewLocalBranchName(branch), &repo.Runner.Config.FullConfig)
-		}
+		branchesToPark.AddMany(gitdomain.NewLocalBranchNames(args...), &repo.Runner.Config.FullConfig)
 	}
 	return parkConfig{
 		allBranches:    branchesSnapshot.Branches,
