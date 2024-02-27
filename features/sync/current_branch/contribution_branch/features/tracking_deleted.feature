@@ -9,6 +9,7 @@ Feature: remove the contribution branch as soon as the tracking branch is gone, 
     And origin deletes the "contribution" branch
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                    |
@@ -19,6 +20,10 @@ Feature: remove the contribution branch as soon as the tracking branch is gone, 
     And these commits exist now
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
+    And it prints:
+      """
+      deleted branch "contribution"
+      """
 
   Scenario: undo
     When I run "git-town undo"
