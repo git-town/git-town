@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
 	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/config/commandconfig"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
@@ -14,7 +15,6 @@ import (
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
 )
 
 const contributeDesc = "Stops syncing some feature branches with their parents"
@@ -70,7 +70,7 @@ func executeContribute(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	if err = repo.Runner.Config.AddToContributionBranches(maps.Keys(config.branchesToMark)...); err != nil {
+	if err = repo.Runner.Config.AddToContributionBranches(config.branchesToMark.Keys()...); err != nil {
 		return err
 	}
 	if err = removeNonContributionBranchTypes(config.branchesToMark, repo.Runner.Config); err != nil {
@@ -93,11 +93,11 @@ func executeContribute(args []string, verbose bool) error {
 
 type contributeConfig struct {
 	allBranches    gitdomain.BranchInfos
-	branchesToMark map[gitdomain.LocalBranchName]configdomain.BranchType
+	branchesToMark commandconfig.BranchesToMark
 	checkout       gitdomain.LocalBranchName
 }
 
-func removeNonContributionBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
+func removeNonContributionBranchTypes(branches commandconfig.BranchesToMark, config *config.Config) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
@@ -119,7 +119,7 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 	if err != nil {
 		return contributeConfig{}, err
 	}
-	branchesToMark := map[gitdomain.LocalBranchName]configdomain.BranchType{}
+	branchesToMark := commandconfig.BranchesToMark{}
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:

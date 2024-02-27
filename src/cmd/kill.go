@@ -61,9 +61,6 @@ func executeKill(args []string, dryRun, verbose bool) error {
 		return err
 	}
 	steps, finalUndoProgram := killProgram(config)
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
