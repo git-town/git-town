@@ -15,6 +15,7 @@ const (
 	BranchDoesntContainCommit          = "branch %q does not contain commit %q. Found commits %s"
 	BranchDoesntExist                  = "there is no branch %q"
 	BranchHasWrongSHA                  = "cannot reset branch %q to %q because it received additional commits in the meantime. It should have SHA %q but has %q"
+	BranchIsAlreadyParked              = "branch %q is already parked"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
 	BranchParentChanged                = "branch %q is now a child of %q"

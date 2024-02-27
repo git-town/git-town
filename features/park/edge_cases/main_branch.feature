@@ -1,4 +1,4 @@
-Feature: parking the main branch
+Feature: cannot park the main branch
 
   Background:
     Given an uncommitted file

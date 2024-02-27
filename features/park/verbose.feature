@@ -21,8 +21,8 @@ Feature: park a branch verbosely
       Ran 8 shell commands
       """
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And branch "branch" is now parked
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo --verbose"
@@ -48,5 +48,5 @@ Feature: park a branch verbosely
       Ran 15 shell commands
       """
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And branch "branch" is now a feature branch
+    And the uncommitted file still exists

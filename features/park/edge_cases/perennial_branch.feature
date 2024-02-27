@@ -1,4 +1,4 @@
-Feature: parking a perennial branch
+Feature: cannot park perennial branches
 
   Background:
     Given the current branch is a perennial branch "perennial"
