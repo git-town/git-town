@@ -66,9 +66,6 @@ func executePropose(dryRun, verbose bool) error {
 	if err != nil || exit {
 		return err
 	}
-	if err != nil {
-		return err
-	}
 	runState := runstate.RunState{
 		BeginBranchesSnapshot: initialBranchesSnapshot,
 		BeginConfigSnapshot:   repo.ConfigSnapshot,
