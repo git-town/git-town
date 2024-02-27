@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v12/src/config"
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
-	"github.com/git-town/git-town/v12/src/git"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
@@ -60,7 +59,7 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	err = validateParkConfig(config, repo.Runner)
+	err = validateParkConfig(config)
 	if err != nil {
 		return err
 	}
@@ -122,9 +121,9 @@ func determineParkConfig(args []string, repo *execute.OpenRepoResult) (parkConfi
 	}, nil
 }
 
-func validateParkConfig(config parkConfig, runner *git.ProdRunner) error {
+func validateParkConfig(config parkConfig) error {
 	for branchName, branchType := range config.branchesToPark {
-		if !runner.Backend.HasLocalBranch(branchName) {
+		if !config.allBranches.HasLocalBranch(branchName) {
 			return fmt.Errorf(messages.BranchDoesntExist, branchName)
 		}
 		switch branchType {

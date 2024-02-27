@@ -13,13 +13,12 @@ Feature: park a branch verbosely
       |        | git config -lz --local                     |
       |        | git rev-parse --show-toplevel              |
       |        | git branch -vva                            |
-      |        | git show-ref --quiet refs/heads/branch     |
       |        | git config git-town.parked-branches branch |
       |        | git config -lz --global                    |
       |        | git config -lz --local                     |
     And it prints:
       """
-      Ran 9 shell commands
+      Ran 8 shell commands
       """
     And the current branch is still "branch"
     And branch "branch" is now parked
