@@ -60,7 +60,10 @@ func executePark(args []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	validateParkConfig(config, repo.Runner)
+	err = validateParkConfig(config, repo.Runner)
+	if err != nil {
+		return err
+	}
 	if err = repo.Runner.Config.AddToParkedBranches(maps.Keys(config.branchesToPark)...); err != nil {
 		return err
 	}
