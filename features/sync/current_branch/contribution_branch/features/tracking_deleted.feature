@@ -1,4 +1,4 @@
-Feature: remove the contribution branch as soon as the tracking branch is gone, even if it has unpushed commits
+Feature: remove a contribution branch as soon as its tracking branch is gone, even if it has unpushed commits
 
   Background:
     Given the current branch is a contribution branch "contribution"
