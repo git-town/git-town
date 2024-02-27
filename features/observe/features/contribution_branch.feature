@@ -1,16 +1,16 @@
-Feature: observe a local feature branch
+Feature: observing a contribution branch
 
   Background:
-    Given the current branch is a feature branch "branch"
+    Given the current branch is a contribution branch "branch"
     And an uncommitted file
     When I run "git-town observe"
 
-  @this
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
-    And the uncommitted file still exists
     And branch "branch" is now observed
+    And there are now no contribution branches
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -20,5 +20,6 @@ Feature: observe a local feature branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And the uncommitted file still exists
+    And branch "branch" is now a contribution branch
     And there are now no observed branches
+    And the uncommitted file still exists
