@@ -20,11 +20,14 @@ import (
 const observeDesc = "Stops your contributions to specific feature branches"
 
 const observeHelp = `
+Markes the given local branches as observed.
+If no branch is provided, observes the current branch.
+
 Observed branches are useful when you assist other developers
 and make local changes to try out ideas,
 but want the other developers to implement and commit all official changes.
 
-For an observed branch, "git sync"
+On an observed branch, "git sync"
 - pulls down updates from the tracking branch (always via rebase)
 - does not push your local commits to the tracking branch
 - does not pull updates from the parent branch
