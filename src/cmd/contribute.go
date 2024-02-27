@@ -119,7 +119,7 @@ func determineContributeConfig(args []string, repo *execute.OpenRepoResult) (con
 	if err != nil {
 		return contributeConfig{}, err
 	}
-	branchesToMark := commandconfig.BranchesToMark{}
+	branchesToMark := commandconfig.BranchesAndTypes{}
 	checkout := gitdomain.EmptyLocalBranchName()
 	switch len(args) {
 	case 0:
