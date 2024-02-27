@@ -15,6 +15,7 @@ const (
 	BranchDoesntContainCommit          = "branch %q does not contain commit %q. Found commits %s"
 	BranchDoesntExist                  = "there is no branch %q"
 	BranchHasWrongSHA                  = "cannot reset branch %q to %q because it received additional commits in the meantime. It should have SHA %q but has %q"
+	BranchIsAlreadyObserved            = "branch %q is already observed"
 	BranchIsAlreadyParked              = "branch %q is already parked"
 	BranchLocalSHAProblem              = "cannot determine SHA of local branch %q: %w"
 	BranchLocalProblem                 = "cannot determine whether the local branch %q exists: %w"
@@ -87,6 +88,7 @@ END OUTPUT FROM 'git branch -vva'
 	KillBranchOtherWorktree           = `branch %q is active in another worktree`
 	KillOnlyFeatureBranches           = "you can only kill feature branches"
 	MainBranch                        = "Main branch: %s\n"
+	MainBranchCannotObserve           = "cannot observe the main branch"
 	MainBranchCannotPark              = "cannot park the main branch"
 	ObservedBranchCannotPark          = "cannot park observed branches"
 	OfflineNotAllowed                 = "this command requires an active internet connection"
@@ -94,6 +96,7 @@ END OUTPUT FROM 'git branch -vva'
 	OpenChangesProblem                = "cannot determine open changes: %w"
 	OriginHostname                    = "Origin hostname: %s\n"
 	ParentDialogSelected              = "Selected parent branch for %q: %s\n"
+	PerennialBranchCannotObserve      = "cannot observe perennial branches"
 	PerennialBranchCannotPark         = "cannot park perennial branches"
 	PerennialBranches                 = "Perennial branches: %s\n"
 	PerennialRegex                    = "Perennial regex: %s\n"

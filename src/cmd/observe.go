@@ -2,14 +2,19 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v12/src/cli/flags"
 	"github.com/git-town/git-town/v12/src/cmd/cmdhelpers"
+	"github.com/git-town/git-town/v12/src/config"
+	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/execute"
+	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	configInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/config"
 	"github.com/spf13/cobra"
+	"golang.org/x/exp/maps"
 )
 
 const observeDesc = "Stops your contributions to a specific feature branches"
@@ -41,7 +46,7 @@ func observeCmd() *cobra.Command {
 	return &cmd
 }
 
-func executeObserve(_ []string, verbose bool) error {
+func executeObserve(args []string, verbose bool) error {
 	repo, err := execute.OpenRepo(execute.OpenRepoArgs{
 		DryRun:           false,
 		OmitBranchNames:  true,
@@ -53,26 +58,86 @@ func executeObserve(_ []string, verbose bool) error {
 	if err != nil {
 		return err
 	}
-	currentBranch, err := repo.Runner.Backend.CurrentBranch()
+	config, err := determineObserveConfig(args, repo)
 	if err != nil {
 		return err
 	}
-	if repo.Runner.Config.FullConfig.IsMainBranch(currentBranch) {
-		return errors.New(messages.MainBranchCannotPark)
-	}
-	if repo.Runner.Config.FullConfig.IsPerennialBranch(currentBranch) {
-		return errors.New(messages.PerennialBranchCannotPark)
-	}
-	err = repo.Runner.Config.AddToParkedBranches(currentBranch)
+	err = validateObserveConfig(config)
 	if err != nil {
+		return err
+	}
+	if err = repo.Runner.Config.AddToObservedBranches(maps.Keys(config.branchesToObserve)...); err != nil {
+		return err
+	}
+	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
-		Command:             "park",
+		Command:             "observe",
 		EndConfigSnapshot:   undoconfig.EmptyConfigSnapshot(),
 		RootDir:             repo.RootDir,
 		Runner:              repo.Runner,
 		Verbose:             verbose,
 	})
+}
+
+type observeConfig struct {
+	allBranches       gitdomain.BranchInfos
+	branchesToObserve map[gitdomain.LocalBranchName]configdomain.BranchType
+}
+
+func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
+	for branchName, branchType := range branches {
+		switch branchType {
+		case configdomain.BranchTypeContributionBranch:
+			if err := config.RemoveFromContributionBranches(branchName); err != nil {
+				return err
+			}
+		case configdomain.BranchTypeObservedBranch:
+			if err := config.RemoveFromObservedBranches(branchName); err != nil {
+				return err
+			}
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		}
+	}
+	return nil
+}
+
+func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observeConfig, error) {
+	branchesSnapshot, err := repo.Runner.Backend.BranchesSnapshot()
+	if err != nil {
+		return observeConfig{}, err
+	}
+	branchesToObserve := map[gitdomain.LocalBranchName]configdomain.BranchType{}
+	if len(args) == 0 {
+		branchesToObserve[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
+	} else {
+		for _, branch := range args {
+			branchName := gitdomain.NewLocalBranchName(branch)
+			branchesToObserve[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
+		}
+	}
+	return observeConfig{
+		allBranches:       branchesSnapshot.Branches,
+		branchesToObserve: branchesToObserve,
+	}, nil
+}
+
+func validateObserveConfig(config observeConfig) error {
+	for branchName, branchType := range config.branchesToObserve {
+		if !config.allBranches.HasLocalBranch(branchName) {
+			return fmt.Errorf(messages.BranchDoesntExist, branchName)
+		}
+		switch branchType {
+		case configdomain.BranchTypeMainBranch:
+			return errors.New(messages.MainBranchCannotObserve)
+		case configdomain.BranchTypePerennialBranch:
+			return errors.New(messages.PerennialBranchCannotObserve)
+		case configdomain.BranchTypeObservedBranch:
+			return fmt.Errorf(messages.BranchIsAlreadyObserved, branchName)
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeContributionBranch, configdomain.BranchTypeParkedBranch:
+		}
+	}
+	return nil
 }
