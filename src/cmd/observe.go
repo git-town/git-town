@@ -76,7 +76,9 @@ func executeObserve(args []string, verbose bool) error {
 		return err
 	}
 	if !config.checkout.IsEmpty() {
-		repo.Runner.Frontend.CheckoutBranch(config.checkout)
+		if err = repo.Runner.Frontend.CheckoutBranch(config.checkout); err != nil {
+			return err
+		}
 	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
