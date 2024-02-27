@@ -193,8 +193,8 @@ func proposeProgram(config *proposeConfig) program.Program {
 }
 
 func validateProposeConfig(config *proposeConfig) error {
-	branchType := config.FullConfig.BranchType(config.initialBranch)
-	switch branchType {
+	initialBranchType := config.FullConfig.BranchType(config.initialBranch)
+	switch initialBranchType {
 	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
 		return nil
 	case configdomain.BranchTypeMainBranch:
@@ -206,5 +206,5 @@ func validateProposeConfig(config *proposeConfig) error {
 	case configdomain.BranchTypePerennialBranch:
 		return errors.New(messages.PerennialBranchCannotPropose)
 	}
-	panic(fmt.Sprintf("unhandled branch type: %v", branchType))
+	panic(fmt.Sprintf("unhandled branch type: %v", initialBranchType))
 }
