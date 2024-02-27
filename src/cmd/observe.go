@@ -17,7 +17,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-const observeDesc = "Stops your contributions to specific feature branches"
+const observeDesc = "Stops your contributions to some feature branches"
 
 const observeHelp = `
 Markes the given local branches as observed.
