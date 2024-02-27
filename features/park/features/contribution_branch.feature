@@ -9,7 +9,7 @@ Feature: parking a contribution branch
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
-    And branch "branch" is now a parked branch
+    And branch "branch" is now parked
     And the uncommitted file still exists
     And there are now no contribution branches
 
