@@ -13,6 +13,7 @@ func Execute() error {
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(config.RootCmd())
 	rootCmd.AddCommand(continueCmd())
+	rootCmd.AddCommand(contributeCmd())
 	rootCmd.AddCommand(debug.RootCmd())
 	rootCmd.AddCommand(diffParentCommand())
 	rootCmd.AddCommand(hackCmd())
