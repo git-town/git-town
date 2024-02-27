@@ -100,7 +100,7 @@ END OUTPUT FROM 'git branch -vva'
 	OpcodeUnknown                         = "unknown opcode: %q, run \"git town status reset\" to reset it"
 	OpenChangesProblem                    = "cannot determine open changes: %w"
 	OriginHostname                        = "Origin hostname: %s\n"
-	ParentDialogSelected                  = "Selected parent brancObservedh for %q: %s\n"
+	ParentDialogSelected                  = "Selected parent branch for %q: %s\n"
 	PerennialBranchCannotMakeContribution = "cannot make perennial branches contribution branches"
 	PerennialBranchCannotObserve          = "cannot observe perennial branches"
 	PerennialBranchCannotPark             = "cannot park perennial branches"
