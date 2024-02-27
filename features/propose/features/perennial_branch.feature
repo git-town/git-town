@@ -6,11 +6,11 @@ Feature: Cannot create proposals for perennial branches
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 
-  @this
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND |
+      | BRANCH    | COMMAND                  |
+      | perennial | git fetch --prune --tags |
     And it prints the error:
       """
-      xxx
+      cannot propose perennial branches
       """
