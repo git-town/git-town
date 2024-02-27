@@ -12,7 +12,7 @@ Feature: does not ship perennial branches
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      the branch "production" is not a feature branch. Only feature branches can be shipped
+      cannot ship perennial branches
       """
     And the current branch is still "main"
     And the uncommitted file still exists

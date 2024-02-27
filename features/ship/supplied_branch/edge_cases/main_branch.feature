@@ -11,7 +11,7 @@ Feature: does not ship the main branch
       | feature | git fetch --prune --tags |
     And it prints the error:
       """
-      the branch "main" is not a feature branch. Only feature branches can be shipped
+      cannot ship the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file still exists

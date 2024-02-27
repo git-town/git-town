@@ -1,6 +1,8 @@
 package commandconfig
 
 import (
+	"slices"
+
 	"github.com/git-town/git-town/v12/src/config/configdomain"
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"golang.org/x/exp/maps"
@@ -23,5 +25,7 @@ func (self *BranchesAndTypes) AddMany(branches gitdomain.LocalBranchNames, fullC
 }
 
 func (self BranchesAndTypes) Keys() gitdomain.LocalBranchNames {
-	return maps.Keys(self)
+	result := maps.Keys(self)
+	slices.Sort(result)
+	return result
 }

@@ -8,5 +8,5 @@ Feature: ask for missing configuration information
     And the main branch is now "main"
     And it prints the error:
       """
-      the branch "main" is not a feature branch. Only feature branches can be shipped
+      cannot ship the main branch
       """
