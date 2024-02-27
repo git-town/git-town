@@ -75,6 +75,9 @@ func executeObserve(args []string, verbose bool) error {
 	if err = removeNonObserveBranchTypes(config.branchesToObserve, repo.Runner.Config); err != nil {
 		return err
 	}
+	if !config.checkout.IsEmpty() {
+		repo.Runner.Frontend.CheckoutBranch(config.checkout)
+	}
 	return configInterpreter.Finished(configInterpreter.FinishedArgs{
 		BeginConfigSnapshot: repo.ConfigSnapshot,
 		Command:             "observe",
@@ -88,6 +91,7 @@ func executeObserve(args []string, verbose bool) error {
 type observeConfig struct {
 	allBranches       gitdomain.BranchInfos
 	branchesToObserve map[gitdomain.LocalBranchName]configdomain.BranchType
+	checkout          gitdomain.LocalBranchName
 }
 
 func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdomain.BranchType, config *config.Config) error {
@@ -113,9 +117,17 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 		return observeConfig{}, err
 	}
 	branchesToObserve := map[gitdomain.LocalBranchName]configdomain.BranchType{}
-	if len(args) == 0 {
+	checkout := gitdomain.EmptyLocalBranchName()
+	switch len(args) {
+	case 0:
 		branchesToObserve[branchesSnapshot.Active] = repo.Runner.Config.FullConfig.BranchType(branchesSnapshot.Active)
-	} else {
+	case 1:
+		branch := gitdomain.NewLocalBranchName(args[0])
+		branchesToObserve[branch] = repo.Runner.Config.FullConfig.BranchType(branch)
+		if branchesSnapshot.Branches.HasMatchingTrackingBranchFor(branch) {
+			checkout = branch
+		}
+	default:
 		for _, branch := range args {
 			branchName := gitdomain.NewLocalBranchName(branch)
 			branchesToObserve[branchName] = repo.Runner.Config.FullConfig.BranchType(branchName)
@@ -124,14 +136,12 @@ func determineObserveConfig(args []string, repo *execute.OpenRepoResult) (observ
 	return observeConfig{
 		allBranches:       branchesSnapshot.Branches,
 		branchesToObserve: branchesToObserve,
+		checkout:          checkout,
 	}, nil
 }
 
 func validateObserveConfig(config observeConfig) error {
 	for branchName, branchType := range config.branchesToObserve {
-		if !config.allBranches.HasLocalBranch(branchName) {
-			return fmt.Errorf(messages.BranchDoesntExist, branchName)
-		}
 		switch branchType {
 		case configdomain.BranchTypeMainBranch:
 			return errors.New(messages.MainBranchCannotObserve)
