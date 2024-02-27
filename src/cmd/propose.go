@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/git-town/git-town/v12/src/git/gitdomain"
 	"github.com/git-town/git-town/v12/src/hosting"
 	"github.com/git-town/git-town/v12/src/hosting/hostingdomain"
+	"github.com/git-town/git-town/v12/src/messages"
 	"github.com/git-town/git-town/v12/src/sync"
 	"github.com/git-town/git-town/v12/src/undo/undoconfig"
 	fullInterpreter "github.com/git-town/git-town/v12/src/vm/interpreter/full"
@@ -64,6 +66,9 @@ func executePropose(dryRun, verbose bool) error {
 	}
 	config, initialBranchesSnapshot, initialStashSize, exit, err := determineProposeConfig(repo, dryRun, verbose)
 	if err != nil || exit {
+		return err
+	}
+	if err = validateProposeConfig(config); err != nil {
 		return err
 	}
 	runState := runstate.RunState{
@@ -184,4 +189,21 @@ func proposeProgram(config *proposeConfig) program.Program {
 	})
 	prog.Add(&opcodes.CreateProposal{Branch: config.initialBranch})
 	return prog
+}
+
+func validateProposeConfig(config *proposeConfig) error {
+	initialBranchType := config.FullConfig.BranchType(config.initialBranch)
+	switch initialBranchType {
+	case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch:
+		return nil
+	case configdomain.BranchTypeMainBranch:
+		return errors.New(messages.MainBranchCannotPropose)
+	case configdomain.BranchTypeContributionBranch:
+		return errors.New(messages.ContributionBranchCannotPropose)
+	case configdomain.BranchTypeObservedBranch:
+		return errors.New(messages.ObservedBranchCannotPropose)
+	case configdomain.BranchTypePerennialBranch:
+		return errors.New(messages.PerennialBranchCannotPropose)
+	}
+	panic(fmt.Sprintf("unhandled branch type: %v", initialBranchType))
 }
