@@ -5,7 +5,6 @@ Feature: making an observed branch a contribution branch
     And an uncommitted file
     When I run "git-town contribute"
 
-  @this
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
@@ -22,6 +21,6 @@ Feature: making an observed branch a contribution branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And branch "branch" is now an observed branch
+    And branch "branch" is now observed
     And there are now no contribution branches
     And the uncommitted file still exists
