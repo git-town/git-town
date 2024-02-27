@@ -93,11 +93,11 @@ func executeContribute(args []string, verbose bool) error {
 
 type contributeConfig struct {
 	allBranches    gitdomain.BranchInfos
-	branchesToMark commandconfig.BranchesToMark
+	branchesToMark commandconfig.BranchesAndTypes
 	checkout       gitdomain.LocalBranchName
 }
 
-func removeNonContributionBranchTypes(branches commandconfig.BranchesToMark, config *config.Config) error {
+func removeNonContributionBranchTypes(branches commandconfig.BranchesAndTypes, config *config.Config) error {
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
