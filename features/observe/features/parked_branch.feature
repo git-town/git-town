@@ -20,6 +20,6 @@ Feature: observing a parked branch
       |        | git stash     |
       |        | git stash pop |
     And the current branch is still "branch"
-    And branch "branch" is now a parked branch
+    And branch "branch" is now parked
     And there are now no observed branches
     And the uncommitted file still exists

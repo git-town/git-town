@@ -94,11 +94,11 @@ func removeNonObserveBranchTypes(branches map[gitdomain.LocalBranchName]configdo
 			if err := config.RemoveFromContributionBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromObservedBranches(branchName); err != nil {
+		case configdomain.BranchTypeParkedBranch:
+			if err := config.RemoveFromParkedBranches(branchName); err != nil {
 				return err
 			}
-		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeParkedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
+		case configdomain.BranchTypeFeatureBranch, configdomain.BranchTypeObservedBranch, configdomain.BranchTypeMainBranch, configdomain.BranchTypePerennialBranch:
 		}
 	}
 	return nil
