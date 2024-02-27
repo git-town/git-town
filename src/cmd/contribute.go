@@ -25,7 +25,7 @@ If no branch is provided, marks the current branch.
 
 Contribution branches are useful when you assist other developers
 and make commits to their branch,
-but want the other developers to handle the branch
+but want the other developers to manage the branch
 including syncing it with its parent and shipping it.
 
 On a contribution branch, "git sync"
