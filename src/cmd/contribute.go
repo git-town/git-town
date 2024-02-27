@@ -101,7 +101,7 @@ func removeNonContributionBranchTypes(branches map[gitdomain.LocalBranchName]con
 	for branchName, branchType := range branches {
 		switch branchType {
 		case configdomain.BranchTypeObservedBranch:
-			if err := config.RemoveFromContributionBranches(branchName); err != nil {
+			if err := config.RemoveFromObservedBranches(branchName); err != nil {
 				return err
 			}
 		case configdomain.BranchTypeParkedBranch:
