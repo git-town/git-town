@@ -1,4 +1,3 @@
-@skipWindows
 Feature: cannot ship perennial branches
 
   Background:
