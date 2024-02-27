@@ -224,7 +224,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		branch := gitdomain.NewLocalBranchName(name)
 		if !state.fixture.DevRepo.Config.FullConfig.IsContributionBranch(branch) {
 			return fmt.Errorf(
-				"branch %q isn't contribution as expected.\nObserved branches: %s",
+				"branch %q isn't contribution as expected.\nContribution branches: %s",
 				branch,
 				strings.Join(state.fixture.DevRepo.Config.FullConfig.ContributionBranches.Strings(), ", "),
 			)

@@ -3,13 +3,14 @@ Feature: making an observed branch a contribution branch
   Background:
     Given the current branch is an observed branch "branch"
     And an uncommitted file
-    When I run "git-town contribution"
+    When I run "git-town contribute"
 
+  @debug @this
   Scenario: result
     Then it runs no commands
     And the current branch is still "branch"
     And branch "branch" is now a contribution branch
-    And there are now no contribution branches
+    And there are now no observed branches
     And the uncommitted file still exists
 
   Scenario: undo
