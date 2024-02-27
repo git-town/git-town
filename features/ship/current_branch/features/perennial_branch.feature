@@ -13,7 +13,7 @@ Feature: cannot ship perennial branches
       | perennial | git fetch --prune --tags |
     And it prints the error:
       """
-      the branch "perennial" is not a feature branch. Only feature branches can be shipped
+      cannot ship perennial branches
       """
     And the current branch is still "perennial"
     And the initial commits exist
