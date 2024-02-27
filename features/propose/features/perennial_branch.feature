@@ -2,7 +2,6 @@ Feature: Cannot create proposals for perennial branches
 
   Background:
     Given the current branch is a perennial branch "perennial"
-    And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 
