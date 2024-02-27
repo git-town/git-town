@@ -3,7 +3,7 @@ Feature: Create proposals for parked branches
 
   Background:
     Given the current branch is a parked branch "parked"
-    Given tool "open" is installed
+    And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town propose"
 
