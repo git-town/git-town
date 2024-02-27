@@ -1,4 +1,3 @@
-@this
 Feature: parking a contribution branch
 
   Background:
@@ -15,8 +14,12 @@ Feature: parking a contribution branch
 
   Scenario: undo
     When I run "git-town undo"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND       |
+      | branch | git add -A    |
+      |        | git stash     |
+      |        | git stash pop |
     And the current branch is still "branch"
     And the uncommitted file still exists
-    And branch "branch" is now a parked branch
+    And branch "branch" is now a contribution branch
     And there are now no parked branches
