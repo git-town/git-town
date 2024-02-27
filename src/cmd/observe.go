@@ -34,7 +34,7 @@ func observeCmd() *cobra.Command {
 	addVerboseFlag, readVerboseFlag := flags.Verbose()
 	cmd := cobra.Command{
 		Use:     "observe [branches]",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ArbitraryArgs,
 		GroupID: "types",
 		Short:   observeDesc,
 		Long:    cmdhelpers.Long(observeDesc, observeHelp),
